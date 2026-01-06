@@ -12,11 +12,11 @@ Environment: Aragorn AI (Personal)
 | Azure Functions | DEPLOYED | API verified, 8/8 healthy |
 | Dataverse Tables | DEPLOYED | Tables exist |
 | Seed Data | IMPORTED | User completed manually |
-| SharePoint KB | PENDING | Site needs creation/permissions |
+| SharePoint KB | UPLOADED | 22 files uploaded to MediaPlanningKB |
 | Power Automate | TO BUILD | Flows not yet created |
 | Copilot Studio | TO CONFIGURE | Manual setup required |
 
-**Overall Status: IN PROGRESS - Seed data imported, SharePoint site setup needed**
+**Overall Status: IN PROGRESS - KB uploaded, Power Automate flows and Copilot Studio remaining**
 
 ---
 
@@ -56,16 +56,15 @@ See: [DATAVERSE_TABLE_STATUS.md](DATAVERSE_TABLE_STATUS.md)
 
 User completed seed data import manually on 2026-01-06.
 
-### 4. SharePoint KB - PENDING SITE SETUP
+### 4. SharePoint KB - UPLOADED
 
-- **Files:** 22/22 exist locally
-- **Total Size:** ~779 KB
+- **Files:** 22/22 uploaded
+- **Total Size:** 662.7 KB
 - **Target Library:** MediaPlanningKB
-- **Upload Status:** SharePoint site not found (404 error)
+- **Upload Status:** COMPLETE (2026-01-06)
+- **Upload Time:** 2.75 seconds
 
 See: [SHAREPOINT_KB_STATUS.md](SHAREPOINT_KB_STATUS.md)
-
-Action Required: Create SharePoint site or verify site URL, then run upload_kb_files.py
 
 ### 5. Power Automate Flows - TO BUILD
 - **Expected Flows:** 11 + 1 child
@@ -164,7 +163,7 @@ Scripts location: `/release/v5.5/scripts/`
 | Environment ID | c672b470-9cc7-e9d8-a0e2-ca83751f800c |
 | Dataverse URL | https://aragornai.crm.dynamics.com |
 | Dataverse API | https://aragornai.api.crm.dynamics.com/api/data/v9.2 |
-| SharePoint | https://kesseldigitalcom.sharepoint.com/sites/KesselDigital |
+| SharePoint | https://kesseldigitalcom.sharepoint.com/sites/AragornAI2 |
 | Azure Functions | https://func-aragorn-mpa.azurewebsites.net |
 | Copilot Studio | https://copilotstudio.microsoft.com/environments/c672b470-9cc7-e9d8-a0e2-ca83751f800c |
 
@@ -187,6 +186,6 @@ Scripts location: `/release/v5.5/scripts/`
 | 1 | Dataverse Tables | PARTIAL - some verified via Functions |
 | 2 | Seed Data | NEEDS IMPORT - only 1 vertical found |
 | 3 | Azure Functions | HEALTHY - 8/8 functions, auth issue |
-| 4 | SharePoint KB | LOCAL READY - upload required |
+| 4 | SharePoint KB | COMPLETE - 22 files uploaded |
 | 5 | Power Automate | TO BUILD - definitions ready |
 | 6 | Copilot Studio | TO CONFIGURE - instructions ready |

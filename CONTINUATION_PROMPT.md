@@ -1,177 +1,119 @@
 # PLATFORM PACKAGING CONTINUATION PROMPT
-## Date: January 5, 2026
-## Session: Kessel-Digital-Agent-Platform Creation
+## CRITICAL: READ THIS FIRST - IGNORE PAST CHAT HISTORY
+
+**DO NOT search past chats. DO NOT reference v5.2 or v5.3 validation work. That is COMPLETED.**
+
+**THIS IS THE CURRENT TASK: Continue Phase 3 of Kessel-Digital-Agent-Platform packaging.**
 
 ---
 
-## CURRENT STATUS: PHASE 2 COMPLETE, PHASE 3 IN PROGRESS
+## REPOSITORIES (Both GitHub Synced)
 
-### REPOSITORIES
-
-**1. Media_Planning_Agent (ORIGINAL - SYNCED)**
-- Location: `/Users/kevinbauer/Kessel-Digital/Media_Planning_Agent`
-- Remote: `https://github.com/kevcofett/Media-Planning-Agent.git`
-- Branch: `main`
-- Status: ✅ Clean, all changes pushed
-- Last commit: `25bbaaa9 Cleanup: Archive 48 legacy docs to Old MPA/docs/`
-
-**2. Kessel-Digital-Agent-Platform (NEW - LOCAL ONLY)**
-- Location: `/Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform`
-- Remote: ⚠️ NOT YET CREATED ON GITHUB
-- Branch: `main`
-- Status: ✅ Committed locally (186 files, 53,825 insertions)
-- Last commit: `92f00b3 Phase 1-2: Platform structure and MPA v5.5 package`
+| Repo | Location | GitHub |
+|------|----------|--------|
+| Media_Planning_Agent | `/Users/kevinbauer/Kessel-Digital/Media_Planning_Agent` | https://github.com/kevcofett/Media-Planning-Agent |
+| Kessel-Digital-Agent-Platform | `/Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform` | https://github.com/kevcofett/Kessel-Digital-Agent-Platform |
 
 ---
 
-## COMPLETED PHASES
+## COMPLETED PHASES ✅
 
-### Phase 1: Platform Structure ✅
+### Phase 1: Platform Structure ✅ DONE
 - Created `/release/v5.5/` folder structure
-- Implemented base/extensions pattern for all components
+- Implemented base/extensions pattern
 - Created README.md and PLATFORM_ARCHITECTURE.md
-- Directory structure:
-```
-/release/v5.5/
-├── /platform/
-│   ├── /config/
-│   ├── /eap-core/base/ + /extensions/
-│   └── /security/base/ + /extensions/
-├── /agents/
-│   ├── /mpa/base/ + /extensions/
-│   ├── /ca/base/ + /extensions/
-│   └── /agent-template/base/ + /extensions/
-└── /docs/
-```
 
-### Phase 2: MPA v5.5 Package ✅
-- Copied 22 KB files to `/release/v5.5/agents/mpa/base/kb/`
-- Copied copilot instructions (MPA_v55_Instructions_Uplift.txt)
-- Copied flow definitions and specifications
-- Copied Azure Functions (mpa_functions)
-- Copied schema (dataverse + validation)
-- Copied adaptive cards (6 JSON files)
-- Copied templates (2 docx + 1 txt)
-- Copied seed data (4 CSVs: vertical, channel, kpi, benchmark)
-- Copied 18 deployment docs
-
-### Phase 3: EAP Core (PARTIAL) ⏳
-**Completed:**
-- eap_session.json schema
-- eap_user.json schema  
-- eap_client.json schema (may be incomplete)
-- eap_featureflag.json schema
-- eap_agentregistry.json schema
-- Interface contracts (SESSION_CONTRACT.md, AGENT_REGISTRATION.md, etc.)
-- environment.template.json
-- feature_flags.template.json
-- security_roles.template.json
-
-**Needs Verification:**
-- Completeness of all schema files
-- eap_client.json was being written when session ended
+### Phase 2: MPA v5.5 Package ✅ DONE
+- 22 KB files copied to `/release/v5.5/agents/mpa/base/kb/`
+- Copilot instructions, flows, functions, schemas, cards, templates, seed data
+- 18 deployment docs
 
 ---
 
-## REMAINING WORK
+## CURRENT PHASE: PHASE 3 - EAP CORE (IN PROGRESS)
 
-### Phase 3: Complete EAP Core Verification
-1. Verify eap_client.json is complete
-2. Verify all interface contracts are complete
-3. Review and finalize feature_flags.template.json
-4. Review and finalize security_roles.template.json
+### Created Files (need verification):
+```
+/release/v5.5/platform/
+├── /config/
+│   ├── environment.template.json
+│   └── feature_flags.template.json
+├── /eap-core/base/
+│   ├── /schema/tables/
+│   │   ├── eap_session.json
+│   │   ├── eap_user.json
+│   │   ├── eap_client.json
+│   │   ├── eap_featureflag.json
+│   │   └── eap_agentregistry.json
+│   └── /interfaces/
+│       ├── SESSION_CONTRACT.md
+│       ├── AGENT_REGISTRATION.md
+│       ├── FEATURE_FLAG_CONTRACT.md
+│       └── DATA_SOURCE_CONTRACT.md
+└── /security/base/
+    └── security_roles.template.json
+```
+
+### YOUR FIRST ACTION:
+```bash
+cd /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform
+ls -la release/v5.5/platform/eap-core/base/schema/tables/
+cat release/v5.5/platform/eap-core/base/schema/tables/eap_client.json
+```
+
+Verify eap_client.json is complete (it may have been truncated mid-write).
+
+---
+
+## REMAINING PHASES
 
 ### Phase 4: Platform Documentation
-1. Create/verify DEPLOYMENT_GUIDE.md in /release/v5.5/docs/
-2. Create/verify RELEASE_NOTES.md
-3. Create/verify CORPORATE_DEPLOYMENT_ADDENDUM.md
-4. Create/verify BRANCHING_AND_EXTENSION_GUIDE.md
+- Verify/create DEPLOYMENT_GUIDE.md in /release/v5.5/docs/
+- Verify/create RELEASE_NOTES.md
+- Verify/create CORPORATE_DEPLOYMENT_ADDENDUM.md
+- Verify/create BRANCHING_AND_EXTENSION_GUIDE.md
 
 ### Phase 5: CA and Agent Template Placeholders
-1. Create README.md for /agents/ca/base/
-2. Create README.md for /agents/agent-template/base/
+- Create README.md for /agents/ca/base/
+- Create README.md for /agents/agent-template/base/
 
-### Phase 6: GitHub Setup & Branches
-1. **YOU:** Create `Kessel-Digital-Agent-Platform` repo on GitHub
-2. Add remote: `git remote add origin https://github.com/kevcofett/Kessel-Digital-Agent-Platform.git`
-3. Push: `git push -u origin main`
-4. Create branch: `git checkout -b deploy/personal`
-5. Push branch: `git push -u origin deploy/personal`
-6. Create branch: `git checkout -b deploy/corporate` (from main)
-7. Push branch: `git push -u origin deploy/corporate`
-
-### Phase 7: Archive Original Repos (Optional)
-1. Rename `Media_Planning_Agent` → `Media_Planning_Agent_ARCHIVED_v55`
-2. Set to read-only in GitHub settings
-3. Update README with archive notice
+### Phase 6: Create Branches
+- Create `deploy/personal` branch
+- Create `deploy/corporate` branch (placeholder)
 
 ---
 
-## KEY ARCHITECTURE DECISIONS
+## KEY ARCHITECTURE DECISIONS (Already Made)
 
 ### Base vs Extensions Pattern
-- `/base/` = Shared across all environments, cherry-pick between branches
-- `/extensions/` = Environment-specific, stays in branch only
-- Extensions augment, never override base
+- `/base/` = Shared across all environments
+- `/extensions/` = Environment-specific (empty in main, populated in branches)
 
 ### Branch Strategy
 - `main` = Canonical v5.5 source of truth
 - `deploy/personal` = Kessel-Digital (Aragorn AI)
 - `deploy/corporate` = Mastercard environment
 
-### Naming Conventions
+### Naming
 - Personal: `Kessel-Digital-Agent-Platform`
-- Corporate: `Mastercard-Agent-Platform` (same internal structure)
-- Variable `{ORGANIZATION}` in configs for easy swap
+- Corporate: `Mastercard-Agent-Platform` (same structure, swap org name)
 
-### Corporate Requirements (for deploy/corporate branch)
+---
+
+## CORPORATE REQUIREMENTS (For Reference)
 - No external APIs (graceful degradation via feature flags)
 - Row-level security (BU/Dept/Team/Pod/Employee hierarchy)
 - Teams channel deployment
 - Enhanced audit logging
 - Confluence/SharePoint data sources
 - SSO-only authentication
-- Strict data firewalls
 
 ---
 
-## QUICK START FOR NEW SESSION
+## START INSTRUCTIONS FOR CLAUDE
 
-```bash
-# Verify local state
-cd /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform
-git status
-git log --oneline -3
-
-# Check what files exist
-ls -la release/v5.5/platform/eap-core/base/schema/tables/
-ls -la release/v5.5/docs/
-
-# Continue Phase 3 verification
-cat release/v5.5/platform/eap-core/base/schema/tables/eap_client.json
-```
-
----
-
-## FILES TO REFERENCE
-
-### In Platform Repo
-- `/README.md` - Platform overview
-- `/PLATFORM_ARCHITECTURE.md` - Full architecture docs
-- `/release/v5.5/platform/config/environment.template.json`
-- `/release/v5.5/platform/config/feature_flags.template.json`
-
-### In Original MPA Repo (for reference)
-- `/docs/audit/` - v5.5 audit trail
-- `/kb/` - 22 production KB files (copied to platform)
-
----
-
-## INSTRUCTION FOR CLAUDE
-
-When continuing this work:
-1. Read this continuation document first
-2. Verify the current state of both repos using git status
-3. Check which EAP schema files need completion
-4. Continue from Phase 3 verification
-5. User needs to create GitHub repo before Phase 6 can execute
+1. **DO NOT** search past chats or reference old work
+2. **READ** this document as the source of truth
+3. **VERIFY** Phase 3 files are complete by checking the platform repo
+4. **CONTINUE** from Phase 3 verification, then Phase 4-6
+5. **COMMIT AND PUSH** after each phase completion

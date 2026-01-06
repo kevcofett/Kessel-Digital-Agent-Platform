@@ -1,273 +1,354 @@
-# EAP and CA Compliance Audit Report
+# EAP and CA Compliance Audit Report - REVISED
 
 **Date:** 2026-01-06
 **Auditor:** Web Claude
-**Repository:** Kessel-Digital-Agent-Platform
-**Branch:** deploy/personal
-**Scope:** EAP Core Platform and Consulting Agent (CA)
+**Scope:** Enterprise AI Platform (EAP) and Consulting Agent (CA)
 
 ---
 
 ## EXECUTIVE SUMMARY
 
-| Component | Status | Action Required |
-|-----------|--------|-----------------|
-| EAP Core | PARTIAL COMPLIANCE | Schema standardization needed |
-| CA | NOT STARTED (Expected) | No action - planned for Feb 2026 |
-| 6-Rule Compliance | NOT APPLICABLE | EAP/CA have no KB files yet |
+**CRITICAL DISCOVERY:** CA and EAP are in SEPARATE REPOSITORIES, not in Kessel-Digital-Agent-Platform.
+
+| Repository | Location | Version | Status |
+|------------|----------|---------|--------|
+| Enterprise_AI_Platform | /Users/kevinbauer/Kessel-Digital/Enterprise_AI_Platform | 1.0.0 | ADVANCED |
+| Consulting_Agent | /Users/kevinbauer/Kessel-Digital/Consulting_Agent | 11.1.0 (V12 ready) | ADVANCED |
+| Kessel-Digital-Agent-Platform | /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform | MPA v5.5 | PRODUCTION |
+
+The CA is NOT a placeholder - it is a fully developed agent at version 11.1/12.0 with:
+- 35 KB files (436K chars, 51K words)
+- 52 industry benchmarks
+- 32 consulting frameworks
+- 8 Dataverse tables
+- 8 Power Automate flows
+- Azure Function for document generation
+- Full EAP integration
 
 ---
 
-## PART 1: EAP CORE PLATFORM AUDIT
+## PART 1: REPOSITORY STRUCTURE
 
-### 1.1 Component Inventory
+### Three-Repo Architecture
 
-| Category | Count | Files |
-|----------|-------|-------|
-| Table Schemas | 5 | eap_agentregistry, eap_client, eap_featureflag, eap_session, eap_user |
-| Flows | 1 | eap_initialize_session.json |
-| Interface Contracts | 4 | SESSION, FEATURE_FLAG, AGENT_REGISTRATION, DATA_SOURCE |
-| Extensions | 7 | Access control (5), audit (1), benchmarks (1) |
-| KB Files | 0 | None (EAP is infrastructure, not agent) |
-
-### 1.2 Schema Format Inconsistency (CRITICAL)
-
-**Finding:** Three different schema formats are in use across the platform.
-
-**EAP Format:**
-```json
-{
-  "table_name": "eap_session",
-  "columns": [
-    { "name": "eap_sessioncode", "type": "Text", "max_length": 50 }
-  ]
-}
+```
+/Users/kevinbauer/Kessel-Digital/
+├── Enterprise_AI_Platform/          # Shared infrastructure
+│   ├── .platform/VERSION.json       # v1.0.0
+│   ├── specs/                       # Dataverse, flows, topics
+│   ├── data/                        # 30+ seed data files
+│   ├── kb/                          # 7 shared KB files
+│   ├── azure_functions/             # Shared functions
+│   └── docs/                        # 50+ documentation files
+│
+├── Consulting_Agent/                # CA domain agent
+│   ├── .platform/VERSION.json       # v11.1.0
+│   ├── specs/copilot/               # V12 instructions (4,289 chars)
+│   ├── kb/                          # 35 KB files
+│   ├── data/                        # Benchmarks, KB registry seeds
+│   ├── azure_functions/             # Document generation
+│   ├── docs/                        # V12 deployment guides
+│   └── Old CA/                      # v4.5 through v11 archived
+│
+└── Kessel-Digital-Agent-Platform/   # MPA consolidated repo
+    └── release/v5.5/
+        ├── agents/mpa/              # Full MPA implementation
+        ├── agents/ca/               # PLACEHOLDER ONLY
+        └── platform/eap-core/       # Partial EAP representation
 ```
 
-**MPA Format (JSON Schema):**
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "properties": {
-    "mpa_channel_code": { "type": "string", "maxLength": 50 }
-  }
-}
-```
+### Implications
 
-**Extensions Format (I created):**
-```json
-{
-  "schemaName": "eap_mc_businessunit",
-  "columns": [
-    { "schemaName": "businessunit_id", "type": "Text", "maxLength": 50 }
-  ]
-}
-```
+1. CA development has been happening in a SEPARATE repo
+2. The /agents/ca/ in Kessel-Digital-Agent-Platform is just a placeholder
+3. Cross-repo standards exist in .platform/STANDARDS.md (identical across repos)
+4. EAP must be deployed BEFORE CA or MPA
 
-**Impact:** 
-- Inconsistent parsing logic required
-- Confusion for developers
-- Difficult to validate automatically
+---
 
-**Recommendation:** Standardize ALL schemas to ONE format. Recommend JSON Schema format (MPA style) as it provides:
-- Built-in validation
-- Industry standard
-- Self-documenting
+## PART 2: CONSULTING AGENT (CA) - FULL ASSESSMENT
 
-### 1.3 Missing Tables Referenced in Contracts
+### 2.1 Version State
 
-| Table | Referenced In | Status |
-|-------|---------------|--------|
-| eap_audit | SESSION_CONTRACT, multiple places | NOT DEFINED in /base/schema/ |
-| eap_datasource | DATA_SOURCE_CONTRACT | NOT DEFINED (documented as extension only) |
+| Attribute | Value |
+|-----------|-------|
+| VERSION.json | 11.1.0 |
+| Instructions File | V12 (4,289 chars) |
+| Agent Code | CONSULTING_AGENT |
+| Agent Type Value | 100000001 |
+| EAP Dependency | v1.0.0+ |
+| Last Sync | 2026-01-02 |
 
-**Analysis:**
-- `eap_audit` should be a BASE table (all environments need audit)
-- `eap_datasource` correctly documented as extension-only
+### 2.2 Component Inventory
 
-**Recommendation:** Create `eap_audit.json` in `/base/schema/tables/`
+| Category | Count | Details |
+|----------|-------|---------|
+| KB Files | 35 | 436,451 chars, 51,009 words total |
+| Benchmarks | 52 | Across 5 categories |
+| Frameworks | 32 | Strategic, Competitive, Customer, Operations, Innovation |
+| Dataverse Tables | 8 | CA-domain tables |
+| Power Automate Flows | 8 | flow_50 through flow_57 |
+| Azure Functions | 1 | GenerateConsultingDeliverable |
+| Copilot Topics | 8 | topic_20 through topic_27 |
+| EAP Topic References | 11 | topic_01 through topic_18 (shared) |
 
-### 1.4 Interface Contracts Quality
+### 2.3 KB Files Detail
 
-| Contract | Lines | Quality | Notes |
-|----------|-------|---------|-------|
-| SESSION_CONTRACT.md | 123 | EXCELLENT | Complete, well-structured |
-| FEATURE_FLAG_CONTRACT.md | 170 | EXCELLENT | Complete, includes examples |
-| AGENT_REGISTRATION.md | 153 | EXCELLENT | Complete, good templates |
-| DATA_SOURCE_CONTRACT.md | 197 | EXCELLENT | Complete, correct extension pattern |
+| Category | Files | Chars | Notes |
+|----------|-------|-------|-------|
+| FRAMEWORK | 4 | 62,359 | 32 frameworks |
+| BEHAVIORAL | 2 | 14,306 | Routing + graceful degradation |
+| INDUSTRY | 1 | 7,971 | 7 verticals |
+| REFERENCE | 14 | 274,181 | Vendors, demographics, glossary |
+| REGISTRY | 5 | 56,623 | Benchmarks, URLs |
+| QUALITY | 2 | ~20,000 | Source quality, research indicators |
 
-**Finding:** All interface contracts are well-documented and follow consistent structure.
+### 2.4 Dataverse Tables (CA Domain)
 
-### 1.5 Flow Definitions
+| Table | Purpose | EAP Reference |
+|-------|---------|---------------|
+| ca_engagement | Consulting engagements | FK to eap_client |
+| ca_deliverable | Deliverable documents | FK to eap_outputs |
+| ca_framework | 32 framework definitions | Standalone |
+| ca_assessment | Client assessments | FK to eap_outputs |
+| ca_consulting_sessions | CA session extension | FK to eap_session |
+| ca_framework_applications | Framework usage tracking | FK to ca_consulting_sessions |
+| ca_analyses | Analysis outputs | FK to eap_outputs |
+| ca_recommendations | Recommendations | FK to eap_outputs |
 
-| Flow | Status | Notes |
+### 2.5 6-Rule Compliance
+
+| Rule | Status | Notes |
 |------|--------|-------|
-| eap_initialize_session.json | EXISTS | Needs location move per restructure plan |
+| 1. Plain text (.txt) | PASS | All 35 files |
+| 2. UTF-8 encoding | PASS | No special chars |
+| 3. Section headers (===, ---) | PASS | Consistent |
+| 4. One concept per line | PARTIAL | FRAMEWORK_Library_Master has long lines |
+| 5. No code blocks | PASS | Clean |
+| 6. Size limits | PASS | Largest: 35K chars |
 
-**Finding:** Only 1 EAP flow defined. Based on contracts, these additional flows should exist:
-- eap_check_feature_flag
-- eap_update_session
-- eap_complete_session
-- eap_get_user_or_create
+### 2.6 Quality Issues
 
-**Recommendation:** Either create these flows or document they are implemented inline in agent flows.
-
-### 1.6 EAP Compliance Summary
-
-| Requirement | Status | Action |
-|-------------|--------|--------|
-| Base tables defined | PARTIAL | Add eap_audit |
-| Schema format consistent | FAIL | Standardize to JSON Schema |
-| Interface contracts complete | PASS | All 4 documented |
-| Extensions properly isolated | PASS | In /extensions/ folder |
-| Feature flag pattern | PASS | Well documented |
-| Session management | PASS | CONTRACT + table + flow exist |
+| Priority | Issue | File | Impact |
+|----------|-------|------|--------|
+| MEDIUM | Long lines (13 lines, 34K chars) | FRAMEWORK_Library_Master_v1.txt | Parseability |
+| LOW | V7 reference in header | REFERENCE_Glossary_v1.txt | Cosmetic |
+| LOW | 29 failing tests | tests/ | V7/V10 path references |
+| LOW | Version mismatch | appPackage/instruction.txt | V11.1 content vs V12 |
 
 ---
 
-## PART 2: CONSULTING AGENT (CA) AUDIT
+## PART 3: ENTERPRISE AI PLATFORM (EAP) - FULL ASSESSMENT
 
-### 2.1 Current State
+### 3.1 Version State
 
-| Component | Status |
-|-----------|--------|
-| Folder structure | EXISTS (/agents/ca/base/, /agents/ca/extensions/) |
-| README.md | EXISTS |
-| KB files | NONE |
-| Table schemas | NONE |
-| Flow definitions | NONE |
-| Copilot instructions | NONE |
+| Attribute | Value |
+|-----------|-------|
+| VERSION.json | 1.0.0 |
+| Agent Code | null (infrastructure) |
+| Last Sync | 2026-01-02 |
 
-### 2.2 Assessment
+### 3.2 Tables Owned
 
-**Finding:** CA is correctly set up as a placeholder for future development.
+| Table | Purpose |
+|-------|---------|
+| eap_session | Shared session management |
+| eap_user | User records |
+| eap_client | Client records |
+| eap_learning | Knowledge capture |
+| eap_feedback | User feedback |
+| eap_audit | Audit trail |
+| eap_config | Configuration |
 
-Per CA_Agent_Roadmap_and_Starter.md:
-- Development planned for ~1 month after MPA deployment
-- 6-phase, 6-week project
-- Uses shared EAP infrastructure
+### 3.3 Seed Data Files
 
-**Status:** NO ACTION REQUIRED - CA is not yet in development.
+The EAP repo contains 30+ seed data files:
+
+| File | Purpose |
+|------|---------|
+| eap_agents.json | Agent registry |
+| eap_clients.json | Client records |
+| eap_users.json | User records |
+| eap_feature_flags.json | Feature toggles |
+| eap_kb_registry.json | KB file registry |
+| eap_config_definitions.json | Config definitions |
+| eap_approval_statuses.json | Approval workflow |
+| eap_output_types.json | Output type definitions |
+| eap_industries.json | Industry codes |
+| eap_business_units.json | Org structure |
+| ca_frameworks.json | CA framework seeds |
+| ca_benchmarks.json | CA benchmark seeds |
+| + 18 more... | Various reference data |
+
+### 3.4 KB Files
+
+| File | Category |
+|------|----------|
+| BEHAVIORAL_Service_Availability_v1.txt | Graceful degradation |
+| BENCHMARK_Industry_KPIs_v1.txt | KPI reference |
+| FRAMEWORK_Library_v1.txt | Framework summary |
+| INDUSTRY_Vertical_Expertise_v1.txt | Industry guide |
+| REFERENCE_Research_Routing_v1.txt | Research routing |
+| REGISTRY_Available_Integrations_v1.txt | Integration list |
+| TOOLS_Consulting_Methods_v1.txt | Consulting tools |
+
+### 3.5 Azure Functions
+
+| Function | Purpose |
+|----------|---------|
+| chat/ | Chat handling |
+| sessions/ | Session management |
+| webhooks/ | External integrations |
+| data/ | Data operations |
+| llm-router/ | LLM routing |
 
 ---
 
-## PART 3: 6-RULE COMPLIANCE CHECK
+## PART 4: CROSS-REPO STANDARDS
 
-### 3.1 Applicability
+### 4.1 STANDARDS.md Compliance
 
-The 6-Rule Compliance Framework applies to:
-- KB files for Copilot Studio
-- Agent instruction files
-- SharePoint-hosted documents
+The .platform/STANDARDS.md file is IDENTICAL across all three repos.
 
-### 3.2 Assessment
+| Section | Requirement | Status |
+|---------|-------------|--------|
+| Naming | Singular table names | COMPLIANT |
+| Naming | {prefix}_{field} columns | COMPLIANT |
+| Naming | Agent codes (MPA_AGENT, CONSULTING_AGENT) | COMPLIANT |
+| Structure | Required folders | COMPLIANT |
+| 6-Rule | KB file formatting | MOSTLY COMPLIANT |
+| Validation | Pre-commit checks | DOCUMENTED |
 
-| Component | Has KB Files | 6-Rule Applicable |
-|-----------|--------------|-------------------|
-| EAP Core | No | NOT APPLICABLE |
-| CA | No | NOT APPLICABLE |
-| MPA | Yes (22 files) | YES - separate audit needed |
+### 4.2 Table Ownership
 
-**Finding:** EAP is infrastructure (no KB). CA is not started. 6-Rule audit only applies to MPA KB files.
+| Repo | Tables Owned |
+|------|--------------|
+| EAP | eap_session, eap_user, eap_client, eap_learning, eap_feedback, eap_audit, eap_config |
+| MPA | mpa_mediaplan, mpa_channel, mpa_benchmark, mpa_kpi, mpa_partner, mpa_vertical, etc. |
+| CA | ca_engagement, ca_deliverable, ca_framework, ca_assessment |
 
 ---
 
-## PART 4: MPA v5.5 ALIGNMENT CHECK
+## PART 5: MPA v5.5 ALIGNMENT CHECK
 
-### 4.1 EAP-MPA Integration Points
+### 5.1 CA-MPA Compatibility
 
-| Integration | MPA v5.5 | EAP Support | Status |
-|-------------|----------|-------------|--------|
+Per CA_MPA_v52_Compatibility.md:
+
+| Check | Result |
+|-------|--------|
+| CA references MPA pathways | NO - independent |
+| CA queries MPA tables | NO - independent |
+| CA depth tiers conflict with MPA | NO - different systems |
+| CA can coexist with MPA v5.2+ | YES |
+
+### 5.2 EAP-MPA Integration
+
+| Integration Point | MPA v5.5 | EAP Support | Status |
+|-------------------|----------|-------------|--------|
 | Session Management | Uses eap_session | Defined | ALIGNED |
 | User Management | Uses eap_user | Defined | ALIGNED |
 | Client Context | Uses eap_client | Defined | ALIGNED |
 | Feature Flags | Uses eap_featureflag | Defined | ALIGNED |
-| Agent Registry | Registered as MPA | Defined | ALIGNED |
-| Audit Logging | References eap_audit | NOT DEFINED | GAP |
+| Audit Logging | References eap_audit | Defined | ALIGNED |
 
-### 4.2 Schema Prefix Alignment
+### 5.3 Architectural Alignment
 
-| Convention | Expected | Actual | Status |
-|------------|----------|--------|--------|
-| EAP tables | eap_ | eap_ | PASS |
-| MPA tables | mpa_ | mpa_ | PASS |
-| Extension tables | eap_mc_ or mpa_mc_ | eap_mc_, mpa_mc_ | PASS |
-
----
-
-## PART 5: REMEDIATION PLAN
-
-### Priority 1: Schema Standardization (HIGH)
-
-**Task:** Convert all schemas to JSON Schema format
-
-| Schema Set | File Count | Effort |
-|------------|------------|--------|
-| EAP base tables | 5 | 2 hours |
-| Extensions | 7 | 2 hours |
-| MPA tables (already JSON Schema) | ~8 | 0 hours |
-
-**Acceptance Criteria:**
-- All schemas use $schema declaration
-- All use consistent property naming (camelCase or snake_case)
-- All include metadata block
-- All pass JSON Schema validation
-
-### Priority 2: Add Missing eap_audit Table (HIGH)
-
-**Task:** Create eap_audit.json in /base/schema/tables/
-
-**Fields Required:**
-- audit_id (primary key)
-- session_id (lookup to eap_session)
-- user_id (lookup to eap_user)
-- action_type (choice)
-- resource_type (text)
-- resource_id (text)
-- timestamp (datetime)
-- details (memo/JSON)
-
-### Priority 3: Document Missing Flows (MEDIUM)
-
-**Task:** Either create flow definitions or document that functionality is inline
-
-| Flow | Action |
-|------|--------|
-| eap_check_feature_flag | Create or document |
-| eap_update_session | Create or document |
-| eap_complete_session | Create or document |
-| eap_get_user_or_create | Create or document |
-
-### Priority 4: Repository Restructure (MEDIUM)
-
-**Task:** Execute MPA_Repository_Restructure_Plan.md
-
-This will:
-- Move schemas to /schema/tables/ and /schema/flows/
-- Standardize folder structure
-- Enable easier compliance checking
+| Pattern | MPA | CA | EAP | Alignment |
+|---------|-----|-----|-----|-----------|
+| Lean Orchestration | YES | YES | N/A | ALIGNED |
+| Rich Knowledge Base | YES | YES | YES | ALIGNED |
+| Graceful Degradation | YES | YES | YES | ALIGNED |
+| Feature Flags | YES | YES | YES | ALIGNED |
+| Session Isolation | YES | YES | YES | ALIGNED |
+| 6-Rule KB Format | YES | MOSTLY | YES | MOSTLY ALIGNED |
 
 ---
 
-## PART 6: SIGN-OFF
+## PART 6: CONSOLIDATION RECOMMENDATIONS
 
-### Audit Complete
+### Option A: Keep Separate Repos (Current State)
 
-- [x] EAP Core reviewed
-- [x] CA status confirmed
-- [x] 6-Rule applicability assessed
-- [x] MPA alignment checked
-- [x] Remediation plan created
+**Pros:**
+- Clear ownership boundaries
+- Independent versioning
+- Smaller, focused repos
 
-### Next Steps
+**Cons:**
+- Three repos to maintain
+- Cross-repo synchronization required
+- Duplicate infrastructure in Kessel-Digital-Agent-Platform
 
-1. Execute repository restructure (VS Code Claude)
-2. Standardize schema formats (Web Claude can create)
-3. Add missing eap_audit table (Web Claude can create)
-4. Document or create missing flows
+### Option B: Consolidate into Kessel-Digital-Agent-Platform
+
+**Pros:**
+- Single source of truth
+- Unified deployment
+- Easier cross-agent coordination
+
+**Cons:**
+- Large migration effort
+- Risk of breaking existing deployments
+- Need to preserve version history
+
+### Recommendation
+
+**Phase 1 (Immediate):** Keep separate repos, ensure .platform/STANDARDS.md sync
+**Phase 2 (Post-MPA deployment):** Plan consolidation migration
+**Phase 3 (Q2 2026):** Execute consolidation if business need justifies
+
+---
+
+## PART 7: REMEDIATION PLAN
+
+### CA Repository
+
+| Priority | Task | Effort |
+|----------|------|--------|
+| HIGH | Fix FRAMEWORK_Library_Master_v1.txt long lines | 1 hour |
+| MEDIUM | Update failing tests to V12 paths | 4 hours |
+| MEDIUM | Sync appPackage/instruction.txt to V12 | 30 min |
+| LOW | Update glossary header to V12 | 10 min |
+
+### EAP Repository
+
+| Priority | Task | Effort |
+|----------|------|--------|
+| HIGH | Verify all seed data imports correctly | 2 hours |
+| MEDIUM | Document flow dependency order | 1 hour |
+| LOW | Add missing flow documentation | 4 hours |
+
+### Kessel-Digital-Agent-Platform
+
+| Priority | Task | Effort |
+|----------|------|--------|
+| HIGH | Update CA placeholder README | 30 min |
+| HIGH | Document actual CA location | 30 min |
+| MEDIUM | Align EAP core with standalone repo | 4 hours |
+
+---
+
+## PART 8: CORRECTED CA_Agent_Roadmap_and_Starter.md
+
+The document I created earlier (CA_Agent_Roadmap_and_Starter.md) contains INACCURATE information. It describes CA as a future project when CA is actually a mature agent at V11.1/V12.
+
+**Action Required:** Delete or replace CA_Agent_Roadmap_and_Starter.md with accurate information pointing to the actual Consulting_Agent repository.
+
+---
+
+## SUMMARY
+
+| Component | Actual State | Previous Assessment |
+|-----------|--------------|---------------------|
+| CA | V11.1/V12, 35 KB files, 52 benchmarks, fully developed | "NOT STARTED" (WRONG) |
+| EAP | V1.0.0, 7 tables, 30+ seed files, fully developed | "PARTIAL" (UNDERSTATED) |
+| Cross-repo standards | Established and synced | Not assessed |
+| Consolidation status | THREE SEPARATE REPOS | Assumed single repo |
+
+**Overall:** Both CA and EAP are significantly more developed than initially assessed. The challenge is not building them - it's consolidating and aligning them with MPA v5.5.
 
 ---
 
 **Report Generated:** 2026-01-06
 **Auditor:** Web Claude
-**Status:** COMPLETE - REMEDIATION REQUIRED
+**Status:** REVISED - ACCURATE ASSESSMENT

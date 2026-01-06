@@ -1,0 +1,716 @@
+TESTING REFERENCE
+MPA V5.5 CORPORATE DEPLOYMENT
+VERSION 1.0
+
+============================================================
+OVERVIEW
+============================================================
+
+This document provides complete test scenarios for validating MPA v5.5 deployment. Execute all tests after deployment to verify system functionality.
+
+TEST CATEGORIES
+- Infrastructure Tests - Dataverse tables and connections
+- Data Tests - Seed data and lookups
+- Flow Tests - Power Automate flows
+- Agent Tests - Copilot Studio functionality
+- Integration Tests - End to end workflows
+- Security Tests - Access control and permissions
+
+============================================================
+INFRASTRUCTURE TESTS
+============================================================
+
+TEST INF-01 - DATAVERSE TABLES EXIST
+
+Purpose
+Verify all required tables are created
+
+Steps
+1 Open make.powerapps.com
+2 Select environment
+3 Open MPA solution
+4 Click Tables
+
+Expected Results
+- mpa_vertical exists
+- mpa_channel exists
+- mpa_kpi exists
+- mpa_benchmark exists
+- mpa_errorlog exists
+- mpa_mediaplan exists
+- mpa_planversion exists
+- mpa_plandata exists
+
+Pass Criteria
+All 8 tables present in solution
+
+TEST INF-02 - TABLE COLUMNS CORRECT
+
+Purpose
+Verify all columns are created with correct types
+
+Steps
+1 Open each table
+2 Click Columns
+3 Verify column names and types
+
+Expected Results
+- All columns from specification exist
+- Data types match specification
+- Required fields marked correctly
+- Choice values configured correctly
+
+Pass Criteria
+All columns match specification document
+
+TEST INF-03 - LOOKUP RELATIONSHIPS CONFIGURED
+
+Purpose
+Verify lookup fields link to correct tables
+
+Steps
+1 Open mpa_planversion table
+2 Verify mpa_mediaplan lookup points to Media Plan table
+3 Open mpa_plandata table
+4 Verify mpa_mediaplan lookup points to Media Plan table
+5 Verify mpa_planversion lookup points to Plan Version table
+
+Expected Results
+All lookups resolve to correct parent tables
+
+Pass Criteria
+All lookup relationships functional
+
+TEST INF-04 - CONNECTION REFERENCES VALID
+
+Purpose
+Verify connection references are authenticated
+
+Steps
+1 Open MPA solution
+2 Click Connection References
+3 Check MPA Dataverse Connection status
+4 Check MPA SharePoint Connection status
+
+Expected Results
+- Both connections show as Connected
+- No authentication errors
+- Correct credentials linked
+
+Pass Criteria
+All connections authenticated and functional
+
+============================================================
+DATA TESTS
+============================================================
+
+TEST DAT-01 - VERTICAL SEED DATA
+
+Purpose
+Verify vertical seed data imported correctly
+
+Steps
+1 Open mpa_vertical table
+2 Click Data tab
+3 Count total records
+4 Verify sample records
+
+Expected Results
+- 12 vertical records exist
+- RETAIL vertical present with correct code
+- FINANCE vertical present with correct code
+- All records have IsActive set to Yes
+
+Pass Criteria
+12 records with correct data
+
+TEST DAT-02 - CHANNEL SEED DATA
+
+Purpose
+Verify channel seed data imported correctly
+
+Steps
+1 Open mpa_channel table
+2 Click Data tab
+3 Count total records
+4 Verify sample records
+
+Expected Results
+- 43 channel records exist
+- DISPLAY channel present with Digital category
+- VIDEO channel present with Digital category
+- LINEAR_TV channel present with Traditional category
+- CPM ranges populated for applicable channels
+
+Pass Criteria
+43 records with correct data
+
+TEST DAT-03 - KPI SEED DATA
+
+Purpose
+Verify KPI seed data imported correctly
+
+Steps
+1 Open mpa_kpi table
+2 Click Data tab
+3 Count total records
+4 Verify sample records
+
+Expected Results
+- 44 KPI records exist
+- CPM KPI present with Cost category
+- CTR KPI present with Engagement category
+- CVR KPI present with Conversion category
+- Formulas populated for all KPIs
+
+Pass Criteria
+44 records with correct data
+
+TEST DAT-04 - BENCHMARK SEED DATA
+
+Purpose
+Verify benchmark seed data imported correctly
+
+Steps
+1 Open mpa_benchmark table
+2 Click Data tab
+3 Count total records
+4 Verify sample records
+
+Expected Results
+- 794 benchmark records exist
+- Benchmarks exist for multiple verticals
+- Benchmarks exist for multiple channels
+- Metric values are within reasonable ranges
+- Data sources and periods populated
+
+Pass Criteria
+794 records with correct data
+
+TEST DAT-05 - BENCHMARK LOOKUP VALUES
+
+Purpose
+Verify benchmark records can filter by vertical channel and KPI
+
+Steps
+1 Open mpa_benchmark table
+2 Filter by mpa_verticalcode equals RETAIL
+3 Count filtered results
+4 Filter by mpa_channelcode equals DISPLAY
+5 Count filtered results
+6 Filter by mpa_kpicode equals CPM
+7 Count filtered results
+
+Expected Results
+- Filtering by vertical returns subset
+- Filtering by channel returns subset
+- Filtering by KPI returns subset
+- Combined filters work correctly
+
+Pass Criteria
+All filters return expected results
+
+============================================================
+FLOW TESTS
+============================================================
+
+TEST FLW-01 - MPA SEARCH CHANNELS FLOW
+
+Purpose
+Verify channel search flow returns data
+
+Steps
+1 Open Power Automate
+2 Find MPA Search Channels flow
+3 Click Test
+4 Select Manually
+5 Enter test inputs
+   - category - Digital
+   - funnelStage - leave blank
+   - minBudget - 0
+6 Click Run flow
+
+Expected Results
+- Flow completes successfully
+- channelsJson contains channel data
+- totalCount greater than 0
+- status equals success
+
+Pass Criteria
+Flow returns filtered channel data
+
+TEST FLW-02 - MPA SEARCH BENCHMARKS FLOW
+
+Purpose
+Verify benchmark search flow returns data
+
+Steps
+1 Open Power Automate
+2 Find MPA Search Benchmarks flow
+3 Click Test
+4 Select Manually
+5 Enter test inputs
+   - vertical - RETAIL
+   - channel - DISPLAY
+   - metricType - CPM
+6 Click Run flow
+
+Expected Results
+- Flow completes successfully
+- benchmarksJson contains benchmark data
+- totalResults greater than 0
+- status equals success
+
+Pass Criteria
+Flow returns filtered benchmark data
+
+TEST FLW-03 - MPA INITIALIZE SESSION FLOW
+
+Purpose
+Verify session creation flow works
+
+Steps
+1 Open Power Automate
+2 Find MPA Initialize Session flow
+3 Click Test
+4 Select Manually
+5 Enter test inputs
+   - userId - test@company.com
+   - clientId - TEST-CLIENT
+   - vertical - RETAIL
+   - sessionType - Planning
+6 Click Run flow
+
+Expected Results
+- Flow completes successfully
+- sessionId returned
+- status equals active
+- message confirms creation
+
+Pass Criteria
+Session created successfully
+
+TEST FLW-04 - MPA CREATE PLAN FLOW
+
+Purpose
+Verify plan creation flow works
+
+Steps
+1 Open Power Automate
+2 Find MPA Create Plan flow
+3 Click Test
+4 Select Manually
+5 Enter test inputs
+   - sessionId - (from previous test)
+   - clientId - TEST-CLIENT
+   - campaignName - Test Campaign
+   - vertical - RETAIL
+   - pathway - GUIDED
+6 Click Run flow
+
+Expected Results
+- Flow completes successfully
+- planId returned
+- planCode generated with PLN prefix
+- status equals success
+
+Pass Criteria
+Plan record created in Dataverse
+
+TEST FLW-05 - MPA SAVE SECTION FLOW
+
+Purpose
+Verify section save flow works
+
+Steps
+1 Open Power Automate
+2 Find MPA Save Section flow
+3 Click Test
+4 Select Manually
+5 Enter test inputs
+   - planId - (from previous test)
+   - sectionType - ClientContext
+   - sectionData - {"company":"Test Co","industry":"Retail"}
+   - stepNumber - 1
+   - sectionStatus - Complete
+6 Click Run flow
+
+Expected Results
+- Flow completes successfully
+- sectionId returned
+- currentStep equals 1
+- status equals success
+
+Pass Criteria
+Section record created in Dataverse
+
+TEST FLW-06 - MPA VALIDATE PLAN FLOW
+
+Purpose
+Verify plan validation flow works
+
+Steps
+1 Open Power Automate
+2 Find MPA Validate Plan flow
+3 Click Test
+4 Select Manually
+5 Enter test inputs
+   - planId - (from previous test)
+   - gateNumber - 1
+   - planDataJson - (current plan data)
+6 Click Run flow
+
+Expected Results
+- Flow completes successfully
+- gateStatus returned (passed or failed or warning)
+- validationResultsJson contains details
+- missingFieldsJson lists any gaps
+
+Pass Criteria
+Validation executed and results returned
+
+TEST FLW-07 - MPA GENERATE DOCUMENT FLOW
+
+Purpose
+Verify document generation flow works
+
+Steps
+1 Open Power Automate
+2 Find MPA Generate Document flow
+3 Click Test
+4 Select Manually
+5 Enter test inputs
+   - planId - (from completed plan)
+   - planDataJson - (complete plan data)
+6 Click Run flow
+
+Expected Results
+- Flow completes successfully
+- documentUrl contains SharePoint link
+- documentName ends with .docx
+- status equals success
+
+Pass Criteria
+Word document created in SharePoint
+
+============================================================
+AGENT TESTS
+============================================================
+
+TEST AGT-01 - AGENT RESPONDS
+
+Purpose
+Verify agent responds to basic greeting
+
+Steps
+1 Open Copilot Studio
+2 Open Media Planning Agent
+3 Click Test
+4 Send message - Hello
+
+Expected Results
+- Agent responds within 5 seconds
+- Response is contextually appropriate
+- Agent introduces itself as media planning advisor
+
+Pass Criteria
+Agent responds appropriately
+
+TEST AGT-02 - KNOWLEDGE BASE ACCESS
+
+Purpose
+Verify agent can access knowledge base content
+
+Steps
+1 Open agent test panel
+2 Send message - What CPM range should I expect for retail display advertising
+3 Observe response
+
+Expected Results
+- Agent provides CPM benchmark information
+- Response cites knowledge source
+- Values align with benchmark data
+
+Pass Criteria
+Agent references knowledge base content
+
+TEST AGT-03 - ACTION INVOCATION
+
+Purpose
+Verify agent can invoke flow actions
+
+Steps
+1 Open agent test panel
+2 Send message - I want to create a new media plan
+3 Follow prompts to provide campaign name
+4 Observe action execution
+
+Expected Results
+- Agent asks for required information
+- Agent invokes MPA Create Plan action
+- Plan ID returned in conversation
+- Agent guides to next step
+
+Pass Criteria
+Action executed successfully
+
+TEST AGT-04 - MULTI-TURN CONVERSATION
+
+Purpose
+Verify agent maintains context across turns
+
+Steps
+1 Open agent test panel
+2 Send message - I want to plan a campaign for a retail client
+3 Send message - The budget is 500000 dollars
+4 Send message - It should run for 3 months starting in March
+5 Observe context retention
+
+Expected Results
+- Agent remembers retail client context
+- Agent associates budget with campaign
+- Agent understands timeline reference
+- No repeated questions for already provided info
+
+Pass Criteria
+Context maintained across conversation
+
+TEST AGT-05 - BENCHMARK SEARCH ACTION
+
+Purpose
+Verify agent can search benchmarks via action
+
+Steps
+1 Open agent test panel
+2 Send message - Show me CTR benchmarks for finance industry video ads
+3 Observe response
+
+Expected Results
+- Agent invokes MPA Search Benchmarks action
+- Results returned for finance vertical
+- Results filtered to video channel
+- Results filtered to CTR metric
+
+Pass Criteria
+Benchmark data returned correctly
+
+============================================================
+INTEGRATION TESTS
+============================================================
+
+TEST INT-01 - COMPLETE PLAN CREATION WORKFLOW
+
+Purpose
+Verify end to end plan creation works
+
+Steps
+1 Open agent in Teams or test panel
+2 Request to create a new media plan
+3 Provide campaign name - Integration Test Campaign
+4 Provide client - Test Client Inc
+5 Provide vertical - Retail
+6 Complete Step 1 Client Context
+7 Complete Step 2 Objectives
+8 Complete Step 3 Budget
+9 Complete Step 4 Timeline
+10 Complete Step 5 Audience
+11 Complete Step 6 Channels
+12 Complete Step 7 Measurement
+13 Request document generation
+
+Expected Results
+- Session created successfully
+- Plan record created in Dataverse
+- Each section saved correctly
+- Gates validated at checkpoints
+- Document generated successfully
+
+Pass Criteria
+Full workflow completes without errors
+
+TEST INT-02 - BENCHMARK INTEGRATION
+
+Purpose
+Verify benchmarks inform planning
+
+Steps
+1 Start new planning session
+2 Set vertical to Retail
+3 Set channel mix to include Display and Video
+4 Request benchmark recommendations
+5 Verify benchmarks match vertical and channels
+
+Expected Results
+- Benchmarks filtered to Retail vertical
+- Benchmarks include Display metrics
+- Benchmarks include Video metrics
+- Values reasonable for industry
+
+Pass Criteria
+Relevant benchmarks provided
+
+TEST INT-03 - DOCUMENT GENERATION CONTENT
+
+Purpose
+Verify generated document contains plan data
+
+Steps
+1 Complete a full media plan
+2 Generate document
+3 Download document from SharePoint
+4 Open in Word
+5 Review contents
+
+Expected Results
+- Document contains campaign name
+- Document contains client information
+- Document contains budget breakdown
+- Document contains channel recommendations
+- Document contains timeline
+- Document contains measurement plan
+
+Pass Criteria
+All plan sections present in document
+
+============================================================
+SECURITY TESTS
+============================================================
+
+TEST SEC-01 - UNAUTHORIZED ACCESS BLOCKED
+
+Purpose
+Verify users cannot access data outside their scope
+
+Steps
+1 Log in as Pod level user
+2 Create a media plan
+3 Log out
+4 Log in as different Pod user (different pod)
+5 Attempt to view the plan
+
+Expected Results
+- Plan not visible to different pod user
+- No error messages expose data
+- Access denied gracefully
+
+Pass Criteria
+Row level security enforced
+
+TEST SEC-02 - TEAM LEVEL ACCESS
+
+Purpose
+Verify managers can see team member data
+
+Steps
+1 Log in as Pod level user
+2 Create a media plan
+3 Log out
+4 Log in as Team manager (same team)
+5 Attempt to view the plan
+
+Expected Results
+- Plan visible to team manager
+- Manager can view all details
+- Manager can edit if permissions allow
+
+Pass Criteria
+Hierarchical access works correctly
+
+TEST SEC-03 - AUDIT LOGGING
+
+Purpose
+Verify access is logged for audit
+
+Steps
+1 Log in as any user
+2 Access a media plan
+3 Edit the plan
+4 Save changes
+5 Check audit log table
+
+Expected Results
+- View event logged
+- Edit event logged
+- User ID recorded
+- Timestamp recorded
+- Record ID captured
+
+Pass Criteria
+All access events logged
+
+============================================================
+PERFORMANCE TESTS
+============================================================
+
+TEST PRF-01 - BENCHMARK SEARCH RESPONSE TIME
+
+Purpose
+Verify benchmark searches complete quickly
+
+Steps
+1 Open agent test panel
+2 Time the following query
+3 Send message - Show me all CPM benchmarks for retail
+4 Record response time
+
+Expected Results
+- Response received within 10 seconds
+- Results complete (not truncated)
+
+Pass Criteria
+Response time under 10 seconds
+
+TEST PRF-02 - PLAN CREATION TIME
+
+Purpose
+Verify plan creation is responsive
+
+Steps
+1 Open agent test panel
+2 Start timer
+3 Request new plan creation
+4 Provide required inputs
+5 Stop timer when plan confirmed
+
+Expected Results
+- Plan creation within 15 seconds
+- No timeout errors
+- Confirmation received
+
+Pass Criteria
+Plan created within 15 seconds
+
+TEST PRF-03 - DOCUMENT GENERATION TIME
+
+Purpose
+Verify document generation completes reasonably
+
+Steps
+1 Complete a media plan
+2 Start timer
+3 Request document generation
+4 Stop timer when URL received
+
+Expected Results
+- Document generated within 60 seconds
+- URL accessible
+- Document downloadable
+
+Pass Criteria
+Document generated within 60 seconds
+
+============================================================
+TEST EXECUTION LOG
+============================================================
+
+Use this template to record test results
+
+TEST ID - 
+TESTER - 
+DATE - 
+RESULT - Pass or Fail
+NOTES - 
+
+============================================================
+END OF DOCUMENT
+============================================================

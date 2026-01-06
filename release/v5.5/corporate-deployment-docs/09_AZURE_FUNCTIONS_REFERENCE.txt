@@ -1,0 +1,647 @@
+AZURE FUNCTIONS REFERENCE
+MPA V5.5 CORPORATE DEPLOYMENT
+VERSION 1.0
+
+============================================================
+OVERVIEW
+============================================================
+
+This document provides complete specifications for Azure Functions required by MPA v5.5. Functions handle complex calculations and document generation that cannot be performed in Power Automate.
+
+FUNCTION APP NAME
+func-aragorn-mpa (personal environment)
+func-corporate-mpa (corporate environment)
+
+RUNTIME
+Python 3.9
+
+HOSTING PLAN
+Consumption (recommended for cost)
+Premium (recommended for performance)
+
+============================================================
+FUNCTION LIST
+============================================================
+
+Function 1 - SessionManager
+- Endpoint - /api/session
+- Method - POST
+- Purpose - Create and manage planning sessions
+
+Function 2 - SearchBenchmarks
+- Endpoint - /api/search-benchmarks
+- Method - POST
+- Purpose - Advanced benchmark search with scoring
+
+Function 3 - CalculateAllocation
+- Endpoint - /api/allocation
+- Method - POST
+- Purpose - Calculate optimal budget allocation
+
+Function 4 - RunProjections
+- Endpoint - /api/projections
+- Method - POST
+- Purpose - Generate performance projections
+
+Function 5 - ValidateGate
+- Endpoint - /api/validate-gate
+- Method - POST
+- Purpose - Validate plan against gate requirements
+
+Function 6 - GenerateDocument
+- Endpoint - /api/generate-media-plan-document
+- Method - POST
+- Purpose - Generate Word document from plan data
+
+Function 7 - ProcessBrief
+- Endpoint - /api/process-brief
+- Method - POST
+- Purpose - Extract structured data from media brief
+
+Function 8 - LogError
+- Endpoint - /api/log-error
+- Method - POST
+- Purpose - Log errors to Dataverse
+
+============================================================
+FUNCTION 1 - SESSION MANAGER
+============================================================
+
+ENDPOINT
+POST /api/session
+
+PURPOSE
+Create and manage user planning sessions with context tracking
+
+REQUEST BODY
+{
+  "action": "create",
+  "userId": "user@company.com",
+  "clientId": "CLIENT-001",
+  "vertical": "RETAIL",
+  "sessionType": "Planning"
+}
+
+ACTIONS
+- create - Create new session
+- get - Retrieve existing session
+- update - Update session context
+- close - Close session
+
+RESPONSE - CREATE
+{
+  "status": "success",
+  "sessionId": "ses-20250106-abc123",
+  "userId": "user@company.com",
+  "vertical": "RETAIL",
+  "sessionType": "Planning",
+  "createdAt": "2025-01-06T10:30:00Z",
+  "expiresAt": "2025-01-06T22:30:00Z"
+}
+
+ERROR RESPONSE
+{
+  "status": "error",
+  "errorCode": "SESSION_001",
+  "errorMessage": "Failed to create session",
+  "details": "User ID is required"
+}
+
+============================================================
+FUNCTION 2 - SEARCH BENCHMARKS
+============================================================
+
+ENDPOINT
+POST /api/search-benchmarks
+
+PURPOSE
+Advanced benchmark search with relevance scoring and filtering
+
+REQUEST BODY
+{
+  "vertical": "RETAIL",
+  "channel": "DISPLAY",
+  "kpiCode": "CPM",
+  "includeRelated": true,
+  "maxResults": 20
+}
+
+PARAMETERS
+- vertical - Required industry vertical code
+- channel - Optional channel filter
+- kpiCode - Optional KPI filter
+- includeRelated - Include related benchmarks
+- maxResults - Maximum results to return
+
+RESPONSE
+{
+  "status": "success",
+  "results": [
+    {
+      "benchmarkId": "bm-001",
+      "vertical": "RETAIL",
+      "channel": "DISPLAY",
+      "kpiCode": "CPM",
+      "metricName": "Retail Display CPM",
+      "metricLow": 2.50,
+      "metricMedian": 5.00,
+      "metricHigh": 10.00,
+      "metricBest": 2.00,
+      "dataSource": "IAB Benchmarks",
+      "dataPeriod": "2024 Q4",
+      "confidence": "High",
+      "relevanceScore": 0.95
+    }
+  ],
+  "totalResults": 15,
+  "query": {
+    "vertical": "RETAIL",
+    "channel": "DISPLAY",
+    "kpiCode": "CPM"
+  }
+}
+
+============================================================
+FUNCTION 3 - CALCULATE ALLOCATION
+============================================================
+
+ENDPOINT
+POST /api/allocation
+
+PURPOSE
+Calculate optimal budget allocation across channels
+
+REQUEST BODY
+{
+  "totalBudget": 500000,
+  "vertical": "RETAIL",
+  "objectives": ["awareness", "consideration"],
+  "constraints": {
+    "minDigital": 0.6,
+    "maxTraditional": 0.3
+  },
+  "channels": ["DISPLAY", "VIDEO", "SEARCH", "SOCIAL_PAID"]
+}
+
+PARAMETERS
+- totalBudget - Total budget amount
+- vertical - Industry vertical for benchmarks
+- objectives - Campaign objectives
+- constraints - Allocation constraints
+- channels - Channels to include
+
+RESPONSE
+{
+  "status": "success",
+  "allocation": {
+    "totalBudget": 500000,
+    "channels": [
+      {
+        "channel": "DISPLAY",
+        "budget": 125000,
+        "percentage": 0.25,
+        "projectedImpressions": 12500000,
+        "projectedCPM": 10.00
+      },
+      {
+        "channel": "VIDEO",
+        "budget": 150000,
+        "percentage": 0.30,
+        "projectedImpressions": 7500000,
+        "projectedCPM": 20.00
+      },
+      {
+        "channel": "SEARCH",
+        "budget": 125000,
+        "percentage": 0.25,
+        "projectedClicks": 62500,
+        "projectedCPC": 2.00
+      },
+      {
+        "channel": "SOCIAL_PAID",
+        "budget": 100000,
+        "percentage": 0.20,
+        "projectedImpressions": 10000000,
+        "projectedCPM": 10.00
+      }
+    ]
+  },
+  "rationale": "Allocation optimized for awareness and consideration objectives with digital emphasis per constraints"
+}
+
+============================================================
+FUNCTION 4 - RUN PROJECTIONS
+============================================================
+
+ENDPOINT
+POST /api/projections
+
+PURPOSE
+Generate performance projections based on allocation and benchmarks
+
+REQUEST BODY
+{
+  "allocation": {
+    "channels": [
+      {"channel": "DISPLAY", "budget": 125000},
+      {"channel": "VIDEO", "budget": 150000}
+    ]
+  },
+  "vertical": "RETAIL",
+  "duration": 90,
+  "scenarioType": "median"
+}
+
+PARAMETERS
+- allocation - Budget allocation by channel
+- vertical - Industry vertical
+- duration - Campaign duration in days
+- scenarioType - low or median or high or best
+
+RESPONSE
+{
+  "status": "success",
+  "projections": {
+    "totalImpressions": 20000000,
+    "totalReach": 5000000,
+    "avgFrequency": 4.0,
+    "totalClicks": 400000,
+    "overallCTR": 0.02,
+    "projectedConversions": 4000,
+    "projectedCVR": 0.01,
+    "estimatedROAS": 3.5,
+    "byChannel": [
+      {
+        "channel": "DISPLAY",
+        "impressions": 12500000,
+        "clicks": 250000,
+        "ctr": 0.02,
+        "conversions": 2500
+      },
+      {
+        "channel": "VIDEO",
+        "impressions": 7500000,
+        "views": 5250000,
+        "vcr": 0.70,
+        "conversions": 1500
+      }
+    ]
+  },
+  "confidence": "Medium",
+  "assumptions": [
+    "Benchmarks based on RETAIL vertical median performance",
+    "90 day campaign duration",
+    "Standard audience targeting"
+  ]
+}
+
+============================================================
+FUNCTION 5 - VALIDATE GATE
+============================================================
+
+ENDPOINT
+POST /api/validate-gate
+
+PURPOSE
+Validate plan data against gate requirements
+
+REQUEST BODY
+{
+  "planId": "plan-001",
+  "gateNumber": 1,
+  "planData": {
+    "clientContext": {
+      "company": "Test Corp",
+      "industry": "Retail",
+      "products": ["Electronics", "Appliances"]
+    },
+    "objectives": {
+      "primary": "Brand Awareness",
+      "kpis": ["CPM", "Reach", "Brand Lift"]
+    }
+  }
+}
+
+GATE DEFINITIONS
+
+Gate 1 - Foundation
+- Client context complete
+- Primary objective defined
+- Budget range established
+
+Gate 2 - Strategy
+- Audience defined
+- Channel mix selected
+- Timeline established
+
+Gate 3 - Tactics
+- Budget allocated
+- Partners identified
+- Creative requirements defined
+
+Gate 4 - Measurement
+- KPIs finalized
+- Attribution defined
+- Reporting structure set
+
+RESPONSE - PASSED
+{
+  "status": "success",
+  "gateNumber": 1,
+  "gateStatus": "passed",
+  "validationResults": {
+    "requiredFields": {
+      "clientContext": "complete",
+      "objectives": "complete",
+      "budget": "complete"
+    },
+    "warnings": [],
+    "recommendations": [
+      "Consider adding competitive context"
+    ]
+  },
+  "score": 95
+}
+
+RESPONSE - FAILED
+{
+  "status": "success",
+  "gateNumber": 1,
+  "gateStatus": "failed",
+  "validationResults": {
+    "requiredFields": {
+      "clientContext": "complete",
+      "objectives": "incomplete",
+      "budget": "missing"
+    },
+    "missingFields": ["objectives.kpis", "budget.total"],
+    "warnings": ["Budget not defined"],
+    "recommendations": [
+      "Define primary KPIs",
+      "Establish budget range"
+    ]
+  },
+  "score": 45
+}
+
+============================================================
+FUNCTION 6 - GENERATE DOCUMENT
+============================================================
+
+ENDPOINT
+POST /api/generate-media-plan-document
+
+PURPOSE
+Generate Word document from complete plan data
+
+REQUEST BODY
+{
+  "planId": "plan-001",
+  "planName": "Q1 2025 Brand Campaign",
+  "planData": {
+    "clientContext": {...},
+    "objectives": {...},
+    "budget": {...},
+    "timeline": {...},
+    "audience": {...},
+    "channels": {...},
+    "measurement": {...}
+  },
+  "includeAppendix": true
+}
+
+RESPONSE HEADERS
+Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document
+Content-Disposition: attachment; filename="Q1_2025_Brand_Campaign_MediaPlan.docx"
+
+RESPONSE BODY
+Binary Word document (.docx)
+
+DOCUMENT STRUCTURE
+- Cover Page
+- Executive Summary
+- Client Context
+- Campaign Objectives
+- Budget Overview
+- Timeline
+- Target Audience
+- Channel Strategy
+- Measurement Framework
+- Appendix (if requested)
+
+============================================================
+FUNCTION 7 - PROCESS BRIEF
+============================================================
+
+ENDPOINT
+POST /api/process-brief
+
+PURPOSE
+Extract structured data from uploaded media brief
+
+REQUEST BODY
+{
+  "sessionId": "ses-001",
+  "briefContent": "Full text content of media brief...",
+  "briefSource": "uploaded_brief.pdf",
+  "extractionDepth": "detailed"
+}
+
+EXTRACTION FIELDS
+- Client name and industry
+- Campaign objectives
+- Budget information
+- Timeline dates
+- Target audience
+- Geographic scope
+- Channel preferences
+- KPI targets
+- Competitive context
+
+RESPONSE
+{
+  "status": "success",
+  "extraction": {
+    "clientName": "Acme Corporation",
+    "industry": "Retail",
+    "objectives": {
+      "primary": "Drive brand awareness",
+      "secondary": "Increase consideration"
+    },
+    "budget": {
+      "total": 500000,
+      "currency": "USD",
+      "confidence": "high"
+    },
+    "timeline": {
+      "startDate": "2025-03-01",
+      "endDate": "2025-05-31",
+      "confidence": "high"
+    },
+    "audience": {
+      "description": "Adults 25-54 interested in electronics",
+      "confidence": "medium"
+    },
+    "geography": ["United States", "National"],
+    "channels": {
+      "mentioned": ["Digital", "TV", "Social"],
+      "confidence": "medium"
+    }
+  },
+  "confidenceScore": 0.85,
+  "missingFields": ["specific KPI targets"],
+  "clarificationNeeded": ["Confirm budget includes agency fees"]
+}
+
+============================================================
+FUNCTION 8 - LOG ERROR
+============================================================
+
+ENDPOINT
+POST /api/log-error
+
+PURPOSE
+Log errors to Dataverse for monitoring and debugging
+
+REQUEST BODY
+{
+  "source": "MPA Create Plan Flow",
+  "errorCode": "PLAN_001",
+  "errorMessage": "Failed to create plan record",
+  "errorDetails": "Dataverse connection timeout after 30 seconds",
+  "sessionId": "ses-001",
+  "planId": null,
+  "severity": "High"
+}
+
+SEVERITY LEVELS
+- Low - Minor issues not affecting functionality
+- Medium - Issues affecting some functionality
+- High - Major issues affecting core functionality
+- Critical - System failures requiring immediate attention
+
+RESPONSE
+{
+  "status": "success",
+  "errorLogId": "err-001",
+  "logged": true,
+  "alertSent": true
+}
+
+============================================================
+DEPLOYMENT
+============================================================
+
+PREREQUISITES
+- Azure subscription
+- Resource group created
+- Function App created
+- Python 3.9 runtime selected
+
+DEPLOYMENT METHODS
+
+Method 1 - VS Code
+1 Open functions folder in VS Code
+2 Install Azure Functions extension
+3 Sign in to Azure
+4 Right click function app
+5 Click Deploy to Function App
+6 Select target function app
+7 Confirm deployment
+
+Method 2 - Azure CLI
+az login
+az account set --subscription YOUR_SUBSCRIPTION
+cd release/v5.5/agents/mpa/base/functions/mpa_functions
+func azure functionapp publish func-aragorn-mpa
+
+Method 3 - GitHub Actions
+- Configure GitHub Actions workflow
+- Set up Azure credentials
+- Push to trigger deployment
+
+ENVIRONMENT VARIABLES
+
+Required Variables
+- DATAVERSE_URL - Dataverse API URL
+- DATAVERSE_CLIENT_ID - App registration client ID
+- DATAVERSE_CLIENT_SECRET - App registration secret
+- SHAREPOINT_SITE_URL - SharePoint site URL
+
+Configure in Azure Portal
+1 Open Function App
+2 Click Configuration
+3 Click New application setting
+4 Add each variable
+5 Click Save
+6 Restart function app
+
+============================================================
+AUTHENTICATION
+============================================================
+
+FUNCTION LEVEL AUTH
+
+Default
+- All functions use Function level authentication
+- Requires function key in header or query
+
+Header Format
+x-functions-key: YOUR_FUNCTION_KEY
+
+Query Format
+?code=YOUR_FUNCTION_KEY
+
+GET FUNCTION KEY
+
+Steps
+1 Open Azure Portal
+2 Navigate to Function App
+3 Click Functions
+4 Select function
+5 Click Function Keys
+6 Copy default key
+
+MANAGED IDENTITY
+
+For Dataverse Access
+1 Enable system assigned identity on Function App
+2 Grant identity access in Dataverse
+3 Use DefaultAzureCredential in code
+
+============================================================
+MONITORING
+============================================================
+
+APPLICATION INSIGHTS
+
+Enable
+1 Open Function App in Azure Portal
+2 Click Application Insights
+3 Enable Application Insights
+4 Select or create instance
+
+View Logs
+1 Open Application Insights
+2 Click Logs
+3 Query traces and exceptions
+4 Set up alerts for failures
+
+METRICS TO MONITOR
+- Function execution count
+- Execution duration
+- Failure rate
+- Memory usage
+
+ALERTS
+
+Configure Alerts
+1 Open Application Insights
+2 Click Alerts
+3 Create alert rule
+4 Set condition (e.g., failure rate greater than 5 percent)
+5 Configure action group (email, Teams, etc.)
+
+============================================================
+END OF DOCUMENT
+============================================================

@@ -1,0 +1,671 @@
+POWER AUTOMATE FLOW REFERENCE
+MPA V5.5 CORPORATE DEPLOYMENT
+VERSION 1.0
+
+============================================================
+OVERVIEW
+============================================================
+
+This document provides specifications for all 11 Power Automate flows required for MPA v5.5. Build flows in the order listed to handle dependencies.
+
+FLOW STATUS SUMMARY
+- Flow 1 through Flow 10 - Built and operational
+- Flow 11 - Pending (skipped due to data conflict)
+
+CONNECTION REFERENCES REQUIRED
+- MPA Dataverse Connection - Microsoft Dataverse connector
+- MPA SharePoint Connection - SharePoint connector
+- MPA Office 365 Connection - Office 365 Outlook connector (for alerts)
+
+============================================================
+FLOW BUILD ORDER
+============================================================
+
+Build flows in this sequence
+
+Order 1 - MPA Search Channels
+Order 2 - MPA Search Benchmarks
+Order 3 - MPA Initialize Session
+Order 4 - MPA Create Plan
+Order 5 - MPA Save Section
+Order 6 - MPA Validate Plan
+Order 7 - MPA Generate Document
+Order 8 - MPA Import Performance
+Order 9 - MPA Create PostMortem
+Order 10 - MPA Process Media Brief
+Order 11 - MPA Promote Learning (PENDING)
+
+============================================================
+FLOW 1 - MPA SEARCH CHANNELS
+============================================================
+
+PURPOSE
+Search and filter available advertising channels from Dataverse
+
+TRIGGER
+- Type - PowerApps V2
+- Inputs
+  - category (Text) - Optional filter by category
+  - funnelStage (Text) - Optional filter by funnel stage
+  - minBudget (Number) - Optional minimum budget filter
+
+ACTIONS
+
+Action 1 - Initialize Variable varFilter
+- Type - Initialize variable
+- Name - varFilter
+- Type - String
+- Value - mpa_isactive eq true
+
+Action 2 - Condition Check Category
+- Condition - category is not equal to null
+- If Yes - Append to string variable
+  - Name - varFilter
+  - Value - and mpa_category eq 'category'
+
+Action 3 - Condition Check Funnel Stage
+- Condition - funnelStage is not equal to null
+- If Yes - Append to string variable
+  - Name - varFilter
+  - Value - and mpa_funnelstage eq 'funnelStage'
+
+Action 4 - List Rows from Dataverse
+- Table name - Channels (mpa_channel)
+- Filter rows - varFilter
+- Select columns - mpa_channelid,mpa_name,mpa_channelcode,mpa_category,mpa_cpmlow,mpa_cpmhigh,mpa_funnelstage
+
+Action 5 - Select Transform Results
+- From - value from List Rows
+- Map - Transform to JSON structure
+
+Action 6 - Respond to PowerApp
+- Output channelsJson - Stringified results
+- Output totalCount - Length of results
+- Output status - success
+
+============================================================
+FLOW 2 - MPA SEARCH BENCHMARKS
+============================================================
+
+PURPOSE
+Search benchmark data by vertical channel and metric type
+
+TRIGGER
+- Type - PowerApps V2
+- Inputs
+  - vertical (Text) - Industry vertical filter
+  - channel (Text) - Channel filter
+  - metricType (Text) - KPI metric type filter
+
+ACTIONS
+
+Action 1 - Initialize Variable varFilter
+- Type - Initialize variable
+- Name - varFilter
+- Type - String
+- Value - mpa_isactive eq true
+
+Action 2 - Condition Check Vertical
+- Condition - vertical is not equal to null
+- If Yes - Append filter for vertical
+
+Action 3 - Condition Check Channel
+- Condition - channel is not equal to null
+- If Yes - Append filter for channel
+
+Action 4 - Condition Check Metric Type
+- Condition - metricType is not equal to null
+- If Yes - Append filter for metric type
+
+Action 5 - List Rows from Dataverse
+- Table name - Benchmarks (mpa_benchmark)
+- Filter rows - varFilter
+- Select columns - mpa_benchmarkid,mpa_name,mpa_verticalcode,mpa_channelcode,mpa_kpicode,mpa_metriclow,mpa_metricmedian,mpa_metrichigh,mpa_metricbest,mpa_datasource,mpa_dataperiod,mpa_confidencelevel
+- Row count - 100
+
+Action 6 - Select Transform Results
+- From - value from List Rows
+- Map to benchmark JSON structure
+
+Action 7 - Respond to PowerApp
+- Output benchmarksJson - Stringified results
+- Output totalResults - Count of results
+- Output status - success
+
+============================================================
+FLOW 3 - MPA INITIALIZE SESSION
+============================================================
+
+PURPOSE
+Create a new planning session and return session context
+
+TRIGGER
+- Type - PowerApps V2
+- Inputs
+  - userId (Text) - User identifier from Entra ID
+  - clientId (Text) - Optional client identifier
+  - vertical (Text) - Initial industry vertical
+  - sessionType (Text) - Planning or InFlight or PostMortem
+
+ACTIONS
+
+Action 1 - HTTP Call Azure Function
+- Method - POST
+- URI - https://func-aragorn-mpa.azurewebsites.net/api/session
+- Headers
+  - Content-Type - application/json
+  - x-functions-key - (function key)
+- Body - JSON with userId clientId vertical sessionType
+
+Action 2 - Parse JSON Response
+- Content - Body from HTTP action
+- Schema - Session response schema
+
+Action 3 - Condition Check Success
+- Condition - status equals success
+- If Yes - Return session details
+- If No - Return error
+
+Action 4 - Respond to PowerApp (Success)
+- Output sessionId - From parsed response
+- Output status - active
+- Output message - Session created successfully
+
+Action 5 - Respond to PowerApp (Error)
+- Output sessionId - Empty
+- Output status - error
+- Output message - Error from response
+
+============================================================
+FLOW 4 - MPA CREATE PLAN
+============================================================
+
+PURPOSE
+Create a new media plan record in Dataverse
+
+TRIGGER
+- Type - PowerApps V2
+- Inputs
+  - sessionId (Text) - Session identifier
+  - clientId (Text) - Client identifier
+  - campaignName (Text) - Name for the campaign
+  - vertical (Text) - Industry vertical
+  - pathway (Text) - GUIDED or STANDARD or AUDIT
+
+ACTIONS
+
+Action 1 - Initialize Variable varPlanCode
+- Type - Initialize variable
+- Name - varPlanCode
+- Type - String
+- Value - Expression concat PLN- formatDateTime utcNow yyyyMMddHHmmss
+
+Action 2 - Add Row to Dataverse
+- Table name - Media Plans (mpa_mediaplan)
+- Columns
+  - Campaign Name - campaignName
+  - Plan Code - varPlanCode
+  - Client ID - clientId
+  - Status - Draft (100000000)
+  - Lifecycle Mode - Planning (100000000)
+  - Pathway - Map pathway to choice value
+  - Current Step - 1
+  - Created At - utcNow()
+
+Action 3 - Get Row by ID
+- Table name - Media Plans
+- Row ID - From Add Row output
+
+Action 4 - Respond to PowerApp
+- Output planId - mpa_mediaplanid from created record
+- Output planCode - varPlanCode
+- Output status - success
+
+============================================================
+FLOW 5 - MPA SAVE SECTION
+============================================================
+
+PURPOSE
+Save or update a plan section with data
+
+TRIGGER
+- Type - PowerApps V2
+- Inputs
+  - planId (Text) - Media plan identifier
+  - sectionType (Text) - Section type code
+  - sectionData (Text) - JSON data for section
+  - stepNumber (Number) - Step number 1 through 10
+  - sectionStatus (Text) - Complete or InProgress or NotStarted
+
+ACTIONS
+
+Action 1 - Initialize Variable varStatusCode
+- Type - Initialize variable
+- Name - varStatusCode
+- Type - Integer
+- Value - Expression mapping status to choice value
+
+Action 2 - List Rows Check Existing
+- Table name - Plan Data (mpa_plandata)
+- Filter rows - _mpa_mediaplan_value eq planId and mpa_sectiontype eq sectionTypeCode
+- Row count - 1
+
+Action 3 - Condition Section Exists
+- Condition - Length of value greater than 0
+- If Yes - Update existing row
+- If No - Create new row
+
+Action 4 - Update Row (If Exists)
+- Table name - Plan Data
+- Row ID - From existing record
+- Columns
+  - Section Data - sectionData
+  - Section Status - varStatusCode
+  - Updated At - utcNow()
+
+Action 5 - Add Row (If Not Exists)
+- Table name - Plan Data
+- Columns
+  - Media Plan - planId (lookup)
+  - Section Type - Map to choice value
+  - Section Label - sectionType
+  - Step Number - stepNumber
+  - Section Data - sectionData
+  - Section Status - varStatusCode
+  - Created At - utcNow()
+
+Action 6 - Update Media Plan Current Step
+- Table name - Media Plans
+- Row ID - planId
+- Columns
+  - Current Step - stepNumber
+  - Updated At - utcNow()
+
+Action 7 - Respond to PowerApp
+- Output sectionId - ID of created or updated record
+- Output status - success
+- Output currentStep - stepNumber
+
+============================================================
+FLOW 6 - MPA VALIDATE PLAN
+============================================================
+
+PURPOSE
+Validate plan data against gate requirements
+
+TRIGGER
+- Type - PowerApps V2
+- Inputs
+  - planId (Text) - Media plan identifier
+  - gateNumber (Number) - Gate to validate 1 through 4
+  - planDataJson (Text) - Current plan data as JSON
+
+ACTIONS
+
+Action 1 - HTTP Call Azure Function
+- Method - POST
+- URI - https://func-aragorn-mpa.azurewebsites.net/api/validate-gate
+- Headers
+  - Content-Type - application/json
+  - x-functions-key - (function key)
+- Body - JSON with planId gateNumber planData
+
+Action 2 - Parse JSON Response
+- Content - Body from HTTP
+- Schema - Validation response schema
+
+Action 3 - Respond to PowerApp
+- Output gateStatus - passed or failed or warning
+- Output gateNumber - Gate number validated
+- Output validationResultsJson - Stringified validation results
+- Output missingFieldsJson - Stringified missing fields
+- Output recommendationsJson - Stringified recommendations
+
+============================================================
+FLOW 7 - MPA GENERATE DOCUMENT
+============================================================
+
+PURPOSE
+Generate Word document from plan data
+
+TRIGGER
+- Type - PowerApps V2
+- Inputs
+  - planId (Text) - Media plan identifier
+  - planDataJson (Text) - Complete plan data as JSON
+
+ACTIONS
+
+Action 1 - Parse Plan Data
+- Content - planDataJson
+- Schema - Plan data schema
+
+Action 2 - HTTP Call Azure Function
+- Method - POST
+- URI - https://func-aragorn-mpa.azurewebsites.net/api/generate-media-plan-document
+- Headers
+  - Content-Type - application/json
+  - x-functions-key - (function key)
+  - Accept - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+- Body - planDataJson
+
+Action 3 - Condition Check Success
+- Condition - Status code equals 200
+- If Yes - Save to SharePoint
+- If No - Return error
+
+Action 4 - Compose File Name
+- Expression - concat planName _ formatDateTime utcNow yyyyMMdd_HHmmss .docx
+
+Action 5 - Create File in SharePoint
+- Site Address - SharePoint site URL
+- Folder Path - /Shared Documents/Media Plans
+- File Name - From Compose
+- File Content - Body from HTTP (binary)
+
+Action 6 - Create Sharing Link
+- Site Address - SharePoint site URL
+- Library Name - Shared Documents
+- Item Id - From Create File
+- Link Type - View
+- Link Scope - Organization
+
+Action 7 - Respond to PowerApp
+- Output status - success
+- Output documentUrl - Sharing link URL
+- Output documentName - File name
+- Output generatedAt - utcNow()
+
+============================================================
+FLOW 8 - MPA IMPORT PERFORMANCE
+============================================================
+
+PURPOSE
+Import actual performance data for in-flight campaigns
+
+TRIGGER
+- Type - PowerApps V2
+- Inputs
+  - planId (Text) - Media plan identifier
+  - performanceDataJson (Text) - Performance metrics as JSON
+  - dataSource (Text) - Source of performance data
+  - dataPeriod (Text) - Period covered by data
+
+ACTIONS
+
+Action 1 - Parse Performance Data
+- Content - performanceDataJson
+- Schema - Performance data schema
+
+Action 2 - Get Media Plan
+- Table name - Media Plans
+- Row ID - planId
+
+Action 3 - Update Plan with Performance
+- Table name - Media Plans
+- Row ID - planId
+- Columns
+  - Lifecycle Mode - InFlight (100000001)
+  - Updated At - utcNow()
+
+Action 4 - Add Plan Data Section
+- Table name - Plan Data
+- Columns
+  - Media Plan - planId
+  - Section Type - Measurement (100000007)
+  - Section Label - Performance Import
+  - Section Data - performanceDataJson
+  - Data Sources - dataSource and dataPeriod
+  - Section Status - Complete
+  - Created At - utcNow()
+
+Action 5 - Respond to PowerApp
+- Output status - success
+- Output importedAt - utcNow()
+- Output recordCount - Count of metrics imported
+
+============================================================
+FLOW 9 - MPA CREATE POSTMORTEM
+============================================================
+
+PURPOSE
+Create post-mortem analysis record from completed campaign
+
+TRIGGER
+- Type - PowerApps V2
+- Inputs
+  - planId (Text) - Original media plan identifier
+  - analysisDataJson (Text) - Post-mortem analysis as JSON
+
+ACTIONS
+
+Action 1 - Get Original Plan
+- Table name - Media Plans
+- Row ID - planId
+
+Action 2 - Update Plan Lifecycle
+- Table name - Media Plans
+- Row ID - planId
+- Columns
+  - Lifecycle Mode - PostMortem (100000002)
+  - Updated At - utcNow()
+
+Action 3 - Create Plan Version Snapshot
+- Table name - Plan Versions
+- Columns
+  - Media Plan - planId
+  - Version Number - Next version number
+  - Version Type - Initial or Revision
+  - Is Current - Yes
+  - Snapshot Data - Full plan data JSON
+  - Created At - utcNow()
+
+Action 4 - Add Analysis Section
+- Table name - Plan Data
+- Columns
+  - Media Plan - planId
+  - Section Type - Summary (100000010)
+  - Section Label - Post-Mortem Analysis
+  - Section Data - analysisDataJson
+  - Section Status - Complete
+  - Created At - utcNow()
+
+Action 5 - Respond to PowerApp
+- Output status - success
+- Output postMortemId - Created section ID
+- Output createdAt - utcNow()
+
+============================================================
+FLOW 10 - MPA PROCESS MEDIA BRIEF
+============================================================
+
+PURPOSE
+Orchestration flow that processes uploaded media brief
+
+TRIGGER
+- Type - PowerApps V2
+- Inputs
+  - sessionId (Text) - Session identifier
+  - briefContent (Text) - Extracted brief content
+  - briefSource (Text) - Source file name or URL
+
+ACTIONS
+
+Action 1 - HTTP Call Azure Function
+- Method - POST
+- URI - https://func-aragorn-mpa.azurewebsites.net/api/process-brief
+- Headers
+  - Content-Type - application/json
+  - x-functions-key - (function key)
+- Body - JSON with sessionId briefContent briefSource
+
+Action 2 - Parse Brief Analysis
+- Content - Body from HTTP
+- Schema - Brief analysis schema
+
+Action 3 - Create Plan from Brief
+- Call MPA Create Plan flow as child flow
+- Pass extracted values
+
+Action 4 - Save Initial Sections
+- Loop through extracted sections
+- Call MPA Save Section for each
+
+Action 5 - Respond to PowerApp
+- Output status - success
+- Output planId - Created plan ID
+- Output extractedFieldsJson - Fields extracted from brief
+- Output confidenceScore - Analysis confidence
+
+============================================================
+FLOW 11 - MPA PROMOTE LEARNING (PENDING)
+============================================================
+
+STATUS
+This flow was skipped during initial deployment due to a data conflict. Investigation required before building.
+
+PURPOSE
+Promote validated learnings from post-mortem analysis to knowledge base
+
+TRIGGER
+- Type - PowerApps V2
+- Inputs
+  - postMortemId (Text) - Post-mortem record identifier
+  - learningIds (Text) - JSON array of learning IDs to promote
+
+PLANNED ACTIONS
+
+Action 1 - Get Post-Mortem Record
+- Retrieve original analysis
+
+Action 2 - Get Selected Learnings
+- Filter learnings by provided IDs
+
+Action 3 - Create Knowledge Entries
+- Transform learnings to KB format
+- Store in appropriate location
+
+Action 4 - Update Learning Status
+- Mark selected learnings as Promoted
+
+Action 5 - Respond to PowerApp
+- Output status
+- Output promotedCount
+- Output kbEntryIds
+
+INVESTIGATION NEEDED
+- Identify data conflict that caused skip
+- Determine KB storage location
+- Define learning to KB transformation rules
+
+============================================================
+AZURE FUNCTION ENDPOINTS
+============================================================
+
+Base URL
+https://func-aragorn-mpa.azurewebsites.net
+
+Function Key
+lCMpDrdQQV47TWq3pR9OXFen_uFlaOwdSw7_7uk6CHO2AzFuoaY6GQ==
+
+ENDPOINTS
+
+Session Management
+- POST /api/session - Create or manage session
+
+Validation
+- POST /api/validate-gate - Validate plan against gate
+
+Document Generation
+- POST /api/generate-media-plan-document - Generate Word document
+
+Calculations
+- POST /api/allocation - Calculate budget allocation
+- POST /api/projections - Run performance projections
+
+Brief Processing
+- POST /api/process-brief - Analyze media brief
+
+============================================================
+COMMON EXPRESSIONS
+============================================================
+
+Current Timestamp
+utcNow()
+
+Generate Unique Code
+concat('PLN-', formatDateTime(utcNow(), 'yyyyMMddHHmmss'))
+
+Null Check
+coalesce(triggerBody()?['fieldName'], 'defaultValue')
+
+JSON Parse
+json(triggerBody()?['jsonField'])
+
+String from JSON
+string(body('ActionName'))
+
+Array Length
+length(body('ListRows')?['value'])
+
+First Item
+first(body('ListRows')?['value'])
+
+Conditional Value
+if(equals(variables('varStatus'), 'Complete'), 100000002, 100000001)
+
+============================================================
+ERROR HANDLING PATTERN
+============================================================
+
+All flows should implement this error handling pattern
+
+Scope Try
+- Contains main flow logic
+- Configure run after to run on success only
+
+Scope Catch
+- Configure run after to run on failure of Try scope
+- Actions in Catch scope
+  - Compose error details
+  - Call MPA Log Error flow (if exists)
+  - Respond with error status
+
+Error Response Format
+- status - error
+- errorCode - Specific error code
+- errorMessage - Human readable message
+- errorDetails - Technical details for debugging
+
+============================================================
+VERIFICATION CHECKLIST
+============================================================
+
+After building all flows verify
+
+Flow Status
+- All 10 flows show as On in solution
+- No flows show errors or warnings
+- Connection references are properly linked
+
+Triggers
+- All flows use PowerApps V2 trigger
+- Input parameters match specifications
+
+Actions
+- Dataverse actions reference correct tables
+- HTTP actions have correct URLs and headers
+- Parse JSON schemas are valid
+
+Responses
+- All flows have Respond to PowerApp action
+- Output names match specifications
+
+Testing
+- Each flow tested with sample data
+- Success and error paths verified
+- Response format validated
+
+============================================================
+END OF DOCUMENT
+============================================================

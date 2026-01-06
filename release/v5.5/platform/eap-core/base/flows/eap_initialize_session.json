@@ -1,0 +1,449 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "flowName": "EAP - Initialize Session",
+  "flowCode": "eap_initialize_session",
+  "description": "Core EAP flow that initializes a new session for any agent. Creates session record, resolves user identity, loads feature flags, and establishes data access scope.",
+  "version": "5.5",
+  "category": "platform",
+  "scope": "shared",
+  
+  "trigger": {
+    "type": "PowerVirtualAgents",
+    "kind": "Button",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "agent_code": {
+            "type": "string",
+            "description": "Agent identifier (e.g., MPA, CA)"
+          },
+          "user_email": {
+            "type": "string",
+            "description": "User email from Copilot context"
+          },
+          "channel": {
+            "type": "string",
+            "description": "Interaction channel (web, teams, mobile)"
+          },
+          "session_type": {
+            "type": "string",
+            "description": "Type of session (NEW, RESUME, AUDIT)"
+          },
+          "existing_session_id": {
+            "type": "string",
+            "description": "Optional - for RESUME session type"
+          }
+        },
+        "required": ["agent_code", "user_email", "channel", "session_type"]
+      }
+    }
+  },
+  
+  "actions": {
+    "Initialize_Variables": {
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "varSessionId",
+            "type": "string",
+            "value": ""
+          },
+          {
+            "name": "varUserId",
+            "type": "string",
+            "value": ""
+          },
+          {
+            "name": "varClientId",
+            "type": "string",
+            "value": ""
+          },
+          {
+            "name": "varFeatureFlags",
+            "type": "object",
+            "value": {}
+          },
+          {
+            "name": "varAgentConfig",
+            "type": "object",
+            "value": {}
+          },
+          {
+            "name": "varCorrelationId",
+            "type": "string",
+            "value": "@{guid()}"
+          }
+        ]
+      },
+      "runAfter": {}
+    },
+    
+    "Lookup_User": {
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_commondataserviceforapps",
+          "operationId": "ListRecords",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+        },
+        "parameters": {
+          "entityName": "eap_users",
+          "queryOptions": "$filter=eap_email eq '@{triggerBody()?['user_email']}' and statecode eq 0&$top=1"
+        }
+      },
+      "runAfter": {
+        "Initialize_Variables": ["Succeeded"]
+      }
+    },
+    
+    "Check_User_Exists": {
+      "type": "If",
+      "expression": {
+        "greater": [
+          "@length(body('Lookup_User')?['value'])",
+          0
+        ]
+      },
+      "actions": {
+        "Set_Existing_User_Id": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "varUserId",
+            "value": "@{first(body('Lookup_User')?['value'])?['eap_userid']}"
+          }
+        },
+        "Set_Client_Id": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "varClientId",
+            "value": "@{first(body('Lookup_User')?['value'])?['_eap_clientid_value']}"
+          },
+          "runAfter": {
+            "Set_Existing_User_Id": ["Succeeded"]
+          }
+        }
+      },
+      "else": {
+        "actions": {
+          "Create_New_User": {
+            "type": "OpenApiConnection",
+            "inputs": {
+              "host": {
+                "connectionName": "shared_commondataserviceforapps",
+                "operationId": "CreateRecord",
+                "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              },
+              "parameters": {
+                "entityName": "eap_users",
+                "item/eap_email": "@{triggerBody()?['user_email']}",
+                "item/eap_displayname": "@{triggerBody()?['user_email']}",
+                "item/eap_role": "User",
+                "item/eap_status": "Active"
+              }
+            }
+          },
+          "Set_New_User_Id": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "varUserId",
+              "value": "@{body('Create_New_User')?['eap_userid']}"
+            },
+            "runAfter": {
+              "Create_New_User": ["Succeeded"]
+            }
+          }
+        }
+      },
+      "runAfter": {
+        "Lookup_User": ["Succeeded"]
+      }
+    },
+    
+    "Lookup_Agent_Registry": {
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_commondataserviceforapps",
+          "operationId": "ListRecords",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+        },
+        "parameters": {
+          "entityName": "eap_agentregistries",
+          "queryOptions": "$filter=eap_agentcode eq '@{triggerBody()?['agent_code']}' and statecode eq 0&$top=1"
+        }
+      },
+      "runAfter": {
+        "Check_User_Exists": ["Succeeded"]
+      }
+    },
+    
+    "Set_Agent_Config": {
+      "type": "SetVariable",
+      "inputs": {
+        "name": "varAgentConfig",
+        "value": "@first(body('Lookup_Agent_Registry')?['value'])"
+      },
+      "runAfter": {
+        "Lookup_Agent_Registry": ["Succeeded"]
+      }
+    },
+    
+    "Load_Feature_Flags": {
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_commondataserviceforapps",
+          "operationId": "ListRecords",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+        },
+        "parameters": {
+          "entityName": "eap_featureflags",
+          "queryOptions": "$filter=(startswith(eap_flagcode, '@{triggerBody()?['agent_code']}_') or startswith(eap_flagcode, 'eap_') or startswith(eap_flagcode, 'sec_') or startswith(eap_flagcode, 'ui_')) and statecode eq 0"
+        }
+      },
+      "runAfter": {
+        "Set_Agent_Config": ["Succeeded"]
+      }
+    },
+    
+    "Build_Feature_Flag_Object": {
+      "type": "Select",
+      "inputs": {
+        "from": "@body('Load_Feature_Flags')?['value']",
+        "select": {
+          "flag_code": "@item()?['eap_flagcode']",
+          "enabled": "@item()?['eap_defaultvalue']"
+        }
+      },
+      "runAfter": {
+        "Load_Feature_Flags": ["Succeeded"]
+      }
+    },
+    
+    "Check_Session_Type": {
+      "type": "Switch",
+      "expression": "@triggerBody()?['session_type']",
+      "cases": {
+        "RESUME": {
+          "case": "RESUME",
+          "actions": {
+            "Lookup_Existing_Session": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "eap_sessions",
+                  "recordId": "@{triggerBody()?['existing_session_id']}"
+                }
+              }
+            },
+            "Update_Session_Resumed": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "eap_sessions",
+                  "recordId": "@{triggerBody()?['existing_session_id']}",
+                  "item/eap_lastactivity": "@{utcNow()}"
+                }
+              },
+              "runAfter": {
+                "Lookup_Existing_Session": ["Succeeded"]
+              }
+            },
+            "Set_Resumed_Session_Id": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "varSessionId",
+                "value": "@{triggerBody()?['existing_session_id']}"
+              },
+              "runAfter": {
+                "Update_Session_Resumed": ["Succeeded"]
+              }
+            }
+          }
+        },
+        "AUDIT": {
+          "case": "AUDIT",
+          "actions": {
+            "Create_Audit_Session": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "eap_sessions",
+                  "item/eap_agentcode": "@{triggerBody()?['agent_code']}",
+                  "item/eap_userid@odata.bind": "eap_users(@{variables('varUserId')})",
+                  "item/eap_channel": "@{triggerBody()?['channel']}",
+                  "item/eap_sessiontype": "AUDIT",
+                  "item/eap_status": "Active",
+                  "item/eap_starttime": "@{utcNow()}",
+                  "item/eap_lastactivity": "@{utcNow()}",
+                  "item/eap_correlationid": "@{variables('varCorrelationId')}"
+                }
+              }
+            },
+            "Set_Audit_Session_Id": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "varSessionId",
+                "value": "@{body('Create_Audit_Session')?['eap_sessionid']}"
+              },
+              "runAfter": {
+                "Create_Audit_Session": ["Succeeded"]
+              }
+            }
+          }
+        }
+      },
+      "default": {
+        "actions": {
+          "Create_New_Session": {
+            "type": "OpenApiConnection",
+            "inputs": {
+              "host": {
+                "connectionName": "shared_commondataserviceforapps",
+                "operationId": "CreateRecord",
+                "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              },
+              "parameters": {
+                "entityName": "eap_sessions",
+                "item/eap_agentcode": "@{triggerBody()?['agent_code']}",
+                "item/eap_userid@odata.bind": "eap_users(@{variables('varUserId')})",
+                "item/eap_channel": "@{triggerBody()?['channel']}",
+                "item/eap_sessiontype": "NEW",
+                "item/eap_status": "Active",
+                "item/eap_starttime": "@{utcNow()}",
+                "item/eap_lastactivity": "@{utcNow()}",
+                "item/eap_correlationid": "@{variables('varCorrelationId')}"
+              }
+            }
+          },
+          "Set_New_Session_Id": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "varSessionId",
+              "value": "@{body('Create_New_Session')?['eap_sessionid']}"
+            },
+            "runAfter": {
+              "Create_New_Session": ["Succeeded"]
+            }
+          }
+        }
+      },
+      "runAfter": {
+        "Build_Feature_Flag_Object": ["Succeeded"]
+      }
+    },
+    
+    "Response": {
+      "type": "Response",
+      "kind": "PowerVirtualAgents",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "session_id": "@{variables('varSessionId')}",
+          "user_id": "@{variables('varUserId')}",
+          "client_id": "@{variables('varClientId')}",
+          "agent_code": "@{triggerBody()?['agent_code']}",
+          "agent_name": "@{variables('varAgentConfig')?['eap_agentname']}",
+          "agent_version": "@{variables('varAgentConfig')?['eap_agentversion']}",
+          "kb_library": "@{variables('varAgentConfig')?['eap_kblibrary']}",
+          "channel": "@{triggerBody()?['channel']}",
+          "session_type": "@{triggerBody()?['session_type']}",
+          "correlation_id": "@{variables('varCorrelationId')}",
+          "feature_flags": "@{body('Build_Feature_Flag_Object')}",
+          "timestamp": "@{utcNow()}"
+        }
+      },
+      "runAfter": {
+        "Check_Session_Type": ["Succeeded"]
+      }
+    }
+  },
+  
+  "outputs": {
+    "session_id": {
+      "type": "string",
+      "description": "Unique session identifier"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "User record ID"
+    },
+    "client_id": {
+      "type": "string",
+      "description": "Client record ID (if user has client association)"
+    },
+    "agent_code": {
+      "type": "string",
+      "description": "Agent identifier"
+    },
+    "agent_name": {
+      "type": "string",
+      "description": "Agent display name"
+    },
+    "agent_version": {
+      "type": "string",
+      "description": "Agent version"
+    },
+    "kb_library": {
+      "type": "string",
+      "description": "SharePoint KB library name"
+    },
+    "channel": {
+      "type": "string",
+      "description": "Interaction channel"
+    },
+    "session_type": {
+      "type": "string",
+      "description": "Session type (NEW, RESUME, AUDIT)"
+    },
+    "correlation_id": {
+      "type": "string",
+      "description": "Correlation ID for tracing"
+    },
+    "feature_flags": {
+      "type": "array",
+      "description": "Array of enabled feature flags"
+    },
+    "timestamp": {
+      "type": "string",
+      "description": "Session initialization timestamp"
+    }
+  },
+  
+  "errorHandling": {
+    "strategy": "ContinueOnError",
+    "defaultResponse": {
+      "session_id": null,
+      "error": "Session initialization failed",
+      "error_code": "EAP_SESSION_INIT_FAILED",
+      "correlation_id": "@{variables('varCorrelationId')}"
+    }
+  },
+  
+  "notes": {
+    "dependencies": ["eap_session", "eap_user", "eap_client", "eap_agentregistry", "eap_featureflag"],
+    "calledBy": ["All agent topics that require session context"],
+    "extensionPoints": [
+      "Access control can be added via /extensions/ in corporate branch",
+      "Additional user attributes can be loaded via /extensions/",
+      "Custom feature flag logic can be added via /extensions/"
+    ]
+  }
+}

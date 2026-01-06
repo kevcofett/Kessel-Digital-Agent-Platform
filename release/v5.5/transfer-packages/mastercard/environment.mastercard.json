@@ -1,0 +1,198 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mastercard Environment Configuration",
+  "description": "Environment configuration for Mastercard corporate deployment",
+  "version": "5.5",
+  "lastUpdated": "{DEPLOYMENT_DATE}",
+  
+  "_deployment_notes": {
+    "created_from": "Kessel-Digital-Agent-Platform v5.5",
+    "transfer_date": "January 2026",
+    "instructions": "Replace all {PLACEHOLDER} values with Mastercard-specific values before deployment"
+  },
+  
+  "organization": {
+    "code": "Mastercard",
+    "name": "Mastercard",
+    "description": "Corporate managed environment"
+  },
+  
+  "tenant": {
+    "tenantId": "{MASTERCARD_TENANT_ID}",
+    "tenantName": "{MASTERCARD_TENANT_NAME}.onmicrosoft.com",
+    "description": "Mastercard Azure AD tenant"
+  },
+  
+  "dataverse": {
+    "environmentUrl": "{MASTERCARD_DATAVERSE_URL}",
+    "environmentId": "{MASTERCARD_ENVIRONMENT_ID}",
+    "organizationId": "{MASTERCARD_ORGANIZATION_ID}",
+    "apiUrl": "{MASTERCARD_DATAVERSE_URL}/api/data/v9.2",
+    "solutionName": "AgentPlatform",
+    "publisherPrefix": "eap",
+    "description": "Mastercard Dataverse environment"
+  },
+  
+  "sharepoint": {
+    "siteUrl": "{MASTERCARD_SHAREPOINT_SITE_URL}",
+    "kbLibraries": {
+      "mpa": "MediaPlanningKB",
+      "ca": "ConsultingKB",
+      "shared": "SharedKB"
+    },
+    "description": "SharePoint site for knowledge base files"
+  },
+  
+  "copilotStudio": {
+    "environmentUrl": "{MASTERCARD_COPILOT_ENVIRONMENT_URL}",
+    "powerPlatformApiUrl": "{MASTERCARD_POWER_PLATFORM_API_URL}",
+    "agents": {
+      "mpa": {
+        "agentId": "{MPA_AGENT_ID}",
+        "agentName": "Media Planning Agent",
+        "webchatUrl": "{MPA_WEBCHAT_URL}"
+      },
+      "ca": {
+        "agentId": "{CA_AGENT_ID}",
+        "agentName": "Consulting Agent",
+        "webchatUrl": "{CA_WEBCHAT_URL}"
+      }
+    },
+    "description": "Copilot Studio configuration"
+  },
+  
+  "azureFunctions": {
+    "appName": "{MASTERCARD_FUNCTION_APP_NAME}",
+    "resourceGroup": "{MASTERCARD_RESOURCE_GROUP}",
+    "subscriptionId": "{MASTERCARD_SUBSCRIPTION_ID}",
+    "storageAccount": "{MASTERCARD_STORAGE_ACCOUNT}",
+    "baseUrl": "{MASTERCARD_FUNCTION_BASE_URL}",
+    "endpoints": {
+      "health": "/api/health",
+      "allocation": "/api/allocation",
+      "gap": "/api/gap",
+      "spo": "/api/spo",
+      "features": "/api/features/{flag_name}",
+      "document": "/api/document",
+      "media_plan_document": "/api/generate-media-plan-document",
+      "projections": "/api/projections",
+      "benchmarks_search": "/api/benchmarks/search",
+      "session": "/api/session",
+      "validate_gate": "/api/validate-gate"
+    },
+    "functionKey": "{MASTERCARD_FUNCTION_KEY}",
+    "deployedFunctions": [
+      "CalculateBudgetAllocation",
+      "CalculateGap",
+      "CalculateSPO",
+      "CheckFeatureEnabled",
+      "GenerateDocument",
+      "GenerateMediaPlanDocument",
+      "HealthCheck",
+      "RunProjections",
+      "SearchBenchmarks",
+      "SessionManager",
+      "ValidateGate",
+      "WarmupTrigger"
+    ],
+    "description": "Azure Functions for calculations and document generation"
+  },
+  
+  "authentication": {
+    "clientId": "{MASTERCARD_AUTH_CLIENT_ID}",
+    "authority": "https://login.microsoftonline.com/{MASTERCARD_TENANT_ID}",
+    "scopes": [
+      "{MASTERCARD_DATAVERSE_URL}/.default"
+    ],
+    "authMethod": "SSO",
+    "requireMFA": true,
+    "description": "Azure AD app registration - SSO only"
+  },
+  
+  "channels": {
+    "primary": "teams",
+    "options": ["teams"],
+    "teamsAppId": "{MASTERCARD_TEAMS_APP_ID}",
+    "teamsManifestId": "{MASTERCARD_TEAMS_MANIFEST_ID}",
+    "description": "Teams channel deployment only"
+  },
+  
+  "monitoring": {
+    "applicationInsights": "{MASTERCARD_APP_INSIGHTS_NAME}",
+    "appInsightsConnectionString": "{MASTERCARD_APP_INSIGHTS_CONNECTION_STRING}",
+    "logLevel": "Warning",
+    "enableDetailedErrors": false,
+    "auditRetentionDays": 90,
+    "description": "Application Insights for monitoring and diagnostics"
+  },
+  
+  "security": {
+    "dataFirewall": {
+      "enabled": true,
+      "allowedDomains": [
+        "mastercard.com",
+        "mastercard.sharepoint.com"
+      ],
+      "blockedExternalAPIs": true
+    },
+    "accessControl": {
+      "model": "hierarchy",
+      "levels": ["business_unit", "department", "team", "pod", "employee"],
+      "defaultVisibility": "pod"
+    }
+  },
+  
+  "featureDefaults": {
+    "description": "Corporate environment - security features enabled, external access disabled",
+    "profile": "corporate",
+    "overrides": {
+      "mpa_enable_web_search": false,
+      "mpa_enable_external_api": false,
+      "mpa_enable_document_generation": true,
+      "mpa_enable_benchmark_lookup": true,
+      "mpa_enable_budget_optimization": true,
+      "mpa_enable_channel_recommendations": true,
+      "mpa_enable_projections": true,
+      "mpa_enable_gap_analysis": true,
+      "sec_enable_audit_logging": true,
+      "sec_require_data_classification": true,
+      "sec_enable_row_level_security": true,
+      "sec_enable_mfa_verification": true,
+      "ui_show_debug_info": false,
+      "ui_show_advanced_options": false
+    }
+  },
+  
+  "dataSources": {
+    "internal": {
+      "confluence": {
+        "enabled": true,
+        "baseUrl": "{MASTERCARD_CONFLUENCE_URL}",
+        "spaceKeys": "{CONFLUENCE_SPACE_KEYS}"
+      },
+      "sharepoint": {
+        "enabled": true,
+        "sites": "{MASTERCARD_SHAREPOINT_SITES}"
+      }
+    },
+    "external": {
+      "webSearch": false,
+      "publicAPIs": false
+    }
+  },
+  
+  "deploymentStatus": {
+    "lastUpdated": "{DEPLOYMENT_DATE}",
+    "phases": {
+      "phase_0_environment": "PENDING",
+      "phase_1_azure": "PENDING",
+      "phase_2_dataverse": "PENDING",
+      "phase_3_sharepoint": "PENDING",
+      "phase_4_flows": "PENDING",
+      "phase_5_mpa_agent": "PENDING",
+      "phase_6_ca_agent": "PENDING",
+      "phase_7_monitoring": "PENDING",
+      "phase_8_validation": "PENDING"
+    }
+  }
+}

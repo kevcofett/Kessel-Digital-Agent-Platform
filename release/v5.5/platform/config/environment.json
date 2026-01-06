@@ -1,0 +1,151 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Kessel-Digital Environment Configuration",
+  "description": "Environment configuration for Kessel-Digital personal deployment (Aragorn AI)",
+  "version": "5.5",
+  "lastUpdated": "January 2026",
+  
+  "organization": {
+    "code": "Kessel-Digital",
+    "name": "Kessel Digital Consulting",
+    "description": "Personal deployment environment"
+  },
+  
+  "tenant": {
+    "tenantId": "3933d83c-778f-4bf2-b5d7-1eea5844e9a3",
+    "tenantName": "kesseldigitalcom.onmicrosoft.com",
+    "description": "Kessel Digital Azure AD tenant"
+  },
+  
+  "dataverse": {
+    "environmentUrl": "https://aragornai.crm.dynamics.com",
+    "environmentId": "c672b470-9cc7-e9d8-a0e2-ca83751f800c",
+    "organizationId": "d53abdc5-f7e7-f011-aa23-6045bd003938",
+    "apiUrl": "https://aragornai.api.crm.dynamics.com/api/data/v9.2",
+    "solutionName": "AgentPlatform",
+    "publisherPrefix": "eap",
+    "description": "Aragorn AI Dataverse environment"
+  },
+  
+  "sharepoint": {
+    "siteUrl": "https://kesseldigitalcom.sharepoint.com/sites/KesselDigital",
+    "kbLibraries": {
+      "mpa": "MediaPlanningKB",
+      "ca": "ConsultingKB",
+      "shared": "SharedKB"
+    },
+    "description": "SharePoint site for knowledge base files"
+  },
+  
+  "copilotStudio": {
+    "environmentUrl": "https://copilotstudio.microsoft.com/environments/c672b470-9cc7-e9d8-a0e2-ca83751f800c",
+    "powerPlatformApiUrl": "https://c672b4709cc7e9d8a0e2ca83751f80.0c.environment.api.powerplatform.com",
+    "agents": {
+      "mpa": {
+        "agentId": "copilots_header_a2740",
+        "agentName": "Media Planning Agent",
+        "webchatUrl": "https://copilotstudio.microsoft.com/environments/c672b470-9cc7-e9d8-a0e2-ca83751f800c/bots/copilots_header_a2740/webchat?__version__=2"
+      },
+      "ca": {
+        "agentId": "{CA_AGENT_ID}",
+        "agentName": "Consulting Agent"
+      }
+    },
+    "description": "Copilot Studio configuration"
+  },
+  
+  "azureFunctions": {
+    "appName": "func-aragorn-mpa",
+    "resourceGroup": "rg-aragorn-ai",
+    "subscriptionId": "0c691503-1f82-419a-adbf-0bd77c2d7d7e",
+    "storageAccount": "staragornai72605",
+    "baseUrl": "https://func-aragorn-mpa.azurewebsites.net",
+    "endpoints": {
+      "health": "/api/health",
+      "allocation": "/api/allocation",
+      "gap": "/api/gap",
+      "spo": "/api/spo",
+      "features": "/api/features/{flag_name}",
+      "document": "/api/document",
+      "media_plan_document": "/api/generate-media-plan-document",
+      "projections": "/api/projections",
+      "benchmarks_search": "/api/benchmarks/search",
+      "session": "/api/session",
+      "validate_gate": "/api/validate-gate"
+    },
+    "functionKey": "lCMpDrdQQV47TWq3pR9OXFen_uFlaOwdSw7_7uk6CHO2AzFuoaY6GQ==",
+    "deployedFunctions": [
+      "CalculateBudgetAllocation",
+      "CalculateGap",
+      "CalculateSPO",
+      "CheckFeatureEnabled",
+      "GenerateDocument",
+      "GenerateMediaPlanDocument",
+      "HealthCheck",
+      "RunProjections",
+      "SearchBenchmarks",
+      "SessionManager",
+      "ValidateGate",
+      "WarmupTrigger"
+    ],
+    "description": "Azure Functions for calculations and document generation"
+  },
+  
+  "authentication": {
+    "clientId": "f1ccccf1-c2a0-4890-8d52-fdfcd6620ac8",
+    "authority": "https://login.microsoftonline.com/3933d83c-778f-4bf2-b5d7-1eea5844e9a3",
+    "scopes": [
+      "https://aragornai.crm.dynamics.com/.default"
+    ],
+    "description": "Azure AD app registration for API access"
+  },
+  
+  "channels": {
+    "primary": "web",
+    "options": ["web", "mobile"],
+    "teamsAppId": null,
+    "description": "Web deployment for personal environment"
+  },
+  
+  "monitoring": {
+    "applicationInsights": "func-aragorn-mpa",
+    "appInsightsConnectionString": "{APP_INSIGHTS_CONNECTION_STRING}",
+    "logLevel": "Information",
+    "enableDetailedErrors": true,
+    "description": "Application Insights for monitoring and diagnostics"
+  },
+  
+  "featureDefaults": {
+    "description": "Personal environment enables most features",
+    "profile": "personal",
+    "overrides": {
+      "mpa_enable_web_search": true,
+      "mpa_enable_external_api": true,
+      "mpa_enable_document_generation": true,
+      "mpa_enable_benchmark_lookup": true,
+      "mpa_enable_budget_optimization": true,
+      "mpa_enable_channel_recommendations": true,
+      "mpa_enable_projections": true,
+      "mpa_enable_gap_analysis": true,
+      "sec_enable_audit_logging": false,
+      "sec_enable_row_level_security": false,
+      "ui_show_debug_info": true,
+      "ui_show_advanced_options": true
+    }
+  },
+  
+  "deploymentStatus": {
+    "lastUpdated": "2026-01-06",
+    "phases": {
+      "phase_0_environment": "COMPLETE",
+      "phase_1_azure": "COMPLETE",
+      "phase_2_dataverse": "IN_PROGRESS",
+      "phase_3_sharepoint": "IN_PROGRESS",
+      "phase_4_flows": "PENDING",
+      "phase_5_mpa_agent": "PENDING",
+      "phase_6_ca_agent": "PENDING",
+      "phase_7_monitoring": "PENDING",
+      "phase_8_validation": "PENDING"
+    }
+  }
+}

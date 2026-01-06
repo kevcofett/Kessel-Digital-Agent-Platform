@@ -1,0 +1,591 @@
+FEATURE FLAGS REFERENCE
+MPA V5.5 CORPORATE DEPLOYMENT
+VERSION 1.0
+
+============================================================
+OVERVIEW
+============================================================
+
+This document provides complete specifications for feature flags used to control MPA v5.5 functionality. Feature flags enable gradual rollout and environment-specific configuration.
+
+TOTAL FLAGS
+24 flags
+
+FLAG CATEGORIES
+- Platform (5 flags)
+- Agent (6 flags)
+- Integration (5 flags)
+- Security (4 flags)
+- UI (4 flags)
+
+STORAGE
+eap_featureflag table in Dataverse
+
+============================================================
+TABLE SCHEMA
+============================================================
+
+TABLE NAME
+eap_featureflag
+
+COLUMNS
+
+eap_flagcode
+- Type - Text
+- Max Length - 100
+- Required - Yes
+- Description - Unique identifier for flag
+
+eap_flagname
+- Type - Text
+- Max Length - 200
+- Required - Yes
+- Description - Display name for flag
+
+eap_description
+- Type - Text
+- Max Length - 2000
+- Required - No
+- Description - Detailed description of flag purpose
+
+eap_category
+- Type - Choice
+- Required - Yes
+- Values
+  - Platform - 100000000
+  - Agent - 100000001
+  - Integration - 100000002
+  - Security - 100000003
+  - UI - 100000004
+
+eap_isenabled
+- Type - Boolean
+- Required - Yes
+- Description - Current enabled state
+
+eap_defaultvalue
+- Type - Boolean
+- Required - Yes
+- Description - Default value for new environments
+
+eap_fallbackmessage
+- Type - Text
+- Max Length - 500
+- Required - No
+- Description - Message to show when flag disabled
+
+eap_agentcode
+- Type - Text
+- Max Length - 20
+- Required - No
+- Description - Agent code if flag is agent specific
+
+============================================================
+PLATFORM FLAGS
+============================================================
+
+FLAG - EAP_ENABLE_MULTI_AGENT
+
+Code - eap_enable_multi_agent
+Name - Enable Multi-Agent Orchestration
+Category - Platform
+Default - false
+
+Description
+Enables cross-agent handoff and orchestration capabilities. When enabled agents can transfer conversations to other agents.
+
+Personal Environment - false
+Corporate Environment - false (until tested)
+
+FLAG - EAP_ENABLE_CACHING
+
+Code - eap_enable_caching
+Name - Enable Response Caching
+Category - Platform
+Default - true
+
+Description
+Enables caching of benchmark and reference data queries. Improves performance for frequently accessed data.
+
+Personal Environment - true
+Corporate Environment - true
+
+FLAG - EAP_ENABLE_BATCH_OPERATIONS
+
+Code - eap_enable_batch_operations
+Name - Enable Batch Operations
+Category - Platform
+Default - true
+
+Description
+Enables batch processing for bulk data operations. Required for importing large datasets.
+
+Personal Environment - true
+Corporate Environment - true
+
+FLAG - EAP_LOG_LEVEL
+
+Code - eap_log_level
+Name - Logging Level
+Category - Platform
+Default - true (Info level)
+
+Description
+Controls verbosity of system logging. When disabled only errors are logged.
+
+Personal Environment - true
+Corporate Environment - true
+
+FLAG - EAP_ENABLE_METRICS
+
+Code - eap_enable_metrics
+Name - Enable Performance Metrics
+Category - Platform
+Default - true
+
+Description
+Enables collection of performance metrics and telemetry data.
+
+Personal Environment - true
+Corporate Environment - true
+
+============================================================
+AGENT FLAGS
+============================================================
+
+FLAG - MPA_ENABLE_GUIDED_MODE
+
+Code - mpa_enable_guided_mode
+Name - Enable Guided Planning Mode
+Category - Agent
+Default - true
+
+Description
+Enables the guided step-by-step planning workflow. Core functionality for MPA.
+
+Personal Environment - true
+Corporate Environment - true
+
+FLAG - MPA_ENABLE_WEB_SEARCH
+
+Code - mpa_enable_web_search
+Name - Enable Web Search
+Category - Agent
+Default - true
+
+Description
+Enables agent to search external web sources for current information.
+
+Personal Environment - true
+Corporate Environment - false (external access restricted)
+
+Fallback Message
+Web search is not available in this environment. Please refer to internal knowledge sources.
+
+FLAG - MPA_ENABLE_EXTERNAL_API
+
+Code - mpa_enable_external_api
+Name - Enable External API Calls
+Category - Agent
+Default - true
+
+Description
+Enables agent to call external APIs for data enrichment.
+
+Personal Environment - true
+Corporate Environment - false (external access restricted)
+
+Fallback Message
+External API access is not available in this environment.
+
+FLAG - MPA_ENABLE_DOCUMENT_GENERATION
+
+Code - mpa_enable_document_generation
+Name - Enable Document Generation
+Category - Agent
+Default - true
+
+Description
+Enables generation of Word documents from plan data.
+
+Personal Environment - true
+Corporate Environment - true
+
+FLAG - MPA_ENABLE_BENCHMARK_SEARCH
+
+Code - mpa_enable_benchmark_search
+Name - Enable Benchmark Search
+Category - Agent
+Default - true
+
+Description
+Enables searching and retrieving benchmark data.
+
+Personal Environment - true
+Corporate Environment - true
+
+FLAG - MPA_ENABLE_PROJECTIONS
+
+Code - mpa_enable_projections
+Name - Enable Performance Projections
+Category - Agent
+Default - true
+
+Description
+Enables calculation and display of performance projections.
+
+Personal Environment - true
+Corporate Environment - true
+
+============================================================
+INTEGRATION FLAGS
+============================================================
+
+FLAG - INT_ENABLE_SHAREPOINT_SEARCH
+
+Code - int_enable_sharepoint_search
+Name - Enable SharePoint Search
+Category - Integration
+Default - true
+
+Description
+Enables searching SharePoint for documents and knowledge.
+
+Personal Environment - true
+Corporate Environment - true
+
+FLAG - INT_ENABLE_CONFLUENCE_SEARCH
+
+Code - int_enable_confluence_search
+Name - Enable Confluence Search
+Category - Integration
+Default - false
+
+Description
+Enables searching Confluence for internal documentation.
+
+Personal Environment - false
+Corporate Environment - true
+
+FLAG - INT_ENABLE_TEAMS_NOTIFICATIONS
+
+Code - int_enable_teams_notifications
+Name - Enable Teams Notifications
+Category - Integration
+Default - false
+
+Description
+Enables sending notifications to Microsoft Teams channels.
+
+Personal Environment - false
+Corporate Environment - true
+
+FLAG - INT_ENABLE_EMAIL_ALERTS
+
+Code - int_enable_email_alerts
+Name - Enable Email Alerts
+Category - Integration
+Default - true
+
+Description
+Enables sending email alerts for critical events.
+
+Personal Environment - true
+Corporate Environment - true
+
+FLAG - INT_ENABLE_DATAVERSE_SYNC
+
+Code - int_enable_dataverse_sync
+Name - Enable Dataverse Synchronization
+Category - Integration
+Default - true
+
+Description
+Enables synchronization of data with Dataverse.
+
+Personal Environment - true
+Corporate Environment - true
+
+============================================================
+SECURITY FLAGS
+============================================================
+
+FLAG - SEC_ENABLE_AUDIT_LOGGING
+
+Code - sec_enable_audit_logging
+Name - Enable Audit Logging
+Category - Security
+Default - false
+
+Description
+Enables comprehensive audit logging of all user actions.
+
+Personal Environment - false
+Corporate Environment - true (compliance requirement)
+
+FLAG - SEC_REQUIRE_DATA_CLASSIFICATION
+
+Code - sec_require_data_classification
+Name - Require Data Classification
+Category - Security
+Default - false
+
+Description
+Requires sensitivity labels on all exported documents.
+
+Personal Environment - false
+Corporate Environment - true (compliance requirement)
+
+FLAG - SEC_ENABLE_ROW_LEVEL_SECURITY
+
+Code - sec_enable_row_level_security
+Name - Enable Row Level Security
+Category - Security
+Default - false
+
+Description
+Enables row-level security based on organizational hierarchy.
+
+Personal Environment - false
+Corporate Environment - true (compliance requirement)
+
+FLAG - SEC_ENABLE_MFA_VERIFICATION
+
+Code - sec_enable_mfa_verification
+Name - Enable MFA Verification
+Category - Security
+Default - false
+
+Description
+Requires additional MFA verification for sensitive operations.
+
+Personal Environment - false
+Corporate Environment - true
+
+============================================================
+UI FLAGS
+============================================================
+
+FLAG - UI_SHOW_DEBUG_INFO
+
+Code - ui_show_debug_info
+Name - Show Debug Information
+Category - UI
+Default - true
+
+Description
+Shows debug information and technical details in responses.
+
+Personal Environment - true
+Corporate Environment - false (production security)
+
+FLAG - UI_SHOW_ADVANCED_OPTIONS
+
+Code - ui_show_advanced_options
+Name - Show Advanced Options
+Category - UI
+Default - true
+
+Description
+Shows advanced configuration options in user interface.
+
+Personal Environment - true
+Corporate Environment - false
+
+FLAG - UI_ENABLE_DARK_MODE
+
+Code - ui_enable_dark_mode
+Name - Enable Dark Mode
+Category - UI
+Default - true
+
+Description
+Enables dark mode theme option.
+
+Personal Environment - true
+Corporate Environment - true
+
+FLAG - UI_SHOW_BENCHMARK_SOURCES
+
+Code - ui_show_benchmark_sources
+Name - Show Benchmark Sources
+Category - UI
+Default - true
+
+Description
+Shows data source citations for benchmark values.
+
+Personal Environment - true
+Corporate Environment - true
+
+============================================================
+ENVIRONMENT CONFIGURATIONS
+============================================================
+
+PERSONAL ENVIRONMENT DEFAULTS
+
+Enabled Flags
+- eap_enable_caching
+- eap_enable_batch_operations
+- eap_log_level
+- eap_enable_metrics
+- mpa_enable_guided_mode
+- mpa_enable_web_search
+- mpa_enable_external_api
+- mpa_enable_document_generation
+- mpa_enable_benchmark_search
+- mpa_enable_projections
+- int_enable_sharepoint_search
+- int_enable_email_alerts
+- int_enable_dataverse_sync
+- ui_show_debug_info
+- ui_show_advanced_options
+- ui_enable_dark_mode
+- ui_show_benchmark_sources
+
+Disabled Flags
+- eap_enable_multi_agent
+- int_enable_confluence_search
+- int_enable_teams_notifications
+- sec_enable_audit_logging
+- sec_require_data_classification
+- sec_enable_row_level_security
+- sec_enable_mfa_verification
+
+CORPORATE ENVIRONMENT DEFAULTS
+
+Enabled Flags
+- eap_enable_caching
+- eap_enable_batch_operations
+- eap_log_level
+- eap_enable_metrics
+- mpa_enable_guided_mode
+- mpa_enable_document_generation
+- mpa_enable_benchmark_search
+- mpa_enable_projections
+- int_enable_sharepoint_search
+- int_enable_confluence_search
+- int_enable_teams_notifications
+- int_enable_email_alerts
+- int_enable_dataverse_sync
+- sec_enable_audit_logging
+- sec_require_data_classification
+- sec_enable_row_level_security
+- sec_enable_mfa_verification
+- ui_enable_dark_mode
+- ui_show_benchmark_sources
+
+Disabled Flags
+- eap_enable_multi_agent
+- mpa_enable_web_search
+- mpa_enable_external_api
+- ui_show_debug_info
+- ui_show_advanced_options
+
+============================================================
+IMPLEMENTATION
+============================================================
+
+CHECKING FLAGS IN FLOWS
+
+List Row Query
+Table - eap_featureflag
+Filter - eap_flagcode eq 'mpa_enable_web_search'
+Select - eap_isenabled
+
+Condition Check
+If eap_isenabled equals true
+  Execute feature logic
+Else
+  Return fallback message or skip
+
+CHECKING FLAGS IN FUNCTIONS
+
+Python Example
+def check_feature_flag(flag_code):
+    # Query Dataverse for flag
+    result = dataverse_client.get(
+        "eap_featureflags",
+        filter=f"eap_flagcode eq '{flag_code}'"
+    )
+    if result and len(result) > 0:
+        return result[0]["eap_isenabled"]
+    return False
+
+CACHING FLAGS
+
+Recommendation
+- Cache flags for 5 minutes
+- Refresh cache on demand
+- Handle cache misses gracefully
+
+============================================================
+ADMINISTRATION
+============================================================
+
+VIEWING FLAGS
+
+Power Apps Method
+1 Open make.powerapps.com
+2 Select environment
+3 Open eap_featureflag table
+4 View all flag records
+
+Model Driven App
+1 Open admin app
+2 Navigate to Feature Flags
+3 View and filter flags
+
+UPDATING FLAGS
+
+Single Flag Update
+1 Open flag record
+2 Change eap_isenabled value
+3 Save record
+4 Changes take effect immediately (or after cache expiry)
+
+Bulk Update
+1 Export flags to CSV
+2 Modify eap_isenabled values
+3 Import updated CSV
+4 Verify changes
+
+ADDING NEW FLAGS
+
+Steps
+1 Create new record in eap_featureflag
+2 Set flag code (unique)
+3 Set category
+4 Set default value
+5 Add fallback message if needed
+6 Update flows and functions to check flag
+
+============================================================
+SEED DATA GENERATION
+============================================================
+
+GENERATE CSV FROM TEMPLATE
+
+Script Location
+release/v5.5/scripts/generate_featureflag_csv.py
+
+Source File
+release/v5.5/platform/config/feature_flags.template.json
+
+Output File
+release/v5.5/platform/eap-core/base/data/seed/eap_featureflag_seed.csv
+
+Usage
+python generate_featureflag_csv.py
+
+CSV FORMAT
+
+Columns
+eap_flagcode,eap_flagname,eap_description,eap_category,eap_isenabled,eap_defaultvalue,eap_fallbackmessage,eap_agentcode
+
+Example Row
+mpa_enable_web_search,Enable Web Search,Enables agent to search external web sources,100000001,true,true,Web search not available,MPA
+
+============================================================
+END OF DOCUMENT
+============================================================

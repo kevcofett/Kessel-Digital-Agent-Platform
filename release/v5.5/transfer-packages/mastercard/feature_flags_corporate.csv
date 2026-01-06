@@ -1,0 +1,26 @@
+flag_code,flag_name,description,scope,default_value,fallback_behavior,category
+mpa_enable_web_search,Enable Web Search,Allow MPA to perform real-time web searches for market data,agent,false,Use KB benchmarks only,capability
+mpa_enable_external_api,Enable External API,Allow MPA to call external APIs for data enrichment,agent,false,Use internal data sources only,capability
+mpa_enable_document_generation,Enable Document Generation,Allow MPA to generate media plan documents,agent,true,Return JSON summary only,capability
+mpa_enable_benchmark_lookup,Enable Benchmark Lookup,Allow MPA to search benchmark database,agent,true,Use default industry averages,capability
+mpa_enable_budget_optimization,Enable Budget Optimization,Allow MPA to run budget optimization algorithms,agent,true,Use simple allocation,capability
+mpa_enable_channel_recommendations,Enable Channel Recommendations,Allow MPA to provide channel mix recommendations,agent,true,Return channels without optimization,capability
+mpa_enable_projections,Enable Projections,Allow MPA to run performance projections,agent,true,Skip projections section,capability
+mpa_enable_gap_analysis,Enable Gap Analysis,Allow MPA to perform gap detection and analysis,agent,true,Skip gap analysis,capability
+mpa_enable_confidence_scoring,Enable Confidence Scoring,Show confidence levels on recommendations,agent,true,Hide confidence indicators,capability
+mpa_enable_correlation_tracking,Enable Correlation Tracking,Track correlation IDs across all operations,agent,true,Basic logging only,observability
+sec_enable_audit_logging,Enable Audit Logging,Log all user actions to audit table,security,true,No audit logging,security
+sec_require_data_classification,Require Data Classification,Require data classification on all records,security,true,No classification required,security
+sec_enable_row_level_security,Enable Row Level Security,Enforce row-level security based on user hierarchy,security,true,No row filtering,security
+sec_enable_mfa_verification,Enable MFA Verification,Require MFA for sensitive operations,security,true,Skip MFA check,security
+sec_enable_session_timeout,Enable Session Timeout,Auto-expire sessions after inactivity,security,true,Sessions never expire,security
+sec_session_timeout_minutes,Session Timeout Minutes,Minutes of inactivity before session expires,security,30,Default 60 minutes,security
+sec_enable_data_firewall,Enable Data Firewall,Block all external data transmission,security,true,Allow external transmission,security
+ui_show_debug_info,Show Debug Info,Display debug information in responses,ui,false,Hide debug info,ui
+ui_show_advanced_options,Show Advanced Options,Display advanced configuration options,ui,false,Hide advanced options,ui
+ui_enable_adaptive_cards,Enable Adaptive Cards,Use adaptive cards for rich responses,ui,true,Use plain text responses,ui
+ui_enable_workflow_progress,Enable Workflow Progress,Show workflow progress indicators,ui,true,Hide progress indicators,ui
+eap_enable_session_resume,Enable Session Resume,Allow users to resume previous sessions,platform,true,Start new session only,platform
+eap_enable_multi_agent,Enable Multi Agent,Allow switching between agents in same session,platform,true,Single agent per session,platform
+eap_enable_agent_handoff,Enable Agent Handoff,Allow agents to hand off to other agents,platform,true,No handoff capability,platform
+eap_enable_kb_versioning,Enable KB Versioning,Track KB document versions,platform,true,No version tracking,platform

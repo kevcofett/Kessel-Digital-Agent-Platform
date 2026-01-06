@@ -1,0 +1,853 @@
+DATAVERSE TABLE REFERENCE
+MPA V5.5 CORPORATE DEPLOYMENT
+VERSION 1.0
+
+============================================================
+OVERVIEW
+============================================================
+
+This document provides complete specifications for all 8 MPA Dataverse tables required for deployment. Tables must be created in the order listed due to lookup dependencies.
+
+CREATION ORDER
+1 mpa_vertical - No dependencies
+2 mpa_channel - No dependencies
+3 mpa_kpi - No dependencies
+4 mpa_benchmark - No dependencies (uses text references)
+5 mpa_errorlog - No dependencies
+6 mpa_mediaplan - No dependencies
+7 mpa_planversion - Depends on mpa_mediaplan
+8 mpa_plandata - Depends on mpa_mediaplan and mpa_planversion
+
+============================================================
+PREREQUISITE - SOLUTION AND PUBLISHER
+============================================================
+
+STEP 1 - CREATE PUBLISHER
+
+Navigation
+1 Open make.powerapps.com
+2 Select your environment
+3 Click Solutions
+4 Click New solution
+5 Click New publisher at bottom
+
+Publisher Settings
+- Display name - Media Planning Agent
+- Name - mediaplanning
+- Prefix - mpa
+- Choice value prefix - 10000
+
+Click Save
+
+STEP 2 - CREATE SOLUTION
+
+Solution Settings
+- Display name - Media Planning Agent v5.5
+- Name - MediaPlanningAgent
+- Publisher - Media Planning Agent (mpa)
+- Version - 5.5.0.0
+
+Click Create
+
+IMPORTANT - All tables MUST be created from inside this solution
+
+============================================================
+TABLE 1 - MPA_VERTICAL
+============================================================
+
+PURPOSE
+Industry verticals for benchmark categorization
+
+TABLE PROPERTIES
+- Display name - Vertical
+- Plural name - Verticals
+- Description - Industry verticals for benchmark categorization
+- Primary column display name - Vertical Name
+- Primary column description - Name of the industry vertical
+
+COLUMNS
+
+Column 1 - Vertical Code
+- Display name - Vertical Code
+- Name - mpa_verticalcode (auto generated)
+- Data type - Single line of text
+- Format - Text
+- Maximum character count - 50
+- Required - Business required
+
+Column 2 - Description
+- Display name - Description
+- Name - mpa_description
+- Data type - Multiple lines of text
+- Maximum character count - 2000
+- Required - Optional
+
+Column 3 - Is Active
+- Display name - Is Active
+- Name - mpa_isactive
+- Data type - Yes/No
+- Default value - Yes
+- Required - Business required
+
+Column 4 - Display Order
+- Display name - Display Order
+- Name - mpa_displayorder
+- Data type - Whole number
+- Minimum value - 0
+- Maximum value - 1000
+- Required - Optional
+
+============================================================
+TABLE 2 - MPA_CHANNEL
+============================================================
+
+PURPOSE
+Advertising channels for media planning
+
+TABLE PROPERTIES
+- Display name - Channel
+- Plural name - Channels
+- Description - Advertising channels for media planning
+- Primary column display name - Channel Name
+- Primary column description - Name of the advertising channel
+
+COLUMNS
+
+Column 1 - Channel Code
+- Display name - Channel Code
+- Name - mpa_channelcode
+- Data type - Single line of text
+- Maximum character count - 50
+- Required - Business required
+
+Column 2 - Category
+- Display name - Category
+- Name - mpa_category
+- Data type - Choice
+- Sync with global choice - No
+- Required - Business required
+- Choice values
+  - Digital - 100000000
+  - Traditional - 100000001
+  - Emerging - 100000002
+
+Column 3 - Description
+- Display name - Description
+- Name - mpa_description
+- Data type - Multiple lines of text
+- Maximum character count - 4000
+- Required - Optional
+
+Column 4 - Min Budget
+- Display name - Min Budget
+- Name - mpa_minbudget
+- Data type - Currency
+- Precision - 2
+- Minimum value - 0
+- Required - Optional
+
+Column 5 - CPM Low
+- Display name - CPM Low
+- Name - mpa_cpmlow
+- Data type - Decimal number
+- Precision - 2
+- Minimum value - 0
+- Required - Optional
+
+Column 6 - CPM High
+- Display name - CPM High
+- Name - mpa_cpmhigh
+- Data type - Decimal number
+- Precision - 2
+- Minimum value - 0
+- Required - Optional
+
+Column 7 - CPC Low
+- Display name - CPC Low
+- Name - mpa_cpclow
+- Data type - Decimal number
+- Precision - 2
+- Minimum value - 0
+- Required - Optional
+
+Column 8 - CPC High
+- Display name - CPC High
+- Name - mpa_cpchigh
+- Data type - Decimal number
+- Precision - 2
+- Minimum value - 0
+- Required - Optional
+
+Column 9 - Funnel Stage
+- Display name - Funnel Stage
+- Name - mpa_funnelstage
+- Data type - Single line of text
+- Maximum character count - 100
+- Required - Optional
+
+Column 10 - Platforms
+- Display name - Platforms
+- Name - mpa_platforms
+- Data type - Multiple lines of text
+- Maximum character count - 2000
+- Required - Optional
+
+Column 11 - Confidence Level
+- Display name - Confidence Level
+- Name - mpa_confidencelevel
+- Data type - Single line of text
+- Maximum character count - 50
+- Required - Optional
+
+Column 12 - Notes
+- Display name - Notes
+- Name - mpa_notes
+- Data type - Multiple lines of text
+- Maximum character count - 4000
+- Required - Optional
+
+Column 13 - Is Active
+- Display name - Is Active
+- Name - mpa_isactive
+- Data type - Yes/No
+- Default value - Yes
+- Required - Business required
+
+============================================================
+TABLE 3 - MPA_KPI
+============================================================
+
+PURPOSE
+KPI definitions with formulas and interpretation guidance
+
+TABLE PROPERTIES
+- Display name - KPI Definition
+- Plural name - KPI Definitions
+- Description - KPI definitions with formulas and interpretation guidance
+- Primary column display name - KPI Name
+- Primary column description - Full name of the KPI
+
+COLUMNS
+
+Column 1 - KPI Code
+- Display name - KPI Code
+- Name - mpa_kpicode
+- Data type - Single line of text
+- Maximum character count - 20
+- Required - Business required
+
+Column 2 - Category
+- Display name - Category
+- Name - mpa_category
+- Data type - Choice
+- Sync with global choice - No
+- Required - Business required
+- Choice values
+  - Cost - 100000000
+  - Engagement - 100000001
+  - Conversion - 100000002
+  - Efficiency - 100000003
+  - Quality - 100000004
+
+Column 3 - Formula
+- Display name - Formula
+- Name - mpa_formula
+- Data type - Single line of text
+- Maximum character count - 500
+- Required - Business required
+
+Column 4 - Unit
+- Display name - Unit
+- Name - mpa_unit
+- Data type - Single line of text
+- Maximum character count - 20
+- Required - Business required
+
+Column 5 - Format
+- Display name - Format
+- Name - mpa_format
+- Data type - Single line of text
+- Maximum character count - 50
+- Required - Optional
+
+Column 6 - Direction
+- Display name - Direction
+- Name - mpa_direction
+- Data type - Choice
+- Sync with global choice - No
+- Required - Business required
+- Choice values
+  - Higher is Better - 100000000
+  - Lower is Better - 100000001
+  - Target Range - 100000002
+
+Column 7 - Confidence Level
+- Display name - Confidence Level
+- Name - mpa_confidencelevel
+- Data type - Single line of text
+- Maximum character count - 50
+- Required - Optional
+
+Column 8 - Notes
+- Display name - Notes
+- Name - mpa_notes
+- Data type - Multiple lines of text
+- Maximum character count - 4000
+- Required - Optional
+
+Column 9 - Is Active
+- Display name - Is Active
+- Name - mpa_isactive
+- Data type - Yes/No
+- Default value - Yes
+- Required - Business required
+
+============================================================
+TABLE 4 - MPA_BENCHMARK
+============================================================
+
+PURPOSE
+Industry benchmark data for performance comparison
+
+TABLE PROPERTIES
+- Display name - Benchmark
+- Plural name - Benchmarks
+- Description - Industry benchmark data for performance comparison
+- Primary column display name - Metric Name
+- Primary column description - Name of the metric being benchmarked
+
+COLUMNS
+
+Column 1 - Vertical Code
+- Display name - Vertical Code
+- Name - mpa_verticalcode
+- Data type - Single line of text
+- Maximum character count - 50
+- Required - Business required
+
+Column 2 - Channel Code
+- Display name - Channel Code
+- Name - mpa_channelcode
+- Data type - Single line of text
+- Maximum character count - 50
+- Required - Optional
+
+Column 3 - KPI Code
+- Display name - KPI Code
+- Name - mpa_kpicode
+- Data type - Single line of text
+- Maximum character count - 20
+- Required - Business required
+
+Column 4 - Metric Low
+- Display name - Metric Low
+- Name - mpa_metriclow
+- Data type - Decimal number
+- Precision - 6
+- Required - Business required
+
+Column 5 - Metric Median
+- Display name - Metric Median
+- Name - mpa_metricmedian
+- Data type - Decimal number
+- Precision - 6
+- Required - Business required
+
+Column 6 - Metric High
+- Display name - Metric High
+- Name - mpa_metrichigh
+- Data type - Decimal number
+- Precision - 6
+- Required - Business required
+
+Column 7 - Metric Best
+- Display name - Metric Best
+- Name - mpa_metricbest
+- Data type - Decimal number
+- Precision - 6
+- Required - Optional
+
+Column 8 - Data Source
+- Display name - Data Source
+- Name - mpa_datasource
+- Data type - Single line of text
+- Maximum character count - 200
+- Required - Business required
+
+Column 9 - Data Period
+- Display name - Data Period
+- Name - mpa_dataperiod
+- Data type - Single line of text
+- Maximum character count - 50
+- Required - Business required
+
+Column 10 - Confidence Level
+- Display name - Confidence Level
+- Name - mpa_confidencelevel
+- Data type - Single line of text
+- Maximum character count - 50
+- Required - Optional
+
+Column 11 - Metric Unit
+- Display name - Metric Unit
+- Name - mpa_metricunit
+- Data type - Single line of text
+- Maximum character count - 20
+- Required - Optional
+
+Column 12 - Is Active
+- Display name - Is Active
+- Name - mpa_isactive
+- Data type - Yes/No
+- Default value - Yes
+- Required - Business required
+
+============================================================
+TABLE 5 - MPA_ERRORLOG
+============================================================
+
+PURPOSE
+Error logging for MPA flows and functions
+
+TABLE PROPERTIES
+- Display name - Error Log
+- Plural name - Error Logs
+- Description - Error logging for MPA flows and functions
+- Primary column display name - Error ID
+- Primary column description - Auto generated error identifier
+
+COLUMNS
+
+Column 1 - Source
+- Display name - Source
+- Name - mpa_source
+- Data type - Single line of text
+- Maximum character count - 200
+- Required - Business required
+
+Column 2 - Error Code
+- Display name - Error Code
+- Name - mpa_errorcode
+- Data type - Single line of text
+- Maximum character count - 50
+- Required - Optional
+
+Column 3 - Error Message
+- Display name - Error Message
+- Name - mpa_errormessage
+- Data type - Multiple lines of text
+- Maximum character count - 4000
+- Required - Business required
+
+Column 4 - Error Details
+- Display name - Error Details
+- Name - mpa_errordetails
+- Data type - Multiple lines of text
+- Maximum character count - 100000
+- Required - Optional
+
+Column 5 - Session ID
+- Display name - Session ID
+- Name - mpa_sessionid
+- Data type - Single line of text
+- Maximum character count - 100
+- Required - Optional
+
+Column 6 - Plan ID
+- Display name - Plan ID
+- Name - mpa_planid
+- Data type - Single line of text
+- Maximum character count - 100
+- Required - Optional
+
+Column 7 - Severity
+- Display name - Severity
+- Name - mpa_severity
+- Data type - Choice
+- Sync with global choice - No
+- Required - Business required
+- Choice values
+  - Low - 100000000
+  - Medium - 100000001
+  - High - 100000002
+  - Critical - 100000003
+
+Column 8 - Occurred At
+- Display name - Occurred At
+- Name - mpa_occurredat
+- Data type - Date and time
+- Required - Business required
+
+============================================================
+TABLE 6 - MPA_MEDIAPLAN
+============================================================
+
+PURPOSE
+Core media plan records
+
+TABLE PROPERTIES
+- Display name - Media Plan
+- Plural name - Media Plans
+- Description - Core media plan records
+- Primary column display name - Campaign Name
+- Primary column description - Name of the campaign
+
+COLUMNS
+
+Column 1 - Plan Code
+- Display name - Plan Code
+- Name - mpa_plancode
+- Data type - Single line of text
+- Maximum character count - 20
+- Required - Business required
+
+Column 2 - Client ID
+- Display name - Client ID
+- Name - mpa_clientid
+- Data type - Single line of text
+- Maximum character count - 100
+- Required - Business required
+
+Column 3 - Status
+- Display name - Status
+- Name - mpa_status
+- Data type - Choice
+- Sync with global choice - No
+- Required - Business required
+- Default value - Draft
+- Choice values
+  - Draft - 100000000
+  - In Progress - 100000001
+  - Pending Approval - 100000002
+  - Approved - 100000003
+  - Active - 100000004
+  - Paused - 100000005
+  - Completed - 100000006
+  - Archived - 100000007
+
+Column 4 - Lifecycle Mode
+- Display name - Lifecycle Mode
+- Name - mpa_lifecyclemode
+- Data type - Choice
+- Sync with global choice - No
+- Required - Business required
+- Default value - Planning
+- Choice values
+  - Planning - 100000000
+  - InFlight - 100000001
+  - PostMortem - 100000002
+  - Archived - 100000003
+
+Column 5 - Pathway
+- Display name - Pathway
+- Name - mpa_pathway
+- Data type - Choice
+- Sync with global choice - No
+- Required - Business required
+- Default value - GUIDED
+- Choice values
+  - STANDARD - 100000001
+  - GUIDED - 100000002
+  - AUDIT - 100000003
+
+Column 6 - Current Step
+- Display name - Current Step
+- Name - mpa_currentstep
+- Data type - Whole number
+- Minimum value - 1
+- Maximum value - 10
+- Default value - 1
+- Required - Business required
+
+Column 7 - Current Gate
+- Display name - Current Gate
+- Name - mpa_currentgate
+- Data type - Whole number
+- Minimum value - 0
+- Maximum value - 4
+- Default value - 0
+- Required - Optional
+
+Column 8 - Total Budget
+- Display name - Total Budget
+- Name - mpa_totalbudget
+- Data type - Currency
+- Precision - 2
+- Minimum value - 0
+- Required - Optional
+
+Column 9 - Start Date
+- Display name - Start Date
+- Name - mpa_startdate
+- Data type - Date only
+- Required - Optional
+
+Column 10 - End Date
+- Display name - End Date
+- Name - mpa_enddate
+- Data type - Date only
+- Required - Optional
+
+Column 11 - Primary Objective
+- Display name - Primary Objective
+- Name - mpa_primaryobjective
+- Data type - Single line of text
+- Maximum character count - 200
+- Required - Optional
+
+Column 12 - Steps Completed
+- Display name - Steps Completed
+- Name - mpa_stepscompleted
+- Data type - Multiple lines of text
+- Maximum character count - 500
+- Required - Optional
+
+Column 13 - Gates Passed
+- Display name - Gates Passed
+- Name - mpa_gatespassed
+- Data type - Multiple lines of text
+- Maximum character count - 200
+- Required - Optional
+
+Column 14 - Created By
+- Display name - Created By
+- Name - mpa_createdby
+- Data type - Single line of text
+- Maximum character count - 100
+- Required - Optional
+
+Column 15 - Owned By
+- Display name - Owned By
+- Name - mpa_ownedby
+- Data type - Single line of text
+- Maximum character count - 100
+- Required - Optional
+
+Column 16 - Created At
+- Display name - Created At
+- Name - mpa_createdat
+- Data type - Date and time
+- Required - Optional
+
+Column 17 - Updated At
+- Display name - Updated At
+- Name - mpa_updatedat
+- Data type - Date and time
+- Required - Optional
+
+============================================================
+TABLE 7 - MPA_PLANVERSION
+============================================================
+
+PURPOSE
+Version history for media plans
+
+TABLE PROPERTIES
+- Display name - Plan Version
+- Plural name - Plan Versions
+- Description - Version history for media plans
+- Primary column display name - Version Name
+- Primary column description - Optional name for this version
+
+COLUMNS
+
+Column 1 - Media Plan (Lookup)
+- Display name - Media Plan
+- Name - mpa_mediaplan
+- Data type - Lookup
+- Related table - Media Plan
+- Required - Business required
+
+Column 2 - Version Number
+- Display name - Version Number
+- Name - mpa_versionnumber
+- Data type - Whole number
+- Minimum value - 1
+- Required - Business required
+
+Column 3 - Version Type
+- Display name - Version Type
+- Name - mpa_versiontype
+- Data type - Choice
+- Sync with global choice - No
+- Required - Business required
+- Choice values
+  - Initial - 100000000
+  - Revision - 100000001
+  - Optimization - 100000002
+  - Correction - 100000003
+
+Column 4 - Is Current
+- Display name - Is Current
+- Name - mpa_iscurrent
+- Data type - Yes/No
+- Default value - No
+- Required - Business required
+
+Column 5 - Change Summary
+- Display name - Change Summary
+- Name - mpa_changesummary
+- Data type - Multiple lines of text
+- Maximum character count - 10000
+- Required - Optional
+
+Column 6 - Snapshot Data
+- Display name - Snapshot Data
+- Name - mpa_snapshotdata
+- Data type - Multiple lines of text
+- Maximum character count - 1048576
+- Required - Optional
+
+Column 7 - Created By
+- Display name - Created By
+- Name - mpa_createdby
+- Data type - Single line of text
+- Maximum character count - 100
+- Required - Optional
+
+Column 8 - Created At
+- Display name - Created At
+- Name - mpa_createdat
+- Data type - Date and time
+- Required - Optional
+
+============================================================
+TABLE 8 - MPA_PLANDATA
+============================================================
+
+PURPOSE
+Detailed plan data organized by section and step
+
+TABLE PROPERTIES
+- Display name - Plan Data
+- Plural name - Plan Data
+- Description - Detailed plan data organized by section and step
+- Primary column display name - Section Label
+- Primary column description - Label for this section
+
+COLUMNS
+
+Column 1 - Media Plan (Lookup)
+- Display name - Media Plan
+- Name - mpa_mediaplan
+- Data type - Lookup
+- Related table - Media Plan
+- Required - Business required
+
+Column 2 - Plan Version (Lookup)
+- Display name - Plan Version
+- Name - mpa_planversion
+- Data type - Lookup
+- Related table - Plan Version
+- Required - Optional
+
+Column 3 - Section Type
+- Display name - Section Type
+- Name - mpa_sectiontype
+- Data type - Choice
+- Sync with global choice - No
+- Required - Business required
+- Choice values
+  - ClientContext - 100000000
+  - Objectives - 100000001
+  - Budget - 100000002
+  - Timeline - 100000003
+  - Audience - 100000004
+  - Channels - 100000005
+  - Partners - 100000006
+  - Measurement - 100000007
+  - Optimization - 100000008
+  - Compliance - 100000009
+  - Summary - 100000010
+
+Column 4 - Step Number
+- Display name - Step Number
+- Name - mpa_stepnumber
+- Data type - Whole number
+- Minimum value - 1
+- Maximum value - 10
+- Required - Business required
+
+Column 5 - Section Data
+- Display name - Section Data
+- Name - mpa_sectiondata
+- Data type - Multiple lines of text
+- Maximum character count - 1048576
+- Required - Optional
+
+Column 6 - Section Status
+- Display name - Section Status
+- Name - mpa_sectionstatus
+- Data type - Choice
+- Sync with global choice - No
+- Required - Business required
+- Default value - Not Started
+- Choice values
+  - Not Started - 100000000
+  - In Progress - 100000001
+  - Complete - 100000002
+  - Needs Review - 100000003
+
+Column 7 - Validation Status
+- Display name - Validation Status
+- Name - mpa_validationstatus
+- Data type - Choice
+- Sync with global choice - No
+- Required - Optional
+- Choice values
+  - Not Validated - 100000000
+  - Valid - 100000001
+  - Invalid - 100000002
+  - Warning - 100000003
+
+Column 8 - Data Sources
+- Display name - Data Sources
+- Name - mpa_datasources
+- Data type - Multiple lines of text
+- Maximum character count - 10000
+- Required - Optional
+
+Column 9 - Created At
+- Display name - Created At
+- Name - mpa_createdat
+- Data type - Date and time
+- Required - Optional
+
+Column 10 - Updated At
+- Display name - Updated At
+- Name - mpa_updatedat
+- Data type - Date and time
+- Required - Optional
+
+============================================================
+VERIFICATION CHECKLIST
+============================================================
+
+After creating all tables verify the following
+
+Tables Created
+- mpa_vertical exists with 4 columns
+- mpa_channel exists with 13 columns
+- mpa_kpi exists with 9 columns
+- mpa_benchmark exists with 12 columns
+- mpa_errorlog exists with 8 columns
+- mpa_mediaplan exists with 17 columns
+- mpa_planversion exists with 8 columns including lookup
+- mpa_plandata exists with 10 columns including lookups
+
+Prefixes Correct
+- All table names start with mpa_
+- All column names start with mpa_
+
+Lookups Configured
+- mpa_planversion has lookup to mpa_mediaplan
+- mpa_plandata has lookup to mpa_mediaplan
+- mpa_plandata has lookup to mpa_planversion
+
+Choice Values Correct
+- All choice fields have values starting at 100000000
+- All choice fields increment by 1
+
+============================================================
+END OF DOCUMENT
+============================================================

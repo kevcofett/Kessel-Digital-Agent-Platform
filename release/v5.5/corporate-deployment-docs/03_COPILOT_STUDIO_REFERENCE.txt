@@ -1,0 +1,536 @@
+COPILOT STUDIO REFERENCE
+MPA V5.5 CORPORATE DEPLOYMENT
+VERSION 1.0
+
+============================================================
+OVERVIEW
+============================================================
+
+This document provides complete instructions for configuring the Media Planning Agent in Microsoft Copilot Studio. Follow all steps in sequence.
+
+AGENT SUMMARY
+- Name - Media Planning Agent
+- Version - 5.5
+- Primary Function - Strategic media planning advisor
+- Knowledge Source - SharePoint document library
+- Actions - 7 Power Automate flows
+
+============================================================
+STEP 1 - CREATE AGENT
+============================================================
+
+NAVIGATION
+1 Open copilotstudio.microsoft.com
+2 Select your environment from top right
+3 Click Copilots in left navigation
+4 Click New copilot button
+5 Select Skip to configure
+
+AGENT PROPERTIES
+
+Basic Information
+- Name - Media Planning Agent
+- Icon - Upload MPA icon or use default
+- Description - Strategic media planning advisor that guides users through campaign development with industry benchmarks and best practices
+
+Primary Language
+- Language - English
+
+CLICK CREATE
+
+============================================================
+STEP 2 - CONFIGURE INSTRUCTIONS
+============================================================
+
+NAVIGATION
+1 Open Media Planning Agent
+2 Click Overview in left navigation
+3 Scroll to Instructions section
+4 Click Edit
+
+INSTRUCTIONS SOURCE
+File location - release/v5.5/agents/mpa/base/copilot/MPA_v55_Instructions_Uplift.txt
+
+COPY AND PASTE
+1 Open MPA_v55_Instructions_Uplift.txt
+2 Select all content
+3 Paste into Instructions field
+4 Verify character count is under 8000
+
+IMPORTANT NOTES
+- Instructions must be plain text
+- No markdown formatting
+- No special characters
+- Maximum 8000 characters
+
+CLICK SAVE
+
+============================================================
+STEP 3 - CONFIGURE KNOWLEDGE SOURCES
+============================================================
+
+NAVIGATION
+1 Click Knowledge in left navigation
+2 Click Add knowledge button
+
+ADD SHAREPOINT SOURCE
+
+Source Type
+- Select SharePoint
+
+Configuration
+- SharePoint site URL - Your corporate SharePoint site
+- Document library - MediaPlanningKB
+- Include subfolders - No (files are in root)
+
+Authentication
+- Use current user credentials - Yes
+
+CLICK ADD
+
+VERIFY KNOWLEDGE SOURCE
+
+After adding the source
+1 Wait 1 to 4 hours for indexing
+2 Click the knowledge source to view status
+3 Verify all 22 files are indexed
+
+INDEXED FILES LIST
+- AI_ADVERTISING_GUIDE_v5_5.txt
+- Analytics_Engine_v5_5.txt
+- BRAND_PERFORMANCE_FRAMEWORK_v5_5.txt
+- Confidence_Level_Framework_v5_5.txt
+- Data_Provenance_Framework_v5_5.txt
+- FIRST_PARTY_DATA_STRATEGY_v5_5.txt
+- Gap_Detection_Playbook_v5_5.txt
+- MEASUREMENT_FRAMEWORK_v5_5.txt
+- MPA_Conversation_Examples_v5_5.txt
+- MPA_Expert_Lens_Audience_Strategy_v5_5.txt
+- MPA_Expert_Lens_Budget_Allocation_v5_5.txt
+- MPA_Expert_Lens_Channel_Mix_v5_5.txt
+- MPA_Expert_Lens_Measurement_Attribution_v5_5.txt
+- MPA_Implications_Audience_Targeting_v5_5.txt
+- MPA_Implications_Budget_Decisions_v5_5.txt
+- MPA_Implications_Channel_Shifts_v5_5.txt
+- MPA_Implications_Measurement_Choices_v5_5.txt
+- MPA_Implications_Timing_Pacing_v5_5.txt
+- MPA_Supporting_Instructions_v5_5.txt
+- Output_Templates_v5_5.txt
+- RETAIL_MEDIA_NETWORKS_v5_5.txt
+- Strategic_Wisdom_v5_5.txt
+
+============================================================
+STEP 4 - CONFIGURE ACTIONS
+============================================================
+
+NAVIGATION
+1 Click Actions in left navigation
+2 Click Add an action button
+
+ADD POWER AUTOMATE FLOWS
+
+For each flow listed below repeat these steps
+
+ADDING AN ACTION
+1 Click Add an action
+2 Select Power Automate flow
+3 Search for flow name
+4 Select the flow
+5 Configure input mappings
+6 Configure output mappings
+7 Click Add
+
+ACTION 1 - MPA SEARCH CHANNELS
+
+Flow Name
+MPA Search Channels
+
+Description
+Search available advertising channels with optional filters
+
+Input Mappings
+- category - Optional channel category filter
+- funnelStage - Optional funnel stage filter
+- minBudget - Optional minimum budget threshold
+
+Output Mappings
+- channelsJson - JSON array of matching channels
+- totalCount - Number of results
+- status - Success or error status
+
+ACTION 2 - MPA SEARCH BENCHMARKS
+
+Flow Name
+MPA Search Benchmarks
+
+Description
+Search industry benchmarks by vertical channel and metric
+
+Input Mappings
+- vertical - Industry vertical to filter
+- channel - Channel to filter
+- metricType - KPI metric type to filter
+
+Output Mappings
+- benchmarksJson - JSON array of benchmarks
+- totalResults - Number of results
+- status - Success or error status
+
+ACTION 3 - MPA INITIALIZE SESSION
+
+Flow Name
+MPA Initialize Session
+
+Description
+Create a new planning session for the user
+
+Input Mappings
+- userId - Current user identifier
+- clientId - Client identifier if known
+- vertical - Initial industry vertical
+- sessionType - Planning or InFlight or PostMortem
+
+Output Mappings
+- sessionId - Created session identifier
+- status - Session status
+- message - Status message
+
+ACTION 4 - MPA CREATE PLAN
+
+Flow Name
+MPA Create Plan
+
+Description
+Create a new media plan record
+
+Input Mappings
+- sessionId - Current session identifier
+- clientId - Client identifier
+- campaignName - Name for the campaign
+- vertical - Industry vertical
+- pathway - GUIDED or STANDARD or AUDIT
+
+Output Mappings
+- planId - Created plan identifier
+- planCode - Generated plan code
+- status - Success or error status
+
+ACTION 5 - MPA SAVE SECTION
+
+Flow Name
+MPA Save Section
+
+Description
+Save or update a section of the media plan
+
+Input Mappings
+- planId - Media plan identifier
+- sectionType - Type of section being saved
+- sectionData - JSON data for the section
+- stepNumber - Current step number
+- sectionStatus - Complete or InProgress or NotStarted
+
+Output Mappings
+- sectionId - Section record identifier
+- status - Success or error status
+- currentStep - Updated current step
+
+ACTION 6 - MPA VALIDATE PLAN
+
+Flow Name
+MPA Validate Plan
+
+Description
+Validate plan data against gate requirements
+
+Input Mappings
+- planId - Media plan identifier
+- gateNumber - Gate number to validate
+- planDataJson - Current plan data as JSON
+
+Output Mappings
+- gateStatus - Passed or failed or warning
+- gateNumber - Validated gate number
+- validationResultsJson - Validation details
+- missingFieldsJson - Missing required fields
+- recommendationsJson - Improvement suggestions
+
+ACTION 7 - MPA GENERATE DOCUMENT
+
+Flow Name
+MPA Generate Document
+
+Description
+Generate Word document from completed plan
+
+Input Mappings
+- planId - Media plan identifier
+- planDataJson - Complete plan data as JSON
+
+Output Mappings
+- status - Success or error status
+- documentUrl - Link to generated document
+- documentName - Generated file name
+- generatedAt - Generation timestamp
+
+============================================================
+STEP 5 - CONFIGURE TOPICS
+============================================================
+
+NAVIGATION
+1 Click Topics in left navigation
+2 Review system topics
+3 Add custom topics as needed
+
+SYSTEM TOPICS TO ENABLE
+- Greeting - Enable
+- End of conversation - Enable
+- Escalate - Enable for corporate environments
+
+CUSTOM TOPICS TO ADD
+
+Topic 1 - Start Planning Session
+
+Trigger Phrases
+- I want to create a media plan
+- Start a new campaign
+- Help me plan media
+- Begin planning session
+
+Actions
+1 Call MPA Initialize Session
+2 Store sessionId in variable
+3 Ask for campaign name
+4 Call MPA Create Plan
+5 Guide to first step
+
+Topic 2 - Search Benchmarks
+
+Trigger Phrases
+- What are the benchmarks for
+- Show me industry benchmarks
+- CPM benchmarks for retail
+- Performance benchmarks
+
+Actions
+1 Extract vertical from conversation
+2 Extract channel if mentioned
+3 Extract metric type if mentioned
+4 Call MPA Search Benchmarks
+5 Present results conversationally
+
+Topic 3 - Generate Document
+
+Trigger Phrases
+- Generate the media plan document
+- Create the plan document
+- Export to Word
+- Download the plan
+
+Actions
+1 Verify plan is complete
+2 Call MPA Validate Plan for final gate
+3 If passed call MPA Generate Document
+4 Return document link
+
+============================================================
+STEP 6 - CONFIGURE GENERATIVE AI
+============================================================
+
+NAVIGATION
+1 Click Settings in left navigation
+2 Click Generative AI
+
+CONFIGURATION
+
+Knowledge Source Behavior
+- Allow agent to use knowledge sources - Yes
+- Cite sources in responses - Yes
+
+Content Moderation
+- Enable content moderation - Yes
+- Block inappropriate content - Yes
+
+Response Generation
+- Use generative answers - Yes
+- Allow multi-turn conversations - Yes
+
+============================================================
+STEP 7 - PUBLISH AGENT
+============================================================
+
+NAVIGATION
+1 Click Publish in left navigation
+2 Review publish settings
+3 Click Publish
+
+PUBLISH OPTIONS
+
+For Testing Only
+- Publish to test environment first
+- Verify all functionality
+- Check knowledge source responses
+
+For Production
+- Publish after testing complete
+- Enable Teams channel if required
+- Configure authentication
+
+============================================================
+STEP 8 - DEPLOY TO TEAMS (CORPORATE)
+============================================================
+
+NAVIGATION
+1 Click Channels in left navigation
+2 Click Microsoft Teams
+3 Click Turn on Teams
+
+TEAMS CONFIGURATION
+
+App Details
+- App name - Media Planning Agent
+- Short description - Strategic media planning advisor
+- Full description - Copy from agent description
+
+App Icon
+- Upload 192x192 PNG icon
+- Upload 32x32 PNG icon
+
+DOWNLOAD APP PACKAGE
+1 Click Download app package
+2 Save the ZIP file
+
+DEPLOY TO TEAMS ADMIN
+
+Navigation
+1 Open Teams Admin Center
+2 Click Teams apps
+3 Click Manage apps
+4 Click Upload new app
+5 Select downloaded ZIP file
+
+App Policies
+1 Navigate to Setup policies
+2 Add app to appropriate policy
+3 Assign policy to target users or groups
+
+============================================================
+TESTING SCENARIOS
+============================================================
+
+SCENARIO 1 - KNOWLEDGE BASE ACCESS
+
+Test Steps
+1 Open agent in test panel
+2 Ask - What is the recommended CPM range for retail display advertising
+3 Verify agent references knowledge base content
+4 Confirm source citation appears
+
+Expected Result
+Agent provides CPM benchmarks with source citation
+
+SCENARIO 2 - CREATE PLAN FLOW
+
+Test Steps
+1 Open agent in test panel
+2 Say - I want to create a media plan
+3 Provide campaign name when asked
+4 Complete initial setup prompts
+
+Expected Result
+- Session created successfully
+- Plan record created in Dataverse
+- Agent guides to first planning step
+
+SCENARIO 3 - BENCHMARK SEARCH
+
+Test Steps
+1 Open agent in test panel
+2 Ask - Show me CPM benchmarks for finance industry video ads
+3 Verify benchmark data is returned
+4 Confirm data matches Dataverse records
+
+Expected Result
+Agent returns relevant benchmark data with values
+
+SCENARIO 4 - DOCUMENT GENERATION
+
+Test Steps
+1 Complete a full media plan
+2 Request document generation
+3 Verify document is created
+4 Confirm download link works
+
+Expected Result
+- Word document generated
+- Link returned to user
+- Document contains plan data
+
+============================================================
+TROUBLESHOOTING
+============================================================
+
+ISSUE - KNOWLEDGE SOURCE NOT RESPONDING
+
+Symptoms
+- Agent says it cannot find information
+- No source citations appear
+- Generic responses instead of KB content
+
+Resolution
+1 Verify SharePoint library name is correct
+2 Check indexing status in Knowledge settings
+3 Wait for full indexing (up to 4 hours)
+4 Verify files are in correct format (TXT)
+5 Test specific file content manually
+
+ISSUE - FLOW ACTIONS FAILING
+
+Symptoms
+- Actions return errors
+- Timeout messages appear
+- Data not saved to Dataverse
+
+Resolution
+1 Open flow in Power Automate
+2 Check run history for errors
+3 Verify connection references are valid
+4 Check Dataverse permissions
+5 Test flow manually with sample data
+
+ISSUE - AGENT NOT RESPONDING AS EXPECTED
+
+Symptoms
+- Responses do not match instructions
+- Agent ignores custom topics
+- Generic chatbot behavior
+
+Resolution
+1 Verify instructions are saved (under 8000 chars)
+2 Check for special characters in instructions
+3 Review topic trigger phrases
+4 Republish agent after changes
+5 Clear test conversation and retry
+
+============================================================
+CORPORATE SECURITY SETTINGS
+============================================================
+
+AUTHENTICATION
+- SSO enabled via Entra ID
+- No anonymous access
+- User identity passed to flows
+
+DATA HANDLING
+- All data stored in Dataverse
+- No external API calls (if feature flags disabled)
+- Documents stored in corporate SharePoint
+
+COMPLIANCE
+- Audit logging enabled
+- Data classification required for exports
+- Row-level security applied
+
+============================================================
+END OF DOCUMENT
+============================================================

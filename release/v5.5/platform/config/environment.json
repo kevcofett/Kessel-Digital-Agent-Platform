@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Kessel-Digital Environment Configuration",
+  "description": "Environment configuration for Kessel-Digital personal deployment (Aragorn AI)",
+  "version": "5.5",
+  "lastUpdated": "January 2026",
+  
+  "organization": {
+    "code": "Kessel-Digital",
+    "name": "Kessel Digital Consulting",
+    "description": "Personal deployment environment"
+  },
+  
+  "tenant": {
+    "tenantId": "{TENANT_ID}",
+    "tenantName": "{tenant}.onmicrosoft.com",
+    "description": "Replace with your Azure AD tenant ID"
+  },
+  
+  "dataverse": {
+    "environmentUrl": "https://aragornai.crm.dynamics.com",
+    "environmentId": "{ENVIRONMENT_ID}",
+    "solutionName": "AgentPlatform",
+    "publisherPrefix": "eap",
+    "description": "Aragorn AI Dataverse environment"
+  },
+  
+  "sharepoint": {
+    "siteUrl": "https://{TENANT}.sharepoint.com/sites/KesselDigital",
+    "kbLibraries": {
+      "mpa": "MediaPlanningKB",
+      "ca": "ConsultingKB",
+      "shared": "SharedKB"
+    },
+    "description": "SharePoint site for knowledge base files"
+  },
+  
+  "copilotStudio": {
+    "environmentUrl": "https://copilotstudio.microsoft.com/environments/{ENVIRONMENT_ID}",
+    "agents": {
+      "mpa": {
+        "agentId": "{MPA_AGENT_ID}",
+        "agentName": "Media Planning Agent"
+      },
+      "ca": {
+        "agentId": "{CA_AGENT_ID}",
+        "agentName": "Consulting Agent"
+      }
+    },
+    "description": "Copilot Studio configuration"
+  },
+  
+  "azureFunctions": {
+    "appName": "kessel-digital-agent-functions",
+    "resourceGroup": "kessel-digital-agent-platform-rg",
+    "subscriptionId": "{SUBSCRIPTION_ID}",
+    "endpoints": {
+      "mpa": "https://kessel-digital-agent-functions.azurewebsites.net/api/mpa",
+      "shared": "https://kessel-digital-agent-functions.azurewebsites.net/api/shared"
+    },
+    "description": "Azure Functions for calculations and document generation"
+  },
+  
+  "authentication": {
+    "clientId": "{CLIENT_ID}",
+    "authority": "https://login.microsoftonline.com/{TENANT_ID}",
+    "scopes": [
+      "https://aragornai.crm.dynamics.com/.default"
+    ],
+    "description": "Azure AD app registration for API access"
+  },
+  
+  "channels": {
+    "primary": "web",
+    "options": ["web", "mobile"],
+    "teamsAppId": null,
+    "description": "Web deployment for personal environment"
+  },
+  
+  "monitoring": {
+    "appInsightsConnectionString": "{APP_INSIGHTS_CONNECTION_STRING}",
+    "logLevel": "Information",
+    "enableDetailedErrors": true,
+    "description": "Application Insights for monitoring and diagnostics"
+  },
+  
+  "featureDefaults": {
+    "description": "Personal environment enables most features",
+    "profile": "personal",
+    "overrides": {
+      "mpa_enable_web_search": true,
+      "mpa_enable_external_api": true,
+      "sec_enable_audit_logging": false,
+      "sec_enable_row_level_security": false,
+      "ui_show_debug_info": true
+    }
+  }
+}

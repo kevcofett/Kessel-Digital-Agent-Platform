@@ -1,0 +1,566 @@
+ACCESS CONTROL REFERENCE
+MPA V5.5 CORPORATE DEPLOYMENT
+VERSION 1.0
+
+============================================================
+OVERVIEW
+============================================================
+
+This document provides complete instructions for configuring the corporate access control hierarchy. This enables row-level security based on organizational structure.
+
+HIERARCHY STRUCTURE
+- Business Unit (top level)
+- Department
+- Team
+- Pod (lowest level)
+
+SECURITY MODEL
+Users are assigned to a hierarchy node and access level. They can view data owned by users at or below their assigned level.
+
+============================================================
+STEP 1 - CREATE HIERARCHY TABLES
+============================================================
+
+Create these 5 tables in the order listed. Use the EAP solution for these tables.
+
+TABLE 1 - EAP_BUSINESSUNIT
+
+Purpose
+Top level organizational unit
+
+Table Properties
+- Display name - Business Unit
+- Plural name - Business Units
+- Description - Top level organizational units
+- Primary column display name - Business Unit Name
+
+Columns
+
+Column 1 - BU Code
+- Display name - BU Code
+- Name - eap_bucode
+- Data type - Single line of text
+- Maximum character count - 10
+- Required - Business required
+
+Column 2 - Status
+- Display name - Status
+- Name - eap_status
+- Data type - Choice
+- Required - Business required
+- Choice values
+  - Active - 100000000
+  - Inactive - 100000001
+
+TABLE 2 - EAP_DEPARTMENT
+
+Purpose
+Department within a business unit
+
+Table Properties
+- Display name - Department
+- Plural name - Departments
+- Description - Departments within business units
+- Primary column display name - Department Name
+
+Columns
+
+Column 1 - Business Unit (Lookup)
+- Display name - Business Unit
+- Name - eap_businessunit
+- Data type - Lookup
+- Related table - Business Unit
+- Required - Business required
+
+Column 2 - Dept Code
+- Display name - Dept Code
+- Name - eap_deptcode
+- Data type - Single line of text
+- Maximum character count - 20
+- Required - Business required
+
+Column 3 - Status
+- Display name - Status
+- Name - eap_status
+- Data type - Choice
+- Required - Business required
+- Choice values
+  - Active - 100000000
+  - Inactive - 100000001
+
+TABLE 3 - EAP_TEAM
+
+Purpose
+Team within a department
+
+Table Properties
+- Display name - Team
+- Plural name - Teams
+- Description - Teams within departments
+- Primary column display name - Team Name
+
+Columns
+
+Column 1 - Department (Lookup)
+- Display name - Department
+- Name - eap_department
+- Data type - Lookup
+- Related table - Department
+- Required - Business required
+
+Column 2 - Team Code
+- Display name - Team Code
+- Name - eap_teamcode
+- Data type - Single line of text
+- Maximum character count - 20
+- Required - Business required
+
+Column 3 - Status
+- Display name - Status
+- Name - eap_status
+- Data type - Choice
+- Required - Business required
+- Choice values
+  - Active - 100000000
+  - Inactive - 100000001
+
+TABLE 4 - EAP_POD
+
+Purpose
+Pod within a team (smallest unit)
+
+Table Properties
+- Display name - Pod
+- Plural name - Pods
+- Description - Pods within teams
+- Primary column display name - Pod Name
+
+Columns
+
+Column 1 - Team (Lookup)
+- Display name - Team
+- Name - eap_team
+- Data type - Lookup
+- Related table - Team
+- Required - Business required
+
+Column 2 - Pod Code
+- Display name - Pod Code
+- Name - eap_podcode
+- Data type - Single line of text
+- Maximum character count - 20
+- Required - Business required
+
+Column 3 - Status
+- Display name - Status
+- Name - eap_status
+- Data type - Choice
+- Required - Business required
+- Choice values
+  - Active - 100000000
+  - Inactive - 100000001
+
+TABLE 5 - EAP_USERASSIGNMENT
+
+Purpose
+Maps users to hierarchy positions and access levels
+
+Table Properties
+- Display name - User Assignment
+- Plural name - User Assignments
+- Description - User assignments to organizational hierarchy
+- Primary column display name - Assignment Name
+
+Columns
+
+Column 1 - User ID
+- Display name - User ID
+- Name - eap_userid
+- Data type - Single line of text
+- Maximum character count - 100
+- Required - Business required
+
+Column 2 - User Email
+- Display name - User Email
+- Name - eap_useremail
+- Data type - Single line of text
+- Format - Email
+- Maximum character count - 200
+- Required - Business required
+
+Column 3 - Business Unit (Lookup)
+- Display name - Business Unit
+- Name - eap_businessunit
+- Data type - Lookup
+- Related table - Business Unit
+- Required - Optional
+
+Column 4 - Department (Lookup)
+- Display name - Department
+- Name - eap_department
+- Data type - Lookup
+- Related table - Department
+- Required - Optional
+
+Column 5 - Team (Lookup)
+- Display name - Team
+- Name - eap_team
+- Data type - Lookup
+- Related table - Team
+- Required - Optional
+
+Column 6 - Pod (Lookup)
+- Display name - Pod
+- Name - eap_pod
+- Data type - Lookup
+- Related table - Pod
+- Required - Optional
+
+Column 7 - Access Level
+- Display name - Access Level
+- Name - eap_accesslevel
+- Data type - Choice
+- Required - Business required
+- Choice values
+  - Pod - 100000000
+  - Team - 100000001
+  - Department - 100000002
+  - Business Unit - 100000003
+  - Global - 100000004
+
+Column 8 - Effective Date
+- Display name - Effective Date
+- Name - eap_effectivedate
+- Data type - Date and time
+- Required - Business required
+
+Column 9 - Expiration Date
+- Display name - Expiration Date
+- Name - eap_expirationdate
+- Data type - Date and time
+- Required - Optional
+
+Column 10 - Is Active
+- Display name - Is Active
+- Name - eap_isactive
+- Data type - Yes/No
+- Default value - Yes
+- Required - Business required
+
+============================================================
+STEP 2 - POPULATE HIERARCHY DATA
+============================================================
+
+Import organizational structure in this order
+
+ORDER 1 - BUSINESS UNITS
+
+Example Data
+- MKT - Marketing
+- FIN - Finance
+- OPS - Operations
+- TECH - Technology
+
+Import Method
+1 Open Business Units table in Power Apps
+2 Click Import then Import data
+3 Select CSV with business unit data
+4 Map columns
+5 Click Import
+
+ORDER 2 - DEPARTMENTS
+
+Example Data
+- MKT/BRAND - Brand Strategy (under Marketing)
+- MKT/DIGITAL - Digital Marketing (under Marketing)
+- MKT/MEDIA - Media Planning (under Marketing)
+- FIN/ACCT - Accounting (under Finance)
+
+Import Method
+1 Open Departments table
+2 Import CSV with department data
+3 Ensure Business Unit lookup resolves correctly
+
+ORDER 3 - TEAMS
+
+Example Data
+- MKT/MEDIA/PLAN - Planning Team (under Media Planning)
+- MKT/MEDIA/BUY - Buying Team (under Media Planning)
+- MKT/MEDIA/ANALYTICS - Analytics Team (under Media Planning)
+
+Import Method
+1 Open Teams table
+2 Import CSV with team data
+3 Ensure Department lookup resolves correctly
+
+ORDER 4 - PODS
+
+Example Data
+- MKT/MEDIA/PLAN/ALPHA - Alpha Pod (under Planning Team)
+- MKT/MEDIA/PLAN/BETA - Beta Pod (under Planning Team)
+
+Import Method
+1 Open Pods table
+2 Import CSV with pod data
+3 Ensure Team lookup resolves correctly
+
+ORDER 5 - USER ASSIGNMENTS
+
+Example Data
+- john.smith@company.com - Pod level - Alpha Pod
+- jane.doe@company.com - Team level - Planning Team
+- bob.manager@company.com - Department level - Media Planning
+- alice.director@company.com - Business Unit level - Marketing
+
+Import Method
+1 Open User Assignments table
+2 Import CSV with user assignment data
+3 Ensure all lookups resolve correctly
+4 Set effective dates appropriately
+
+============================================================
+STEP 3 - CREATE SECURITY ROLES
+============================================================
+
+Create these security roles in Power Platform Admin Center
+
+ROLE 1 - MPA USER POD LEVEL
+
+Description
+Basic user with access to own and pod member data
+
+Table Permissions - MPA Media Plan
+- Create - Organization
+- Read - Business Unit (filtered by pod)
+- Write - User
+- Delete - User
+
+Table Permissions - MPA Plan Data
+- Create - Organization
+- Read - Business Unit (filtered by pod)
+- Write - User
+- Delete - User
+
+Table Permissions - MPA Benchmark
+- Create - None
+- Read - Organization
+- Write - None
+- Delete - None
+
+ROLE 2 - MPA MANAGER TEAM LEVEL
+
+Description
+Manager with access to team data and approval rights
+
+Table Permissions - MPA Media Plan
+- Create - Organization
+- Read - Business Unit (filtered by team)
+- Write - Business Unit (filtered by team)
+- Delete - User
+- Approve - Business Unit (filtered by team)
+
+Table Permissions - MPA Plan Data
+- Create - Organization
+- Read - Business Unit (filtered by team)
+- Write - Business Unit (filtered by team)
+- Delete - User
+
+ROLE 3 - MPA DIRECTOR DEPARTMENT LEVEL
+
+Description
+Director with access to department data
+
+Table Permissions - MPA Media Plan
+- Create - Organization
+- Read - Business Unit (filtered by department)
+- Write - Business Unit (filtered by department)
+- Delete - User
+- Approve - Business Unit (filtered by department)
+
+Table Permissions - MPA Plan Data
+- Create - Organization
+- Read - Business Unit (filtered by department)
+- Write - Business Unit (filtered by department)
+- Delete - User
+
+ROLE 4 - MPA ADMIN GLOBAL
+
+Description
+Administrator with full access to all MPA data
+
+Table Permissions - All MPA Tables
+- Create - Organization
+- Read - Organization
+- Write - Organization
+- Delete - Organization
+- Approve - Organization
+
+============================================================
+STEP 4 - CONFIGURE ROW-LEVEL SECURITY
+============================================================
+
+ENABLE HIERARCHICAL SECURITY
+
+Navigation
+1 Open Power Platform Admin Center
+2 Select your environment
+3 Click Settings
+4 Click Security
+5 Click Hierarchy Security
+
+Configuration
+1 Enable hierarchical security
+2 Select Manager hierarchy model
+3 Set depth to 4 levels
+
+APPLY TO MPA TABLES
+
+For each MPA table configure
+
+MPA Media Plan
+1 Open table settings
+2 Enable hierarchical security
+3 Set owner field to mpa_ownedby
+4 Configure read access based on hierarchy
+
+MPA Plan Data
+1 Open table settings
+2 Enable hierarchical security
+3 Inherit from parent Media Plan
+
+MPA Plan Version
+1 Open table settings
+2 Enable hierarchical security
+3 Inherit from parent Media Plan
+
+============================================================
+STEP 5 - ASSIGN USERS TO ROLES
+============================================================
+
+ASSIGNMENT PROCESS
+
+For Each User
+1 Open Power Platform Admin Center
+2 Select your environment
+3 Click Users
+4 Search for user
+5 Click user to open details
+6 Click Manage Roles
+7 Select appropriate MPA role
+8 Click Save
+
+ROLE ASSIGNMENT GUIDELINES
+
+Pod Level Users
+- Assign MPA User Pod Level role
+- Create user assignment record with Pod lookup
+- Set Access Level to Pod
+
+Team Level Managers
+- Assign MPA Manager Team Level role
+- Create user assignment record with Team lookup
+- Set Access Level to Team
+
+Department Level Directors
+- Assign MPA Director Department Level role
+- Create user assignment record with Department lookup
+- Set Access Level to Department
+
+Global Administrators
+- Assign MPA Admin Global role
+- Create user assignment record with no hierarchy lookups
+- Set Access Level to Global
+
+============================================================
+STEP 6 - VERIFY CONFIGURATION
+============================================================
+
+VERIFICATION TESTS
+
+Test 1 - Pod Level Access
+1 Log in as pod level user
+2 Create a media plan
+3 Verify plan is visible
+4 Log in as different pod user
+5 Verify plan is NOT visible
+6 Log in as same pod user
+7 Verify plan IS visible
+
+Test 2 - Team Level Access
+1 Log in as team manager
+2 Verify can see all pod member plans
+3 Verify can edit team member plans
+4 Verify cannot see other team plans
+
+Test 3 - Department Level Access
+1 Log in as department director
+2 Verify can see all team plans in department
+3 Verify cannot see other department plans
+
+Test 4 - Global Access
+1 Log in as global admin
+2 Verify can see all plans across organization
+
+============================================================
+AUDIT LOGGING FOR ACCESS
+============================================================
+
+ACCESS AUDIT TABLE
+
+Create audit records for access events
+
+Table - EAP_ACCESSAUDIT
+
+Columns
+- Timestamp - Date and time of access
+- User ID - User who accessed data
+- Action - View or Edit or Delete
+- Entity - Table accessed
+- Record ID - Record accessed
+- Access Level - Users access level
+- Hierarchy Path - BU/Dept/Team/Pod path
+
+AUDIT FLOW
+
+Create flow to log access events
+
+Trigger
+- When row is accessed or modified
+
+Actions
+1 Get user assignment record
+2 Build hierarchy path
+3 Create audit record
+
+============================================================
+TROUBLESHOOTING
+============================================================
+
+ISSUE - USER CANNOT SEE EXPECTED DATA
+
+Check Steps
+1 Verify user assignment record exists
+2 Verify access level is correct
+3 Verify hierarchy lookups are populated
+4 Verify security role is assigned
+5 Check effective and expiration dates
+
+ISSUE - USER HAS TOO MUCH ACCESS
+
+Check Steps
+1 Verify access level is not higher than intended
+2 Check for multiple role assignments
+3 Verify hierarchy position is correct
+4 Review security role permissions
+
+ISSUE - HIERARCHY NOT FILTERING CORRECTLY
+
+Check Steps
+1 Verify hierarchical security is enabled
+2 Check table security settings
+3 Verify owner field is correctly populated
+4 Test with known good user configuration
+
+============================================================
+END OF DOCUMENT
+============================================================

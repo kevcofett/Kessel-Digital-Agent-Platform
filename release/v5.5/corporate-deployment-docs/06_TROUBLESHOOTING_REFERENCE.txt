@@ -1,0 +1,546 @@
+TROUBLESHOOTING REFERENCE
+MPA V5.5 CORPORATE DEPLOYMENT
+VERSION 1.0
+
+============================================================
+OVERVIEW
+============================================================
+
+This document provides troubleshooting guidance for common issues encountered during and after MPA v5.5 deployment. Issues are organized by component.
+
+TROUBLESHOOTING APPROACH
+1 Identify the component experiencing issues
+2 Find matching symptom in this document
+3 Follow diagnostic steps
+4 Apply resolution
+5 Verify fix
+
+============================================================
+DATAVERSE ISSUES
+============================================================
+
+ISSUE DV-01 - TABLE NOT FOUND ERROR
+
+Symptoms
+- Flow fails with entity not found error
+- API returns 404 for table operations
+- Copilot actions fail to find data
+
+Diagnostic Steps
+1 Open make.powerapps.com
+2 Navigate to solution
+3 Verify table exists
+4 Check table logical name matches flow reference
+5 Verify table is published
+
+Resolution
+- If table missing - Create table per specification
+- If name mismatch - Update flow to use correct logical name
+- If not published - Publish solution customizations
+
+ISSUE DV-02 - COLUMN NOT FOUND ERROR
+
+Symptoms
+- Flow fails with column not found
+- Data import fails on specific column
+- API returns error for column reference
+
+Diagnostic Steps
+1 Open table in Power Apps
+2 Click Columns
+3 Search for column name
+4 Verify logical name matches reference
+5 Check column is published
+
+Resolution
+- If column missing - Add column per specification
+- If name mismatch - Update reference to use correct logical name
+- If not published - Publish table customizations
+
+ISSUE DV-03 - CHOICE VALUE ERRORS
+
+Symptoms
+- Data import fails on choice columns
+- Invalid option value errors
+- Dropdown shows wrong values
+
+Diagnostic Steps
+1 Open table column
+2 Click to edit choice column
+3 Compare values to specification
+4 Verify value numbers match (100000000 etc)
+
+Resolution
+- If values missing - Add missing choice options
+- If values wrong - Update to correct values per specification
+- Republish after changes
+
+ISSUE DV-04 - LOOKUP RESOLUTION FAILURES
+
+Symptoms
+- Related records not linking
+- Lookup fields show errors
+- Parent child relationships broken
+
+Diagnostic Steps
+1 Verify parent table exists and has data
+2 Check lookup column configuration
+3 Verify related table selection
+4 Test lookup manually in form
+
+Resolution
+- If parent table empty - Import parent data first
+- If wrong related table - Reconfigure lookup column
+- If data issue - Verify lookup values exist in parent
+
+ISSUE DV-05 - PERMISSION DENIED ERRORS
+
+Symptoms
+- User cannot view records
+- Create or update operations fail
+- Access denied messages
+
+Diagnostic Steps
+1 Check user security role assignment
+2 Verify role has table permissions
+3 Check row level security configuration
+4 Verify user hierarchy assignment
+
+Resolution
+- Assign appropriate security role
+- Update role permissions if needed
+- Verify hierarchy position is correct
+
+============================================================
+POWER AUTOMATE ISSUES
+============================================================
+
+ISSUE PA-01 - FLOW FAILS TO TRIGGER
+
+Symptoms
+- Flow never starts when action invoked
+- No run history entries
+- Copilot shows action timeout
+
+Diagnostic Steps
+1 Open flow in Power Automate
+2 Check flow status (should be On)
+3 Verify trigger configuration
+4 Check connection references
+5 Review any deployment errors
+
+Resolution
+- If flow off - Turn on flow
+- If trigger wrong - Reconfigure trigger
+- If connection issue - Reauthenticate connection
+
+ISSUE PA-02 - CONNECTION AUTHENTICATION FAILED
+
+Symptoms
+- Flow runs but fails at first action
+- Authentication error in run history
+- Connection shows as expired
+
+Diagnostic Steps
+1 Open solution
+2 Click Connection References
+3 Check connection status
+4 Verify credentials are current
+
+Resolution
+1 Click on connection reference
+2 Click Edit
+3 Select existing connection or create new
+4 Authenticate with valid credentials
+5 Save and test flow
+
+ISSUE PA-03 - HTTP ACTION TIMEOUT
+
+Symptoms
+- Azure Function calls timeout
+- HTTP action shows timeout error
+- Long running operations fail
+
+Diagnostic Steps
+1 Check Azure Function status
+2 Verify function endpoint URL
+3 Check function key validity
+4 Review Application Insights
+
+Resolution
+- If function down - Restart Azure Function app
+- If URL wrong - Update HTTP action URL
+- If key invalid - Update function key
+- If slow - Increase timeout or optimize function
+
+ISSUE PA-04 - PARSE JSON FAILS
+
+Symptoms
+- Parse JSON action shows error
+- Schema validation fails
+- Downstream actions cannot access data
+
+Diagnostic Steps
+1 Open flow run history
+2 Check raw output from previous action
+3 Compare output to expected schema
+4 Identify schema mismatches
+
+Resolution
+1 Get sample output from working call
+2 In Parse JSON action click Generate from sample
+3 Paste sample data
+4 Update schema
+5 Save and retest
+
+ISSUE PA-05 - RESPOND TO POWERAPPS FAILS
+
+Symptoms
+- Flow completes but Copilot gets no response
+- Action shows as timed out in Copilot
+- Response not received error
+
+Diagnostic Steps
+1 Verify flow reaches Respond action
+2 Check all output parameters have values
+3 Verify no null values in required outputs
+4 Check response action configuration
+
+Resolution
+- Add null handling before response
+- Provide default values for all outputs
+- Verify output names match Copilot action configuration
+
+============================================================
+COPILOT STUDIO ISSUES
+============================================================
+
+ISSUE CS-01 - KNOWLEDGE SOURCE NOT INDEXED
+
+Symptoms
+- Agent cannot find information from KB
+- No sources cited in responses
+- Generic responses instead of KB content
+
+Diagnostic Steps
+1 Open Copilot Studio
+2 Click Knowledge
+3 Check knowledge source status
+4 Verify indexing completion percentage
+
+Resolution
+- If not started - Wait and check again
+- If stuck - Remove and re-add source
+- If failed - Check SharePoint permissions
+- Normal indexing takes 1 to 4 hours
+
+ISSUE CS-02 - AGENT NOT USING KNOWLEDGE
+
+Symptoms
+- Agent responds but ignores KB content
+- Questions about KB topics get generic answers
+- Sources never cited
+
+Diagnostic Steps
+1 Open agent settings
+2 Check Generative AI configuration
+3 Verify knowledge source is enabled
+4 Test with direct KB topic question
+
+Resolution
+- Enable Use knowledge sources option
+- Verify file format is TXT
+- Check files contain searchable content
+- Rebuild knowledge index
+
+ISSUE CS-03 - ACTIONS NOT APPEARING
+
+Symptoms
+- Cannot add action to topic
+- Action dropdown is empty
+- Flow not visible in action list
+
+Diagnostic Steps
+1 Verify flow is in same environment
+2 Check flow trigger is PowerApps V2
+3 Verify flow is turned on
+4 Check flow sharing permissions
+
+Resolution
+- Move flow to correct environment
+- Change trigger to PowerApps V2
+- Turn on flow
+- Share flow with Copilot service account
+
+ISSUE CS-04 - ACTION INVOCATION FAILS
+
+Symptoms
+- Agent tries to call action but fails
+- Error message in conversation
+- Action timeout
+
+Diagnostic Steps
+1 Open flow run history
+2 Check if flow was triggered
+3 Review flow execution for errors
+4 Verify input parameter mapping
+
+Resolution
+- Fix flow errors if present
+- Update input mappings in action
+- Verify connection references
+- Check parameter data types match
+
+ISSUE CS-05 - INSTRUCTIONS NOT APPLIED
+
+Symptoms
+- Agent ignores custom instructions
+- Default chatbot behavior
+- Persona not reflected in responses
+
+Diagnostic Steps
+1 Open agent overview
+2 Check instructions section
+3 Verify content was saved
+4 Check character count under 8000
+
+Resolution
+- If empty - Re-paste instructions
+- If too long - Trim to under 8000 characters
+- Remove special characters or markdown
+- Republish agent after changes
+
+============================================================
+SHAREPOINT ISSUES
+============================================================
+
+ISSUE SP-01 - LIBRARY NOT FOUND
+
+Symptoms
+- Knowledge source fails to connect
+- Document generation cannot save
+- Library access errors
+
+Diagnostic Steps
+1 Open SharePoint site
+2 Navigate to Site contents
+3 Verify library name matches configuration
+4 Check library permissions
+
+Resolution
+- Create library if missing
+- Update configuration to correct name
+- Grant access to service accounts
+
+ISSUE SP-02 - FILE UPLOAD FAILS
+
+Symptoms
+- KB upload script fails
+- Document generation save fails
+- Permission denied errors
+
+Diagnostic Steps
+1 Check user permissions on library
+2 Verify file size within limits
+3 Check for special characters in filename
+4 Verify network connectivity
+
+Resolution
+- Grant Contribute permission to user
+- Reduce file size if over limit
+- Remove special characters from filename
+- Check firewall and network settings
+
+ISSUE SP-03 - INDEXING DELAYED
+
+Symptoms
+- New files not appearing in search
+- Knowledge source shows old content
+- Recently uploaded files not found
+
+Diagnostic Steps
+1 Verify files uploaded successfully
+2 Check upload timestamp
+3 Allow time for indexing
+4 Force reindex if needed
+
+Resolution
+- Wait 1 to 4 hours for initial index
+- For updates wait up to 24 hours
+- Force reindex in Copilot Studio
+- Verify file format is supported
+
+============================================================
+AZURE FUNCTION ISSUES
+============================================================
+
+ISSUE AF-01 - FUNCTION NOT RESPONDING
+
+Symptoms
+- HTTP calls to function timeout
+- No response from function endpoint
+- 500 errors returned
+
+Diagnostic Steps
+1 Open Azure Portal
+2 Navigate to Function App
+3 Check function status
+4 Review Application Insights
+5 Check for deployment errors
+
+Resolution
+- Restart function app if stopped
+- Review and fix code errors
+- Redeploy if deployment failed
+- Check resource limits
+
+ISSUE AF-02 - AUTHENTICATION ERRORS
+
+Symptoms
+- 401 Unauthorized from function
+- Function key rejected
+- Authentication configuration errors
+
+Diagnostic Steps
+1 Verify function key in flow
+2 Check key has not expired
+3 Verify authentication level
+4 Check managed identity if used
+
+Resolution
+- Get fresh function key from portal
+- Update key in Power Automate flow
+- Verify function auth level matches
+- Configure managed identity correctly
+
+ISSUE AF-03 - FUNCTION TIMEOUT
+
+Symptoms
+- Function starts but times out
+- Partial results returned
+- Complex operations fail
+
+Diagnostic Steps
+1 Check function timeout configuration
+2 Review operation duration
+3 Check for infinite loops
+4 Monitor resource usage
+
+Resolution
+- Increase timeout in host.json
+- Optimize slow operations
+- Add pagination for large datasets
+- Scale up function plan if needed
+
+============================================================
+SEED DATA ISSUES
+============================================================
+
+ISSUE SD-01 - IMPORT FAILS ON VALIDATION
+
+Symptoms
+- CSV import rejects records
+- Validation errors on import
+- Required field missing errors
+
+Diagnostic Steps
+1 Open CSV file
+2 Verify all required columns present
+3 Check column names match table
+4 Verify data types correct
+
+Resolution
+- Add missing columns to CSV
+- Rename columns to match table
+- Fix data type mismatches
+- Remove invalid characters
+
+ISSUE SD-02 - DUPLICATE KEY ERRORS
+
+Symptoms
+- Import fails with duplicate error
+- Some records import others fail
+- Primary key conflicts
+
+Diagnostic Steps
+1 Check if data already exists
+2 Verify import is using upsert
+3 Check key column values
+
+Resolution
+- Clear existing data before import
+- Use upsert logic instead of insert
+- Ensure key values are unique
+
+ISSUE SD-03 - LOOKUP VALUES NOT RESOLVING
+
+Symptoms
+- Benchmark import fails on lookups
+- Foreign key errors
+- Related record not found
+
+Diagnostic Steps
+1 Verify parent tables imported first
+2 Check lookup values exist in parent
+3 Verify lookup column configuration
+
+Resolution
+- Import in correct order (parents first)
+- Verify codes match parent records
+- Check lookup field references correct table
+
+============================================================
+GENERAL TROUBLESHOOTING
+============================================================
+
+CLEARING CACHE
+
+Browser Cache
+1 Open browser settings
+2 Clear browsing data
+3 Select cached images and files
+4 Clear data
+5 Refresh Power Platform pages
+
+Copilot Cache
+1 Close test panel
+2 Wait 30 seconds
+3 Reopen test panel
+4 Start new conversation
+
+CHECKING LOGS
+
+Power Automate Run History
+1 Open flow
+2 Click Run history
+3 Select failed run
+4 Expand each action
+5 Review inputs and outputs
+
+Application Insights
+1 Open Azure Portal
+2 Navigate to Application Insights
+3 Click Failures
+4 Review exception details
+5 Check dependency calls
+
+ESCALATION PATH
+
+Level 1 - Self Service
+- Review this troubleshooting guide
+- Check run history and logs
+- Verify configuration matches documentation
+
+Level 2 - Platform Team
+- Complex flow issues
+- Permission configuration
+- Environment problems
+
+Level 3 - Microsoft Support
+- Platform bugs
+- Service outages
+- Licensing issues
+
+============================================================
+END OF DOCUMENT
+============================================================

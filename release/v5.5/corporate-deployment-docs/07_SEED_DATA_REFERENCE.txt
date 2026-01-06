@@ -1,0 +1,566 @@
+SEED DATA REFERENCE
+MPA V5.5 CORPORATE DEPLOYMENT
+VERSION 1.0
+
+============================================================
+OVERVIEW
+============================================================
+
+This document provides complete specifications for MPA seed data files. Import data in the order listed to handle dependencies correctly.
+
+SEED DATA FILES
+- mpa_vertical_seed.csv - 12 records
+- mpa_channel_seed.csv - 43 records
+- mpa_kpi_seed.csv - 44 records
+- mpa_benchmark_seed.csv - 794 records
+
+IMPORT ORDER
+1 Verticals (no dependencies)
+2 Channels (no dependencies)
+3 KPIs (no dependencies)
+4 Benchmarks (references verticals channels and KPIs)
+
+============================================================
+FILE 1 - MPA_VERTICAL_SEED.CSV
+============================================================
+
+PURPOSE
+Industry verticals for categorizing benchmarks and customizing recommendations
+
+RECORD COUNT
+12 verticals
+
+FILE LOCATION
+release/v5.5/agents/mpa/base/data/seed/mpa_vertical_seed.csv
+
+COLUMNS
+
+mpa_verticalcode
+- Type - Text
+- Max Length - 50
+- Required - Yes
+- Description - Unique code for vertical
+
+mpa_name
+- Type - Text
+- Max Length - 200
+- Required - Yes
+- Description - Display name for vertical
+
+mpa_description
+- Type - Text
+- Max Length - 2000
+- Required - No
+- Description - Detailed description
+
+mpa_isactive
+- Type - Boolean
+- Required - Yes
+- Default - Yes
+- Description - Whether vertical is available
+
+VERTICAL LIST
+
+Code - RETAIL
+Name - Retail
+Description - Retail and ecommerce businesses including brick and mortar and online stores
+
+Code - FINANCE
+Name - Financial Services
+Description - Banking insurance investment and financial technology companies
+
+Code - HEALTHCARE
+Name - Healthcare
+Description - Healthcare providers pharmaceuticals medical devices and health technology
+
+Code - TECHNOLOGY
+Name - Technology
+Description - Software hardware SaaS and technology services companies
+
+Code - AUTOMOTIVE
+Name - Automotive
+Description - Vehicle manufacturers dealers and automotive services
+
+Code - CPG
+Name - Consumer Packaged Goods
+Description - Fast moving consumer goods food beverage and household products
+
+Code - TRAVEL
+Name - Travel and Hospitality
+Description - Airlines hotels travel agencies and tourism businesses
+
+Code - TELECOM
+Name - Telecommunications
+Description - Mobile carriers internet providers and communication services
+
+Code - MEDIA
+Name - Media and Entertainment
+Description - Streaming services publishers gaming and entertainment companies
+
+Code - EDUCATION
+Name - Education
+Description - Educational institutions online learning and edtech companies
+
+Code - REALESTATE
+Name - Real Estate
+Description - Property developers real estate agencies and property technology
+
+Code - NONPROFIT
+Name - Nonprofit
+Description - Charitable organizations foundations and nonprofit entities
+
+============================================================
+FILE 2 - MPA_CHANNEL_SEED.CSV
+============================================================
+
+PURPOSE
+Advertising channels with cost benchmarks and platform details
+
+RECORD COUNT
+43 channels
+
+FILE LOCATION
+release/v5.5/agents/mpa/base/data/seed/mpa_channel_seed.csv
+
+COLUMNS
+
+mpa_channelcode
+- Type - Text
+- Max Length - 50
+- Required - Yes
+- Description - Unique code for channel
+
+mpa_name
+- Type - Text
+- Max Length - 200
+- Required - Yes
+- Description - Display name for channel
+
+mpa_category
+- Type - Choice
+- Required - Yes
+- Values - Digital (100000000) Traditional (100000001) Emerging (100000002)
+- Description - Channel category
+
+mpa_minbudget
+- Type - Currency
+- Required - No
+- Description - Minimum recommended budget
+
+mpa_cpmlow
+- Type - Decimal
+- Required - No
+- Description - Low end CPM estimate
+
+mpa_cpmhigh
+- Type - Decimal
+- Required - No
+- Description - High end CPM estimate
+
+mpa_cpclow
+- Type - Decimal
+- Required - No
+- Description - Low end CPC estimate
+
+mpa_cpchigh
+- Type - Decimal
+- Required - No
+- Description - High end CPC estimate
+
+mpa_funnelstage
+- Type - Text
+- Max Length - 100
+- Required - No
+- Description - Primary funnel stage
+
+mpa_platforms
+- Type - Text
+- Max Length - 2000
+- Required - No
+- Description - Available platforms
+
+mpa_confidencelevel
+- Type - Text
+- Max Length - 50
+- Required - No
+- Description - Data confidence level
+
+mpa_notes
+- Type - Text
+- Max Length - 4000
+- Required - No
+- Description - Additional notes
+
+mpa_isactive
+- Type - Boolean
+- Required - Yes
+- Description - Whether channel is available
+
+CHANNEL CATEGORIES
+
+Digital Channels
+- DISPLAY - Display Advertising
+- VIDEO - Digital Video
+- SEARCH - Paid Search
+- SOCIAL_PAID - Paid Social Media
+- PROGRAMMATIC - Programmatic Display
+- NATIVE - Native Advertising
+- AUDIO - Digital Audio and Podcasts
+- CONNECTED_TV - Connected TV
+- MOBILE_APP - Mobile App Advertising
+- EMAIL - Email Marketing
+- AFFILIATE - Affiliate Marketing
+- INFLUENCER - Influencer Marketing
+- CONTENT - Content Marketing
+- SEO - Search Engine Optimization
+
+Traditional Channels
+- LINEAR_TV - Linear Television
+- RADIO - Traditional Radio
+- PRINT - Print Advertising
+- OOH - Out of Home
+- DIRECT_MAIL - Direct Mail
+- CINEMA - Cinema Advertising
+- SPONSORSHIP - Event Sponsorship
+
+Emerging Channels
+- RETAIL_MEDIA - Retail Media Networks
+- COMMERCE_MEDIA - Commerce Media
+- GAMING - In Game Advertising
+- AR_VR - Augmented and Virtual Reality
+- VOICE - Voice Advertising
+- DOOH - Digital Out of Home
+
+============================================================
+FILE 3 - MPA_KPI_SEED.CSV
+============================================================
+
+PURPOSE
+KPI definitions with formulas and interpretation guidance
+
+RECORD COUNT
+44 KPIs
+
+FILE LOCATION
+release/v5.5/agents/mpa/base/data/seed/mpa_kpi_seed.csv
+
+COLUMNS
+
+mpa_kpicode
+- Type - Text
+- Max Length - 20
+- Required - Yes
+- Description - Unique code for KPI
+
+mpa_name
+- Type - Text
+- Max Length - 200
+- Required - Yes
+- Description - Full KPI name
+
+mpa_category
+- Type - Choice
+- Required - Yes
+- Values - Cost (100000000) Engagement (100000001) Conversion (100000002) Efficiency (100000003) Quality (100000004)
+- Description - KPI category
+
+mpa_formula
+- Type - Text
+- Max Length - 500
+- Required - Yes
+- Description - Calculation formula
+
+mpa_unit
+- Type - Text
+- Max Length - 20
+- Required - Yes
+- Description - Unit of measurement
+
+mpa_format
+- Type - Text
+- Max Length - 50
+- Required - No
+- Description - Display format pattern
+
+mpa_direction
+- Type - Choice
+- Required - Yes
+- Values - Higher is Better (100000000) Lower is Better (100000001) Target Range (100000002)
+- Description - Performance direction
+
+mpa_confidencelevel
+- Type - Text
+- Max Length - 50
+- Required - No
+- Description - Data confidence
+
+mpa_notes
+- Type - Text
+- Max Length - 4000
+- Required - No
+- Description - Interpretation guidance
+
+mpa_isactive
+- Type - Boolean
+- Required - Yes
+- Description - Whether KPI is available
+
+KPI CATEGORIES
+
+Cost KPIs
+- CPM - Cost Per Mille (thousand impressions)
+- CPC - Cost Per Click
+- CPV - Cost Per View
+- CPCV - Cost Per Completed View
+- CPE - Cost Per Engagement
+- CPL - Cost Per Lead
+- CPA - Cost Per Acquisition
+- CPI - Cost Per Install
+- CPQL - Cost Per Qualified Lead
+
+Engagement KPIs
+- CTR - Click Through Rate
+- VTR - View Through Rate
+- VCR - Video Completion Rate
+- ER - Engagement Rate
+- SR - Share Rate
+- DR - Dwell Rate
+- SCROLL - Scroll Depth Rate
+
+Conversion KPIs
+- CVR - Conversion Rate
+- CR - Click to Conversion Rate
+- LCR - Lead Conversion Rate
+- ACR - Add to Cart Rate
+- PCR - Purchase Conversion Rate
+- ROAS - Return on Ad Spend
+- ROI - Return on Investment
+
+Efficiency KPIs
+- ECPM - Effective CPM
+- ECPC - Effective CPC
+- FREQ - Frequency
+- REACH - Reach Percentage
+- SOV - Share of Voice
+- IMP_SHARE - Impression Share
+
+Quality KPIs
+- VIEWABILITY - Viewability Rate
+- BRAND_SAFETY - Brand Safety Score
+- AD_FRAUD - Invalid Traffic Rate
+- ATTENTION - Attention Score
+- BRAND_LIFT - Brand Lift Percentage
+- RECALL - Ad Recall Rate
+
+============================================================
+FILE 4 - MPA_BENCHMARK_SEED.CSV
+============================================================
+
+PURPOSE
+Industry benchmark data for performance comparison
+
+RECORD COUNT
+794 benchmarks
+
+FILE LOCATION
+release/v5.5/agents/mpa/base/data/seed/mpa_benchmark_seed.csv
+
+COLUMNS
+
+mpa_verticalcode
+- Type - Text
+- Max Length - 50
+- Required - Yes
+- Description - References vertical code
+
+mpa_channelcode
+- Type - Text
+- Max Length - 50
+- Required - No
+- Description - References channel code (null for vertical only benchmarks)
+
+mpa_kpicode
+- Type - Text
+- Max Length - 20
+- Required - Yes
+- Description - References KPI code
+
+mpa_name
+- Type - Text
+- Max Length - 200
+- Required - Yes
+- Description - Benchmark metric name
+
+mpa_metriclow
+- Type - Decimal
+- Precision - 6
+- Required - Yes
+- Description - Low percentile value (25th)
+
+mpa_metricmedian
+- Type - Decimal
+- Precision - 6
+- Required - Yes
+- Description - Median value (50th percentile)
+
+mpa_metrichigh
+- Type - Decimal
+- Precision - 6
+- Required - Yes
+- Description - High percentile value (75th)
+
+mpa_metricbest
+- Type - Decimal
+- Precision - 6
+- Required - No
+- Description - Best in class value (90th percentile)
+
+mpa_datasource
+- Type - Text
+- Max Length - 200
+- Required - Yes
+- Description - Source of benchmark data
+
+mpa_dataperiod
+- Type - Text
+- Max Length - 50
+- Required - Yes
+- Description - Time period for data
+
+mpa_confidencelevel
+- Type - Text
+- Max Length - 50
+- Required - No
+- Description - Data confidence level
+
+mpa_metricunit
+- Type - Text
+- Max Length - 20
+- Required - No
+- Description - Unit for metric values
+
+mpa_isactive
+- Type - Boolean
+- Required - Yes
+- Description - Whether benchmark is available
+
+BENCHMARK COVERAGE
+
+Verticals Covered
+- All 12 verticals have benchmark data
+
+Channels Covered
+- DISPLAY - All verticals
+- VIDEO - All verticals
+- SEARCH - All verticals
+- SOCIAL_PAID - All verticals
+- PROGRAMMATIC - All verticals
+- CONNECTED_TV - Selected verticals
+- RETAIL_MEDIA - Selected verticals
+
+KPIs Covered
+- CPM - All channel/vertical combinations
+- CPC - Search and Social
+- CTR - All digital channels
+- CVR - Conversion focused channels
+- VCR - Video channels
+- VIEWABILITY - Display and Video
+
+Data Sources
+- IAB Benchmarks
+- Platform Published Data
+- Industry Research Reports
+- Aggregated Client Data
+
+============================================================
+IMPORT METHODS
+============================================================
+
+METHOD 1 - POWER APPS DATA IMPORT
+
+Steps
+1 Open make.powerapps.com
+2 Select environment
+3 Open table
+4 Click Import then Import data
+5 Select Import from CSV
+6 Choose file
+7 Map columns
+8 Click Import
+
+Column Mapping
+- Verify each CSV column maps to correct table column
+- Handle any name differences
+- Set data types correctly
+
+METHOD 2 - PYTHON SCRIPT
+
+Prerequisites
+- Python 3.9 or higher
+- MSAL library installed
+- Network access to Dataverse
+
+Script Location
+release/v5.5/scripts/seed_data_import.py
+
+Usage
+python seed_data_import.py --table all
+python seed_data_import.py --table vertical
+python seed_data_import.py --table channel
+python seed_data_import.py --table kpi
+python seed_data_import.py --table benchmark
+python seed_data_import.py --dry-run
+
+Authentication
+- Script uses device code flow
+- User authenticates via browser
+- Token cached for subsequent runs
+
+METHOD 3 - PAC CLI
+
+Prerequisites
+- Power Platform CLI installed
+- Authenticated to environment
+
+Commands
+pac auth create --url https://environment.crm.dynamics.com
+pac data import --file mpa_vertical_seed.csv --table mpa_vertical
+pac data import --file mpa_channel_seed.csv --table mpa_channel
+pac data import --file mpa_kpi_seed.csv --table mpa_kpi
+pac data import --file mpa_benchmark_seed.csv --table mpa_benchmark
+
+============================================================
+VERIFICATION
+============================================================
+
+VERIFICATION QUERIES
+
+Vertical Count
+Open mpa_vertical table and verify 12 records
+
+Channel Count
+Open mpa_channel table and verify 43 records
+
+KPI Count
+Open mpa_kpi table and verify 44 records
+
+Benchmark Count
+Open mpa_benchmark table and verify 794 records
+
+SAMPLE VERIFICATION
+
+Verify Retail Display CPM Benchmark
+1 Open mpa_benchmark table
+2 Filter mpa_verticalcode equals RETAIL
+3 Filter mpa_channelcode equals DISPLAY
+4 Filter mpa_kpicode equals CPM
+5 Verify record exists with reasonable values
+
+Expected Values (approximate)
+- Metric Low - 2.00 to 5.00
+- Metric Median - 5.00 to 10.00
+- Metric High - 10.00 to 20.00
+
+============================================================
+END OF DOCUMENT
+============================================================

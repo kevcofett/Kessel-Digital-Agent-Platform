@@ -1,0 +1,508 @@
+MPA V5.5 CORPORATE DEPLOYMENT MASTER GUIDE
+VERSION 1.0
+DATE JANUARY 6 2026
+
+============================================================
+DOCUMENT INFORMATION
+============================================================
+
+DOCUMENT PURPOSE
+This guide provides complete deployment instructions for Media Planning Agent v5.5 in corporate environments with restricted network access and enhanced security requirements.
+
+TARGET ENVIRONMENT
+- Corporate Microsoft 365 tenant
+- Restricted external network access
+- Mandatory SSO authentication
+- Teams as primary interface
+- Enhanced audit logging required
+
+COMPLIANCE FRAMEWORK
+All content follows 6-Rule Compliance
+- ALL-CAPS headers
+- Simple lists with hyphens only
+- ASCII characters only
+- Zero visual dependencies
+- Mandatory language
+
+============================================================
+DEPLOYMENT OVERVIEW
+============================================================
+
+COMPONENT SUMMARY
+
+The MPA v5.5 deployment consists of these components
+
+- 8 Dataverse tables with mpa prefix
+- 10 Power Automate flows (Flow 11 pending)
+- 22 SharePoint knowledge base files
+- 1 Copilot Studio agent
+- Azure Functions deployment
+- Feature flag configuration
+- Access control hierarchy
+
+DEPLOYMENT ORDER
+
+Phase 1 - Infrastructure
+- Step 1 - Create Dataverse solution
+- Step 2 - Create 8 Dataverse tables
+- Step 3 - Configure connection references
+
+Phase 2 - Data
+- Step 4 - Import seed data (4 tables)
+- Step 5 - Configure feature flags
+
+Phase 3 - Knowledge Base
+- Step 6 - Create SharePoint library
+- Step 7 - Upload 22 KB files
+- Step 8 - Wait for indexing (1-4 hours)
+
+Phase 4 - Integration
+- Step 9 - Deploy Azure Functions
+- Step 10 - Build 10 Power Automate flows
+
+Phase 5 - Agent
+- Step 11 - Create Copilot Studio agent
+- Step 12 - Configure knowledge sources
+- Step 13 - Connect flow actions
+
+Phase 6 - Corporate Security
+- Step 14 - Configure access hierarchy
+- Step 15 - Enable audit logging
+- Step 16 - Deploy via Teams
+
+Phase 7 - Validation
+- Step 17 - Execute test scenarios
+- Step 18 - Verify all components
+
+============================================================
+PREREQUISITES
+============================================================
+
+REQUIRED ACCESS
+
+The following access rights are required before deployment
+
+- Power Platform admin OR Environment Maker role
+- SharePoint site collection administrator
+- Azure subscription contributor access
+- Copilot Studio license
+- Teams admin access for app deployment
+
+REQUIRED TOOLS
+
+Install these tools on your workstation
+
+- Git client for repository access
+- VS Code with extensions
+  - Power Platform Tools
+  - Azure Functions
+- Power Platform CLI (pac)
+- Azure CLI (az)
+- Python 3.9 or higher
+
+REQUIRED INFORMATION
+
+Gather this information before starting
+
+- Tenant ID (Azure AD)
+- Dataverse environment URL
+- SharePoint site URL
+- Azure resource group name
+- Azure subscription ID
+
+============================================================
+PHASE 1 - INFRASTRUCTURE
+============================================================
+
+STEP 1 - CREATE DATAVERSE SOLUTION
+
+Navigation
+1 Open make.powerapps.com
+2 Select your environment from top right dropdown
+3 Click Solutions in left navigation
+4 Click New solution button
+
+Solution Properties
+- Display name - Media Planning Agent v5.5
+- Name - MediaPlanningAgentv55
+- Publisher - Select or create with mpa prefix
+- Version - 5.5.0.0
+
+Click Create
+
+STEP 2 - CREATE DATAVERSE TABLES
+
+Open the solution created in Step 1. Create 8 tables in this order.
+
+Table creation order matters because of lookup relationships.
+
+Order 1 - mpa_vertical
+Order 2 - mpa_channel
+Order 3 - mpa_kpi
+Order 4 - mpa_benchmark
+Order 5 - mpa_errorlog
+Order 6 - mpa_mediaplan
+Order 7 - mpa_planversion
+Order 8 - mpa_plandata
+
+See document DATAVERSE_TABLE_REFERENCE.txt for column specifications.
+
+STEP 3 - CREATE CONNECTION REFERENCES
+
+Inside the solution create 2 connection references
+
+Connection Reference 1
+- Display name - MPA Dataverse Connection
+- Connector - Microsoft Dataverse
+- Connection - Select or create new
+
+Connection Reference 2
+- Display name - MPA SharePoint Connection
+- Connector - SharePoint
+- Connection - Select or create new
+
+============================================================
+PHASE 2 - DATA
+============================================================
+
+STEP 4 - IMPORT SEED DATA
+
+Import seed data in dependency order
+
+Order 1 - Verticals
+- File - mpa_vertical_seed.csv
+- Records - 12
+- Table - mpa_vertical
+
+Order 2 - Channels
+- File - mpa_channel_seed.csv
+- Records - 43
+- Table - mpa_channel
+
+Order 3 - KPIs
+- File - mpa_kpi_seed.csv
+- Records - 44
+- Table - mpa_kpi
+
+Order 4 - Benchmarks
+- File - mpa_benchmark_seed.csv
+- Records - 794
+- Table - mpa_benchmark
+
+Import Method Option A - Power Apps Data Import
+1 Open table in Power Apps
+2 Click Import then Import data
+3 Select CSV file
+4 Map columns
+5 Click Import
+
+Import Method Option B - Python Script
+1 Navigate to scripts folder
+2 Run python seed_data_import.py
+3 Authenticate via browser
+4 Monitor progress
+
+STEP 5 - CONFIGURE FEATURE FLAGS
+
+Corporate feature flag defaults
+
+Flags to DISABLE
+- mpa_enable_web_search - false
+- mpa_enable_external_api - false
+- ui_show_debug_info - false
+
+Flags to ENABLE
+- sec_enable_audit_logging - true
+- sec_require_data_classification - true
+- sec_enable_row_level_security - true
+- int_enable_sharepoint_search - true
+
+============================================================
+PHASE 3 - KNOWLEDGE BASE
+============================================================
+
+STEP 6 - CREATE SHAREPOINT LIBRARY
+
+Navigation
+1 Open SharePoint site
+2 Click Settings gear then Site contents
+3 Click New then Document library
+
+Library Settings
+- Name - MediaPlanningKB
+- Description - Knowledge base for Media Planning Agent v5.5
+
+STEP 7 - UPLOAD KB FILES
+
+Upload all 22 files from kb folder
+
+File List
+- AI_ADVERTISING_GUIDE_v5_5.txt
+- Analytics_Engine_v5_5.txt
+- BRAND_PERFORMANCE_FRAMEWORK_v5_5.txt
+- Confidence_Level_Framework_v5_5.txt
+- Data_Provenance_Framework_v5_5.txt
+- FIRST_PARTY_DATA_STRATEGY_v5_5.txt
+- Gap_Detection_Playbook_v5_5.txt
+- MEASUREMENT_FRAMEWORK_v5_5.txt
+- MPA_Conversation_Examples_v5_5.txt
+- MPA_Expert_Lens_Audience_Strategy_v5_5.txt
+- MPA_Expert_Lens_Budget_Allocation_v5_5.txt
+- MPA_Expert_Lens_Channel_Mix_v5_5.txt
+- MPA_Expert_Lens_Measurement_Attribution_v5_5.txt
+- MPA_Implications_Audience_Targeting_v5_5.txt
+- MPA_Implications_Budget_Decisions_v5_5.txt
+- MPA_Implications_Channel_Shifts_v5_5.txt
+- MPA_Implications_Measurement_Choices_v5_5.txt
+- MPA_Implications_Timing_Pacing_v5_5.txt
+- MPA_Supporting_Instructions_v5_5.txt
+- Output_Templates_v5_5.txt
+- RETAIL_MEDIA_NETWORKS_v5_5.txt
+- Strategic_Wisdom_v5_5.txt
+
+Total - 22 files
+
+STEP 8 - WAIT FOR INDEXING
+
+SharePoint requires time to index uploaded files.
+
+- Minimum wait - 1 hour
+- Maximum wait - 4 hours
+- Verification - Test search in Copilot Studio
+
+============================================================
+PHASE 4 - INTEGRATION
+============================================================
+
+STEP 9 - DEPLOY AZURE FUNCTIONS
+
+Azure Function List
+- SessionManager
+- SearchBenchmarks
+- CalculateAllocation
+- RunProjections
+- ValidateGate
+- GenerateDocument
+- LogError
+
+Deployment Steps
+1 Open VS Code
+2 Open functions folder
+3 Sign in to Azure extension
+4 Right click on function app
+5 Select Deploy to Function App
+6 Select target function app
+7 Confirm deployment
+
+STEP 10 - BUILD POWER AUTOMATE FLOWS
+
+10 flows are required. Build in this order.
+
+Order 1 - MPA Search Channels
+Order 2 - MPA Search Benchmarks
+Order 3 - MPA Initialize Session
+Order 4 - MPA Create Plan
+Order 5 - MPA Save Section
+Order 6 - MPA Validate Plan
+Order 7 - MPA Generate Document
+Order 8 - MPA Import Performance
+Order 9 - MPA Create PostMortem
+Order 10 - MPA Process Media Brief
+
+Note - Flow 11 MPA Promote Learning is pending due to data conflict. Skip for initial deployment.
+
+See document POWER_AUTOMATE_FLOW_REFERENCE.txt for detailed build instructions.
+
+============================================================
+PHASE 5 - AGENT
+============================================================
+
+STEP 11 - CREATE COPILOT STUDIO AGENT
+
+Navigation
+1 Open copilotstudio.microsoft.com
+2 Select your environment
+3 Click Create then New copilot
+4 Select Skip to configure
+
+Agent Properties
+- Name - Media Planning Agent
+- Description - Strategic media planning advisor
+- Language - English
+- Icon - Upload MPA icon
+
+STEP 12 - CONFIGURE KNOWLEDGE SOURCES
+
+Add SharePoint as knowledge source
+
+Navigation
+1 Open agent
+2 Click Knowledge in left navigation
+3 Click Add knowledge
+4 Select SharePoint
+
+Configuration
+- Site URL - Your SharePoint site URL
+- Library - MediaPlanningKB
+- Include all files - Yes
+
+STEP 13 - CONNECT FLOW ACTIONS
+
+Add Power Automate flows as actions
+
+Navigation
+1 Open agent
+2 Click Actions in left navigation
+3 Click Add an action
+4 Select Power Automate flow
+
+Add these flows as actions
+- MPA Search Channels
+- MPA Search Benchmarks
+- MPA Initialize Session
+- MPA Create Plan
+- MPA Save Section
+- MPA Validate Plan
+- MPA Generate Document
+
+Configure input and output mappings per flow_actions.json
+
+============================================================
+PHASE 6 - CORPORATE SECURITY
+============================================================
+
+STEP 14 - CONFIGURE ACCESS HIERARCHY
+
+Create organizational hierarchy tables
+
+Tables to create
+- eap_businessunit
+- eap_department
+- eap_team
+- eap_pod
+- eap_userassignment
+
+Import organizational structure data
+- Business units
+- Departments
+- Teams
+- Pods
+- User assignments
+
+See document ACCESS_CONTROL_REFERENCE.txt for table schemas.
+
+STEP 15 - ENABLE AUDIT LOGGING
+
+Create audit infrastructure
+
+Audit table - eap_auditlog
+
+Audit flow - eap_log_audit_event
+- Trigger - HTTP request
+- Action - Create Dataverse record
+- Fields - timestamp user agent session event entity details
+
+Configure all flows to call audit flow when sec_enable_audit_logging is true.
+
+STEP 16 - DEPLOY VIA TEAMS
+
+Publish to Teams
+
+Navigation
+1 Open Copilot Studio
+2 Click Publish
+3 Click Make available in Teams
+4 Download app package
+
+Deploy to Teams Admin
+
+Navigation
+1 Open Teams Admin Center
+2 Click Teams apps then Manage apps
+3 Click Upload new app
+4 Select downloaded package
+5 Configure app policies
+
+============================================================
+PHASE 7 - VALIDATION
+============================================================
+
+STEP 17 - EXECUTE TEST SCENARIOS
+
+Test Scenario 1 - Basic Conversation
+- Action - Send hello message
+- Expected - Agent responds as strategic advisor
+- Status - Pass or Fail
+
+Test Scenario 2 - Knowledge Base Access
+- Action - Ask about CPM benchmarks
+- Expected - Agent references KB content
+- Status - Pass or Fail
+
+Test Scenario 3 - Create Media Plan
+- Action - Request new media plan
+- Expected - Plan created in Dataverse
+- Status - Pass or Fail
+
+Test Scenario 4 - Search Benchmarks
+- Action - Ask for retail display benchmarks
+- Expected - Benchmark data returned
+- Status - Pass or Fail
+
+Test Scenario 5 - Document Generation
+- Action - Request media plan document
+- Expected - Word document created
+- Status - Pass or Fail
+
+STEP 18 - VERIFY ALL COMPONENTS
+
+Verification Checklist
+
+Dataverse
+- 8 tables created
+- All columns present
+- Relationships configured
+- Seed data imported
+
+SharePoint
+- Library created
+- 22 files uploaded
+- Indexing complete
+
+Power Automate
+- 10 flows built
+- Connections configured
+- Flows enabled
+
+Copilot Studio
+- Agent created
+- Instructions loaded
+- Knowledge connected
+- Actions connected
+
+Azure Functions
+- Functions deployed
+- Endpoints accessible
+- Authentication working
+
+Security
+- Feature flags set
+- Access hierarchy created
+- Audit logging enabled
+
+============================================================
+DOCUMENT REFERENCES
+============================================================
+
+Supporting documents in this folder
+
+- DATAVERSE_TABLE_REFERENCE.txt - Table and column specifications
+- POWER_AUTOMATE_FLOW_REFERENCE.txt - Flow build instructions
+- COPILOT_STUDIO_REFERENCE.txt - Agent configuration details
+- ACCESS_CONTROL_REFERENCE.txt - Security hierarchy setup
+- TESTING_REFERENCE.txt - Complete test scenarios
+- TROUBLESHOOTING_REFERENCE.txt - Common issues and solutions
+
+============================================================
+END OF DOCUMENT
+============================================================

@@ -1,32 +1,58 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Environment Configuration Template",
-  "description": "Template for environment-specific configuration. Copy to environment.json and fill in values.",
+  "title": "{ORGANIZATION} Environment Configuration",
+  "description": "Environment configuration template - Replace {ORGANIZATION} and all placeholder values",
   "version": "5.5",
-  "lastUpdated": "January 2026",
+  "lastUpdated": "{DEPLOYMENT_DATE}",
+  
+  "_instructions": {
+    "usage": "Copy this file to environment.json and replace all {PLACEHOLDER} values",
+    "organization_swap": "Find/replace {ORGANIZATION} with your org name (e.g., Kessel-Digital or Mastercard)",
+    "required_values": [
+      "{ORGANIZATION}",
+      "{ORGANIZATION_FULL_NAME}",
+      "{TENANT_ID}",
+      "{TENANT_NAME}",
+      "{DATAVERSE_ENVIRONMENT_URL}",
+      "{DATAVERSE_ENVIRONMENT_ID}",
+      "{DATAVERSE_ORGANIZATION_ID}",
+      "{SHAREPOINT_SITE_URL}",
+      "{COPILOT_ENVIRONMENT_URL}",
+      "{AZURE_FUNCTION_APP_NAME}",
+      "{AZURE_RESOURCE_GROUP}",
+      "{AZURE_SUBSCRIPTION_ID}",
+      "{AZURE_STORAGE_ACCOUNT}",
+      "{AZURE_FUNCTION_BASE_URL}",
+      "{AZURE_FUNCTION_KEY}",
+      "{AUTH_CLIENT_ID}",
+      "{APP_INSIGHTS_CONNECTION_STRING}"
+    ]
+  },
   
   "organization": {
     "code": "{ORGANIZATION}",
-    "name": "{Organization Full Name}",
-    "description": "Replace {ORGANIZATION} with: Kessel-Digital or Mastercard"
+    "name": "{ORGANIZATION_FULL_NAME}",
+    "description": "{ENVIRONMENT_DESCRIPTION}"
   },
   
   "tenant": {
     "tenantId": "{TENANT_ID}",
-    "tenantName": "{tenant}.onmicrosoft.com",
-    "description": "Azure AD / Entra ID tenant"
+    "tenantName": "{TENANT_NAME}",
+    "description": "{ORGANIZATION} Azure AD tenant"
   },
   
   "dataverse": {
-    "environmentUrl": "https://{ENVIRONMENT}.crm.dynamics.com",
-    "environmentId": "{ENVIRONMENT_ID}",
+    "environmentUrl": "{DATAVERSE_ENVIRONMENT_URL}",
+    "environmentId": "{DATAVERSE_ENVIRONMENT_ID}",
+    "organizationId": "{DATAVERSE_ORGANIZATION_ID}",
+    "apiUrl": "{DATAVERSE_ENVIRONMENT_URL}/api/data/v9.2",
     "solutionName": "AgentPlatform",
     "publisherPrefix": "eap",
-    "description": "Dataverse environment for tables and data"
+    "description": "{ORGANIZATION} Dataverse environment"
   },
   
   "sharepoint": {
-    "siteUrl": "https://{TENANT}.sharepoint.com/sites/{SITE_NAME}",
+    "siteUrl": "{SHAREPOINT_SITE_URL}",
     "kbLibraries": {
       "mpa": "MediaPlanningKB",
       "ca": "ConsultingKB",
@@ -36,69 +62,150 @@
   },
   
   "copilotStudio": {
-    "environmentUrl": "https://copilotstudio.microsoft.com/environments/{ENVIRONMENT_ID}",
+    "environmentUrl": "{COPILOT_ENVIRONMENT_URL}",
+    "powerPlatformApiUrl": "{POWER_PLATFORM_API_URL}",
     "agents": {
       "mpa": {
         "agentId": "{MPA_AGENT_ID}",
-        "agentName": "Media Planning Agent"
+        "agentName": "Media Planning Agent",
+        "webchatUrl": "{MPA_WEBCHAT_URL}"
       },
       "ca": {
         "agentId": "{CA_AGENT_ID}",
-        "agentName": "Consulting Agent"
+        "agentName": "Consulting Agent",
+        "webchatUrl": "{CA_WEBCHAT_URL}"
       }
     },
     "description": "Copilot Studio configuration"
   },
   
   "azureFunctions": {
-    "appName": "{ORGANIZATION}-agent-functions",
-    "resourceGroup": "{ORGANIZATION}-agent-platform-rg",
-    "subscriptionId": "{SUBSCRIPTION_ID}",
+    "appName": "{AZURE_FUNCTION_APP_NAME}",
+    "resourceGroup": "{AZURE_RESOURCE_GROUP}",
+    "subscriptionId": "{AZURE_SUBSCRIPTION_ID}",
+    "storageAccount": "{AZURE_STORAGE_ACCOUNT}",
+    "baseUrl": "{AZURE_FUNCTION_BASE_URL}",
     "endpoints": {
-      "mpa": "https://{ORGANIZATION}-agent-functions.azurewebsites.net/api/mpa",
-      "shared": "https://{ORGANIZATION}-agent-functions.azurewebsites.net/api/shared"
+      "health": "/api/health",
+      "allocation": "/api/allocation",
+      "gap": "/api/gap",
+      "spo": "/api/spo",
+      "features": "/api/features/{flag_name}",
+      "document": "/api/document",
+      "media_plan_document": "/api/generate-media-plan-document",
+      "projections": "/api/projections",
+      "benchmarks_search": "/api/benchmarks/search",
+      "session": "/api/session",
+      "validate_gate": "/api/validate-gate"
     },
+    "functionKey": "{AZURE_FUNCTION_KEY}",
+    "deployedFunctions": [
+      "CalculateBudgetAllocation",
+      "CalculateGap",
+      "CalculateSPO",
+      "CheckFeatureEnabled",
+      "GenerateDocument",
+      "GenerateMediaPlanDocument",
+      "HealthCheck",
+      "RunProjections",
+      "SearchBenchmarks",
+      "SessionManager",
+      "ValidateGate",
+      "WarmupTrigger"
+    ],
     "description": "Azure Functions for calculations and document generation"
   },
   
   "authentication": {
-    "clientId": "{CLIENT_ID}",
+    "clientId": "{AUTH_CLIENT_ID}",
     "authority": "https://login.microsoftonline.com/{TENANT_ID}",
     "scopes": [
-      "https://{ENVIRONMENT}.crm.dynamics.com/.default"
+      "{DATAVERSE_ENVIRONMENT_URL}/.default"
     ],
     "description": "Azure AD app registration for API access"
   },
   
   "channels": {
     "primary": "{PRIMARY_CHANNEL}",
-    "options": ["web", "teams", "mobile"],
+    "options": "{CHANNEL_OPTIONS}",
     "teamsAppId": "{TEAMS_APP_ID}",
-    "description": "Deployment channels (personal: web, corporate: teams)"
+    "description": "Deployment channel configuration"
   },
   
   "monitoring": {
+    "applicationInsights": "{APP_INSIGHTS_NAME}",
     "appInsightsConnectionString": "{APP_INSIGHTS_CONNECTION_STRING}",
-    "logLevel": "Information",
-    "enableDetailedErrors": false,
+    "logLevel": "{LOG_LEVEL}",
+    "enableDetailedErrors": "{ENABLE_DETAILED_ERRORS}",
     "description": "Application Insights for monitoring and diagnostics"
   },
   
   "featureDefaults": {
-    "description": "Default feature flag values for this environment",
-    "reference": "See feature_flags.template.json for full catalog"
+    "description": "Feature flag defaults for this environment",
+    "profile": "{FEATURE_PROFILE}",
+    "overrides": {
+      "mpa_enable_web_search": "{FLAG_WEB_SEARCH}",
+      "mpa_enable_external_api": "{FLAG_EXTERNAL_API}",
+      "mpa_enable_document_generation": true,
+      "mpa_enable_benchmark_lookup": true,
+      "mpa_enable_budget_optimization": true,
+      "mpa_enable_channel_recommendations": true,
+      "mpa_enable_projections": true,
+      "mpa_enable_gap_analysis": true,
+      "sec_enable_audit_logging": "{FLAG_AUDIT_LOGGING}",
+      "sec_require_data_classification": "{FLAG_DATA_CLASSIFICATION}",
+      "sec_enable_row_level_security": "{FLAG_ROW_LEVEL_SECURITY}",
+      "sec_enable_mfa_verification": "{FLAG_MFA_VERIFICATION}",
+      "ui_show_debug_info": "{FLAG_DEBUG_INFO}",
+      "ui_show_advanced_options": "{FLAG_ADVANCED_OPTIONS}"
+    }
   },
   
-  "_examples": {
+  "deploymentStatus": {
+    "lastUpdated": "{DEPLOYMENT_DATE}",
+    "phases": {
+      "phase_0_environment": "PENDING",
+      "phase_1_azure": "PENDING",
+      "phase_2_dataverse": "PENDING",
+      "phase_3_sharepoint": "PENDING",
+      "phase_4_flows": "PENDING",
+      "phase_5_mpa_agent": "PENDING",
+      "phase_6_ca_agent": "PENDING",
+      "phase_7_monitoring": "PENDING",
+      "phase_8_validation": "PENDING"
+    }
+  },
+  
+  "_profiles": {
     "personal": {
-      "organization.code": "Kessel-Digital",
-      "dataverse.environmentUrl": "https://aragornai.crm.dynamics.com",
-      "channels.primary": "web"
+      "description": "Personal/development environment with all features enabled",
+      "FLAG_WEB_SEARCH": true,
+      "FLAG_EXTERNAL_API": true,
+      "FLAG_AUDIT_LOGGING": false,
+      "FLAG_DATA_CLASSIFICATION": false,
+      "FLAG_ROW_LEVEL_SECURITY": false,
+      "FLAG_MFA_VERIFICATION": false,
+      "FLAG_DEBUG_INFO": true,
+      "FLAG_ADVANCED_OPTIONS": true,
+      "PRIMARY_CHANNEL": "web",
+      "CHANNEL_OPTIONS": ["web", "mobile"],
+      "LOG_LEVEL": "Information",
+      "ENABLE_DETAILED_ERRORS": true
     },
     "corporate": {
-      "organization.code": "Mastercard",
-      "dataverse.environmentUrl": "https://mastercard-prod.crm.dynamics.com",
-      "channels.primary": "teams"
+      "description": "Corporate/production environment with security features enabled",
+      "FLAG_WEB_SEARCH": false,
+      "FLAG_EXTERNAL_API": false,
+      "FLAG_AUDIT_LOGGING": true,
+      "FLAG_DATA_CLASSIFICATION": true,
+      "FLAG_ROW_LEVEL_SECURITY": true,
+      "FLAG_MFA_VERIFICATION": true,
+      "FLAG_DEBUG_INFO": false,
+      "FLAG_ADVANCED_OPTIONS": false,
+      "PRIMARY_CHANNEL": "teams",
+      "CHANNEL_OPTIONS": ["teams"],
+      "LOG_LEVEL": "Warning",
+      "ENABLE_DETAILED_ERRORS": false
     }
   }
 }

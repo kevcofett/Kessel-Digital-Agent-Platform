@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MPA v5.2 Benchmark Metric Types Schema Update",
+  "description": "Schema migration to add 5 new metric_type options to table_17_verticalbenchmarks for benchmark seed data import",
+  "version": "5.2.0",
+  "created": "2025-01-02",
+  "author": "MPA Development Team",
+  "changeType": "SchemaModification",
+  "affectedTables": [
+    "mpa_verticalbenchmarks"
+  ],
+  "changeSummary": {
+    "description": "Adds 5 new metric_type choice options to support benchmark data from Q4 2024 industry sources",
+    "reason": "Excel benchmark seed data contains metric types not present in original v5.1 schema",
+    "impact": "Non-breaking additive change - existing data unaffected",
+    "rollbackPlan": "Remove choice options 100000011-100000015 from mpa_metric_type field"
+  },
+  "existingOptions": [
+    {
+      "value": 100000000,
+      "label": "CPM"
+    },
+    {
+      "value": 100000001,
+      "label": "CPC"
+    },
+    {
+      "value": 100000002,
+      "label": "CTR"
+    },
+    {
+      "value": 100000003,
+      "label": "CVR"
+    },
+    {
+      "value": 100000004,
+      "label": "CPA"
+    },
+    {
+      "value": 100000005,
+      "label": "CAC"
+    },
+    {
+      "value": 100000006,
+      "label": "ROAS"
+    },
+    {
+      "value": 100000007,
+      "label": "LTV"
+    },
+    {
+      "value": 100000008,
+      "label": "Viewability"
+    },
+    {
+      "value": 100000009,
+      "label": "Frequency"
+    },
+    {
+      "value": 100000010,
+      "label": "Reach"
+    }
+  ],
+  "newOptions": [
+    {
+      "value": 100000011,
+      "label": "VTR",
+      "description": "View-Through Rate - percentage of users who view an ad and later convert",
+      "applicableChannels": [
+        "Paid Social",
+        "Video (OLV)",
+        "CTV/OTT",
+        "Programmatic Display"
+      ]
+    },
+    {
+      "value": 100000012,
+      "label": "CPCV",
+      "description": "Cost Per Completed View - cost for a full video view",
+      "applicableChannels": [
+        "Video (OLV)",
+        "CTV/OTT"
+      ]
+    },
+    {
+      "value": 100000013,
+      "label": "ListenThroughRate",
+      "description": "Listen-Through Rate - percentage of audio ad completions",
+      "applicableChannels": [
+        "Audio"
+      ]
+    },
+    {
+      "value": 100000014,
+      "label": "ReachEfficiency",
+      "description": "Reach Efficiency - cost per thousand unique users reached",
+      "applicableChannels": [
+        "DOOH",
+        "CTV/OTT"
+      ]
+    },
+    {
+      "value": 100000015,
+      "label": "OpenRate",
+      "description": "Open Rate - percentage of emails opened",
+      "applicableChannels": [
+        "Email"
+      ]
+    }
+  ],
+  "updatedOptions": [
+    {
+      "value": 100000000,
+      "label": "CPM"
+    },
+    {
+      "value": 100000001,
+      "label": "CPC"
+    },
+    {
+      "value": 100000002,
+      "label": "CTR"
+    },
+    {
+      "value": 100000003,
+      "label": "CVR"
+    },
+    {
+      "value": 100000004,
+      "label": "CPA"
+    },
+    {
+      "value": 100000005,
+      "label": "CAC"
+    },
+    {
+      "value": 100000006,
+      "label": "ROAS"
+    },
+    {
+      "value": 100000007,
+      "label": "LTV"
+    },
+    {
+      "value": 100000008,
+      "label": "Viewability"
+    },
+    {
+      "value": 100000009,
+      "label": "Frequency"
+    },
+    {
+      "value": 100000010,
+      "label": "Reach"
+    },
+    {
+      "value": 100000011,
+      "label": "VTR"
+    },
+    {
+      "value": 100000012,
+      "label": "CPCV"
+    },
+    {
+      "value": 100000013,
+      "label": "ListenThroughRate"
+    },
+    {
+      "value": 100000014,
+      "label": "ReachEfficiency"
+    },
+    {
+      "value": 100000015,
+      "label": "OpenRate"
+    }
+  ],
+  "deploymentSteps": [
+    {
+      "step": 1,
+      "action": "Backup existing mpa_verticalbenchmarks table",
+      "command": "Power Platform Admin Center > Backup environment"
+    },
+    {
+      "step": 2,
+      "action": "Update mpa_metric_type choice field in Dataverse",
+      "method": "Power Platform Admin Center or Solution Import",
+      "notes": "Add options 100000011-100000015"
+    },
+    {
+      "step": 3,
+      "action": "Validate schema update",
+      "command": "Query mpa_verticalbenchmarks entity metadata to confirm new options exist"
+    },
+    {
+      "step": 4,
+      "action": "Import benchmark seed data CSV",
+      "file": "data/mpa_verticalbenchmarks_import.csv",
+      "method": "Power Platform Data Import or Power Automate flow"
+    },
+    {
+      "step": 5,
+      "action": "Validate import results",
+      "validation": "Confirm 708 records imported with no errors"
+    }
+  ],
+  "dataMapping": {
+    "excelToDataverse": {
+      "Listen-Through Rate": "ListenThroughRate",
+      "Reach Efficiency": "ReachEfficiency",
+      "Open Rate": "OpenRate",
+      "VTR": "VTR",
+      "CPCV": "CPCV"
+    },
+    "notes": "Excel values with spaces or hyphens are mapped to PascalCase Dataverse labels"
+  },
+  "testingRequirements": [
+    {
+      "test": "Schema validation",
+      "expected": "All 16 metric_type options present in entity metadata"
+    },
+    {
+      "test": "Data import validation",
+      "expected": "708 records imported successfully"
+    },
+    {
+      "test": "Choice value validation",
+      "expected": "All metric_type values map to valid choice codes"
+    },
+    {
+      "test": "Flow compatibility",
+      "expected": "flow_08_SearchBenchmarks handles new metric types"
+    }
+  ],
+  "relatedFiles": [
+    "specs/dataverse/MediaPlanningAgent_DataverseSchema_Part2.json",
+    "data/MPA_Benchmark_Seed_Data.xlsx",
+    "data/mpa_verticalbenchmarks_import.csv",
+    "scripts/transform/transform_benchmark_seed_data.py",
+    "flows/definitions/flow_08_SearchBenchmarks.json"
+  ]
+}

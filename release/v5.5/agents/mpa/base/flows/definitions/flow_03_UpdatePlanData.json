@@ -1,0 +1,147 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "name": "flow_03_mpa_UpdatePlanData",
+    "displayName": "MPA - Update Plan Data",
+    "description": "Updates media plan data sections in Dataverse. Handles budget, channels, targets, and other plan components.",
+    "category": "Plan Management",
+    "version": "1.0.0",
+    "author": "Kessel Digital",
+    "lastModified": "2025-01-15"
+  },
+  "trigger": {
+    "type": "PowerVirtualAgents",
+    "description": "Triggered when user updates plan data through conversation",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "planId": {
+            "type": "string",
+            "description": "Media plan ID to update"
+          },
+          "sectionName": {
+            "type": "string",
+            "description": "Section to update (strategy, tactical, execution)",
+            "enum": ["strategy", "tactical", "execution", "performance"]
+          },
+          "sectionData": {
+            "type": "object",
+            "description": "Data to update in the section"
+          }
+        },
+        "required": ["planId", "sectionName", "sectionData"]
+      }
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "name": "Get_Existing_PlanData",
+      "type": "Dataverse",
+      "description": "Check if section data already exists",
+      "inputs": {
+        "operation": "ListRecords",
+        "entityName": "mpa_plandata",
+        "filter": "_mpa_mediaplan_value eq '@{triggerBody()?['planId']}' and mpa_section_name eq '@{triggerBody()?['sectionName']}'"
+      }
+    },
+    {
+      "order": 2,
+      "name": "Condition_Section_Exists",
+      "type": "Condition",
+      "description": "Check if we need to create or update",
+      "inputs": {
+        "expression": {
+          "greater": ["@length(outputs('Get_Existing_PlanData')?['body/value'])", 0]
+        }
+      },
+      "actions": {
+        "true": [
+          {
+            "name": "Update_Existing_Section",
+            "type": "Dataverse",
+            "inputs": {
+              "operation": "UpdateRecord",
+              "entityName": "mpa_plandata",
+              "recordId": "@{first(outputs('Get_Existing_PlanData')?['body/value'])?['mpa_plandataid']}",
+              "item": {
+                "mpa_content": "@{json(string(triggerBody()?['sectionData']))}",
+                "mpa_updated_at": "@{utcNow()}"
+              }
+            }
+          }
+        ],
+        "false": [
+          {
+            "name": "Create_New_Section",
+            "type": "Dataverse",
+            "inputs": {
+              "operation": "CreateRecord",
+              "entityName": "mpa_plandata",
+              "item": {
+                "mpa_section_name": "@{triggerBody()?['sectionName']}",
+                "mpa_content": "@{json(string(triggerBody()?['sectionData']))}",
+                "mpa_mediaplan@odata.bind": "/mpa_mediaplan(@{triggerBody()?['planId']})"
+              }
+            }
+          }
+        ]
+      },
+      "runAfter": ["Get_Existing_PlanData"]
+    },
+    {
+      "order": 3,
+      "name": "Update_Plan_Modified_Date",
+      "type": "Dataverse",
+      "description": "Update the plan's last modified timestamp",
+      "inputs": {
+        "operation": "UpdateRecord",
+        "entityName": "mpa_mediaplan",
+        "recordId": "@{triggerBody()?['planId']}",
+        "item": {
+          "mpa_last_updated_at": "@{utcNow()}"
+        }
+      },
+      "runAfter": ["Condition_Section_Exists"]
+    },
+    {
+      "order": 4,
+      "name": "Return_Success",
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "planId": "@{triggerBody()?['planId']}",
+          "section": "@{triggerBody()?['sectionName']}",
+          "status": "updated",
+          "message": "Plan data updated successfully"
+        }
+      },
+      "runAfter": ["Update_Plan_Modified_Date"]
+    }
+  ],
+  "outputs": {
+    "planId": {
+      "type": "string",
+      "description": "Updated plan ID"
+    },
+    "section": {
+      "type": "string",
+      "description": "Updated section name"
+    },
+    "status": {
+      "type": "string",
+      "description": "Update status"
+    }
+  },
+  "parameters": {},
+  "errorHandling": {
+    "retryPolicy": {
+      "type": "fixed",
+      "count": 2,
+      "interval": "PT10S"
+    },
+    "onError": "Call flow_11_LogError with error details"
+  }
+}

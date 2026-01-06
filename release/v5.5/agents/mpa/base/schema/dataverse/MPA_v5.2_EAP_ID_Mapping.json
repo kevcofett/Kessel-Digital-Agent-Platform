@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MPA to EAP ID Mapping Tables",
+  "description": "Temporary tables to track ID mappings during migration from MPA standalone tables to EAP shared infrastructure",
+  "metadata": {
+    "version": "5.2.0",
+    "created": "2026-01-01",
+    "purpose": "EAP Integration - Phase 1 Schema Preparation",
+    "retention": "Keep until migration verified complete, then archive"
+  },
+  "tables": [
+    {
+      "logicalName": "mpa_user_mapping",
+      "displayName": "MPA User Mapping",
+      "description": "Maps legacy mpa_user IDs to new eap_user IDs",
+      "ownership": "Organization",
+      "fields": [
+        {
+          "logicalName": "mpa_user_mapping_id",
+          "displayName": "Mapping ID",
+          "type": "Uniqueidentifier",
+          "isPrimaryKey": true,
+          "required": true
+        },
+        {
+          "logicalName": "mpa_user_id",
+          "displayName": "MPA User ID",
+          "type": "Uniqueidentifier",
+          "required": true,
+          "description": "Original mpa_user record ID"
+        },
+        {
+          "logicalName": "eap_user_id",
+          "displayName": "EAP User ID",
+          "type": "Uniqueidentifier",
+          "required": true,
+          "description": "New eap_user record ID"
+        },
+        {
+          "logicalName": "mpa_email",
+          "displayName": "Email",
+          "type": "SingleLineOfText",
+          "maxLength": 200,
+          "required": false,
+          "description": "Email for verification during migration"
+        },
+        {
+          "logicalName": "migrated_at",
+          "displayName": "Migrated At",
+          "type": "DateTime",
+          "required": true,
+          "description": "Timestamp when migration occurred"
+        },
+        {
+          "logicalName": "migration_status",
+          "displayName": "Migration Status",
+          "type": "Choice",
+          "required": true,
+          "options": [
+            {"value": 100000000, "label": "Pending"},
+            {"value": 100000001, "label": "Migrated"},
+            {"value": 100000002, "label": "Verified"},
+            {"value": 100000003, "label": "Failed"}
+          ],
+          "defaultValue": 100000000
+        },
+        {
+          "logicalName": "migration_notes",
+          "displayName": "Migration Notes",
+          "type": "MultilineText",
+          "maxLength": 4000,
+          "required": false,
+          "description": "Notes about migration issues or special handling"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_user_mapping_mpa",
+          "fields": ["mpa_user_id"],
+          "isUnique": true
+        },
+        {
+          "name": "idx_user_mapping_eap",
+          "fields": ["eap_user_id"],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "logicalName": "mpa_client_mapping",
+      "displayName": "MPA Client Mapping",
+      "description": "Maps legacy mpa_client IDs to new eap_client IDs",
+      "ownership": "Organization",
+      "fields": [
+        {
+          "logicalName": "mpa_client_mapping_id",
+          "displayName": "Mapping ID",
+          "type": "Uniqueidentifier",
+          "isPrimaryKey": true,
+          "required": true
+        },
+        {
+          "logicalName": "mpa_client_id",
+          "displayName": "MPA Client ID",
+          "type": "Uniqueidentifier",
+          "required": true,
+          "description": "Original mpa_client record ID"
+        },
+        {
+          "logicalName": "eap_client_id",
+          "displayName": "EAP Client ID",
+          "type": "Uniqueidentifier",
+          "required": true,
+          "description": "New eap_client record ID"
+        },
+        {
+          "logicalName": "mpa_client_code",
+          "displayName": "Client Code",
+          "type": "SingleLineOfText",
+          "maxLength": 50,
+          "required": false,
+          "description": "Client code for verification during migration"
+        },
+        {
+          "logicalName": "migrated_at",
+          "displayName": "Migrated At",
+          "type": "DateTime",
+          "required": true,
+          "description": "Timestamp when migration occurred"
+        },
+        {
+          "logicalName": "migration_status",
+          "displayName": "Migration Status",
+          "type": "Choice",
+          "required": true,
+          "options": [
+            {"value": 100000000, "label": "Pending"},
+            {"value": 100000001, "label": "Migrated"},
+            {"value": 100000002, "label": "Verified"},
+            {"value": 100000003, "label": "Failed"}
+          ],
+          "defaultValue": 100000000
+        },
+        {
+          "logicalName": "migration_notes",
+          "displayName": "Migration Notes",
+          "type": "MultilineText",
+          "maxLength": 4000,
+          "required": false,
+          "description": "Notes about migration issues or special handling"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_client_mapping_mpa",
+          "fields": ["mpa_client_id"],
+          "isUnique": true
+        },
+        {
+          "name": "idx_client_mapping_eap",
+          "fields": ["eap_client_id"],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "logicalName": "mpa_session_mapping",
+      "displayName": "MPA Session Mapping",
+      "description": "Maps legacy mpa_session IDs to new eap_session IDs",
+      "ownership": "Organization",
+      "fields": [
+        {
+          "logicalName": "mpa_session_mapping_id",
+          "displayName": "Mapping ID",
+          "type": "Uniqueidentifier",
+          "isPrimaryKey": true,
+          "required": true
+        },
+        {
+          "logicalName": "mpa_session_id",
+          "displayName": "MPA Session ID",
+          "type": "Uniqueidentifier",
+          "required": true,
+          "description": "Original mpa_session record ID"
+        },
+        {
+          "logicalName": "eap_session_id",
+          "displayName": "EAP Session ID",
+          "type": "Uniqueidentifier",
+          "required": true,
+          "description": "New eap_session record ID"
+        },
+        {
+          "logicalName": "mpa_session_code",
+          "displayName": "Session Code",
+          "type": "SingleLineOfText",
+          "maxLength": 50,
+          "required": false,
+          "description": "Session code for verification during migration"
+        },
+        {
+          "logicalName": "migrated_at",
+          "displayName": "Migrated At",
+          "type": "DateTime",
+          "required": true,
+          "description": "Timestamp when migration occurred"
+        },
+        {
+          "logicalName": "migration_status",
+          "displayName": "Migration Status",
+          "type": "Choice",
+          "required": true,
+          "options": [
+            {"value": 100000000, "label": "Pending"},
+            {"value": 100000001, "label": "Migrated"},
+            {"value": 100000002, "label": "Verified"},
+            {"value": 100000003, "label": "Failed"}
+          ],
+          "defaultValue": 100000000
+        },
+        {
+          "logicalName": "migration_notes",
+          "displayName": "Migration Notes",
+          "type": "MultilineText",
+          "maxLength": 4000,
+          "required": false,
+          "description": "Notes about migration issues or special handling"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_session_mapping_mpa",
+          "fields": ["mpa_session_id"],
+          "isUnique": true
+        },
+        {
+          "name": "idx_session_mapping_eap",
+          "fields": ["eap_session_id"],
+          "isUnique": true
+        }
+      ]
+    }
+  ],
+  "deploymentNotes": {
+    "order": "Deploy before running any migration scripts",
+    "cleanup": "Archive tables after migration verification complete (retain for 90 days)",
+    "rollback": "Tables enable reverse lookup if rollback needed"
+  }
+}

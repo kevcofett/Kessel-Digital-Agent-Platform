@@ -1,0 +1,224 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "Media Plan Progress",
+      "weight": "Bolder",
+      "size": "Medium"
+    },
+    {
+      "type": "ColumnSet",
+      "columns": [
+        {
+          "type": "Column",
+          "width": "stretch",
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "Step ${current_step} of 10",
+              "weight": "Bolder"
+            },
+            {
+              "type": "TextBlock",
+              "text": "${step_name}",
+              "size": "Small",
+              "isSubtle": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "ColumnSet",
+          "columns": [
+            {
+              "type": "Column",
+              "width": "10",
+              "style": "${step1_style}",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "1",
+                  "horizontalAlignment": "Center"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "10",
+              "style": "${step2_style}",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "2",
+                  "horizontalAlignment": "Center"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "10",
+              "style": "${step3_style}",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "3",
+                  "horizontalAlignment": "Center"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "10",
+              "style": "${step4_style}",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "4",
+                  "horizontalAlignment": "Center"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "10",
+              "style": "${step5_style}",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "5",
+                  "horizontalAlignment": "Center"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "10",
+              "style": "${step6_style}",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "6",
+                  "horizontalAlignment": "Center"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "10",
+              "style": "${step7_style}",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "7",
+                  "horizontalAlignment": "Center"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "10",
+              "style": "${step8_style}",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "8",
+                  "horizontalAlignment": "Center"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "10",
+              "style": "${step9_style}",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "9",
+                  "horizontalAlignment": "Center"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "10",
+              "style": "${step10_style}",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "10",
+                  "horizontalAlignment": "Center"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FactSet",
+      "facts": [
+        {
+          "title": "Completed",
+          "value": "${completed_steps}"
+        },
+        {
+          "title": "Current",
+          "value": "${current_step_name}"
+        },
+        {
+          "title": "Remaining",
+          "value": "${remaining_steps}"
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "style": "${gate_container_style}",
+      "isVisible": "${show_gate_info}",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Validation Gate",
+          "weight": "Bolder",
+          "color": "${gate_color}"
+        },
+        {
+          "type": "TextBlock",
+          "text": "${gate_message}",
+          "wrap": true,
+          "size": "Small"
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.Submit",
+      "title": "View Details",
+      "data": {
+        "action": "view_step_details",
+        "step": "${current_step}"
+      }
+    },
+    {
+      "type": "Action.Submit",
+      "title": "Continue",
+      "data": {
+        "action": "continue_workflow"
+      }
+    }
+  ],
+  "metadata": {
+    "cardId": "workflow_progress",
+    "version": "1.0",
+    "createdDate": "2025-12-30",
+    "description": "Progressive disclosure card showing 10-step media planning workflow progress"
+  }
+}

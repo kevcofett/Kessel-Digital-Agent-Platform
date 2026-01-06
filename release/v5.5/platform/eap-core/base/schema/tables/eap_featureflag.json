@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EAP Feature Flag Table",
+  "description": "Platform-wide feature flags for controlling functionality",
+  "tableName": "eap_featureflag",
+  "tableLogicalName": "eap_featureflag",
+  "primaryKey": "eap_featureflagid",
+  "primaryNameColumn": "eap_flagcode",
+  "columns": [
+    {
+      "logicalName": "eap_featureflagid",
+      "displayName": "Feature Flag ID",
+      "type": "Uniqueidentifier",
+      "required": true
+    },
+    {
+      "logicalName": "eap_flagcode",
+      "displayName": "Flag Code",
+      "type": "String",
+      "maxLength": 100,
+      "required": true,
+      "description": "Unique flag identifier (e.g., mpa_enable_web_search)"
+    },
+    {
+      "logicalName": "eap_flagname",
+      "displayName": "Flag Name",
+      "type": "String",
+      "maxLength": 200,
+      "required": true,
+      "description": "Human-readable name"
+    },
+    {
+      "logicalName": "eap_description",
+      "displayName": "Description",
+      "type": "Memo",
+      "required": false
+    },
+    {
+      "logicalName": "eap_isenabled",
+      "displayName": "Is Enabled",
+      "type": "Boolean",
+      "defaultValue": false,
+      "required": true
+    },
+    {
+      "logicalName": "eap_category",
+      "displayName": "Category",
+      "type": "Choice",
+      "options": [
+        { "value": 1, "label": "Platform" },
+        { "value": 2, "label": "Agent" },
+        { "value": 3, "label": "Integration" },
+        { "value": 4, "label": "Security" },
+        { "value": 5, "label": "UI" }
+      ],
+      "required": true
+    },
+    {
+      "logicalName": "eap_agentcode",
+      "displayName": "Agent Code",
+      "type": "String",
+      "maxLength": 20,
+      "required": false,
+      "description": "If agent-specific, which agent (null = platform-wide)"
+    },
+    {
+      "logicalName": "eap_defaultvalue",
+      "displayName": "Default Value",
+      "type": "Boolean",
+      "defaultValue": false,
+      "required": true,
+      "description": "Default when not explicitly set"
+    },
+    {
+      "logicalName": "eap_fallbackmessage",
+      "displayName": "Fallback Message",
+      "type": "Memo",
+      "required": false,
+      "description": "Message to display when feature is disabled"
+    }
+  ]
+}

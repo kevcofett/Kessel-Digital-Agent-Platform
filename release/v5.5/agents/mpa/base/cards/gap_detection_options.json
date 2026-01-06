@@ -1,0 +1,143 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "metadata": {
+    "templateId": "mpa-gap-detection-options",
+    "version": "5.2",
+    "lastUpdated": "2025-12-30",
+    "description": "Presents the 6-options framework for closing projection gaps"
+  },
+  "body": [
+    {
+      "type": "Container",
+      "style": "attention",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "GAP DETECTED",
+          "weight": "Bolder",
+          "size": "Large",
+          "color": "Attention"
+        },
+        {
+          "type": "TextBlock",
+          "text": "Projection falls short of target by ${gapPercentage}%",
+          "wrap": true
+        }
+      ]
+    },
+    {
+      "type": "FactSet",
+      "facts": [
+        {
+          "title": "Current Projection",
+          "value": "${projectedValue}"
+        },
+        {
+          "title": "Target",
+          "value": "${targetValue}"
+        },
+        {
+          "title": "Gap to Close",
+          "value": "${gapValue} (${gapPercentage}%)"
+        },
+        {
+          "title": "Root Cause",
+          "value": "${rootCause}"
+        }
+      ]
+    },
+    {
+      "type": "TextBlock",
+      "text": "OPTIONS TO CLOSE GAP",
+      "weight": "Bolder",
+      "size": "Medium",
+      "spacing": "Large"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "ActionSet",
+          "actions": [
+            {
+              "type": "Action.Submit",
+              "title": "1. Increase Budget",
+              "data": {
+                "action": "select_option",
+                "option": "increase_budget",
+                "sessionId": "${sessionId}"
+              }
+            },
+            {
+              "type": "Action.Submit",
+              "title": "2. Improve CVR",
+              "data": {
+                "action": "select_option",
+                "option": "improve_cvr",
+                "sessionId": "${sessionId}"
+              }
+            },
+            {
+              "type": "Action.Submit",
+              "title": "3. Improve CTR",
+              "data": {
+                "action": "select_option",
+                "option": "improve_ctr",
+                "sessionId": "${sessionId}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "ActionSet",
+          "actions": [
+            {
+              "type": "Action.Submit",
+              "title": "4. Change Channel Mix",
+              "data": {
+                "action": "select_option",
+                "option": "change_channel_mix",
+                "sessionId": "${sessionId}"
+              }
+            },
+            {
+              "type": "Action.Submit",
+              "title": "5. Adjust Goal",
+              "data": {
+                "action": "select_option",
+                "option": "adjust_goal",
+                "sessionId": "${sessionId}"
+              }
+            },
+            {
+              "type": "Action.Submit",
+              "title": "6. Combine Approaches",
+              "data": {
+                "action": "select_option",
+                "option": "combine_approaches",
+                "sessionId": "${sessionId}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "TextBlock",
+      "text": "Select an option to see detailed calculations.",
+      "wrap": true,
+      "isSubtle": true,
+      "spacing": "Medium"
+    }
+  ],
+  "$data": {
+    "gapPercentage": "20",
+    "projectedValue": "1,600 conversions",
+    "targetValue": "2,000 conversions",
+    "gapValue": "400 conversions",
+    "rootCause": "Budget-driven gap",
+    "sessionId": "session-123"
+  }
+}

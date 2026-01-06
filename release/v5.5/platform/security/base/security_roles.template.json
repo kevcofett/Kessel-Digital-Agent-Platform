@@ -1,0 +1,229 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Security Roles Template",
+  "description": "Security role definitions and access control patterns",
+  "version": "5.5",
+  "lastUpdated": "January 2026",
+  
+  "baseRoles": {
+    "description": "Core roles used in all environments",
+    
+    "eap_platform_user": {
+      "name": "Platform User",
+      "description": "Basic platform access - can use agents",
+      "permissions": [
+        "Read own sessions",
+        "Create sessions",
+        "Read own user profile",
+        "Update own preferences"
+      ]
+    },
+    
+    "eap_platform_admin": {
+      "name": "Platform Administrator",
+      "description": "Full platform administration",
+      "permissions": [
+        "All Platform User permissions",
+        "Read all sessions",
+        "Manage users",
+        "Manage clients",
+        "Manage feature flags",
+        "View audit logs"
+      ]
+    },
+    
+    "mpa_user": {
+      "name": "Media Planning User",
+      "description": "Can create and manage media plans",
+      "permissions": [
+        "Create media plans",
+        "Read own media plans",
+        "Update own media plans",
+        "Delete own media plans",
+        "Generate documents for own plans",
+        "Query benchmarks"
+      ]
+    },
+    
+    "mpa_manager": {
+      "name": "Media Planning Manager",
+      "description": "Can view team media plans",
+      "permissions": [
+        "All MPA User permissions",
+        "Read team media plans",
+        "Approve media plans",
+        "View team analytics"
+      ]
+    },
+    
+    "mpa_admin": {
+      "name": "Media Planning Administrator",
+      "description": "Full MPA administration",
+      "permissions": [
+        "All MPA Manager permissions",
+        "Manage benchmarks",
+        "Manage channels",
+        "Manage KPIs",
+        "Configure MPA feature flags"
+      ]
+    },
+    
+    "ca_user": {
+      "name": "Consulting User",
+      "description": "Can use consulting agent",
+      "permissions": [
+        "Create consulting sessions",
+        "Generate deliverables"
+      ]
+    },
+    
+    "ca_admin": {
+      "name": "Consulting Administrator",
+      "description": "Full CA administration",
+      "permissions": [
+        "All CA User permissions",
+        "Manage consulting templates",
+        "Configure CA feature flags"
+      ]
+    }
+  },
+  
+  "corporateExtensionRoles": {
+    "description": "Additional roles for corporate environments (defined in /extensions/)",
+    
+    "sec_data_steward": {
+      "name": "Data Steward",
+      "description": "Manages data classification and access controls",
+      "permissions": [
+        "Manage data classifications",
+        "Review access requests",
+        "Configure row-level security"
+      ]
+    },
+    
+    "sec_auditor": {
+      "name": "Security Auditor",
+      "description": "Read-only access to audit logs and security events",
+      "permissions": [
+        "Read all audit logs",
+        "Export audit reports",
+        "View security dashboards"
+      ]
+    }
+  },
+  
+  "accessControlHierarchy": {
+    "description": "Corporate row-level security hierarchy",
+    "applicability": "Corporate environment only - defined in /extensions/",
+    
+    "levels": [
+      {
+        "level": 1,
+        "name": "Business Unit",
+        "table": "eap_businessunit",
+        "example": "Marketing, Finance, Operations"
+      },
+      {
+        "level": 2,
+        "name": "Department",
+        "table": "eap_department",
+        "parentLevel": "Business Unit",
+        "example": "Brand Strategy, Performance Marketing"
+      },
+      {
+        "level": 3,
+        "name": "Team",
+        "table": "eap_team",
+        "parentLevel": "Department",
+        "example": "Digital Team, Traditional Team"
+      },
+      {
+        "level": 4,
+        "name": "Pod",
+        "table": "eap_pod",
+        "parentLevel": "Team",
+        "example": "Performance Pod, Creative Pod"
+      },
+      {
+        "level": 5,
+        "name": "Employee",
+        "table": "eap_user",
+        "parentLevel": "Pod",
+        "description": "Individual user at lowest level"
+      }
+    ],
+    
+    "accessRules": {
+      "description": "How access is determined based on hierarchy position",
+      
+      "rules": [
+        {
+          "rule": "Own Records",
+          "description": "Users always see records they created",
+          "implementation": "createdby = current_user"
+        },
+        {
+          "rule": "Pod Level",
+          "description": "Users see records from their pod",
+          "implementation": "record.pod_id = user.pod_id"
+        },
+        {
+          "rule": "Team Level",
+          "description": "Team leads see all pod records in their team",
+          "implementation": "record.team_id = user.team_id AND user.role contains 'manager'"
+        },
+        {
+          "rule": "Department Level",
+          "description": "Department heads see all team records",
+          "implementation": "record.department_id = user.department_id AND user.role contains 'director'"
+        },
+        {
+          "rule": "Business Unit Level",
+          "description": "BU leads see all department records",
+          "implementation": "record.bu_id = user.bu_id AND user.role contains 'vp'"
+        },
+        {
+          "rule": "Global Access",
+          "description": "Admins see all records",
+          "implementation": "user.role contains 'admin'"
+        }
+      ]
+    },
+    
+    "assignment": {
+      "table": "eap_userassignment",
+      "description": "Maps users to hierarchy nodes",
+      "schema": {
+        "eap_userid": "Lookup to eap_user",
+        "eap_businessunitid": "Lookup to eap_businessunit",
+        "eap_departmentid": "Lookup to eap_department",
+        "eap_teamid": "Lookup to eap_team",
+        "eap_podid": "Lookup to eap_pod",
+        "eap_accesslevel": "Choice (Pod/Team/Department/BU/Global)",
+        "eap_effectivedate": "DateTime",
+        "eap_expirationdate": "DateTime (optional)"
+      }
+    }
+  },
+  
+  "implementationNotes": {
+    "personal": {
+      "description": "Personal environment uses simple role-based access",
+      "implementation": [
+        "Assign users to base roles only",
+        "No hierarchy tables needed",
+        "Row-level security disabled via feature flag"
+      ]
+    },
+    "corporate": {
+      "description": "Corporate environment uses full hierarchy-based access",
+      "implementation": [
+        "Create hierarchy tables in /extensions/",
+        "Populate hierarchy with organizational structure",
+        "Assign users via eap_userassignment",
+        "Enable sec_enable_row_level_security flag",
+        "Configure Dataverse security roles to match"
+      ]
+    }
+  }
+}

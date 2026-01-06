@@ -1,0 +1,190 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "name": "flow_10_mpa_CalculateBudgetAllocation",
+    "displayName": "MPA - Calculate Budget Allocation",
+    "description": "Calculates optimal budget allocation across channels based on objective and benchmarks.",
+    "category": "Calculations",
+    "version": "1.1.0",
+    "author": "Kessel Digital",
+    "lastModified": "2026-01-01",
+    "eapIntegration": {
+      "auditTable": "eap_audit",
+      "agentSource": "MPA_AGENT"
+    }
+  },
+  "trigger": {
+    "type": "PowerVirtualAgents",
+    "description": "Triggered when user requests budget allocation",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "budget": {
+            "type": "number",
+            "description": "Total budget to allocate"
+          },
+          "channels": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Channels to allocate across"
+          },
+          "objective": {
+            "type": "string",
+            "description": "Campaign objective",
+            "enum": ["awareness", "consideration", "conversions", "retention"]
+          },
+          "vertical": {
+            "type": "string",
+            "description": "Industry vertical"
+          }
+        },
+        "required": ["budget", "channels"]
+      }
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "name": "Validate_Budget",
+      "type": "Condition",
+      "inputs": {
+        "expression": {
+          "greater": ["@triggerBody()?['budget']", 0]
+        }
+      },
+      "actions": {
+        "false": [
+          {
+            "name": "Return_Validation_Error",
+            "type": "Response",
+            "inputs": {
+              "statusCode": 400,
+              "body": {
+                "error": "VALIDATION_ERROR",
+                "message": "Budget must be a positive number"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "order": 2,
+      "name": "Call_CalculateBudgetAllocation_Function",
+      "type": "Http",
+      "description": "Call Azure Function to calculate allocation",
+      "inputs": {
+        "method": "POST",
+        "uri": "@{parameters('AzureFunctionsBaseUrl')}/api/CalculateBudgetAllocation",
+        "headers": {
+          "Content-Type": "application/json",
+          "x-functions-key": "@{parameters('AzureFunctionsKey')}"
+        },
+        "body": {
+          "budget": "@{triggerBody()?['budget']}",
+          "channels": "@{triggerBody()?['channels']}",
+          "objective": "@{coalesce(triggerBody()?['objective'], 'conversions')}",
+          "vertical": "@{coalesce(triggerBody()?['vertical'], 'general')}"
+        }
+      },
+      "runAfter": ["Validate_Budget"]
+    },
+    {
+      "order": 3,
+      "name": "Parse_Allocation",
+      "type": "ParseJson",
+      "inputs": {
+        "content": "@body('Call_CalculateBudgetAllocation_Function')",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string" },
+            "allocation": {
+              "type": "object",
+              "properties": {
+                "totalBudget": { "type": "number" },
+                "percentages": { "type": "object" },
+                "byChannel": { "type": "object" }
+              }
+            }
+          }
+        }
+      },
+      "runAfter": ["Call_CalculateBudgetAllocation_Function"]
+    },
+    {
+      "order": 4,
+      "name": "Format_Allocation_Summary",
+      "type": "Compose",
+      "description": "Create user-friendly allocation summary",
+      "inputs": {
+        "totalBudget": "@{body('Parse_Allocation')?['allocation']?['totalBudget']}",
+        "percentages": "@{body('Parse_Allocation')?['allocation']?['percentages']}",
+        "channelDetails": "@{body('Parse_Allocation')?['allocation']?['byChannel']}",
+        "recommendedAction": "Review the allocation and adjust if needed based on your campaign priorities."
+      },
+      "runAfter": ["Parse_Allocation"]
+    },
+    {
+      "order": 5,
+      "name": "Write_EAP_Audit",
+      "type": "Dataverse",
+      "description": "Log budget allocation to EAP shared audit table",
+      "inputs": {
+        "operation": "CreateRecord",
+        "entityName": "eap_audit",
+        "item": {
+          "eap_action_type": "BudgetAllocationCalculated",
+          "eap_entity_type": "mpa_mediaplan",
+          "eap_description": "Budget allocation calculated: $@{triggerBody()?['budget']} across @{length(triggerBody()?['channels'])} channels",
+          "eap_agent_source": "MPA_AGENT",
+          "eap_created_at": "@{utcNow()}"
+        }
+      },
+      "runAfter": ["Format_Allocation_Summary"]
+    },
+    {
+      "order": 6,
+      "name": "Return_Allocation",
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": "@outputs('Format_Allocation_Summary')"
+      },
+      "runAfter": ["Write_EAP_Audit"]
+    }
+  ],
+  "outputs": {
+    "totalBudget": {
+      "type": "number",
+      "description": "Total budget allocated"
+    },
+    "percentages": {
+      "type": "object",
+      "description": "Percentage allocation by channel"
+    },
+    "channelDetails": {
+      "type": "object",
+      "description": "Detailed allocation with scores"
+    }
+  },
+  "parameters": {
+    "AzureFunctionsBaseUrl": {
+      "type": "string",
+      "description": "Base URL for Azure Functions"
+    },
+    "AzureFunctionsKey": {
+      "type": "securestring",
+      "description": "Azure Functions API key"
+    }
+  },
+  "errorHandling": {
+    "retryPolicy": {
+      "type": "exponential",
+      "count": 3,
+      "interval": "PT5S"
+    },
+    "onError": "Call flow_11_LogError with error details"
+  }
+}

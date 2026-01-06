@@ -1,0 +1,189 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "name": "flow_01_mpa_CreateSession",
+    "displayName": "MPA - Create Session",
+    "description": "Creates a new user session for the Media Planning Agent. Called when a user starts a new conversation.",
+    "category": "Session Management",
+    "version": "1.0.0",
+    "author": "Kessel Digital",
+    "lastModified": "2025-01-15"
+  },
+  "trigger": {
+    "type": "PowerVirtualAgents",
+    "description": "Triggered from Copilot Studio when user starts a new planning session",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "User's unique identifier from Entra ID"
+          },
+          "clientId": {
+            "type": "string",
+            "description": "Optional client identifier"
+          },
+          "vertical": {
+            "type": "string",
+            "description": "Initial industry vertical"
+          },
+          "objective": {
+            "type": "string",
+            "description": "Initial campaign objective"
+          }
+        },
+        "required": ["userId"]
+      }
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "name": "Initialize_Variables",
+      "type": "InitializeVariable",
+      "description": "Set up session context variables",
+      "inputs": {
+        "variables": [
+          {
+            "name": "sessionContext",
+            "type": "object",
+            "value": {
+              "vertical": "@{triggerBody()?['vertical']}",
+              "objective": "@{triggerBody()?['objective']}"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "order": 2,
+      "name": "Call_SessionManager_Function",
+      "type": "Http",
+      "description": "Call Azure Function to create session",
+      "inputs": {
+        "method": "POST",
+        "uri": "@{parameters('AzureFunctionsBaseUrl')}/api/SessionManager",
+        "headers": {
+          "Content-Type": "application/json",
+          "x-functions-key": "@{parameters('AzureFunctionsKey')}"
+        },
+        "body": {
+          "action": "create",
+          "user_id": "@{triggerBody()?['userId']}",
+          "client_id": "@{triggerBody()?['clientId']}",
+          "context": "@variables('sessionContext')"
+        }
+      },
+      "runAfter": ["Initialize_Variables"]
+    },
+    {
+      "order": 3,
+      "name": "Parse_Response",
+      "type": "ParseJson",
+      "description": "Parse the Azure Function response",
+      "inputs": {
+        "content": "@body('Call_SessionManager_Function')",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string" },
+            "session": {
+              "type": "object",
+              "properties": {
+                "session_id": { "type": "string" },
+                "user_id": { "type": "string" },
+                "status": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "runAfter": ["Call_SessionManager_Function"]
+    },
+    {
+      "order": 4,
+      "name": "Condition_Check_Success",
+      "type": "Condition",
+      "description": "Check if session was created successfully",
+      "inputs": {
+        "expression": {
+          "equals": ["@body('Parse_Response')?['status']", "success"]
+        }
+      },
+      "actions": {
+        "true": [
+          {
+            "name": "Return_Success",
+            "type": "Response",
+            "inputs": {
+              "statusCode": 200,
+              "body": {
+                "sessionId": "@{body('Parse_Response')?['session']?['session_id']}",
+                "status": "active",
+                "message": "Session created successfully"
+              }
+            }
+          }
+        ],
+        "false": [
+          {
+            "name": "Call_LogError_Flow",
+            "type": "Workflow",
+            "inputs": {
+              "host": {
+                "workflowId": "/flows/flow_11_mpa_LogError"
+              },
+              "body": {
+                "source": "flow_01_CreateSession",
+                "error": "@body('Parse_Response')"
+              }
+            }
+          },
+          {
+            "name": "Return_Error",
+            "type": "Response",
+            "inputs": {
+              "statusCode": 500,
+              "body": {
+                "error": "Failed to create session",
+                "details": "@body('Parse_Response')"
+              }
+            }
+          }
+        ]
+      },
+      "runAfter": ["Parse_Response"]
+    }
+  ],
+  "outputs": {
+    "sessionId": {
+      "type": "string",
+      "description": "The created session ID"
+    },
+    "status": {
+      "type": "string",
+      "description": "Session status (active)"
+    }
+  },
+  "parameters": {
+    "AzureFunctionsBaseUrl": {
+      "type": "string",
+      "description": "Base URL for Azure Functions",
+      "defaultValue": "https://mpa-functions.azurewebsites.net"
+    },
+    "AzureFunctionsKey": {
+      "type": "securestring",
+      "description": "Azure Functions API key"
+    }
+  },
+  "errorHandling": {
+    "retryPolicy": {
+      "type": "exponential",
+      "count": 3,
+      "interval": "PT5S",
+      "maximumInterval": "PT1M"
+    },
+    "onError": "Call flow_11_LogError with error details"
+  }
+}

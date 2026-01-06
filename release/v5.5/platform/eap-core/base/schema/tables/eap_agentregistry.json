@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EAP Agent Registry Table",
+  "description": "Registry of all agents deployed on the platform",
+  "tableName": "eap_agentregistry",
+  "tableLogicalName": "eap_agentregistry",
+  "primaryKey": "eap_agentregistryid",
+  "primaryNameColumn": "eap_agentname",
+  "columns": [
+    {
+      "logicalName": "eap_agentregistryid",
+      "displayName": "Agent Registry ID",
+      "type": "Uniqueidentifier",
+      "required": true
+    },
+    {
+      "logicalName": "eap_agentcode",
+      "displayName": "Agent Code",
+      "type": "String",
+      "maxLength": 20,
+      "required": true,
+      "description": "Short identifier (MPA, CA, etc.)"
+    },
+    {
+      "logicalName": "eap_agentname",
+      "displayName": "Agent Name",
+      "type": "String",
+      "maxLength": 200,
+      "required": true,
+      "description": "Full agent name"
+    },
+    {
+      "logicalName": "eap_agentversion",
+      "displayName": "Agent Version",
+      "type": "String",
+      "maxLength": 20,
+      "required": true
+    },
+    {
+      "logicalName": "eap_status",
+      "displayName": "Status",
+      "type": "Choice",
+      "options": [
+        { "value": 1, "label": "Active" },
+        { "value": 2, "label": "Inactive" },
+        { "value": 3, "label": "Deprecated" },
+        { "value": 4, "label": "Development" }
+      ],
+      "defaultValue": 1,
+      "required": true
+    },
+    {
+      "logicalName": "eap_copilotagentid",
+      "displayName": "Copilot Agent ID",
+      "type": "String",
+      "maxLength": 100,
+      "required": false,
+      "description": "GUID of Copilot Studio agent"
+    },
+    {
+      "logicalName": "eap_kbsharepointlibrary",
+      "displayName": "KB SharePoint Library",
+      "type": "String",
+      "maxLength": 200,
+      "required": false,
+      "description": "SharePoint library name for KB files"
+    },
+    {
+      "logicalName": "eap_featureflagprefix",
+      "displayName": "Feature Flag Prefix",
+      "type": "String",
+      "maxLength": 20,
+      "required": false,
+      "description": "Prefix for agent-specific flags (e.g., mpa_)"
+    },
+    {
+      "logicalName": "eap_tablesowned",
+      "displayName": "Tables Owned",
+      "type": "Memo",
+      "required": false,
+      "description": "JSON array of table names owned by this agent"
+    },
+    {
+      "logicalName": "eap_requiredpermissions",
+      "displayName": "Required Permissions",
+      "type": "Memo",
+      "required": false,
+      "description": "JSON array of security roles required"
+    },
+    {
+      "logicalName": "eap_description",
+      "displayName": "Description",
+      "type": "Memo",
+      "required": false
+    },
+    {
+      "logicalName": "eap_deployedon",
+      "displayName": "Deployed On",
+      "type": "DateTime",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "flowName": "MPA_InitializeSession",
+    "flowNumber": "01",
+    "displayName": "MPA - Initialize Session",
+    "description": "Initialize a new planning session for the Media Planning Agent",
+    "version": "1.0.0",
+    "author": "MPA Remediation",
+    "createdDate": "2025-12-28",
+    "tables": ["eap_session"],
+    "azureFunctions": []
+  },
+  "trigger": {
+    "type": "Request",
+    "kind": "Http",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": "User ID initiating the session"
+        },
+        "client_id": {
+          "type": "string",
+          "description": "Client ID for the planning session (optional)"
+        },
+        "pathway": {
+          "type": "string",
+          "enum": ["EXPRESS", "GUIDED", "STANDARD", "AUDIT"],
+          "description": "Planning pathway selected"
+        },
+        "campaign_name": {
+          "type": "string",
+          "description": "Name of the campaign being planned (optional)"
+        }
+      },
+      "required": ["user_id", "pathway"]
+    }
+  },
+  "variables": [
+    {
+      "name": "varSuccess",
+      "type": "Boolean",
+      "value": true
+    },
+    {
+      "name": "varErrorMessage",
+      "type": "String",
+      "value": ""
+    },
+    {
+      "name": "varSessionCode",
+      "type": "String",
+      "value": ""
+    }
+  ],
+  "actions": {
+    "Scope_Try": {
+      "type": "Scope",
+      "actions": {
+        "Generate_Session_Code": {
+          "type": "Compose",
+          "inputs": "@concat('SES-', formatDateTime(utcNow(), 'yyyyMMddHHmmss'), '-', substring(guid(), 0, 4))",
+          "runAfter": {}
+        },
+        "Set_varSessionCode": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "varSessionCode",
+            "value": "@outputs('Generate_Session_Code')"
+          },
+          "runAfter": {
+            "Generate_Session_Code": ["Succeeded"]
+          }
+        },
+        "Create_Session_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "eap_session",
+              "item": {
+                "eap_session_code": "@variables('varSessionCode')",
+                "eap_agent_type": "MPA_AGENT",
+                "eap_user_id": "@triggerBody()?['user_id']",
+                "eap_client_id": "@triggerBody()?['client_id']",
+                "eap_status": 100000000,
+                "eap_started_at": "@utcNow()",
+                "eap_session_data": "@json(concat('{\"pathway\":\"', triggerBody()?['pathway'], '\",\"campaign_name\":\"', coalesce(triggerBody()?['campaign_name'], ''), '\"}'))"
+              }
+            }
+          },
+          "runAfter": {
+            "Set_varSessionCode": ["Succeeded"]
+          }
+        },
+        "Response_Success": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "status": "Success",
+              "session_id": "@outputs('Create_Session_Record')?['body/eap_sessionid']",
+              "session_code": "@variables('varSessionCode')",
+              "pathway": "@triggerBody()?['pathway']",
+              "created_at": "@utcNow()"
+            }
+          },
+          "runAfter": {
+            "Create_Session_Record": ["Succeeded"]
+          }
+        }
+      }
+    },
+    "Scope_Catch": {
+      "type": "Scope",
+      "runAfter": {
+        "Scope_Try": ["Failed", "TimedOut"]
+      },
+      "actions": {
+        "Set_varSuccess_False": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "varSuccess",
+            "value": false
+          },
+          "runAfter": {}
+        },
+        "Set_varErrorMessage": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "varErrorMessage",
+            "value": "@{result('Scope_Try')}"
+          },
+          "runAfter": {
+            "Set_varSuccess_False": ["Succeeded"]
+          }
+        },
+        "Create_ErrorLog_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_errorlog",
+              "item": {
+                "mpa_error_type": "FlowError",
+                "mpa_error_message": "@variables('varErrorMessage')",
+                "mpa_source_flow": "MPA_InitializeSession",
+                "mpa_severity": 100000002,
+                "mpa_is_resolved": false,
+                "mpa_occurred_at": "@utcNow()",
+                "mpa_request_data": "@string(triggerBody())"
+              }
+            }
+          },
+          "runAfter": {
+            "Set_varErrorMessage": ["Succeeded"]
+          }
+        },
+        "Response_Error": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 500,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "status": "Error",
+              "message": "Failed to initialize session",
+              "error_details": "@variables('varErrorMessage')"
+            }
+          },
+          "runAfter": {
+            "Create_ErrorLog_Record": ["Succeeded"]
+          }
+        }
+      }
+    }
+  },
+  "connectionReferences": {
+    "shared_commondataserviceforapps": {
+      "connectionName": "shared_commondataserviceforapps",
+      "source": "Embedded",
+      "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+      "tier": "Standard"
+    }
+  },
+  "environmentVariables": {
+    "DataverseEnvironmentUrl": "https://org5c737821.crm.dynamics.com"
+  }
+}

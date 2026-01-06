@@ -1,0 +1,124 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "flowName": "MPA_GenerateDocument",
+    "flowNumber": "05",
+    "displayName": "MPA - Generate Media Plan Document",
+    "description": "Generate Word document programmatically via Azure Function. Returns binary .docx for SharePoint storage.",
+    "version": "2.0.0",
+    "author": "MPA Remediation",
+    "createdDate": "2025-12-28",
+    "lastModified": "2026-01-02",
+    "tables": ["mpa_mediaplan", "mpa_plandata"],
+    "azureFunctions": ["GenerateMediaPlanDocument"],
+    "azureFunctionEndpoint": "/api/generate-media-plan-document"
+  },
+  "trigger": {
+    "type": "Request",
+    "kind": "Http",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "plan_id": {
+          "type": "string",
+          "description": "Media plan ID"
+        },
+        "template_type": {
+          "type": "string",
+          "enum": ["full", "executive", "tactical"],
+          "description": "Document template type"
+        }
+      },
+      "required": ["plan_id"]
+    }
+  },
+  "variables": [
+    {"name": "varSuccess", "type": "Boolean", "value": true},
+    {"name": "varErrorMessage", "type": "String", "value": ""}
+  ],
+  "actions": {
+    "Scope_Try": {
+      "type": "Scope",
+      "actions": {
+        "Get_Plan_Details": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "GetItem", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {"entityName": "mpa_mediaplan", "recordId": "@triggerBody()?['plan_id']"}
+          },
+          "runAfter": {}
+        },
+        "Get_All_Sections": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "ListRecords", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {"entityName": "mpa_plandata", "$filter": "mpa_plan_id eq '@{triggerBody()?['plan_id']}'"}
+          },
+          "runAfter": {"Get_Plan_Details": ["Succeeded"]}
+        },
+        "Call_GenerateMediaPlanDocument_Function": {
+          "type": "Http",
+          "inputs": {
+            "method": "POST",
+            "uri": "@{parameters('AzureFunctionsBaseUrl')}/api/generate-media-plan-document",
+            "headers": {"Content-Type": "application/json", "x-functions-key": "@parameters('FunctionKey')"},
+            "body": {
+              "metadata": {
+                "planName": "@outputs('Get_Plan_Details')?['body/mpa_plan_name']",
+                "clientName": "@outputs('Get_Plan_Details')?['body/mpa_client_name']",
+                "preparedBy": "Media Planning Agent",
+                "preparedDate": "@utcNow('yyyy-MM-dd')",
+                "version": "@coalesce(outputs('Get_Plan_Details')?['body/mpa_version'], '1.0')"
+              },
+              "planData": "@outputs('Get_Plan_Details')?['body']",
+              "sections": "@outputs('Get_All_Sections')?['body/value']"
+            },
+            "retryPolicy": {"type": "exponential", "count": 3, "interval": "PT5S"}
+          },
+          "runAfter": {"Get_All_Sections": ["Succeeded"]}
+        },
+        "Response_Success": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {"Content-Type": "application/json"},
+            "body": {
+              "status": "Success",
+              "plan_id": "@triggerBody()?['plan_id']",
+              "document_content": "@body('Call_GenerateMediaPlanDocument_Function')",
+              "content_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              "generated_at": "@utcNow()"
+            }
+          },
+          "runAfter": {"Call_GenerateMediaPlanDocument_Function": ["Succeeded"]}
+        }
+      }
+    },
+    "Scope_Catch": {
+      "type": "Scope",
+      "runAfter": {"Scope_Try": ["Failed", "TimedOut"]},
+      "actions": {
+        "Set_varSuccess_False": {"type": "SetVariable", "inputs": {"name": "varSuccess", "value": false}, "runAfter": {}},
+        "Set_varErrorMessage": {"type": "SetVariable", "inputs": {"name": "varErrorMessage", "value": "@{result('Scope_Try')}"}, "runAfter": {"Set_varSuccess_False": ["Succeeded"]}},
+        "Create_ErrorLog_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {"entityName": "mpa_errorlog", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_GenerateDocument", "mpa_severity": 100000002, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()", "mpa_plan_id": "@triggerBody()?['plan_id']"}}
+          },
+          "runAfter": {"Set_varErrorMessage": ["Succeeded"]}
+        },
+        "Response_Error": {
+          "type": "Response",
+          "inputs": {"statusCode": 500, "headers": {"Content-Type": "application/json"}, "body": {"status": "Error", "message": "Failed to generate document", "error_details": "@variables('varErrorMessage')"}},
+          "runAfter": {"Create_ErrorLog_Record": ["Succeeded"]}
+        }
+      }
+    }
+  },
+  "parameters": {
+    "AzureFunctionsBaseUrl": {"type": "String", "defaultValue": "https://mpa-functions-prod.azurewebsites.net"},
+    "FunctionKey": {"type": "String", "defaultValue": ""}
+  },
+  "connectionReferences": {"shared_commondataserviceforapps": {"connectionName": "shared_commondataserviceforapps", "source": "Embedded", "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps", "tier": "Standard"}}
+}

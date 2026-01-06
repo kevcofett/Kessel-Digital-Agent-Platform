@@ -1,0 +1,198 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "name": "flow_06_mpa_GenerateDocument",
+    "displayName": "MPA - Generate Media Plan Document",
+    "description": "Generates Word documents programmatically via Azure Function. Returns binary .docx content for SharePoint storage.",
+    "category": "Documents",
+    "version": "2.0.0",
+    "author": "Kessel Digital",
+    "lastModified": "2026-01-02",
+    "eapIntegration": {
+      "auditTable": "eap_audit",
+      "agentSource": "MPA_AGENT"
+    },
+    "azureFunction": {
+      "name": "GenerateMediaPlanDocument",
+      "endpoint": "/api/generate-media-plan-document",
+      "returnType": "binary/docx"
+    }
+  },
+  "trigger": {
+    "type": "PowerVirtualAgents",
+    "description": "Triggered when user requests document generation",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "planId": {
+            "type": "string",
+            "description": "Media plan ID"
+          },
+          "planData": {
+            "type": "object",
+            "description": "Complete plan data object from Dataverse",
+            "properties": {
+              "metadata": {
+                "type": "object",
+                "properties": {
+                  "planName": { "type": "string" },
+                  "clientName": { "type": "string" },
+                  "preparedBy": { "type": "string" },
+                  "preparedDate": { "type": "string" },
+                  "version": { "type": "string" }
+                }
+              },
+              "budgetTiers": { "type": "array" },
+              "channels": { "type": "array" },
+              "dmaAllocations": { "type": "array" },
+              "audiences": { "type": "array" },
+              "performanceTargets": { "type": "object" }
+            }
+          }
+        },
+        "required": ["planId", "planData"]
+      }
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "name": "Call_GenerateMediaPlanDocument_Function",
+      "type": "Http",
+      "description": "Call Azure Function to generate Word document programmatically",
+      "inputs": {
+        "method": "POST",
+        "uri": "@{parameters('AzureFunctionsBaseUrl')}/api/generate-media-plan-document",
+        "headers": {
+          "Content-Type": "application/json",
+          "x-functions-key": "@{parameters('AzureFunctionsKey')}"
+        },
+        "body": "@{triggerBody()?['planData']}"
+      }
+    },
+    {
+      "order": 2,
+      "name": "Check_Response_Status",
+      "type": "Condition",
+      "inputs": {
+        "expression": {
+          "equals": ["@outputs('Call_GenerateMediaPlanDocument_Function')['statusCode']", 200]
+        }
+      },
+      "actions": {
+        "true": [
+          {
+            "name": "Save_Document_To_SharePoint",
+            "type": "SharePointOnline",
+            "description": "Save binary .docx document to SharePoint",
+            "inputs": {
+              "operation": "CreateFile",
+              "siteUrl": "@{parameters('SharePointSiteUrl')}",
+              "folderPath": "/Shared Documents/Media Plans/@{triggerBody()?['planId']}",
+              "fileName": "@{triggerBody()?['planData']?['metadata']?['planName']}_@{utcNow('yyyyMMdd_HHmmss')}.docx",
+              "content": "@{body('Call_GenerateMediaPlanDocument_Function')}"
+            }
+          },
+          {
+            "name": "Get_SharePoint_File_Link",
+            "type": "SharePointOnline",
+            "description": "Create sharing link for the document",
+            "inputs": {
+              "operation": "CreateSharingLink",
+              "siteUrl": "@{parameters('SharePointSiteUrl')}",
+              "itemId": "@{outputs('Save_Document_To_SharePoint')?['body/Id']}",
+              "type": "View",
+              "scope": "Organization"
+            },
+            "runAfter": ["Save_Document_To_SharePoint"]
+          },
+          {
+            "name": "Write_EAP_Audit",
+            "type": "Dataverse",
+            "description": "Log document generation to EAP shared audit table",
+            "inputs": {
+              "operation": "CreateRecord",
+              "entityName": "eap_audit",
+              "item": {
+                "eap_action_type": "DocumentGenerated",
+                "eap_entity_type": "mpa_mediaplan",
+                "eap_entity_id": "@{triggerBody()?['planId']}",
+                "eap_description": "Media plan document generated: @{triggerBody()?['planData']?['metadata']?['planName']}.docx",
+                "eap_agent_source": "MPA_AGENT",
+                "eap_created_at": "@{utcNow()}"
+              }
+            },
+            "runAfter": ["Get_SharePoint_File_Link"]
+          },
+          {
+            "name": "Return_Document_Link",
+            "type": "Response",
+            "inputs": {
+              "statusCode": 200,
+              "body": {
+                "status": "success",
+                "planId": "@{triggerBody()?['planId']}",
+                "documentName": "@{triggerBody()?['planData']?['metadata']?['planName']}_@{utcNow('yyyyMMdd_HHmmss')}.docx",
+                "documentUrl": "@{outputs('Get_SharePoint_File_Link')?['body/link/webUrl']}",
+                "generatedAt": "@{utcNow()}"
+              }
+            },
+            "runAfter": ["Write_EAP_Audit"]
+          }
+        ],
+        "false": [
+          {
+            "name": "Return_Error",
+            "type": "Response",
+            "inputs": {
+              "statusCode": "@outputs('Call_GenerateMediaPlanDocument_Function')['statusCode']",
+              "body": {
+                "status": "error",
+                "message": "Failed to generate document",
+                "error": "@body('Call_GenerateMediaPlanDocument_Function')"
+              }
+            }
+          }
+        ]
+      },
+      "runAfter": ["Call_GenerateMediaPlanDocument_Function"]
+    }
+  ],
+  "outputs": {
+    "documentUrl": {
+      "type": "string",
+      "description": "SharePoint URL for the generated document"
+    },
+    "documentName": {
+      "type": "string",
+      "description": "Generated document filename"
+    },
+    "generatedAt": {
+      "type": "string",
+      "description": "Timestamp of document generation"
+    }
+  },
+  "parameters": {
+    "AzureFunctionsBaseUrl": {
+      "type": "string",
+      "description": "Base URL for Azure Functions"
+    },
+    "AzureFunctionsKey": {
+      "type": "securestring",
+      "description": "Azure Functions API key"
+    },
+    "SharePointSiteUrl": {
+      "type": "string",
+      "description": "SharePoint site URL for document storage"
+    }
+  },
+  "errorHandling": {
+    "retryPolicy": {
+      "type": "fixed",
+      "count": 2,
+      "interval": "PT10S"
+    },
+    "onError": "Call flow_11_LogError with error details"
+  }
+}

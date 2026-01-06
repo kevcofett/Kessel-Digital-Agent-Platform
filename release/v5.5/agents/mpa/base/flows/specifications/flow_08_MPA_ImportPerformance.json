@@ -1,0 +1,172 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "flowName": "MPA_ImportPerformance",
+    "flowNumber": "08",
+    "displayName": "MPA - Import Performance",
+    "description": "Import campaign performance data for in-flight optimization",
+    "version": "1.0.0",
+    "author": "MPA Remediation",
+    "createdDate": "2025-12-28",
+    "tables": ["mpa_campaignperformance", "mpa_dataimportlog"],
+    "azureFunctions": []
+  },
+  "trigger": {
+    "type": "Request",
+    "kind": "Http",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "plan_id": {"type": "string", "description": "Media plan ID"},
+        "performance_data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "channel": {"type": "string"},
+              "date": {"type": "string", "format": "date"},
+              "impressions": {"type": "number"},
+              "clicks": {"type": "number"},
+              "conversions": {"type": "number"},
+              "spend": {"type": "number"},
+              "revenue": {"type": "number"}
+            }
+          },
+          "description": "Array of performance records"
+        },
+        "import_source": {"type": "string", "description": "Source of data (manual, api, file)"}
+      },
+      "required": ["plan_id", "performance_data"]
+    }
+  },
+  "variables": [
+    {"name": "varSuccess", "type": "Boolean", "value": true},
+    {"name": "varErrorMessage", "type": "String", "value": ""},
+    {"name": "varRecordsImported", "type": "Integer", "value": 0},
+    {"name": "varImportLogId", "type": "String", "value": ""}
+  ],
+  "actions": {
+    "Scope_Try": {
+      "type": "Scope",
+      "actions": {
+        "Create_Import_Log": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {
+              "entityName": "mpa_dataimportlog",
+              "item": {
+                "mpa_plan_id": "@triggerBody()?['plan_id']",
+                "mpa_import_source": "@coalesce(triggerBody()?['import_source'], 'manual')",
+                "mpa_record_count": "@length(triggerBody()?['performance_data'])",
+                "mpa_status": 100000000,
+                "mpa_started_at": "@utcNow()"
+              }
+            }
+          },
+          "runAfter": {}
+        },
+        "Set_Import_Log_Id": {
+          "type": "SetVariable",
+          "inputs": {"name": "varImportLogId", "value": "@outputs('Create_Import_Log')?['body/mpa_dataimportlogid']"},
+          "runAfter": {"Create_Import_Log": ["Succeeded"]}
+        },
+        "For_Each_Performance_Record": {
+          "type": "Foreach",
+          "foreach": "@triggerBody()?['performance_data']",
+          "actions": {
+            "Create_Performance_Record": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+                "parameters": {
+                  "entityName": "mpa_campaignperformance",
+                  "item": {
+                    "mpa_plan_id": "@triggerBody()?['plan_id']",
+                    "mpa_channel": "@items('For_Each_Performance_Record')?['channel']",
+                    "mpa_performance_date": "@items('For_Each_Performance_Record')?['date']",
+                    "mpa_impressions": "@items('For_Each_Performance_Record')?['impressions']",
+                    "mpa_clicks": "@items('For_Each_Performance_Record')?['clicks']",
+                    "mpa_conversions": "@items('For_Each_Performance_Record')?['conversions']",
+                    "mpa_spend": "@items('For_Each_Performance_Record')?['spend']",
+                    "mpa_revenue": "@items('For_Each_Performance_Record')?['revenue']",
+                    "mpa_import_log_id": "@variables('varImportLogId')",
+                    "mpa_imported_at": "@utcNow()"
+                  }
+                }
+              }
+            },
+            "Increment_Counter": {
+              "type": "IncrementVariable",
+              "inputs": {"name": "varRecordsImported", "value": 1},
+              "runAfter": {"Create_Performance_Record": ["Succeeded"]}
+            }
+          },
+          "runAfter": {"Set_Import_Log_Id": ["Succeeded"]},
+          "runtimeConfiguration": {"concurrency": {"repetitions": 10}}
+        },
+        "Update_Import_Log_Success": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "UpdateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {
+              "entityName": "mpa_dataimportlog",
+              "recordId": "@variables('varImportLogId')",
+              "item": {"mpa_status": 100000001, "mpa_completed_at": "@utcNow()", "mpa_records_imported": "@variables('varRecordsImported')"}
+            }
+          },
+          "runAfter": {"For_Each_Performance_Record": ["Succeeded"]}
+        },
+        "Response_Success": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {"Content-Type": "application/json"},
+            "body": {
+              "status": "Success",
+              "plan_id": "@triggerBody()?['plan_id']",
+              "records_imported": "@variables('varRecordsImported')",
+              "import_log_id": "@variables('varImportLogId')",
+              "imported_at": "@utcNow()"
+            }
+          },
+          "runAfter": {"Update_Import_Log_Success": ["Succeeded"]}
+        }
+      }
+    },
+    "Scope_Catch": {
+      "type": "Scope",
+      "runAfter": {"Scope_Try": ["Failed", "TimedOut"]},
+      "actions": {
+        "Set_varSuccess_False": {"type": "SetVariable", "inputs": {"name": "varSuccess", "value": false}, "runAfter": {}},
+        "Set_varErrorMessage": {"type": "SetVariable", "inputs": {"name": "varErrorMessage", "value": "@{result('Scope_Try')}"}, "runAfter": {"Set_varSuccess_False": ["Succeeded"]}},
+        "Update_Import_Log_Failed": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "UpdateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {
+              "entityName": "mpa_dataimportlog",
+              "recordId": "@variables('varImportLogId')",
+              "item": {"mpa_status": 100000002, "mpa_error_message": "@variables('varErrorMessage')", "mpa_completed_at": "@utcNow()"}
+            }
+          },
+          "runAfter": {"Set_varErrorMessage": ["Succeeded"]}
+        },
+        "Create_ErrorLog_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {"entityName": "mpa_errorlog", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_ImportPerformance", "mpa_severity": 100000002, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()", "mpa_plan_id": "@triggerBody()?['plan_id']"}}
+          },
+          "runAfter": {"Update_Import_Log_Failed": ["Succeeded"]}
+        },
+        "Response_Error": {
+          "type": "Response",
+          "inputs": {"statusCode": 500, "headers": {"Content-Type": "application/json"}, "body": {"status": "Error", "message": "Failed to import performance data", "records_imported": "@variables('varRecordsImported')", "error_details": "@variables('varErrorMessage')"}},
+          "runAfter": {"Create_ErrorLog_Record": ["Succeeded"]}
+        }
+      }
+    }
+  },
+  "connectionReferences": {"shared_commondataserviceforapps": {"connectionName": "shared_commondataserviceforapps", "source": "Embedded", "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps", "tier": "Standard"}}
+}

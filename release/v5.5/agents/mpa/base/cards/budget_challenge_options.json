@@ -1,0 +1,152 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "metadata": {
+    "templateId": "mpa-budget-challenge-options",
+    "version": "5.2",
+    "lastUpdated": "2025-12-30",
+    "description": "Presents options when user provides a challenging budget scenario"
+  },
+  "body": [
+    {
+      "type": "Container",
+      "style": "warning",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "BUDGET CHALLENGE DETECTED",
+          "weight": "Bolder",
+          "size": "Large",
+          "color": "Warning"
+        },
+        {
+          "type": "TextBlock",
+          "text": "${challengeDescription}",
+          "wrap": true
+        }
+      ]
+    },
+    {
+      "type": "FactSet",
+      "facts": [
+        {
+          "title": "Proposed Budget",
+          "value": "${proposedBudget}"
+        },
+        {
+          "title": "Recommended Minimum",
+          "value": "${recommendedMinimum}"
+        },
+        {
+          "title": "Shortfall",
+          "value": "${shortfall}"
+        },
+        {
+          "title": "Impact",
+          "value": "${impact}"
+        }
+      ]
+    },
+    {
+      "type": "TextBlock",
+      "text": "How would you like to proceed?",
+      "weight": "Bolder",
+      "size": "Medium",
+      "spacing": "Large"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "ActionSet",
+          "actions": [
+            {
+              "type": "Action.Submit",
+              "title": "Proceed with Current Budget",
+              "style": "positive",
+              "data": {
+                "action": "budget_decision",
+                "decision": "proceed_current",
+                "budget": "${proposedBudget}",
+                "sessionId": "${sessionId}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "ActionSet",
+          "actions": [
+            {
+              "type": "Action.Submit",
+              "title": "Increase to Recommended",
+              "data": {
+                "action": "budget_decision",
+                "decision": "increase_recommended",
+                "budget": "${recommendedMinimum}",
+                "sessionId": "${sessionId}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "ActionSet",
+          "actions": [
+            {
+              "type": "Action.Submit",
+              "title": "Reduce Scope to Fit Budget",
+              "data": {
+                "action": "budget_decision",
+                "decision": "reduce_scope",
+                "sessionId": "${sessionId}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "ActionSet",
+          "actions": [
+            {
+              "type": "Action.Submit",
+              "title": "Explore Phased Approach",
+              "data": {
+                "action": "budget_decision",
+                "decision": "phased_approach",
+                "sessionId": "${sessionId}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "style": "emphasis",
+      "spacing": "Medium",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Analysis Note",
+          "weight": "Bolder",
+          "size": "Small"
+        },
+        {
+          "type": "TextBlock",
+          "text": "${analysisNote}",
+          "wrap": true,
+          "isSubtle": true,
+          "size": "Small"
+        }
+      ]
+    }
+  ],
+  "$data": {
+    "challengeDescription": "The proposed budget may not achieve stated objectives at current market rates.",
+    "proposedBudget": "$75,000",
+    "recommendedMinimum": "$125,000",
+    "shortfall": "$50,000 (40%)",
+    "impact": "Projected 800 conversions vs 2,000 target",
+    "analysisNote": "At current CPM rates and conversion benchmarks, this budget provides approximately 40% of required reach. Consider reducing geographic scope or extending timeline.",
+    "sessionId": "session-123"
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "flowName": "MPA_CreatePostMortem",
+    "flowNumber": "09",
+    "displayName": "MPA - Create Post Mortem",
+    "description": "Create post-mortem report with findings",
+    "version": "1.0.0",
+    "author": "MPA Remediation",
+    "createdDate": "2025-12-28",
+    "tables": ["mpa_postmortemreport", "mpa_postmortemfinding"],
+    "azureFunctions": []
+  },
+  "trigger": {
+    "type": "Request",
+    "kind": "Http",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "plan_id": {"type": "string", "description": "Media plan ID"},
+        "report_title": {"type": "string", "description": "Title of the post-mortem report"},
+        "summary": {"type": "string", "description": "Executive summary"},
+        "findings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "category": {"type": "string", "enum": ["success", "challenge", "learning", "recommendation"]},
+              "title": {"type": "string"},
+              "description": {"type": "string"},
+              "impact": {"type": "string", "enum": ["high", "medium", "low"]},
+              "action_items": {"type": "string"}
+            }
+          },
+          "description": "Array of findings"
+        }
+      },
+      "required": ["plan_id", "report_title"]
+    }
+  },
+  "variables": [
+    {"name": "varSuccess", "type": "Boolean", "value": true},
+    {"name": "varErrorMessage", "type": "String", "value": ""},
+    {"name": "varReportId", "type": "String", "value": ""},
+    {"name": "varFindingsCreated", "type": "Integer", "value": 0}
+  ],
+  "actions": {
+    "Scope_Try": {
+      "type": "Scope",
+      "actions": {
+        "Create_Report": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {
+              "entityName": "mpa_postmortemreport",
+              "item": {
+                "mpa_plan_id": "@triggerBody()?['plan_id']",
+                "mpa_report_title": "@triggerBody()?['report_title']",
+                "mpa_summary": "@triggerBody()?['summary']",
+                "mpa_status": 100000000,
+                "mpa_created_at": "@utcNow()"
+              }
+            }
+          },
+          "runAfter": {}
+        },
+        "Set_Report_Id": {
+          "type": "SetVariable",
+          "inputs": {"name": "varReportId", "value": "@outputs('Create_Report')?['body/mpa_postmortemreportid']"},
+          "runAfter": {"Create_Report": ["Succeeded"]}
+        },
+        "Condition_Has_Findings": {
+          "type": "If",
+          "expression": {"and": [{"greater": ["@length(coalesce(triggerBody()?['findings'], json('[]')))", 0]}]},
+          "actions": {
+            "For_Each_Finding": {
+              "type": "Foreach",
+              "foreach": "@triggerBody()?['findings']",
+              "actions": {
+                "Create_Finding": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+                    "parameters": {
+                      "entityName": "mpa_postmortemfinding",
+                      "item": {
+                        "mpa_report_id": "@variables('varReportId')",
+                        "mpa_category": "@items('For_Each_Finding')?['category']",
+                        "mpa_title": "@items('For_Each_Finding')?['title']",
+                        "mpa_description": "@items('For_Each_Finding')?['description']",
+                        "mpa_impact": "@items('For_Each_Finding')?['impact']",
+                        "mpa_action_items": "@items('For_Each_Finding')?['action_items']",
+                        "mpa_created_at": "@utcNow()"
+                      }
+                    }
+                  }
+                },
+                "Increment_Findings": {
+                  "type": "IncrementVariable",
+                  "inputs": {"name": "varFindingsCreated", "value": 1},
+                  "runAfter": {"Create_Finding": ["Succeeded"]}
+                }
+              },
+              "runtimeConfiguration": {"concurrency": {"repetitions": 5}}
+            }
+          },
+          "runAfter": {"Set_Report_Id": ["Succeeded"]}
+        },
+        "Response_Success": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {"Content-Type": "application/json"},
+            "body": {
+              "status": "Success",
+              "report_id": "@variables('varReportId')",
+              "plan_id": "@triggerBody()?['plan_id']",
+              "findings_created": "@variables('varFindingsCreated')",
+              "created_at": "@utcNow()"
+            }
+          },
+          "runAfter": {"Condition_Has_Findings": ["Succeeded"]}
+        }
+      }
+    },
+    "Scope_Catch": {
+      "type": "Scope",
+      "runAfter": {"Scope_Try": ["Failed", "TimedOut"]},
+      "actions": {
+        "Set_varSuccess_False": {"type": "SetVariable", "inputs": {"name": "varSuccess", "value": false}, "runAfter": {}},
+        "Set_varErrorMessage": {"type": "SetVariable", "inputs": {"name": "varErrorMessage", "value": "@{result('Scope_Try')}"}, "runAfter": {"Set_varSuccess_False": ["Succeeded"]}},
+        "Create_ErrorLog_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {"entityName": "mpa_errorlog", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_CreatePostMortem", "mpa_severity": 100000002, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()", "mpa_plan_id": "@triggerBody()?['plan_id']"}}
+          },
+          "runAfter": {"Set_varErrorMessage": ["Succeeded"]}
+        },
+        "Response_Error": {
+          "type": "Response",
+          "inputs": {"statusCode": 500, "headers": {"Content-Type": "application/json"}, "body": {"status": "Error", "message": "Failed to create post-mortem report", "error_details": "@variables('varErrorMessage')"}},
+          "runAfter": {"Create_ErrorLog_Record": ["Succeeded"]}
+        }
+      }
+    }
+  },
+  "connectionReferences": {"shared_commondataserviceforapps": {"connectionName": "shared_commondataserviceforapps", "source": "Embedded", "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps", "tier": "Standard"}}
+}

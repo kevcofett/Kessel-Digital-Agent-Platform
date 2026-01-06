@@ -1,0 +1,168 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body": [
+    {
+      "type": "Container",
+      "style": "emphasis",
+      "items": [
+        {
+          "type": "ColumnSet",
+          "columns": [
+            {
+              "type": "Column",
+              "width": "stretch",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "${channel_name}",
+                  "weight": "Bolder",
+                  "size": "Medium"
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "${channel_category}",
+                  "size": "Small",
+                  "isSubtle": true
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "auto",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "${fit_score}/10",
+                  "weight": "Bolder",
+                  "size": "Large",
+                  "color": "${fit_color}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "TextBlock",
+      "text": "${channel_description}",
+      "wrap": true,
+      "size": "Small",
+      "spacing": "Small"
+    },
+    {
+      "type": "FactSet",
+      "facts": [
+        {
+          "title": "Best For",
+          "value": "${best_for}"
+        },
+        {
+          "title": "CPM Range",
+          "value": "${cpm_low} - ${cpm_high}"
+        },
+        {
+          "title": "Typical CTR",
+          "value": "${typical_ctr}"
+        },
+        {
+          "title": "Min Budget",
+          "value": "${min_budget}"
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "spacing": "Small",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Fit Rationale",
+          "weight": "Bolder",
+          "size": "Small"
+        },
+        {
+          "type": "TextBlock",
+          "text": "${fit_rationale}",
+          "wrap": true,
+          "size": "Small",
+          "isSubtle": true
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "spacing": "Small",
+      "isVisible": "${show_strengths}",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Strengths",
+          "weight": "Bolder",
+          "size": "Small",
+          "color": "Good"
+        },
+        {
+          "type": "TextBlock",
+          "text": "${strengths_list}",
+          "wrap": true,
+          "size": "Small"
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "spacing": "Small",
+      "isVisible": "${show_considerations}",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Considerations",
+          "weight": "Bolder",
+          "size": "Small",
+          "color": "Attention"
+        },
+        {
+          "type": "TextBlock",
+          "text": "${considerations_list}",
+          "wrap": true,
+          "size": "Small"
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.Submit",
+      "title": "Add to Plan",
+      "data": {
+        "action": "add_channel",
+        "channel": "${channel_id}"
+      }
+    },
+    {
+      "type": "Action.Submit",
+      "title": "See Details",
+      "data": {
+        "action": "channel_details",
+        "channel": "${channel_id}"
+      }
+    },
+    {
+      "type": "Action.Submit",
+      "title": "Compare",
+      "data": {
+        "action": "compare_channel",
+        "channel": "${channel_id}"
+      }
+    }
+  ],
+  "metadata": {
+    "cardId": "channel_recommendation",
+    "version": "1.0",
+    "createdDate": "2025-12-30",
+    "description": "Channel recommendation card with fit score and rationale"
+  }
+}

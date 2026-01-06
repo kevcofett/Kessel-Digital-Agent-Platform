@@ -1,0 +1,668 @@
+{
+  "version": "2.0",
+  "description": "MPA Power Automate Flow Actions for Copilot Studio - Remediated flows with error handling",
+  "environment": "Aragorn AI",
+  "environment_id": "49785cc9-6b8b-eee1-9553-c7ca603f6404",
+  "generated_at": "2025-12-28",
+  "_note": "IMPORTANT: Flow URLs below are from previous deployment. After deploying new flows with Try/Catch error handling, update the 'url' and 'flowId' fields with new values from Power Automate.",
+  "_status": "SCHEMAS_UPDATED_2025-12-29",
+  "actions": [
+    {
+      "name": "InitializeSession",
+      "displayName": "Initialize Planning Session",
+      "description": "Starts a new media planning session for a user and client. Creates session record in Dataverse.",
+      "flowName": "MPA Initialize Session",
+      "flowId": "8e5f368c-699c-61f6-8f81-15bf7c4622f5",
+      "url": "https://49785cc96b8beee19553c7ca603f64.04.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/1e785ad83c3b4371aa3ac7bd42e0d092/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KvhOtaPUoDOsUo1Gf-xqSh-dXKGCTOqAKrbH6WBl-zg",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "Display name or ID of the user"
+          },
+          "client_id": {
+            "type": "string",
+            "description": "Client or brand name"
+          },
+          "agent_type": {
+            "type": "string",
+            "description": "Type of agent (MPA for Media Planning Agent)",
+            "default": "MPA"
+          }
+        },
+        "required": ["user_id", "agent_type"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Success or Error"
+          },
+          "session_id": {
+            "type": "string",
+            "description": "The created session GUID"
+          },
+          "message": {
+            "type": "string",
+            "description": "Status message"
+          }
+        }
+      }
+    },
+    {
+      "name": "CreatePlan",
+      "displayName": "Create Media Plan",
+      "description": "Creates a new media plan for a campaign. Initializes plan record with budget, dates, and first version.",
+      "flowName": "MPA Create Plan",
+      "flowId": "9a1b0eb1-79c2-5475-198b-a6d993a7a32f",
+      "url": "https://49785cc96b8beee19553c7ca603f64.04.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/21a8ea4a0e0e4391bb5f22b6f6bea011/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=tloyznqw04Z3Ul4fqRYZDqe4LChhGbwdq5TdS188H-w",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "string",
+            "description": "The Dataverse GUID of the client (eap_client)"
+          },
+          "campaign_name": {
+            "type": "string",
+            "description": "Name of the campaign"
+          },
+          "user_id": {
+            "type": "string",
+            "description": "The ID of the user creating the plan"
+          },
+          "budget": {
+            "type": "number",
+            "description": "Total campaign budget in dollars"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Campaign start date (YYYY-MM-DD)"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Campaign end date (YYYY-MM-DD)"
+          }
+        },
+        "required": ["client_id", "campaign_name", "user_id"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Success or Error"
+          },
+          "plan_id": {
+            "type": "string",
+            "description": "The created media plan GUID"
+          },
+          "plan_code": {
+            "type": "string",
+            "description": "Human-readable plan code (e.g., PLN-20250126-abc12345)"
+          },
+          "version_id": {
+            "type": "string",
+            "description": "The initial version GUID"
+          },
+          "message": {
+            "type": "string",
+            "description": "Status message"
+          }
+        }
+      }
+    },
+    {
+      "name": "SaveSection",
+      "displayName": "Save Plan Section",
+      "description": "Saves a section of the media plan (objectives, audience, channels, etc.) to Dataverse.",
+      "flowName": "MPA Save Section",
+      "flowId": "9cb97c7e-c2b5-cf80-1beb-053153e94ec9",
+      "url": "https://49785cc96b8beee19553c7ca603f64.04.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/6fa15fc9f46b413a902251959168cd7c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=8VOnWHqLx0hFhfXUoO2PCppPbg6-pw5uOqQg_93DGM8",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "plan_id": {
+            "type": "string",
+            "description": "The media plan GUID"
+          },
+          "section_type": {
+            "type": "string",
+            "description": "Type of section being saved",
+            "enum": ["objectives", "audience", "channels", "budget", "timeline", "creative", "measurement"]
+          },
+          "section_data": {
+            "type": "object",
+            "description": "The section data as a JSON object"
+          },
+          "user_id": {
+            "type": "string",
+            "description": "The ID of the user saving the section"
+          },
+          "step_number": {
+            "type": "integer",
+            "description": "Current step in the planning workflow"
+          }
+        },
+        "required": ["plan_id", "section_type", "section_data"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Success or Error"
+          },
+          "section_id": {
+            "type": "string",
+            "description": "The created/updated section GUID"
+          },
+          "message": {
+            "type": "string",
+            "description": "Status message"
+          }
+        }
+      }
+    },
+    {
+      "name": "ValidatePlan",
+      "displayName": "Validate Plan Step",
+      "description": "Validates the current step of a media plan before proceeding to the next step or gate.",
+      "flowName": "MPA Validate Plan",
+      "flowId": "7563a226-598a-0d6e-facd-65ca3810761c",
+      "url": "https://49785cc96b8beee19553c7ca603f64.04.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/a27e030cc1b84d138af1db47b66ba7a3/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qZ6FdXayfK3aYivwcGvoRSCPc2Yfv4SsBtPzmnqnKz8",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "plan_id": {
+            "type": "string",
+            "description": "The media plan GUID"
+          },
+          "step_number": {
+            "type": "integer",
+            "description": "Current step number to validate"
+          },
+          "gate_number": {
+            "type": "integer",
+            "description": "Current gate number (0 if no gate)",
+            "default": 0
+          },
+          "user_id": {
+            "type": "string",
+            "description": "The ID of the user requesting validation"
+          }
+        },
+        "required": ["plan_id"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Success or Error"
+          },
+          "is_valid": {
+            "type": "boolean",
+            "description": "Whether the plan step is valid"
+          },
+          "validation_errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of validation errors if any"
+          },
+          "message": {
+            "type": "string",
+            "description": "Status message"
+          }
+        }
+      }
+    },
+    {
+      "name": "GenerateDocument",
+      "displayName": "Generate Plan Document",
+      "description": "Generates a document (summary, presentation, or full plan) from the media plan data.",
+      "flowName": "MPA Generate Document",
+      "flowId": "9627e1e2-51b9-f49d-19d4-a98ca7ffd664",
+      "url": "https://49785cc96b8beee19553c7ca603f64.04.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/a8407d3b0c034dceacc4c5831994c423/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=omnz1OGTlVzchCebQtQZn-9e0M-ItpuprKXCf15cmJ0",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "plan_id": {
+            "type": "string",
+            "description": "The media plan GUID"
+          },
+          "document_type": {
+            "type": "string",
+            "description": "Type of document to generate",
+            "enum": ["summary", "presentation", "full_plan", "executive_brief"]
+          },
+          "format": {
+            "type": "string",
+            "description": "Output format",
+            "enum": ["json", "markdown", "html"],
+            "default": "json"
+          },
+          "user_id": {
+            "type": "string",
+            "description": "The ID of the user requesting the document"
+          }
+        },
+        "required": ["plan_id", "document_type"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Success or Error"
+          },
+          "document_id": {
+            "type": "string",
+            "description": "The generated document GUID"
+          },
+          "content": {
+            "type": "string",
+            "description": "The document content"
+          },
+          "message": {
+            "type": "string",
+            "description": "Status message"
+          }
+        }
+      }
+    },
+    {
+      "name": "SearchBenchmarks",
+      "displayName": "Search Industry Benchmarks",
+      "description": "Searches for industry benchmarks by vertical, channel, and KPI type.",
+      "flowName": "MPA Search Benchmarks",
+      "flowId": "75aeafba-7a19-8395-362b-09cea56e8be5",
+      "url": "https://49785cc96b8beee19553c7ca603f64.04.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/4e52809585c94241ae6f92896954a854/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=i1Us637ecGyxQc_bTgaTLwAPiy48TUfWGjRZPx_BhQQ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "vertical": {
+            "type": "string",
+            "description": "Industry vertical (e.g., Retail, Finance, Healthcare, Technology)"
+          },
+          "channel": {
+            "type": "string",
+            "description": "Media channel (e.g., Digital, TV, Radio, OOH, Print)"
+          },
+          "kpi_type": {
+            "type": "string",
+            "description": "KPI type (e.g., CPM, CPC, CTR, CPA, ROAS)"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of results to return",
+            "default": 10
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Success or Error"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "vertical": {
+                  "type": "string"
+                },
+                "channel": {
+                  "type": "string"
+                },
+                "kpi_type": {
+                  "type": "string"
+                },
+                "benchmark_value": {
+                  "type": "number"
+                },
+                "percentile_25": {
+                  "type": "number"
+                },
+                "percentile_75": {
+                  "type": "number"
+                },
+                "source": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Array of matching benchmarks"
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of results returned"
+          }
+        }
+      }
+    },
+    {
+      "name": "SearchChannels",
+      "displayName": "Search Media Channels",
+      "description": "Searches for available media channels by category or search term.",
+      "flowName": "MPA Search Channels",
+      "flowId": "e587e948-3981-97e4-3e3f-4919122257c5",
+      "url": "https://49785cc96b8beee19553c7ca603f64.04.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/56640578e727419186e3ebe43e0bf3fa/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=w6ceF_xSvCdAXB2Phy3TfDn2Dr_ptGHOJK5SUFxgGm8",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Channel category (e.g., Digital, Traditional, Emerging)"
+          },
+          "search_term": {
+            "type": "string",
+            "description": "Search term to filter channels"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of results to return",
+            "default": 10
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Success or Error"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel_id": {
+                  "type": "string"
+                },
+                "channel_name": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "typical_cpm_range": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Array of matching channels"
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of results returned"
+          }
+        }
+      }
+    },
+    {
+      "name": "ImportPerformance",
+      "displayName": "Import Performance Data",
+      "description": "Imports performance data for a media plan from various sources.",
+      "flowName": "MPA Import Performance",
+      "flowId": "c86a6c20-b841-c8e0-6c83-70fe7437fd48",
+      "url": "https://49785cc96b8beee19553c7ca603f64.04.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/63e373e202494dbea92c17d91361e4da/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=wdiegSx-V9aRqizCG7nB0BnOjZNyrTPnPdLVd0GvE8o",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "plan_id": {
+            "type": "string",
+            "description": "The media plan GUID"
+          },
+          "data_source": {
+            "type": "string",
+            "description": "Source of performance data",
+            "enum": ["manual", "google_ads", "meta_ads", "csv_import"],
+            "default": "manual"
+          },
+          "performance_data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel": {
+                  "type": "string",
+                  "description": "Media channel name"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Performance date (YYYY-MM-DD)"
+                },
+                "impressions": {
+                  "type": "integer",
+                  "description": "Number of impressions"
+                },
+                "clicks": {
+                  "type": "integer",
+                  "description": "Number of clicks"
+                },
+                "spend": {
+                  "type": "number",
+                  "description": "Amount spent in dollars"
+                },
+                "conversions": {
+                  "type": "integer",
+                  "description": "Number of conversions"
+                }
+              }
+            },
+            "description": "Array of performance data records"
+          },
+          "user_id": {
+            "type": "string",
+            "description": "The ID of the user importing data"
+          }
+        },
+        "required": ["plan_id", "performance_data"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Success or Error"
+          },
+          "records_imported": {
+            "type": "integer",
+            "description": "Number of records successfully imported"
+          },
+          "message": {
+            "type": "string",
+            "description": "Status message"
+          }
+        }
+      }
+    },
+    {
+      "name": "CreatePostMortem",
+      "displayName": "Create Campaign Post-Mortem",
+      "description": "Creates a post-mortem analysis report for a completed campaign.",
+      "flowName": "MPA Create PostMortem",
+      "flowId": "3d08fb9d-ba26-1125-7097-384847ab327f",
+      "url": "https://49785cc96b8beee19553c7ca603f64.04.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/9b8179a9e46b41c496498f13875cabdd/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ecfOLp6TGl6OGYlBDiQyYAxC-zjWYb_cxQtix2A0E4Y",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "plan_id": {
+            "type": "string",
+            "description": "The media plan GUID"
+          },
+          "report_title": {
+            "type": "string",
+            "description": "Title for the post-mortem report"
+          },
+          "user_id": {
+            "type": "string",
+            "description": "The ID of the user creating the report"
+          },
+          "analysis_start_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Start date for analysis period (YYYY-MM-DD)"
+          },
+          "analysis_end_date": {
+            "type": "string",
+            "format": "date",
+            "description": "End date for analysis period (YYYY-MM-DD)"
+          }
+        },
+        "required": ["plan_id", "report_title"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Success or Error"
+          },
+          "report_id": {
+            "type": "string",
+            "description": "The created post-mortem report GUID"
+          },
+          "message": {
+            "type": "string",
+            "description": "Status message"
+          }
+        }
+      }
+    },
+    {
+      "name": "PromoteLearning",
+      "displayName": "Promote Learning to Shared",
+      "description": "Promotes a plan-level learning to the shared EAP learnings library for cross-agent use.",
+      "flowName": "MPA Promote Learning",
+      "flowId": "deb27eb9-ddad-bec8-113b-c15f15230dff",
+      "url": "https://49785cc96b8beee19553c7ca603f64.04.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/a421ef207ce54ebd8da887fa3710799f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=16Q4iH2z9Wcb1YMDo6EdJUW8MxpjIMoFkwSvXPqSMH0",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "learning_id": {
+            "type": "string",
+            "description": "The mpa_planlearning GUID to promote"
+          },
+          "scope": {
+            "type": "string",
+            "description": "Scope for the shared learning",
+            "enum": ["client", "organization", "global"],
+            "default": "client"
+          },
+          "user_id": {
+            "type": "string",
+            "description": "The ID of the user promoting the learning"
+          }
+        },
+        "required": ["learning_id"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Success or Error"
+          },
+          "shared_learning_id": {
+            "type": "string",
+            "description": "The created eap_learning GUID"
+          },
+          "message": {
+            "type": "string",
+            "description": "Status message"
+          }
+        }
+      }
+    },
+    {
+      "name": "ProcessMediaBrief",
+      "displayName": "Process Media Brief",
+      "description": "Processes an incoming media brief to create a new plan with pre-filled information.",
+      "flowName": "MPA Process Media Brief",
+      "flowId": "dc9eeef9-3d98-c841-34e3-a643e515427e",
+      "url": "https://49785cc96b8beee19553c7ca603f64.04.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/29d35955a6564112971dbd781eea4ac3/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ok2uMppEvz1btP7pZ1iQyFgfSeCDMAgQ8ZHGK04wcj4",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "string",
+            "description": "The Dataverse GUID of the client (eap_client)"
+          },
+          "campaign_name": {
+            "type": "string",
+            "description": "Name of the campaign from the brief"
+          },
+          "user_id": {
+            "type": "string",
+            "description": "The ID of the user processing the brief"
+          },
+          "campaign_type": {
+            "type": "string",
+            "description": "Type of campaign",
+            "enum": ["brand_awareness", "product_launch", "seasonal", "always_on", "event", "competitive"]
+          },
+          "budget_estimate": {
+            "type": "number",
+            "description": "Estimated campaign budget in dollars"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Campaign start date (YYYY-MM-DD)"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Campaign end date (YYYY-MM-DD)"
+          },
+          "primary_objective": {
+            "type": "string",
+            "description": "Primary campaign objective"
+          }
+        },
+        "required": ["client_id", "campaign_name", "user_id"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Success or Error"
+          },
+          "plan_id": {
+            "type": "string",
+            "description": "The created media plan GUID"
+          },
+          "plan_code": {
+            "type": "string",
+            "description": "Human-readable plan code"
+          },
+          "session_id": {
+            "type": "string",
+            "description": "The created session GUID"
+          },
+          "message": {
+            "type": "string",
+            "description": "Status message"
+          }
+        }
+      }
+    }
+  ]
+}

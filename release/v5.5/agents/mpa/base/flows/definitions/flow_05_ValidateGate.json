@@ -1,0 +1,187 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "name": "flow_05_mpa_ValidateGate",
+    "displayName": "MPA - Validate Gate",
+    "description": "Validates a media plan against gate criteria. Supports strategy, tactical, execution, and final gates.",
+    "category": "Validation",
+    "version": "1.0.0",
+    "author": "Kessel Digital",
+    "lastModified": "2025-01-15"
+  },
+  "trigger": {
+    "type": "PowerVirtualAgents",
+    "description": "Triggered when user requests gate validation",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "planId": {
+            "type": "string",
+            "description": "Media plan ID to validate"
+          },
+          "gate": {
+            "type": "string",
+            "description": "Gate to validate",
+            "enum": ["strategy", "tactical", "execution", "final"]
+          }
+        },
+        "required": ["planId", "gate"]
+      }
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "name": "Get_Plan_Data",
+      "type": "Dataverse",
+      "description": "Retrieve all plan data sections",
+      "inputs": {
+        "operation": "ListRecords",
+        "entityName": "mpa_plandata",
+        "filter": "_mpa_mediaplan_value eq '@{triggerBody()?['planId']}'"
+      }
+    },
+    {
+      "order": 2,
+      "name": "Get_Plan_Details",
+      "type": "Dataverse",
+      "description": "Get main plan record",
+      "inputs": {
+        "operation": "GetRecord",
+        "entityName": "mpa_mediaplan",
+        "recordId": "@{triggerBody()?['planId']}"
+      },
+      "runAfter": ["Get_Plan_Data"]
+    },
+    {
+      "order": 3,
+      "name": "Build_Plan_Data_Object",
+      "type": "Compose",
+      "description": "Combine plan sections into validation payload",
+      "inputs": "@json(concat('{', join(body('Get_Plan_Data')?['value'], ','), '}'))",
+      "runAfter": ["Get_Plan_Details"]
+    },
+    {
+      "order": 4,
+      "name": "Call_ValidateGate_Function",
+      "type": "Http",
+      "description": "Call Azure Function to validate gate",
+      "inputs": {
+        "method": "POST",
+        "uri": "@{parameters('AzureFunctionsBaseUrl')}/api/ValidateGate",
+        "headers": {
+          "Content-Type": "application/json",
+          "x-functions-key": "@{parameters('AzureFunctionsKey')}"
+        },
+        "body": {
+          "plan_id": "@{triggerBody()?['planId']}",
+          "gate": "@{triggerBody()?['gate']}",
+          "plan_data": "@outputs('Build_Plan_Data_Object')"
+        }
+      },
+      "runAfter": ["Build_Plan_Data_Object"]
+    },
+    {
+      "order": 5,
+      "name": "Parse_Validation_Result",
+      "type": "ParseJson",
+      "inputs": {
+        "content": "@body('Call_ValidateGate_Function')",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string" },
+            "gateValidation": {
+              "type": "object",
+              "properties": {
+                "passed": { "type": "boolean" },
+                "summary": { "type": "object" },
+                "nextGate": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "runAfter": ["Call_ValidateGate_Function"]
+    },
+    {
+      "order": 6,
+      "name": "Condition_Gate_Passed",
+      "type": "Condition",
+      "inputs": {
+        "expression": {
+          "equals": ["@body('Parse_Validation_Result')?['gateValidation']?['passed']", true]
+        }
+      },
+      "actions": {
+        "true": [
+          {
+            "name": "Update_Plan_Gate_Status",
+            "type": "Dataverse",
+            "inputs": {
+              "operation": "UpdateRecord",
+              "entityName": "mpa_mediaplan",
+              "recordId": "@{triggerBody()?['planId']}",
+              "item": {
+                "mpa_current_gate": "@{body('Parse_Validation_Result')?['gateValidation']?['nextGate']}",
+                "mpa_gate_@{triggerBody()?['gate']}_passed": true,
+                "mpa_gate_@{triggerBody()?['gate']}_passed_at": "@{utcNow()}"
+              }
+            }
+          }
+        ]
+      },
+      "runAfter": ["Parse_Validation_Result"]
+    },
+    {
+      "order": 7,
+      "name": "Return_Validation_Result",
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "planId": "@{triggerBody()?['planId']}",
+          "gate": "@{triggerBody()?['gate']}",
+          "passed": "@{body('Parse_Validation_Result')?['gateValidation']?['passed']}",
+          "summary": "@{body('Parse_Validation_Result')?['gateValidation']?['summary']}",
+          "nextGate": "@{body('Parse_Validation_Result')?['gateValidation']?['nextGate']}",
+          "validationResults": "@{body('Parse_Validation_Result')?['gateValidation']?['validationResults']}"
+        }
+      },
+      "runAfter": ["Condition_Gate_Passed"]
+    }
+  ],
+  "outputs": {
+    "passed": {
+      "type": "boolean",
+      "description": "Whether the gate passed"
+    },
+    "nextGate": {
+      "type": "string",
+      "description": "Next gate in sequence"
+    },
+    "validationResults": {
+      "type": "array",
+      "description": "Detailed validation results"
+    }
+  },
+  "parameters": {
+    "AzureFunctionsBaseUrl": {
+      "type": "string",
+      "description": "Base URL for Azure Functions"
+    },
+    "AzureFunctionsKey": {
+      "type": "securestring",
+      "description": "Azure Functions API key"
+    }
+  },
+  "errorHandling": {
+    "retryPolicy": {
+      "type": "fixed",
+      "count": 2,
+      "interval": "PT5S"
+    },
+    "onError": "Call flow_11_LogError with error details"
+  }
+}

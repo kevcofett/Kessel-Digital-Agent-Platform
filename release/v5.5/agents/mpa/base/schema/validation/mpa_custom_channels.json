@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MPA Custom Channels Table Schema",
+  "description": "Dataverse table schema for client-defined custom channels",
+  "type": "object",
+  "properties": {
+    "mpa_custom_channelid": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Primary key (auto-generated GUID)"
+    },
+    "mpa_channel_code": {
+      "type": "string",
+      "maxLength": 50,
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "description": "Unique identifier for the channel (lowercase, underscores allowed)"
+    },
+    "mpa_channel_name": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Human-readable display name"
+    },
+    "mpa_category": {
+      "type": "string",
+      "enum": ["Digital", "Traditional", "Owned", "Emerging", "Custom"],
+      "description": "Channel category for grouping"
+    },
+    "mpa_description": {
+      "type": "string",
+      "maxLength": 2000,
+      "description": "Clear explanation of what this channel is and how it works"
+    },
+    "mpa_cpm_low": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Lower bound of typical CPM range"
+    },
+    "mpa_cpm_high": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Upper bound of typical CPM range"
+    },
+    "mpa_cpm_median": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Median CPM for projections"
+    },
+    "mpa_typical_ctr": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Expected click-through rate as percentage"
+    },
+    "mpa_typical_cvr": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Expected conversion rate as percentage"
+    },
+    "mpa_min_budget": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Minimum recommended budget in dollars"
+    },
+    "mpa_max_budget": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Maximum recommended budget in dollars"
+    },
+    "mpa_targeting_options": {
+      "type": "string",
+      "description": "JSON array of available targeting methods",
+      "default": "[]"
+    },
+    "mpa_ad_formats": {
+      "type": "string",
+      "description": "JSON array of supported ad formats",
+      "default": "[]"
+    },
+    "mpa_buying_models": {
+      "type": "string",
+      "description": "JSON array of buying options (CPM, CPC, CPA, etc.)",
+      "default": "[\"CPM\"]"
+    },
+    "mpa_objective_fit": {
+      "type": "string",
+      "description": "JSON object with objective alignment scores (0-100)",
+      "default": "{\"awareness\": 50, \"consideration\": 50, \"conversion\": 50}"
+    },
+    "mpa_funnel_position": {
+      "type": "string",
+      "enum": ["awareness", "consideration", "conversion", "full_funnel"],
+      "description": "Where channel fits in the marketing funnel"
+    },
+    "mpa_primary_kpis": {
+      "type": "string",
+      "description": "JSON array of primary KPI codes for this channel",
+      "default": "[]"
+    },
+    "mpa_integration_notes": {
+      "type": "string",
+      "maxLength": 4000,
+      "description": "How to set up and use this channel"
+    },
+    "mpa_platform_url": {
+      "type": "string",
+      "maxLength": 500,
+      "format": "uri",
+      "description": "URL to platform or documentation"
+    },
+    "mpa_is_partner_required": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether a specific partner or setup is required"
+    },
+    "mpa_required_partner": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Name of required partner if is_partner_required is true"
+    },
+    "mpa_sort_order": {
+      "type": "integer",
+      "default": 100,
+      "description": "Display order in lists (lower = higher priority)"
+    },
+    "mpa_is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this channel is active and discoverable"
+    },
+    "mpa_client_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Reference to eap_client table for scoping"
+    },
+    "mpa_created_by": {
+      "type": "string",
+      "format": "uuid",
+      "description": "User who created this channel"
+    },
+    "mpa_created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Creation timestamp"
+    },
+    "mpa_modified_by": {
+      "type": "string",
+      "format": "uuid",
+      "description": "User who last modified this channel"
+    },
+    "mpa_modified_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last modification timestamp"
+    }
+  },
+  "required": [
+    "mpa_channel_code",
+    "mpa_channel_name",
+    "mpa_category",
+    "mpa_description",
+    "mpa_client_id"
+  ],
+  "additionalProperties": false,
+  "indexes": [
+    {
+      "name": "idx_channel_code_client",
+      "columns": ["mpa_channel_code", "mpa_client_id"],
+      "unique": true
+    },
+    {
+      "name": "idx_client_active",
+      "columns": ["mpa_client_id", "mpa_is_active"]
+    },
+    {
+      "name": "idx_category",
+      "columns": ["mpa_category", "mpa_is_active"]
+    },
+    {
+      "name": "idx_funnel_position",
+      "columns": ["mpa_funnel_position", "mpa_is_active"]
+    }
+  ],
+  "relationships": [
+    {
+      "name": "fk_client",
+      "type": "many-to-one",
+      "target_table": "eap_client",
+      "target_column": "eap_clientid",
+      "source_column": "mpa_client_id"
+    }
+  ],
+  "metadata": {
+    "table_name": "mpa_custom_channels",
+    "display_name": "Custom Channels",
+    "plural_name": "Custom Channels",
+    "description": "Client-defined custom channel definitions",
+    "owner": "MPA",
+    "version": "1.0",
+    "created_date": "2025-12-30"
+  }
+}

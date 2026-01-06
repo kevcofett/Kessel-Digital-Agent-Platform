@@ -1,0 +1,169 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "name": "flow_07_mpa_GetPlanSummary",
+    "displayName": "MPA - Get Plan Summary",
+    "description": "Retrieves a summary of a media plan including key metrics, status, and current gate position.",
+    "category": "Plan Management",
+    "version": "1.0.0",
+    "author": "Kessel Digital",
+    "lastModified": "2025-01-15"
+  },
+  "trigger": {
+    "type": "PowerVirtualAgents",
+    "description": "Triggered when user requests plan summary",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "planId": {
+            "type": "string",
+            "description": "Media plan ID"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "Session ID (optional, to get current plan)"
+          }
+        }
+      }
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "name": "Determine_Plan_Id",
+      "type": "Condition",
+      "description": "Get plan ID from input or session",
+      "inputs": {
+        "expression": {
+          "not": {
+            "equals": ["@triggerBody()?['planId']", null]
+          }
+        }
+      },
+      "actions": {
+        "false": [
+          {
+            "name": "Get_Session",
+            "type": "Http",
+            "inputs": {
+              "method": "POST",
+              "uri": "@{parameters('AzureFunctionsBaseUrl')}/api/SessionManager",
+              "headers": {
+                "Content-Type": "application/json",
+                "x-functions-key": "@{parameters('AzureFunctionsKey')}"
+              },
+              "body": {
+                "action": "get",
+                "session_id": "@{triggerBody()?['sessionId']}"
+              }
+            }
+          },
+          {
+            "name": "Set_PlanId_From_Session",
+            "type": "SetVariable",
+            "inputs": {
+              "name": "planId",
+              "value": "@{body('Get_Session')?['session']?['plan_id']}"
+            },
+            "runAfter": ["Get_Session"]
+          }
+        ],
+        "true": [
+          {
+            "name": "Set_PlanId_From_Input",
+            "type": "SetVariable",
+            "inputs": {
+              "name": "planId",
+              "value": "@{triggerBody()?['planId']}"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "order": 2,
+      "name": "Get_Plan_Record",
+      "type": "Dataverse",
+      "description": "Get main plan details",
+      "inputs": {
+        "operation": "GetRecord",
+        "entityName": "mpa_mediaplan",
+        "recordId": "@variables('planId')"
+      },
+      "runAfter": ["Determine_Plan_Id"]
+    },
+    {
+      "order": 3,
+      "name": "Get_Plan_Sections",
+      "type": "Dataverse",
+      "description": "Get all plan data sections",
+      "inputs": {
+        "operation": "ListRecords",
+        "entityName": "mpa_plandata",
+        "filter": "_mpa_mediaplan_value eq '@{variables('planId')}'"
+      },
+      "runAfter": ["Get_Plan_Record"]
+    },
+    {
+      "order": 4,
+      "name": "Build_Summary",
+      "type": "Compose",
+      "description": "Compile plan summary",
+      "inputs": {
+        "planId": "@{outputs('Get_Plan_Record')?['body/mpa_mediaplanid']}",
+        "name": "@{outputs('Get_Plan_Record')?['body/mpa_name']}",
+        "status": "@{outputs('Get_Plan_Record')?['body/mpa_status']}",
+        "currentGate": "@{outputs('Get_Plan_Record')?['body/mpa_current_gate']}",
+        "budget": "@{outputs('Get_Plan_Record')?['body/mpa_total_budget']}",
+        "startDate": "@{outputs('Get_Plan_Record')?['body/mpa_start_date']}",
+        "endDate": "@{outputs('Get_Plan_Record')?['body/mpa_end_date']}",
+        "sectionsCompleted": "@{length(outputs('Get_Plan_Sections')?['body/value'])}",
+        "lastUpdated": "@{outputs('Get_Plan_Record')?['body/mpa_last_updated_at']}",
+        "gateStatus": {
+          "strategy": "@{outputs('Get_Plan_Record')?['body/mpa_gate_strategy_passed']}",
+          "tactical": "@{outputs('Get_Plan_Record')?['body/mpa_gate_tactical_passed']}",
+          "execution": "@{outputs('Get_Plan_Record')?['body/mpa_gate_execution_passed']}",
+          "final": "@{outputs('Get_Plan_Record')?['body/mpa_gate_final_passed']}"
+        }
+      },
+      "runAfter": ["Get_Plan_Sections"]
+    },
+    {
+      "order": 5,
+      "name": "Return_Summary",
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": "@outputs('Build_Summary')"
+      },
+      "runAfter": ["Build_Summary"]
+    }
+  ],
+  "outputs": {
+    "planId": { "type": "string" },
+    "name": { "type": "string" },
+    "status": { "type": "string" },
+    "currentGate": { "type": "string" },
+    "budget": { "type": "number" },
+    "gateStatus": { "type": "object" }
+  },
+  "parameters": {
+    "AzureFunctionsBaseUrl": {
+      "type": "string",
+      "description": "Base URL for Azure Functions"
+    },
+    "AzureFunctionsKey": {
+      "type": "securestring",
+      "description": "Azure Functions API key"
+    }
+  },
+  "errorHandling": {
+    "retryPolicy": {
+      "type": "fixed",
+      "count": 2,
+      "interval": "PT5S"
+    },
+    "onError": "Call flow_11_LogError with error details"
+  }
+}

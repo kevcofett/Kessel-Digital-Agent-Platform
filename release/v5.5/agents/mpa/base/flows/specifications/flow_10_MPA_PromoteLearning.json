@@ -1,0 +1,152 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "flowName": "MPA_PromoteLearning",
+    "flowNumber": "10",
+    "displayName": "MPA - Promote Learning",
+    "description": "Promote a learning from MPA to EAP shared learnings (uses EAP tables with NEW naming)",
+    "version": "1.0.0",
+    "author": "MPA Remediation",
+    "createdDate": "2025-12-28",
+    "tables": ["mpa_planlearning", "eap_learning"],
+    "azureFunctions": [],
+    "notes": "CRITICAL: This flow writes to EAP tables. Uses NEW EAP naming (eap_learning, not eap_learning)"
+  },
+  "trigger": {
+    "type": "Request",
+    "kind": "Http",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "learning_id": {"type": "string", "description": "MPA Plan Learning ID to promote"},
+        "scope": {"type": "string", "enum": ["Client", "Organization", "Global"], "description": "Scope for the promoted learning"}
+      },
+      "required": ["learning_id"]
+    }
+  },
+  "variables": [
+    {"name": "varSuccess", "type": "Boolean", "value": true},
+    {"name": "varErrorMessage", "type": "String", "value": ""},
+    {"name": "varEapLearningId", "type": "String", "value": ""}
+  ],
+  "actions": {
+    "Scope_Try": {
+      "type": "Scope",
+      "actions": {
+        "Get_MPA_Learning": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "GetItem", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {"entityName": "mpa_planlearning", "recordId": "@triggerBody()?['learning_id']"}
+          },
+          "runAfter": {}
+        },
+        "Check_Already_Promoted": {
+          "type": "If",
+          "expression": {"and": [{"equals": ["@outputs('Get_MPA_Learning')?['body/mpa_is_promoted']", true]}]},
+          "actions": {
+            "Response_Already_Promoted": {
+              "type": "Response",
+              "inputs": {
+                "statusCode": 400,
+                "headers": {"Content-Type": "application/json"},
+                "body": {
+                  "status": "Error",
+                  "message": "Learning has already been promoted",
+                  "learning_id": "@triggerBody()?['learning_id']",
+                  "eap_learning_id": "@outputs('Get_MPA_Learning')?['body/mpa_eap_learning_id']"
+                }
+              }
+            },
+            "Terminate_Already_Promoted": {
+              "type": "Terminate",
+              "inputs": {"runStatus": "Succeeded"},
+              "runAfter": {"Response_Already_Promoted": ["Succeeded"]}
+            }
+          },
+          "runAfter": {"Get_MPA_Learning": ["Succeeded"]}
+        },
+        "Create_EAP_Learning": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {
+              "entityName": "eap_learning",
+              "item": {
+                "eap_learning_title": "@outputs('Get_MPA_Learning')?['body/mpa_learning_title']",
+                "eap_content": "@outputs('Get_MPA_Learning')?['body/mpa_description']",
+                "eap_category": "@outputs('Get_MPA_Learning')?['body/mpa_category']",
+                "eap_source_agent": "MPA",
+                "eap_source_entity_type": "PlanLearning",
+                "eap_source_entity_id": "@triggerBody()?['learning_id']",
+                "eap_scope": "@coalesce(triggerBody()?['scope'], 'Organization')",
+                "eap_is_active": true,
+                "eap_created_at": "@utcNow()"
+              }
+            }
+          },
+          "runAfter": {"Check_Already_Promoted": ["Succeeded"]}
+        },
+        "Set_EAP_Learning_Id": {
+          "type": "SetVariable",
+          "inputs": {"name": "varEapLearningId", "value": "@outputs('Create_EAP_Learning')?['body/eap_learningid']"},
+          "runAfter": {"Create_EAP_Learning": ["Succeeded"]}
+        },
+        "Update_MPA_Learning_Promoted": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "UpdateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {
+              "entityName": "mpa_planlearning",
+              "recordId": "@triggerBody()?['learning_id']",
+              "item": {
+                "mpa_is_promoted": true,
+                "mpa_eap_learning_id": "@variables('varEapLearningId')",
+                "mpa_promoted_at": "@utcNow()"
+              }
+            }
+          },
+          "runAfter": {"Set_EAP_Learning_Id": ["Succeeded"]}
+        },
+        "Response_Success": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {"Content-Type": "application/json"},
+            "body": {
+              "status": "Success",
+              "message": "Learning promoted to EAP shared learnings",
+              "mpa_learning_id": "@triggerBody()?['learning_id']",
+              "eap_learning_id": "@variables('varEapLearningId')",
+              "scope": "@coalesce(triggerBody()?['scope'], 'Organization')",
+              "promoted_at": "@utcNow()"
+            }
+          },
+          "runAfter": {"Update_MPA_Learning_Promoted": ["Succeeded"]}
+        }
+      }
+    },
+    "Scope_Catch": {
+      "type": "Scope",
+      "runAfter": {"Scope_Try": ["Failed", "TimedOut"]},
+      "actions": {
+        "Set_varSuccess_False": {"type": "SetVariable", "inputs": {"name": "varSuccess", "value": false}, "runAfter": {}},
+        "Set_varErrorMessage": {"type": "SetVariable", "inputs": {"name": "varErrorMessage", "value": "@{result('Scope_Try')}"}, "runAfter": {"Set_varSuccess_False": ["Succeeded"]}},
+        "Create_ErrorLog_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {"entityName": "mpa_errorlog", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_PromoteLearning", "mpa_severity": 100000002, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()"}}
+          },
+          "runAfter": {"Set_varErrorMessage": ["Succeeded"]}
+        },
+        "Response_Error": {
+          "type": "Response",
+          "inputs": {"statusCode": 500, "headers": {"Content-Type": "application/json"}, "body": {"status": "Error", "message": "Failed to promote learning", "error_details": "@variables('varErrorMessage')"}},
+          "runAfter": {"Create_ErrorLog_Record": ["Succeeded"]}
+        }
+      }
+    }
+  },
+  "connectionReferences": {"shared_commondataserviceforapps": {"connectionName": "shared_commondataserviceforapps", "source": "Embedded", "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps", "tier": "Standard"}}
+}

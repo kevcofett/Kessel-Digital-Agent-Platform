@@ -1,0 +1,290 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "metadata": {
+    "templateId": "mpa-validation-gate-summary",
+    "version": "5.2",
+    "lastUpdated": "2025-12-30",
+    "description": "Presents validation gate summary for media plan approval"
+  },
+  "body": [
+    {
+      "type": "Container",
+      "style": "${overallStatus == 'PASS' ? 'good' : (overallStatus == 'WARNING' ? 'warning' : 'attention')}",
+      "items": [
+        {
+          "type": "ColumnSet",
+          "columns": [
+            {
+              "type": "Column",
+              "width": "auto",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "${overallStatus == 'PASS' ? '✓' : (overallStatus == 'WARNING' ? '⚠' : '✗')}",
+                  "size": "ExtraLarge",
+                  "weight": "Bolder"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "stretch",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "VALIDATION GATE: ${overallStatus}",
+                  "weight": "Bolder",
+                  "size": "Large"
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "${planName}",
+                  "isSubtle": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "TextBlock",
+      "text": "Validation Checks",
+      "weight": "Bolder",
+      "size": "Medium",
+      "spacing": "Large"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "FactSet",
+          "facts": [
+            {
+              "title": "${budgetCheck.status == 'PASS' ? '✓' : '✗'} Budget Allocation",
+              "value": "${budgetCheck.message}"
+            },
+            {
+              "title": "${channelCheck.status == 'PASS' ? '✓' : '✗'} Channel Mix",
+              "value": "${channelCheck.message}"
+            },
+            {
+              "title": "${kpiCheck.status == 'PASS' ? '✓' : '✗'} KPI Alignment",
+              "value": "${kpiCheck.message}"
+            },
+            {
+              "title": "${timelineCheck.status == 'PASS' ? '✓' : '✗'} Timeline",
+              "value": "${timelineCheck.message}"
+            },
+            {
+              "title": "${complianceCheck.status == 'PASS' ? '✓' : '✗'} Compliance",
+              "value": "${complianceCheck.message}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "spacing": "Large",
+      "$when": "${warningsCount > 0}",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Warnings (${warningsCount})",
+          "weight": "Bolder",
+          "size": "Medium",
+          "color": "Warning"
+        },
+        {
+          "type": "TextBlock",
+          "text": "${warnings}",
+          "wrap": true,
+          "size": "Small"
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "style": "emphasis",
+      "spacing": "Large",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Plan Summary",
+          "weight": "Bolder",
+          "size": "Medium"
+        },
+        {
+          "type": "ColumnSet",
+          "columns": [
+            {
+              "type": "Column",
+              "width": "1",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "Total Budget",
+                  "size": "Small",
+                  "isSubtle": true
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "${totalBudget}",
+                  "weight": "Bolder"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "1",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "Duration",
+                  "size": "Small",
+                  "isSubtle": true
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "${duration}",
+                  "weight": "Bolder"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "1",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "Channels",
+                  "size": "Small",
+                  "isSubtle": true
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "${channelCount}",
+                  "weight": "Bolder"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "TextBlock",
+      "text": "Projected Outcomes",
+      "weight": "Bolder",
+      "size": "Medium",
+      "spacing": "Large"
+    },
+    {
+      "type": "FactSet",
+      "facts": [
+        {
+          "title": "Impressions",
+          "value": "${projectedImpressions} (${impressionsConfidence})"
+        },
+        {
+          "title": "Clicks",
+          "value": "${projectedClicks} (${clicksConfidence})"
+        },
+        {
+          "title": "Conversions",
+          "value": "${projectedConversions} (${conversionsConfidence})"
+        },
+        {
+          "title": "Estimated CAC",
+          "value": "${estimatedCAC}"
+        }
+      ]
+    },
+    {
+      "type": "ActionSet",
+      "spacing": "Large",
+      "actions": [
+        {
+          "type": "Action.Submit",
+          "title": "Approve Plan",
+          "style": "positive",
+          "data": {
+            "action": "validation_decision",
+            "decision": "approve",
+            "planId": "${planId}",
+            "sessionId": "${sessionId}"
+          }
+        },
+        {
+          "type": "Action.Submit",
+          "title": "Request Changes",
+          "data": {
+            "action": "validation_decision",
+            "decision": "request_changes",
+            "planId": "${planId}",
+            "sessionId": "${sessionId}"
+          }
+        },
+        {
+          "type": "Action.Submit",
+          "title": "Generate Document",
+          "data": {
+            "action": "validation_decision",
+            "decision": "generate_document",
+            "planId": "${planId}",
+            "sessionId": "${sessionId}"
+          }
+        }
+      ]
+    },
+    {
+      "type": "TextBlock",
+      "text": "Confidence levels: HIGH (+/-10%), MEDIUM (+/-20%), MEDIUM-LOW (+/-30%)",
+      "wrap": true,
+      "isSubtle": true,
+      "size": "Small",
+      "spacing": "Medium"
+    }
+  ],
+  "$data": {
+    "overallStatus": "PASS",
+    "planName": "Q1 2026 Retail Campaign",
+    "budgetCheck": {
+      "status": "PASS",
+      "message": "100% allocated across channels"
+    },
+    "channelCheck": {
+      "status": "PASS",
+      "message": "4 channels, balanced mix"
+    },
+    "kpiCheck": {
+      "status": "PASS",
+      "message": "Primary: Conversions, Secondary: ROAS"
+    },
+    "timelineCheck": {
+      "status": "PASS",
+      "message": "12 weeks, Q1 2026"
+    },
+    "complianceCheck": {
+      "status": "PASS",
+      "message": "All requirements met"
+    },
+    "warningsCount": 1,
+    "warnings": "CPM rates are at upper benchmark range. Consider monitoring closely.",
+    "totalBudget": "$150,000",
+    "duration": "12 weeks",
+    "channelCount": "4",
+    "projectedImpressions": "8.5M",
+    "impressionsConfidence": "HIGH",
+    "projectedClicks": "127K",
+    "clicksConfidence": "MEDIUM",
+    "projectedConversions": "1,600",
+    "conversionsConfidence": "MEDIUM-LOW",
+    "estimatedCAC": "$93.75",
+    "planId": "plan-456",
+    "sessionId": "session-123"
+  }
+}

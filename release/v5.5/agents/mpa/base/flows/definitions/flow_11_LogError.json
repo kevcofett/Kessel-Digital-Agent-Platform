@@ -1,0 +1,145 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "name": "flow_11_mpa_LogError",
+    "displayName": "MPA - Log Error",
+    "description": "Central error logging flow. Records errors to Dataverse and optionally sends alerts.",
+    "category": "System",
+    "version": "1.0.0",
+    "author": "Kessel Digital",
+    "lastModified": "2025-01-15"
+  },
+  "trigger": {
+    "type": "Workflow",
+    "description": "Called by other flows when an error occurs",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "Source flow or function name"
+          },
+          "errorCode": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "Error message"
+          },
+          "errorDetails": {
+            "type": "object",
+            "description": "Full error details"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "Session ID if available"
+          },
+          "planId": {
+            "type": "string",
+            "description": "Plan ID if available"
+          },
+          "severity": {
+            "type": "string",
+            "description": "Error severity",
+            "enum": ["Low", "Medium", "High", "Critical"],
+            "default": "Medium"
+          }
+        },
+        "required": ["source", "errorMessage"]
+      }
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "name": "Create_Error_Log_Record",
+      "type": "Dataverse",
+      "description": "Log error to Dataverse",
+      "inputs": {
+        "operation": "CreateRecord",
+        "entityName": "mpa_errorlog",
+        "item": {
+          "mpa_source": "@{triggerBody()?['source']}",
+          "mpa_error_code": "@{triggerBody()?['errorCode']}",
+          "mpa_error_message": "@{triggerBody()?['errorMessage']}",
+          "mpa_error_details": "@{string(triggerBody()?['errorDetails'])}",
+          "mpa_session_id": "@{triggerBody()?['sessionId']}",
+          "mpa_plan_id": "@{triggerBody()?['planId']}",
+          "mpa_severity": "@{coalesce(triggerBody()?['severity'], 'Medium')}",
+          "mpa_occurred_at": "@{utcNow()}"
+        }
+      }
+    },
+    {
+      "order": 2,
+      "name": "Check_Severity",
+      "type": "Condition",
+      "description": "Send alert for high/critical errors",
+      "inputs": {
+        "expression": {
+          "or": [
+            { "equals": ["@triggerBody()?['severity']", "High"] },
+            { "equals": ["@triggerBody()?['severity']", "Critical"] }
+          ]
+        }
+      },
+      "actions": {
+        "true": [
+          {
+            "name": "Send_Alert_Email",
+            "type": "Office365Outlook",
+            "inputs": {
+              "operation": "SendEmail",
+              "to": "@{parameters('AlertEmailRecipients')}",
+              "subject": "[MPA Alert] @{triggerBody()?['severity']} Error in @{triggerBody()?['source']}",
+              "body": "<h2>Media Planning Agent Error Alert</h2><p><strong>Source:</strong> @{triggerBody()?['source']}</p><p><strong>Severity:</strong> @{triggerBody()?['severity']}</p><p><strong>Error:</strong> @{triggerBody()?['errorMessage']}</p><p><strong>Time:</strong> @{utcNow()}</p><hr><p><strong>Details:</strong></p><pre>@{string(triggerBody()?['errorDetails'])}</pre>",
+              "isHtml": true
+            }
+          }
+        ]
+      },
+      "runAfter": ["Create_Error_Log_Record"]
+    },
+    {
+      "order": 3,
+      "name": "Return_Log_Confirmation",
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "logged": true,
+          "errorLogId": "@{outputs('Create_Error_Log_Record')?['body/mpa_errorlogid']}",
+          "alertSent": "@{equals(triggerBody()?['severity'], 'Critical')}"
+        }
+      },
+      "runAfter": ["Check_Severity"]
+    }
+  ],
+  "outputs": {
+    "logged": {
+      "type": "boolean",
+      "description": "Whether error was logged successfully"
+    },
+    "errorLogId": {
+      "type": "string",
+      "description": "ID of the error log record"
+    }
+  },
+  "parameters": {
+    "AlertEmailRecipients": {
+      "type": "string",
+      "description": "Email addresses for error alerts (comma-separated)",
+      "defaultValue": "admin@example.com"
+    }
+  },
+  "errorHandling": {
+    "retryPolicy": {
+      "type": "fixed",
+      "count": 1,
+      "interval": "PT5S"
+    },
+    "onError": "Fail silently to avoid infinite loops"
+  }
+}

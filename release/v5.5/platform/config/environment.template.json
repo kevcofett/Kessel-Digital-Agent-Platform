@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Environment Configuration Template",
+  "description": "Template for environment-specific configuration. Copy to environment.json and fill in values.",
+  "version": "5.5",
+  "lastUpdated": "January 2026",
+  
+  "organization": {
+    "code": "{ORGANIZATION}",
+    "name": "{Organization Full Name}",
+    "description": "Replace {ORGANIZATION} with: Kessel-Digital or Mastercard"
+  },
+  
+  "tenant": {
+    "tenantId": "{TENANT_ID}",
+    "tenantName": "{tenant}.onmicrosoft.com",
+    "description": "Azure AD / Entra ID tenant"
+  },
+  
+  "dataverse": {
+    "environmentUrl": "https://{ENVIRONMENT}.crm.dynamics.com",
+    "environmentId": "{ENVIRONMENT_ID}",
+    "solutionName": "AgentPlatform",
+    "publisherPrefix": "eap",
+    "description": "Dataverse environment for tables and data"
+  },
+  
+  "sharepoint": {
+    "siteUrl": "https://{TENANT}.sharepoint.com/sites/{SITE_NAME}",
+    "kbLibraries": {
+      "mpa": "MediaPlanningKB",
+      "ca": "ConsultingKB",
+      "shared": "SharedKB"
+    },
+    "description": "SharePoint site for knowledge base files"
+  },
+  
+  "copilotStudio": {
+    "environmentUrl": "https://copilotstudio.microsoft.com/environments/{ENVIRONMENT_ID}",
+    "agents": {
+      "mpa": {
+        "agentId": "{MPA_AGENT_ID}",
+        "agentName": "Media Planning Agent"
+      },
+      "ca": {
+        "agentId": "{CA_AGENT_ID}",
+        "agentName": "Consulting Agent"
+      }
+    },
+    "description": "Copilot Studio configuration"
+  },
+  
+  "azureFunctions": {
+    "appName": "{ORGANIZATION}-agent-functions",
+    "resourceGroup": "{ORGANIZATION}-agent-platform-rg",
+    "subscriptionId": "{SUBSCRIPTION_ID}",
+    "endpoints": {
+      "mpa": "https://{ORGANIZATION}-agent-functions.azurewebsites.net/api/mpa",
+      "shared": "https://{ORGANIZATION}-agent-functions.azurewebsites.net/api/shared"
+    },
+    "description": "Azure Functions for calculations and document generation"
+  },
+  
+  "authentication": {
+    "clientId": "{CLIENT_ID}",
+    "authority": "https://login.microsoftonline.com/{TENANT_ID}",
+    "scopes": [
+      "https://{ENVIRONMENT}.crm.dynamics.com/.default"
+    ],
+    "description": "Azure AD app registration for API access"
+  },
+  
+  "channels": {
+    "primary": "{PRIMARY_CHANNEL}",
+    "options": ["web", "teams", "mobile"],
+    "teamsAppId": "{TEAMS_APP_ID}",
+    "description": "Deployment channels (personal: web, corporate: teams)"
+  },
+  
+  "monitoring": {
+    "appInsightsConnectionString": "{APP_INSIGHTS_CONNECTION_STRING}",
+    "logLevel": "Information",
+    "enableDetailedErrors": false,
+    "description": "Application Insights for monitoring and diagnostics"
+  },
+  
+  "featureDefaults": {
+    "description": "Default feature flag values for this environment",
+    "reference": "See feature_flags.template.json for full catalog"
+  },
+  
+  "_examples": {
+    "personal": {
+      "organization.code": "Kessel-Digital",
+      "dataverse.environmentUrl": "https://aragornai.crm.dynamics.com",
+      "channels.primary": "web"
+    },
+    "corporate": {
+      "organization.code": "Mastercard",
+      "dataverse.environmentUrl": "https://mastercard-prod.crm.dynamics.com",
+      "channels.primary": "teams"
+    }
+  }
+}

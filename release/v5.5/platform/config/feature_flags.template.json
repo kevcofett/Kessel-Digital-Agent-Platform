@@ -1,0 +1,251 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Feature Flags Template",
+  "description": "Complete catalog of feature flags with defaults for each environment",
+  "version": "5.5",
+  "lastUpdated": "January 2026",
+  
+  "instructions": {
+    "usage": "Import these flags into eap_featureflag table during deployment",
+    "customization": "Set is_enabled based on environment requirements",
+    "extension": "Corporate environments add flags in /extensions/"
+  },
+  
+  "flags": {
+    "platform": {
+      "eap_require_session_tracking": {
+        "name": "Require Session Tracking",
+        "description": "Require all agent interactions to have a session record",
+        "category": "Platform",
+        "defaultPersonal": true,
+        "defaultCorporate": true,
+        "fallbackMessage": "Session tracking is required but unavailable. Please try again."
+      },
+      "eap_enable_cross_agent_handoff": {
+        "name": "Enable Cross-Agent Handoff",
+        "description": "Allow agents to hand off conversations to other agents",
+        "category": "Platform",
+        "defaultPersonal": false,
+        "defaultCorporate": false,
+        "fallbackMessage": "Cross-agent handoff is not enabled in this environment."
+      },
+      "eap_enable_user_preferences": {
+        "name": "Enable User Preferences",
+        "description": "Allow users to save preferences that persist across sessions",
+        "category": "Platform",
+        "defaultPersonal": true,
+        "defaultCorporate": true,
+        "fallbackMessage": "User preferences are not available."
+      }
+    },
+    
+    "mpa": {
+      "mpa_enable_document_generation": {
+        "name": "Enable Document Generation",
+        "description": "Generate Word/PDF media plan documents",
+        "category": "Agent",
+        "defaultPersonal": true,
+        "defaultCorporate": true,
+        "fallbackMessage": "Document generation is not available. Your media plan data has been saved and can be exported manually."
+      },
+      "mpa_enable_web_search": {
+        "name": "Enable Web Search",
+        "description": "Search external web for research and benchmarks",
+        "category": "Integration",
+        "defaultPersonal": true,
+        "defaultCorporate": false,
+        "fallbackMessage": "Web search is not available in this environment. Using internal knowledge base instead."
+      },
+      "mpa_enable_benchmark_lookup": {
+        "name": "Enable Benchmark Lookup",
+        "description": "Query benchmark database for industry comparisons",
+        "category": "Agent",
+        "defaultPersonal": true,
+        "defaultCorporate": true,
+        "fallbackMessage": "Benchmark data is currently unavailable. Proceeding with general industry guidelines."
+      },
+      "mpa_enable_budget_optimization": {
+        "name": "Enable Budget Optimization",
+        "description": "Run automated budget allocation optimization",
+        "category": "Agent",
+        "defaultPersonal": true,
+        "defaultCorporate": true,
+        "fallbackMessage": "Budget optimization is not available. Please allocate budget manually."
+      },
+      "mpa_enable_external_api": {
+        "name": "Enable External API Calls",
+        "description": "Call external APIs for data enrichment",
+        "category": "Integration",
+        "defaultPersonal": true,
+        "defaultCorporate": false,
+        "fallbackMessage": "External API access is restricted in this environment."
+      },
+      "mpa_enable_channel_recommendations": {
+        "name": "Enable Channel Recommendations",
+        "description": "Provide AI-powered channel mix recommendations",
+        "category": "Agent",
+        "defaultPersonal": true,
+        "defaultCorporate": true,
+        "fallbackMessage": "Channel recommendations are not available. Please select channels manually."
+      },
+      "mpa_enable_projections": {
+        "name": "Enable Performance Projections",
+        "description": "Calculate expected performance projections",
+        "category": "Agent",
+        "defaultPersonal": true,
+        "defaultCorporate": true,
+        "fallbackMessage": "Performance projections are not available."
+      },
+      "mpa_enable_gap_analysis": {
+        "name": "Enable Gap Analysis",
+        "description": "Identify gaps and opportunities in media plans",
+        "category": "Agent",
+        "defaultPersonal": true,
+        "defaultCorporate": true,
+        "fallbackMessage": "Gap analysis is not available."
+      }
+    },
+    
+    "ca": {
+      "ca_enable_external_research": {
+        "name": "Enable External Research",
+        "description": "Research external sources for consulting insights",
+        "category": "Integration",
+        "defaultPersonal": true,
+        "defaultCorporate": false,
+        "fallbackMessage": "External research is restricted. Using internal knowledge base."
+      },
+      "ca_enable_deliverable_generation": {
+        "name": "Enable Deliverable Generation",
+        "description": "Generate consulting deliverable documents",
+        "category": "Agent",
+        "defaultPersonal": true,
+        "defaultCorporate": true,
+        "fallbackMessage": "Deliverable generation is not available."
+      }
+    },
+    
+    "integration": {
+      "int_enable_sharepoint_search": {
+        "name": "Enable SharePoint Search",
+        "description": "Search SharePoint document libraries",
+        "category": "Integration",
+        "defaultPersonal": true,
+        "defaultCorporate": true,
+        "fallbackMessage": "SharePoint search is not available."
+      },
+      "int_enable_confluence_search": {
+        "name": "Enable Confluence Search",
+        "description": "Search Confluence knowledge base (corporate)",
+        "category": "Integration",
+        "defaultPersonal": false,
+        "defaultCorporate": true,
+        "fallbackMessage": "Confluence search is not available."
+      },
+      "int_enable_teams_notifications": {
+        "name": "Enable Teams Notifications",
+        "description": "Send notifications via Microsoft Teams",
+        "category": "Integration",
+        "defaultPersonal": false,
+        "defaultCorporate": true,
+        "fallbackMessage": "Teams notifications are not enabled."
+      },
+      "int_enable_email_notifications": {
+        "name": "Enable Email Notifications",
+        "description": "Send notifications via email",
+        "category": "Integration",
+        "defaultPersonal": true,
+        "defaultCorporate": true,
+        "fallbackMessage": "Email notifications are not enabled."
+      }
+    },
+    
+    "security": {
+      "sec_enable_audit_logging": {
+        "name": "Enable Audit Logging",
+        "description": "Enhanced audit trail for compliance",
+        "category": "Security",
+        "defaultPersonal": false,
+        "defaultCorporate": true,
+        "fallbackMessage": null
+      },
+      "sec_require_data_classification": {
+        "name": "Require Data Classification",
+        "description": "Require sensitivity classification for outputs",
+        "category": "Security",
+        "defaultPersonal": false,
+        "defaultCorporate": true,
+        "fallbackMessage": "Data classification is required before proceeding."
+      },
+      "sec_enable_row_level_security": {
+        "name": "Enable Row-Level Security",
+        "description": "Enforce BU/department/team access controls",
+        "category": "Security",
+        "defaultPersonal": false,
+        "defaultCorporate": true,
+        "fallbackMessage": null
+      },
+      "sec_enable_pii_detection": {
+        "name": "Enable PII Detection",
+        "description": "Detect and flag personally identifiable information",
+        "category": "Security",
+        "defaultPersonal": false,
+        "defaultCorporate": true,
+        "fallbackMessage": null
+      }
+    },
+    
+    "ui": {
+      "ui_show_advanced_options": {
+        "name": "Show Advanced Options",
+        "description": "Display advanced configuration options to users",
+        "category": "UI",
+        "defaultPersonal": true,
+        "defaultCorporate": false,
+        "fallbackMessage": null
+      },
+      "ui_enable_feedback_collection": {
+        "name": "Enable Feedback Collection",
+        "description": "Allow users to provide feedback on agent responses",
+        "category": "UI",
+        "defaultPersonal": true,
+        "defaultCorporate": true,
+        "fallbackMessage": null
+      },
+      "ui_show_debug_info": {
+        "name": "Show Debug Information",
+        "description": "Display debugging information (development only)",
+        "category": "UI",
+        "defaultPersonal": true,
+        "defaultCorporate": false,
+        "fallbackMessage": null
+      }
+    }
+  },
+  
+  "gracefulDegradationPattern": {
+    "description": "Standard pattern for handling disabled features",
+    "steps": [
+      "1. Check feature flag using eap_check_feature_flag flow",
+      "2. If disabled, log the event with flag code and user context",
+      "3. Return fallbackMessage to user (if not null)",
+      "4. Continue workflow - never throw errors for disabled features",
+      "5. If alternative exists, offer it to user"
+    ],
+    "example": {
+      "pseudocode": [
+        "result = check_feature_flag('mpa_enable_web_search')",
+        "IF result.is_enabled THEN",
+        "    RETURN perform_web_search(query)",
+        "ELSE",
+        "    log_event('feature_disabled', 'mpa_enable_web_search')",
+        "    RETURN {",
+        "        success: true,",
+        "        message: result.fallback_message,",
+        "        alternative: 'internal_kb_search'",
+        "    }",
+        "END IF"
+      ]
+    }
+  }
+}

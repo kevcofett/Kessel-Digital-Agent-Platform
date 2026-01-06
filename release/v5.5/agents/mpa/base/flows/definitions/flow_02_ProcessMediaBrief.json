@@ -1,0 +1,303 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "name": "flow_02_mpa_ProcessMediaBrief",
+    "displayName": "MPA - Process Media Brief",
+    "description": "Processes a media brief document, extracts key information, and creates a media plan record in Dataverse. Includes transaction rollback on failure, idempotency pattern, and EAP audit logging.",
+    "category": "Plan Management",
+    "version": "1.3.0",
+    "author": "Kessel Digital",
+    "lastModified": "2026-01-01",
+    "eapIntegration": {
+      "auditTable": "eap_audit",
+      "agentSource": "MPA_AGENT"
+    }
+  },
+  "trigger": {
+    "type": "PowerVirtualAgents",
+    "description": "Triggered when user submits a media brief for processing",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "Active session ID"
+          },
+          "briefContent": {
+            "type": "string",
+            "description": "Media brief text content"
+          },
+          "clientName": {
+            "type": "string",
+            "description": "Client name"
+          },
+          "campaignName": {
+            "type": "string",
+            "description": "Campaign name"
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "description": "Client-generated UUID for duplicate prevention"
+          }
+        },
+        "required": ["sessionId", "briefContent"]
+      }
+    }
+  },
+  "actions": {
+    "Try_Scope": {
+      "type": "Scope",
+      "description": "Main processing scope - contains all business logic with idempotency check",
+      "actions": {
+        "Check_Existing_Plan": {
+          "order": 1,
+          "type": "Dataverse",
+          "description": "Check for existing plan with same idempotency key",
+          "inputs": {
+            "operation": "ListRecords",
+            "entityName": "mpa_mediaplan",
+            "filter": "mpa_idempotency_key eq '@{triggerBody()?['idempotencyKey']}'",
+            "top": 1
+          }
+        },
+        "Idempotency_Condition": {
+          "order": 2,
+          "type": "Condition",
+          "description": "Check if plan already exists with this idempotency key",
+          "runAfter": {
+            "Check_Existing_Plan": ["Succeeded"]
+          },
+          "expression": {
+            "greater": [
+              "@length(outputs('Check_Existing_Plan')?['body/value'])",
+              0
+            ]
+          },
+          "actions": {
+            "Return_Existing_Plan": {
+              "type": "Response",
+              "description": "Return existing plan (idempotent response)",
+              "inputs": {
+                "statusCode": 200,
+                "body": {
+                  "planId": "@{first(outputs('Check_Existing_Plan')?['body/value'])?['mpa_mediaplanid']}",
+                  "planName": "@{first(outputs('Check_Existing_Plan')?['body/value'])?['mpa_name']}",
+                  "status": "Existing",
+                  "message": "Plan already exists (idempotent return)",
+                  "idempotent": true
+                }
+              }
+            }
+          },
+          "else": {
+            "actions": {
+              "Extract_Brief_Data": {
+                "order": 3,
+                "type": "Compose",
+                "description": "Parse and structure brief content",
+                "inputs": {
+                  "objective": "@{first(split(triggerBody()?['briefContent'], 'Objective:'))}",
+                  "budget": "@{first(split(triggerBody()?['briefContent'], 'Budget:'))}",
+                  "timeline": "@{first(split(triggerBody()?['briefContent'], 'Timeline:'))}"
+                }
+              },
+              "Create_MediaPlan_Record": {
+                "order": 4,
+                "type": "Dataverse",
+                "description": "Create a new media plan in Dataverse with idempotency key",
+                "inputs": {
+                  "operation": "CreateRecord",
+                  "entityName": "mpa_mediaplan",
+                  "item": {
+                    "mpa_name": "@{triggerBody()?['campaignName']}",
+                    "mpa_client_name": "@{triggerBody()?['clientName']}",
+                    "mpa_status": "Draft",
+                    "mpa_brief_content": "@{triggerBody()?['briefContent']}",
+                    "mpa_created_by": "@{triggerBody()?['sessionId']}",
+                    "mpa_idempotency_key": "@{triggerBody()?['idempotencyKey']}"
+                  }
+                },
+                "runAfter": {
+                  "Extract_Brief_Data": ["Succeeded"]
+                }
+              },
+              "Write_EAP_Audit": {
+                "order": 5,
+                "type": "Dataverse",
+                "description": "Log plan creation to EAP shared audit table",
+                "inputs": {
+                  "operation": "CreateRecord",
+                  "entityName": "eap_audit",
+                  "item": {
+                    "eap_user_id": "@{triggerBody()?['sessionId']}",
+                    "eap_session_id": "@{triggerBody()?['sessionId']}",
+                    "eap_action_type": "PlanCreated",
+                    "eap_entity_type": "mpa_mediaplan",
+                    "eap_entity_id": "@{outputs('Create_MediaPlan_Record')?['body/mpa_mediaplanid']}",
+                    "eap_description": "Media plan created: @{triggerBody()?['campaignName']}",
+                    "eap_agent_source": "MPA_AGENT",
+                    "eap_created_at": "@{utcNow()}"
+                  }
+                },
+                "runAfter": {
+                  "Create_MediaPlan_Record": ["Succeeded"]
+                }
+              },
+              "Update_Session_With_PlanId": {
+                "order": 6,
+                "type": "Http",
+                "description": "Associate the plan with the session",
+                "inputs": {
+                  "method": "POST",
+                  "uri": "@{parameters('AzureFunctionsBaseUrl')}/api/SessionManager",
+                  "headers": {
+                    "Content-Type": "application/json",
+                    "x-functions-key": "@{parameters('AzureFunctionsKey')}"
+                  },
+                  "body": {
+                    "action": "update",
+                    "session_id": "@{triggerBody()?['sessionId']}",
+                    "plan_id": "@{outputs('Create_MediaPlan_Record')?['body/mpa_mediaplanid']}"
+                  }
+                },
+                "runAfter": {
+                  "Write_EAP_Audit": ["Succeeded"]
+                }
+              },
+              "Return_Plan_Details": {
+                "order": 7,
+                "type": "Response",
+                "description": "Return the created plan information",
+                "inputs": {
+                  "statusCode": 200,
+                  "body": {
+                    "planId": "@{outputs('Create_MediaPlan_Record')?['body/mpa_mediaplanid']}",
+                    "planName": "@{triggerBody()?['campaignName']}",
+                    "status": "Draft",
+                    "message": "Media brief processed and plan created successfully",
+                    "idempotent": false
+                  }
+                },
+                "runAfter": {
+                  "Update_Session_With_PlanId": ["Succeeded"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Catch_Scope": {
+      "type": "Scope",
+      "description": "Error handling scope - performs compensating transactions on failure",
+      "runAfter": {
+        "Try_Scope": ["Failed", "Skipped", "TimedOut"]
+      },
+      "actions": {
+        "Check_MediaPlan_Created": {
+          "type": "Condition",
+          "description": "Check if MediaPlan record was created before failure",
+          "expression": {
+            "not": {
+              "equals": [
+                "@outputs('Create_MediaPlan_Record')?['body/mpa_mediaplanid']",
+                null
+              ]
+            }
+          },
+          "actions": {
+            "Delete_MediaPlan_Record": {
+              "type": "Dataverse",
+              "description": "Compensating delete - remove orphaned MediaPlan record",
+              "inputs": {
+                "operation": "DeleteRecord",
+                "entityName": "mpa_mediaplan",
+                "itemId": "@outputs('Create_MediaPlan_Record')?['body/mpa_mediaplanid']"
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          }
+        },
+        "Log_Rollback": {
+          "type": "Http",
+          "description": "Log the rollback event for monitoring",
+          "runAfter": {
+            "Check_MediaPlan_Created": ["Succeeded", "Failed", "Skipped"]
+          },
+          "inputs": {
+            "method": "POST",
+            "uri": "@{parameters('AzureFunctionsBaseUrl')}/api/LogError",
+            "headers": {
+              "Content-Type": "application/json",
+              "x-functions-key": "@{parameters('AzureFunctionsKey')}"
+            },
+            "body": {
+              "error_type": "ProcessMediaBrief_Rollback",
+              "session_id": "@{triggerBody()?['sessionId']}",
+              "idempotency_key": "@{triggerBody()?['idempotencyKey']}",
+              "error_message": "Transaction rolled back due to error",
+              "records_deleted": ["mpa_mediaplan"],
+              "original_error": "@{result('Try_Scope')?['error']}"
+            }
+          }
+        },
+        "Return_Error_Response": {
+          "type": "Response",
+          "description": "Return error response to caller",
+          "runAfter": {
+            "Log_Rollback": ["Succeeded", "Failed", "Skipped"]
+          },
+          "inputs": {
+            "statusCode": 500,
+            "body": {
+              "success": false,
+              "error": "Failed to process media brief. Transaction rolled back.",
+              "errorDetails": "@{result('Try_Scope')?['error']}",
+              "sessionId": "@{triggerBody()?['sessionId']}",
+              "idempotencyKey": "@{triggerBody()?['idempotencyKey']}"
+            }
+          }
+        }
+      }
+    }
+  },
+  "outputs": {
+    "planId": {
+      "type": "string",
+      "description": "The created media plan ID"
+    },
+    "planName": {
+      "type": "string",
+      "description": "The plan name"
+    },
+    "status": {
+      "type": "string",
+      "description": "Plan status"
+    },
+    "idempotent": {
+      "type": "boolean",
+      "description": "Whether this was an idempotent return of existing plan"
+    }
+  },
+  "parameters": {
+    "AzureFunctionsBaseUrl": {
+      "type": "string",
+      "description": "Base URL for Azure Functions"
+    },
+    "AzureFunctionsKey": {
+      "type": "securestring",
+      "description": "Azure Functions API key"
+    }
+  },
+  "errorHandling": {
+    "retryPolicy": {
+      "type": "exponential",
+      "count": 3,
+      "interval": "PT5S"
+    },
+    "onError": "Catch_Scope handles rollback and logging"
+  }
+}

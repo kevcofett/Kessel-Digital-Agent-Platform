@@ -1,0 +1,80 @@
+{
+  "table_name": "eap_user",
+  "display_name": "EAP User",
+  "description": "User identity and profile for all agents",
+  "schema_name": "eap_user",
+  "primary_column": "eap_userprincipalname",
+  "columns": [
+    {
+      "name": "eap_userprincipalname",
+      "display_name": "User Principal Name",
+      "type": "Text",
+      "max_length": 200,
+      "required": true,
+      "description": "Microsoft SSO UPN (email)"
+    },
+    {
+      "name": "eap_displayname",
+      "display_name": "Display Name",
+      "type": "Text",
+      "max_length": 200,
+      "required": true
+    },
+    {
+      "name": "eap_email",
+      "display_name": "Email",
+      "type": "Text",
+      "max_length": 200,
+      "required": true
+    },
+    {
+      "name": "eap_department",
+      "display_name": "Department",
+      "type": "Text",
+      "max_length": 100,
+      "required": false
+    },
+    {
+      "name": "eap_jobtitle",
+      "display_name": "Job Title",
+      "type": "Text",
+      "max_length": 100,
+      "required": false
+    },
+    {
+      "name": "eap_preferences",
+      "display_name": "User Preferences",
+      "type": "Text",
+      "max_length": 1048576,
+      "required": false,
+      "description": "JSON blob for user preferences"
+    },
+    {
+      "name": "eap_status",
+      "display_name": "Status",
+      "type": "Choice",
+      "options": ["active", "inactive", "suspended"],
+      "default": "active",
+      "required": true
+    },
+    {
+      "name": "eap_firstseen",
+      "display_name": "First Seen",
+      "type": "DateTime",
+      "required": true
+    },
+    {
+      "name": "eap_lastseen",
+      "display_name": "Last Seen",
+      "type": "DateTime",
+      "required": true
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_user_upn",
+      "columns": ["eap_userprincipalname"],
+      "unique": true
+    }
+  ]
+}

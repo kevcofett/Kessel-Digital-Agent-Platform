@@ -1,0 +1,948 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MPA v5.2 Data Migration Specification",
+  "description": "Complete specification for migrating MPA v5.1 tables to EAP shared infrastructure",
+  "version": "5.2.0",
+  "created": "2025-12-25",
+  "phase": "1.1",
+  "v52Deprecations": {
+    "pathway": {
+      "status": "DEPRECATED",
+      "reason": "v5.2 simplification - pathway selection system removed. All sessions now use GUIDED approach.",
+      "migrationNote": "Do not migrate mpa_pathway values to eap_session_data. Legacy pathway data can be preserved in historical records but should not be used for new sessions."
+    }
+  },
+  "migrationOverview": {
+    "purpose": "Migrate 5 MPA tables to EAP shared equivalents while maintaining referential integrity",
+    "approach": "Generate new GUIDs for all migrated records, maintain ID mapping tables for FK updates",
+    "rollbackStrategy": "Keep original mpa_ tables intact until validation complete, then archive",
+    "estimatedRecords": {
+      "mpa_user": "~50-200 records",
+      "mpa_client": "~20-100 records",
+      "mpa_session": "~500-2000 records",
+      "mpa_auditlog": "~5000-20000 records",
+      "mpa_documentregistry": "~200-1000 records"
+    }
+  },
+  "executionOrder": [
+    {
+      "order": 1,
+      "table": "mpa_user → eap_user",
+      "reason": "Users have no FK dependencies on other migrated tables"
+    },
+    {
+      "order": 2,
+      "table": "mpa_client → eap_client",
+      "reason": "Clients depend on users (account_manager), must run after users"
+    },
+    {
+      "order": 3,
+      "table": "mpa_session → eap_session",
+      "reason": "Sessions depend on both users and clients"
+    },
+    {
+      "order": 4,
+      "table": "Update mpa_mediaplan FKs",
+      "reason": "Core table FK updates after users/clients migrated"
+    },
+    {
+      "order": 5,
+      "table": "mpa_auditlog → eap_audit_logs",
+      "reason": "Audit logs depend on users and sessions"
+    },
+    {
+      "order": 6,
+      "table": "mpa_documentregistry → eap_documents",
+      "reason": "Documents depend on users and clients"
+    },
+    {
+      "order": 7,
+      "table": "Update remaining FK references",
+      "reason": "All other tables with client/user FKs"
+    }
+  ],
+  "idMappingTables": {
+    "mpa_migration_user_map": {
+      "description": "Maps old mpa_user_id to new eap_user_id",
+      "schemaName": "mpa_migration_user_map",
+      "fields": [
+        {
+          "name": "mpa_user_id",
+          "type": "Uniqueidentifier",
+          "description": "Original MPA user ID"
+        },
+        {
+          "name": "eap_user_id",
+          "type": "Uniqueidentifier",
+          "description": "New EAP user ID"
+        },
+        {
+          "name": "migrated_at",
+          "type": "DateTime",
+          "description": "Migration timestamp"
+        },
+        {
+          "name": "migration_status",
+          "type": "Choice",
+          "options": ["Pending", "Completed", "Failed", "Validated"]
+        }
+      ],
+      "indexes": [
+        {"fields": ["mpa_user_id"], "unique": true},
+        {"fields": ["eap_user_id"], "unique": true}
+      ]
+    },
+    "mpa_migration_client_map": {
+      "description": "Maps old mpa_client_id to new eap_client_id",
+      "schemaName": "mpa_migration_client_map",
+      "fields": [
+        {
+          "name": "mpa_client_id",
+          "type": "Uniqueidentifier",
+          "description": "Original MPA client ID"
+        },
+        {
+          "name": "eap_client_id",
+          "type": "Uniqueidentifier",
+          "description": "New EAP client ID"
+        },
+        {
+          "name": "migrated_at",
+          "type": "DateTime",
+          "description": "Migration timestamp"
+        },
+        {
+          "name": "migration_status",
+          "type": "Choice",
+          "options": ["Pending", "Completed", "Failed", "Validated"]
+        }
+      ],
+      "indexes": [
+        {"fields": ["mpa_client_id"], "unique": true},
+        {"fields": ["eap_client_id"], "unique": true}
+      ]
+    },
+    "mpa_migration_session_map": {
+      "description": "Maps old mpa_session_id to new eap_session_id",
+      "schemaName": "mpa_migration_session_map",
+      "fields": [
+        {
+          "name": "mpa_session_id",
+          "type": "Uniqueidentifier",
+          "description": "Original MPA session ID"
+        },
+        {
+          "name": "eap_session_id",
+          "type": "Uniqueidentifier",
+          "description": "New EAP session ID"
+        },
+        {
+          "name": "migrated_at",
+          "type": "DateTime",
+          "description": "Migration timestamp"
+        },
+        {
+          "name": "migration_status",
+          "type": "Choice",
+          "options": ["Pending", "Completed", "Failed", "Validated"]
+        }
+      ],
+      "indexes": [
+        {"fields": ["mpa_session_id"], "unique": true},
+        {"fields": ["eap_session_id"], "unique": true}
+      ]
+    }
+  },
+  "migrations": {
+    "migration_01_users": {
+      "name": "Migrate Users",
+      "source": {
+        "table": "mpa_user",
+        "filter": null,
+        "orderBy": "mpa_created_at asc"
+      },
+      "destination": {
+        "table": "eap_user"
+      },
+      "fieldMappings": [
+        {
+          "source": null,
+          "destination": "eap_user_id",
+          "transformation": "NEWID()",
+          "notes": "Generate new GUID"
+        },
+        {
+          "source": "mpa_email",
+          "destination": "eap_email",
+          "transformation": "DIRECT",
+          "notes": "Direct copy"
+        },
+        {
+          "source": "mpa_display_name",
+          "destination": "eap_display_name",
+          "transformation": "DIRECT",
+          "notes": "Direct copy"
+        },
+        {
+          "source": "mpa_role",
+          "destination": "eap_role_id",
+          "transformation": "LOOKUP",
+          "notes": "Map choice value to eap_roles FK",
+          "lookupTable": "eap_roles",
+          "lookupMapping": {
+            "100000000": "Admin role GUID",
+            "100000001": "Planner role GUID",
+            "100000002": "Reviewer role GUID",
+            "100000003": "Viewer role GUID"
+          }
+        },
+        {
+          "source": "mpa_organization_id",
+          "destination": "eap_organization_id",
+          "transformation": "DIRECT",
+          "notes": "Direct copy if organizations exist in EAP"
+        },
+        {
+          "source": "mpa_department",
+          "destination": "eap_department",
+          "transformation": "DIRECT",
+          "notes": "Direct copy"
+        },
+        {
+          "source": "mpa_preferences",
+          "destination": "eap_preferences",
+          "transformation": "MERGE_JSON",
+          "notes": "Merge with any MPA-specific preferences",
+          "mergeFields": [
+            {
+              "sourceField": "mpa_preferences",
+              "targetKey": "mpa_preferences"
+            }
+          ],
+          "additionalKeys": {
+            "experience_level": "Extract from mpa_preferences if exists"
+          },
+          "notes_v52": "preferred_pathway excluded per v5.2 deprecation"
+        },
+        {
+          "source": "mpa_last_login_at",
+          "destination": "eap_last_login_at",
+          "transformation": "DIRECT",
+          "notes": "Direct copy"
+        },
+        {
+          "source": "mpa_is_active",
+          "destination": "eap_is_active",
+          "transformation": "DIRECT",
+          "notes": "Direct copy"
+        },
+        {
+          "source": "mpa_created_at",
+          "destination": "eap_created_at",
+          "transformation": "DIRECT",
+          "notes": "Preserve original timestamp"
+        }
+      ],
+      "postMigrationActions": [
+        {
+          "action": "INSERT_MAPPING",
+          "table": "mpa_migration_user_map",
+          "values": {
+            "mpa_user_id": "@source.mpa_user_id",
+            "eap_user_id": "@destination.eap_user_id",
+            "migrated_at": "GETUTCDATE()",
+            "migration_status": "Completed"
+          }
+        }
+      ],
+      "validation": {
+        "countMatch": true,
+        "sampleValidation": {
+          "sampleSize": 10,
+          "compareFields": ["email", "display_name"]
+        }
+      }
+    },
+    "migration_02_clients": {
+      "name": "Migrate Clients",
+      "source": {
+        "table": "mpa_client",
+        "filter": null,
+        "orderBy": "mpa_created_at asc"
+      },
+      "destination": {
+        "table": "eap_client"
+      },
+      "fieldMappings": [
+        {
+          "source": null,
+          "destination": "eap_client_id",
+          "transformation": "NEWID()",
+          "notes": "Generate new GUID"
+        },
+        {
+          "source": "mpa_client_name",
+          "destination": "eap_client_name",
+          "transformation": "DIRECT",
+          "notes": "Direct copy"
+        },
+        {
+          "source": "mpa_client_code",
+          "destination": "eap_client_code",
+          "transformation": "DIRECT",
+          "notes": "Direct copy"
+        },
+        {
+          "source": null,
+          "destination": "eap_client_metadata",
+          "transformation": "BUILD_JSON",
+          "notes": "Build metadata JSON from MPA columns",
+          "jsonStructure": {
+            "industry_vertical": "@source.mpa_industry_vertical",
+            "sub_vertical": "@source.mpa_sub_vertical",
+            "company_size": "@source.mpa_company_size",
+            "brand_guidelines_url": "@source.mpa_brand_guidelines_url",
+            "compliance_requirements": "@source.mpa_compliance_requirements",
+            "source_system": "MPA_AGENT",
+            "migrated_from_mpa": true
+          }
+        },
+        {
+          "source": "mpa_account_manager_id",
+          "destination": "eap_account_manager_id",
+          "transformation": "LOOKUP_MAPPING",
+          "notes": "Use user mapping table",
+          "lookupQuery": "SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = @source.mpa_account_manager_id"
+        },
+        {
+          "source": "mpa_default_approval_workflow",
+          "destination": "eap_approval_workflow_id",
+          "transformation": "LOOKUP",
+          "notes": "Map to EAP approval workflow if exists"
+        },
+        {
+          "source": "mpa_is_active",
+          "destination": "eap_is_active",
+          "transformation": "DIRECT",
+          "notes": "Direct copy"
+        },
+        {
+          "source": "mpa_created_at",
+          "destination": "eap_created_at",
+          "transformation": "DIRECT",
+          "notes": "Preserve original timestamp"
+        }
+      ],
+      "postMigrationActions": [
+        {
+          "action": "INSERT_MAPPING",
+          "table": "mpa_migration_client_map",
+          "values": {
+            "mpa_client_id": "@source.mpa_client_id",
+            "eap_client_id": "@destination.eap_client_id",
+            "migrated_at": "GETUTCDATE()",
+            "migration_status": "Completed"
+          }
+        }
+      ],
+      "validation": {
+        "countMatch": true,
+        "sampleValidation": {
+          "sampleSize": 10,
+          "compareFields": ["client_name", "client_code"]
+        }
+      }
+    },
+    "migration_03_sessions": {
+      "name": "Migrate Sessions",
+      "source": {
+        "table": "mpa_session",
+        "filter": null,
+        "orderBy": "mpa_started_at asc"
+      },
+      "destination": {
+        "table": "eap_session"
+      },
+      "fieldMappings": [
+        {
+          "source": null,
+          "destination": "eap_session_id",
+          "transformation": "NEWID()",
+          "notes": "Generate new GUID"
+        },
+        {
+          "source": "mpa_user_id",
+          "destination": "eap_user_id",
+          "transformation": "LOOKUP_MAPPING",
+          "notes": "Use user mapping table",
+          "lookupQuery": "SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = @source.mpa_user_id"
+        },
+        {
+          "source": "mpa_client_id",
+          "destination": "eap_client_id",
+          "transformation": "LOOKUP_MAPPING",
+          "notes": "Use client mapping table",
+          "lookupQuery": "SELECT eap_client_id FROM mpa_migration_client_map WHERE mpa_client_id = @source.mpa_client_id"
+        },
+        {
+          "source": null,
+          "destination": "eap_agent_type",
+          "transformation": "CONSTANT",
+          "value": "MPA_AGENT",
+          "notes": "Set agent type discriminator"
+        },
+        {
+          "source": "mpa_session_type",
+          "destination": "eap_session_type_id",
+          "transformation": "MAP_CHOICE",
+          "notes": "Map MPA choice values to EAP",
+          "choiceMapping": {
+            "100000000": 1,
+            "100000001": 2,
+            "100000002": 3
+          },
+          "choiceLabels": {
+            "100000000": "Planning",
+            "100000001": "InFlight",
+            "100000002": "PostMortem"
+          }
+        },
+        {
+          "source": "mpa_status",
+          "destination": "eap_status",
+          "transformation": "MAP_CHOICE",
+          "notes": "Map status values",
+          "choiceMapping": {
+            "100000000": 1,
+            "100000001": 2,
+            "100000002": 3,
+            "100000003": 4
+          },
+          "choiceLabels": {
+            "100000000": "Active",
+            "100000001": "Paused",
+            "100000002": "Completed",
+            "100000003": "Abandoned"
+          }
+        },
+        {
+          "source": "mpa_started_at",
+          "destination": "eap_started_at",
+          "transformation": "DIRECT",
+          "notes": "Direct copy"
+        },
+        {
+          "source": "mpa_ended_at",
+          "destination": "eap_ended_at",
+          "transformation": "DIRECT",
+          "notes": "Direct copy"
+        },
+        {
+          "source": null,
+          "destination": "eap_session_data",
+          "transformation": "BUILD_JSON",
+          "notes": "Build session data JSON from MPA columns",
+          "jsonStructure": {
+            "mpa_plan_id": "@source.mpa_plan_id",
+            "session_type": "@source.mpa_session_type",
+            "current_step": "@source.mpa_current_step",
+            "customizations": "@source.mpa_customizations",
+            "session_data": "@source.mpa_session_data",
+            "source_system": "MPA_AGENT",
+            "migrated": true
+          },
+          "notes_v52": "pathway field intentionally excluded per v5.2 deprecation - see v52Deprecations section"
+        }
+      ],
+      "postMigrationActions": [
+        {
+          "action": "INSERT_MAPPING",
+          "table": "mpa_migration_session_map",
+          "values": {
+            "mpa_session_id": "@source.mpa_session_id",
+            "eap_session_id": "@destination.eap_session_id",
+            "migrated_at": "GETUTCDATE()",
+            "migration_status": "Completed"
+          }
+        }
+      ],
+      "validation": {
+        "countMatch": true,
+        "agentTypeCheck": {
+          "query": "SELECT COUNT(*) FROM eap_session WHERE eap_agent_type = 'MPA_AGENT'",
+          "expectedMatch": "SELECT COUNT(*) FROM mpa_session"
+        }
+      }
+    },
+    "migration_04_update_mediaplans_fks": {
+      "name": "Update MediaPlans Foreign Keys",
+      "description": "Update FK references in mpa_mediaplan to point to new EAP IDs",
+      "type": "UPDATE",
+      "target": {
+        "table": "mpa_mediaplan"
+      },
+      "updates": [
+        {
+          "field": "mpa_client_id",
+          "transformation": "LOOKUP_MAPPING",
+          "notes": "Update client FK to EAP client ID",
+          "updateQuery": "UPDATE mpa_mediaplan SET mpa_client_id = (SELECT eap_client_id FROM mpa_migration_client_map WHERE mpa_client_id = mpa_mediaplan.mpa_client_id)"
+        },
+        {
+          "field": "mpa_created_by",
+          "transformation": "LOOKUP_MAPPING",
+          "notes": "Update created_by FK to EAP user ID",
+          "updateQuery": "UPDATE mpa_mediaplan SET mpa_created_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_mediaplan.mpa_created_by)"
+        },
+        {
+          "field": "mpa_owned_by",
+          "transformation": "LOOKUP_MAPPING",
+          "notes": "Update owned_by FK to EAP user ID",
+          "updateQuery": "UPDATE mpa_mediaplan SET mpa_owned_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_mediaplan.mpa_owned_by)"
+        },
+        {
+          "field": "mpa_updated_by",
+          "transformation": "LOOKUP_MAPPING",
+          "notes": "Update updated_by FK to EAP user ID",
+          "updateQuery": "UPDATE mpa_mediaplan SET mpa_updated_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_mediaplan.mpa_updated_by)"
+        }
+      ],
+      "validation": {
+        "orphanCheck": {
+          "query": "SELECT COUNT(*) FROM mpa_mediaplan WHERE mpa_client_id NOT IN (SELECT eap_client_id FROM eap_client)",
+          "expected": 0
+        }
+      }
+    },
+    "migration_05_auditlogs": {
+      "name": "Migrate Audit Logs",
+      "source": {
+        "table": "mpa_auditlog",
+        "filter": null,
+        "orderBy": "mpa_timestamp asc"
+      },
+      "destination": {
+        "table": "eap_audit_logs"
+      },
+      "fieldMappings": [
+        {
+          "source": null,
+          "destination": "eap_log_id",
+          "transformation": "NEWID()",
+          "notes": "Generate new GUID"
+        },
+        {
+          "source": "mpa_user_id",
+          "destination": "eap_user_id",
+          "transformation": "LOOKUP_MAPPING",
+          "notes": "Use user mapping table",
+          "lookupQuery": "SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = @source.mpa_user_id"
+        },
+        {
+          "source": "mpa_action_type",
+          "destination": "eap_action_type",
+          "transformation": "DIRECT",
+          "notes": "Direct copy - action types should be compatible"
+        },
+        {
+          "source": "mpa_entity_type",
+          "destination": "eap_entity_type",
+          "transformation": "DIRECT",
+          "notes": "Direct copy"
+        },
+        {
+          "source": "mpa_entity_id",
+          "destination": "eap_entity_id",
+          "transformation": "DIRECT",
+          "notes": "Direct copy - entity IDs remain in mpa_ tables"
+        },
+        {
+          "source": "mpa_session_id",
+          "destination": "eap_session_id",
+          "transformation": "LOOKUP_MAPPING",
+          "notes": "Use session mapping table",
+          "lookupQuery": "SELECT eap_session_id FROM mpa_migration_session_map WHERE mpa_session_id = @source.mpa_session_id",
+          "allowNull": true
+        },
+        {
+          "source": "mpa_timestamp",
+          "destination": "eap_created_at",
+          "transformation": "DIRECT",
+          "notes": "Preserve original timestamp"
+        },
+        {
+          "source": "mpa_old_value",
+          "destination": "eap_old_value",
+          "transformation": "DIRECT",
+          "notes": "Direct copy"
+        },
+        {
+          "source": "mpa_new_value",
+          "destination": "eap_new_value",
+          "transformation": "DIRECT",
+          "notes": "Direct copy"
+        },
+        {
+          "source": null,
+          "destination": "eap_agent_source",
+          "transformation": "CONSTANT",
+          "value": "MPA_AGENT",
+          "notes": "Tag with source agent"
+        }
+      ],
+      "batchProcessing": {
+        "enabled": true,
+        "batchSize": 1000,
+        "reason": "Audit logs may have many records"
+      },
+      "validation": {
+        "countMatch": true
+      }
+    },
+    "migration_06_documents": {
+      "name": "Migrate Document Registry",
+      "source": {
+        "table": "mpa_documentregistry",
+        "filter": null,
+        "orderBy": "mpa_created_at asc"
+      },
+      "destination": {
+        "table": "eap_documents"
+      },
+      "fieldMappings": [
+        {
+          "source": null,
+          "destination": "eap_document_id",
+          "transformation": "NEWID()",
+          "notes": "Generate new GUID"
+        },
+        {
+          "source": null,
+          "destination": "eap_document_metadata",
+          "transformation": "BUILD_JSON",
+          "notes": "Build metadata JSON from MPA columns",
+          "jsonStructure": {
+            "mpa_plan_id": "@source.mpa_plan_id",
+            "mpa_report_id": "@source.mpa_report_id",
+            "lifecycle_phase": "@source.mpa_lifecycle_phase",
+            "source_system": "MPA_AGENT",
+            "migrated": true
+          }
+        },
+        {
+          "source": "mpa_document_type",
+          "destination": "eap_document_type_id",
+          "transformation": "LOOKUP",
+          "notes": "Map to EAP document types",
+          "lookupMapping": {
+            "MediaPlan": "MediaPlan type GUID",
+            "PostMortemReport": "PostMortemReport type GUID",
+            "OptimizationReport": "OptimizationReport type GUID"
+          }
+        },
+        {
+          "source": "mpa_storage_reference",
+          "destination": "eap_file_url",
+          "transformation": "DIRECT",
+          "notes": "Direct copy - SharePoint URLs remain valid"
+        },
+        {
+          "source": "mpa_file_format",
+          "destination": "eap_file_format",
+          "transformation": "DIRECT",
+          "notes": "Direct copy"
+        },
+        {
+          "source": "mpa_title",
+          "destination": "eap_title",
+          "transformation": "DIRECT",
+          "notes": "Direct copy"
+        },
+        {
+          "source": "mpa_created_by",
+          "destination": "eap_created_by",
+          "transformation": "LOOKUP_MAPPING",
+          "notes": "Use user mapping table",
+          "lookupQuery": "SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = @source.mpa_created_by"
+        },
+        {
+          "source": "mpa_created_at",
+          "destination": "eap_created_at",
+          "transformation": "DIRECT",
+          "notes": "Preserve original timestamp"
+        },
+        {
+          "source": null,
+          "destination": "eap_agent_source",
+          "transformation": "CONSTANT",
+          "value": "MPA_AGENT",
+          "notes": "Tag with source agent"
+        }
+      ],
+      "validation": {
+        "countMatch": true
+      }
+    },
+    "migration_07_update_remaining_fks": {
+      "name": "Update Remaining Foreign Keys",
+      "description": "Update FK references in other MPA tables that reference users/clients",
+      "type": "UPDATE",
+      "updates": [
+        {
+          "table": "mpa_campaignperformance",
+          "updates": [
+            {
+              "field": "mpa_created_by",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_user_map"
+            }
+          ]
+        },
+        {
+          "table": "mpa_postmortemreport",
+          "updates": [
+            {
+              "field": "mpa_client_id",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_client_map"
+            },
+            {
+              "field": "mpa_prepared_by",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_user_map"
+            },
+            {
+              "field": "mpa_reviewed_by",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_user_map"
+            },
+            {
+              "field": "mpa_approved_by",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_user_map"
+            }
+          ]
+        },
+        {
+          "table": "mpa_clientcampaignindex",
+          "updates": [
+            {
+              "field": "mpa_client_id",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_client_map"
+            }
+          ]
+        },
+        {
+          "table": "mpa_planversion",
+          "updates": [
+            {
+              "field": "mpa_created_by",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_user_map"
+            },
+            {
+              "field": "mpa_approved_by",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_user_map"
+            }
+          ]
+        },
+        {
+          "table": "mpa_plandata",
+          "updates": [
+            {
+              "field": "mpa_created_by",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_user_map"
+            },
+            {
+              "field": "mpa_updated_by",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_user_map"
+            }
+          ]
+        },
+        {
+          "table": "mpa_inflightsession",
+          "updates": [
+            {
+              "field": "mpa_conducted_by",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_user_map"
+            }
+          ]
+        },
+        {
+          "table": "mpa_inflightdataentry",
+          "updates": [
+            {
+              "field": "mpa_entered_by",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_user_map"
+            }
+          ]
+        },
+        {
+          "table": "mpa_optimizationrecommendation",
+          "updates": [
+            {
+              "field": "mpa_decided_by",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_user_map"
+            }
+          ]
+        },
+        {
+          "table": "mpa_optimizationaction",
+          "updates": [
+            {
+              "field": "mpa_action_taken_by",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_user_map"
+            }
+          ]
+        },
+        {
+          "table": "mpa_planlearning",
+          "updates": [
+            {
+              "field": "mpa_created_by",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_user_map"
+            }
+          ]
+        },
+        {
+          "table": "mpa_learningapplication",
+          "updates": [
+            {
+              "field": "mpa_applied_by",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_user_map"
+            }
+          ]
+        },
+        {
+          "table": "mpa_verticalbenchmarks",
+          "updates": [
+            {
+              "field": "mpa_validated_by",
+              "transformation": "LOOKUP_MAPPING",
+              "lookupTable": "mpa_migration_user_map"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "powerAutomateFlows": {
+    "flow_migration_01_users": {
+      "flowName": "MPA_Migration_Users",
+      "displayName": "MPA Migration - Users",
+      "description": "Migrate mpa_user to eap_user",
+      "trigger": {
+        "type": "Manual",
+        "description": "Run manually during migration window"
+      },
+      "processingSteps": [
+        {
+          "stepNumber": 1,
+          "action": "Dataverse - List rows",
+          "table": "mpa_user",
+          "description": "Get all MPA users"
+        },
+        {
+          "stepNumber": 2,
+          "action": "Apply to each",
+          "description": "For each user, create in eap_user and record mapping",
+          "actions": [
+            {
+              "action": "Compose",
+              "description": "Generate new GUID",
+              "expression": "@guid()"
+            },
+            {
+              "action": "Dataverse - Add a new row",
+              "table": "eap_user",
+              "description": "Create EAP user record"
+            },
+            {
+              "action": "Dataverse - Add a new row",
+              "table": "mpa_migration_user_map",
+              "description": "Record ID mapping"
+            }
+          ]
+        },
+        {
+          "stepNumber": 3,
+          "action": "Compose",
+          "description": "Return migration summary"
+        }
+      ]
+    }
+  },
+  "validationQueries": {
+    "preValidation": [
+      {
+        "name": "Count source users",
+        "query": "SELECT COUNT(*) as count FROM mpa_user"
+      },
+      {
+        "name": "Count source clients",
+        "query": "SELECT COUNT(*) as count FROM mpa_client"
+      },
+      {
+        "name": "Count source sessions",
+        "query": "SELECT COUNT(*) as count FROM mpa_session"
+      }
+    ],
+    "postValidation": [
+      {
+        "name": "Verify user count match",
+        "query": "SELECT (SELECT COUNT(*) FROM mpa_user) - (SELECT COUNT(*) FROM mpa_migration_user_map WHERE migration_status = 'Completed') as difference",
+        "expected": 0
+      },
+      {
+        "name": "Verify no orphaned mediaplans",
+        "query": "SELECT COUNT(*) FROM mpa_mediaplan mp WHERE NOT EXISTS (SELECT 1 FROM eap_client ec WHERE ec.eap_client_id = mp.mpa_client_id)",
+        "expected": 0
+      },
+      {
+        "name": "Verify all MPA sessions have agent_type",
+        "query": "SELECT COUNT(*) FROM eap_session WHERE eap_agent_type = 'MPA_AGENT'",
+        "expectedMatch": "SELECT COUNT(*) FROM mpa_migration_session_map WHERE migration_status = 'Completed'"
+      }
+    ]
+  },
+  "rollbackProcedure": {
+    "description": "Steps to rollback if migration fails",
+    "steps": [
+      {
+        "order": 1,
+        "action": "Restore mpa_mediaplan FKs",
+        "query": "UPDATE mpa_mediaplan SET mpa_client_id = (SELECT mpa_client_id FROM mpa_migration_client_map WHERE eap_client_id = mpa_mediaplan.mpa_client_id)"
+      },
+      {
+        "order": 2,
+        "action": "Delete migrated EAP records",
+        "queries": [
+          "DELETE FROM eap_documents WHERE eap_agent_source = 'MPA_AGENT'",
+          "DELETE FROM eap_audit_logs WHERE eap_agent_source = 'MPA_AGENT'",
+          "DELETE FROM eap_session WHERE eap_agent_type = 'MPA_AGENT'",
+          "DELETE FROM eap_client WHERE eap_client_id IN (SELECT eap_client_id FROM mpa_migration_client_map)",
+          "DELETE FROM eap_user WHERE eap_user_id IN (SELECT eap_user_id FROM mpa_migration_user_map)"
+        ]
+      },
+      {
+        "order": 3,
+        "action": "Clear mapping tables",
+        "queries": [
+          "DELETE FROM mpa_migration_session_map",
+          "DELETE FROM mpa_migration_client_map",
+          "DELETE FROM mpa_migration_user_map"
+        ]
+      }
+    ]
+  }
+}

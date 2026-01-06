@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MPA Custom KPIs Table Schema",
+  "description": "Dataverse table schema for client-defined custom KPIs",
+  "type": "object",
+  "properties": {
+    "mpa_custom_kpiid": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Primary key (auto-generated GUID)"
+    },
+    "mpa_kpi_code": {
+      "type": "string",
+      "maxLength": 100,
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "description": "Unique identifier for the KPI (lowercase, underscores allowed)"
+    },
+    "mpa_display_name": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Human-readable display name"
+    },
+    "mpa_category": {
+      "type": "string",
+      "enum": ["Efficiency", "Engagement", "Conversion", "Reach", "Quality", "Custom"],
+      "description": "KPI category for grouping"
+    },
+    "mpa_formula": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Calculation formula using supported operators and functions"
+    },
+    "mpa_formula_inputs": {
+      "type": "string",
+      "description": "JSON array of required input variable names",
+      "default": "[]"
+    },
+    "mpa_unit": {
+      "type": "string",
+      "enum": ["ratio", "percentage", "currency", "number", "rate", "index"],
+      "description": "Unit type for display formatting"
+    },
+    "mpa_description": {
+      "type": "string",
+      "maxLength": 2000,
+      "description": "Clear explanation of what this KPI measures"
+    },
+    "mpa_interpretation_guide": {
+      "type": "string",
+      "maxLength": 4000,
+      "description": "Guidance on how to interpret and act on KPI values"
+    },
+    "mpa_benchmark_low": {
+      "type": "number",
+      "description": "Value below which performance is considered poor"
+    },
+    "mpa_benchmark_target": {
+      "type": "number",
+      "description": "Target or expected value for good performance"
+    },
+    "mpa_benchmark_high": {
+      "type": "number",
+      "description": "Value above which performance is considered excellent"
+    },
+    "mpa_vertical_adjustments": {
+      "type": "string",
+      "description": "JSON object with vertical-specific benchmark overrides",
+      "default": "{}"
+    },
+    "mpa_data_sources": {
+      "type": "string",
+      "description": "JSON array of data source identifiers that feed this KPI",
+      "default": "[]"
+    },
+    "mpa_related_kpis": {
+      "type": "string",
+      "description": "JSON array of related standard KPI codes",
+      "default": "[]"
+    },
+    "mpa_is_primary": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is a primary KPI for the client"
+    },
+    "mpa_sort_order": {
+      "type": "integer",
+      "default": 100,
+      "description": "Display order in lists (lower = higher priority)"
+    },
+    "mpa_is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this KPI is active and discoverable"
+    },
+    "mpa_client_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Reference to eap_client table for scoping"
+    },
+    "mpa_created_by": {
+      "type": "string",
+      "format": "uuid",
+      "description": "User who created this KPI"
+    },
+    "mpa_created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Creation timestamp"
+    },
+    "mpa_modified_by": {
+      "type": "string",
+      "format": "uuid",
+      "description": "User who last modified this KPI"
+    },
+    "mpa_modified_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last modification timestamp"
+    }
+  },
+  "required": [
+    "mpa_kpi_code",
+    "mpa_display_name",
+    "mpa_category",
+    "mpa_formula",
+    "mpa_unit",
+    "mpa_description",
+    "mpa_client_id"
+  ],
+  "additionalProperties": false,
+  "indexes": [
+    {
+      "name": "idx_kpi_code_client",
+      "columns": ["mpa_kpi_code", "mpa_client_id"],
+      "unique": true
+    },
+    {
+      "name": "idx_client_active",
+      "columns": ["mpa_client_id", "mpa_is_active"]
+    },
+    {
+      "name": "idx_category",
+      "columns": ["mpa_category", "mpa_is_active"]
+    }
+  ],
+  "relationships": [
+    {
+      "name": "fk_client",
+      "type": "many-to-one",
+      "target_table": "eap_client",
+      "target_column": "eap_clientid",
+      "source_column": "mpa_client_id"
+    }
+  ],
+  "metadata": {
+    "table_name": "mpa_custom_kpis",
+    "display_name": "Custom KPIs",
+    "plural_name": "Custom KPIs",
+    "description": "Client-defined custom KPI definitions",
+    "owner": "MPA",
+    "version": "1.0",
+    "created_date": "2025-12-30"
+  }
+}

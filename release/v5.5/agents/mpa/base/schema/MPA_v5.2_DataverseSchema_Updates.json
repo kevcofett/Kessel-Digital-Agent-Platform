@@ -1,0 +1,445 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MPA v5.2 - Dataverse Schema Updates",
+  "description": "Schema changes for EAP integration - removes migrated tables, updates FK references",
+  "version": "5.2.0",
+  "created": "2025-12-26",
+  "baseVersion": "5.1.0",
+  "migrationSummary": {
+    "tablesRemoved": 5,
+    "tablesRetained": 29,
+    "fkUpdatesRequired": 22,
+    "newDependencies": ["eap_user", "eap_client", "eap_session", "eap_audit_logs", "eap_documents"]
+  },
+  "solution": {
+    "uniqueName": "MediaPlanningAgent52",
+    "displayName": "Media Planning Agent v5.2",
+    "version": "5.2.0.0",
+    "description": "AI-powered media planning assistant integrated with Enterprise AI Platform. 29 domain-specific tables with shared infrastructure for users, clients, sessions, audit logs, and documents.",
+    "dependencies": [
+      {
+        "solution": "EnterpriseAIPlatform",
+        "minVersion": "1.1.0.0",
+        "required": true
+      }
+    ]
+  },
+  "tablesRemoved": {
+    "description": "These tables are removed from MPA solution - functionality provided by EAP shared tables",
+    "tables": [
+      {
+        "originalTable": "mpa_user",
+        "replacedBy": "eap_user",
+        "migrationSpec": "MPA_v5.2_DataMigration_Specification.json#migration_01_users",
+        "notes": "User management now handled by EAP platform"
+      },
+      {
+        "originalTable": "mpa_client",
+        "replacedBy": "eap_client",
+        "migrationSpec": "MPA_v5.2_DataMigration_Specification.json#migration_02_clients",
+        "notes": "Client management shared across all agents"
+      },
+      {
+        "originalTable": "mpa_session",
+        "replacedBy": "eap_session",
+        "migrationSpec": "MPA_v5.2_DataMigration_Specification.json#migration_03_sessions",
+        "notes": "MPA sessions identified by eap_agent_type = 'MPA_AGENT'"
+      },
+      {
+        "originalTable": "mpa_auditlog",
+        "replacedBy": "eap_audit_logs",
+        "migrationSpec": "MPA_v5.2_DataMigration_Specification.json#migration_05_auditlogs",
+        "notes": "Audit logging shared across all agents, tagged with eap_agent_source"
+      },
+      {
+        "originalTable": "mpa_documentregistry",
+        "replacedBy": "eap_documents",
+        "migrationSpec": "MPA_v5.2_DataMigration_Specification.json#migration_06_documents",
+        "notes": "Document registry shared across all agents, tagged with eap_agent_source"
+      }
+    ]
+  },
+  "tablesRetained": {
+    "description": "These 29 tables remain in MPA solution with updated FK references",
+    "categories": {
+      "corePlanning": {
+        "count": 4,
+        "tables": ["mpa_mediaplan", "mpa_planversion", "mpa_plandata", "mpa_audiences"]
+      },
+      "adEcosystem": {
+        "count": 4,
+        "tables": ["mpa_adpartner", "mpa_partnerrequirements", "mpa_partnerchannelcapabilities", "mpa_planpartner"]
+      },
+      "intelligence": {
+        "count": 3,
+        "tables": ["mpa_benchmark", "mpa_benchmarktrends", "mpa_forecasts"]
+      },
+      "mediaChannels": {
+        "count": 4,
+        "tables": ["mpa_channel", "mpa_channelkpis", "mpa_planchannels", "mpa_channelallocations"]
+      },
+      "campaignPerformance": {
+        "count": 4,
+        "tables": ["mpa_campaignperformance", "mpa_performancekpis", "mpa_dataimportlog", "mpa_importfieldmapping"]
+      },
+      "optimization": {
+        "count": 4,
+        "tables": ["mpa_optimizationrecommendation", "mpa_optimizationaction", "mpa_inflightsession", "mpa_inflightdataentry"]
+      },
+      "learnings": {
+        "count": 2,
+        "tables": ["mpa_planlearning", "mpa_learningapplication"]
+      },
+      "postMortem": {
+        "count": 4,
+        "tables": ["mpa_postmortemreport", "mpa_postmortemfinding", "mpa_clientcampaignindex", "mpa_errorlogs"]
+      }
+    }
+  },
+  "foreignKeyUpdates": {
+    "description": "FK fields that must be updated to reference EAP shared tables",
+    "updates": [
+      {
+        "table": "mpa_mediaplan",
+        "field": "mpa_client_id",
+        "oldTarget": "mpa_client.mpa_client_id",
+        "newTarget": "eap_client.eap_client_id",
+        "updateQuery": "UPDATE mpa_mediaplan SET mpa_client_id = (SELECT eap_client_id FROM mpa_migration_client_map WHERE mpa_client_id = mpa_mediaplan.mpa_client_id)"
+      },
+      {
+        "table": "mpa_mediaplan",
+        "field": "mpa_created_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_mediaplan SET mpa_created_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_mediaplan.mpa_created_by)"
+      },
+      {
+        "table": "mpa_mediaplan",
+        "field": "mpa_owned_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_mediaplan SET mpa_owned_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_mediaplan.mpa_owned_by)"
+      },
+      {
+        "table": "mpa_mediaplan",
+        "field": "mpa_updated_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_mediaplan SET mpa_updated_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_mediaplan.mpa_updated_by)"
+      },
+      {
+        "table": "mpa_planversion",
+        "field": "mpa_created_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_planversion SET mpa_created_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_planversion.mpa_created_by)"
+      },
+      {
+        "table": "mpa_planversion",
+        "field": "mpa_approved_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_planversion SET mpa_approved_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_planversion.mpa_approved_by)"
+      },
+      {
+        "table": "mpa_plandata",
+        "field": "mpa_created_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_plandata SET mpa_created_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_plandata.mpa_created_by)"
+      },
+      {
+        "table": "mpa_plandata",
+        "field": "mpa_updated_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_plandata SET mpa_updated_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_plandata.mpa_updated_by)"
+      },
+      {
+        "table": "mpa_campaignperformance",
+        "field": "mpa_client_id",
+        "oldTarget": "mpa_client.mpa_client_id",
+        "newTarget": "eap_client.eap_client_id",
+        "updateQuery": "UPDATE mpa_campaignperformance SET mpa_client_id = (SELECT eap_client_id FROM mpa_migration_client_map WHERE mpa_client_id = mpa_campaignperformance.mpa_client_id)"
+      },
+      {
+        "table": "mpa_campaignperformance",
+        "field": "mpa_created_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_campaignperformance SET mpa_created_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_campaignperformance.mpa_created_by)"
+      },
+      {
+        "table": "mpa_inflightsession",
+        "field": "mpa_session_id",
+        "oldTarget": "mpa_session.mpa_session_id",
+        "newTarget": "eap_session.eap_session_id",
+        "updateQuery": "UPDATE mpa_inflightsession SET mpa_session_id = (SELECT eap_session_id FROM mpa_migration_session_map WHERE mpa_session_id = mpa_inflightsession.mpa_session_id)"
+      },
+      {
+        "table": "mpa_inflightsession",
+        "field": "mpa_conducted_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_inflightsession SET mpa_conducted_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_inflightsession.mpa_conducted_by)"
+      },
+      {
+        "table": "mpa_inflightdataentry",
+        "field": "mpa_entered_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_inflightdataentry SET mpa_entered_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_inflightdataentry.mpa_entered_by)"
+      },
+      {
+        "table": "mpa_optimizationrecommendation",
+        "field": "mpa_decided_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_optimizationrecommendation SET mpa_decided_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_optimizationrecommendation.mpa_decided_by)"
+      },
+      {
+        "table": "mpa_optimizationaction",
+        "field": "mpa_action_taken_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_optimizationaction SET mpa_action_taken_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_optimizationaction.mpa_action_taken_by)"
+      },
+      {
+        "table": "mpa_planlearning",
+        "field": "mpa_created_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_planlearning SET mpa_created_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_planlearning.mpa_created_by)"
+      },
+      {
+        "table": "mpa_learningapplication",
+        "field": "mpa_applied_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_learningapplication SET mpa_applied_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_learningapplication.mpa_applied_by)"
+      },
+      {
+        "table": "mpa_postmortemreport",
+        "field": "mpa_client_id",
+        "oldTarget": "mpa_client.mpa_client_id",
+        "newTarget": "eap_client.eap_client_id",
+        "updateQuery": "UPDATE mpa_postmortemreport SET mpa_client_id = (SELECT eap_client_id FROM mpa_migration_client_map WHERE mpa_client_id = mpa_postmortemreport.mpa_client_id)"
+      },
+      {
+        "table": "mpa_postmortemreport",
+        "field": "mpa_prepared_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_postmortemreport SET mpa_prepared_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_postmortemreport.mpa_prepared_by)"
+      },
+      {
+        "table": "mpa_postmortemreport",
+        "field": "mpa_reviewed_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_postmortemreport SET mpa_reviewed_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_postmortemreport.mpa_reviewed_by)"
+      },
+      {
+        "table": "mpa_postmortemreport",
+        "field": "mpa_approved_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_postmortemreport SET mpa_approved_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_postmortemreport.mpa_approved_by)"
+      },
+      {
+        "table": "mpa_clientcampaignindex",
+        "field": "mpa_client_id",
+        "oldTarget": "mpa_client.mpa_client_id",
+        "newTarget": "eap_client.eap_client_id",
+        "updateQuery": "UPDATE mpa_clientcampaignindex SET mpa_client_id = (SELECT eap_client_id FROM mpa_migration_client_map WHERE mpa_client_id = mpa_clientcampaignindex.mpa_client_id)"
+      },
+      {
+        "table": "mpa_verticalbenchmarks",
+        "field": "mpa_validated_by",
+        "oldTarget": "mpa_user.mpa_user_id",
+        "newTarget": "eap_user.eap_user_id",
+        "updateQuery": "UPDATE mpa_verticalbenchmarks SET mpa_validated_by = (SELECT eap_user_id FROM mpa_migration_user_map WHERE mpa_user_id = mpa_verticalbenchmarks.mpa_validated_by)"
+      }
+    ]
+  },
+  "relationshipUpdates": {
+    "description": "Relationship definitions that need updating in retained tables",
+    "updates": [
+      {
+        "table": "mpa_mediaplan",
+        "relationship": "client_mediaplan",
+        "oldDefinition": {
+          "type": "ManyToOne",
+          "relatedTable": "mpa_client",
+          "lookupField": "mpa_client_id"
+        },
+        "newDefinition": {
+          "type": "ManyToOne",
+          "relatedTable": "eap_client",
+          "lookupField": "mpa_client_id",
+          "targetField": "eap_client_id",
+          "crossSolution": true
+        }
+      },
+      {
+        "table": "mpa_mediaplan",
+        "relationship": "user_created_mediaplan",
+        "oldDefinition": {
+          "type": "ManyToOne",
+          "relatedTable": "mpa_user",
+          "lookupField": "mpa_created_by"
+        },
+        "newDefinition": {
+          "type": "ManyToOne",
+          "relatedTable": "eap_user",
+          "lookupField": "mpa_created_by",
+          "targetField": "eap_user_id",
+          "crossSolution": true
+        }
+      },
+      {
+        "table": "mpa_inflightsession",
+        "relationship": "session_inflightsession",
+        "oldDefinition": {
+          "type": "ManyToOne",
+          "relatedTable": "mpa_session",
+          "lookupField": "mpa_session_id"
+        },
+        "newDefinition": {
+          "type": "ManyToOne",
+          "relatedTable": "eap_session",
+          "lookupField": "mpa_session_id",
+          "targetField": "eap_session_id",
+          "crossSolution": true,
+          "filterCondition": "eap_agent_type eq 'MPA_AGENT'"
+        }
+      }
+    ]
+  },
+  "newExtensionTable": {
+    "description": "Optional extension table for MPA-specific session data if JSON storage is insufficient",
+    "table": {
+      "schemaName": "mpa_session_extensions",
+      "displayName": "MPA Session Extensions",
+      "pluralName": "MPA Session Extensions",
+      "description": "Extended session data for Media Planning Agent sessions (linked to eap_session)",
+      "primaryColumn": "session_extension_id",
+      "ownership": "Organization",
+      "tableType": "Standard",
+      "category": "Session Management",
+      "fields": [
+        {
+          "schemaName": "mpa_session_extension_id",
+          "displayName": "Session Extension ID",
+          "dataType": "Uniqueidentifier",
+          "isPrimaryKey": true,
+          "isRequired": true
+        },
+        {
+          "schemaName": "mpa_eap_session_id",
+          "displayName": "EAP Session ID",
+          "description": "Link to parent eap_session record",
+          "dataType": "Lookup",
+          "isRequired": true,
+          "relatedTable": "eap_session",
+          "relationship": {
+            "type": "ManyToOne",
+            "relatedTableSchemaName": "eap_session",
+            "cascadeDelete": "Cascade"
+          }
+        },
+        {
+          "schemaName": "mpa_plan_id",
+          "displayName": "Media Plan ID",
+          "description": "Associated media plan",
+          "dataType": "Lookup",
+          "isRequired": false,
+          "relatedTable": "mpa_mediaplan"
+        },
+        {
+          "schemaName": "mpa_current_step",
+          "displayName": "Current Step",
+          "description": "Current step in 10-step process",
+          "dataType": "WholeNumber",
+          "minValue": 1,
+          "maxValue": 10
+        },
+        {
+          "schemaName": "mpa_current_gate",
+          "displayName": "Current Gate",
+          "description": "Current gate (0-3)",
+          "dataType": "WholeNumber",
+          "minValue": 0,
+          "maxValue": 3
+        },
+        {
+          "schemaName": "mpa_steps_completed",
+          "displayName": "Steps Completed",
+          "description": "JSON array of completed step numbers",
+          "dataType": "MultilineText",
+          "maxLength": 1000,
+          "format": "JSON"
+        },
+        {
+          "schemaName": "mpa_gates_passed",
+          "displayName": "Gates Passed",
+          "description": "JSON array of passed gate numbers",
+          "dataType": "MultilineText",
+          "maxLength": 100,
+          "format": "JSON"
+        },
+        {
+          "schemaName": "mpa_customizations",
+          "displayName": "Session Customizations",
+          "description": "User customizations for this session",
+          "dataType": "MultilineText",
+          "maxLength": 50000,
+          "format": "JSON"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_session_extension_eap_session",
+          "fields": ["mpa_eap_session_id"],
+          "isUnique": true
+        }
+      ],
+      "notes": "This table is OPTIONAL. MPA-specific session data can alternatively be stored in eap_session.eap_session_data JSON field. Use this table if structured querying of session fields is needed."
+    }
+  },
+  "validationRules": {
+    "description": "Validation rules to ensure data integrity after migration",
+    "rules": [
+      {
+        "name": "AllMediaPlansHaveValidClient",
+        "query": "SELECT COUNT(*) FROM mpa_mediaplan mp WHERE NOT EXISTS (SELECT 1 FROM eap_client ec WHERE ec.eap_client_id = mp.mpa_client_id)",
+        "expectedResult": 0,
+        "errorMessage": "Found media plans with invalid client references"
+      },
+      {
+        "name": "AllMediaPlansHaveValidCreator",
+        "query": "SELECT COUNT(*) FROM mpa_mediaplan mp WHERE NOT EXISTS (SELECT 1 FROM eap_user eu WHERE eu.eap_user_id = mp.mpa_created_by)",
+        "expectedResult": 0,
+        "errorMessage": "Found media plans with invalid creator references"
+      },
+      {
+        "name": "AllInFlightSessionsHaveValidSession",
+        "query": "SELECT COUNT(*) FROM mpa_inflightsession ifs WHERE NOT EXISTS (SELECT 1 FROM eap_session es WHERE es.eap_session_id = ifs.mpa_session_id AND es.eap_agent_type = 'MPA_AGENT')",
+        "expectedResult": 0,
+        "errorMessage": "Found in-flight sessions with invalid session references"
+      }
+    ]
+  },
+  "deprecatedFields": {
+    "description": "Fields that are deprecated in v5.2 - remain in Dataverse for backward compatibility but should not be written to",
+    "fields": [
+      {
+        "table": "mpa_session",
+        "field": "mpa_pathway",
+        "reason": "v5.2 simplification - pathway selection removed. All sessions now use GUIDED approach. Field retained for historical data but new sessions should not write to this field.",
+        "deprecatedInVersion": "5.2.0",
+        "migrationNotes": "Existing data with pathway values should be preserved. New sessions leave this field null or default."
+      }
+    ]
+  }
+}

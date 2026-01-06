@@ -1,0 +1,188 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "name": "flow_04_mpa_RunProjections",
+    "displayName": "MPA - Run Projections",
+    "description": "Calculates media projections for a campaign based on budget, channels, and benchmarks.",
+    "category": "Calculations",
+    "version": "1.0.0",
+    "author": "Kessel Digital",
+    "lastModified": "2025-01-15"
+  },
+  "trigger": {
+    "type": "PowerVirtualAgents",
+    "description": "Triggered when user requests projections for their plan",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "budget": {
+            "type": "number",
+            "description": "Total campaign budget"
+          },
+          "channels": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "List of media channels"
+          },
+          "vertical": {
+            "type": "string",
+            "description": "Industry vertical"
+          },
+          "objective": {
+            "type": "string",
+            "description": "Campaign objective"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Campaign start date"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Campaign end date"
+          },
+          "allocation": {
+            "type": "object",
+            "description": "Budget allocation by channel"
+          }
+        },
+        "required": ["budget", "channels"]
+      }
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "name": "Validate_Input",
+      "type": "Condition",
+      "description": "Validate required inputs",
+      "inputs": {
+        "expression": {
+          "and": [
+            { "greater": ["@triggerBody()?['budget']", 0] },
+            { "greater": ["@length(triggerBody()?['channels'])", 0] }
+          ]
+        }
+      },
+      "actions": {
+        "false": [
+          {
+            "name": "Return_Validation_Error",
+            "type": "Response",
+            "inputs": {
+              "statusCode": 400,
+              "body": {
+                "error": "VALIDATION_ERROR",
+                "message": "Budget must be positive and at least one channel is required"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "order": 2,
+      "name": "Call_RunProjections_Function",
+      "type": "Http",
+      "description": "Call Azure Function to calculate projections",
+      "inputs": {
+        "method": "POST",
+        "uri": "@{parameters('AzureFunctionsBaseUrl')}/api/RunProjections",
+        "headers": {
+          "Content-Type": "application/json",
+          "x-functions-key": "@{parameters('AzureFunctionsKey')}"
+        },
+        "body": {
+          "budget": "@{triggerBody()?['budget']}",
+          "channels": "@{triggerBody()?['channels']}",
+          "vertical": "@{coalesce(triggerBody()?['vertical'], 'general')}",
+          "objective": "@{coalesce(triggerBody()?['objective'], 'conversions')}",
+          "startDate": "@{triggerBody()?['startDate']}",
+          "endDate": "@{triggerBody()?['endDate']}",
+          "allocation": "@{triggerBody()?['allocation']}"
+        }
+      },
+      "runAfter": ["Validate_Input"]
+    },
+    {
+      "order": 3,
+      "name": "Parse_Projections",
+      "type": "ParseJson",
+      "description": "Parse the projection response",
+      "inputs": {
+        "content": "@body('Call_RunProjections_Function')",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string" },
+            "projections": { "type": "object" },
+            "confidence": { "type": "string" },
+            "metadata": { "type": "object" }
+          }
+        }
+      },
+      "runAfter": ["Call_RunProjections_Function"]
+    },
+    {
+      "order": 4,
+      "name": "Format_Response",
+      "type": "Compose",
+      "description": "Format projections for Copilot display",
+      "inputs": {
+        "projections": "@body('Parse_Projections')?['projections']",
+        "confidence": "@body('Parse_Projections')?['confidence']",
+        "summary": {
+          "totalImpressions": "@{body('Parse_Projections')?['projections']?['total']?['impressions']}",
+          "totalClicks": "@{body('Parse_Projections')?['projections']?['total']?['clicks']}",
+          "totalConversions": "@{body('Parse_Projections')?['projections']?['total']?['conversions']}",
+          "estimatedCPM": "@{body('Parse_Projections')?['projections']?['total']?['cpm']}",
+          "estimatedCTR": "@{body('Parse_Projections')?['projections']?['total']?['ctr']}",
+          "estimatedCPA": "@{body('Parse_Projections')?['projections']?['total']?['cpa']}"
+        }
+      },
+      "runAfter": ["Parse_Projections"]
+    },
+    {
+      "order": 5,
+      "name": "Return_Projections",
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": "@outputs('Format_Response')"
+      },
+      "runAfter": ["Format_Response"]
+    }
+  ],
+  "outputs": {
+    "projections": {
+      "type": "object",
+      "description": "Calculated projections"
+    },
+    "confidence": {
+      "type": "string",
+      "description": "Confidence level"
+    },
+    "summary": {
+      "type": "object",
+      "description": "Summary metrics"
+    }
+  },
+  "parameters": {
+    "AzureFunctionsBaseUrl": {
+      "type": "string",
+      "description": "Base URL for Azure Functions"
+    },
+    "AzureFunctionsKey": {
+      "type": "securestring",
+      "description": "Azure Functions API key"
+    }
+  },
+  "errorHandling": {
+    "retryPolicy": {
+      "type": "exponential",
+      "count": 3,
+      "interval": "PT5S"
+    },
+    "onError": "Call flow_11_LogError with error details"
+  }
+}

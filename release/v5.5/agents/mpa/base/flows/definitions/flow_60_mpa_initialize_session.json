@@ -1,0 +1,297 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "name": "flow_60_mpa_initialize_session",
+    "displayName": "MPA - Initialize Session",
+    "description": "Child flow called by shared session initialization (flow_01_shared_initialize_session). Sets up MPA-specific context including pathway, plan data, and session type.",
+    "category": "MPA Session Management",
+    "version": "1.0.0",
+    "author": "Kessel Digital",
+    "lastModified": "2026-01-01",
+    "eapIntegration": {
+      "parentFlow": "flow_01_shared_initialize_session",
+      "agentType": "MPA_AGENT",
+      "purpose": "Agent-specific session initialization"
+    }
+  },
+  "trigger": {
+    "type": "Request",
+    "kind": "ChildFlow",
+    "description": "Called by shared session initialization with base session data",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "description": "EAP session ID created by parent flow"
+          },
+          "user_id": {
+            "type": "string",
+            "description": "EAP user ID"
+          },
+          "client_id": {
+            "type": "string",
+            "description": "EAP client ID (optional)"
+          },
+          "session_metadata": {
+            "type": "object",
+            "description": "Agent-specific metadata passed from Copilot",
+            "properties": {
+              "pathway": {
+                "type": "string",
+                "enum": ["EXPRESS", "GUIDED", "STANDARD", "AUDIT"]
+              },
+              "session_type": {
+                "type": "string",
+                "enum": ["Planning", "InFlight", "PostMortem", "General", "Audit"]
+              },
+              "plan_id": {
+                "type": "string",
+                "description": "Existing plan ID for continue/resume scenarios"
+              }
+            }
+          }
+        },
+        "required": ["session_id", "user_id"]
+      }
+    }
+  },
+  "actions": {
+    "Parse_Session_Metadata": {
+      "order": 1,
+      "type": "ParseJson",
+      "description": "Parse the agent-specific metadata from Copilot",
+      "inputs": {
+        "content": "@triggerBody()?['session_metadata']",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "pathway": {"type": "string"},
+            "session_type": {"type": "string"},
+            "plan_id": {"type": "string"}
+          }
+        }
+      }
+    },
+    "Check_Existing_Plan": {
+      "order": 2,
+      "type": "Condition",
+      "description": "Check if resuming an existing plan",
+      "runAfter": {
+        "Parse_Session_Metadata": ["Succeeded"]
+      },
+      "expression": {
+        "and": [
+          {
+            "not": {
+              "equals": ["@body('Parse_Session_Metadata')?['plan_id']", null]
+            }
+          },
+          {
+            "not": {
+              "equals": ["@body('Parse_Session_Metadata')?['plan_id']", ""]
+            }
+          }
+        ]
+      },
+      "actions": {
+        "Get_Existing_Plan": {
+          "type": "Dataverse",
+          "description": "Retrieve the existing plan record",
+          "inputs": {
+            "operation": "GetRecord",
+            "entityName": "mpa_mediaplan",
+            "itemId": "@body('Parse_Session_Metadata')?['plan_id']",
+            "select": "mpa_mediaplanid,mpa_name,mpa_status,mpa_current_step,mpa_client_id,mpa_campaign_type,mpa_total_budget,mpa_start_date,mpa_end_date"
+          }
+        },
+        "Get_Plan_Data": {
+          "type": "Dataverse",
+          "description": "Retrieve completed sections for the plan",
+          "inputs": {
+            "operation": "ListRecords",
+            "entityName": "mpa_plandata",
+            "filter": "mpa_plan_id eq '@{body('Parse_Session_Metadata')?['plan_id']}'",
+            "select": "mpa_section_name,mpa_section_status,mpa_section_data",
+            "orderBy": "mpa_section_order asc"
+          },
+          "runAfter": {
+            "Get_Existing_Plan": ["Succeeded"]
+          }
+        },
+        "Build_Existing_Plan_Context": {
+          "type": "Compose",
+          "description": "Build context for existing plan",
+          "inputs": {
+            "has_plan": true,
+            "plan_id": "@body('Parse_Session_Metadata')?['plan_id']",
+            "plan_name": "@outputs('Get_Existing_Plan')?['body/mpa_name']",
+            "plan_status": "@outputs('Get_Existing_Plan')?['body/mpa_status']",
+            "current_step": "@coalesce(outputs('Get_Existing_Plan')?['body/mpa_current_step'], 1)",
+            "campaign_type": "@outputs('Get_Existing_Plan')?['body/mpa_campaign_type']",
+            "total_budget": "@outputs('Get_Existing_Plan')?['body/mpa_total_budget']",
+            "date_range": {
+              "start": "@outputs('Get_Existing_Plan')?['body/mpa_start_date']",
+              "end": "@outputs('Get_Existing_Plan')?['body/mpa_end_date']"
+            },
+            "sections_complete": "@body('Get_Plan_Data')?['value']",
+            "sections_count": "@length(body('Get_Plan_Data')?['value'])"
+          },
+          "runAfter": {
+            "Get_Plan_Data": ["Succeeded"]
+          }
+        }
+      },
+      "else": {
+        "actions": {
+          "Build_New_Session_Context": {
+            "type": "Compose",
+            "description": "Build context for new session without existing plan",
+            "inputs": {
+              "has_plan": false,
+              "plan_id": null,
+              "plan_name": null,
+              "plan_status": null,
+              "current_step": 1,
+              "sections_complete": [],
+              "sections_count": 0
+            }
+          }
+        }
+      }
+    },
+    "Get_User_Preferences": {
+      "order": 3,
+      "type": "Http",
+      "description": "Get user preferences from EAP for personalization",
+      "runAfter": {
+        "Check_Existing_Plan": ["Succeeded"]
+      },
+      "inputs": {
+        "method": "GET",
+        "uri": "@{parameters('EAPBaseUrl')}/api/users/@{triggerBody()?['user_id']}/preferences",
+        "headers": {
+          "x-functions-key": "@{parameters('EAPFunctionsKey')}"
+        }
+      }
+    },
+    "Parse_User_Preferences": {
+      "order": 4,
+      "type": "ParseJson",
+      "description": "Parse user preferences including MPA-specific settings",
+      "runAfter": {
+        "Get_User_Preferences": ["Succeeded", "Failed"]
+      },
+      "inputs": {
+        "content": "@coalesce(body('Get_User_Preferences'), '{}')",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "experience_level": {"type": "string"},
+            "preferred_pathway": {"type": "string"},
+            "mpa_preferences": {"type": "object"}
+          }
+        }
+      }
+    },
+    "Build_MPA_Context": {
+      "order": 5,
+      "type": "Compose",
+      "description": "Build complete MPA session context",
+      "runAfter": {
+        "Parse_User_Preferences": ["Succeeded"]
+      },
+      "inputs": {
+        "session_id": "@{triggerBody()?['session_id']}",
+        "agent_type": "MPA_AGENT",
+        "pathway": "@coalesce(body('Parse_Session_Metadata')?['pathway'], body('Parse_User_Preferences')?['preferred_pathway'], 'GUIDED')",
+        "session_type": "@coalesce(body('Parse_Session_Metadata')?['session_type'], 'Planning')",
+        "user_context": {
+          "user_id": "@{triggerBody()?['user_id']}",
+          "experience_level": "@body('Parse_User_Preferences')?['experience_level']",
+          "preferences": "@body('Parse_User_Preferences')?['mpa_preferences']"
+        },
+        "client_context": {
+          "client_id": "@{triggerBody()?['client_id']}"
+        },
+        "plan_context": "@coalesce(outputs('Build_Existing_Plan_Context'), outputs('Build_New_Session_Context'))",
+        "available_actions": [
+          "start_new_plan",
+          "continue_plan",
+          "review_benchmarks",
+          "calculate_allocation",
+          "generate_document",
+          "run_projections"
+        ],
+        "initialized_at": "@{utcNow()}"
+      }
+    },
+    "Write_Audit_Log": {
+      "order": 6,
+      "type": "Dataverse",
+      "description": "Log session initialization to EAP audit",
+      "runAfter": {
+        "Build_MPA_Context": ["Succeeded"]
+      },
+      "inputs": {
+        "operation": "CreateRecord",
+        "entityName": "eap_audit",
+        "item": {
+          "eap_user_id": "@{triggerBody()?['user_id']}",
+          "eap_session_id": "@{triggerBody()?['session_id']}",
+          "eap_action_type": "SessionInitialized",
+          "eap_entity_type": "eap_session",
+          "eap_entity_id": "@{triggerBody()?['session_id']}",
+          "eap_description": "MPA session initialized with pathway @{outputs('Build_MPA_Context')?['pathway']}",
+          "eap_agent_source": "MPA_AGENT",
+          "eap_created_at": "@{utcNow()}"
+        }
+      }
+    },
+    "Return_MPA_Context": {
+      "order": 7,
+      "type": "Response",
+      "description": "Return MPA context to parent flow",
+      "runAfter": {
+        "Write_Audit_Log": ["Succeeded", "Failed"]
+      },
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "success": true,
+          "mpa_context": "@outputs('Build_MPA_Context')",
+          "agent_type": "MPA_AGENT"
+        }
+      }
+    }
+  },
+  "outputs": {
+    "mpa_context": {
+      "type": "object",
+      "description": "Complete MPA session context"
+    },
+    "agent_type": {
+      "type": "string",
+      "description": "Agent identifier (MPA_AGENT)"
+    }
+  },
+  "parameters": {
+    "EAPBaseUrl": {
+      "type": "string",
+      "description": "Base URL for EAP shared services"
+    },
+    "EAPFunctionsKey": {
+      "type": "securestring",
+      "description": "EAP functions API key"
+    }
+  },
+  "errorHandling": {
+    "retryPolicy": {
+      "type": "fixed",
+      "count": 2,
+      "interval": "PT5S"
+    },
+    "onError": "Return partial context with error flag"
+  }
+}

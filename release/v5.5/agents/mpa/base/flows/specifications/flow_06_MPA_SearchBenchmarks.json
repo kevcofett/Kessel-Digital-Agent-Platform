@@ -1,0 +1,121 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "flowName": "MPA_SearchBenchmarks",
+    "flowNumber": "06",
+    "displayName": "MPA - Search Benchmarks",
+    "description": "Search benchmark data from Dataverse",
+    "version": "1.0.0",
+    "author": "MPA Remediation",
+    "createdDate": "2025-12-28",
+    "tables": ["mpa_benchmark"],
+    "azureFunctions": []
+  },
+  "trigger": {
+    "type": "Request",
+    "kind": "Http",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "vertical": {"type": "string", "description": "Industry vertical (e.g., retail, ecommerce, general)"},
+        "channel": {"type": "string", "description": "Media channel (e.g., Paid Search, Paid Social)"},
+        "metric": {"type": "string", "description": "Metric type (e.g., CPM, CTR, CVR)"},
+        "limit": {"type": "integer", "description": "Max results to return", "default": 50}
+      }
+    }
+  },
+  "variables": [
+    {"name": "varSuccess", "type": "Boolean", "value": true},
+    {"name": "varErrorMessage", "type": "String", "value": ""},
+    {"name": "varFilter", "type": "String", "value": "mpa_isactive eq true"}
+  ],
+  "actions": {
+    "Scope_Try": {
+      "type": "Scope",
+      "actions": {
+        "Build_Filter_Vertical": {
+          "type": "If",
+          "expression": {"and": [{"not": {"equals": ["@triggerBody()?['vertical']", null]}}]},
+          "actions": {
+            "Append_Vertical_Filter": {
+              "type": "SetVariable",
+              "inputs": {"name": "varFilter", "value": "@concat(variables('varFilter'), ' and mpa_verticalcode eq ''', triggerBody()?['vertical'], '''')"}
+            }
+          },
+          "runAfter": {}
+        },
+        "Build_Filter_Channel": {
+          "type": "If",
+          "expression": {"and": [{"not": {"equals": ["@triggerBody()?['channel']", null]}}]},
+          "actions": {
+            "Append_Channel_Filter": {
+              "type": "SetVariable",
+              "inputs": {"name": "varFilter", "value": "@concat(variables('varFilter'), ' and mpa_channelcode eq ''', triggerBody()?['channel'], '''')"}
+            }
+          },
+          "runAfter": {"Build_Filter_Vertical": ["Succeeded"]}
+        },
+        "Build_Filter_Metric": {
+          "type": "If",
+          "expression": {"and": [{"not": {"equals": ["@triggerBody()?['metric']", null]}}]},
+          "actions": {
+            "Append_Metric_Filter": {
+              "type": "SetVariable",
+              "inputs": {"name": "varFilter", "value": "@concat(variables('varFilter'), ' and mpa_kpicode eq ''', triggerBody()?['metric'], '''')"}
+            }
+          },
+          "runAfter": {"Build_Filter_Channel": ["Succeeded"]}
+        },
+        "Query_Benchmarks": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "ListRecords", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {
+              "entityName": "mpa_benchmark",
+              "$filter": "@variables('varFilter')",
+              "$top": "@coalesce(triggerBody()?['limit'], 50)",
+              "$orderby": "mpa_verticalcode,mpa_channelcode,mpa_kpicode"
+            }
+          },
+          "runAfter": {"Build_Filter_Metric": ["Succeeded"]}
+        },
+        "Response_Success": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {"Content-Type": "application/json"},
+            "body": {
+              "status": "Success",
+              "count": "@length(outputs('Query_Benchmarks')?['body/value'])",
+              "benchmarks": "@outputs('Query_Benchmarks')?['body/value']",
+              "filters_applied": {"vertical": "@triggerBody()?['vertical']", "channel": "@triggerBody()?['channel']", "metric": "@triggerBody()?['metric']"}
+            }
+          },
+          "runAfter": {"Query_Benchmarks": ["Succeeded"]}
+        }
+      }
+    },
+    "Scope_Catch": {
+      "type": "Scope",
+      "runAfter": {"Scope_Try": ["Failed", "TimedOut"]},
+      "actions": {
+        "Set_varSuccess_False": {"type": "SetVariable", "inputs": {"name": "varSuccess", "value": false}, "runAfter": {}},
+        "Set_varErrorMessage": {"type": "SetVariable", "inputs": {"name": "varErrorMessage", "value": "@{result('Scope_Try')}"}, "runAfter": {"Set_varSuccess_False": ["Succeeded"]}},
+        "Create_ErrorLog_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {"entityName": "mpa_errorlog", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_SearchBenchmarks", "mpa_severity": 100000001, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()"}}
+          },
+          "runAfter": {"Set_varErrorMessage": ["Succeeded"]}
+        },
+        "Response_Error": {
+          "type": "Response",
+          "inputs": {"statusCode": 500, "headers": {"Content-Type": "application/json"}, "body": {"status": "Error", "message": "Failed to search benchmarks", "error_details": "@variables('varErrorMessage')"}},
+          "runAfter": {"Create_ErrorLog_Record": ["Succeeded"]}
+        }
+      }
+    }
+  },
+  "connectionReferences": {"shared_commondataserviceforapps": {"connectionName": "shared_commondataserviceforapps", "source": "Embedded", "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps", "tier": "Standard"}}
+}

@@ -1,0 +1,222 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "flowName": "MPA_ValidatePlan",
+    "flowNumber": "04",
+    "displayName": "MPA - Validate Plan",
+    "description": "Validate plan against gate rules using Azure Function",
+    "version": "1.0.0",
+    "author": "MPA Remediation",
+    "createdDate": "2025-12-28",
+    "tables": ["mpa_mediaplan", "mpa_plandata"],
+    "azureFunctions": ["ValidateGate"]
+  },
+  "trigger": {
+    "type": "Request",
+    "kind": "Http",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "plan_id": {
+          "type": "string",
+          "description": "Media plan ID to validate"
+        },
+        "gate_number": {
+          "type": "integer",
+          "description": "Gate number to validate (1-4)",
+          "minimum": 1,
+          "maximum": 4
+        }
+      },
+      "required": ["plan_id", "gate_number"]
+    }
+  },
+  "variables": [
+    {
+      "name": "varSuccess",
+      "type": "Boolean",
+      "value": true
+    },
+    {
+      "name": "varErrorMessage",
+      "type": "String",
+      "value": ""
+    }
+  ],
+  "actions": {
+    "Scope_Try": {
+      "type": "Scope",
+      "actions": {
+        "Get_Plan_Details": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_mediaplan",
+              "recordId": "@triggerBody()?['plan_id']"
+            }
+          },
+          "runAfter": {}
+        },
+        "Get_Plan_Sections": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_plandata",
+              "$filter": "mpa_plan_id eq '@{triggerBody()?['plan_id']}'"
+            }
+          },
+          "runAfter": {
+            "Get_Plan_Details": ["Succeeded"]
+          }
+        },
+        "Call_ValidateGate_Function": {
+          "type": "Http",
+          "inputs": {
+            "method": "POST",
+            "uri": "https://mpa-functions-prod.azurewebsites.net/api/validate-gate",
+            "headers": {
+              "Content-Type": "application/json",
+              "x-functions-key": "@parameters('FunctionKey')"
+            },
+            "body": {
+              "plan_id": "@triggerBody()?['plan_id']",
+              "gate_number": "@triggerBody()?['gate_number']",
+              "plan_data": {
+                "campaign_name": "@outputs('Get_Plan_Details')?['body/mpa_campaign_name']",
+                "budget": "@outputs('Get_Plan_Details')?['body/mpa_budget']",
+                "objective": "@outputs('Get_Plan_Details')?['body/mpa_objective']",
+                "start_date": "@outputs('Get_Plan_Details')?['body/mpa_start_date']",
+                "end_date": "@outputs('Get_Plan_Details')?['body/mpa_end_date']",
+                "pathway": "@outputs('Get_Plan_Details')?['body/mpa_pathway']",
+                "current_step": "@outputs('Get_Plan_Details')?['body/mpa_current_step']"
+              },
+              "sections": "@outputs('Get_Plan_Sections')?['body/value']"
+            },
+            "retryPolicy": {
+              "type": "exponential",
+              "count": 3,
+              "interval": "PT5S",
+              "maximumInterval": "PT1M"
+            }
+          },
+          "runAfter": {
+            "Get_Plan_Sections": ["Succeeded"]
+          }
+        },
+        "Response_Success": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "status": "Success",
+              "plan_id": "@triggerBody()?['plan_id']",
+              "gate_number": "@triggerBody()?['gate_number']",
+              "validation_result": "@body('Call_ValidateGate_Function')",
+              "validated_at": "@utcNow()"
+            }
+          },
+          "runAfter": {
+            "Call_ValidateGate_Function": ["Succeeded"]
+          }
+        }
+      }
+    },
+    "Scope_Catch": {
+      "type": "Scope",
+      "runAfter": {
+        "Scope_Try": ["Failed", "TimedOut"]
+      },
+      "actions": {
+        "Set_varSuccess_False": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "varSuccess",
+            "value": false
+          },
+          "runAfter": {}
+        },
+        "Set_varErrorMessage": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "varErrorMessage",
+            "value": "@{result('Scope_Try')}"
+          },
+          "runAfter": {
+            "Set_varSuccess_False": ["Succeeded"]
+          }
+        },
+        "Create_ErrorLog_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_errorlog",
+              "item": {
+                "mpa_error_type": "FlowError",
+                "mpa_error_message": "@variables('varErrorMessage')",
+                "mpa_source_flow": "MPA_ValidatePlan",
+                "mpa_severity": 100000002,
+                "mpa_is_resolved": false,
+                "mpa_occurred_at": "@utcNow()",
+                "mpa_plan_id": "@triggerBody()?['plan_id']",
+                "mpa_request_data": "@string(triggerBody())"
+              }
+            }
+          },
+          "runAfter": {
+            "Set_varErrorMessage": ["Succeeded"]
+          }
+        },
+        "Response_Error": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 500,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "status": "Error",
+              "message": "Failed to validate plan",
+              "error_details": "@variables('varErrorMessage')"
+            }
+          },
+          "runAfter": {
+            "Create_ErrorLog_Record": ["Succeeded"]
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "FunctionKey": {
+      "type": "String",
+      "defaultValue": "",
+      "description": "Azure Function host key - retrieve from Key Vault"
+    }
+  },
+  "connectionReferences": {
+    "shared_commondataserviceforapps": {
+      "connectionName": "shared_commondataserviceforapps",
+      "source": "Embedded",
+      "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+      "tier": "Standard"
+    }
+  }
+}

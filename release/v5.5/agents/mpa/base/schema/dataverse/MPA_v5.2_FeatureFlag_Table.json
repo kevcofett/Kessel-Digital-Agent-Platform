@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MPA Feature Flag Table Schema",
+  "description": "Dataverse table definition for MPA feature flags",
+  "type": "object",
+  "metadata": {
+    "version": "5.2.0",
+    "created": "2026-01-01",
+    "purpose": "P0-001 Feature Flag System"
+  },
+  "table": {
+    "logicalName": "mpa_featureflag",
+    "displayName": "MPA Feature Flag",
+    "pluralName": "MPA Feature Flags",
+    "description": "Feature flags for controlling MPA functionality in restricted environments",
+    "primaryColumn": "mpa_name",
+    "ownership": "Organization",
+    "isActivity": false
+  },
+  "fields": [
+    {
+      "logicalName": "mpa_featureflagid",
+      "displayName": "Feature Flag ID",
+      "type": "Uniqueidentifier",
+      "isPrimaryKey": true,
+      "required": true
+    },
+    {
+      "logicalName": "mpa_name",
+      "displayName": "Flag Name",
+      "type": "SingleLineOfText",
+      "maxLength": 100,
+      "required": true,
+      "description": "Unique identifier for the feature flag (e.g., ENABLE_WEB_SEARCH)"
+    },
+    {
+      "logicalName": "mpa_description",
+      "displayName": "Description",
+      "type": "MultilineText",
+      "maxLength": 2000,
+      "required": false,
+      "description": "Human-readable description of what the flag controls"
+    },
+    {
+      "logicalName": "mpa_isenabled",
+      "displayName": "Is Enabled",
+      "type": "TwoOptions",
+      "required": true,
+      "defaultValue": true,
+      "description": "Master switch - if false, feature is disabled globally"
+    },
+    {
+      "logicalName": "mpa_rolloutpercentage",
+      "displayName": "Rollout Percentage",
+      "type": "WholeNumber",
+      "minValue": 0,
+      "maxValue": 100,
+      "required": false,
+      "defaultValue": 100,
+      "description": "Percentage of users/clients to enable (0-100)"
+    },
+    {
+      "logicalName": "mpa_allowedusers",
+      "displayName": "Allowed Users",
+      "type": "MultilineText",
+      "maxLength": 4000,
+      "required": false,
+      "description": "Comma-separated list of user IDs always allowed"
+    },
+    {
+      "logicalName": "mpa_allowedclients",
+      "displayName": "Allowed Clients",
+      "type": "MultilineText",
+      "maxLength": 4000,
+      "required": false,
+      "description": "Comma-separated list of client IDs always allowed"
+    },
+    {
+      "logicalName": "mpa_startdate",
+      "displayName": "Start Date",
+      "type": "DateOnly",
+      "required": false,
+      "description": "Date when flag becomes active (null = immediately)"
+    },
+    {
+      "logicalName": "mpa_enddate",
+      "displayName": "End Date",
+      "type": "DateOnly",
+      "required": false,
+      "description": "Date when flag expires (null = never)"
+    },
+    {
+      "logicalName": "mpa_category",
+      "displayName": "Category",
+      "type": "Choice",
+      "required": false,
+      "options": [
+        {"value": 100000000, "label": "API Integration"},
+        {"value": 100000001, "label": "Web Search"},
+        {"value": 100000002, "label": "External Data"},
+        {"value": 100000003, "label": "Document Generation"},
+        {"value": 100000004, "label": "Analytics"},
+        {"value": 100000005, "label": "Experimental"}
+      ]
+    },
+    {
+      "logicalName": "mpa_createdon",
+      "displayName": "Created On",
+      "type": "DateTime",
+      "behavior": "UserLocal",
+      "required": false
+    },
+    {
+      "logicalName": "mpa_modifiedon",
+      "displayName": "Modified On",
+      "type": "DateTime",
+      "behavior": "UserLocal",
+      "required": false
+    }
+  ],
+  "seedData": [
+    {
+      "mpa_name": "ENABLE_WEB_SEARCH",
+      "mpa_description": "Enable web search capability for research queries",
+      "mpa_isenabled": true,
+      "mpa_rolloutpercentage": 100,
+      "mpa_category": 100000001
+    },
+    {
+      "mpa_name": "ENABLE_EXTERNAL_API",
+      "mpa_description": "Enable calls to external benchmark/data APIs",
+      "mpa_isenabled": true,
+      "mpa_rolloutpercentage": 100,
+      "mpa_category": 100000000
+    },
+    {
+      "mpa_name": "ENABLE_DOCUMENT_EXPORT",
+      "mpa_description": "Enable exporting plans to Word/PDF",
+      "mpa_isenabled": true,
+      "mpa_rolloutpercentage": 100,
+      "mpa_category": 100000003
+    },
+    {
+      "mpa_name": "ENABLE_SPO_CALCULATION",
+      "mpa_description": "Enable Supply Path Optimization calculations",
+      "mpa_isenabled": true,
+      "mpa_rolloutpercentage": 100,
+      "mpa_category": 100000002
+    },
+    {
+      "mpa_name": "ENABLE_BENCHMARK_LOOKUP",
+      "mpa_description": "Enable benchmark data lookups from Dataverse",
+      "mpa_isenabled": true,
+      "mpa_rolloutpercentage": 100,
+      "mpa_category": 100000002
+    }
+  ]
+}

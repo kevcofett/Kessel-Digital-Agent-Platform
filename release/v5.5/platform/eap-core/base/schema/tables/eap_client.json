@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EAP Client Table",
+  "description": "Client/organization context for agent interactions",
+  "tableName": "eap_client",
+  "tableLogicalName": "eap_client",
+  "primaryKey": "eap_clientid",
+  "primaryNameColumn": "eap_clientname",
+  "columns": [
+    {
+      "logicalName": "eap_clientid",
+      "displayName": "Client ID",
+      "type": "Uniqueidentifier",
+      "required": true
+    },
+    {
+      "logicalName": "eap_clientcode",
+      "displayName": "Client Code",
+      "type": "String",
+      "maxLength": 50,
+      "required": true,
+      "description": "Short identifier for client"
+    },
+    {
+      "logicalName": "eap_clientname",
+      "displayName": "Client Name",
+      "type": "String",
+      "maxLength": 200,
+      "required": true
+    },
+    {
+      "logicalName": "eap_industry",
+      "displayName": "Industry",
+      "type": "String",
+      "maxLength": 100,
+      "required": false
+    },
+    {
+      "logicalName": "eap_vertical",
+      "displayName": "Vertical",
+      "type": "String",
+      "maxLength": 100,
+      "required": false
+    },
+    {
+      "logicalName": "eap_status",
+      "displayName": "Status",
+      "type": "Choice",
+      "options": [
+        { "value": 1, "label": "Active" },
+        { "value": 2, "label": "Inactive" }
+      ],
+      "defaultValue": 1,
+      "required": true
+    },
+    {
+      "logicalName": "eap_metadata",
+      "displayName": "Metadata JSON",
+      "type": "Memo",
+      "required": false,
+      "description": "Client-specific configuration and metadata"
+    }
+  ]
+}

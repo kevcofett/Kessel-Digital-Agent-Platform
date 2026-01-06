@@ -1,0 +1,79 @@
+{
+  "table_name": "eap_session",
+  "display_name": "EAP Session",
+  "description": "Shared session management across all agents",
+  "schema_name": "eap_session",
+  "primary_column": "eap_sessioncode",
+  "columns": [
+    {
+      "name": "eap_sessioncode",
+      "display_name": "Session Code",
+      "type": "Text",
+      "max_length": 50,
+      "required": true,
+      "description": "Unique session identifier"
+    },
+    {
+      "name": "eap_userid",
+      "display_name": "User ID",
+      "type": "Lookup",
+      "target_table": "eap_user",
+      "required": true,
+      "description": "Reference to EAP user"
+    },
+    {
+      "name": "eap_clientid",
+      "display_name": "Client ID",
+      "type": "Lookup",
+      "target_table": "eap_client",
+      "required": false,
+      "description": "Reference to client context"
+    },
+    {
+      "name": "eap_agentcode",
+      "display_name": "Agent Code",
+      "type": "Text",
+      "max_length": 20,
+      "required": true,
+      "description": "Which agent owns this session (MPA, CA, etc.)"
+    },
+    {
+      "name": "eap_status",
+      "display_name": "Status",
+      "type": "Choice",
+      "options": ["active", "completed", "abandoned", "error"],
+      "default": "active",
+      "required": true
+    },
+    {
+      "name": "eap_startedat",
+      "display_name": "Started At",
+      "type": "DateTime",
+      "required": true
+    },
+    {
+      "name": "eap_completedat",
+      "display_name": "Completed At",
+      "type": "DateTime",
+      "required": false
+    },
+    {
+      "name": "eap_sessiondata",
+      "display_name": "Session Data",
+      "type": "Text",
+      "max_length": 1048576,
+      "required": false,
+      "description": "JSON blob for agent-specific session state"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_session_user",
+      "columns": ["eap_userid", "eap_status"]
+    },
+    {
+      "name": "idx_session_agent",
+      "columns": ["eap_agentcode", "eap_status"]
+    }
+  ]
+}

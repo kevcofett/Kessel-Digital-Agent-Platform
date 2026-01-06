@@ -1,0 +1,283 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "flowName": "MPA_SaveSection",
+    "flowNumber": "03",
+    "displayName": "MPA - Save Section",
+    "description": "Save plan section data (upsert - create or update)",
+    "version": "1.0.0",
+    "author": "MPA Remediation",
+    "createdDate": "2025-12-28",
+    "tables": ["mpa_plandata", "mpa_mediaplan"],
+    "azureFunctions": []
+  },
+  "trigger": {
+    "type": "Request",
+    "kind": "Http",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "plan_id": {
+          "type": "string",
+          "description": "Media plan ID"
+        },
+        "section_type": {
+          "type": "string",
+          "description": "Type of section (e.g., objectives, audience, channels, budget, timeline)"
+        },
+        "section_data": {
+          "type": "string",
+          "description": "JSON string of section data"
+        },
+        "step_number": {
+          "type": "integer",
+          "description": "Current planning step number (optional)"
+        }
+      },
+      "required": ["plan_id", "section_type", "section_data"]
+    }
+  },
+  "variables": [
+    {
+      "name": "varSuccess",
+      "type": "Boolean",
+      "value": true
+    },
+    {
+      "name": "varErrorMessage",
+      "type": "String",
+      "value": ""
+    },
+    {
+      "name": "varIsUpdate",
+      "type": "Boolean",
+      "value": false
+    }
+  ],
+  "actions": {
+    "Scope_Try": {
+      "type": "Scope",
+      "actions": {
+        "Check_Existing_Section": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_plandata",
+              "$filter": "mpa_plan_id eq '@{triggerBody()?['plan_id']}' and mpa_section_type eq '@{triggerBody()?['section_type']}'",
+              "$top": 1
+            }
+          },
+          "runAfter": {}
+        },
+        "Condition_Section_Exists": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "greater": [
+                  "@length(outputs('Check_Existing_Section')?['body/value'])",
+                  0
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Update_Existing_Section": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "mpa_plandata",
+                  "recordId": "@first(outputs('Check_Existing_Section')?['body/value'])?['mpa_plandataid']",
+                  "item": {
+                    "mpa_section_data": "@triggerBody()?['section_data']",
+                    "mpa_updated_at": "@utcNow()"
+                  }
+                }
+              }
+            },
+            "Set_varIsUpdate_True": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "varIsUpdate",
+                "value": true
+              },
+              "runAfter": {
+                "Update_Existing_Section": ["Succeeded"]
+              }
+            }
+          },
+          "else": {
+            "actions": {
+              "Create_New_Section": {
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps",
+                    "operationId": "CreateRecord",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "mpa_plandata",
+                    "item": {
+                      "mpa_plan_id": "@triggerBody()?['plan_id']",
+                      "mpa_section_type": "@triggerBody()?['section_type']",
+                      "mpa_section_data": "@triggerBody()?['section_data']",
+                      "mpa_created_at": "@utcNow()"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Check_Existing_Section": ["Succeeded"]
+          }
+        },
+        "Condition_Update_Step": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "not": {
+                  "equals": [
+                    "@triggerBody()?['step_number']",
+                    null
+                  ]
+                }
+              }
+            ]
+          },
+          "actions": {
+            "Update_Plan_Current_Step": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "mpa_mediaplan",
+                  "recordId": "@triggerBody()?['plan_id']",
+                  "item": {
+                    "mpa_current_step": "@triggerBody()?['step_number']",
+                    "mpa_updated_at": "@utcNow()"
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Condition_Section_Exists": ["Succeeded"]
+          }
+        },
+        "Response_Success": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "status": "Success",
+              "action": "@if(variables('varIsUpdate'), 'updated', 'created')",
+              "section_type": "@triggerBody()?['section_type']",
+              "plan_id": "@triggerBody()?['plan_id']",
+              "saved_at": "@utcNow()"
+            }
+          },
+          "runAfter": {
+            "Condition_Update_Step": ["Succeeded"]
+          }
+        }
+      }
+    },
+    "Scope_Catch": {
+      "type": "Scope",
+      "runAfter": {
+        "Scope_Try": ["Failed", "TimedOut"]
+      },
+      "actions": {
+        "Set_varSuccess_False": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "varSuccess",
+            "value": false
+          },
+          "runAfter": {}
+        },
+        "Set_varErrorMessage": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "varErrorMessage",
+            "value": "@{result('Scope_Try')}"
+          },
+          "runAfter": {
+            "Set_varSuccess_False": ["Succeeded"]
+          }
+        },
+        "Create_ErrorLog_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_errorlog",
+              "item": {
+                "mpa_error_type": "FlowError",
+                "mpa_error_message": "@variables('varErrorMessage')",
+                "mpa_source_flow": "MPA_SaveSection",
+                "mpa_severity": 100000001,
+                "mpa_is_resolved": false,
+                "mpa_occurred_at": "@utcNow()",
+                "mpa_plan_id": "@triggerBody()?['plan_id']",
+                "mpa_request_data": "@string(triggerBody())"
+              }
+            }
+          },
+          "runAfter": {
+            "Set_varErrorMessage": ["Succeeded"]
+          }
+        },
+        "Response_Error": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 500,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "status": "Error",
+              "message": "Failed to save section",
+              "error_details": "@variables('varErrorMessage')"
+            }
+          },
+          "runAfter": {
+            "Create_ErrorLog_Record": ["Succeeded"]
+          }
+        }
+      }
+    }
+  },
+  "connectionReferences": {
+    "shared_commondataserviceforapps": {
+      "connectionName": "shared_commondataserviceforapps",
+      "source": "Embedded",
+      "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+      "tier": "Standard"
+    }
+  }
+}

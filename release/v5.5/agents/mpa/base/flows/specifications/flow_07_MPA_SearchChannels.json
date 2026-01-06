@@ -1,0 +1,120 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "flowName": "MPA_SearchChannels",
+    "flowNumber": "07",
+    "displayName": "MPA - Search Channels",
+    "description": "Search channel data from Dataverse",
+    "version": "1.0.0",
+    "author": "MPA Remediation",
+    "createdDate": "2025-12-28",
+    "tables": ["mpa_channel"],
+    "azureFunctions": []
+  },
+  "trigger": {
+    "type": "Request",
+    "kind": "Http",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "category": {"type": "string", "description": "Channel category (e.g., Search, Social, Display)"},
+        "search_term": {"type": "string", "description": "Search term for channel name"},
+        "funnel_position": {"type": "string", "description": "Funnel position filter"},
+        "limit": {"type": "integer", "default": 20}
+      }
+    }
+  },
+  "variables": [
+    {"name": "varSuccess", "type": "Boolean", "value": true},
+    {"name": "varErrorMessage", "type": "String", "value": ""},
+    {"name": "varFilter", "type": "String", "value": "mpa_isactive eq true"}
+  ],
+  "actions": {
+    "Scope_Try": {
+      "type": "Scope",
+      "actions": {
+        "Build_Filter_Category": {
+          "type": "If",
+          "expression": {"and": [{"not": {"equals": ["@triggerBody()?['category']", null]}}]},
+          "actions": {
+            "Append_Category_Filter": {
+              "type": "SetVariable",
+              "inputs": {"name": "varFilter", "value": "@concat(variables('varFilter'), ' and mpa_category eq ''', triggerBody()?['category'], '''')"}
+            }
+          },
+          "runAfter": {}
+        },
+        "Build_Filter_Search": {
+          "type": "If",
+          "expression": {"and": [{"not": {"equals": ["@triggerBody()?['search_term']", null]}}]},
+          "actions": {
+            "Append_Search_Filter": {
+              "type": "SetVariable",
+              "inputs": {"name": "varFilter", "value": "@concat(variables('varFilter'), ' and contains(mpa_newcolumn, ''', triggerBody()?['search_term'], ''')')"}
+            }
+          },
+          "runAfter": {"Build_Filter_Category": ["Succeeded"]}
+        },
+        "Build_Filter_Funnel": {
+          "type": "If",
+          "expression": {"and": [{"not": {"equals": ["@triggerBody()?['funnel_position']", null]}}]},
+          "actions": {
+            "Append_Funnel_Filter": {
+              "type": "SetVariable",
+              "inputs": {"name": "varFilter", "value": "@concat(variables('varFilter'), ' and mpa_funnelstage eq ''', triggerBody()?['funnel_position'], '''')"}
+            }
+          },
+          "runAfter": {"Build_Filter_Search": ["Succeeded"]}
+        },
+        "Query_Channels": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "ListRecords", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {
+              "entityName": "mpa_channel",
+              "$filter": "@variables('varFilter')",
+              "$top": "@coalesce(triggerBody()?['limit'], 20)",
+              "$orderby": "mpa_newcolumn"
+            }
+          },
+          "runAfter": {"Build_Filter_Funnel": ["Succeeded"]}
+        },
+        "Response_Success": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {"Content-Type": "application/json"},
+            "body": {
+              "status": "Success",
+              "count": "@length(outputs('Query_Channels')?['body/value'])",
+              "channels": "@outputs('Query_Channels')?['body/value']"
+            }
+          },
+          "runAfter": {"Query_Channels": ["Succeeded"]}
+        }
+      }
+    },
+    "Scope_Catch": {
+      "type": "Scope",
+      "runAfter": {"Scope_Try": ["Failed", "TimedOut"]},
+      "actions": {
+        "Set_varSuccess_False": {"type": "SetVariable", "inputs": {"name": "varSuccess", "value": false}, "runAfter": {}},
+        "Set_varErrorMessage": {"type": "SetVariable", "inputs": {"name": "varErrorMessage", "value": "@{result('Scope_Try')}"}, "runAfter": {"Set_varSuccess_False": ["Succeeded"]}},
+        "Create_ErrorLog_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
+            "parameters": {"entityName": "mpa_errorlog", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_SearchChannels", "mpa_severity": 100000001, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()"}}
+          },
+          "runAfter": {"Set_varErrorMessage": ["Succeeded"]}
+        },
+        "Response_Error": {
+          "type": "Response",
+          "inputs": {"statusCode": 500, "headers": {"Content-Type": "application/json"}, "body": {"status": "Error", "message": "Failed to search channels", "error_details": "@variables('varErrorMessage')"}},
+          "runAfter": {"Create_ErrorLog_Record": ["Succeeded"]}
+        }
+      }
+    }
+  },
+  "connectionReferences": {"shared_commondataserviceforapps": {"connectionName": "shared_commondataserviceforapps", "source": "Embedded", "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps", "tier": "Standard"}}
+}

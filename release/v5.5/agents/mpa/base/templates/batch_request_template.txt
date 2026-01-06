@@ -1,0 +1,238 @@
+================================================================================
+DATAVERSE BATCH REQUEST TEMPLATE
+================================================================================
+
+VERSION: 5.2
+DATE: December 30, 2025
+PURPOSE: Template for constructing Dataverse Web API batch requests
+
+================================================================================
+BASIC BATCH REQUEST (NO CHANGESET)
+================================================================================
+
+POST https://{org}.crm.dynamics.com/api/data/v9.2/$batch HTTP/1.1
+Authorization: Bearer {access_token}
+Content-Type: multipart/mixed; boundary=batch_{batch_id}
+OData-MaxVersion: 4.0
+OData-Version: 4.0
+
+--batch_{batch_id}
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+POST /api/data/v9.2/{entity_set_name} HTTP/1.1
+Content-Type: application/json
+
+{json_payload_1}
+--batch_{batch_id}
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+POST /api/data/v9.2/{entity_set_name} HTTP/1.1
+Content-Type: application/json
+
+{json_payload_2}
+--batch_{batch_id}--
+
+================================================================================
+BATCH REQUEST WITH CHANGESET (TRANSACTIONAL)
+================================================================================
+
+POST https://{org}.crm.dynamics.com/api/data/v9.2/$batch HTTP/1.1
+Authorization: Bearer {access_token}
+Content-Type: multipart/mixed; boundary=batch_{batch_id}
+OData-MaxVersion: 4.0
+OData-Version: 4.0
+
+--batch_{batch_id}
+Content-Type: multipart/mixed; boundary=changeset_{changeset_id}
+
+--changeset_{changeset_id}
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 1
+
+POST /api/data/v9.2/{entity_set_name} HTTP/1.1
+Content-Type: application/json
+
+{json_payload_1}
+--changeset_{changeset_id}
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 2
+
+POST /api/data/v9.2/{entity_set_name} HTTP/1.1
+Content-Type: application/json
+
+{json_payload_2_with_reference_to_1}
+--changeset_{changeset_id}--
+--batch_{batch_id}--
+
+================================================================================
+MPA MEDIA PLAN CREATION EXAMPLE
+================================================================================
+
+POST https://org5c737821.crm.dynamics.com/api/data/v9.2/$batch HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLC...
+Content-Type: multipart/mixed; boundary=batch_mpa_plan_001
+OData-MaxVersion: 4.0
+OData-Version: 4.0
+
+--batch_mpa_plan_001
+Content-Type: multipart/mixed; boundary=changeset_mpa_alloc_001
+
+--changeset_mpa_alloc_001
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 1
+
+POST /api/data/v9.2/mpa_mediaplan HTTP/1.1
+Content-Type: application/json
+
+{
+  "mpa_name": "Q1 2026 Retail Campaign",
+  "mpa_clientid": "client-retail-001",
+  "mpa_budget": 150000,
+  "mpa_startdate": "2026-01-01T00:00:00Z",
+  "mpa_enddate": "2026-03-31T23:59:59Z",
+  "mpa_status": 100000000,
+  "mpa_vertical": "retail"
+}
+--changeset_mpa_alloc_001
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 2
+
+POST /api/data/v9.2/mpa_allocations HTTP/1.1
+Content-Type: application/json
+
+{
+  "mpa_planid@odata.bind": "$1",
+  "mpa_channelid": "paid_search",
+  "mpa_amount": 60000,
+  "mpa_percentage": 40
+}
+--changeset_mpa_alloc_001
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 3
+
+POST /api/data/v9.2/mpa_allocations HTTP/1.1
+Content-Type: application/json
+
+{
+  "mpa_planid@odata.bind": "$1",
+  "mpa_channelid": "paid_social",
+  "mpa_amount": 45000,
+  "mpa_percentage": 30
+}
+--changeset_mpa_alloc_001
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 4
+
+POST /api/data/v9.2/mpa_allocations HTTP/1.1
+Content-Type: application/json
+
+{
+  "mpa_planid@odata.bind": "$1",
+  "mpa_channelid": "display",
+  "mpa_amount": 30000,
+  "mpa_percentage": 20
+}
+--changeset_mpa_alloc_001
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 5
+
+POST /api/data/v9.2/mpa_allocations HTTP/1.1
+Content-Type: application/json
+
+{
+  "mpa_planid@odata.bind": "$1",
+  "mpa_channelid": "video",
+  "mpa_amount": 15000,
+  "mpa_percentage": 10
+}
+--changeset_mpa_alloc_001--
+--batch_mpa_plan_001--
+
+================================================================================
+BULK UPDATE EXAMPLE (NO CHANGESET)
+================================================================================
+
+POST https://org5c737821.crm.dynamics.com/api/data/v9.2/$batch HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLC...
+Content-Type: multipart/mixed; boundary=batch_mpa_update_001
+OData-MaxVersion: 4.0
+OData-Version: 4.0
+
+--batch_mpa_update_001
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+PATCH /api/data/v9.2/mpa_performances(guid-1) HTTP/1.1
+Content-Type: application/json
+
+{
+  "mpa_impressions": 125000,
+  "mpa_clicks": 3750,
+  "mpa_conversions": 188
+}
+--batch_mpa_update_001
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+PATCH /api/data/v9.2/mpa_performances(guid-2) HTTP/1.1
+Content-Type: application/json
+
+{
+  "mpa_impressions": 98000,
+  "mpa_clicks": 2940,
+  "mpa_conversions": 147
+}
+--batch_mpa_update_001
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+PATCH /api/data/v9.2/mpa_performances(guid-3) HTTP/1.1
+Content-Type: application/json
+
+{
+  "mpa_impressions": 210000,
+  "mpa_clicks": 6300,
+  "mpa_conversions": 315
+}
+--batch_mpa_update_001--
+
+================================================================================
+PLACEHOLDER REFERENCE
+================================================================================
+
+VARIABLE              DESCRIPTION                           EXAMPLE
+--------------------------------------------------------------------------------
+{org}                 Dataverse organization name           org5c737821
+{access_token}        OAuth 2.0 bearer token                eyJ0eXAiOiJKV1QiLC...
+{batch_id}            Unique batch identifier               mpa_plan_001
+{changeset_id}        Unique changeset identifier           mpa_alloc_001
+{entity_set_name}     Plural entity name                    mpa_mediaplan
+{json_payload_N}      JSON record data                      See examples above
+$N                    Reference to Content-ID N             $1, $2, $3
+
+================================================================================
+NOTES
+================================================================================
+
+1. Line endings MUST be CRLF (carriage return + line feed)
+2. Batch boundary must be unique and match in header and body
+3. Each operation must be separated by --{boundary}
+4. Final boundary must end with -- (e.g., --batch_001--)
+5. Content-ID is required for references in change sets
+6. References use format: "{field}@odata.bind": "$N"
+7. Maximum 1000 operations per batch request
+8. Maximum 16 MB total payload size
+9. Timeout is 120 seconds
+
+================================================================================
+END OF TEMPLATE
+================================================================================

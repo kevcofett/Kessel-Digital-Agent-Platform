@@ -1,0 +1,252 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "name": "flow_08_mpa_SearchBenchmarks",
+    "displayName": "MPA - Search Benchmarks",
+    "description": "Searches and retrieves benchmark data from Dataverse. Supports filtering by vertical, channel, and metric. Includes feature flag check for external data access.",
+    "category": "Benchmarks",
+    "version": "1.2.0",
+    "author": "Kessel Digital",
+    "lastModified": "2026-01-01",
+    "eapIntegration": {
+      "auditTable": "eap_audit",
+      "agentSource": "MPA_AGENT"
+    }
+  },
+  "trigger": {
+    "type": "PowerVirtualAgents",
+    "description": "Triggered when user requests benchmark data",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "vertical": {
+            "type": "string",
+            "description": "Industry vertical filter"
+          },
+          "channel": {
+            "type": "string",
+            "description": "Media channel filter"
+          },
+          "metricType": {
+            "type": "string",
+            "description": "Metric type filter (CPM, CTR, CVR, etc.)"
+          },
+          "groupBy": {
+            "type": "string",
+            "description": "Group results by channel or vertical",
+            "enum": ["channel", "vertical"]
+          },
+          "userId": {
+            "type": "string",
+            "description": "User ID for feature flag evaluation"
+          },
+          "clientId": {
+            "type": "string",
+            "description": "Client ID for feature flag evaluation"
+          }
+        }
+      }
+    }
+  },
+  "actions": {
+    "Check_Feature_Flag": {
+      "order": 1,
+      "type": "Http",
+      "description": "Check if ENABLE_BENCHMARK_LOOKUP feature is enabled",
+      "inputs": {
+        "method": "GET",
+        "uri": "@{parameters('AzureFunctionsBaseUrl')}/api/features/ENABLE_BENCHMARK_LOOKUP",
+        "headers": {
+          "x-functions-key": "@{parameters('AzureFunctionsKey')}"
+        },
+        "queries": {
+          "user_id": "@{triggerBody()?['userId']}",
+          "client_id": "@{triggerBody()?['clientId']}"
+        }
+      }
+    },
+    "Feature_Enabled_Condition": {
+      "type": "Condition",
+      "description": "Branch based on feature flag status",
+      "runAfter": {
+        "Check_Feature_Flag": ["Succeeded"]
+      },
+      "expression": {
+        "equals": [
+          "@body('Check_Feature_Flag')?['enabled']",
+          true
+        ]
+      },
+      "actions": {
+        "Call_SearchBenchmarks_Function": {
+          "order": 2,
+          "type": "Http",
+          "description": "Call Azure Function to search benchmarks",
+          "inputs": {
+            "method": "POST",
+            "uri": "@{parameters('AzureFunctionsBaseUrl')}/api/SearchBenchmarks",
+            "headers": {
+              "Content-Type": "application/json",
+              "x-functions-key": "@{parameters('AzureFunctionsKey')}"
+            },
+            "body": {
+              "vertical": "@{triggerBody()?['vertical']}",
+              "channel": "@{triggerBody()?['channel']}",
+              "metric_type": "@{triggerBody()?['metricType']}",
+              "group_by": "@{triggerBody()?['groupBy']}"
+            }
+          }
+        },
+        "Parse_Benchmarks": {
+          "order": 3,
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('Call_SearchBenchmarks_Function')",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": { "type": "string" },
+                "benchmarks": {},
+                "metadata": { "type": "object" }
+              }
+            }
+          },
+          "runAfter": {
+            "Call_SearchBenchmarks_Function": ["Succeeded"]
+          }
+        },
+        "Format_For_Display": {
+          "order": 4,
+          "type": "Compose",
+          "description": "Format benchmarks for Copilot display",
+          "inputs": {
+            "benchmarks": "@body('Parse_Benchmarks')?['benchmarks']",
+            "totalResults": "@{body('Parse_Benchmarks')?['metadata']?['total_results']}",
+            "filtersApplied": {
+              "vertical": "@{triggerBody()?['vertical']}",
+              "channel": "@{triggerBody()?['channel']}",
+              "metricType": "@{triggerBody()?['metricType']}"
+            },
+            "source": "live"
+          },
+          "runAfter": {
+            "Parse_Benchmarks": ["Succeeded"]
+          }
+        },
+        "Write_EAP_Audit": {
+          "order": 5,
+          "type": "Dataverse",
+          "description": "Log benchmark search to EAP shared audit table",
+          "inputs": {
+            "operation": "CreateRecord",
+            "entityName": "eap_audit",
+            "item": {
+              "eap_user_id": "@{triggerBody()?['userId']}",
+              "eap_action_type": "BenchmarkSearched",
+              "eap_entity_type": "mpa_verticalbenchmarks",
+              "eap_description": "Benchmark search: vertical=@{triggerBody()?['vertical']}, channel=@{triggerBody()?['channel']}",
+              "eap_agent_source": "MPA_AGENT",
+              "eap_created_at": "@{utcNow()}"
+            }
+          },
+          "runAfter": {
+            "Format_For_Display": ["Succeeded"]
+          }
+        },
+        "Return_Benchmarks": {
+          "order": 6,
+          "type": "Response",
+          "inputs": {
+            "statusCode": 200,
+            "body": "@outputs('Format_For_Display')"
+          },
+          "runAfter": {
+            "Write_EAP_Audit": ["Succeeded"]
+          }
+        }
+      },
+      "else": {
+        "actions": {
+          "Return_Fallback_Data": {
+            "type": "Response",
+            "description": "Return fallback response when feature is disabled",
+            "inputs": {
+              "statusCode": 200,
+              "body": {
+                "source": "fallback",
+                "message": "Benchmark lookup feature is currently disabled. Using default benchmarks.",
+                "featureFlag": "ENABLE_BENCHMARK_LOOKUP",
+                "featureReason": "@{body('Check_Feature_Flag')?['reason']}",
+                "benchmarks": "@parameters('DefaultBenchmarks')",
+                "filtersApplied": {
+                  "vertical": "@{triggerBody()?['vertical']}",
+                  "channel": "@{triggerBody()?['channel']}",
+                  "metricType": "@{triggerBody()?['metricType']}"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "outputs": {
+    "benchmarks": {
+      "type": "object",
+      "description": "Benchmark data"
+    },
+    "totalResults": {
+      "type": "integer",
+      "description": "Number of results found"
+    },
+    "source": {
+      "type": "string",
+      "description": "Data source (live or fallback)"
+    }
+  },
+  "parameters": {
+    "AzureFunctionsBaseUrl": {
+      "type": "string",
+      "description": "Base URL for Azure Functions"
+    },
+    "AzureFunctionsKey": {
+      "type": "securestring",
+      "description": "Azure Functions API key"
+    },
+    "DefaultBenchmarks": {
+      "type": "object",
+      "description": "Fallback benchmark data when feature is disabled",
+      "defaultValue": {
+        "Display": {
+          "CPM": { "min": 2.00, "median": 5.00, "max": 15.00 },
+          "CTR": { "min": 0.05, "median": 0.10, "max": 0.30 },
+          "Viewability": { "min": 50, "median": 65, "max": 85 }
+        },
+        "Video": {
+          "CPM": { "min": 8.00, "median": 15.00, "max": 35.00 },
+          "VCR": { "min": 50, "median": 70, "max": 90 },
+          "CTR": { "min": 0.20, "median": 0.50, "max": 1.50 }
+        },
+        "Search": {
+          "CPC": { "min": 0.50, "median": 2.00, "max": 10.00 },
+          "CTR": { "min": 1.50, "median": 3.50, "max": 8.00 },
+          "CVR": { "min": 1.00, "median": 3.00, "max": 8.00 }
+        },
+        "Social": {
+          "CPM": { "min": 3.00, "median": 8.00, "max": 20.00 },
+          "CTR": { "min": 0.50, "median": 1.20, "max": 3.00 },
+          "EngagementRate": { "min": 1.00, "median": 3.00, "max": 8.00 }
+        }
+      }
+    }
+  },
+  "errorHandling": {
+    "retryPolicy": {
+      "type": "fixed",
+      "count": 2,
+      "interval": "PT5S"
+    },
+    "onError": "Call flow_11_LogError with error details"
+  }
+}

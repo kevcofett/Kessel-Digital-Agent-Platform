@@ -1,0 +1,267 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "flowName": "MPA_CreatePlan",
+    "flowNumber": "02",
+    "displayName": "MPA - Create Plan",
+    "description": "Create a new media plan with initial version",
+    "version": "1.0.0",
+    "author": "MPA Remediation",
+    "createdDate": "2025-12-28",
+    "tables": ["mpa_mediaplan", "mpa_planversion", "eap_session"],
+    "azureFunctions": []
+  },
+  "trigger": {
+    "type": "Request",
+    "kind": "Http",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "description": "Session ID from InitializeSession"
+        },
+        "client_id": {
+          "type": "string",
+          "description": "Client ID for the plan"
+        },
+        "campaign_name": {
+          "type": "string",
+          "description": "Name of the campaign"
+        },
+        "pathway": {
+          "type": "string",
+          "enum": ["EXPRESS", "GUIDED", "STANDARD", "AUDIT"]
+        },
+        "budget": {
+          "type": "number",
+          "description": "Total campaign budget"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date",
+          "description": "Campaign start date"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date",
+          "description": "Campaign end date"
+        },
+        "objective": {
+          "type": "string",
+          "description": "Primary campaign objective"
+        }
+      },
+      "required": ["session_id", "client_id", "campaign_name"]
+    }
+  },
+  "variables": [
+    {
+      "name": "varSuccess",
+      "type": "Boolean",
+      "value": true
+    },
+    {
+      "name": "varErrorMessage",
+      "type": "String",
+      "value": ""
+    },
+    {
+      "name": "varPlanCode",
+      "type": "String",
+      "value": ""
+    }
+  ],
+  "actions": {
+    "Scope_Try": {
+      "type": "Scope",
+      "actions": {
+        "Generate_Plan_Code": {
+          "type": "Compose",
+          "inputs": "@concat('PLN-', substring(guid(), 0, 8))",
+          "runAfter": {}
+        },
+        "Set_varPlanCode": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "varPlanCode",
+            "value": "@outputs('Generate_Plan_Code')"
+          },
+          "runAfter": {
+            "Generate_Plan_Code": ["Succeeded"]
+          }
+        },
+        "Create_MediaPlan_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_mediaplan",
+              "item": {
+                "mpa_plan_code": "@variables('varPlanCode')",
+                "mpa_campaign_name": "@triggerBody()?['campaign_name']",
+                "mpa_client_id": "@triggerBody()?['client_id']",
+                "mpa_session_id": "@triggerBody()?['session_id']",
+                "mpa_pathway": "@triggerBody()?['pathway']",
+                "mpa_budget": "@triggerBody()?['budget']",
+                "mpa_start_date": "@triggerBody()?['start_date']",
+                "mpa_end_date": "@triggerBody()?['end_date']",
+                "mpa_objective": "@triggerBody()?['objective']",
+                "mpa_status": 100000000,
+                "mpa_current_step": 1,
+                "mpa_created_at": "@utcNow()"
+              }
+            }
+          },
+          "runAfter": {
+            "Set_varPlanCode": ["Succeeded"]
+          }
+        },
+        "Create_Initial_Version": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_planversion",
+              "item": {
+                "mpa_version_number": 1,
+                "mpa_plan_id": "@outputs('Create_MediaPlan_Record')?['body/mpa_mediaplanid']",
+                "mpa_is_current": true,
+                "mpa_created_at": "@utcNow()",
+                "mpa_change_summary": "Initial plan creation"
+              }
+            }
+          },
+          "runAfter": {
+            "Create_MediaPlan_Record": ["Succeeded"]
+          }
+        },
+        "Update_Session_With_Plan": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "UpdateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "eap_session",
+              "recordId": "@triggerBody()?['session_id']",
+              "item": {
+                "eap_session_data": "@json(concat('{\"plan_id\":\"', outputs('Create_MediaPlan_Record')?['body/mpa_mediaplanid'], '\",\"plan_code\":\"', variables('varPlanCode'), '\"}'))"
+              }
+            }
+          },
+          "runAfter": {
+            "Create_Initial_Version": ["Succeeded"]
+          }
+        },
+        "Response_Success": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "status": "Success",
+              "plan_id": "@outputs('Create_MediaPlan_Record')?['body/mpa_mediaplanid']",
+              "plan_code": "@variables('varPlanCode')",
+              "version_id": "@outputs('Create_Initial_Version')?['body/mpa_planversionid']",
+              "version_number": 1,
+              "created_at": "@utcNow()"
+            }
+          },
+          "runAfter": {
+            "Update_Session_With_Plan": ["Succeeded"]
+          }
+        }
+      }
+    },
+    "Scope_Catch": {
+      "type": "Scope",
+      "runAfter": {
+        "Scope_Try": ["Failed", "TimedOut"]
+      },
+      "actions": {
+        "Set_varSuccess_False": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "varSuccess",
+            "value": false
+          },
+          "runAfter": {}
+        },
+        "Set_varErrorMessage": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "varErrorMessage",
+            "value": "@{result('Scope_Try')}"
+          },
+          "runAfter": {
+            "Set_varSuccess_False": ["Succeeded"]
+          }
+        },
+        "Create_ErrorLog_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_errorlog",
+              "item": {
+                "mpa_error_type": "FlowError",
+                "mpa_error_message": "@variables('varErrorMessage')",
+                "mpa_source_flow": "MPA_CreatePlan",
+                "mpa_severity": 100000002,
+                "mpa_is_resolved": false,
+                "mpa_occurred_at": "@utcNow()",
+                "mpa_session_id": "@triggerBody()?['session_id']",
+                "mpa_request_data": "@string(triggerBody())"
+              }
+            }
+          },
+          "runAfter": {
+            "Set_varErrorMessage": ["Succeeded"]
+          }
+        },
+        "Response_Error": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 500,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "status": "Error",
+              "message": "Failed to create media plan",
+              "error_details": "@variables('varErrorMessage')"
+            }
+          },
+          "runAfter": {
+            "Create_ErrorLog_Record": ["Succeeded"]
+          }
+        }
+      }
+    }
+  },
+  "connectionReferences": {
+    "shared_commondataserviceforapps": {
+      "connectionName": "shared_commondataserviceforapps",
+      "source": "Embedded",
+      "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+      "tier": "Standard"
+    }
+  }
+}

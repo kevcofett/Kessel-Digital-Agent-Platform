@@ -1,0 +1,178 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "name": "flow_09_mpa_CalculateGap",
+    "displayName": "MPA - Calculate Gap",
+    "description": "Analyzes gaps between target KPIs and projections. Provides recommendations using the 6 Options Framework.",
+    "category": "Analysis",
+    "version": "1.1.0",
+    "author": "Kessel Digital",
+    "lastModified": "2026-01-01",
+    "eapIntegration": {
+      "auditTable": "eap_audit",
+      "agentSource": "MPA_AGENT"
+    }
+  },
+  "trigger": {
+    "type": "PowerVirtualAgents",
+    "description": "Triggered when user requests gap analysis",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "targets": {
+            "type": "object",
+            "description": "Target KPI values",
+            "properties": {
+              "impressions": { "type": "number" },
+              "clicks": { "type": "number" },
+              "conversions": { "type": "number" },
+              "roas": { "type": "number" }
+            }
+          },
+          "projections": {
+            "type": "object",
+            "description": "Projected KPI values"
+          },
+          "budget": {
+            "type": "number",
+            "description": "Campaign budget"
+          },
+          "channels": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Channels in the plan"
+          }
+        },
+        "required": ["targets", "projections"]
+      }
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "name": "Call_CalculateGap_Function",
+      "type": "Http",
+      "description": "Call Azure Function to calculate gaps",
+      "inputs": {
+        "method": "POST",
+        "uri": "@{parameters('AzureFunctionsBaseUrl')}/api/CalculateGap",
+        "headers": {
+          "Content-Type": "application/json",
+          "x-functions-key": "@{parameters('AzureFunctionsKey')}"
+        },
+        "body": {
+          "targets": "@{triggerBody()?['targets']}",
+          "projections": "@{triggerBody()?['projections']}",
+          "budget": "@{triggerBody()?['budget']}",
+          "channels": "@{triggerBody()?['channels']}"
+        }
+      }
+    },
+    {
+      "order": 2,
+      "name": "Parse_Gap_Analysis",
+      "type": "ParseJson",
+      "inputs": {
+        "content": "@body('Call_CalculateGap_Function')",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string" },
+            "gapAnalysis": {
+              "type": "object",
+              "properties": {
+                "overallStatus": { "type": "string" },
+                "byMetric": { "type": "object" },
+                "criticalGaps": { "type": "array" }
+              }
+            },
+            "recommendations": { "type": "array" }
+          }
+        }
+      },
+      "runAfter": ["Call_CalculateGap_Function"]
+    },
+    {
+      "order": 3,
+      "name": "Format_Recommendations",
+      "type": "Select",
+      "description": "Format recommendations for display",
+      "inputs": {
+        "from": "@body('Parse_Gap_Analysis')?['recommendations']",
+        "select": {
+          "metric": "@item()?['metric']",
+          "gapPercent": "@item()?['gap_percent']",
+          "topOptions": "@take(item()?['options'], 3)"
+        }
+      },
+      "runAfter": ["Parse_Gap_Analysis"]
+    },
+    {
+      "order": 4,
+      "name": "Write_EAP_Audit",
+      "type": "Dataverse",
+      "description": "Log gap analysis to EAP shared audit table",
+      "inputs": {
+        "operation": "CreateRecord",
+        "entityName": "eap_audit",
+        "item": {
+          "eap_action_type": "GapAnalysisCalculated",
+          "eap_entity_type": "mpa_mediaplan",
+          "eap_description": "Gap analysis completed: @{body('Parse_Gap_Analysis')?['gapAnalysis']?['overallStatus']}",
+          "eap_agent_source": "MPA_AGENT",
+          "eap_created_at": "@{utcNow()}"
+        }
+      },
+      "runAfter": ["Format_Recommendations"]
+    },
+    {
+      "order": 5,
+      "name": "Return_Analysis",
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "overallStatus": "@{body('Parse_Gap_Analysis')?['gapAnalysis']?['overallStatus']}",
+          "criticalGaps": "@{body('Parse_Gap_Analysis')?['gapAnalysis']?['criticalGaps']}",
+          "gapsByMetric": "@{body('Parse_Gap_Analysis')?['gapAnalysis']?['byMetric']}",
+          "recommendations": "@{body('Format_Recommendations')}",
+          "message": "@{if(equals(body('Parse_Gap_Analysis')?['gapAnalysis']?['overallStatus'], 'on_track'), 'All metrics are on track!', concat('Found ', length(body('Parse_Gap_Analysis')?['gapAnalysis']?['criticalGaps']), ' critical gap(s) requiring attention.'))}"
+        }
+      },
+      "runAfter": ["Write_EAP_Audit"]
+    }
+  ],
+  "outputs": {
+    "overallStatus": {
+      "type": "string",
+      "description": "Overall gap status (on_track, at_risk, behind)"
+    },
+    "criticalGaps": {
+      "type": "array",
+      "description": "List of metrics with critical gaps"
+    },
+    "recommendations": {
+      "type": "array",
+      "description": "6 Options Framework recommendations"
+    }
+  },
+  "parameters": {
+    "AzureFunctionsBaseUrl": {
+      "type": "string",
+      "description": "Base URL for Azure Functions"
+    },
+    "AzureFunctionsKey": {
+      "type": "securestring",
+      "description": "Azure Functions API key"
+    }
+  },
+  "errorHandling": {
+    "retryPolicy": {
+      "type": "exponential",
+      "count": 3,
+      "interval": "PT5S"
+    },
+    "onError": "Call flow_11_LogError with error details"
+  }
+}

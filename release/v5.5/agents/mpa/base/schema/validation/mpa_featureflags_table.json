@@ -1,0 +1,200 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MPA Feature Flags Dataverse Table Schema",
+  "description": "Schema definition for the mpa_featureflag Dataverse table",
+  "version": "5.2",
+  "lastUpdated": "2025-12-30",
+  "dataverse": {
+    "tableLogicalName": "mpa_featureflag",
+    "tableDisplayName": "MPA Feature Flag",
+    "tablePluralName": "MPA Feature Flags",
+    "tableDescription": "Stores feature flags for controlling MPA functionality rollout",
+    "primaryColumn": "mpa_name",
+    "ownershipType": "OrganizationOwned"
+  },
+  "columns": [
+    {
+      "logicalName": "mpa_featureflagid",
+      "displayName": "Feature Flag ID",
+      "description": "Unique identifier for the feature flag record",
+      "type": "Uniqueidentifier",
+      "isPrimaryKey": true,
+      "isRequired": true,
+      "isSearchable": false
+    },
+    {
+      "logicalName": "mpa_name",
+      "displayName": "Flag Name",
+      "description": "Unique name of the feature flag (e.g., gap_detection_v2)",
+      "type": "String",
+      "maxLength": 100,
+      "isRequired": true,
+      "isSearchable": true,
+      "isUnique": true,
+      "format": "lowercase_underscore"
+    },
+    {
+      "logicalName": "mpa_description",
+      "displayName": "Description",
+      "description": "Human-readable description of what this feature flag controls",
+      "type": "Memo",
+      "maxLength": 2000,
+      "isRequired": false,
+      "isSearchable": true
+    },
+    {
+      "logicalName": "mpa_isenabled",
+      "displayName": "Is Enabled",
+      "description": "Master switch - if false, feature is disabled for everyone",
+      "type": "Boolean",
+      "defaultValue": false,
+      "isRequired": true,
+      "isSearchable": true
+    },
+    {
+      "logicalName": "mpa_rolloutpercentage",
+      "displayName": "Rollout Percentage",
+      "description": "Percentage of users/clients who should see this feature (0-100)",
+      "type": "Integer",
+      "minValue": 0,
+      "maxValue": 100,
+      "defaultValue": 0,
+      "isRequired": true,
+      "isSearchable": false
+    },
+    {
+      "logicalName": "mpa_allowedusers",
+      "displayName": "Allowed Users",
+      "description": "Comma-separated list of user IDs who always see this feature",
+      "type": "Memo",
+      "maxLength": 4000,
+      "isRequired": false,
+      "isSearchable": false,
+      "notes": "Format: user-id-1,user-id-2,user-id-3"
+    },
+    {
+      "logicalName": "mpa_allowedclients",
+      "displayName": "Allowed Clients",
+      "description": "Comma-separated list of client IDs who always see this feature",
+      "type": "Memo",
+      "maxLength": 4000,
+      "isRequired": false,
+      "isSearchable": false,
+      "notes": "Format: client-id-1,client-id-2,client-id-3"
+    },
+    {
+      "logicalName": "mpa_startdate",
+      "displayName": "Start Date",
+      "description": "Date when the feature becomes active (null = immediately)",
+      "type": "DateTime",
+      "format": "DateAndTime",
+      "isRequired": false,
+      "isSearchable": false
+    },
+    {
+      "logicalName": "mpa_enddate",
+      "displayName": "End Date",
+      "description": "Date when the feature expires (null = never expires)",
+      "type": "DateTime",
+      "format": "DateAndTime",
+      "isRequired": false,
+      "isSearchable": false
+    },
+    {
+      "logicalName": "mpa_category",
+      "displayName": "Category",
+      "description": "Category for organizing feature flags",
+      "type": "Choice",
+      "isRequired": false,
+      "isSearchable": true,
+      "options": [
+        {"value": 100000000, "label": "Core"},
+        {"value": 100000001, "label": "Optimization"},
+        {"value": 100000002, "label": "Research"},
+        {"value": 100000003, "label": "UX"},
+        {"value": 100000004, "label": "Transparency"},
+        {"value": 100000005, "label": "Output"},
+        {"value": 100000006, "label": "Performance"},
+        {"value": 100000007, "label": "Analytics"}
+      ]
+    },
+    {
+      "logicalName": "mpa_priority",
+      "displayName": "Priority",
+      "description": "Priority level of the feature",
+      "type": "Choice",
+      "isRequired": false,
+      "isSearchable": true,
+      "options": [
+        {"value": 100000000, "label": "High"},
+        {"value": 100000001, "label": "Medium"},
+        {"value": 100000002, "label": "Low"}
+      ]
+    },
+    {
+      "logicalName": "mpa_notes",
+      "displayName": "Notes",
+      "description": "Additional notes about the feature flag",
+      "type": "Memo",
+      "maxLength": 4000,
+      "isRequired": false,
+      "isSearchable": false
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_mpa_featureflag_name",
+      "columns": ["mpa_name"],
+      "isUnique": true
+    },
+    {
+      "name": "idx_mpa_featureflag_enabled",
+      "columns": ["mpa_isenabled"],
+      "isUnique": false
+    },
+    {
+      "name": "idx_mpa_featureflag_category",
+      "columns": ["mpa_category"],
+      "isUnique": false
+    }
+  ],
+  "views": [
+    {
+      "name": "Active Feature Flags",
+      "description": "All currently enabled feature flags",
+      "filter": "mpa_isenabled eq true",
+      "columns": ["mpa_name", "mpa_description", "mpa_rolloutpercentage", "mpa_category"],
+      "orderBy": "mpa_category, mpa_name"
+    },
+    {
+      "name": "All Feature Flags",
+      "description": "All feature flags regardless of status",
+      "filter": null,
+      "columns": ["mpa_name", "mpa_description", "mpa_isenabled", "mpa_rolloutpercentage", "mpa_category"],
+      "orderBy": "mpa_name"
+    },
+    {
+      "name": "Gradual Rollout Flags",
+      "description": "Feature flags with partial rollout",
+      "filter": "mpa_isenabled eq true and mpa_rolloutpercentage gt 0 and mpa_rolloutpercentage lt 100",
+      "columns": ["mpa_name", "mpa_rolloutpercentage", "mpa_description"],
+      "orderBy": "mpa_rolloutpercentage desc"
+    }
+  ],
+  "manualIntegration": {
+    "required": true,
+    "steps": [
+      "Create the mpa_featureflag table in Dataverse using this schema",
+      "Add the columns as defined above",
+      "Create the specified indexes",
+      "Create the specified views",
+      "Run seed_feature_flags.ps1 to populate default values",
+      "Update Copilot Studio to use feature flag checking in orchestration"
+    ],
+    "relatedDocuments": [
+      "docs/FEATURE_FLAGS_INTEGRATION.md",
+      "config/default_feature_flags.json",
+      "scripts/seed_feature_flags.ps1"
+    ]
+  }
+}

@@ -1,0 +1,514 @@
+MPA IMPLICATIONS: MEASUREMENT CHOICES
+VERSION: 5.5
+EFFECTIVE DATE - JANUARY 2026
+DOCUMENT TYPE - KNOWLEDGE BASE IMPLICATION MAPPING
+COMPLIANCE - 6-RULE COMPLIANT
+
+================================================================================
+SECTION 1: PURPOSE AND SCOPE
+================================================================================
+
+1.1 PURPOSE
+
+This document maps the downstream implications of measurement decisions. The agent MUST use this document to surface effects that users may not anticipate when selecting KPIs, attribution approaches, and measurement methodology. Every measurement decision shapes optimization behavior and perceived success.
+
+1.2 SCOPE
+
+This document covers implications of:
+- KPI selection and hierarchy
+- Attribution window and methodology
+- Incrementality validation approach
+- Reporting and decision framework
+
+================================================================================
+SECTION 2: KPI SELECTION IMPLICATIONS
+================================================================================
+
+2.1 ROAS AS PRIMARY KPI
+
+OPTIMIZATION EFFECTS
+- Campaigns optimize for attributed revenue
+- Platform algorithms chase highest ROAS opportunities
+- Lower funnel typically favored
+- Agent MUST warn: ROAS optimization often chases easy wins over incremental value
+
+BEHAVIORAL EFFECTS
+- Teams focus on dashboard ROAS
+- Upper funnel investment questioned
+- Short-term efficiency prioritized
+- Agent SHOULD surface: ROAS focus typically underinvests in demand generation
+
+BUSINESS EFFECTS
+- May achieve ROAS targets while missing business goals
+- Incremental revenue often less than attributed
+- Long-term growth may suffer
+- Agent SHOULD recommend: Use ROAS as input not primary success metric
+
+WHEN APPROPRIATE
+- Well-validated incrementality rates
+- Mature campaigns with known baselines
+- When used alongside portfolio metrics
+- Agent SHOULD note: ROAS useful as directional signal with proper context
+
+2.2 CAC OR CPA AS PRIMARY KPI
+
+OPTIMIZATION EFFECTS
+- Campaigns optimize for conversion volume and cost
+- More focus on quantity than quality
+- May attract low-value customers
+- Agent SHOULD surface: CAC optimization may sacrifice customer quality
+
+BEHAVIORAL EFFECTS
+- Teams manage to cost target
+- Volume and efficiency balanced
+- Customer value often secondary
+- Agent SHOULD note: CAC focus balances volume and cost
+
+BUSINESS EFFECTS
+- Predictable customer acquisition cost
+- May not align with LTV
+- Sustainable with CAC to LTV discipline
+- Agent SHOULD recommend: Always pair CAC with LTV consideration
+
+WHEN APPROPRIATE
+- Subscription businesses with predictable LTV
+- When customer value is relatively uniform
+- When LTV to CAC ratio is monitored
+- Agent SHOULD note: CAC works when customer value is understood
+
+2.3 INCREMENTAL REVENUE OR iCAC AS PRIMARY KPI
+
+OPTIMIZATION EFFECTS
+- Campaigns optimize for true incremental value
+- Upper funnel appropriately valued
+- Lower funnel credit adjusted
+- Agent SHOULD note: Incremental metrics optimize for true value
+
+BEHAVIORAL EFFECTS
+- Teams focus on validated contribution
+- Channel mix based on true performance
+- Long-term thinking encouraged
+- Agent SHOULD surface: Incremental focus aligns marketing with business
+
+BUSINESS EFFECTS
+- Marketing ROI accurately measured
+- Investment allocated to actual drivers
+- Sustainable growth more likely
+- Agent SHOULD recommend: Incremental metrics when measurement supports
+
+WHEN APPROPRIATE
+- When incrementality testing is in place
+- When measurement resources exist
+- When longer measurement cycles acceptable
+- Agent SHOULD note: Incremental metrics require measurement investment
+
+2.4 AWARENESS OR CONSIDERATION METRICS
+
+OPTIMIZATION EFFECTS
+- Campaigns optimize for upper and mid funnel
+- Brand metrics as success criteria
+- Direct response secondary
+- Agent SHOULD note: Awareness metrics shift focus from conversion
+
+BEHAVIORAL EFFECTS
+- Teams focus on reach and impact
+- Longer-term orientation
+- Less pressure for immediate results
+- Agent SHOULD surface: Awareness metrics require patience for validation
+
+BUSINESS EFFECTS
+- Brand building prioritized
+- Demand generation investment justified
+- Business outcome link less direct
+- Agent SHOULD warn: Awareness metrics must ultimately connect to outcomes
+
+WHEN APPROPRIATE
+- Brand building campaigns
+- Market entry situations
+- When direct response is secondary goal
+- Agent SHOULD recommend: Pair awareness metrics with downstream indicators
+
+================================================================================
+SECTION 3: ATTRIBUTION METHODOLOGY IMPLICATIONS
+================================================================================
+
+3.1 LAST-CLICK ATTRIBUTION
+
+OPTIMIZATION EFFECTS
+- Full credit to final touchpoint
+- Lower funnel strongly advantaged
+- Upper funnel undervalued
+- Agent SHOULD surface: Last-click dramatically undervalues awareness
+
+CHANNEL ALLOCATION EFFECTS
+- Search and retargeting appear most efficient
+- Video and display appear inefficient
+- Mix shifts to lower funnel
+- Agent MUST warn: Last-click attribution creates funnel imbalance
+
+DECISION EFFECTS
+- Upper funnel investment hard to justify
+- Full funnel strategy undermined
+- Short-term thinking encouraged
+- Agent SHOULD recommend: Do not use last-click as sole attribution method
+
+WHEN ACCEPTABLE
+- Very short purchase cycles
+- Single touchpoint journeys
+- When simplicity required and limitations understood
+- Agent SHOULD note: Last-click acceptable only with explicit limitations acknowledged
+
+3.2 MULTI-TOUCH ATTRIBUTION
+
+OPTIMIZATION EFFECTS
+- Credit distributed across touchpoints
+- Upper funnel receives some credit
+- More balanced view of contribution
+- Agent SHOULD note: MTA provides more balanced channel view
+
+CHANNEL ALLOCATION EFFECTS
+- All funnel stages show value
+- Video and display credited appropriately
+- More diverse channel mix supported
+- Agent SHOULD surface: MTA supports full-funnel investment
+
+DECISION EFFECTS
+- Holistic view of marketing
+- Complex to understand and explain
+- Model assumptions affect results
+- Agent SHOULD warn: MTA results depend heavily on model choice
+
+WHEN APPROPRIATE
+- Multi-touch customer journeys
+- Full funnel campaigns
+- When model assumptions can be validated
+- Agent SHOULD recommend: MTA for campaigns with considered purchases
+
+3.3 MEDIA MIX MODELING
+
+OPTIMIZATION EFFECTS
+- Aggregate level optimization
+- All channels including offline evaluated
+- External factors accounted for
+- Agent SHOULD note: MMM provides comprehensive marketing view
+
+CHANNEL ALLOCATION EFFECTS
+- Budget allocation guidance
+- Long-term effects captured
+- Less useful for tactical decisions
+- Agent SHOULD surface: MMM guides strategy not daily optimization
+
+DECISION EFFECTS
+- Strategic planning supported
+- Less actionable for in-flight optimization
+- Requires significant data and expertise
+- Agent SHOULD recommend: MMM for annual planning alongside tactical measurement
+
+WHEN APPROPRIATE
+- Large budgets with multiple channels
+- When historical data exists
+- For strategic planning not tactical optimization
+- Agent SHOULD note: MMM complements not replaces real-time measurement
+
+3.4 INCREMENTALITY TESTING
+
+OPTIMIZATION EFFECTS
+- True causal impact measured
+- All channels evaluated fairly
+- No attribution model bias
+- Agent SHOULD note: Incrementality is gold standard for true value
+
+CHANNEL ALLOCATION EFFECTS
+- Investment based on actual contribution
+- Over-credited channels identified
+- Under-credited channels discovered
+- Agent SHOULD surface: Incrementality reveals true channel value
+
+DECISION EFFECTS
+- Highest confidence decisions
+- Requires dedicated testing budget
+- Longer measurement cycles
+- Agent SHOULD recommend: Incrementality testing for major allocation decisions
+
+WHEN APPROPRIATE
+- Before major scaling decisions
+- When attribution is questioned
+- As ongoing validation cadence
+- Agent MUST recommend: Incrementality testing at least annually per channel
+
+================================================================================
+SECTION 4: ATTRIBUTION WINDOW IMPLICATIONS
+================================================================================
+
+4.1 SHORT WINDOWS (1-7 DAYS)
+
+OPTIMIZATION EFFECTS
+- Only immediate conversions credited
+- Urgency-driven optimization
+- Lower funnel favored
+- Agent SHOULD note: Short windows capture immediate response only
+
+VOLUME EFFECTS
+- Lower attributed conversion volume
+- Conservative measurement
+- May understate actual impact
+- Agent SHOULD surface: Short windows provide conservative estimate
+
+APPROPRIATE SITUATIONS
+- Direct response campaigns
+- Short purchase cycles
+- When conservative measurement preferred
+- Agent SHOULD recommend: Start with 7-day click as baseline
+
+4.2 MEDIUM WINDOWS (7-14 DAYS)
+
+OPTIMIZATION EFFECTS
+- Balances immediate and delayed response
+- Consideration time captured
+- Reasonable attribution horizon
+- Agent SHOULD note: Medium windows balance precision and coverage
+
+VOLUME EFFECTS
+- Moderate attributed volume
+- Includes some considered purchases
+- Excludes long-cycle decisions
+- Agent SHOULD surface: Medium windows suit most e-commerce
+
+APPROPRIATE SITUATIONS
+- E-commerce with moderate consideration
+- Most consumer campaigns
+- When balance of precision and coverage needed
+- Agent SHOULD recommend: 7-14 day click for most campaigns
+
+4.3 LONG WINDOWS (14-30 PLUS DAYS)
+
+OPTIMIZATION EFFECTS
+- Extended consideration captured
+- May include organic conversions
+- Higher attributed volume
+- Agent SHOULD warn: Long windows may overstate campaign impact
+
+VOLUME EFFECTS
+- Highest attributed volume
+- Includes coincidental conversions
+- Validation increasingly important
+- Agent SHOULD surface: Long windows require incrementality validation
+
+APPROPRIATE SITUATIONS
+- B2B with long sales cycles
+- High-consideration purchases
+- When validated against incrementality
+- Agent SHOULD recommend: Long windows only with incrementality validation
+
+4.4 VIEW-THROUGH ATTRIBUTION
+
+OPTIMIZATION EFFECTS
+- View-only exposures credited
+- Dramatically increases attributed volume
+- Often overstates impact
+- Agent MUST warn: View-through attribution typically highly inflated
+
+VALIDATION REQUIREMENT
+- Must validate with holdout testing
+- True view-through incrementality often low
+- Can be 10-30 percent of claimed impact
+- Agent SHOULD surface: View-through incrementality typically 10-30 percent of attributed
+
+APPROPRIATE SITUATIONS
+- Video and display campaigns
+- Only when validated by testing
+- With conservative incrementality adjustment
+- Agent SHOULD recommend: Exclude view-through until validated
+
+================================================================================
+SECTION 5: REPORTING AND DECISION FRAMEWORK IMPLICATIONS
+================================================================================
+
+5.1 REAL-TIME DASHBOARD FOCUS
+
+BEHAVIORAL EFFECTS
+- Attention on immediate metrics
+- Short-term optimization prioritized
+- May miss longer-term patterns
+- Agent SHOULD surface: Real-time focus may miss important trends
+
+DECISION EFFECTS
+- Quick reaction to signals
+- May overreact to noise
+- Tactical over strategic orientation
+- Agent SHOULD warn: Daily fluctuations often not actionable
+
+APPROPRIATE BALANCE
+- Weekly reviews for optimization decisions
+- Daily monitoring for major issues only
+- Monthly analysis for strategy
+- Agent SHOULD recommend: Match decision cadence to signal reliability
+
+5.2 CHANNEL-LEVEL REPORTING
+
+BEHAVIORAL EFFECTS
+- Channel managers optimize their channel
+- Cross-channel effects ignored
+- Competition for budget
+- Agent SHOULD surface: Channel silos miss portfolio effects
+
+DECISION EFFECTS
+- May optimize parts at cost of whole
+- Upper funnel underinvested
+- Cross-channel synergies missed
+- Agent SHOULD warn: Channel-level optimization may hurt portfolio
+
+APPROPRIATE BALANCE
+- Portfolio metrics for allocation decisions
+- Channel metrics for within-channel optimization
+- Cross-channel effects monitored
+- Agent SHOULD recommend: Use MER for portfolio alongside channel metrics
+
+5.3 PORTFOLIO-LEVEL REPORTING
+
+BEHAVIORAL EFFECTS
+- Team focuses on total outcomes
+- Channel interactions valued
+- Cooperation over competition
+- Agent SHOULD note: Portfolio view aligns team incentives
+
+DECISION EFFECTS
+- Allocation based on total impact
+- Upper funnel appropriately valued
+- Synergies can be captured
+- Agent SHOULD surface: Portfolio view enables full-funnel investment
+
+APPROPRIATE BALANCE
+- Portfolio metrics for strategic decisions
+- Channel detail for tactical optimization
+- Regular reconciliation of levels
+- Agent SHOULD recommend: Lead with portfolio, drill to channel for action
+
+================================================================================
+SECTION 6: MEASUREMENT INFRASTRUCTURE IMPLICATIONS
+================================================================================
+
+6.1 PIXEL AND TAG IMPLEMENTATION
+
+COMPLETE IMPLEMENTATION
+- All events tracked
+- Full funnel visibility
+- Platform optimization enabled
+- Agent SHOULD note: Complete tracking enables full optimization
+
+PARTIAL IMPLEMENTATION
+- Gap in conversion tracking
+- Platform algorithms limited
+- Attribution incomplete
+- Agent SHOULD warn: Missing tags create measurement blind spots
+
+IMPLEMENTATION QUALITY
+- Correct configuration critical
+- Deduplication required
+- Regular auditing needed
+- Agent SHOULD surface: Tag audits should occur quarterly
+
+6.2 DATA INTEGRATION AND MATCHING
+
+PLATFORM DATA ONLY
+- Siloed view per platform
+- No cross-platform deduplication
+- Over-counting likely
+- Agent SHOULD surface: Platform-only data does not deduplicate conversions
+
+INTEGRATED MEASUREMENT
+- Cross-platform view available
+- Deduplication possible
+- Holistic measurement enabled
+- Agent SHOULD recommend: Integrate data for accurate portfolio view
+
+MATCH RATE IMPLICATIONS
+- Data matching imperfect
+- Some conversions unmatchable
+- Gap analysis required
+- Agent SHOULD note: Expect 20-40 percent unmatched conversions in integrated view
+
+6.3 PRIVACY IMPACT ON MEASUREMENT
+
+COOKIE AND TRACKING RESTRICTIONS
+- Attribution accuracy declining
+- Modeled conversions increasing
+- Historical comparison affected
+- Agent SHOULD surface: Privacy changes affect measurement comparability
+
+PLATFORM MODELING
+- Platforms estimate conversions
+- Model quality varies
+- Less direct observation
+- Agent SHOULD note: Modeled conversions have higher uncertainty
+
+FUTURE-PROOFING
+- First-party data increasingly important
+- Server-side tracking recommended
+- Incrementality testing less affected
+- Agent SHOULD recommend: Invest in 1P data and incrementality testing for durability
+
+================================================================================
+SECTION 7: AGENT RESPONSE PATTERNS
+================================================================================
+
+7.1 WHEN USER PROPOSES KPI CHANGE
+
+Agent MUST:
+- Acknowledge rationale
+- Surface optimization behavior implications
+- Warn about unintended consequences
+- Recommend complementary metrics
+
+Example response pattern:
+Changing primary KPI from [current] to [proposed] will shift optimization toward [behavior]. This typically results in [effects] on channel mix and campaign focus. Recommend also tracking [complementary metrics] to ensure [balanced outcome].
+
+7.2 WHEN USER PROPOSES ATTRIBUTION CHANGE
+
+Agent MUST:
+- Acknowledge measurement intent
+- Surface channel allocation implications
+- Warn about comparison discontinuity
+- Recommend transition approach
+
+Example response pattern:
+Moving from [current] to [proposed] attribution will change how channels are credited. Expect [channels] to show improved performance while [channels] will appear less efficient. Historical comparison will be affected. Recommend running parallel measurement for [period] before switching decisions.
+
+7.3 WHEN USER PROPOSES WINDOW CHANGE
+
+Agent MUST:
+- Acknowledge coverage intent
+- Surface validation requirement
+- Warn about inflation risk
+- Recommend incrementality validation
+
+Example response pattern:
+Extending attribution window from [current] to [proposed] will increase attributed conversions by approximately [percentage]. However, longer windows capture more coincidental conversions. Strongly recommend validating with holdout testing before using extended windows for budget decisions.
+
+================================================================================
+SECTION 8: CROSS-REFERENCES
+================================================================================
+
+8.1 RELATED DOCUMENTS
+
+- MPA_Expert_Lens_Measurement_Attribution_v5_5_v5_5.txt - Diagnostic patterns for measurement
+- Analytics Engine v5.1 - Measurement formulas and calculations
+- KPI seed data - Metric definitions and benchmarks
+- AI_ADVERTISING_GUIDE_v5_5.txt - AI campaign measurement challenges
+- MPA_Supporting_Instructions_v5_5.txt - Communication patterns
+
+================================================================================
+VERSION HISTORY
+================================================================================
+
+Version 1.0 - January 2026 - Initial creation
+- KPI selection implications
+- Attribution methodology implications
+- Attribution window implications
+- Reporting framework implications
+- Measurement infrastructure implications
+- Agent response patterns
+
+================================================================================
+END OF DOCUMENT
+================================================================================

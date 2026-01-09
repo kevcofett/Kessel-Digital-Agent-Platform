@@ -1,0 +1,66 @@
+{
+  "version": 2,
+  "name": "kessel-digital-ai-gateway",
+  "regions": ["iad1"],
+  "framework": null,
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "functions": {
+    "api/**/*.ts": {
+      "maxDuration": 60,
+      "memory": 1024
+    }
+  },
+  "env": {
+    "AI_GATEWAY_API_KEY": "@ai-gateway-api-key",
+    "ANTHROPIC_API_KEY": "@anthropic-api-key",
+    "OPENAI_API_KEY": "@openai-api-key",
+    "GOOGLE_AI_API_KEY": "@google-ai-api-key",
+    "DATAVERSE_URL": "@dataverse-url",
+    "DATAVERSE_API_URL": "@dataverse-api-url",
+    "DATAVERSE_CLIENT_ID": "@dataverse-client-id",
+    "DATAVERSE_CLIENT_SECRET": "@dataverse-client-secret",
+    "DATAVERSE_TENANT_ID": "@dataverse-tenant-id",
+    "SHAREPOINT_SITE_URL": "@sharepoint-site-url",
+    "SHAREPOINT_TENANT_ID": "@sharepoint-tenant-id",
+    "AZURE_FUNCTIONS_BASE_URL": "@azure-functions-base-url",
+    "AZURE_FUNCTIONS_KEY": "@azure-functions-key"
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization, X-Correlation-Id, X-Session-Id"
+        },
+        {
+          "key": "Access-Control-Max-Age",
+          "value": "86400"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/mcp",
+      "destination": "/api/mcp/route"
+    },
+    {
+      "source": "/agent/mpa",
+      "destination": "/api/agent/mpa/route"
+    },
+    {
+      "source": "/agent/ca",
+      "destination": "/api/agent/ca/route"
+    }
+  ]
+}

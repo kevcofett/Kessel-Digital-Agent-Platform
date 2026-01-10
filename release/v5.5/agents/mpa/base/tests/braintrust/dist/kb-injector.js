@@ -78,6 +78,7 @@ exports.KB_FILES_BY_STEP = {
 const ALWAYS_INCLUDE_KB = [
     "MPA_Adaptive_Language_v5_5.txt", // Sophistication matching
     "MPA_Calculation_Display_v5_5.txt", // Visible math patterns
+    "MPA_Step_Boundary_Guidance_v5_5.txt", // Step boundary and question discipline
 ];
 /**
  * Maximum characters per KB file to include

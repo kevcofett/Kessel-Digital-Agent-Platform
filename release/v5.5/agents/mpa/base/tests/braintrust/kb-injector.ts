@@ -42,9 +42,13 @@ export const KB_FILES_BY_STEP: Record<number, string[]> = {
 };
 
 /**
- * Adaptive language KB for sophistication matching (always included)
+ * KB files that are always included in every step
  */
-const ADAPTIVE_LANGUAGE_KB = "MPA_Adaptive_Language_v5_5.txt";
+const ALWAYS_INCLUDE_KB = [
+  "MPA_Adaptive_Language_v5_5.txt",      // Sophistication matching
+  "MPA_Calculation_Display_v5_5.txt",    // Visible math patterns
+  "MPA_Step_Boundary_Guidance_v5_5.txt", // Step boundary and question discipline
+];
 
 /**
  * Maximum characters per KB file to include
@@ -72,16 +76,18 @@ export class KBInjector {
     const kbFiles = customKBMap?.[step] || KB_FILES_BY_STEP[step] || [];
     const contents: string[] = [];
 
-    // Always include adaptive language KB
-    const adaptiveContent = await this.loadKBFile(ADAPTIVE_LANGUAGE_KB);
-    if (adaptiveContent) {
-      contents.push(this.formatKBContent(ADAPTIVE_LANGUAGE_KB, adaptiveContent));
+    // Always include required KB files
+    for (const alwaysFile of ALWAYS_INCLUDE_KB) {
+      const content = await this.loadKBFile(alwaysFile);
+      if (content) {
+        contents.push(this.formatKBContent(alwaysFile, content));
+      }
     }
 
     // Load step-specific KB files
     for (const fileName of kbFiles) {
-      // Avoid duplicating adaptive language KB
-      if (fileName === ADAPTIVE_LANGUAGE_KB) continue;
+      // Avoid duplicating always-included KB files
+      if (ALWAYS_INCLUDE_KB.includes(fileName)) continue;
 
       const content = await this.loadKBFile(fileName);
       if (content) {
@@ -175,7 +181,9 @@ export class KBInjector {
     const allFiles = new Set<string>();
 
     // Collect all unique file names
-    allFiles.add(ADAPTIVE_LANGUAGE_KB);
+    for (const alwaysFile of ALWAYS_INCLUDE_KB) {
+      allFiles.add(alwaysFile);
+    }
     for (const files of Object.values(KB_FILES_BY_STEP)) {
       for (const file of files) {
         allFiles.add(file);
@@ -209,7 +217,7 @@ export class KBInjector {
    * Get list of KB files for a step
    */
   getKBFilesForStep(step: number): string[] {
-    return [ADAPTIVE_LANGUAGE_KB, ...(KB_FILES_BY_STEP[step] || [])];
+    return [...ALWAYS_INCLUDE_KB, ...(KB_FILES_BY_STEP[step] || [])];
   }
 }
 

@@ -1,3 +1,7 @@
+---
+description: Start MPA instruction iteration based on Braintrust eval results
+---
+
 Enter MPA instruction iteration mode based on Braintrust evaluation results.
 
 STEP 1 - LOAD CONTEXT

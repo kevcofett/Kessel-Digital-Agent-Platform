@@ -1,3 +1,7 @@
+---
+description: Compare Braintrust results after iteration and decide accept/reject
+---
+
 Check Braintrust evaluation results after an iteration and decide whether to accept or reject the change.
 
 STEP 1 - FETCH NEW RESULTS

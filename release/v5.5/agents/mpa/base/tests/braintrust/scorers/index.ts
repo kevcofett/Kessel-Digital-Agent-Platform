@@ -37,6 +37,106 @@ export {
   scoreConversation,
 } from "./conversation-scorers.js";
 
+// =============================================================================
+// PHASE 1: QUALITY-FOCUSED SCORERS
+// =============================================================================
+
+// Re-export mentorship scorers
+export {
+  scoreTeachingBehavior,
+  scoreProactiveCalculation,
+  scoreBenchmarkCitation,
+  scoreCriticalThinking,
+  scoreStrategicSynthesis,
+  calculateMentorshipScore,
+  scoreMentorship,
+} from "./mentorship-scorers.js";
+
+// Re-export step quality scorers
+export {
+  type ScenarioContext,
+  type StepRequirements,
+  type StepQualityInput,
+  getStepRequirements,
+  scoreStepQuality,
+  scoreStepDataCompleteness,
+  scoreStepTurnEfficiency,
+  scoreStepSynthesis,
+  calculateStepQualityScore,
+  scoreStepTransitionQuality as scoreStepTransitionQualityPhase1,
+} from "./step-quality-scorers.js";
+
+// Re-export plan coherence scorers
+export {
+  type MediaPlan,
+  type IndustryBenchmarks,
+  scoreMathematicalConsistency,
+  scoreStrategicCoherence,
+  scoreDefensibility,
+  scorePlanComprehensiveness,
+  scoreEfficiencyRealism,
+  calculatePlanCoherenceScore,
+  scorePlanCoherence,
+} from "./plan-coherence-scorers.js";
+
+// =============================================================================
+// QUALITY CATEGORY WEIGHTS (Phase 1)
+// =============================================================================
+
+/**
+ * Category weights for quality-focused composite scoring
+ */
+export const QUALITY_CATEGORY_WEIGHTS = {
+  mentorship: 0.20, // Teaching, calculation, citation
+  stepQuality: 0.15, // Per-step depth
+  planCoherence: 0.20, // End-to-end consistency
+  contextAdaptive: 0.15, // Budget/funnel/aggressiveness scaling (Phase 2)
+  recalculation: 0.10, // Updates on new data (Phase 2)
+  crossStepSynthesis: 0.10, // Connects insights (Phase 3)
+  proactiveSuggestion: 0.05, // Unsolicited recommendations (Phase 3)
+  sophisticationDepth: 0.05, // Matches user level (Phase 4)
+};
+
+/**
+ * Quality thresholds for pass/fail determination
+ */
+export const QUALITY_THRESHOLDS = {
+  excellent: 0.90, // Exceptional guidance quality
+  good: 0.80, // Solid professional quality
+  pass: 0.70, // Minimum acceptable
+  fail: 0.70, // Below this is unacceptable
+};
+
+/**
+ * Calculate quality-focused composite score (Phase 1)
+ */
+export function calculateQualityCompositeScore(categoryScores: {
+  mentorship?: number;
+  stepQuality?: number;
+  planCoherence?: number;
+}): number {
+  let weightedSum = 0;
+  let totalWeight = 0;
+
+  // Phase 1 categories only
+  const phase1Categories = ["mentorship", "stepQuality", "planCoherence"];
+
+  for (const category of phase1Categories) {
+    const score = categoryScores[category as keyof typeof categoryScores];
+    const weight =
+      QUALITY_CATEGORY_WEIGHTS[
+        category as keyof typeof QUALITY_CATEGORY_WEIGHTS
+      ];
+
+    if (score !== undefined && weight !== undefined) {
+      weightedSum += score * weight;
+      totalWeight += weight;
+    }
+  }
+
+  return totalWeight > 0 ? weightedSum / totalWeight : 0;
+}
+
 /**
  * Calculate turn score aggregates
  */

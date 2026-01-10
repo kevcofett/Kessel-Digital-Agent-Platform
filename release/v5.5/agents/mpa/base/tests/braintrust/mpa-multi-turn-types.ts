@@ -5,6 +5,143 @@
  */
 
 // =============================================================================
+// CONVERSATION STATE TYPES (Phase 1: Quality-Focused Evaluation)
+// =============================================================================
+
+/**
+ * Persistent state tracked across turns for quality scoring
+ */
+export interface ConversationState {
+  /** All data points collected, keyed by field name */
+  collectedData: Record<string, unknown>;
+
+  /** Track what was calculated and when */
+  calculationsPerformed: {
+    turnNumber: number;
+    calculation: string; // e.g., "impliedCAC"
+    formula: string; // e.g., "$500K / 10K"
+    result: string; // e.g., "$50"
+  }[];
+
+  /** Insights captured per step for synthesis scoring */
+  insightsPerStep: Record<
+    number,
+    {
+      dataPoints: string[]; // What was learned
+      decisions: string[]; // What was decided
+      calculations: string[]; // What was computed
+    }
+  >;
+
+  /** Track when data changes mid-conversation */
+  dataRevisions: {
+    turnNumber: number;
+    field: string; // e.g., "budget"
+    oldValue: unknown;
+    newValue: unknown;
+    agentAcknowledged: boolean;
+    agentRecalculated: boolean;
+  }[];
+
+  /** Accumulated plan for coherence checking */
+  accumulatedPlan: Partial<MediaPlanData>;
+
+  /** Context for adaptive scoring */
+  context: {
+    budget: number;
+    funnel: "awareness" | "consideration" | "performance";
+    kpiAggressiveness: "conservative" | "moderate" | "aggressive";
+    userSophistication: "low" | "medium" | "high";
+  };
+}
+
+/**
+ * Media plan data structure for coherence checking
+ */
+export interface MediaPlanData {
+  // Step 1: Outcomes
+  objective?: string;
+  primaryKPI?: string;
+  volumeTarget?: number;
+  volumeUnit?: string;
+
+  // Step 2: Economics
+  totalBudget?: number;
+  impliedCAC?: number;
+  targetLTV?: number;
+  margin?: number;
+  efficiencyAssessment?: string;
+
+  // Step 3: Audience
+  audienceProfile?: {
+    demographics?: string;
+    behaviors?: string;
+    firstPartyData?: string;
+  };
+  audienceSize?: number;
+
+  // Step 4: Geography
+  geoScope?: "national" | "regional" | "local";
+  geoAllocations?: Record<string, number>;
+  strongMarkets?: string[];
+  weakMarkets?: string[];
+
+  // Step 5: Budget
+  channelAllocations?: Record<string, number>;
+  testBudget?: number;
+  monthlySpend?: number[];
+  pacing?: string;
+
+  // Step 6: Value Proposition
+  valueProp?: string;
+  differentiators?: string[];
+  creativeApproach?: string;
+
+  // Step 7: Channels
+  channelMix?: Record<string, number>;
+  platformStrategies?: Record<string, string>;
+
+  // Step 8: Measurement
+  attributionModel?: string;
+  trackingRequirements?: string[];
+  measurementLimitations?: string[];
+
+  // Step 9: Testing
+  testPlan?: string[];
+  testBudgetAllocated?: number;
+  learningAgenda?: string;
+
+  // Step 10: Risks
+  risks?: string[];
+  mitigations?: string[];
+  contingencies?: string[];
+}
+
+/**
+ * Initialize empty conversation state
+ */
+export function createInitialConversationState(
+  budget: number = 0,
+  funnel: "awareness" | "consideration" | "performance" = "performance",
+  kpiAggressiveness: "conservative" | "moderate" | "aggressive" = "moderate",
+  userSophistication: "low" | "medium" | "high" = "medium"
+): ConversationState {
+  return {
+    collectedData: {},
+    calculationsPerformed: [],
+    insightsPerStep: {},
+    dataRevisions: [],
+    accumulatedPlan: {},
+    context: {
+      budget,
+      funnel,
+      kpiAggressiveness,
+      userSophistication,
+    },
+  };
+}
+
+// =============================================================================
 // USER PERSONA TYPES
 // =============================================================================
 

@@ -20,6 +20,52 @@ import {
   intermediateUserPersona,
 } from "./full-10-step.js";
 
+// Import Phase 1 Quality Scenarios
+import {
+  highStakesPerformanceScenario,
+  highStakesPerformancePersona,
+  highStakesPerformanceContext,
+} from "./high-stakes-performance.js";
+import {
+  brandBuildingLimitedDataScenario,
+  brandBuildingLimitedDataPersona,
+  brandBuildingLimitedDataContext,
+} from "./brand-building-limited-data.js";
+
+// Import Advanced Targeting Scenarios
+import {
+  precisionTargetingComplexScenario,
+  precisionTargetingPersona,
+  precisionTargetingComplexContext,
+} from "./precision-targeting-complex.js";
+import {
+  massNationalSimplicityScenario,
+  massNationalPersona,
+  massNationalSimplicityContext,
+} from "./mass-national-simplicity.js";
+import {
+  aggressiveKpiNarrowTargetingScenario,
+  aggressiveKpiPersona,
+  aggressiveKpiNarrowTargetingContext,
+} from "./aggressive-kpi-narrow-targeting.js";
+
+// Import Multi-Audience Scenarios
+import {
+  multiAudienceUnifiedPlanScenario,
+  multiAudienceUnifiedPersona,
+  multiAudienceUnifiedPlanContext,
+} from "./multi-audience-unified-plan.js";
+import {
+  multiAudienceChannelAllocationScenario,
+  multiAudienceChannelPersona,
+  multiAudienceChannelAllocationContext,
+} from "./multi-audience-channel-allocation.js";
+import {
+  multiAudienceVaryingKpisScenario,
+  multiAudienceVaryingKpisPersona,
+  multiAudienceVaryingKpisContext,
+} from "./multi-audience-varying-kpis.js";
+
 // Export individual scenarios
 export {
   basicUserStep1_2Scenario,
@@ -30,13 +76,61 @@ export {
   intermediateUserPersona,
 };
 
+// Export Phase 1 Quality Scenarios
+export {
+  highStakesPerformanceScenario,
+  highStakesPerformancePersona,
+  highStakesPerformanceContext,
+  brandBuildingLimitedDataScenario,
+  brandBuildingLimitedDataPersona,
+  brandBuildingLimitedDataContext,
+};
+
+// Export Advanced Targeting Scenarios
+export {
+  precisionTargetingComplexScenario,
+  precisionTargetingPersona,
+  precisionTargetingComplexContext,
+  massNationalSimplicityScenario,
+  massNationalPersona,
+  massNationalSimplicityContext,
+  aggressiveKpiNarrowTargetingScenario,
+  aggressiveKpiPersona,
+  aggressiveKpiNarrowTargetingContext,
+};
+
+// Export Multi-Audience Scenarios
+export {
+  multiAudienceUnifiedPlanScenario,
+  multiAudienceUnifiedPersona,
+  multiAudienceUnifiedPlanContext,
+  multiAudienceChannelAllocationScenario,
+  multiAudienceChannelPersona,
+  multiAudienceChannelAllocationContext,
+  multiAudienceVaryingKpisScenario,
+  multiAudienceVaryingKpisPersona,
+  multiAudienceVaryingKpisContext,
+};
+
 /**
  * All available test scenarios
  */
 export const ALL_SCENARIOS: TestScenario[] = [
+  // Core scenarios
   basicUserStep1_2Scenario,
   sophisticatedIdkScenario,
   full10StepScenario,
+  // Phase 1 Quality scenarios
+  highStakesPerformanceScenario,
+  brandBuildingLimitedDataScenario,
+  // Advanced Targeting scenarios
+  precisionTargetingComplexScenario,
+  massNationalSimplicityScenario,
+  aggressiveKpiNarrowTargetingScenario,
+  // Multi-Audience scenarios
+  multiAudienceUnifiedPlanScenario,
+  multiAudienceChannelAllocationScenario,
+  multiAudienceVaryingKpisScenario,
 ];
 
 /**
@@ -53,6 +147,47 @@ export const QUICK_SCENARIOS: TestScenario[] = [
 export const FULL_SCENARIOS: TestScenario[] = [full10StepScenario];
 
 /**
+ * Phase 1 Quality Test Scenarios
+ *
+ * These scenarios test quality-focused scoring:
+ * - Mentorship (teaching, calculation, citation, synthesis)
+ * - Step Quality (context-aware requirements)
+ * - Plan Coherence (mathematical/strategic consistency)
+ */
+export const PHASE1_QUALITY_SCENARIOS: TestScenario[] = [
+  highStakesPerformanceScenario,
+  brandBuildingLimitedDataScenario,
+];
+
+/**
+ * Advanced Targeting Scenarios
+ *
+ * These scenarios test complex audience targeting:
+ * - Precision targeting with complex geo/behavioral/demographic attributes
+ * - Mass national simplicity (broad reach)
+ * - Aggressive KPI requiring narrow targeting
+ */
+export const ADVANCED_TARGETING_SCENARIOS: TestScenario[] = [
+  precisionTargetingComplexScenario,
+  massNationalSimplicityScenario,
+  aggressiveKpiNarrowTargetingScenario,
+];
+
+/**
+ * Multi-Audience Scenarios
+ *
+ * These scenarios test handling multiple distinct audiences:
+ * - Multiple segments with unified plan
+ * - Different channel allocations per segment
+ * - Different KPIs per segment
+ */
+export const MULTI_AUDIENCE_SCENARIOS: TestScenario[] = [
+  multiAudienceUnifiedPlanScenario,
+  multiAudienceChannelAllocationScenario,
+  multiAudienceVaryingKpisScenario,
+];
+
+/**
  * Get scenario by ID
  */
 export function getScenarioById(id: string): TestScenario | undefined {
@@ -63,13 +198,25 @@ export function getScenarioById(id: string): TestScenario | undefined {
  * Get scenarios by tag/category
  */
 export function getScenariosByCategory(
-  category: "quick" | "full" | "all"
+  category:
+    | "quick"
+    | "full"
+    | "phase1"
+    | "targeting"
+    | "multi-audience"
+    | "all"
 ): TestScenario[] {
   switch (category) {
     case "quick":
       return QUICK_SCENARIOS;
     case "full":
       return FULL_SCENARIOS;
+    case "phase1":
+      return PHASE1_QUALITY_SCENARIOS;
+    case "targeting":
+      return ADVANCED_TARGETING_SCENARIOS;
+    case "multi-audience":
+      return MULTI_AUDIENCE_SCENARIOS;
     case "all":
     default:
       return ALL_SCENARIOS;
@@ -86,6 +233,7 @@ export const SCENARIO_METADATA = {
     expectedDuration: "2-5 minutes",
     expectedTurns: "4-12",
     difficulty: "easy",
+    category: "quick",
   },
   "sophisticated-idk-protocol": {
     name: "Sophisticated User - IDK Protocol",
@@ -93,6 +241,7 @@ export const SCENARIO_METADATA = {
     expectedDuration: "3-8 minutes",
     expectedTurns: "5-15",
     difficulty: "medium",
+    category: "quick",
   },
   "full-10-step": {
     name: "Full 10-Step Planning",
@@ -100,7 +249,113 @@ export const SCENARIO_METADATA = {
     expectedDuration: "15-30 minutes",
     expectedTurns: "20-50",
     difficulty: "hard",
+    category: "full",
+  },
+  "high-stakes-performance": {
+    name: "High-Stakes Performance Campaign",
+    description:
+      "Tests quality guidance for $2M budget with aggressive $40 CAC target. " +
+      "Agent MUST challenge unrealistic targets and show calculations.",
+    expectedDuration: "8-15 minutes",
+    expectedTurns: "10-30",
+    difficulty: "hard",
+    category: "phase1",
+    qualityFocus: ["mentorship", "critical-thinking", "calculation", "synthesis"],
+  },
+  "brand-building-limited-data": {
+    name: "Brand Building with Limited Data",
+    description:
+      "Tests quality guidance for awareness campaign with limited data. " +
+      "Agent MUST model with assumptions and avoid performance metric fixation.",
+    expectedDuration: "10-18 minutes",
+    expectedTurns: "12-35",
+    difficulty: "medium",
+    category: "phase1",
+    qualityFocus: ["teaching", "idk-handling", "funnel-appropriate"],
+  },
+  "precision-targeting-complex": {
+    name: "Precision Targeting with Complex Attributes",
+    description:
+      "Tests handling of highly complex geo/behavioral/demographic/contextual " +
+      "targeting for precision campaigns. Agent MUST unpack multi-layered audiences.",
+    expectedDuration: "12-20 minutes",
+    expectedTurns: "18-40",
+    difficulty: "hard",
+    category: "targeting",
+    qualityFocus: ["audience-segmentation", "first-party-data", "precision-reach-tradeoff"],
+  },
+  "mass-national-simplicity": {
+    name: "Mass National Campaign - Simplicity",
+    description:
+      "Tests handling of simple broad-reach national campaign. Agent should NOT " +
+      "over-complicate and should focus on reach/frequency metrics.",
+    expectedDuration: "10-16 minutes",
+    expectedTurns: "12-30",
+    difficulty: "medium",
+    category: "targeting",
+    qualityFocus: ["simplicity", "reach-frequency", "awareness-metrics"],
+  },
+  "aggressive-kpi-narrow-targeting": {
+    name: "Aggressive KPI - Must Narrow",
+    description:
+      "Tests handling of aggressive efficiency targets requiring volume sacrifice. " +
+      "Agent MUST challenge targets and recommend narrowing strategies.",
+    expectedDuration: "10-18 minutes",
+    expectedTurns: "12-40",
+    difficulty: "hard",
+    category: "targeting",
+    qualityFocus: ["critical-thinking", "volume-efficiency-tradeoff", "test-and-scale"],
+  },
+  "multi-audience-unified-plan": {
+    name: "Multi-Audience Unified Plan",
+    description:
+      "Tests handling of three distinct audience segments with different " +
+      "geo/demo/behavior signals in one plan. Agent MUST keep segments distinct.",
+    expectedDuration: "15-25 minutes",
+    expectedTurns: "18-50",
+    difficulty: "hard",
+    category: "multi-audience",
+    qualityFocus: ["segment-clarity", "budget-allocation", "segment-measurement"],
+  },
+  "multi-audience-channel-allocation": {
+    name: "Multi-Audience with Segment-Specific Channels",
+    description:
+      "Advanced: Multiple audiences with different channel allocations per segment. " +
+      "Agent MUST recommend distinct channel mixes based on segment behaviors.",
+    expectedDuration: "18-28 minutes",
+    expectedTurns: "22-55",
+    difficulty: "expert",
+    category: "multi-audience",
+    qualityFocus: ["segment-channel-fit", "channel-justification", "budget-matrix"],
+  },
+  "multi-audience-varying-kpis": {
+    name: "Multi-Audience with Different KPIs",
+    description:
+      "Most complex: Multiple audiences with DIFFERENT primary KPIs per segment " +
+      "(awareness vs leads vs retention). Agent MUST track heterogeneous objectives.",
+    expectedDuration: "18-28 minutes",
+    expectedTurns: "22-55",
+    difficulty: "expert",
+    category: "multi-audience",
+    qualityFocus: ["segment-kpi-clarity", "mixed-funnel", "heterogeneous-measurement"],
   },
 };
+
+/**
+ * Quality Context configurations for scoring
+ */
+export const SCENARIO_CONTEXTS = {
+  "high-stakes-performance": highStakesPerformanceContext,
+  "brand-building-limited-data": brandBuildingLimitedDataContext,
+  "precision-targeting-complex": precisionTargetingComplexContext,
+  "mass-national-simplicity": massNationalSimplicityContext,
+  "aggressive-kpi-narrow-targeting": aggressiveKpiNarrowTargetingContext,
+  "multi-audience-unified-plan": multiAudienceUnifiedPlanContext,
+  "multi-audience-channel-allocation": multiAudienceChannelAllocationContext,
+  "multi-audience-varying-kpis": multiAudienceVaryingKpisContext,
+};
+
+// Backwards compatibility
+export const PHASE1_CONTEXTS = SCENARIO_CONTEXTS;
 
 export default ALL_SCENARIOS;

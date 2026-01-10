@@ -76,28 +76,36 @@ If user does not know profitability, model using industry benchmarks and move fo
 
 ### v5_7_2
 
-**Date:**  
-**Hypothesis:**  
-**Change Type:**  
-**Files Modified:**  
+**Date:** 2026-01-10
+**Hypothesis:** Adaptive Sophistication regressed because v5_7_1 introduced technical terminology (CAC, take rate, implied efficiency) that does not adapt to user sophistication level. Replacing with plain language (cost per customer, fee, achievable target) should recover Adaptive Sophistication while preserving Progress Over Perfection gains.
+**Change Type:** Core instruction
+**Files Modified:** MPA_Copilot_Instructions_v5_7_2.txt (new file)
 
 **Specific Changes:**
 ```
-[Exact text removed]
+When you have budget AND volume target, calculate implied efficiency immediately. Do not ask for CAC if you can compute it from budget divided by target customers. For transaction businesses like remittance or payments, assume 2 to 3 percent take rate, state the assumption, show your math.
+
+If user does not know profitability, model using industry benchmarks and move forward. Step 2 is complete when you can assess whether implied efficiency is achievable. Do not loop endlessly seeking perfect economics data.
 ```
 replaced with:
 ```
-[Exact text added]
+When you have budget AND volume target, calculate the cost per customer immediately. Do not ask what they can afford per customer if you can compute it from budget divided by target customers. For transaction businesses like remittance or payments, assume 2 to 3 percent fee, state the assumption, show your math in plain terms.
+
+If user does not know profitability, model using industry benchmarks and move forward. Step 2 is complete when you can assess whether the target is achievable. Do not loop endlessly seeking perfect data.
 ```
+
+**Character Count:** 7,695 / 8,000
 
 **Eval Results:**
 
-| Scorer | Baseline | New | Delta |
-|--------|----------|-----|-------|
-| | | | |
+| Scorer | Baseline (v5_7_1) | New | Delta |
+|--------|-------------------|-----|-------|
+| Adaptive Sophistication | 72.0% | | |
+| Proactive Intelligence | 79.0% | | |
+| Progress Over Perfection | 66.0% | | |
 
-**Decision:**  
-**Rationale:**  
+**Decision:** Pending eval
+**Rationale:** Awaiting Braintrust evaluation results  
 
 ---
 

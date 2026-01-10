@@ -1,86 +1,186 @@
 ---
-description: Compare Braintrust results after iteration and decide accept/reject
+description: Compare Braintrust results after iteration, calculate composite, decide accept/reject
 ---
 
 Check Braintrust evaluation results after an iteration and decide whether to accept or reject the change.
 
-STEP 1 - FETCH NEW RESULTS
+STEP 1 - LOAD CONFIGURATION
+
+Read scoring configuration:
+/release/v5.5/agents/mpa/base/docs/OPTIMIZATION_SCORING_CONFIG.md
+
+STEP 2 - FETCH NEW RESULTS
 
 Run this command to get the latest evaluation results:
 ```bash
 npx braintrust eval list --project MPA --limit 1 --format json
 ```
 
-STEP 2 - LOAD BASELINE
+Parse all 12 scorer outputs.
 
-Read the change log to get baseline scores:
-/release/v5.5/agents/mpa/base/docs/INSTRUCTION_CHANGE_LOG.md
+STEP 3 - LOAD BASELINE
 
-STEP 3 - COMPARE SCORES
+Read the change log and dashboard to get baseline scores:
+- /release/v5.5/agents/mpa/base/docs/INSTRUCTION_CHANGE_LOG.md
+- /release/v5.5/agents/mpa/base/docs/VERSION_DASHBOARD.md
 
-Create a comparison table:
+STEP 4 - CALCULATE COMPOSITE SCORES
 
-| Scorer | Baseline | New | Delta | Status |
-|--------|----------|-----|-------|--------|
-| Response Length | X.XX | X.XX | +/-X.XX | ✅/⚠️/❌ |
-| Single Question | | | | |
-| Acronym Definition | | | | |
-| Source Citation | | | | |
-| Step Boundary | | | | |
-| IDK Protocol | | | | |
-| Adaptive Sophistication | | | | |
-| Tone Quality | | | | |
-| Proactive Intelligence | | | | |
-| Progress Over Perfection | | | | |
-| Feasibility Framing | | | | |
-| Step Completion | | | | |
+For both baseline and new results:
+
+Tier weights:
+- Tier 1 (3.0): IDK Protocol, Progress Over Perfection, Step Boundary
+- Tier 2 (2.0): Adaptive Sophistication, Source Citation, Tone Quality
+- Tier 3 (1.0): Response Length, Single Question, Proactive Intelligence
+- Tier 4 (0.5): Feasibility Framing, Step Completion, Acronym Definition
+
+Formula: composite = sum(score * weight) / 19.5
+
+STEP 5 - COMPARE SCORES
+
+Create comparison table:
+
+```
+SCORE COMPARISON
+================
+                      | Baseline | New    | Delta  | Status |
+----------------------|----------|--------|--------|--------|
+COMPOSITE SCORE       |   0.XXX  |  0.XXX | +0.XXX |   ✅   |
+----------------------|----------|--------|--------|--------|
+TIER 1 (weight 3.0)   |          |        |        |        |
+  IDK Protocol        |   0.XX   |  0.XX  | +0.XX  |   ✅   |
+  Progress Over Perf  |   0.XX   |  0.XX  | +0.XX  |   ✅   |
+  Step Boundary       |   0.XX   |  0.XX  | +0.XX  |   ✅   |
+  Tier 1 Subtotal     |   0.XX   |  0.XX  | +0.XX  |        |
+----------------------|----------|--------|--------|--------|
+TIER 2 (weight 2.0)   |          |        |        |        |
+  Adaptive Sophist    |   0.XX   |  0.XX  | +0.XX  |   ✅   |
+  Source Citation     |   0.XX   |  0.XX  | +0.XX  |   ✅   |
+  Tone Quality        |   0.XX   |  0.XX  | +0.XX  |   ✅   |
+  Tier 2 Subtotal     |   0.XX   |  0.XX  | +0.XX  |        |
+----------------------|----------|--------|--------|--------|
+TIER 3 (weight 1.0)   |          |        |        |        |
+  Response Length     |   0.XX   |  0.XX  | +0.XX  |   ✅   |
+  Single Question     |   0.XX   |  0.XX  | +0.XX  |   ✅   |
+  Proactive Intel     |   0.XX   |  0.XX  | +0.XX  |   ✅   |
+  Tier 3 Subtotal     |   0.XX   |  0.XX  | +0.XX  |        |
+----------------------|----------|--------|--------|--------|
+TIER 4 (weight 0.5)   |          |        |        |        |
+  Feasibility Frame   |   0.XX   |  0.XX  | +0.XX  |   ✅   |
+  Step Completion     |   0.XX   |  0.XX  | +0.XX  |   ✅   |
+  Acronym Definition  |   0.XX   |  0.XX  | +0.XX  |   ✅   |
+  Tier 4 Subtotal     |   0.XX   |  0.XX  | +0.XX  |        |
+----------------------|----------|--------|--------|--------|
 
 Status key:
-- ✅ Improved or stable
-- ⚠️ Minor regression (< 0.1)
-- ❌ Major regression (>= 0.1)
+✅ Improved or stable (delta >= 0)
+⚠️ Minor regression (delta -0.01 to -0.09)
+❌ Major regression (delta <= -0.10)
+🔴 Tier 1 regression (any negative delta)
+```
 
-STEP 4 - CHECK TIER 1 REGRESSIONS
+STEP 6 - CHECK TIER 1 REGRESSIONS
 
 Tier 1 scorers (NEVER regress):
 - IDK Protocol
 - Progress Over Perfection  
 - Step Boundary
 
-If ANY Tier 1 scorer regressed, recommend REJECT.
+IF ANY Tier 1 scorer has negative delta:
+    AUTOMATIC REJECT - "Tier 1 regression detected. Rejecting change."
+    Do not proceed to recommendation.
 
-STEP 5 - CALCULATE NET IMPACT
+STEP 7 - CHECK MINIMUM THRESHOLDS
 
-Sum of all deltas weighted by tier:
-- Tier 1: weight 3x
-- Tier 2: weight 2x
-- Tier 3: weight 1x
-- Tier 4: weight 0.5x
+From OPTIMIZATION_SCORING_CONFIG.md:
+- Tier 1 minimum: 0.70
+- Tier 2 minimum: 0.50
 
-STEP 6 - RECOMMEND
+IF any Tier 1 scorer < 0.70:
+    Flag: "CRITICAL: Tier 1 scorer below minimum threshold"
+
+IF any Tier 2 scorer < 0.50:
+    Flag: "WARNING: Tier 2 scorer below minimum threshold"
+
+STEP 8 - CALCULATE NET IMPACT
+
+Weighted delta = sum of (delta * tier_weight)
+
+Report:
+- Raw composite delta: {new - baseline}
+- Weighted impact score: {weighted_delta}
+- Percentage improvement: {(new - baseline) / baseline * 100}%
+
+STEP 9 - RECOMMEND
 
 Based on analysis, recommend one of:
 
-ACCEPT - No Tier 1 regressions, positive net impact
-- Update change log with final scores
-- Mark decision as "Accepted"
-- Commit change log update
+ACCEPT - Criteria:
+- No Tier 1 regressions
+- Composite improved OR stable with Tier 1 improvement
+- No minimum threshold violations
 
-REJECT - Tier 1 regression or negative net impact
-- Revert the instruction change
-- Update change log with scores and "Rejected" decision
-- Commit revert
+REJECT - Criteria:
+- Any Tier 1 regression (automatic)
+- Composite decreased with no offsetting Tier 1 gain
+- Minimum threshold violation introduced
 
-MODIFY FURTHER - Mixed results, potential identified
-- Keep current change
-- Propose additional hypothesis to address regressions
-- Enter new iteration cycle
+MODIFY FURTHER - Criteria:
+- Mixed results with potential
+- Composite stable but target scorer didn't improve
+- Minor regressions in Tier 3/4 that could be recovered
 
-STEP 7 - UPDATE CHANGE LOG
+STEP 10 - EXECUTE DECISION
 
-Regardless of decision, update INSTRUCTION_CHANGE_LOG.md with:
-- Eval results table
-- Decision (Accept/Reject/Modify)
-- Rationale
+IF ACCEPT:
+    1. Update VERSION_DASHBOARD.md:
+       - Set new version as current best
+       - Add row to version history
+       - Update scorer progression tables
+    2. Update INSTRUCTION_CHANGE_LOG.md:
+       - Record all scores in eval results table
+       - Mark decision as "Accepted"
+       - Add rationale
+    3. Commit: "Accept v5_7_X: composite {score} (+{delta})"
+    4. Push to deploy/personal
 
-Commit and push.
+IF REJECT:
+    1. Revert the instruction file change (delete new version or restore previous)
+    2. Update INSTRUCTION_CHANGE_LOG.md:
+       - Record all scores
+       - Mark decision as "Rejected"
+       - Add rationale (which scorer regressed, by how much)
+    3. Commit: "Reject v5_7_X: {reason}"
+    4. Push to deploy/personal
+
+IF MODIFY FURTHER:
+    1. Keep current change in place
+    2. Update INSTRUCTION_CHANGE_LOG.md with partial results
+    3. Propose next hypothesis to address remaining issues
+    4. Ask: "Continue with proposed modification? (yes/no)"
+
+STEP 11 - REPORT SUMMARY
+
+```
+DECISION: {ACCEPT|REJECT|MODIFY}
+==================================
+Version tested: {version}
+Composite: {baseline} → {new} ({delta:+.3f})
+Tier 1 status: {PASS|FAIL}
+Minimum thresholds: {PASS|FAIL}
+
+Rationale: {explanation}
+
+{If ACCEPT: "Version {X} is now the current best."}
+{If REJECT: "Reverted to {previous version}."}
+{If MODIFY: "Proposed next change: {description}"}
+```
+
+HARD RULES
+
+1. ANY Tier 1 regression = automatic REJECT
+2. ALWAYS calculate composite score
+3. ALWAYS update both change log AND dashboard
+4. ALWAYS commit after decision
+5. NEVER accept if minimum threshold violated
+6. ALWAYS show full comparison table

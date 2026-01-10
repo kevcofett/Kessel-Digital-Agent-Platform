@@ -100,12 +100,12 @@ If user does not know profitability, model using industry benchmarks and move fo
 
 | Scorer | Baseline (v5_7_1) | New | Delta |
 |--------|-------------------|-----|-------|
-| Adaptive Sophistication | 72.0% | | |
-| Proactive Intelligence | 79.0% | | |
-| Progress Over Perfection | 66.0% | | |
+| Adaptive Sophistication | 72.0% | 84.0% | +12.0% |
+| Proactive Intelligence | 79.0% | 90.0% | +11.0% |
+| Progress Over Perfection | 66.0% | 55.0% | -11.0% |
 
-**Decision:** Pending eval
-**Rationale:** Awaiting Braintrust evaluation results  
+**Decision:** REJECTED
+**Rationale:** Tier 1 regression detected. Progress Over Perfection dropped from 66% to 55% (-11%). While Adaptive Sophistication improved (+12%) and Proactive Intelligence improved (+11%), Tier 1 regressions are never acceptable. The plain language change appears to have made the agent less likely to calculate and move forward. Reverting to v5_7_1 as current best.  
 
 ---
 

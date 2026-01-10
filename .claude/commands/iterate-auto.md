@@ -2,29 +2,32 @@
 description: Auto-optimize MPA instructions until target score or stopping condition
 ---
 
-Automated MPA instruction optimization loop. Runs iterations until composite score target is reached or stopping condition is met.
+Automated MPA instruction optimization loop. Runs iterations until composite score target (95%) is reached or stopping condition is met.
 
-This command uses two-phase validation:
+This command uses multi-turn evaluation as the primary scoring mechanism.
 
-- Single-turn evaluation drives the iteration loop (fast feedback)
-- Multi-turn validation gates final acceptance (when target achieved)
+TARGET: 95% overall composite score across all 11 multi-turn scenarios.
 
 STEP 1 - LOAD CONFIGURATION
 
 Read these files:
+
 - /release/v5.5/agents/mpa/base/docs/MPA_Instruction_Iteration_Framework.md
 - /release/v5.5/agents/mpa/base/docs/OPTIMIZATION_SCORING_CONFIG.md
 - /release/v5.5/agents/mpa/base/docs/INSTRUCTION_CHANGE_LOG.md
 - /release/v5.5/agents/mpa/base/docs/VERSION_DASHBOARD.md
+- /release/v5.5/agents/mpa/base/tests/braintrust/baselines/v5_7_baseline.json
 
 STEP 2 - INITIALIZE TRACKING
 
 Create or update tracking variables:
+
 - iteration_count = 0
 - consecutive_rejections = 0
 - last_three_composites = []
 - current_best_version = baseline v5_7
 - current_best_composite = [from last eval]
+- target_composite = 0.95
 
 STEP 3 - OPTIMIZATION LOOP
 
@@ -34,155 +37,142 @@ WHILE stopping conditions not met:
        iteration_count += 1
        Report: "Starting iteration {iteration_count}"
 
-    B. FETCH RESULTS
-       Run: npx braintrust eval list --project MPA --limit 1 --format json
-       Parse all 12 scorer outputs
+    B. RUN MULTI-TURN EVALUATION (All 11 Scenarios)
 
-    C. CALCULATE COMPOSITE SCORE
-       Using weights from OPTIMIZATION_SCORING_CONFIG.md:
-       - Tier 1 (3.0): IDK Protocol, Progress Over Perfection, Step Boundary
-       - Tier 2 (2.0): Adaptive Sophistication, Source Citation, Tone Quality
-       - Tier 3 (1.0): Response Length, Single Question, Proactive Intelligence
-       - Tier 4 (0.5): Feasibility Framing, Step Completion, Acronym Definition
-       
-       composite = sum(score * weight) / 19.5
-       
-       Report: "Composite score: {composite:.3f}"
+       ```bash
+       cd /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/agents/mpa/base/tests/braintrust
+       export $(grep -E "^[A-Z_]+=" /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/integrations/vercel-ai-gateway/.env | xargs) && \
+       node dist/mpa-multi-turn-eval.js --parallel --efficiency --track-kb
+       ```
 
-    D. CHECK STOPPING CONDITIONS
+       Parse results for all 11 scenarios.
+       Calculate overall composite score.
 
-       IF composite >= 0.90:
-           Report: "Target achieved! Composite: {composite}"
-           Report: "Running multi-turn validation before final acceptance..."
-           GOTO STEP 3.5 (MULTI-TURN VALIDATION)
+    C. CHECK STOPPING CONDITIONS
+
+       IF composite >= 0.95:
+           Report: "TARGET ACHIEVED! Composite: {composite}"
+           GOTO STEP 4
 
        IF len(last_three_composites) >= 3:
            IF max(last_three_composites) - min(last_three_composites) < 0.01:
                STOP - "Plateau detected. Last 3 scores: {last_three_composites}"
                GOTO STEP 4
 
-       IF all Tier 1 scores >= 0.95 AND composite >= 0.85:
-           Report: "Tier 1 perfect with good composite."
-           Report: "Running multi-turn validation before final acceptance..."
-           GOTO STEP 3.5 (MULTI-TURN VALIDATION)
-
-       IF iteration_count >= 10:
+       IF iteration_count >= 20:
            STOP - "Max iterations reached. Human review needed."
            GOTO STEP 4
 
-       IF consecutive_rejections >= 3:
-           STOP - "3 consecutive rejections. Human intervention needed."
+       IF consecutive_rejections >= 5:
+           STOP - "5 consecutive rejections. Human intervention needed."
            GOTO STEP 4
 
-    E. CHECK MINIMUM THRESHOLDS
-       IF any Tier 1 scorer < 0.70:
-           Flag critical: "Tier 1 scorer below minimum threshold"
-           Prioritize fixing this scorer
-       
-       IF any Tier 2 scorer < 0.50:
-           Flag warning: "Tier 2 scorer below minimum threshold"
+    D. ANALYZE FAILING SCENARIOS
 
-    F. IDENTIFY TARGET SCORER
-       Priority order:
-       1. Any Tier 1 < 0.80
-       2. Any Tier 2 < 0.60
-       3. Lowest absolute score
-       
-       Report: "Targeting scorer: {target_scorer} (current: {score})"
+       Sort scenarios by composite score ascending.
+       Identify the 3 lowest-scoring scenarios.
 
-    G. ANALYZE AND PROPOSE
-       For lowest-scoring test case on target scorer:
-       - State the problem
+       For the lowest-scoring scenario:
+       - Read the full conversation from outputs/run-XXX/{scenario}/02_conversation.txt
+       - Identify where the agent failed
        - Diagnose root cause
+
+    E. IDENTIFY TARGET FOR IMPROVEMENT
+
+       Priority order:
+       1. Scenarios failing (<70% composite)
+       2. Scenarios with critical failures
+       3. Scenarios with major failures
+       4. Lowest absolute scores
+
+       Report: "Targeting scenario: {scenario_id} (current: {score}%)"
+
+    F. ANALYZE AND PROPOSE CHANGE
+
+       For lowest-scoring scenario:
+       - State the problem
+       - Diagnose root cause (instruction gap, KB gap, conflicting guidance)
        - Write hypothesis
-       - Determine Core vs KB
+       - Determine Core Instruction vs KB document change
        - Propose minimal change
-       
+
        Check human intervention triggers:
        - New KB document needed? ASK HUMAN
        - Removing instruction entirely? ASK HUMAN
-       - Same test case failed twice? ASK HUMAN
+       - Same scenario failed 3+ times? ASK HUMAN
        - Character count > 7,500? ASK HUMAN
-       - Modifying Tier 1 behavior? ASK HUMAN
 
-    H. IMPLEMENT CHANGE
+    G. IMPLEMENT CHANGE
+
        Follow all safeguards from /iterate:
-       - Character limit < 8,000
-       - Copilot formatting compliance
+       - Character limit < 8,000 for Core instructions
+       - Copilot formatting compliance (no markdown, no bullets, no tables)
        - Create new version file
        - Update mpa-prompt.ts with new version name and content
        - Update mpa-eval.ts with new instruction content
-       - Push prompt to Braintrust:
-         BRAINTRUST_API_KEY=sk-IodwJN1b7KKJk6BUmEg1fO37rwgpIGaRWGsBuG7YFyNH3EUR npx braintrust push mpa-prompt.ts --if-exists replace
+       - Update KB documents if needed
        - Update change log
-       - Commit and push
+       - Update VERSION_DASHBOARD.md
 
-    I. RUN EVALUATION
-       Run: npx braintrust eval run --project MPA --prompt-file {new_version_path}
-       Wait for results
+    H. COMMIT AND PUSH
+
+       MANDATORY after every change:
+       ```bash
+       git add .
+       git commit -m "Iteration {iteration_count}: {brief description of change}"
+       git push origin deploy/personal
+       ```
+
+       This ensures all changes are tracked and the remote repo is updated.
+
+    I. REBUILD TYPESCRIPT
+
+       ```bash
+       cd /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/agents/mpa/base/tests/braintrust
+       npx tsc
+       ```
 
     J. EVALUATE CHANGE
-       Fetch new results
-       Calculate new composite
-       
-       IF new_composite > current_best_composite AND no Tier 1 regressions:
+
+       Re-run multi-turn evaluation:
+       ```bash
+       export $(grep -E "^[A-Z_]+=" /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/integrations/vercel-ai-gateway/.env | xargs) && \
+       node dist/mpa-multi-turn-eval.js --parallel --efficiency --track-kb
+       ```
+
+       Calculate new composite.
+
+       IF new_composite > current_best_composite:
            ACCEPT
            current_best_version = new version
            current_best_composite = new_composite
            consecutive_rejections = 0
            Update VERSION_DASHBOARD.md
+           Report: "ACCEPTED: +{improvement}%"
        ELSE:
            REJECT
            Revert change
            consecutive_rejections += 1
-       
+           Report: "REJECTED: No improvement"
+
        Append new_composite to last_three_composites (keep last 3)
        Update INSTRUCTION_CHANGE_LOG.md
 
-    K. CONTINUE LOOP
+    K. COMMIT AND PUSH RESULTS
 
-STEP 3.5 - MULTI-TURN VALIDATION (when triggered by stopping condition)
+       ```bash
+       git add .
+       git commit -m "Iteration {iteration_count} result: {ACCEPT|REJECT} - {composite}%"
+       git push origin deploy/personal
+       ```
 
-This step runs when single-turn composite reaches target (0.90) or Tier 1 perfect condition.
+    L. CONTINUE LOOP
 
-Run multi-turn evaluation:
-
-```bash
-cd /release/v5.5/agents/mpa/base/tests/braintrust
-ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY npx ts-node --esm mpa-multi-turn-eval.ts
-```
-
-Parse results for each scenario:
-
-- basic-user-step1-2: threshold 0.70
-- sophisticated-idk-protocol: threshold 0.70
-- full-10-step: threshold 0.65
-
-Calculate multi-turn average and check for critical failures.
-
-Evaluate multi-turn status:
-
-IF MULTI-TURN PASS (all thresholds met, no critical failures, average >= 0.68):
-
-- Calculate combined score: (Single-Turn x 0.6) + (Multi-Turn Avg x 0.4)
-- IF combined >= 0.85: STOP - "TARGET ACHIEVED WITH MULTI-TURN VALIDATION" - GOTO STEP 4
-- ELSE: Report "Multi-turn passed but combined score below 0.85" - CONTINUE optimization loop
-
-IF MULTI-TURN CONDITIONAL (one scenario within 0.05, no critical failures, average >= 0.65):
-
-- Report: "Multi-turn conditional pass. Proceeding with caution."
-- Calculate combined score
-- IF combined >= 0.85: STOP - "TARGET ACHIEVED (CONDITIONAL)" - GOTO STEP 4
-- ELSE: CONTINUE optimization loop
-
-IF MULTI-TURN FAIL (scenario below threshold by > 0.10, OR critical failure, OR average < 0.60):
-
-- Report: "MULTI-TURN VALIDATION FAILED"
-- Report: "Failure reason: {specific_failure}"
-- DO NOT accept as target achieved
-- Flag for human intervention: "Single-turn passed but multi-turn failed. Review needed."
-- STOP - "Human review needed: multi-turn validation failure"
-- GOTO STEP 4
+       Report: "Iteration {iteration_count} complete. Composite: {composite}%. Target: 95%"
+       IF composite < 0.95:
+           CONTINUE to next iteration automatically
+       ELSE:
+           GOTO STEP 4
 
 STEP 4 - FINAL REPORT
 
@@ -198,39 +188,52 @@ Improvement: {delta} ({percentage}%)
 Best version: {current_best_version}
 Stopping reason: {reason}
 
-SINGLE-TURN SCORES:
-Tier 1 scores: {scores}
-Tier 2 scores: {scores}
-Tier 3 scores: {scores}
-Tier 4 scores: {scores}
-
-MULTI-TURN VALIDATION: {RAN|NOT_RUN}
-{If RAN:}
-basic-user-step1-2: {score}
-sophisticated-idk-protocol: {score}
-full-10-step: {score}
-Average: {avg}
-Status: {PASS|CONDITIONAL|FAIL}
-Combined score: {combined}
+MULTI-TURN RESULTS (11 Scenarios):
+Scenario                          | Score  | Change |
+----------------------------------|--------|--------|
+basic-user-step1-2                | XX.X%  | +X.X%  |
+sophisticated-idk                 | XX.X%  | +X.X%  |
+full-10-step                      | XX.X%  | +X.X%  |
+high-stakes-performance           | XX.X%  | +X.X%  |
+brand-building-limited-data       | XX.X%  | +X.X%  |
+precision-targeting-complex       | XX.X%  | +X.X%  |
+mass-national-simplicity          | XX.X%  | +X.X%  |
+aggressive-kpi-narrow-targeting   | XX.X%  | +X.X%  |
+multi-audience-unified-plan       | XX.X%  | +X.X%  |
+multi-audience-channel-allocation | XX.X%  | +X.X%  |
+multi-audience-varying-kpis       | XX.X%  | +X.X%  |
+----------------------------------|--------|--------|
+OVERALL                           | XX.X%  | +X.X%  |
 
 Changes accepted: {count}
 Changes rejected: {count}
+
+Outputs saved to: {latest_run_folder}
 
 Recommended next steps:
 - {recommendations based on remaining low scorers}
 ```
 
-Update VERSION_DASHBOARD.md with final state including multi-turn results.
+Update VERSION_DASHBOARD.md with final state.
 Commit summary to change log.
+
+Final push:
+
+```bash
+git add .
+git commit -m "Auto-optimization complete: {final_composite}% composite"
+git push origin deploy/personal
+```
 
 HARD RULES
 
 1. NEVER skip composite calculation
-1. NEVER ignore stopping conditions
-1. NEVER auto-approve Tier 1 regressions
-1. ALWAYS ask human for intervention triggers
-1. ALWAYS update dashboard after each iteration
-1. ALWAYS commit after each change (accepted or rejected)
-1. MAX 10 iterations per /iterate-auto invocation
-1. Multi-turn validation REQUIRED before declaring target achieved
-1. Multi-turn FAIL requires human intervention even if single-turn passes
+2. NEVER ignore stopping conditions
+3. ALWAYS push to git after each change
+4. ALWAYS push to git after each evaluation result
+5. ALWAYS ask human for intervention triggers
+6. ALWAYS update dashboard after each iteration
+7. MAX 20 iterations per /iterate-auto invocation
+8. TARGET is 95% composite - continue until achieved or stopped
+9. ALWAYS save test outputs to numbered folders
+10. ALWAYS track which scenarios are failing and why

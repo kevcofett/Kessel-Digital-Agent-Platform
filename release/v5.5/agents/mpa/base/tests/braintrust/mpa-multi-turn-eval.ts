@@ -65,9 +65,27 @@ import {
 // =============================================================================
 
 /**
- * Default baseline file path
+ * Get the source directory (not dist) for locating baselines
  */
-const BASELINE_PATH = path.join(__dirname, "baselines", "v5_7_baseline.json");
+function getSourceDir(): string {
+  // When running from dist/, go up one level to find the source files
+  // Use __dirname for CommonJS compatibility
+  const currentDir = __dirname;
+  if (currentDir.includes('/dist')) {
+    return path.resolve(currentDir, '..');
+  }
+  return currentDir;
+}
+
+/**
+ * Default baseline file path (in source directory, not dist)
+ */
+const BASELINE_PATH = path.join(getSourceDir(), "baselines", "v5_7_baseline.json");
+
+/**
+ * Output directory for test results
+ */
+const OUTPUT_BASE_DIR = path.join(getSourceDir(), "outputs");
 
 /**
  * Efficiency mode max turns (caps long-running scenarios)
@@ -604,6 +622,256 @@ function generateFinalSummary(
 }
 
 // =============================================================================
+// TEST OUTPUT SAVING
+// =============================================================================
+
+/**
+ * Get the next run number by checking existing output directories
+ */
+function getNextRunNumber(): number {
+  if (!fs.existsSync(OUTPUT_BASE_DIR)) {
+    return 1;
+  }
+
+  const dirs = fs.readdirSync(OUTPUT_BASE_DIR)
+    .filter(d => d.startsWith('run-'))
+    .map(d => parseInt(d.replace('run-', ''), 10))
+    .filter(n => !isNaN(n));
+
+  return dirs.length > 0 ? Math.max(...dirs) + 1 : 1;
+}
+
+/**
+ * Create output directory for this run
+ */
+function createRunDirectory(runNumber: number): string {
+  const runDir = path.join(OUTPUT_BASE_DIR, `run-${runNumber.toString().padStart(3, '0')}`);
+  fs.mkdirSync(runDir, { recursive: true });
+  return runDir;
+}
+
+/**
+ * Format a conversation turn for readable output
+ */
+function formatConversationTurn(turn: ConversationResult["turns"][0]): string {
+  const lines: string[] = [];
+
+  lines.push(`${"─".repeat(60)}`);
+  lines.push(`TURN ${turn.turnNumber} (Step ${turn.currentStep})`);
+  lines.push(`${"─".repeat(60)}`);
+  lines.push("");
+  lines.push("USER:");
+  lines.push(turn.userMessage);
+  lines.push("");
+  lines.push("AGENT:");
+  lines.push(turn.agentResponse);
+  lines.push("");
+
+  if (turn.detectedEvents.length > 0) {
+    lines.push(`Events: ${turn.detectedEvents.map(e => e.type).join(", ")}`);
+    lines.push("");
+  }
+
+  return lines.join("\n");
+}
+
+/**
+ * Save full conversation output for a scenario
+ */
+function saveScenarioOutput(
+  result: ConversationResult,
+  runDir: string,
+  scenarioIndex: number
+): void {
+  const primeDirective = calculatePrimeDirectiveEfficiency(result);
+  const scenarioDir = path.join(runDir, `${(scenarioIndex + 1).toString().padStart(2, '0')}_${result.scenario.id}`);
+  fs.mkdirSync(scenarioDir, { recursive: true });
+
+  // 1. Summary file
+  const summaryLines: string[] = [];
+  summaryLines.push(`# ${result.scenario.name}`);
+  summaryLines.push("");
+  summaryLines.push(`## Summary`);
+  summaryLines.push("");
+  summaryLines.push(`| Metric | Value |`);
+  summaryLines.push(`|--------|-------|`);
+  summaryLines.push(`| Status | ${result.passed ? "PASSED" : "FAILED"} |`);
+  summaryLines.push(`| Composite Score | ${(result.compositeScore * 100).toFixed(1)}% |`);
+  summaryLines.push(`| Plan Quality | ${(primeDirective.planQualityScore * 100).toFixed(1)}% |`);
+  summaryLines.push(`| Mentorship Quality | ${(primeDirective.mentorshipScore * 100).toFixed(1)}% |`);
+  summaryLines.push(`| Combined Efficiency | ${(primeDirective.combinedEfficiency * 100).toFixed(1)}% |`);
+  summaryLines.push(`| Total Turns | ${result.totalTurns} |`);
+  summaryLines.push(`| Steps Completed | ${result.finalStepState.completedSteps.length}/10 |`);
+  summaryLines.push(`| Duration | ${formatDuration(result.executionMetadata.totalDurationMs)} |`);
+  summaryLines.push(`| Tokens Used | ${result.executionMetadata.totalTokensUsed.toLocaleString()} |`);
+  summaryLines.push("");
+
+  if (result.failures.critical.length > 0 || result.failures.major.length > 0 || result.failures.warnings.length > 0) {
+    summaryLines.push(`## Failures`);
+    summaryLines.push("");
+    if (result.failures.critical.length > 0) {
+      summaryLines.push(`### Critical (${result.failures.critical.length})`);
+      for (const f of result.failures.critical) {
+        summaryLines.push(`- **${f.id}**: ${f.description}`);
+      }
+      summaryLines.push("");
+    }
+    if (result.failures.major.length > 0) {
+      summaryLines.push(`### Major (${result.failures.major.length})`);
+      for (const f of result.failures.major) {
+        summaryLines.push(`- **${f.id}**: ${f.description}`);
+      }
+      summaryLines.push("");
+    }
+    if (result.failures.warnings.length > 0) {
+      summaryLines.push(`### Warnings (${result.failures.warnings.length})`);
+      for (const f of result.failures.warnings) {
+        summaryLines.push(`- **${f.id}**: ${f.description}`);
+      }
+      summaryLines.push("");
+    }
+  }
+
+  fs.writeFileSync(path.join(scenarioDir, "01_summary.md"), summaryLines.join("\n"));
+
+  // 2. Full conversation log
+  const conversationLines: string[] = [];
+  conversationLines.push(`# Conversation Log: ${result.scenario.name}`);
+  conversationLines.push("");
+  conversationLines.push(`Timestamp: ${new Date().toISOString()}`);
+  conversationLines.push(`Total Turns: ${result.totalTurns}`);
+  conversationLines.push("");
+  conversationLines.push("═".repeat(60));
+  conversationLines.push("");
+
+  for (const turn of result.turns) {
+    conversationLines.push(formatConversationTurn(turn));
+  }
+
+  fs.writeFileSync(path.join(scenarioDir, "02_conversation.txt"), conversationLines.join("\n"));
+
+  // 3. Score breakdown
+  const scoreLines: string[] = [];
+  scoreLines.push(`# Score Breakdown: ${result.scenario.name}`);
+  scoreLines.push("");
+  scoreLines.push(formatScoreReport(
+    result.turnScoreAggregates,
+    result.conversationScores,
+    result.compositeScore,
+    result.passed
+  ));
+
+  fs.writeFileSync(path.join(scenarioDir, "03_scores.md"), scoreLines.join("\n"));
+
+  // 4. Media Plan Output (if available) - extracted from agent responses
+  const mediaPlanLines: string[] = [];
+  mediaPlanLines.push(`# Media Plan Output: ${result.scenario.name}`);
+  mediaPlanLines.push("");
+  mediaPlanLines.push(`This document contains the key outputs from the media planning conversation.`);
+  mediaPlanLines.push("");
+
+  // Track what we've learned at each step
+  const stepData: Record<number, string[]> = {};
+  for (const turn of result.turns) {
+    if (!stepData[turn.currentStep]) {
+      stepData[turn.currentStep] = [];
+    }
+    // Extract key points from agent response (first 2000 chars)
+    const response = turn.agentResponse.slice(0, 2000);
+    stepData[turn.currentStep].push(`Turn ${turn.turnNumber}:\n${response}${turn.agentResponse.length > 2000 ? '...' : ''}`);
+  }
+
+  for (let step = 1; step <= 10; step++) {
+    if (stepData[step] && stepData[step].length > 0) {
+      const stepNames = [
+        "", "Outcomes", "Economics", "Audience", "Geography", "Budget",
+        "Value Proposition", "Channels", "Measurement", "Testing", "Risks"
+      ];
+      mediaPlanLines.push(`## Step ${step}: ${stepNames[step]}`);
+      mediaPlanLines.push("");
+      for (const content of stepData[step]) {
+        mediaPlanLines.push(content);
+        mediaPlanLines.push("");
+      }
+      mediaPlanLines.push("─".repeat(40));
+      mediaPlanLines.push("");
+    }
+  }
+
+  fs.writeFileSync(path.join(scenarioDir, "04_media_plan.md"), mediaPlanLines.join("\n"));
+
+  // 5. Raw JSON data for debugging
+  const rawData = {
+    scenario: {
+      id: result.scenario.id,
+      name: result.scenario.name,
+      persona: result.scenario.persona.id,
+    },
+    result: {
+      compositeScore: result.compositeScore,
+      passed: result.passed,
+      totalTurns: result.totalTurns,
+      stepsCompleted: result.finalStepState.completedSteps,
+      turnsPerStep: result.finalStepState.turnsPerStep,
+      failures: result.failures,
+      primeDirective,
+    },
+    turnScoreAggregates: result.turnScoreAggregates,
+    conversationScores: Object.fromEntries(
+      Object.entries(result.conversationScores).map(([k, v]) => [k, v.score])
+    ),
+    executionMetadata: result.executionMetadata,
+  };
+
+  fs.writeFileSync(path.join(scenarioDir, "05_raw_data.json"), JSON.stringify(rawData, null, 2));
+}
+
+/**
+ * Save run summary
+ */
+function saveRunSummary(
+  results: Map<string, ConversationResult>,
+  runDir: string,
+  baseline: BaselineRecord | null,
+  promptVersion: string,
+  kbImpactReport?: string
+): void {
+  const summary = generateFinalSummary(results, baseline, promptVersion, kbImpactReport);
+  fs.writeFileSync(path.join(runDir, "00_run_summary.md"), summary);
+
+  // Also save a JSON index
+  const index: {
+    runNumber: number;
+    timestamp: string;
+    promptVersion: string;
+    scenarioCount: number;
+    passedCount: number;
+    overallComposite: number;
+    scenarios: Array<{
+      id: string;
+      name: string;
+      passed: boolean;
+      compositeScore: number;
+    }>;
+  } = {
+    runNumber: parseInt(path.basename(runDir).replace('run-', ''), 10),
+    timestamp: new Date().toISOString(),
+    promptVersion,
+    scenarioCount: results.size,
+    passedCount: Array.from(results.values()).filter(r => r.passed).length,
+    overallComposite: Array.from(results.values()).reduce((sum, r) => sum + r.compositeScore, 0) / results.size,
+    scenarios: Array.from(results.entries()).map(([id, r]) => ({
+      id,
+      name: r.scenario.name,
+      passed: r.passed,
+      compositeScore: r.compositeScore,
+    })).sort((a, b) => b.compositeScore - a.compositeScore),
+  };
+
+  fs.writeFileSync(path.join(runDir, "00_index.json"), JSON.stringify(index, null, 2));
+}
+
+// =============================================================================
 // EXECUTION
 // =============================================================================
 
@@ -745,6 +1013,17 @@ async function main() {
     results = await runScenariosSequential(scenarios, engineConfig, args.verbose);
   }
 
+  // Create output directory and save results
+  const runNumber = getNextRunNumber();
+  const runDir = createRunDirectory(runNumber);
+  console.log(`\n📁 Saving outputs to: ${runDir}`);
+
+  // Save individual scenario outputs
+  let scenarioIndex = 0;
+  for (const [, result] of results) {
+    saveScenarioOutput(result, runDir, scenarioIndex++);
+  }
+
   // Track KB impact if requested
   let kbImpactReport: string | undefined;
   if (args.trackKb) {
@@ -794,6 +1073,10 @@ async function main() {
   // Generate final summary
   const summary = generateFinalSummary(results, baseline, promptVersion, kbImpactReport);
   console.log("\n" + summary);
+
+  // Save run summary
+  saveRunSummary(results, runDir, baseline, promptVersion, kbImpactReport);
+  console.log(`\n📁 Full test outputs saved to: ${runDir}`);
 
   // Save new baseline if requested
   if (args.saveBaseline) {

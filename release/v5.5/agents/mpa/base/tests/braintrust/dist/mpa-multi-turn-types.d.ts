@@ -1,0 +1,493 @@
+/**
+ * MPA Multi-Turn Evaluation Type Definitions
+ *
+ * Comprehensive type system for multi-turn conversation evaluation.
+ */
+/**
+ * Persistent state tracked across turns for quality scoring
+ */
+export interface ConversationState {
+    /** All data points collected, keyed by field name */
+    collectedData: Record<string, unknown>;
+    /** Track what was calculated and when */
+    calculationsPerformed: {
+        turnNumber: number;
+        calculation: string;
+        formula: string;
+        result: string;
+    }[];
+    /** Insights captured per step for synthesis scoring */
+    insightsPerStep: Record<number, {
+        dataPoints: string[];
+        decisions: string[];
+        calculations: string[];
+    }>;
+    /** Track when data changes mid-conversation */
+    dataRevisions: {
+        turnNumber: number;
+        field: string;
+        oldValue: unknown;
+        newValue: unknown;
+        agentAcknowledged: boolean;
+        agentRecalculated: boolean;
+    }[];
+    /** Accumulated plan for coherence checking */
+    accumulatedPlan: Partial<MediaPlanData>;
+    /** Context for adaptive scoring */
+    context: {
+        budget: number;
+        funnel: "awareness" | "consideration" | "performance";
+        kpiAggressiveness: "conservative" | "moderate" | "aggressive";
+        userSophistication: "low" | "medium" | "high";
+    };
+}
+/**
+ * Media plan data structure for coherence checking
+ */
+export interface MediaPlanData {
+    objective?: string;
+    primaryKPI?: string;
+    volumeTarget?: number;
+    volumeUnit?: string;
+    totalBudget?: number;
+    impliedCAC?: number;
+    targetLTV?: number;
+    margin?: number;
+    efficiencyAssessment?: string;
+    audienceProfile?: {
+        demographics?: string;
+        behaviors?: string;
+        firstPartyData?: string;
+    };
+    audienceSize?: number;
+    geoScope?: "national" | "regional" | "local";
+    geoAllocations?: Record<string, number>;
+    strongMarkets?: string[];
+    weakMarkets?: string[];
+    channelAllocations?: Record<string, number>;
+    testBudget?: number;
+    monthlySpend?: number[];
+    pacing?: string;
+    valueProp?: string;
+    differentiators?: string[];
+    creativeApproach?: string;
+    channelMix?: Record<string, number>;
+    platformStrategies?: Record<string, string>;
+    attributionModel?: string;
+    trackingRequirements?: string[];
+    measurementLimitations?: string[];
+    testPlan?: string[];
+    testBudgetAllocated?: number;
+    learningAgenda?: string;
+    risks?: string[];
+    mitigations?: string[];
+    contingencies?: string[];
+}
+/**
+ * Initialize empty conversation state
+ */
+export declare function createInitialConversationState(budget?: number, funnel?: "awareness" | "consideration" | "performance", kpiAggressiveness?: "conservative" | "moderate" | "aggressive", userSophistication?: "low" | "medium" | "high"): ConversationState;
+/**
+ * User persona defining how the simulated user behaves
+ */
+export interface UserPersona {
+    /** Unique identifier for the persona */
+    id: string;
+    /** Human-readable name for the persona */
+    name: string;
+    /** Job title (optional) */
+    title?: string;
+    /** Company name (optional) */
+    company?: string;
+    /** Sophistication level affects language complexity matching */
+    sophisticationLevel: "basic" | "intermediate" | "advanced" | "expert";
+    /** Industry vertical affects benchmark expectations */
+    industry: string;
+    /** Known data the user has available to provide */
+    knownData: UserKnownData;
+    /** Behavioral traits affecting conversation dynamics */
+    behavioralTraits: UserBehavioralTraits;
+    /** Language patterns for response generation */
+    languagePatterns: UserLanguagePatterns;
+    /** Response style preferences (optional) */
+    responseStyle?: {
+        typicalLength?: "short" | "medium" | "long";
+        asksFollowUps?: boolean;
+        confirmsUnderstanding?: boolean;
+    };
+}
+/**
+ * Known data the user has available
+ */
+export interface UserKnownData {
+    hasBudget: boolean;
+    budget?: number;
+    hasVolume?: boolean;
+    volumeTarget?: number;
+    volumeUnit?: string;
+    hasVolumeTarget?: boolean;
+    volumeType?: "customers" | "leads" | "transactions" | "impressions";
+    hasUnitEconomics?: boolean;
+    hasLTV?: boolean;
+    ltv?: number;
+    hasCAC?: boolean;
+    cac?: number;
+    hasMargin?: boolean;
+    margin?: number;
+    contributionMargin?: number;
+    hasAudienceDefinition?: boolean;
+    audienceDescription?: string;
+    hasGeography?: boolean;
+    geography?: string[];
+    hasChannelPreferences?: boolean;
+    preferredChannels?: string[];
+    hasObjective?: boolean;
+    objective?: string;
+}
+/**
+ * Behavioral traits for user simulation
+ */
+export interface UserBehavioralTraits {
+    /** How likely to say "I don't know" */
+    uncertaintyFrequency: "never" | "rare" | "sometimes" | "often" | number;
+    /** How detailed responses are */
+    responseVerbosity?: "terse" | "normal" | "verbose";
+    verbosity?: "concise" | "balanced" | "detailed";
+    /** Whether user tries to skip ahead in steps */
+    stepSkipTendency?: "sequential" | "occasional_skip" | "frequent_skip";
+    skipTendency?: number;
+    /** Whether user pushes back on agent recommendations */
+    challengeFrequency?: "never" | "rare" | "sometimes" | "often";
+    pushbackFrequency?: number;
+    /** Specific objection patterns to test agent handling */
+    objectionPatterns?: string[];
+    /** Whether user provides unsolicited info */
+    providesUnsolicitedInfo?: boolean;
+}
+/**
+ * Language patterns for user simulation
+ */
+export interface UserLanguagePatterns {
+    /** Vocabulary examples to guide LLM user simulator */
+    samplePhrases: string[];
+    /** Whether to use industry jargon */
+    usesJargon: boolean;
+    /** Acronyms the user knows and uses */
+    knownAcronyms?: string[];
+    /** Preferred terms for concepts */
+    preferredTerms?: Record<string, string>;
+    /** Terms the user avoids */
+    avoidedTerms?: string[];
+}
+/**
+ * Test scenario defining the full conversation setup
+ */
+export interface TestScenario {
+    /** Unique identifier */
+    id: string;
+    /** Descriptive name */
+    name: string;
+    /** Category for grouping (optional) */
+    category?: string;
+    /** What this scenario tests */
+    description: string;
+    /** The user persona for this scenario */
+    persona: UserPersona;
+    /** Optional: specific opening message to start conversation */
+    openingMessage?: string;
+    /** Minimum expected turns (optional) */
+    minExpectedTurns?: number;
+    minTurns?: number;
+    /** Maximum turns before forced termination */
+    maxTurns: number;
+    /** Which steps should be completed by end of scenario */
+    expectedCompletedSteps: number[];
+    /** Step-specific expectations for validation (optional) */
+    stepExpectations?: StepExpectation[];
+    /** Expected events to occur (optional) */
+    expectedEvents?: Array<{
+        type: string;
+        description: string;
+    }>;
+    /** Failure conditions that should trigger early termination */
+    failureConditions: FailureCondition[];
+    /** KB files that should be injected at each step */
+    kbInjectionMap: Record<number, string[]>;
+    /** Success criteria for the overall scenario */
+    successCriteria: ScenarioSuccessCriteria;
+}
+/**
+ * Expectations for a specific step in the conversation
+ */
+export interface StepExpectation {
+    /** Which step (1-10) */
+    step: number;
+    /** Minimum viable data to collect before step is complete */
+    minimumViableData: string[];
+    /** Topics the agent MUST NOT discuss at this step */
+    forbiddenTopics: string[];
+    /** Patterns that indicate step completion */
+    completionIndicators: string[];
+    /** Maximum turns allowed within this step */
+    maxTurnsForStep: number;
+}
+/**
+ * Failure conditions for early termination or scoring
+ */
+export interface FailureCondition {
+    /** Unique identifier for the failure type */
+    id: string;
+    /** Description of what constitutes this failure */
+    description: string;
+    /** Detection pattern type */
+    type: "loop_detection" | "context_loss" | "greeting_repetition" | "step_boundary_violation" | "excessive_questions" | "blocked_progress" | "custom_pattern";
+    /** Regex or custom detection logic identifier */
+    detectionPattern?: string;
+    /** Severity determines scoring impact */
+    severity: "warning" | "major" | "critical";
+    /** Score penalty when this failure is detected */
+    scorePenalty: number;
+    /** Whether to terminate conversation on detection */
+    terminateOnDetect: boolean;
+}
+/**
+ * Custom success criterion with evaluator function
+ */
+export interface CustomCriterion {
+    name: string;
+    description: string;
+    evaluator: (result: ConversationResult) => boolean;
+}
+/**
+ * Success criteria for scenario completion
+ */
+export interface ScenarioSuccessCriteria {
+    /** All these steps must be marked complete */
+    requiredStepsComplete: number[];
+    /** Minimum conversation-level score to pass */
+    minimumOverallScore: number;
+    /** No critical failures allowed */
+    noCriticalFailures: boolean;
+    /** Per-turn score thresholds (optional) */
+    perTurnThresholds?: {
+        responseLengthMin: number;
+        singleQuestionRate: number;
+        sourceCitationRate: number;
+    };
+    /** Minimum scores for specific turn scorers (optional) */
+    minimumTurnScores?: Record<string, number>;
+    /** Custom evaluation criteria (optional) */
+    customCriteria?: CustomCriterion[];
+}
+/**
+ * Single turn in a conversation
+ */
+export interface ConversationTurn {
+    /** Turn number (1-indexed) */
+    turnNumber: number;
+    /** Which MPA step this turn belongs to */
+    currentStep: number;
+    /** User message for this turn */
+    userMessage: string;
+    /** Agent response */
+    agentResponse: string;
+    /** KB content injected for this turn */
+    kbContentInjected: string[];
+    /** Token counts for monitoring */
+    tokenCounts: {
+        userTokens: number;
+        agentTokens: number;
+        kbTokens: number;
+        totalContextTokens: number;
+    };
+    /** Timestamp for latency tracking */
+    timestamp: number;
+    /** Latency in milliseconds */
+    latencyMs: number;
+    /** Per-turn scores from all applicable scorers */
+    turnScores: Record<string, TurnScore>;
+    /** Detected events (failures, transitions, etc.) */
+    detectedEvents: ConversationEvent[];
+    /** Extracted data from this turn */
+    extractedData: Record<string, unknown>;
+    /** Step tracking state after this turn */
+    stepState: StepTrackingState;
+}
+/**
+ * Score for a single turn
+ */
+export interface TurnScore {
+    /** Scorer name */
+    scorer: string;
+    /** Numeric score (0-1) */
+    score: number;
+    /** Additional metadata from scorer */
+    metadata: Record<string, unknown>;
+    /** Whether this is a per-turn or conversation-level scorer */
+    scope: "turn" | "conversation";
+}
+/**
+ * Events detected during conversation
+ */
+export interface ConversationEvent {
+    /** Event type */
+    type: "step_transition" | "step_completion" | "failure_detected" | "idk_protocol" | "calculation_performed" | "benchmark_cited" | "loop_warning" | "context_loss_warning";
+    /** Turn number where event occurred */
+    turnNumber: number;
+    /** Event-specific data */
+    data: Record<string, unknown>;
+    /** Severity level */
+    severity: "info" | "warning" | "error" | "critical";
+}
+/**
+ * Tracking state for step progression
+ */
+export interface StepTrackingState {
+    /** Current active step */
+    currentStep: number;
+    /** Steps marked as complete */
+    completedSteps: number[];
+    /** Data collected per step */
+    collectedData: Record<number, StepCollectedData>;
+    /** Turn counts per step */
+    turnsPerStep: Record<number, number>;
+    /** Whether conversation has reached a terminal state */
+    isTerminal: boolean;
+    /** Reason for terminal state if applicable */
+    terminalReason?: string;
+}
+/**
+ * Data collected for a specific step
+ */
+export interface StepCollectedData {
+    /** Step number */
+    step: number;
+    /** List of required data points for this step */
+    requiredDataPoints: string[];
+    /** Which data points have been collected */
+    collectedDataPoints: Record<string, unknown>;
+    /** Whether minimum viable data is met */
+    minimumViableMet: boolean;
+    /** Turn number when step started */
+    startedAtTurn: number;
+    /** Turn number when step completed (if complete) */
+    completedAtTurn?: number;
+}
+/**
+ * Complete conversation result
+ */
+export interface ConversationResult {
+    /** Scenario that was executed */
+    scenario: TestScenario;
+    /** All turns in the conversation */
+    turns: ConversationTurn[];
+    /** Total turn count */
+    totalTurns: number;
+    /** Final step tracking state */
+    finalStepState: StepTrackingState;
+    /** All detected events across conversation */
+    allEvents: ConversationEvent[];
+    /** Failure summary */
+    failures: {
+        warnings: FailureCondition[];
+        major: FailureCondition[];
+        critical: FailureCondition[];
+    };
+    /** Per-turn score aggregations */
+    turnScoreAggregates: Record<string, {
+        min: number;
+        max: number;
+        mean: number;
+        median: number;
+        scores: number[];
+    }>;
+    /** Conversation-level scores */
+    conversationScores: Record<string, TurnScore>;
+    /** Composite overall score */
+    compositeScore: number;
+    /** Whether scenario passed based on success criteria */
+    passed: boolean;
+    /** Execution metadata */
+    executionMetadata: {
+        startTime: number;
+        endTime: number;
+        totalDurationMs: number;
+        averageLatencyMs: number;
+        totalTokensUsed: number;
+        modelUsed: string;
+        promptVersion: string;
+    };
+}
+/**
+ * User simulator response
+ */
+export interface UserSimulatorResponse {
+    /** The simulated user's message */
+    message: string;
+    /** What data the user revealed in this response */
+    revealedData: Record<string, unknown>;
+    /** Whether the user said "I don't know" */
+    saidIDontKnow: boolean;
+    /** Whether the user tried to skip ahead */
+    triedToSkip: boolean;
+    /** Whether the user pushed back on something */
+    pushedBack: boolean;
+    /** Internal reasoning (for debugging) */
+    reasoning?: string;
+}
+/**
+ * User Simulator Configuration
+ */
+export interface UserSimulatorConfig {
+    /** Model to use for simulation */
+    model: string;
+    /** Temperature for response generation */
+    temperature: number;
+    /** Maximum tokens for user response */
+    maxTokens: number;
+}
+/**
+ * Conversation Engine Configuration
+ */
+export interface ConversationEngineConfig {
+    /** Model for MPA agent */
+    agentModel: string;
+    /** Model for user simulator */
+    simulatorModel: string;
+    /** Temperature for agent responses */
+    agentTemperature: number;
+    /** Maximum tokens for agent responses */
+    agentMaxTokens: number;
+    /** System prompt version identifier */
+    promptVersion: string;
+    /** MPA system prompt content */
+    systemPrompt: string;
+    /** Whether to log verbose output */
+    verbose: boolean;
+}
+/**
+ * Step definition with requirements
+ */
+export interface StepDefinition {
+    /** Step number (1-10) */
+    step: number;
+    /** Step name */
+    name: string;
+    /** Minimum viable data points for this step */
+    minimumViableData: string[];
+    /** Patterns to detect this step in conversation */
+    detectionPatterns: RegExp[];
+}
+/**
+ * The 10 MPA steps
+ */
+export declare const MPA_STEPS: StepDefinition[];
+/**
+ * Scorer weight configuration
+ */
+export declare const SCORER_WEIGHTS: Record<string, number>;
+/**
+ * LLM grade to score mapping
+ */
+export declare const GRADE_SCORES: Record<string, number>;
+//# sourceMappingURL=mpa-multi-turn-types.d.ts.map

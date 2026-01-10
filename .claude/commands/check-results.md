@@ -17,6 +17,7 @@ Read scoring configuration:
 STEP 2 - FETCH NEW RESULTS
 
 Run this command to get the latest evaluation results:
+
 ```bash
 npx braintrust eval list --project MPA --limit 1 --format json
 ```
@@ -28,6 +29,9 @@ STEP 3 - LOAD BASELINE
 Read the change log and dashboard to get baseline scores:
 - /release/v5.5/agents/mpa/base/docs/INSTRUCTION_CHANGE_LOG.md
 - /release/v5.5/agents/mpa/base/docs/VERSION_DASHBOARD.md
+
+Also load the v5.7 baseline for multi-turn comparison:
+- /release/v5.5/agents/mpa/base/tests/braintrust/baselines/v5_7_baseline.json
 
 STEP 4 - CALCULATE COMPOSITE SCORES
 
@@ -45,7 +49,7 @@ STEP 5 - COMPARE SCORES
 
 Create comparison table:
 
-```
+```text
 SCORE COMPARISON
 ================
                       | Baseline | New    | Delta  | Status |
@@ -88,7 +92,7 @@ STEP 6 - CHECK TIER 1 REGRESSIONS
 
 Tier 1 scorers (NEVER regress):
 - IDK Protocol
-- Progress Over Perfection  
+- Progress Over Perfection
 - Step Boundary
 
 IF ANY Tier 1 scorer has negative delta:
@@ -146,35 +150,44 @@ Multi-turn validation is REQUIRED when ANY of these conditions are met:
 
 IF multi-turn validation is required:
 
-Run multi-turn evaluation:
+Run multi-turn evaluation (all 11 scenarios):
 
 ```bash
-cd /release/v5.5/agents/mpa/base/tests/braintrust
-ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY npx ts-node --esm mpa-multi-turn-eval.ts
+cd /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/agents/mpa/base/tests/braintrust
+export $(grep -E "^[A-Z_]+=" /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/integrations/vercel-ai-gateway/.env | xargs) && \
+node dist/mpa-multi-turn-eval.js --parallel --efficiency
 ```
 
 Parse multi-turn results for each scenario:
 
-```
+```text
 MULTI-TURN VALIDATION RESULTS
 =============================
-Scenario                  | Score  | Threshold | Status |
---------------------------|--------|-----------|--------|
-basic-user-step1-2        | 0.XXX  | 0.70      |   ✅   |
-sophisticated-idk-protocol| 0.XXX  | 0.70      |   ✅   |
-full-10-step              | 0.XXX  | 0.65      |   ✅   |
---------------------------|--------|-----------|--------|
-Average                   | 0.XXX  | 0.68      |   ✅   |
-Critical Failures         |   0    |    0      |   ✅   |
---------------------------|--------|-----------|--------|
+Scenario                                | Score  | Threshold | Status |
+----------------------------------------|--------|-----------|--------|
+basic-user-step1-2                      | 0.XXX  | 0.70      |   ✅   |
+sophisticated-idk                       | 0.XXX  | 0.70      |   ✅   |
+full-10-step                            | 0.XXX  | 0.65      |   ✅   |
+high-stakes-performance                 | 0.XXX  | 0.70      |   ✅   |
+brand-building-limited-data             | 0.XXX  | 0.70      |   ✅   |
+precision-targeting-complex             | 0.XXX  | 0.70      |   ✅   |
+mass-national-simplicity                | 0.XXX  | 0.70      |   ✅   |
+aggressive-kpi-narrow-targeting         | 0.XXX  | 0.70      |   ✅   |
+multi-audience-unified-plan             | 0.XXX  | 0.70      |   ✅   |
+multi-audience-channel-allocation       | 0.XXX  | 0.70      |   ✅   |
+multi-audience-varying-kpis             | 0.XXX  | 0.70      |   ✅   |
+----------------------------------------|--------|-----------|--------|
+Average                                 | 0.XXX  | 0.70      |   ✅   |
+Critical Failures                       |   X    |    0      |   ✅   |
+----------------------------------------|--------|-----------|--------|
 MULTI-TURN STATUS: {PASS|CONDITIONAL|FAIL}
 ```
 
 Evaluate multi-turn status:
 
-PASS - All scenarios meet thresholds, no critical failures, average >= 0.68
-CONDITIONAL - One scenario slightly below (within 0.05), no critical failures, average >= 0.65
-FAIL - Any scenario below threshold by > 0.10, OR critical failure, OR average < 0.60
+PASS - 70%+ scenarios meet thresholds, no critical failures, average >= 0.70
+CONDITIONAL - 60-70% scenarios pass, no critical failures, average >= 0.65
+FAIL - <60% scenarios pass, OR critical failure, OR average < 0.60
 
 If multi-turn FAIL:
 
@@ -223,7 +236,7 @@ IF MODIFY FURTHER:
 
 STEP 12 - REPORT SUMMARY
 
-```
+```text
 DECISION: {ACCEPT|REJECT|MODIFY}
 ==================================
 Version tested: {version}
@@ -235,9 +248,11 @@ SINGLE-TURN RESULTS:
 
 MULTI-TURN RESULTS: {RAN|SKIPPED}
   {If RAN:}
+  Scenarios: {passed}/{total} passed
   Average score: {multi_turn_avg}
   Status: {PASS|CONDITIONAL|FAIL}
   Combined score: {combined}
+  Outputs saved to: {run_folder}
 
 Rationale: {explanation}
 

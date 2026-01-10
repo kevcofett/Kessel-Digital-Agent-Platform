@@ -6,7 +6,7 @@ Enter MPA instruction iteration mode based on Braintrust evaluation results.
 
 STEP 1 - LOAD CONTEXT
 
-Read these files to understand the iteration framework and current state:
+Read these files to understand the iteration framework, formatting rules, and current state:
 - /release/v5.5/agents/mpa/base/docs/MPA_Instruction_Iteration_Framework.md
 - /release/v5.5/agents/mpa/base/docs/INSTRUCTION_CHANGE_LOG.md
 - /release/v5.5/agents/mpa/base/copilot/MPA_Copilot_Instructions_v5_7.txt (baseline)
@@ -52,8 +52,18 @@ For the lowest-scoring test case:
    - Expected impact: [which scorers improve]
 
 4. LOCATE CHANGE POINT
-   - Core instruction (global behavior, hard constraint)
-   - KB document (step-specific, needs examples, domain knowledge)
+   Decide: Core instruction or KB document?
+   
+   USE KB DOCUMENT IF:
+   - Change is step-specific (only applies to Step 4, Step 7, etc.)
+   - Change requires examples or detailed explanation
+   - Change is about domain knowledge, not agent behavior
+   - Adding to Core would exceed 8,000 character limit
+   
+   USE CORE INSTRUCTION IF:
+   - Change is a global behavior (applies across all steps)
+   - Change is a hard constraint or prime directive
+   - Change conflicts with existing core instruction
 
 5. PROPOSE MINIMAL CHANGE
    Show exact text to remove and exact text to add.
@@ -68,20 +78,70 @@ Do NOT modify any files until user approves.
 
 STEP 5 - IMPLEMENT (after approval)
 
-1. If Core change: Create new version file (v5_7_1, v5_7_2, etc.)
-2. If KB change: Update the KB document
-3. Update INSTRUCTION_CHANGE_LOG.md with hypothesis and changes
-4. Commit with descriptive message
-5. Push to deploy/personal
+MANDATORY CHECKS BEFORE WRITING ANY FILE:
 
-STEP 6 - PROMPT FOR RE-EVAL
+A. CHARACTER LIMIT CHECK (Core instructions only)
+   - Current character count of baseline
+   - Character count after proposed change
+   - MUST be under 8,000 characters
+   - If over, move detail to KB document instead
 
-Tell user: "Change committed. Run eval in Braintrust, then say 'check results' to compare scores."
+B. COPILOT FORMATTING COMPLIANCE (All files)
+   - ALL-CAPS section headers (no Title Case, no lowercase)
+   - NO markdown formatting (no #, *, `, - as bullets)
+   - NO emojis or special Unicode characters
+   - NO tables (use plain text lists)
+   - NO bullet points (use line breaks and plain sentences)
+   - NO numbered lists (use sequential paragraphs)
+   - Plain ASCII text only
+   - Line breaks for structure
 
-RULES
+C. FILE OPERATIONS
+   
+   For Core instruction changes:
+   1. Create new version file in /release/v5.5/agents/mpa/base/copilot/
+      - Name: MPA_Copilot_Instructions_v5_7_[N].txt (increment N)
+   2. Copy baseline content
+   3. Apply the approved change
+   4. Verify character count < 8,000
+   5. Verify formatting compliance
+   
+   For KB document changes:
+   1. If updating existing: Edit file in /release/v5.5/agents/mpa/base/kb/
+   2. If creating new: Create in /release/v5.5/agents/mpa/base/kb/
+      - Name: [DescriptiveName]_v5_5.txt
+   3. Verify formatting compliance
+   4. If new KB doc, check if Core instructions need reference added
+   
+   For ALL changes:
+   1. Update INSTRUCTION_CHANGE_LOG.md with hypothesis and changes
+   2. Git add all modified/created files
+   3. Git commit with descriptive message
+   4. Git push to deploy/personal
 
-- Never modify baseline v5_7 directly
-- One hypothesis per iteration
-- KB before Core when possible
-- Never regress Tier 1 scorers
-- Document everything in change log
+STEP 6 - VERIFICATION
+
+After writing files, run:
+```bash
+wc -c /release/v5.5/agents/mpa/base/copilot/MPA_Copilot_Instructions_v5_7_*.txt
+```
+
+Report:
+- File created/modified
+- Character count (must be < 8,000 for Core)
+- Formatting compliance confirmed
+
+STEP 7 - PROMPT FOR RE-EVAL
+
+Tell user: "Change committed. Run eval in Braintrust, then type /check-results to compare scores."
+
+HARD RULES - NEVER VIOLATE
+
+1. Core instructions MUST stay under 8,000 characters - no exceptions
+2. ALL files MUST follow Copilot formatting - no markdown, no bullets, no tables
+3. NEVER modify baseline v5_7.txt directly - always create new version
+4. ONE hypothesis per iteration - no combined changes
+5. KB before Core when possible - Core is precious character budget
+6. NEVER regress Tier 1 scorers
+7. ALWAYS update change log
+8. ALWAYS commit and push after changes

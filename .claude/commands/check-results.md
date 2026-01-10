@@ -4,6 +4,11 @@ description: Compare Braintrust results after iteration, calculate composite, de
 
 Check Braintrust evaluation results after an iteration and decide whether to accept or reject the change.
 
+This command supports two-phase validation:
+
+- Phase 1: Single-turn evaluation (always runs)
+- Phase 2: Multi-turn validation (runs when single-turn passes target threshold)
+
 STEP 1 - LOAD CONFIGURATION
 
 Read scoring configuration:
@@ -126,11 +131,68 @@ REJECT - Criteria:
 - Minimum threshold violation introduced
 
 MODIFY FURTHER - Criteria:
+
 - Mixed results with potential
 - Composite stable but target scorer didn't improve
 - Minor regressions in Tier 3/4 that could be recovered
 
-STEP 10 - EXECUTE DECISION
+STEP 10 - MULTI-TURN VALIDATION GATE (Conditional)
+
+Multi-turn validation is REQUIRED when ANY of these conditions are met:
+
+- Single-turn composite >= 0.90 (target achieved - must validate before final acceptance)
+- This is the 5th consecutive accepted change (periodic validation)
+- Change affects Tier 1 behaviors
+
+IF multi-turn validation is required:
+
+Run multi-turn evaluation:
+
+```bash
+cd /release/v5.5/agents/mpa/base/tests/braintrust
+ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY npx ts-node --esm mpa-multi-turn-eval.ts
+```
+
+Parse multi-turn results for each scenario:
+
+```
+MULTI-TURN VALIDATION RESULTS
+=============================
+Scenario                  | Score  | Threshold | Status |
+--------------------------|--------|-----------|--------|
+basic-user-step1-2        | 0.XXX  | 0.70      |   ✅   |
+sophisticated-idk-protocol| 0.XXX  | 0.70      |   ✅   |
+full-10-step              | 0.XXX  | 0.65      |   ✅   |
+--------------------------|--------|-----------|--------|
+Average                   | 0.XXX  | 0.68      |   ✅   |
+Critical Failures         |   0    |    0      |   ✅   |
+--------------------------|--------|-----------|--------|
+MULTI-TURN STATUS: {PASS|CONDITIONAL|FAIL}
+```
+
+Evaluate multi-turn status:
+
+PASS - All scenarios meet thresholds, no critical failures, average >= 0.68
+CONDITIONAL - One scenario slightly below (within 0.05), no critical failures, average >= 0.65
+FAIL - Any scenario below threshold by > 0.10, OR critical failure, OR average < 0.60
+
+If multi-turn FAIL:
+
+- Override single-turn ACCEPT to REJECT
+- Reason: "Multi-turn validation failed: {specific failure reason}"
+- Do not proceed to execute decision
+
+If multi-turn PASS or CONDITIONAL:
+
+- Calculate combined score: (Single-Turn x 0.6) + (Multi-Turn Avg x 0.4)
+- Proceed to execute decision with multi-turn results included
+
+IF multi-turn validation is NOT required:
+
+- Proceed directly to execute decision
+- Note: "Multi-turn validation skipped (not required for this change)"
+
+STEP 11 - EXECUTE DECISION
 
 IF ACCEPT:
     1. Update VERSION_DASHBOARD.md:
@@ -159,15 +221,23 @@ IF MODIFY FURTHER:
     3. Propose next hypothesis to address remaining issues
     4. Ask: "Continue with proposed modification? (yes/no)"
 
-STEP 11 - REPORT SUMMARY
+STEP 12 - REPORT SUMMARY
 
 ```
 DECISION: {ACCEPT|REJECT|MODIFY}
 ==================================
 Version tested: {version}
-Composite: {baseline} → {new} ({delta:+.3f})
-Tier 1 status: {PASS|FAIL}
-Minimum thresholds: {PASS|FAIL}
+
+SINGLE-TURN RESULTS:
+  Composite: {baseline} → {new} ({delta:+.3f})
+  Tier 1 status: {PASS|FAIL}
+  Minimum thresholds: {PASS|FAIL}
+
+MULTI-TURN RESULTS: {RAN|SKIPPED}
+  {If RAN:}
+  Average score: {multi_turn_avg}
+  Status: {PASS|CONDITIONAL|FAIL}
+  Combined score: {combined}
 
 Rationale: {explanation}
 
@@ -179,8 +249,10 @@ Rationale: {explanation}
 HARD RULES
 
 1. ANY Tier 1 regression = automatic REJECT
-2. ALWAYS calculate composite score
-3. ALWAYS update both change log AND dashboard
-4. ALWAYS commit after decision
-5. NEVER accept if minimum threshold violated
-6. ALWAYS show full comparison table
+1. ALWAYS calculate composite score
+1. ALWAYS update both change log AND dashboard
+1. ALWAYS commit after decision
+1. NEVER accept if minimum threshold violated
+1. ALWAYS show full comparison table
+1. Multi-turn validation REQUIRED before accepting composite >= 0.90
+1. Multi-turn FAIL overrides single-turn ACCEPT

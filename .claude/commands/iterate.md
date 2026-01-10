@@ -142,6 +142,9 @@ STEP 7 - PROMPT FOR RE-EVAL
 
 Tell user: "Change committed. Run eval in Braintrust, then type /check-results to compare scores."
 
+Note: If the change affects Tier 1 behaviors OR if composite score reaches >= 0.90,
+/check-results will automatically trigger multi-turn validation before final acceptance.
+
 HARD RULES - NEVER VIOLATE
 
 1. Core instructions MUST stay under 8,000 characters - no exceptions

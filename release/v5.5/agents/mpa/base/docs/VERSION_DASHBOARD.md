@@ -5,10 +5,12 @@
 | Attribute | Value |
 |-----------|-------|
 | Version | v5_7_5 |
-| Composite Score | 0.917 (91.7%) |
+| Single-Turn Composite | 0.917 (91.7%) |
+| Multi-Turn Average | 0.872 (87.2%) |
+| Combined Score | 0.899 (89.9%) |
 | Character Count | 7,983 |
 | Last Updated | 2026-01-10 |
-| Status | Active - TARGET ACHIEVED |
+| Status | PRODUCTION VALIDATED |
 
 ## VERSION HISTORY
 
@@ -91,11 +93,40 @@ Monitor approach to 8,000 limit.
 | v5_7 | 7,587 | 94.8% | 413 |
 | | | | |
 
+## MULTI-TURN VALIDATION HISTORY
+
+Track multi-turn evaluation results for validated versions.
+
+### v5_7_5 (PASSED - 2026-01-10)
+
+| Scenario | Score | Threshold | Status |
+|----------|-------|-----------|--------|
+| basic-user-step1-2 | 0.845 (84.5%) | 0.70 | PASS |
+| sophisticated-idk-protocol | 0.938 (93.8%) | 0.70 | PASS |
+| full-10-step | 0.834 (83.4%) | 0.65 | PASS |
+
+| Metric | Value |
+|--------|-------|
+| Average | 0.872 (87.2%) |
+| Critical Failures | 0 |
+| Multi-Turn Status | PASS |
+| Combined Score | 0.899 (89.9%) |
+
+Quality Scorer Results (Mean across scenarios):
+
+| Scorer | Score | Notes |
+|--------|-------|-------|
+| proactive-intelligence | 89.3% | Agent doing math proactively |
+| risk-opportunity-flagging | 88.3% | Agent flagging risks/opportunities |
+| calculation-presence | 66.5% | Calculation presence - room for improvement |
+| progress-over-perfection | 89.2% | Good momentum maintained |
+
 ## ALERTS
 
 - ⚠️ Character count > 7,500: Consider moving content to KB
 - ❌ Character count > 7,800: Critical - must reduce before next iteration
 - 🔴 Tier 1 regression detected: Immediate rollback required
+- ✅ Multi-turn validation PASSED: v5_7_5 validated for production
 
 ## KB DOCUMENTS CREATED
 

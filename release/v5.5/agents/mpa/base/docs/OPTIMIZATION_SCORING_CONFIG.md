@@ -1,8 +1,17 @@
 MPA OPTIMIZATION SCORING CONFIGURATION
 
-COMPOSITE SCORE FORMULA
+EVALUATION SYSTEM OVERVIEW
 
-The composite score is a weighted average of all scorer outputs, normalized to 0-1 scale.
+The MPA uses a two-phase evaluation system:
+
+1. Single-Turn Evaluation - Fast per-response scoring (12 scorers, 4 tiers)
+2. Multi-Turn Evaluation - Full conversation validation (3 scenarios)
+
+Single-turn drives iteration loops. Multi-turn validates before major acceptance decisions.
+
+SINGLE-TURN COMPOSITE SCORE FORMULA
+
+The single-turn composite score is a weighted average of all scorer outputs, normalized to 0-1 scale.
 
 TIER WEIGHTS
 
@@ -104,3 +113,131 @@ Stop auto-optimization and ask for human input when:
 3. Two consecutive hypotheses address same test case with no improvement
 4. Character count would exceed 7,500 (approaching limit)
 5. Change requires modifying Tier 1 behavior
+
+MULTI-TURN EVALUATION CONFIGURATION
+
+Multi-turn evaluation tests complete conversation flows through the 10-step MPA process.
+
+WHEN TO RUN MULTI-TURN EVALUATION
+
+Multi-turn evaluation is required as a validation gate in these situations:
+
+1. FINAL ACCEPTANCE GATE
+   Before accepting a version as production-ready (composite >= 0.90), run multi-turn validation.
+
+2. MAJOR INSTRUCTION CHANGES
+   When changes affect Tier 1 behaviors or core conversation flow.
+
+3. TARGET ACHIEVEMENT VERIFICATION
+   When single-turn composite reaches target (0.90), validate with multi-turn before declaring success.
+
+4. PERIODIC VALIDATION
+   Every 5 accepted iterations, run multi-turn as a regression check.
+
+MULTI-TURN TEST SCENARIOS
+
+Three standard scenarios validate different aspects of conversation quality:
+
+Scenario 1: basic-user-step1-2
+
+- Tests language adaptation for basic users
+- Validates Steps 1-2 completion
+- Expected turns: 4-12
+- Pass threshold: 0.70
+
+Scenario 2: sophisticated-idk-protocol
+
+- Tests IDK protocol and benchmark modeling
+- Validates expert-level language adaptation
+- Expected turns: 5-15
+- Pass threshold: 0.70
+
+Scenario 3: full-10-step
+
+- Tests complete 10-step planning session
+- Validates all step transitions and data collection
+- Expected turns: 20-50
+- Pass threshold: 0.65
+
+MULTI-TURN SCORING
+
+Each scenario produces a composite score based on:
+
+Per-Turn Scorers (evaluated each turn):
+
+- response-length: Response within 50-300 word bounds
+- single-question: Only one question per turn
+- step-boundary: No step boundary violations
+- adaptive-sophistication: Language matches user level
+- proactive-intelligence: Offers relevant insights
+
+Conversation-Level Scorers (evaluated once per conversation):
+
+- step-completion-rate: Percentage of expected steps completed
+- conversation-efficiency: Turns vs expected minimum
+- context-retention: References previous conversation data
+- greeting-uniqueness: No repeated greetings
+- loop-detection: No question loops
+
+Multi-Turn Composite = weighted average of all scorer outputs
+
+MULTI-TURN VALIDATION RULES
+
+PASS CRITERIA (all must be met):
+
+- All scenarios pass their individual thresholds
+- No critical failures detected (greeting repetition, context loss, step boundary violations)
+- Average composite across scenarios >= 0.68
+
+FAIL CRITERIA (any triggers rejection):
+
+- Any scenario below pass threshold by > 0.10
+- Critical failure detected in any scenario
+- Average composite < 0.60
+
+CONDITIONAL PASS:
+
+- One scenario slightly below threshold (within 0.05)
+- No critical failures
+- Average composite >= 0.65
+
+RUNNING MULTI-TURN EVALUATION
+
+Command to run multi-turn evaluation:
+
+```bash
+cd /release/v5.5/agents/mpa/base/tests/braintrust
+ANTHROPIC_API_KEY=xxx npx ts-node --esm mpa-multi-turn-eval.ts
+```
+
+To run a specific scenario:
+
+```bash
+ANTHROPIC_API_KEY=xxx npx ts-node --esm mpa-multi-turn-eval.ts --scenario basic-user-step1-2
+```
+
+To run with Braintrust logging:
+
+```bash
+BRAINTRUST_API_KEY=xxx ANTHROPIC_API_KEY=xxx npx braintrust eval mpa-multi-turn-eval.ts
+```
+
+COMBINED SCORING FOR FINAL ACCEPTANCE
+
+When both single-turn and multi-turn evaluations are run, calculate combined score:
+
+Combined Score = (Single-Turn Composite x 0.6) + (Multi-Turn Average x 0.4)
+
+This weighting ensures:
+
+- Single-turn (60%): Drives fast iteration on specific behaviors
+- Multi-turn (40%): Validates holistic conversation quality
+
+FINAL ACCEPTANCE REQUIREMENTS
+
+To accept a version as production-ready:
+
+1. Single-turn composite >= 0.90
+2. Multi-turn validation PASS or CONDITIONAL PASS
+3. No Tier 1 regressions from previous version
+4. Combined score >= 0.85

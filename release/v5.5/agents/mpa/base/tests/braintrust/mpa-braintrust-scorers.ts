@@ -257,8 +257,10 @@ project.scorers.create({
     output: z.string(),
     input: z.string(),
   }),
-  type: "llm",
-  prompt: `You are evaluating a Media Planning Agent's response for adaptive sophistication.
+  messages: [
+    {
+      role: "user",
+      content: `You are evaluating a Media Planning Agent's response for adaptive sophistication.
 
 USER INPUT:
 {{input}}
@@ -283,9 +285,11 @@ F - Agent completely ignores user sophistication signals
 First, analyze the user's apparent sophistication level based on their input.
 Then, evaluate if the agent's response matches appropriately.
 Select one choice: A, B, C, D, or F`,
-  model: "gpt-4o",
+    },
+  ],
+  model: "claude-sonnet-4-20250514",
   choiceScores: { A: 1.0, B: 0.8, C: 0.6, D: 0.3, F: 0 },
-  useCoT: true,
+  useCot: true,
 });
 
 /**
@@ -299,8 +303,10 @@ project.scorers.create({
   parameters: z.object({
     output: z.string(),
   }),
-  type: "llm",
-  prompt: `You are evaluating a Media Planning Agent's tone.
+  messages: [
+    {
+      role: "user",
+      content: `You are evaluating a Media Planning Agent's tone.
 
 AGENT RESPONSE:
 {{output}}
@@ -329,9 +335,11 @@ D - Noticeably condescending or cold
 F - Clearly condescending or dismissive
 
 Select one choice: A, B, C, D, or F`,
-  model: "gpt-4o",
+    },
+  ],
+  model: "claude-sonnet-4-20250514",
   choiceScores: { A: 1.0, B: 0.8, C: 0.6, D: 0.3, F: 0 },
-  useCoT: true,
+  useCot: true,
 });
 
 /**
@@ -347,8 +355,10 @@ project.scorers.create({
     input: z.string(),
     metadata: z.object({ hasEnoughDataToModel: z.boolean().optional() }).optional(),
   }),
-  type: "llm",
-  prompt: `You are evaluating a Media Planning Agent's proactive intelligence.
+  messages: [
+    {
+      role: "user",
+      content: `You are evaluating a Media Planning Agent's proactive intelligence.
 
 USER INPUT:
 {{input}}
@@ -376,9 +386,11 @@ F - Agent completely fails to leverage available data
 If there's not enough data to model yet, score as N/A (return 1.0 with note).
 
 Select one choice: A, B, C, D, F, or N/A`,
-  model: "gpt-4o",
+    },
+  ],
+  model: "claude-sonnet-4-20250514",
   choiceScores: { A: 1.0, B: 0.8, C: 0.5, D: 0.2, F: 0, "N/A": 1.0 },
-  useCoT: true,
+  useCot: true,
 });
 
 /**
@@ -393,8 +405,10 @@ project.scorers.create({
     output: z.string(),
     input: z.string(),
   }),
-  type: "llm",
-  prompt: `You are evaluating whether a Media Planning Agent maintains progress momentum.
+  messages: [
+    {
+      role: "user",
+      content: `You are evaluating whether a Media Planning Agent maintains progress momentum.
 
 USER INPUT:
 {{input}}
@@ -430,9 +444,11 @@ D - Agent frequently blocks progress
 F - Agent completely stalls progress with endless questions
 
 Select one choice: A, B, C, D, or F`,
-  model: "gpt-4o",
+    },
+  ],
+  model: "claude-sonnet-4-20250514",
   choiceScores: { A: 1.0, B: 0.8, C: 0.5, D: 0.2, F: 0 },
-  useCoT: true,
+  useCot: true,
 });
 
 /**
@@ -447,8 +463,10 @@ project.scorers.create({
     output: z.string(),
     input: z.string(),
   }),
-  type: "llm",
-  prompt: `You are evaluating how a Media Planning Agent frames target feasibility.
+  messages: [
+    {
+      role: "user",
+      content: `You are evaluating how a Media Planning Agent frames target feasibility.
 
 USER INPUT:
 {{input}}
@@ -485,9 +503,11 @@ F - Accepts obviously unrealistic targets without comment
 If no efficiency targets are discussed, score as N/A.
 
 Select one choice: A, B, C, D, F, or N/A`,
-  model: "gpt-4o",
+    },
+  ],
+  model: "claude-sonnet-4-20250514",
   choiceScores: { A: 1.0, B: 0.7, C: 0.5, D: 0.2, F: 0, "N/A": 1.0 },
-  useCoT: true,
+  useCot: true,
 });
 
 /**
@@ -501,13 +521,15 @@ project.scorers.create({
   parameters: z.object({
     output: z.string(),
     input: z.string(),
-    metadata: z.object({ 
+    metadata: z.object({
       currentStep: z.number().optional(),
       collectedData: z.record(z.any()).optional()
     }).optional(),
   }),
-  type: "llm",
-  prompt: `You are evaluating whether a Media Planning Agent properly manages step completion.
+  messages: [
+    {
+      role: "user",
+      content: `You are evaluating whether a Media Planning Agent properly manages step completion.
 
 USER INPUT:
 {{input}}
@@ -539,9 +561,11 @@ F - Agent fails to recognize when step is complete
 If the step requirements aren't yet met, score based on whether questions are relevant.
 
 Select one choice: A, B, C, D, or F`,
-  model: "gpt-4o",
+    },
+  ],
+  model: "claude-sonnet-4-20250514",
   choiceScores: { A: 1.0, B: 0.8, C: 0.5, D: 0.2, F: 0 },
-  useCoT: true,
+  useCot: true,
 });
 
 export default project;

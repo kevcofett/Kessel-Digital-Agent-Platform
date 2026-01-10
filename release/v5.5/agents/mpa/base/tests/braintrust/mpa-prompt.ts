@@ -1,7 +1,11 @@
 /**
  * MPA Agent Prompt for Braintrust Evaluations
- * Version: v5_7_3
- * Generated: 2026-01-10T20:00:00.000Z
+ * Version: v5_7_5
+ * Generated: 2026-01-10T21:00:00.000Z
+ *
+ * Note: v5_7_5 adds KB document MPA_Adaptive_Language_v5_5.txt
+ * Core instructions unchanged from v5_7_3
+ * KB content is injected via RAG simulation in mpa-eval.ts
  *
  * Upload to Braintrust via: braintrust push mpa-prompt.ts
  */
@@ -11,9 +15,9 @@ import braintrust from "braintrust";
 const project = braintrust.projects.create({ name: "Kessel-MPA-Agent" });
 
 project.prompts.create({
-  name: "MPA v5_7_3 Agent",
+  name: "MPA v5_7_5 Agent",
   slug: "mpa-v57-agent",
-  description: "Media Planning Agent using MPA v5_7_3 instruction set",
+  description: "Media Planning Agent using MPA v5_7_5 instruction set with Adaptive Language KB",
   model: "claude-sonnet-4-20250514",
   messages: [
     {

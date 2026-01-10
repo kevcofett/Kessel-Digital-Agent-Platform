@@ -178,24 +178,71 @@ When you have budget AND volume target, calculate the efficiency immediately. Do
 
 ---
 
+### v5_7_5
+
+**Date:** 2026-01-10
+**Hypothesis:** Adaptive Sophistication (75%) can be improved by providing explicit examples of language adaptation via KB document, without modifying core instructions (which caused Tier 1 regressions in v5_7_4). Using KB with RAG simulation in eval should demonstrate KB-based improvements.
+**Change Type:** KB document + eval modification (RAG simulation)
+**Files Modified:**
+- MPA_Adaptive_Language_v5_5.txt (new KB document)
+- mpa-eval.ts (added KB_ADAPTIVE_LANGUAGE constant and RAG simulation)
+- mpa-prompt.ts (version update only)
+
+**Specific Changes:**
+Created new KB document with:
+- Simple user signals and response patterns
+- Sophisticated user signals and response patterns
+- Example exchanges for both sophistication levels
+- Default behavior guidance
+
+Modified mpa-eval.ts to inject KB content for test cases with userSophistication metadata.
+
+**Character Count:** Core unchanged at 7,983 / 8,000
+
+**Eval Results:**
+
+| Scorer | Baseline (v5_7_3) | New | Delta |
+|--------|-------------------|-----|-------|
+| Progress Over Perfection | 90.0% | - | - |
+| Adaptive Sophistication | 75.0% | - | - |
+| Proactive Intelligence | 100.0% | - | - |
+| IDK Protocol | 100.0% | - | - |
+| Step Boundary | 100.0% | - | - |
+| Response Length | 75.0% | - | - |
+| Single Question | 100.0% | - | - |
+
+**Decision:** PENDING
+**Rationale:** Awaiting evaluation results.
+
+---
+
 ## KB DOCUMENT CHANGES
 
 Track KB changes separately since they don't increment instruction version.
 
+### MPA_Adaptive_Language_v5_5.txt
+
+**Date:** 2026-01-10
+**Change:** New document created
+**Reason:** Improve Adaptive Sophistication scoring by providing explicit examples of language adaptation for simple vs sophisticated users. Previous core instruction changes (v5_7_4) caused Tier 1 regressions, so KB approach used instead.
+**Impact on Eval:** PENDING - Testing with RAG simulation in mpa-eval.ts
+
+---
+
 ### MPA_Geography_DMA_Planning_v5_5.txt
 
-**Date:** 2025-01-10  
-**Change:** New document created  
-**Reason:** Step 4 Geography requires mandatory table format with population, target audience, spend, and outcomes. Rollup calculations at hierarchy breaks.  
+**Date:** 2025-01-10
+**Change:** New document created
+**Reason:** Step 4 Geography requires mandatory table format with population, target audience, spend, and outcomes. Rollup calculations at hierarchy breaks.
 **Impact on Eval:** [Record after testing]
 
 ---
 
 ### [KB Document Name]
 
-**Date:**  
-**Change:**  
-**Reason:**  
+**Date:**
+**Change:**
+**Reason:**
 **Impact on Eval:**  
 
 ---

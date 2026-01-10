@@ -145,6 +145,65 @@ SUCCESS
 
 Succeed when: performance is defensible, forecasts realistic, user understands reasoning, user grows as a marketer. If tempted to keep asking questions, pause and model instead.`;
 
+// KB Document: Adaptive Language Guide (for RAG simulation)
+const KB_ADAPTIVE_LANGUAGE = `[KNOWLEDGE BASE DOCUMENT: ADAPTIVE LANGUAGE GUIDE]
+
+DETECTING SOPHISTICATION LEVEL
+
+SIMPLE USER SIGNALS
+
+User demonstrates simple sophistication when their input contains everyday language without industry jargon, round numbers without precision, casual phrasing like want more customers or get sales, questions that reveal unfamiliarity with marketing concepts, or no mention of metrics like CAC ROAS LTV CPA.
+
+Example simple inputs: We sell shoes online and want more customers. Budget is 100K. We need to run some ads. How do we get more people to buy.
+
+SOPHISTICATED USER SIGNALS
+
+User demonstrates high sophistication when their input contains industry terminology used correctly, specific metrics with context like LTV CAC ratio or contribution margin, unit economics discussion, precise numbers with business logic, or references to attribution incrementality or optimization.
+
+Example sophisticated inputs: Our LTV CAC is 2.8x with 15 percent contribution margin. We need to hit 75 dollar CAC to maintain unit economics at scale. Current blended ROAS is 3.2 but we suspect platform inflation.
+
+RESPONDING TO SIMPLE USERS
+
+LANGUAGE RULES FOR SIMPLE USERS
+
+Use everyday words instead of jargon. Say cost per customer not CAC. Say return on ad spend not ROAS. Say customer value not LTV. Say how much you can spend to get a customer not acquisition efficiency.
+
+Define any technical term before using it. Example: Your cost per customer, meaning how much you spend in ads to get one new buyer, would be 50 dollars.
+
+Keep explanations concrete with examples. Instead of: This affects your unit economics. Say: If you spend 50 dollars to get a customer who only spends 40 dollars, you lose money on each sale.
+
+Ask questions in plain terms. Instead of: What is your target CAC. Say: How much can you afford to spend to get one new customer.
+
+EXAMPLE SIMPLE USER EXCHANGE
+
+User: We sell shoes online and want more customers. Budget is 100K.
+
+Response: Great, 100K gives us solid capacity to bring in new shoe buyers. To make sure we spend it wisely, I have one key question. How much is a typical customer worth to you over time. For example, does the average customer buy once for 80 dollars, or do they come back and spend 200 dollars over a year. This helps us figure out how much we can afford to spend to win each customer.
+
+RESPONDING TO SOPHISTICATED USERS
+
+LANGUAGE RULES FOR SOPHISTICATED USERS
+
+Match their vocabulary. If they say CAC, say CAC. If they discuss contribution margin, engage at that level.
+
+Skip basic definitions. Do not explain what LTV means to someone who just quoted their LTV CAC ratio.
+
+Engage with their framework. If they mention unit economics, respond in unit economics terms.
+
+Challenge and refine at their level. Example: Your 2.8x LTV CAC is healthy, but at 15 percent contribution margin, you need roughly 7x payback on ad spend to break even. Are you seeing that in your current mix.
+
+EXAMPLE SOPHISTICATED USER EXCHANGE
+
+User: Our LTV CAC is currently 2.8x with 15 percent contribution margin. We need to hit 75 dollar CAC to maintain unit economics at scale.
+
+Response: At 2.8x LTV CAC with 15 percent contribution, your effective payback is around 42 percent of LTV, which is tight but workable. The 75 dollar CAC ceiling makes sense. What is your current blended CAC running, and where do you see the most efficiency headroom. Are there channels where you are significantly below 75 that could absorb more spend, or is the constraint more about scale than efficiency.
+
+DEFAULT BEHAVIOR
+
+When sophistication level is unclear, default to simpler language. Users will signal if they want more technical depth.
+
+[END KNOWLEDGE BASE DOCUMENT]`;
+
 // Test cases
 const testCases = [
   {
@@ -248,8 +307,13 @@ const testCases = [
 ];
 
 // Task function: call the MPA agent
-async function runMPA(input: { message: string; context?: string }): Promise<string> {
+async function runMPA(input: { message: string; context?: string }, kbContent?: string): Promise<string> {
   const messages: Anthropic.MessageParam[] = [];
+
+  // Build system prompt with optional KB content (RAG simulation)
+  const systemPrompt = kbContent
+    ? MPA_SYSTEM_PROMPT + "\n\n" + kbContent
+    : MPA_SYSTEM_PROMPT;
 
   // Add context as prior assistant message if provided
   if (input.context) {
@@ -267,7 +331,7 @@ async function runMPA(input: { message: string; context?: string }): Promise<str
   const response = await anthropic.messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 1024,
-    system: MPA_SYSTEM_PROMPT,
+    system: systemPrompt,
     messages,
   });
 
@@ -423,14 +487,16 @@ Reply with ONLY a single letter: A, B, C, D, or F`,
 
 // Main evaluation
 Eval("Kessel-MPA-Agent", {
-  experimentName: `MPA v5_7_3 Eval - ${new Date().toISOString()}`,
+  experimentName: `MPA v5_7_5 Eval (KB RAG) - ${new Date().toISOString()}`,
   data: () => testCases.map((tc) => ({
     input: tc.input,
     expected: tc.expected,
     metadata: tc.metadata,
   })),
-  task: async (input) => {
-    return await runMPA(input);
+  task: async (input, { metadata }) => {
+    // Simulate RAG: inject KB content for test cases with userSophistication metadata
+    const needsAdaptiveKB = (metadata as { userSophistication?: string })?.userSophistication !== undefined;
+    return await runMPA(input, needsAdaptiveKB ? KB_ADAPTIVE_LANGUAGE : undefined);
   },
   scores: [
     async (args) => {

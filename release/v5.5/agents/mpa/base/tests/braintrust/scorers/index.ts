@@ -80,21 +80,72 @@ export {
 } from "./plan-coherence-scorers.js";
 
 // =============================================================================
-// QUALITY CATEGORY WEIGHTS (Phase 1)
+// PHASE 2: DATA QUALITY & RELIABILITY SCORERS
+// =============================================================================
+
+// Re-export data quality scorers
+export {
+  DataSourcePriority,
+  scoreDataSourceAttribution,
+  scoreEstimateLabeling,
+  scoreValidationRecommendation,
+  scoreDataHierarchyAdherence,
+  calculateDataQualityScore,
+} from "./data-quality-scorers.js";
+
+// Re-export graceful degradation scorers
+export {
+  FailureType,
+  scoreFailureAcknowledgment,
+  scoreFallbackBehavior,
+  scoreFollowUpRecommendation,
+  scoreForwardProgress,
+  scoreGracefulDegradation,
+  calculateGracefulDegradationScore,
+} from "./graceful-degradation-scorers.js";
+
+// Re-export citation scorers
+export {
+  CitationType,
+  scoreCitationPresence,
+  scoreCitationAccuracy,
+  scoreCitationConsistency,
+  scoreConfidenceLevel,
+  scoreCitationQuality,
+  calculateCitationScore,
+} from "./citation-scorers.js";
+
+// =============================================================================
+// QUALITY CATEGORY WEIGHTS
 // =============================================================================
 
 /**
  * Category weights for quality-focused composite scoring
+ *
+ * Phase 1: Core quality (mentorship, step quality, plan coherence)
+ * Phase 2: Data quality & reliability (data hierarchy, citation, graceful degradation)
+ * Phase 3: Context adaptation (budget scaling, funnel, recalculation)
+ * Phase 4: Advanced synthesis (cross-step, proactive, sophistication)
  */
 export const QUALITY_CATEGORY_WEIGHTS = {
-  mentorship: 0.20, // Teaching, calculation, citation
-  stepQuality: 0.15, // Per-step depth
-  planCoherence: 0.20, // End-to-end consistency
-  contextAdaptive: 0.15, // Budget/funnel/aggressiveness scaling (Phase 2)
-  recalculation: 0.10, // Updates on new data (Phase 2)
-  crossStepSynthesis: 0.10, // Connects insights (Phase 3)
-  proactiveSuggestion: 0.05, // Unsolicited recommendations (Phase 3)
-  sophisticationDepth: 0.05, // Matches user level (Phase 4)
+  // Phase 1: Core Quality (55% total)
+  mentorship: 0.18, // Teaching, calculation, benchmark citation
+  stepQuality: 0.12, // Per-step depth
+  planCoherence: 0.15, // End-to-end consistency
+
+  // Phase 2: Data Quality & Reliability (20% total)
+  dataQuality: 0.08, // Data hierarchy adherence
+  citationAccuracy: 0.07, // Proper attribution
+  gracefulDegradation: 0.05, // Handling failures
+
+  // Phase 3: Context Adaptation (15% total)
+  contextAdaptive: 0.08, // Budget/funnel/aggressiveness scaling
+  recalculation: 0.07, // Updates on new data
+
+  // Phase 4: Advanced (10% total)
+  crossStepSynthesis: 0.05, // Connects insights
+  proactiveSuggestion: 0.03, // Unsolicited recommendations
+  sophisticationDepth: 0.02, // Matches user level
 };
 
 /**
@@ -108,18 +159,60 @@ export const QUALITY_THRESHOLDS = {
 };
 
 /**
- * Calculate quality-focused composite score (Phase 1)
+ * Calculate quality-focused composite score
+ *
+ * Supports all phases of quality scoring with automatic weighting
  */
 export function calculateQualityCompositeScore(categoryScores: {
+  // Phase 1: Core Quality
   mentorship?: number;
   stepQuality?: number;
   planCoherence?: number;
+  // Phase 2: Data Quality & Reliability
+  dataQuality?: number;
+  citationAccuracy?: number;
+  gracefulDegradation?: number;
+  // Phase 3: Context Adaptation
+  contextAdaptive?: number;
+  recalculation?: number;
+  // Phase 4: Advanced
+  crossStepSynthesis?: number;
+  proactiveSuggestion?: number;
+  sophisticationDepth?: number;
 }): number {
   let weightedSum = 0;
   let totalWeight = 0;
 
-  // Phase 1 categories only
+  // All categories that can be scored
+  const allCategories = Object.keys(QUALITY_CATEGORY_WEIGHTS);
+
+  for (const category of allCategories) {
+    const score = categoryScores[category as keyof typeof categoryScores];
+    const weight =
+      QUALITY_CATEGORY_WEIGHTS[
+        category as keyof typeof QUALITY_CATEGORY_WEIGHTS
+      ];
+
+    if (score !== undefined && weight !== undefined) {
+      weightedSum += score * weight;
+      totalWeight += weight;
+    }
+  }
+
+  return totalWeight > 0 ? weightedSum / totalWeight : 0;
+}
+
+/**
+ * Calculate Phase 1 only composite score (for backward compatibility)
+ */
+export function calculatePhase1CompositeScore(categoryScores: {
+  mentorship?: number;
+  stepQuality?: number;
+  planCoherence?: number;
+}): number {
   const phase1Categories = ["mentorship", "stepQuality", "planCoherence"];
+  let weightedSum = 0;
+  let totalWeight = 0;
 
   for (const category of phase1Categories) {
     const score = categoryScores[category as keyof typeof categoryScores];

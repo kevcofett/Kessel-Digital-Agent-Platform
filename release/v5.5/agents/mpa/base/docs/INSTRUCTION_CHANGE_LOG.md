@@ -109,6 +109,75 @@ If user does not know profitability, model using industry benchmarks and move fo
 
 ---
 
+### v5_7_3
+
+**Date:** 2026-01-10
+**Hypothesis:** Eval report shows agent repeating generic greeting and ignoring conversation context. Adding explicit CONVERSATION CONTINUITY instruction should prevent greeting reset, improve step transition clarity, and boost Progress Over Perfection without introducing technical jargon that caused Adaptive Sophistication regression in v5_7_2.
+**Change Type:** New instruction section
+**Files Modified:** MPA_Copilot_Instructions_v5_7_3.txt (new file)
+
+**Specific Changes:**
+Added new section after FIRST RESPONSE FORMAT:
+```
+CONVERSATION CONTINUITY
+
+Never repeat the greeting after first interaction. Acknowledge user input and build on collected data. When step requirements are met, confirm and transition. Example: Perfect, 5,000 customers at $50 each is your $250,000 budget. Now let us assess if that efficiency is achievable.
+```
+
+**Character Count:** 7,983 / 8,000
+
+**Eval Results:**
+
+| Scorer | Baseline (v5_7_1) | New | Delta |
+|--------|-------------------|-----|-------|
+| Progress Over Perfection | 66.0% | 90.0% | **+24.0%** |
+| Adaptive Sophistication | 72.0% | 76.7% | +4.7% |
+| Proactive Intelligence | 79.0% | 100.0% | **+21.0%** |
+| IDK Protocol | - | 96.7% | N/A |
+| Step Boundary | - | 100.0% | N/A |
+| Response Length | - | 75.0% | N/A |
+| Single Question | - | 83.3% | N/A |
+
+**Decision:** ACCEPTED
+**Rationale:** Major improvements across all key scorers. Progress Over Perfection (Tier 1) improved +24% to 90.0%. Proactive Intelligence improved +21% to 100.0%. Adaptive Sophistication improved +4.7%. No regressions detected. The CONVERSATION CONTINUITY instruction successfully addressed greeting repetition and context handling issues. v5_7_3 is now the current best version.
+
+---
+
+### v5_7_4
+
+**Date:** 2026-01-10
+**Hypothesis:** Adaptive Sophistication scores 75% because MINIMUM VIABLE STEP 2 uses technical jargon (CAC, take rate, implied efficiency) that contradicts ADAPTIVE SOPHISTICATION guidance to default to simpler language. Replacing jargon with plain language equivalents while preserving calculation triggers should improve Adaptive Sophistication without regressing Progress Over Perfection (unlike v5_7_2 which removed calculation triggers).
+**Change Type:** Core instruction
+**Files Modified:** MPA_Copilot_Instructions_v5_7_4.txt (new file)
+
+**Specific Changes:**
+```
+When you have budget AND volume target, calculate implied efficiency immediately. Do not ask for CAC if you can compute it from budget divided by target customers. For transaction businesses like remittance or payments, assume 2 to 3 percent take rate, state the assumption, show your math.
+```
+replaced with:
+```
+When you have budget AND volume target, calculate the efficiency immediately. Do not ask for acquisition cost if you can compute it from budget divided by target customers. For transaction businesses like remittance or payments, assume 2 to 3 percent transaction fee, state the assumption, show your math.
+```
+
+**Character Count:** 7,998 / 8,000
+
+**Eval Results:**
+
+| Scorer | Baseline (v5_7_3) | New | Delta |
+|--------|-------------------|-----|-------|
+| Progress Over Perfection | 90.0% | - | - |
+| Adaptive Sophistication | 75.0% | - | - |
+| Proactive Intelligence | 100.0% | - | - |
+| IDK Protocol | 100.0% | - | - |
+| Step Boundary | 100.0% | - | - |
+| Response Length | 75.0% | - | - |
+| Single Question | 100.0% | - | - |
+
+**Decision:** PENDING
+**Rationale:** Awaiting evaluation results.
+
+---
+
 ## KB DOCUMENT CHANGES
 
 Track KB changes separately since they don't increment instruction version.

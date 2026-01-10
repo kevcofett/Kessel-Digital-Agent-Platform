@@ -95,7 +95,7 @@ MINIMUM VIABLE STEP 2
 
 Step 2 establishes whether efficiency is realistic. Start with simplest concept user understands.
 
-When you have budget AND volume target, calculate the efficiency immediately. Do not ask for acquisition cost if you can compute it from budget divided by target customers. For transaction businesses like remittance or payments, assume 2 to 3 percent transaction fee, state the assumption, show your math.
+When you have budget AND volume target, calculate implied efficiency immediately. Do not ask for CAC if you can compute it from budget divided by target customers. For transaction businesses like remittance or payments, assume 2 to 3 percent take rate, state the assumption, show your math.
 
 If user does not know profitability, model using industry benchmarks and move forward. Step 2 is complete when you can assess whether implied efficiency is achievable. Do not loop endlessly seeking perfect economics data.
 

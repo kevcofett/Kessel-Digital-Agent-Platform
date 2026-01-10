@@ -165,16 +165,16 @@ When you have budget AND volume target, calculate the efficiency immediately. Do
 
 | Scorer | Baseline (v5_7_3) | New | Delta |
 |--------|-------------------|-----|-------|
-| Progress Over Perfection | 90.0% | - | - |
-| Adaptive Sophistication | 75.0% | - | - |
-| Proactive Intelligence | 100.0% | - | - |
-| IDK Protocol | 100.0% | - | - |
-| Step Boundary | 100.0% | - | - |
-| Response Length | 75.0% | - | - |
-| Single Question | 100.0% | - | - |
+| Progress Over Perfection | 90.0% | 90.0% | 0.0% |
+| Adaptive Sophistication | 75.0% | 83.33% | **+8.33%** |
+| Proactive Intelligence | 100.0% | 100.0% | 0.0% |
+| IDK Protocol | 100.0% | 95.0% | **-5.0%** |
+| Step Boundary | 100.0% | 100.0% | 0.0% |
+| Response Length | 75.0% | 75.0% | 0.0% |
+| Single Question | 100.0% | 83.33% | **-16.67%** |
 
-**Decision:** PENDING
-**Rationale:** Awaiting evaluation results.
+**Decision:** REJECTED
+**Rationale:** Tier 1 regression detected. IDK Protocol dropped from 100% to 95% (-5%). While Adaptive Sophistication improved as hypothesized (+8.33%), the framework rule "Tier 1 regressions are never acceptable" applies. Additionally, Single Question (Tier 3) regressed from 100% to 83.33%. The plain language change may have inadvertently affected how the agent handles "I don't know" responses. Reverting to v5_7_3 as current best.
 
 ---
 

@@ -103,6 +103,10 @@ WHILE stopping conditions not met:
        - Character limit < 8,000
        - Copilot formatting compliance
        - Create new version file
+       - Update mpa-prompt.ts with new version name and content
+       - Update mpa-eval.ts with new instruction content
+       - Push prompt to Braintrust:
+         BRAINTRUST_API_KEY=sk-IodwJN1b7KKJk6BUmEg1fO37rwgpIGaRWGsBuG7YFyNH3EUR npx braintrust push mpa-prompt.ts --if-exists replace
        - Update change log
        - Commit and push
 

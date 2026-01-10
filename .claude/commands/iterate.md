@@ -115,9 +115,16 @@ C. FILE OPERATIONS
    
    For ALL changes:
    1. Update INSTRUCTION_CHANGE_LOG.md with hypothesis and changes
-   2. Git add all modified/created files
-   3. Git commit with descriptive message
-   4. Git push to deploy/personal
+   2. Update mpa-prompt.ts with new version name and instruction content
+   3. Update mpa-eval.ts with new instruction content
+   4. Push prompt to Braintrust:
+      ```bash
+      cd /release/v5.5/agents/mpa/base/tests/braintrust
+      BRAINTRUST_API_KEY=sk-IodwJN1b7KKJk6BUmEg1fO37rwgpIGaRWGsBuG7YFyNH3EUR npx braintrust push mpa-prompt.ts --if-exists replace
+      ```
+   5. Git add all modified/created files
+   6. Git commit with descriptive message
+   7. Git push to deploy/personal
 
 STEP 6 - VERIFICATION
 

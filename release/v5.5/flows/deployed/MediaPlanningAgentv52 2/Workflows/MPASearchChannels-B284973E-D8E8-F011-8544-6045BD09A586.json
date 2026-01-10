@@ -1,0 +1,212 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "1cc9d25c-3036-4090-b0c7-5310febeea2f"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "category": {
+                  "type": "string",
+                  "description": "Channel category filter (Search, Social, Programmatic, Video, Audio, Retail, OOH, CRM)"
+                },
+                "funnel_position": {
+                  "type": "string",
+                  "description": "Funnel position filter (AWARENESS, CONSIDERATION, CONVERSION, RETENTION)"
+                },
+                "is_active": {
+                  "type": "boolean",
+                  "description": "Filter by active status (default: true)"
+                },
+                "limit": {
+                  "type": "integer",
+                  "description": "Maximum results to return (default: 50)"
+                }
+              }
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "InitializeFilterQuery": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "dd7baa6b-75d9-477b-bed1-8a17f4be09f7"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "filter_query",
+                "type": "string",
+                "value": "mpa_isactive eq true"
+              }
+            ]
+          }
+        },
+        "CheckCategoryFilter": {
+          "actions": {
+            "AppendCategoryFilter": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "59b43812-29ae-414b-9f3e-9bae56a1a627"
+              },
+              "type": "AppendToStringVariable",
+              "inputs": {
+                "name": "filter_query",
+                "value": " and mpa_category eq '@{triggerBody()?['category']}'"
+              }
+            }
+          },
+          "runAfter": {
+            "InitializeFilterQuery": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "not": {
+              "equals": [
+                "@triggerBody()?['category']",
+                ""
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "7f376b05-def6-4690-bda4-723e5c9426aa"
+          },
+          "type": "If"
+        },
+        "CheckFunnelFilter": {
+          "actions": {
+            "AppendFunnelFilter": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "9637c4ab-0b0b-455e-b45b-455d9cdfe496"
+              },
+              "type": "AppendToStringVariable",
+              "inputs": {
+                "name": "filter_query",
+                "value": " and contains(mpa_funnelpositions, '@{triggerBody()?['funnel_position']}')"
+              }
+            }
+          },
+          "runAfter": {
+            "CheckCategoryFilter": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "not": {
+              "equals": [
+                "@triggerBody()?['funnel_position']",
+                ""
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "7c1fdabf-ba1a-4389-af30-a2de3cf590d8"
+          },
+          "type": "If"
+        },
+        "GetChannels": {
+          "runAfter": {
+            "CheckFunnelFilter": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "25757035-47aa-494b-a1df-8c334e4b511f"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_channels",
+              "$select": "mpa_channelid,mpa_channelcode,mpa_channelname,mpa_category,mpa_description,mpa_funnelpositions,mpa_typicalcpmlow,mpa_typicalcpmhigh,mpa_typicalctr,mpa_minimumbudget,mpa_isactive",
+              "$filter": "@variables('filter_query')",
+              "$top": "@coalesce(triggerBody()?['limit'], 50)"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "SuccessResponse": {
+          "runAfter": {
+            "GetChannels": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "48bc7098-8b13-45a2-a596-d419128f6c9c"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "status": "Success",
+              "count": "@length(outputs('GetChannels')?['body/value'])",
+              "channels": "@outputs('GetChannels')?['body/value']",
+              "filter_applied": "@{variables('filter_query')}"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "integer"
+                },
+                "channels": {
+                  "type": "array"
+                },
+                "filter_applied": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

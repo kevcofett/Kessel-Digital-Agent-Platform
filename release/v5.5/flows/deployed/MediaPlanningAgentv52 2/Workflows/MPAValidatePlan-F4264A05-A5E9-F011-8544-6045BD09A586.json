@@ -1,0 +1,184 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "51910705-eada-4ccd-a49d-0871e24ec5b7"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "plan_id": {
+                  "type": "string",
+                  "description": "GUID of the media plan"
+                },
+                "version_id": {
+                  "type": "string",
+                  "description": "GUID of the plan version"
+                },
+                "gate_number": {
+                  "type": "integer",
+                  "description": "Validation gate (1-4)"
+                }
+              },
+              "required": [
+                "plan_id",
+                "version_id",
+                "gate_number"
+              ]
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "InitializeRequiredSteps": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "b8ef0ac2-2f29-47ae-a860-847543453ce9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "required_steps",
+                "type": "integer",
+                "value": "@if(equals(triggerBody()?['gate_number'], 1), 3, if(equals(triggerBody()?['gate_number'], 2), 5, if(equals(triggerBody()?['gate_number'], 3), 7, 10)))"
+              }
+            ]
+          }
+        },
+        "GetSections": {
+          "runAfter": {
+            "InitializeRequiredSteps": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a13f60ba-a3ce-4097-9b5b-c0fbed7dd30c"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_plandatas",
+              "$filter": "_mpa_planversionid_value eq '@{triggerBody()?['version_id']}' and mpa_stepnumber le @{variables('required_steps')}",
+              "$top": 20
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "GetCompletionStatus": {
+          "runAfter": {
+            "GetSections": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2e8cab4d-b424-4119-98c1-9f6723a6c130"
+          },
+          "type": "Select",
+          "inputs": {
+            "from": "@outputs('GetSections')?['body/value']",
+            "select": {
+              "step": "@item()?['mpa_stepnumber']",
+              "status": "@item()?['mpa_sectionstatus']",
+              "is_complete": "@equals(item()?['mpa_sectionstatus'], 100000002)\n"
+            }
+          }
+        },
+        "FilterIncompleteSections": {
+          "runAfter": {
+            "GetCompletionStatus": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "681649d8-e2d5-4357-9852-94c4b9500b1b"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('GetSections')?['body/value']",
+            "where": "@equals(item()?['is_complete'], false)"
+          }
+        },
+        "InitializeValidationPassed": {
+          "runAfter": {
+            "FilterIncompleteSections": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "34294a1b-4d4b-46e9-9252-2281110d5f08"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "validation_passed",
+                "type": "boolean",
+                "value": "@equals(length(body('FilterIncompleteSections')), 0)"
+              }
+            ]
+          }
+        },
+        "Success_Response": {
+          "runAfter": {
+            "InitializeValidationPassed": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "20b9bff7-8bd1-45e1-be77-5cecc0845288"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "Success",
+              "gate_number": "@triggerBody()?['gate_number']",
+              "validation_passed": "@variables('validation_passed')",
+              "required_sections": "@variables('required_steps')",
+              "incomplete_count": "@length(body('FilterIncompleteSections'))",
+              "message": "@{if(variables('validation_passed'), concat('Gate ', string(triggerBody()?['gate_number']), ' validation passed'), concat('Gate ', string(triggerBody()?['gate_number']), ' validation failed - incomplete sections remain'))}"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,238 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "40b3d730-253a-438a-b12e-18fee673b3d7"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "plan_id": {
+                  "type": "string",
+                  "description": "GUID of the media plan"
+                },
+                "version_id": {
+                  "type": "string",
+                  "description": "GUID of the plan version"
+                },
+                "analysis": {
+                  "type": "object",
+                  "description": "Post-mortem analysis content",
+                  "properties": {
+                    "overall_performance": {
+                      "type": "string"
+                    },
+                    "kpi_analysis": {
+                      "type": "array"
+                    },
+                    "channel_performance": {
+                      "type": "array"
+                    },
+                    "what_worked": {
+                      "type": "array"
+                    },
+                    "what_didnt_work": {
+                      "type": "array"
+                    },
+                    "recommendations": {
+                      "type": "array"
+                    },
+                    "budget_efficiency": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "user_id": {
+                  "type": "string",
+                  "description": "GUID of the user creating the analysis"
+                }
+              },
+              "required": [
+                "plan_id",
+                "version_id",
+                "analysis"
+              ]
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "GetPlan": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "ea77b96d-f88b-4eb7-8f9a-4ed0b516ed31"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_mediaplans",
+              "recordId": "@triggerBody()['plan_id']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "GetPerformanceData": {
+          "runAfter": {
+            "GetPlan": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "495427a9-9b9c-45e3-b9cb-494815c316cd"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_plandatas",
+              "$filter": "_mpa_planversionid_value eq ' @{triggerBody()['version_id']}' and mpa_sectiontype eq 100000010",
+              "$orderby": "@outputs('GetPlan')?['body/createdon']",
+              "$top": 10
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "BuildPostMortemObject": {
+          "runAfter": {
+            "GetPerformanceData": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "38bdc031-9099-44c7-a4e4-c7fce8a8243b"
+          },
+          "type": "Compose",
+          "inputs": {
+            "analysis": "@triggerBody()?['analysis']",
+            "plan_summary": {
+              "plan_name": "@{outputs('GetPlan')?['body/mpa_planname']}",
+              "plan_code": "@{outputs('GetPlan')?['body/mpa_plancode']}",
+              "total_budget": "@outputs('GetPlan')?['body/mpa_totalbudget']",
+              "start_date": "@{outputs('GetPlan')?['body/mpa_startdate']}",
+              "end_date": "@{outputs('GetPlan')?['body/mpa_enddate']}"
+            },
+            "performance_records_analyzed": "@length(outputs('GetPerformanceData')?['body/value'])",
+            "created_at": "@{utcNow()}"
+          }
+        },
+        "CreatePostMortemRecord": {
+          "runAfter": {
+            "BuildPostMortemObject": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3d4b7deb-ab42-4d75-a707-3a5c53b3cdae"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_plandatas",
+              "item/mpa_datatitle": "@concat('Post-Mortem - ', outputs('GetPlan')?['body/mpa_planname'])",
+              "item/mpa_MediaPlan@odata.bind": "@triggerBody()['plan_id']",
+              "item/mpa_PlanVersion@odata.bind": "@triggerBody()['version_id']",
+              "item/mpa_sectionstatus": 100000002,
+              "item/mpa_sectiontype": 100000012,
+              "item/mpa_stepnumber": 10,
+              "item/mpa_createdat": "@{utcNow()}@{triggerBody()?['user_id']}",
+              "item/mpa_sectiondata": "@string(outputs('BuildPostMortemObject'))"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "UpdatePlanStatus": {
+          "runAfter": {
+            "CreatePostMortemRecord": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b930b6e3-5c2c-4d9c-983a-29ddc721f493"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "UpdateOnlyRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_mediaplans",
+              "recordId": "plan@{triggerBody()['plan_id']}",
+              "item/mpa_status": 100000005
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "SuccessResponse": {
+          "runAfter": {
+            "UpdatePlanStatus": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b2d21f13-5088-4005-bb0d-0f71a5a211d5"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "Success",
+              "plan_id": "@{triggerBody()?['plan_id']}",
+              "postmortem_record_id": "@{outputs('CreatePostMortemRecord')?['body/mpa_plandataid']}",
+              "plan_name": "@{outputs('GetPlan')?['body/mpa_planname']}",
+              "performance_records_analyzed": "@length(outputs('GetPerformanceData')?['body/value'])",
+              "message": "Post-mortem analysis created successfully"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

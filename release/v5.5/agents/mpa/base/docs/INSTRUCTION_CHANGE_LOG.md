@@ -56,21 +56,21 @@ If user does not know profitability, model using industry benchmarks and move fo
 
 | Scorer | Baseline | New | Delta |
 |--------|----------|-----|-------|
-| Response Length | | | |
-| Single Question | | | |
-| Acronym Definition | | | |
-| Source Citation | | | |
-| Step Boundary | | | |
-| IDK Protocol | | | |
-| Adaptive Sophistication | 87.0% | | |
-| Tone Quality | | | |
-| Proactive Intelligence | 70.0% | | |
-| Progress Over Perfection | 42.0% | | |
-| Feasibility Framing | | | |
-| Step Completion | | | |
+| Response Length | - | - | - |
+| Single Question | - | - | - |
+| Acronym Definition | - | - | - |
+| Source Citation | - | - | - |
+| Step Boundary | - | - | - |
+| IDK Protocol | - | - | - |
+| Adaptive Sophistication | 87.0% | 72.0% | -15.0% |
+| Tone Quality | - | - | - |
+| Proactive Intelligence | 70.0% | 79.0% | +9.0% |
+| Progress Over Perfection | 42.0% | 66.0% | +24.0% |
+| Feasibility Framing | - | - | - |
+| Step Completion | - | - | - |
 
-**Decision:** Pending eval
-**Rationale:** Awaiting Braintrust evaluation results  
+**Decision:** ACCEPTED
+**Rationale:** Hypothesis confirmed. Progress Over Perfection (Tier 1) improved +24% (42% → 66%). Proactive Intelligence improved +9%. Adaptive Sophistication regressed -15% but remains above threshold. No Tier 1 regressions. Net positive impact.  
 
 ---
 

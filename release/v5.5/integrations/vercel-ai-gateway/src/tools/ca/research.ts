@@ -9,6 +9,10 @@ import { tool } from 'ai';
 import { z } from 'zod';
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
+import { wrapAISDK } from 'braintrust';
+
+// Wrap generateText with Braintrust tracing
+const tracedGenerateText = wrapAISDK(generateText);
 
 /**
  * Analysis types for competitor research
@@ -161,7 +165,7 @@ IMPORTANT GUIDELINES:
 - Note limitations of the analysis`;
 
     try {
-      const result = await generateText({
+      const result = await tracedGenerateText({
         model: anthropic('claude-sonnet-4-20250514'),
         system: systemPrompt,
         prompt: `Analyze competitor: ${competitor_name}
@@ -407,7 +411,7 @@ export const conductMarketResearch = tool({
     };
 
     try {
-      const result = await generateText({
+      const result = await tracedGenerateText({
         model: anthropic('claude-sonnet-4-20250514'),
         system: `You are a market research analyst. Provide data-driven insights based on publicly available information. Be specific about data sources and confidence levels.`,
         prompt: researchPrompts[research_type],

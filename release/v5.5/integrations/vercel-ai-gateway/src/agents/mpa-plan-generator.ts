@@ -7,6 +7,16 @@
 
 import { generateText, CoreMessage } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
+import { wrapAISDK, initLogger } from 'braintrust';
+
+// Initialize Braintrust logger for MPA agent tracing
+void initLogger({
+  projectName: 'Kessel-MPA-Agent',
+  apiKey: process.env.BRAINTRUST_API_KEY,
+});
+
+// Wrap generateText with Braintrust tracing
+const tracedGenerateText = wrapAISDK(generateText);
 import { getBenchmarks, searchChannels } from '../tools/mpa/benchmarks.js';
 import { runProjections } from '../tools/mpa/projections.js';
 import { validatePlan, calculateCAC } from '../tools/mpa/validation.js';
@@ -279,7 +289,7 @@ export async function executeMPAAgent(request: MPAAgentRequest): Promise<MPAAgen
   while (continueLoop && stepCount < config.maxSteps) {
     stepCount++;
 
-    const result = await generateText({
+    const result = await tracedGenerateText({
       model: anthropic(config.model),
       system: systemPromptWithKB,
       messages,

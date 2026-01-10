@@ -9,6 +9,10 @@ import { tool } from 'ai';
 import { z } from 'zod';
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
+import { wrapAISDK } from 'braintrust';
+
+// Wrap generateText with Braintrust tracing
+const tracedGenerateText = wrapAISDK(generateText);
 import { dataverseClient } from '../../utils/dataverse-client.js';
 import { DATAVERSE_TABLES } from '../../config/dataverse.js';
 
@@ -131,7 +135,7 @@ export const synthesizeLearnings = tool({
 
       const synthesisPrompt = buildSynthesisPrompt(planSummaries, focus_area, vertical_code, channel_code);
 
-      const result = await generateText({
+      const result = await tracedGenerateText({
         model: anthropic('claude-sonnet-4-20250514'),
         system: `You are a strategic analyst synthesizing learnings from media planning data.
 Extract meaningful patterns, insights, and actionable recommendations.

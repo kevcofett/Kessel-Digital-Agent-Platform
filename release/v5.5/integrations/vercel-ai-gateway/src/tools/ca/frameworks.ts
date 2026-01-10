@@ -9,6 +9,10 @@ import { tool } from 'ai';
 import { z } from 'zod';
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
+import { wrapAISDK } from 'braintrust';
+
+// Wrap generateText with Braintrust tracing
+const tracedGenerateText = wrapAISDK(generateText);
 
 /**
  * Supported framework types
@@ -250,7 +254,7 @@ export const applyFramework = tool({
     const systemPrompt = FRAMEWORK_PROMPTS[framework_type];
 
     try {
-      const result = await generateText({
+      const result = await tracedGenerateText({
         model: anthropic('claude-sonnet-4-20250514'),
         system: systemPrompt,
         prompt: `Business Context:\n\n${context}\n\nProvide a comprehensive ${framework_type.replace(/_/g, ' ')} analysis of this situation.`,

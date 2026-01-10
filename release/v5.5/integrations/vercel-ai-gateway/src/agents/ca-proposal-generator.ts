@@ -7,6 +7,16 @@
 
 import { generateText, CoreMessage } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
+import { wrapAISDK, initLogger } from 'braintrust';
+
+// Initialize Braintrust logger for CA agent tracing
+void initLogger({
+  projectName: 'Kessel-CA-Agent',
+  apiKey: process.env.BRAINTRUST_API_KEY,
+});
+
+// Wrap generateText with Braintrust tracing
+const tracedGenerateText = wrapAISDK(generateText);
 import { applyFramework } from '../tools/ca/frameworks.js';
 import { analyzeCompetitor, conductMarketResearch } from '../tools/ca/research.js';
 import { loadSessionHistoryForAI, saveResponseToSession } from '../tools/eap/sessions.js';
@@ -224,7 +234,7 @@ Consider using these frameworks if appropriate for the analysis.`;
   while (continueLoop && stepCount < config.maxSteps) {
     stepCount++;
 
-    const result = await generateText({
+    const result = await tracedGenerateText({
       model: anthropic(config.model),
       system: CA_SYSTEM_PROMPT + contextAddition,
       messages,

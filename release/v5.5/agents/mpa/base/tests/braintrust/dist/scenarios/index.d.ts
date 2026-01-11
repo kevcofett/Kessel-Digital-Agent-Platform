@@ -16,14 +16,22 @@ import { multiAudienceUnifiedPlanScenario, multiAudienceUnifiedPersona, multiAud
 import { multiAudienceChannelAllocationScenario, multiAudienceChannelPersona, multiAudienceChannelAllocationContext } from "./multi-audience-channel-allocation.js";
 import { multiAudienceVaryingKpisScenario, multiAudienceVaryingKpisPersona, multiAudienceVaryingKpisContext } from "./multi-audience-varying-kpis.js";
 import { budgetRevisionMidstreamScenario, budgetRevisionPersona, budgetRevisionMidstreamContext } from "./budget-revision-midstream.js";
+import { budgetDecreaseMidstreamScenario, budgetDecreasePersona, budgetDecreaseMidstreamContext } from "./budget-decrease-midstream.js";
 import { volumeTargetIncreaseScenario, volumeTargetIncreasePersona, volumeTargetIncreaseContext } from "./volume-target-increase.js";
 import { timelineCompressionScenario, timelineCompressionPersona, timelineCompressionContext } from "./timeline-compression.js";
 import { efficiencyShockScenario, efficiencyShockPersona, efficiencyShockContext } from "./efficiency-shock.js";
+import { channelMixChangeScenario, channelMixChangePersona, channelMixChangeContext } from "./channel-mix-change.js";
+import { geoExpansionChangeScenario, geoExpansionPersona, geoExpansionChangeContext } from "./geo-expansion-change.js";
+import { demographicShiftChangeScenario, demographicShiftPersona, demographicShiftChangeContext } from "./demographic-shift-change.js";
+import { behavioralTargetingChangeScenario, behavioralTargetingPersona, behavioralTargetingChangeContext } from "./behavioral-targeting-change.js";
+import { outcomeKPIChangeScenario, outcomeKPIPersona, outcomeKPIChangeContext } from "./outcome-kpi-change.js";
+import { audienceAdditionChangeScenario, audienceAdditionPersona, audienceAdditionChangeContext } from "./audience-addition-change.js";
+import { audienceRemovalChangeScenario, audienceRemovalPersona, audienceRemovalChangeContext } from "./audience-removal-change.js";
 export { basicUserStep1_2Scenario, basicUserPersona, sophisticatedIdkScenario, sophisticatedUserPersona, full10StepScenario, intermediateUserPersona, };
 export { highStakesPerformanceScenario, highStakesPerformancePersona, highStakesPerformanceContext, brandBuildingLimitedDataScenario, brandBuildingLimitedDataPersona, brandBuildingLimitedDataContext, };
 export { precisionTargetingComplexScenario, precisionTargetingPersona, precisionTargetingComplexContext, massNationalSimplicityScenario, massNationalPersona, massNationalSimplicityContext, aggressiveKpiNarrowTargetingScenario, aggressiveKpiPersona, aggressiveKpiNarrowTargetingContext, };
 export { multiAudienceUnifiedPlanScenario, multiAudienceUnifiedPersona, multiAudienceUnifiedPlanContext, multiAudienceChannelAllocationScenario, multiAudienceChannelPersona, multiAudienceChannelAllocationContext, multiAudienceVaryingKpisScenario, multiAudienceVaryingKpisPersona, multiAudienceVaryingKpisContext, };
-export { budgetRevisionMidstreamScenario, budgetRevisionPersona, budgetRevisionMidstreamContext, volumeTargetIncreaseScenario, volumeTargetIncreasePersona, volumeTargetIncreaseContext, timelineCompressionScenario, timelineCompressionPersona, timelineCompressionContext, efficiencyShockScenario, efficiencyShockPersona, efficiencyShockContext, };
+export { budgetRevisionMidstreamScenario, budgetRevisionPersona, budgetRevisionMidstreamContext, budgetDecreaseMidstreamScenario, budgetDecreasePersona, budgetDecreaseMidstreamContext, volumeTargetIncreaseScenario, volumeTargetIncreasePersona, volumeTargetIncreaseContext, timelineCompressionScenario, timelineCompressionPersona, timelineCompressionContext, efficiencyShockScenario, efficiencyShockPersona, efficiencyShockContext, channelMixChangeScenario, channelMixChangePersona, channelMixChangeContext, geoExpansionChangeScenario, geoExpansionPersona, geoExpansionChangeContext, demographicShiftChangeScenario, demographicShiftPersona, demographicShiftChangeContext, behavioralTargetingChangeScenario, behavioralTargetingPersona, behavioralTargetingChangeContext, outcomeKPIChangeScenario, outcomeKPIPersona, outcomeKPIChangeContext, audienceAdditionChangeScenario, audienceAdditionPersona, audienceAdditionChangeContext, audienceRemovalChangeScenario, audienceRemovalPersona, audienceRemovalChangeContext, };
 /**
  * All available test scenarios
  */
@@ -32,10 +40,18 @@ export declare const ALL_SCENARIOS: TestScenario[];
  * Reforecasting Scenarios
  *
  * These scenarios test proactive reforecasting when data changes mid-conversation:
- * - Budget revision midstream
+ * - Budget revision midstream (increase)
+ * - Budget decrease midstream (cut)
  * - Volume target increase
  * - Timeline compression
  * - Efficiency shock (CAC reality check)
+ * - Channel mix change (exclusions)
+ * - Geography expansion change
+ * - Demographic shift change
+ * - Behavioral targeting change
+ * - Outcome KPI change (funnel shift)
+ * - Audience addition change
+ * - Audience removal change
  */
 export declare const REFORECASTING_SCENARIOS: TestScenario[];
 /**
@@ -240,6 +256,12 @@ export declare const SCENARIO_CONTEXTS: {
         kpiAggressiveness: "moderate";
         userSophistication: "medium";
     };
+    "budget-decrease-midstream": {
+        budget: number;
+        funnel: "performance";
+        kpiAggressiveness: "aggressive";
+        userSophistication: "high";
+    };
     "volume-target-increase": {
         budget: number;
         funnel: "performance";
@@ -256,6 +278,48 @@ export declare const SCENARIO_CONTEXTS: {
         budget: number;
         funnel: "performance";
         kpiAggressiveness: "aggressive";
+        userSophistication: "medium";
+    };
+    "channel-mix-change": {
+        budget: number;
+        funnel: "awareness";
+        kpiAggressiveness: "moderate";
+        userSophistication: "medium";
+    };
+    "geo-expansion-change": {
+        budget: number;
+        funnel: "consideration";
+        kpiAggressiveness: "moderate";
+        userSophistication: "medium";
+    };
+    "demographic-shift-change": {
+        budget: number;
+        funnel: "awareness";
+        kpiAggressiveness: "moderate";
+        userSophistication: "medium";
+    };
+    "behavioral-targeting-change": {
+        budget: number;
+        funnel: "performance";
+        kpiAggressiveness: "moderate";
+        userSophistication: "high";
+    };
+    "outcome-kpi-change": {
+        budget: number;
+        funnel: "awareness";
+        kpiAggressiveness: "moderate";
+        userSophistication: "high";
+    };
+    "audience-addition-change": {
+        budget: number;
+        funnel: "consideration";
+        kpiAggressiveness: "moderate";
+        userSophistication: "high";
+    };
+    "audience-removal-change": {
+        budget: number;
+        funnel: "consideration";
+        kpiAggressiveness: "moderate";
         userSophistication: "medium";
     };
 };
@@ -314,6 +378,12 @@ export declare const PHASE1_CONTEXTS: {
         kpiAggressiveness: "moderate";
         userSophistication: "medium";
     };
+    "budget-decrease-midstream": {
+        budget: number;
+        funnel: "performance";
+        kpiAggressiveness: "aggressive";
+        userSophistication: "high";
+    };
     "volume-target-increase": {
         budget: number;
         funnel: "performance";
@@ -330,6 +400,48 @@ export declare const PHASE1_CONTEXTS: {
         budget: number;
         funnel: "performance";
         kpiAggressiveness: "aggressive";
+        userSophistication: "medium";
+    };
+    "channel-mix-change": {
+        budget: number;
+        funnel: "awareness";
+        kpiAggressiveness: "moderate";
+        userSophistication: "medium";
+    };
+    "geo-expansion-change": {
+        budget: number;
+        funnel: "consideration";
+        kpiAggressiveness: "moderate";
+        userSophistication: "medium";
+    };
+    "demographic-shift-change": {
+        budget: number;
+        funnel: "awareness";
+        kpiAggressiveness: "moderate";
+        userSophistication: "medium";
+    };
+    "behavioral-targeting-change": {
+        budget: number;
+        funnel: "performance";
+        kpiAggressiveness: "moderate";
+        userSophistication: "high";
+    };
+    "outcome-kpi-change": {
+        budget: number;
+        funnel: "awareness";
+        kpiAggressiveness: "moderate";
+        userSophistication: "high";
+    };
+    "audience-addition-change": {
+        budget: number;
+        funnel: "consideration";
+        kpiAggressiveness: "moderate";
+        userSophistication: "high";
+    };
+    "audience-removal-change": {
+        budget: number;
+        funnel: "consideration";
+        kpiAggressiveness: "moderate";
         userSophistication: "medium";
     };
 };

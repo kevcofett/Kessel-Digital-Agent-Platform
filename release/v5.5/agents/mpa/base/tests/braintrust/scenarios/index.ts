@@ -73,6 +73,11 @@ import {
   budgetRevisionMidstreamContext,
 } from "./budget-revision-midstream.js";
 import {
+  budgetDecreaseMidstreamScenario,
+  budgetDecreasePersona,
+  budgetDecreaseMidstreamContext,
+} from "./budget-decrease-midstream.js";
+import {
   volumeTargetIncreaseScenario,
   volumeTargetIncreasePersona,
   volumeTargetIncreaseContext,
@@ -87,6 +92,41 @@ import {
   efficiencyShockPersona,
   efficiencyShockContext,
 } from "./efficiency-shock.js";
+import {
+  channelMixChangeScenario,
+  channelMixChangePersona,
+  channelMixChangeContext,
+} from "./channel-mix-change.js";
+import {
+  geoExpansionChangeScenario,
+  geoExpansionPersona,
+  geoExpansionChangeContext,
+} from "./geo-expansion-change.js";
+import {
+  demographicShiftChangeScenario,
+  demographicShiftPersona,
+  demographicShiftChangeContext,
+} from "./demographic-shift-change.js";
+import {
+  behavioralTargetingChangeScenario,
+  behavioralTargetingPersona,
+  behavioralTargetingChangeContext,
+} from "./behavioral-targeting-change.js";
+import {
+  outcomeKPIChangeScenario,
+  outcomeKPIPersona,
+  outcomeKPIChangeContext,
+} from "./outcome-kpi-change.js";
+import {
+  audienceAdditionChangeScenario,
+  audienceAdditionPersona,
+  audienceAdditionChangeContext,
+} from "./audience-addition-change.js";
+import {
+  audienceRemovalChangeScenario,
+  audienceRemovalPersona,
+  audienceRemovalChangeContext,
+} from "./audience-removal-change.js";
 
 // Export individual scenarios
 export {
@@ -139,6 +179,9 @@ export {
   budgetRevisionMidstreamScenario,
   budgetRevisionPersona,
   budgetRevisionMidstreamContext,
+  budgetDecreaseMidstreamScenario,
+  budgetDecreasePersona,
+  budgetDecreaseMidstreamContext,
   volumeTargetIncreaseScenario,
   volumeTargetIncreasePersona,
   volumeTargetIncreaseContext,
@@ -148,6 +191,27 @@ export {
   efficiencyShockScenario,
   efficiencyShockPersona,
   efficiencyShockContext,
+  channelMixChangeScenario,
+  channelMixChangePersona,
+  channelMixChangeContext,
+  geoExpansionChangeScenario,
+  geoExpansionPersona,
+  geoExpansionChangeContext,
+  demographicShiftChangeScenario,
+  demographicShiftPersona,
+  demographicShiftChangeContext,
+  behavioralTargetingChangeScenario,
+  behavioralTargetingPersona,
+  behavioralTargetingChangeContext,
+  outcomeKPIChangeScenario,
+  outcomeKPIPersona,
+  outcomeKPIChangeContext,
+  audienceAdditionChangeScenario,
+  audienceAdditionPersona,
+  audienceAdditionChangeContext,
+  audienceRemovalChangeScenario,
+  audienceRemovalPersona,
+  audienceRemovalChangeContext,
 };
 
 /**
@@ -171,25 +235,49 @@ export const ALL_SCENARIOS: TestScenario[] = [
   multiAudienceVaryingKpisScenario,
   // Reforecasting scenarios
   budgetRevisionMidstreamScenario,
+  budgetDecreaseMidstreamScenario,
   volumeTargetIncreaseScenario,
   timelineCompressionScenario,
   efficiencyShockScenario,
+  channelMixChangeScenario,
+  geoExpansionChangeScenario,
+  demographicShiftChangeScenario,
+  behavioralTargetingChangeScenario,
+  outcomeKPIChangeScenario,
+  audienceAdditionChangeScenario,
+  audienceRemovalChangeScenario,
 ];
 
 /**
  * Reforecasting Scenarios
  *
  * These scenarios test proactive reforecasting when data changes mid-conversation:
- * - Budget revision midstream
+ * - Budget revision midstream (increase)
+ * - Budget decrease midstream (cut)
  * - Volume target increase
  * - Timeline compression
  * - Efficiency shock (CAC reality check)
+ * - Channel mix change (exclusions)
+ * - Geography expansion change
+ * - Demographic shift change
+ * - Behavioral targeting change
+ * - Outcome KPI change (funnel shift)
+ * - Audience addition change
+ * - Audience removal change
  */
 export const REFORECASTING_SCENARIOS: TestScenario[] = [
   budgetRevisionMidstreamScenario,
+  budgetDecreaseMidstreamScenario,
   volumeTargetIncreaseScenario,
   timelineCompressionScenario,
   efficiencyShockScenario,
+  channelMixChangeScenario,
+  geoExpansionChangeScenario,
+  demographicShiftChangeScenario,
+  behavioralTargetingChangeScenario,
+  outcomeKPIChangeScenario,
+  audienceAdditionChangeScenario,
+  audienceRemovalChangeScenario,
 ];
 
 /**
@@ -417,9 +505,17 @@ export const SCENARIO_CONTEXTS = {
   "multi-audience-varying-kpis": multiAudienceVaryingKpisContext,
   // Reforecasting scenarios
   "budget-revision-midstream": budgetRevisionMidstreamContext,
+  "budget-decrease-midstream": budgetDecreaseMidstreamContext,
   "volume-target-increase": volumeTargetIncreaseContext,
   "timeline-compression": timelineCompressionContext,
   "efficiency-shock": efficiencyShockContext,
+  "channel-mix-change": channelMixChangeContext,
+  "geo-expansion-change": geoExpansionChangeContext,
+  "demographic-shift-change": demographicShiftChangeContext,
+  "behavioral-targeting-change": behavioralTargetingChangeContext,
+  "outcome-kpi-change": outcomeKPIChangeContext,
+  "audience-addition-change": audienceAdditionChangeContext,
+  "audience-removal-change": audienceRemovalChangeContext,
 };
 
 // Backwards compatibility

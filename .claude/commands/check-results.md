@@ -150,7 +150,7 @@ Multi-turn validation is REQUIRED when ANY of these conditions are met:
 
 IF multi-turn validation is required:
 
-Run multi-turn evaluation (all 15 scenarios):
+Run multi-turn evaluation (all 23 scenarios):
 
 ```bash
 cd /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/agents/mpa/base/tests/braintrust
@@ -180,6 +180,13 @@ budget-revision-midstream               | 0.XXX  | 0.70      |   ✅   |
 volume-target-increase                  | 0.XXX  | 0.70      |   ✅   |
 timeline-compression                    | 0.XXX  | 0.70      |   ✅   |
 efficiency-shock                        | 0.XXX  | 0.70      |   ✅   |
+channel-mix-change                      | 0.XXX  | 0.70      |   ✅   |
+geo-expansion-change                    | 0.XXX  | 0.70      |   ✅   |
+demographic-shift-change                | 0.XXX  | 0.70      |   ✅   |
+behavioral-targeting-change             | 0.XXX  | 0.70      |   ✅   |
+outcome-kpi-change                      | 0.XXX  | 0.70      |   ✅   |
+audience-addition-change                | 0.XXX  | 0.70      |   ✅   |
+audience-removal-change                 | 0.XXX  | 0.70      |   ✅   |
 ----------------------------------------|--------|-----------|--------|
 Average                                 | 0.XXX  | 0.70      |   ✅   |
 Critical Failures                       |   X    |    0      |   ✅   |

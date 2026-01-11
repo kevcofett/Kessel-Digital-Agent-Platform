@@ -5,8 +5,8 @@
  * Exports all test scenarios for the multi-turn MPA evaluation system.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SCENARIO_METADATA = exports.MULTI_AUDIENCE_SCENARIOS = exports.ADVANCED_TARGETING_SCENARIOS = exports.PHASE1_QUALITY_SCENARIOS = exports.FULL_SCENARIOS = exports.QUICK_SCENARIOS = exports.REFORECASTING_SCENARIOS = exports.ALL_SCENARIOS = exports.efficiencyShockContext = exports.efficiencyShockPersona = exports.efficiencyShockScenario = exports.timelineCompressionContext = exports.timelineCompressionPersona = exports.timelineCompressionScenario = exports.volumeTargetIncreaseContext = exports.volumeTargetIncreasePersona = exports.volumeTargetIncreaseScenario = exports.budgetRevisionMidstreamContext = exports.budgetRevisionPersona = exports.budgetRevisionMidstreamScenario = exports.multiAudienceVaryingKpisContext = exports.multiAudienceVaryingKpisPersona = exports.multiAudienceVaryingKpisScenario = exports.multiAudienceChannelAllocationContext = exports.multiAudienceChannelPersona = exports.multiAudienceChannelAllocationScenario = exports.multiAudienceUnifiedPlanContext = exports.multiAudienceUnifiedPersona = exports.multiAudienceUnifiedPlanScenario = exports.aggressiveKpiNarrowTargetingContext = exports.aggressiveKpiPersona = exports.aggressiveKpiNarrowTargetingScenario = exports.massNationalSimplicityContext = exports.massNationalPersona = exports.massNationalSimplicityScenario = exports.precisionTargetingComplexContext = exports.precisionTargetingPersona = exports.precisionTargetingComplexScenario = exports.brandBuildingLimitedDataContext = exports.brandBuildingLimitedDataPersona = exports.brandBuildingLimitedDataScenario = exports.highStakesPerformanceContext = exports.highStakesPerformancePersona = exports.highStakesPerformanceScenario = exports.intermediateUserPersona = exports.full10StepScenario = exports.sophisticatedUserPersona = exports.sophisticatedIdkScenario = exports.basicUserPersona = exports.basicUserStep1_2Scenario = void 0;
-exports.PHASE1_CONTEXTS = exports.SCENARIO_CONTEXTS = void 0;
+exports.geoExpansionPersona = exports.geoExpansionChangeScenario = exports.channelMixChangeContext = exports.channelMixChangePersona = exports.channelMixChangeScenario = exports.efficiencyShockContext = exports.efficiencyShockPersona = exports.efficiencyShockScenario = exports.timelineCompressionContext = exports.timelineCompressionPersona = exports.timelineCompressionScenario = exports.volumeTargetIncreaseContext = exports.volumeTargetIncreasePersona = exports.volumeTargetIncreaseScenario = exports.budgetDecreaseMidstreamContext = exports.budgetDecreasePersona = exports.budgetDecreaseMidstreamScenario = exports.budgetRevisionMidstreamContext = exports.budgetRevisionPersona = exports.budgetRevisionMidstreamScenario = exports.multiAudienceVaryingKpisContext = exports.multiAudienceVaryingKpisPersona = exports.multiAudienceVaryingKpisScenario = exports.multiAudienceChannelAllocationContext = exports.multiAudienceChannelPersona = exports.multiAudienceChannelAllocationScenario = exports.multiAudienceUnifiedPlanContext = exports.multiAudienceUnifiedPersona = exports.multiAudienceUnifiedPlanScenario = exports.aggressiveKpiNarrowTargetingContext = exports.aggressiveKpiPersona = exports.aggressiveKpiNarrowTargetingScenario = exports.massNationalSimplicityContext = exports.massNationalPersona = exports.massNationalSimplicityScenario = exports.precisionTargetingComplexContext = exports.precisionTargetingPersona = exports.precisionTargetingComplexScenario = exports.brandBuildingLimitedDataContext = exports.brandBuildingLimitedDataPersona = exports.brandBuildingLimitedDataScenario = exports.highStakesPerformanceContext = exports.highStakesPerformancePersona = exports.highStakesPerformanceScenario = exports.intermediateUserPersona = exports.full10StepScenario = exports.sophisticatedUserPersona = exports.sophisticatedIdkScenario = exports.basicUserPersona = exports.basicUserStep1_2Scenario = void 0;
+exports.PHASE1_CONTEXTS = exports.SCENARIO_CONTEXTS = exports.SCENARIO_METADATA = exports.MULTI_AUDIENCE_SCENARIOS = exports.ADVANCED_TARGETING_SCENARIOS = exports.PHASE1_QUALITY_SCENARIOS = exports.FULL_SCENARIOS = exports.QUICK_SCENARIOS = exports.REFORECASTING_SCENARIOS = exports.ALL_SCENARIOS = exports.audienceRemovalChangeContext = exports.audienceRemovalPersona = exports.audienceRemovalChangeScenario = exports.audienceAdditionChangeContext = exports.audienceAdditionPersona = exports.audienceAdditionChangeScenario = exports.outcomeKPIChangeContext = exports.outcomeKPIPersona = exports.outcomeKPIChangeScenario = exports.behavioralTargetingChangeContext = exports.behavioralTargetingPersona = exports.behavioralTargetingChangeScenario = exports.demographicShiftChangeContext = exports.demographicShiftPersona = exports.demographicShiftChangeScenario = exports.geoExpansionChangeContext = void 0;
 exports.getScenarioById = getScenarioById;
 exports.getScenariosByCategory = getScenariosByCategory;
 // Import individual scenarios
@@ -59,6 +59,10 @@ const budget_revision_midstream_js_1 = require("./budget-revision-midstream.js")
 Object.defineProperty(exports, "budgetRevisionMidstreamScenario", { enumerable: true, get: function () { return budget_revision_midstream_js_1.budgetRevisionMidstreamScenario; } });
 Object.defineProperty(exports, "budgetRevisionPersona", { enumerable: true, get: function () { return budget_revision_midstream_js_1.budgetRevisionPersona; } });
 Object.defineProperty(exports, "budgetRevisionMidstreamContext", { enumerable: true, get: function () { return budget_revision_midstream_js_1.budgetRevisionMidstreamContext; } });
+const budget_decrease_midstream_js_1 = require("./budget-decrease-midstream.js");
+Object.defineProperty(exports, "budgetDecreaseMidstreamScenario", { enumerable: true, get: function () { return budget_decrease_midstream_js_1.budgetDecreaseMidstreamScenario; } });
+Object.defineProperty(exports, "budgetDecreasePersona", { enumerable: true, get: function () { return budget_decrease_midstream_js_1.budgetDecreasePersona; } });
+Object.defineProperty(exports, "budgetDecreaseMidstreamContext", { enumerable: true, get: function () { return budget_decrease_midstream_js_1.budgetDecreaseMidstreamContext; } });
 const volume_target_increase_js_1 = require("./volume-target-increase.js");
 Object.defineProperty(exports, "volumeTargetIncreaseScenario", { enumerable: true, get: function () { return volume_target_increase_js_1.volumeTargetIncreaseScenario; } });
 Object.defineProperty(exports, "volumeTargetIncreasePersona", { enumerable: true, get: function () { return volume_target_increase_js_1.volumeTargetIncreasePersona; } });
@@ -71,6 +75,34 @@ const efficiency_shock_js_1 = require("./efficiency-shock.js");
 Object.defineProperty(exports, "efficiencyShockScenario", { enumerable: true, get: function () { return efficiency_shock_js_1.efficiencyShockScenario; } });
 Object.defineProperty(exports, "efficiencyShockPersona", { enumerable: true, get: function () { return efficiency_shock_js_1.efficiencyShockPersona; } });
 Object.defineProperty(exports, "efficiencyShockContext", { enumerable: true, get: function () { return efficiency_shock_js_1.efficiencyShockContext; } });
+const channel_mix_change_js_1 = require("./channel-mix-change.js");
+Object.defineProperty(exports, "channelMixChangeScenario", { enumerable: true, get: function () { return channel_mix_change_js_1.channelMixChangeScenario; } });
+Object.defineProperty(exports, "channelMixChangePersona", { enumerable: true, get: function () { return channel_mix_change_js_1.channelMixChangePersona; } });
+Object.defineProperty(exports, "channelMixChangeContext", { enumerable: true, get: function () { return channel_mix_change_js_1.channelMixChangeContext; } });
+const geo_expansion_change_js_1 = require("./geo-expansion-change.js");
+Object.defineProperty(exports, "geoExpansionChangeScenario", { enumerable: true, get: function () { return geo_expansion_change_js_1.geoExpansionChangeScenario; } });
+Object.defineProperty(exports, "geoExpansionPersona", { enumerable: true, get: function () { return geo_expansion_change_js_1.geoExpansionPersona; } });
+Object.defineProperty(exports, "geoExpansionChangeContext", { enumerable: true, get: function () { return geo_expansion_change_js_1.geoExpansionChangeContext; } });
+const demographic_shift_change_js_1 = require("./demographic-shift-change.js");
+Object.defineProperty(exports, "demographicShiftChangeScenario", { enumerable: true, get: function () { return demographic_shift_change_js_1.demographicShiftChangeScenario; } });
+Object.defineProperty(exports, "demographicShiftPersona", { enumerable: true, get: function () { return demographic_shift_change_js_1.demographicShiftPersona; } });
+Object.defineProperty(exports, "demographicShiftChangeContext", { enumerable: true, get: function () { return demographic_shift_change_js_1.demographicShiftChangeContext; } });
+const behavioral_targeting_change_js_1 = require("./behavioral-targeting-change.js");
+Object.defineProperty(exports, "behavioralTargetingChangeScenario", { enumerable: true, get: function () { return behavioral_targeting_change_js_1.behavioralTargetingChangeScenario; } });
+Object.defineProperty(exports, "behavioralTargetingPersona", { enumerable: true, get: function () { return behavioral_targeting_change_js_1.behavioralTargetingPersona; } });
+Object.defineProperty(exports, "behavioralTargetingChangeContext", { enumerable: true, get: function () { return behavioral_targeting_change_js_1.behavioralTargetingChangeContext; } });
+const outcome_kpi_change_js_1 = require("./outcome-kpi-change.js");
+Object.defineProperty(exports, "outcomeKPIChangeScenario", { enumerable: true, get: function () { return outcome_kpi_change_js_1.outcomeKPIChangeScenario; } });
+Object.defineProperty(exports, "outcomeKPIPersona", { enumerable: true, get: function () { return outcome_kpi_change_js_1.outcomeKPIPersona; } });
+Object.defineProperty(exports, "outcomeKPIChangeContext", { enumerable: true, get: function () { return outcome_kpi_change_js_1.outcomeKPIChangeContext; } });
+const audience_addition_change_js_1 = require("./audience-addition-change.js");
+Object.defineProperty(exports, "audienceAdditionChangeScenario", { enumerable: true, get: function () { return audience_addition_change_js_1.audienceAdditionChangeScenario; } });
+Object.defineProperty(exports, "audienceAdditionPersona", { enumerable: true, get: function () { return audience_addition_change_js_1.audienceAdditionPersona; } });
+Object.defineProperty(exports, "audienceAdditionChangeContext", { enumerable: true, get: function () { return audience_addition_change_js_1.audienceAdditionChangeContext; } });
+const audience_removal_change_js_1 = require("./audience-removal-change.js");
+Object.defineProperty(exports, "audienceRemovalChangeScenario", { enumerable: true, get: function () { return audience_removal_change_js_1.audienceRemovalChangeScenario; } });
+Object.defineProperty(exports, "audienceRemovalPersona", { enumerable: true, get: function () { return audience_removal_change_js_1.audienceRemovalPersona; } });
+Object.defineProperty(exports, "audienceRemovalChangeContext", { enumerable: true, get: function () { return audience_removal_change_js_1.audienceRemovalChangeContext; } });
 /**
  * All available test scenarios
  */
@@ -92,24 +124,48 @@ exports.ALL_SCENARIOS = [
     multi_audience_varying_kpis_js_1.multiAudienceVaryingKpisScenario,
     // Reforecasting scenarios
     budget_revision_midstream_js_1.budgetRevisionMidstreamScenario,
+    budget_decrease_midstream_js_1.budgetDecreaseMidstreamScenario,
     volume_target_increase_js_1.volumeTargetIncreaseScenario,
     timeline_compression_js_1.timelineCompressionScenario,
     efficiency_shock_js_1.efficiencyShockScenario,
+    channel_mix_change_js_1.channelMixChangeScenario,
+    geo_expansion_change_js_1.geoExpansionChangeScenario,
+    demographic_shift_change_js_1.demographicShiftChangeScenario,
+    behavioral_targeting_change_js_1.behavioralTargetingChangeScenario,
+    outcome_kpi_change_js_1.outcomeKPIChangeScenario,
+    audience_addition_change_js_1.audienceAdditionChangeScenario,
+    audience_removal_change_js_1.audienceRemovalChangeScenario,
 ];
 /**
  * Reforecasting Scenarios
  *
  * These scenarios test proactive reforecasting when data changes mid-conversation:
- * - Budget revision midstream
+ * - Budget revision midstream (increase)
+ * - Budget decrease midstream (cut)
  * - Volume target increase
  * - Timeline compression
  * - Efficiency shock (CAC reality check)
+ * - Channel mix change (exclusions)
+ * - Geography expansion change
+ * - Demographic shift change
+ * - Behavioral targeting change
+ * - Outcome KPI change (funnel shift)
+ * - Audience addition change
+ * - Audience removal change
  */
 exports.REFORECASTING_SCENARIOS = [
     budget_revision_midstream_js_1.budgetRevisionMidstreamScenario,
+    budget_decrease_midstream_js_1.budgetDecreaseMidstreamScenario,
     volume_target_increase_js_1.volumeTargetIncreaseScenario,
     timeline_compression_js_1.timelineCompressionScenario,
     efficiency_shock_js_1.efficiencyShockScenario,
+    channel_mix_change_js_1.channelMixChangeScenario,
+    geo_expansion_change_js_1.geoExpansionChangeScenario,
+    demographic_shift_change_js_1.demographicShiftChangeScenario,
+    behavioral_targeting_change_js_1.behavioralTargetingChangeScenario,
+    outcome_kpi_change_js_1.outcomeKPIChangeScenario,
+    audience_addition_change_js_1.audienceAdditionChangeScenario,
+    audience_removal_change_js_1.audienceRemovalChangeScenario,
 ];
 /**
  * Quick test scenarios (faster execution, fewer turns)
@@ -311,9 +367,17 @@ exports.SCENARIO_CONTEXTS = {
     "multi-audience-varying-kpis": multi_audience_varying_kpis_js_1.multiAudienceVaryingKpisContext,
     // Reforecasting scenarios
     "budget-revision-midstream": budget_revision_midstream_js_1.budgetRevisionMidstreamContext,
+    "budget-decrease-midstream": budget_decrease_midstream_js_1.budgetDecreaseMidstreamContext,
     "volume-target-increase": volume_target_increase_js_1.volumeTargetIncreaseContext,
     "timeline-compression": timeline_compression_js_1.timelineCompressionContext,
     "efficiency-shock": efficiency_shock_js_1.efficiencyShockContext,
+    "channel-mix-change": channel_mix_change_js_1.channelMixChangeContext,
+    "geo-expansion-change": geo_expansion_change_js_1.geoExpansionChangeContext,
+    "demographic-shift-change": demographic_shift_change_js_1.demographicShiftChangeContext,
+    "behavioral-targeting-change": behavioral_targeting_change_js_1.behavioralTargetingChangeContext,
+    "outcome-kpi-change": outcome_kpi_change_js_1.outcomeKPIChangeContext,
+    "audience-addition-change": audience_addition_change_js_1.audienceAdditionChangeContext,
+    "audience-removal-change": audience_removal_change_js_1.audienceRemovalChangeContext,
 };
 // Backwards compatibility
 exports.PHASE1_CONTEXTS = exports.SCENARIO_CONTEXTS;

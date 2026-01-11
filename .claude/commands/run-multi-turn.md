@@ -10,7 +10,7 @@ Ask the user which scenario(s) to run:
 
 Options:
 
-- `all` - Run all 15 scenarios (full evaluation suite)
+- `all` - Run all 23 scenarios (full evaluation suite)
 - `quick` - Run quick scenarios only (basic-user, sophisticated-idk, high-stakes-performance)
 - `full` - Run only the full-10-step scenario
 - `scenario [id]` - Run a specific scenario by ID
@@ -29,9 +29,17 @@ Available scenarios:
 10. multi-audience-channel-allocation - Multiple audiences with different channels
 11. multi-audience-varying-kpis - Multiple audiences with varying KPIs
 12. budget-revision-midstream - Budget increases mid-conversation (reforecasting)
-13. volume-target-increase - Volume target increases mid-conversation (reforecasting)
-14. timeline-compression - Timeline compresses mid-conversation (reforecasting)
-15. efficiency-shock - CAC reality check mid-conversation (reforecasting)
+13. budget-decrease-midstream - Budget cut mid-conversation (reforecasting)
+14. volume-target-increase - Volume target increases mid-conversation (reforecasting)
+15. timeline-compression - Timeline compresses mid-conversation (reforecasting)
+16. efficiency-shock - CAC reality check mid-conversation (reforecasting)
+17. channel-mix-change - Channel exclusions mid-conversation (reforecasting)
+18. geo-expansion-change - Geography expansion mid-conversation (reforecasting)
+19. demographic-shift-change - Target demo shifts mid-conversation (reforecasting)
+20. behavioral-targeting-change - Behavioral targeting narrows mid-conversation (reforecasting)
+21. outcome-kpi-change - Objective/KPI shifts mid-conversation (reforecasting)
+22. audience-addition-change - Audience segment added mid-conversation (reforecasting)
+23. audience-removal-change - Audience segment removed mid-conversation (reforecasting)
 
 If user specified a scope in the command arguments, use that. Otherwise default to `all`.
 
@@ -110,6 +118,13 @@ budget-revision-midstream               | 0.XXX  | 0.70      |   ✅   |
 volume-target-increase                  | 0.XXX  | 0.70      |   ✅   |
 timeline-compression                    | 0.XXX  | 0.70      |   ✅   |
 efficiency-shock                        | 0.XXX  | 0.70      |   ✅   |
+channel-mix-change                      | 0.XXX  | 0.70      |   ✅   |
+geo-expansion-change                    | 0.XXX  | 0.70      |   ✅   |
+demographic-shift-change                | 0.XXX  | 0.70      |   ✅   |
+behavioral-targeting-change             | 0.XXX  | 0.70      |   ✅   |
+outcome-kpi-change                      | 0.XXX  | 0.70      |   ✅   |
+audience-addition-change                | 0.XXX  | 0.70      |   ✅   |
+audience-removal-change                 | 0.XXX  | 0.70      |   ✅   |
 ----------------------------------------|--------|-----------|--------|
 Average                                 | 0.XXX  | 0.70      |   ✅   |
 Critical Failures                       |   X    |    0      |   ✅   |
@@ -260,4 +275,60 @@ efficiency-shock:
 - Tests: Proactive reforecasting when CAC constraints invalidate calculations
 - Data change: User reveals $120 CAC floor after agent calculates $50 implied CAC
 - Expected turns: 12-35
+- Pass threshold: 0.70
+
+budget-decrease-midstream:
+- Persona: Enterprise software VP of demand generation
+- Tests: Proactive reforecasting when budget is CUT mid-conversation
+- Data change: Budget decreases from $1M to $600K at turn 7
+- Expected turns: 14-40
+- Pass threshold: 0.70
+
+channel-mix-change:
+- Persona: CPG senior brand manager
+- Tests: Proactive reforecasting when channels become unavailable
+- Data change: Social media channels (Meta/TikTok) banned due to brand safety at turn 8
+- Expected turns: 14-40
+- Pass threshold: 0.70
+
+geo-expansion-change:
+- Persona: Retail athletic apparel director of marketing
+- Tests: Proactive reforecasting when geography expands
+- Data change: Expands from US-only to US + Canada + Mexico at turn 7
+- Expected turns: 14-40
+- Pass threshold: 0.70
+
+demographic-shift-change:
+- Persona: Fashion retail streetwear marketing manager
+- Tests: Proactive reforecasting when target demographic shifts
+- Data change: Target shifts from Millennials (25-40) to Gen Z (18-27) at turn 8
+- Expected turns: 14-40
+- Pass threshold: 0.70
+
+behavioral-targeting-change:
+- Persona: Sports nutrition director of digital marketing
+- Tests: Proactive reforecasting when behavioral targeting narrows significantly
+- Data change: From broad "fitness enthusiasts" to narrow "marathon runners preparing for races" at turn 7
+- Expected turns: 14-40
+- Pass threshold: 0.70
+
+outcome-kpi-change:
+- Persona: Insurance head of marketing
+- Tests: Proactive reforecasting when objective/KPI fundamentally shifts
+- Data change: Shifts from acquisition (25K policies) to brand awareness (15% lift) at turn 8
+- Expected turns: 14-40
+- Pass threshold: 0.70
+
+audience-addition-change:
+- Persona: Wealth management VP of marketing
+- Tests: Proactive reforecasting when new audience segment is added
+- Data change: Adds young professionals (30-45) to existing retirees (55+) segment at turn 8
+- Expected turns: 14-40
+- Pass threshold: 0.70
+
+audience-removal-change:
+- Persona: Electric vehicle director of marketing
+- Tests: Proactive reforecasting when audience segment is removed
+- Data change: Removes tech enthusiast segment, leaving 2 of 3 original segments at turn 8
+- Expected turns: 14-40
 - Pass threshold: 0.70

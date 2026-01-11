@@ -1,4 +1,3 @@
-"use strict";
 /**
  * MPA Multi-Turn Evaluation Runner
  *
@@ -38,57 +37,22 @@
  *   --efficiency       Cap scenarios at 20 turns
  *   --haiku-simulator  Use Claude 3.5 Haiku for user simulation (faster, no quality loss)
  */
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.runScenario = runScenario;
-exports.generateReport = generateReport;
-exports.parseArgs = parseArgs;
-exports.calculatePrimeDirectiveEfficiency = calculatePrimeDirectiveEfficiency;
-exports.runScenariosParallel = runScenariosParallel;
-exports.runScenariosSequential = runScenariosSequential;
-const dotenv_1 = require("dotenv");
-const braintrust_1 = require("braintrust");
-const fs = __importStar(require("fs"));
-const path = __importStar(require("path"));
+import { config } from "dotenv";
+import { Eval } from "braintrust";
+import * as fs from "fs";
+import * as path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 // Load environment variables from .env file
-(0, dotenv_1.config)();
-const conversation_engine_js_1 = require("./conversation-engine.js");
-const index_js_1 = require("./scenarios/index.js");
-const index_js_2 = require("./scorers/index.js");
-const baseline_tracker_js_1 = require("./baseline-tracker.js");
-const kb_impact_tracker_js_1 = require("./kb-impact-tracker.js");
+// Look for .env in the source directory (parent of dist/)
+const envPath = path.resolve(__dirname, '..', '.env');
+config({ path: envPath });
+import { ConversationEngine } from "./conversation-engine.js";
+import { ALL_SCENARIOS, getScenarioById, SCENARIO_METADATA, } from "./scenarios/index.js";
+import { formatScoreReport } from "./scorers/index.js";
+import { loadBaseline, saveBaseline, calculateAggregates, } from "./baseline-tracker.js";
+import { trackKBUsage, calculateKBImpactMetrics, generateKBOptimizationRecommendations, generateKBImpactReport, saveKBImpactData, } from "./kb-impact-tracker.js";
 // =============================================================================
 // CONFIGURATION
 // =============================================================================
@@ -204,16 +168,16 @@ function parseArgs() {
  */
 function getScenariosToRun(args) {
     if (args.scenario) {
-        const scenario = (0, index_js_1.getScenarioById)(args.scenario);
+        const scenario = getScenarioById(args.scenario);
         if (!scenario) {
             console.error(`Unknown scenario: ${args.scenario}`);
-            console.error("Available scenarios:", index_js_1.ALL_SCENARIOS.map((s) => s.id).join(", "));
+            console.error("Available scenarios:", ALL_SCENARIOS.map((s) => s.id).join(", "));
             process.exit(1);
         }
         return [scenario];
     }
     // ALWAYS run all scenarios for comprehensive evaluation
-    return index_js_1.ALL_SCENARIOS;
+    return ALL_SCENARIOS;
 }
 /**
  * Apply efficiency mode caps to scenarios
@@ -370,7 +334,7 @@ function generateReport(result) {
         }
     }
     // Score breakdown
-    lines.push((0, index_js_2.formatScoreReport)(result.turnScoreAggregates, result.conversationScores, result.compositeScore, result.passed));
+    lines.push(formatScoreReport(result.turnScoreAggregates, result.conversationScores, result.compositeScore, result.passed));
     lines.push("");
     // Step progression
     lines.push(`## Step Progression`);
@@ -638,7 +602,7 @@ function saveScenarioOutput(result, runDir, scenarioIndex) {
     const scoreLines = [];
     scoreLines.push(`# Score Breakdown: ${result.scenario.name}`);
     scoreLines.push("");
-    scoreLines.push((0, index_js_2.formatScoreReport)(result.turnScoreAggregates, result.conversationScores, result.compositeScore, result.passed));
+    scoreLines.push(formatScoreReport(result.turnScoreAggregates, result.conversationScores, result.compositeScore, result.passed));
     fs.writeFileSync(path.join(scenarioDir, "03_scores.md"), scoreLines.join("\n"));
     // 4. Media Plan Output (if available) - extracted from agent responses
     const mediaPlanLines = [];
@@ -725,7 +689,7 @@ function saveRunSummary(results, runDir, baseline, promptVersion, kbImpactReport
  * Run a single scenario and return results
  */
 async function runScenario(scenario, config) {
-    const engine = new conversation_engine_js_1.ConversationEngine(config);
+    const engine = new ConversationEngine(config);
     return engine.runConversation(scenario);
 }
 /**
@@ -807,7 +771,7 @@ async function main() {
     // Load baseline
     let baseline = null;
     if (!args.skipBaselineComparison) {
-        baseline = (0, baseline_tracker_js_1.loadBaseline)(BASELINE_PATH);
+        baseline = loadBaseline(BASELINE_PATH);
         if (baseline) {
             console.log(`📊 Loaded v5.7 baseline (${Object.keys(baseline.scenarioScores).length} scenarios)`);
         }
@@ -854,7 +818,7 @@ async function main() {
                 // Track KB usage per turn
                 // kbContentInjected contains the KB content strings
                 const injectedDocs = turn.kbContentInjected || [];
-                const usage = (0, kb_impact_tracker_js_1.trackKBUsage)(turn.agentResponse, injectedDocs, turn.currentStep, turn.turnNumber);
+                const usage = trackKBUsage(turn.agentResponse, injectedDocs, turn.currentStep, turn.turnNumber);
                 allKbUsage.push(...usage);
                 // Collect quality scores
                 qualityScores.push({
@@ -866,11 +830,11 @@ async function main() {
                 });
             }
         }
-        const impactMetrics = (0, kb_impact_tracker_js_1.calculateKBImpactMetrics)(allKbUsage, qualityScores);
-        const recommendations = (0, kb_impact_tracker_js_1.generateKBOptimizationRecommendations)(impactMetrics);
-        kbImpactReport = (0, kb_impact_tracker_js_1.generateKBImpactReport)(impactMetrics, recommendations);
+        const impactMetrics = calculateKBImpactMetrics(allKbUsage, qualityScores);
+        const recommendations = generateKBOptimizationRecommendations(impactMetrics);
+        kbImpactReport = generateKBImpactReport(impactMetrics, recommendations);
         // Save KB impact data
-        (0, kb_impact_tracker_js_1.saveKBImpactData)(impactMetrics, promptVersion);
+        saveKBImpactData(impactMetrics, promptVersion);
     }
     // Generate final summary
     const summary = generateFinalSummary(results, baseline, promptVersion, kbImpactReport);
@@ -903,7 +867,7 @@ async function main() {
                 timestamp: Date.now(),
             };
         }
-        const aggregates = (0, baseline_tracker_js_1.calculateAggregates)(scenarioScores);
+        const aggregates = calculateAggregates(scenarioScores);
         const newBaseline = {
             promptVersion,
             model: args.model || "claude-sonnet-4-20250514",
@@ -911,7 +875,7 @@ async function main() {
             scenarioScores,
             ...aggregates,
         };
-        (0, baseline_tracker_js_1.saveBaseline)(newBaseline, BASELINE_PATH);
+        saveBaseline(newBaseline, BASELINE_PATH);
         console.log(`\n✅ New baseline saved to ${BASELINE_PATH}`);
     }
     // Also run via Braintrust for logging (only if API key is configured)
@@ -919,7 +883,7 @@ async function main() {
         console.log("\n⚠️  Skipping Braintrust logging (BRAINTRUST_API_KEY not set)");
     }
     else {
-        await (0, braintrust_1.Eval)("MPA-Multi-Turn", {
+        await Eval("MPA-Multi-Turn", {
             experimentName: `multi-turn-${promptVersion}-${Date.now()}`,
             metadata: {
                 promptVersion,
@@ -943,7 +907,7 @@ async function main() {
                         requiredSteps: scenario.successCriteria.requiredStepsComplete,
                     },
                     metadata: {
-                        ...index_js_1.SCENARIO_METADATA[scenario.id],
+                        ...SCENARIO_METADATA[scenario.id],
                     },
                 }));
             },
@@ -971,7 +935,7 @@ async function main() {
                     };
                 }
                 // Fallback to running scenario
-                const scenario = (0, index_js_1.getScenarioById)(input.scenarioId);
+                const scenario = getScenarioById(input.scenarioId);
                 if (!scenario) {
                     throw new Error(`Scenario not found: ${input.scenarioId}`);
                 }
@@ -1004,4 +968,5 @@ async function main() {
 }
 // Run if executed directly
 main().catch(console.error);
+export { runScenario, generateReport, parseArgs, calculatePrimeDirectiveEfficiency, runScenariosParallel, runScenariosSequential, };
 //# sourceMappingURL=mpa-multi-turn-eval.js.map

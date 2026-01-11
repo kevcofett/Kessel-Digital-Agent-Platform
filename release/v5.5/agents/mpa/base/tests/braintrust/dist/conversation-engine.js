@@ -1,53 +1,57 @@
-"use strict";
 /**
  * Conversation Engine for Multi-Turn MPA Evaluation
  *
  * Orchestrates complete multi-turn conversations between
  * the simulated user and the MPA agent.
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ConversationEngine = void 0;
-const sdk_1 = __importDefault(require("@anthropic-ai/sdk"));
-const user_simulator_js_1 = require("./user-simulator.js");
-const step_tracker_js_1 = require("./step-tracker.js");
-const failure_detector_js_1 = require("./failure-detector.js");
-const kb_injector_js_1 = require("./kb-injector.js");
-const index_js_1 = require("./scorers/index.js");
+import Anthropic from "@anthropic-ai/sdk";
+import { UserSimulator } from "./user-simulator.js";
+import { StepTracker } from "./step-tracker.js";
+import { FailureDetector } from "./failure-detector.js";
+import { KBInjector } from "./kb-injector.js";
+import { scoreTurn, scoreConversation, calculateTurnAggregates, calculateCompositeScore, evaluateSuccess, } from "./scorers/index.js";
 // Import MPA system prompt
-const mpa_prompt_content_js_1 = require("./mpa-prompt-content.js");
+import { MPA_SYSTEM_PROMPT } from "./mpa-prompt-content.js";
+// Import RAG system
+import { RetrievalEngine, ToolExecutor } from "./rag/index.js";
 const DEFAULT_ENGINE_CONFIG = {
     agentModel: "claude-sonnet-4-20250514",
     simulatorModel: "claude-sonnet-4-20250514",
     agentTemperature: 0.7,
     agentMaxTokens: 1024,
-    promptVersion: "v5_7_5",
-    systemPrompt: mpa_prompt_content_js_1.MPA_SYSTEM_PROMPT,
+    promptVersion: "v5_8_rag",
+    systemPrompt: MPA_SYSTEM_PROMPT,
     verbose: false,
+    useAgenticRAG: true,
 };
 /**
  * Conversation Engine - Orchestrates multi-turn conversations
  */
-class ConversationEngine {
+export class ConversationEngine {
     anthropic;
     userSimulator;
     stepTracker;
     failureDetector;
     kbInjector;
     config;
+    ragEngine;
+    toolExecutor;
+    useAgenticRAG;
     constructor(config = {}) {
         this.config = { ...DEFAULT_ENGINE_CONFIG, ...config };
-        this.anthropic = new sdk_1.default({
+        this.anthropic = new Anthropic({
             apiKey: process.env.ANTHROPIC_API_KEY,
         });
-        this.userSimulator = new user_simulator_js_1.UserSimulator({
+        this.userSimulator = new UserSimulator({
             model: this.config.simulatorModel,
         });
-        this.stepTracker = new step_tracker_js_1.StepTracker();
-        this.failureDetector = new failure_detector_js_1.FailureDetector();
-        this.kbInjector = new kb_injector_js_1.KBInjector();
+        this.stepTracker = new StepTracker();
+        this.failureDetector = new FailureDetector();
+        this.kbInjector = new KBInjector();
+        // Initialize RAG system
+        this.ragEngine = new RetrievalEngine();
+        this.toolExecutor = new ToolExecutor(this.ragEngine);
+        this.useAgenticRAG = config.useAgenticRAG ?? true;
     }
     /**
      * Run a complete conversation for a scenario
@@ -57,6 +61,16 @@ class ConversationEngine {
         const turns = [];
         const allEvents = [];
         const failures = { warnings: [], major: [], critical: [] };
+        // Initialize RAG engine if enabled
+        if (this.useAgenticRAG) {
+            try {
+                await this.ragEngine.initialize();
+            }
+            catch (error) {
+                console.warn('RAG initialization failed, falling back to static KB:', error);
+                this.useAgenticRAG = false;
+            }
+        }
         // Reset failure detector for new conversation
         this.failureDetector.reset();
         // Initialize step tracking state
@@ -133,8 +147,10 @@ class ConversationEngine {
                         break;
                 }
             }
+            // Build conversation history from prior agent responses for acronym tracking
+            const conversationHistory = turns.map(t => t.agentResponse).join("\n");
             // Score this turn
-            const turnScores = await (0, index_js_1.scoreTurn)(userResponse.message, agentResult.response, currentStep, stepState, scenario.persona.sophisticationLevel);
+            const turnScores = await scoreTurn(userResponse.message, agentResult.response, currentStep, stepState, scenario.persona.sophisticationLevel, "unknown", conversationHistory);
             // Create turn record
             const turn = {
                 turnNumber,
@@ -157,13 +173,13 @@ class ConversationEngine {
             }
         }
         // Calculate conversation-level scores
-        const conversationScores = await (0, index_js_1.scoreConversation)(turns, scenario, allEvents, failures);
+        const conversationScores = await scoreConversation(turns, scenario, allEvents, failures);
         // Calculate turn score aggregates
-        const turnScoreAggregates = (0, index_js_1.calculateTurnAggregates)(turns);
+        const turnScoreAggregates = calculateTurnAggregates(turns);
         // Calculate composite score
-        const compositeScore = (0, index_js_1.calculateCompositeScore)(turnScoreAggregates, conversationScores, failures);
+        const compositeScore = calculateCompositeScore(turnScoreAggregates, conversationScores, failures);
         // Evaluate success
-        const { passed } = (0, index_js_1.evaluateSuccess)(compositeScore, stepState.completedSteps, failures, scenario.successCriteria);
+        const { passed } = evaluateSuccess(compositeScore, stepState.completedSteps, failures, scenario.successCriteria);
         const endTime = Date.now();
         return {
             scenario,
@@ -190,34 +206,106 @@ class ConversationEngine {
         };
     }
     /**
-     * Get response from MPA agent
+     * Get response from MPA agent with RAG tool support
      */
     async getAgentResponse(systemPrompt, messageHistory, kbContent) {
-        // Inject KB content into system prompt
+        // Inject base KB content into system prompt
         const fullSystemPrompt = kbContent
             ? `${systemPrompt}\n\n=== KNOWLEDGE BASE CONTEXT ===\n${kbContent}`
             : systemPrompt;
         // Handle empty message history (opening greeting)
-        const messages = messageHistory.length > 0
-            ? messageHistory
+        let messages = messageHistory.length > 0
+            ? [...messageHistory]
             : [{ role: "user", content: "Hello, I need help with media planning." }];
-        const response = await this.anthropic.messages.create({
-            model: this.config.agentModel,
-            max_tokens: this.config.agentMaxTokens,
-            temperature: this.config.agentTemperature,
-            system: fullSystemPrompt,
-            messages,
-        });
-        const textBlock = response.content.find((block) => block.type === "text");
+        let finalResponse = "";
+        let toolCallCount = 0;
+        let allCitations = [];
+        const maxToolCalls = 3; // Prevent infinite loops
+        // Tool use loop
+        while (toolCallCount < maxToolCalls) {
+            const requestParams = {
+                model: this.config.agentModel,
+                max_tokens: this.config.agentMaxTokens,
+                temperature: this.config.agentTemperature,
+                system: fullSystemPrompt,
+                messages,
+            };
+            // Add tools if agentic RAG is enabled
+            if (this.useAgenticRAG) {
+                requestParams.tools = this.toolExecutor.getToolDefinitions();
+            }
+            const response = await this.anthropic.messages.create(requestParams);
+            // Extract text content (may exist alongside tool use)
+            const textBlock = response.content.find((block) => block.type === "text");
+            // Check for tool use
+            const toolUseBlocks = response.content.filter((block) => block.type === "tool_use");
+            // If no tool use or RAG disabled, we're done
+            if (toolUseBlocks.length === 0 || !this.useAgenticRAG) {
+                finalResponse = textBlock?.text || "";
+                break;
+            }
+            // If response has ONLY tool use (no text), and stop_reason is end_turn,
+            // we may need to get a final response after processing tools
+            const hasTextContent = textBlock && textBlock.text.trim().length > 0;
+            // Execute tools
+            toolCallCount++;
+            // Add assistant message with tool use (must have content)
+            // The response.content always has at least the tool_use blocks
+            messages.push({
+                role: "assistant",
+                content: response.content,
+            });
+            // Execute each tool and collect results
+            const toolResults = [];
+            for (const toolUse of toolUseBlocks) {
+                const result = await this.toolExecutor.execute({
+                    type: "tool_use",
+                    id: toolUse.id,
+                    name: toolUse.name,
+                    input: toolUse.input,
+                });
+                allCitations.push(...result.citations);
+                toolResults.push({
+                    type: "tool_result",
+                    tool_use_id: toolUse.id,
+                    content: result.content || "No result", // Ensure non-empty content
+                });
+            }
+            // Add tool results (must have at least one result with content)
+            if (toolResults.length > 0) {
+                messages.push({
+                    role: "user",
+                    content: toolResults,
+                });
+            }
+            // If we had meaningful text content alongside tool use, save it
+            // (the model may have provided a partial response while requesting tools)
+            if (hasTextContent && !finalResponse) {
+                finalResponse = textBlock.text;
+            }
+        }
+        // Get last response if we hit tool call limit
+        if (toolCallCount >= maxToolCalls && !finalResponse) {
+            const lastMsg = messages[messages.length - 1];
+            if (lastMsg.role === "assistant" && Array.isArray(lastMsg.content)) {
+                const textBlock = lastMsg.content.find((block) => typeof block === "object" && block.type === "text");
+                finalResponse = textBlock?.text || "[Max tool calls reached]";
+            }
+        }
+        // Ensure we never return an empty response (which would cause API errors in subsequent calls)
+        if (!finalResponse || finalResponse.trim().length === 0) {
+            finalResponse = "I understand. Let me continue with the media planning process.";
+        }
         return {
-            response: textBlock?.text || "",
+            response: finalResponse,
             tokenCounts: {
-                userTokens: response.usage?.input_tokens || 0,
-                agentTokens: response.usage?.output_tokens || 0,
-                kbTokens: Math.round(kbContent.length / 4), // Rough estimate
-                totalContextTokens: (response.usage?.input_tokens || 0) +
-                    (response.usage?.output_tokens || 0),
+                userTokens: 0, // Would need to accumulate from all responses
+                agentTokens: 0,
+                kbTokens: Math.round(kbContent.length / 4),
+                totalContextTokens: 0,
             },
+            toolCalls: toolCallCount,
+            citations: [...new Set(allCitations)], // Deduplicate
         };
     }
     /**
@@ -298,6 +386,5 @@ class ConversationEngine {
         return { ...this.config };
     }
 }
-exports.ConversationEngine = ConversationEngine;
-exports.default = ConversationEngine;
+export default ConversationEngine;
 //# sourceMappingURL=conversation-engine.js.map

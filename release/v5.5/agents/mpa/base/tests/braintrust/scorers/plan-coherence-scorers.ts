@@ -8,9 +8,20 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { TurnScore } from "../mpa-multi-turn-types.js";
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+// Lazy initialization - only create client when needed
+let anthropic: Anthropic | null = null;
+
+function getAnthropicClient(): Anthropic {
+  if (!anthropic) {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error('ANTHROPIC_API_KEY environment variable is not set');
+    }
+    anthropic = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
+    });
+  }
+  return anthropic;
+}
 
 // =============================================================================
 // PLAN TYPES
@@ -358,7 +369,7 @@ export async function scoreStrategicCoherence(plan: MediaPlan): Promise<TurnScor
     .replace("{value_prop}", plan.valueProp || "Not defined");
 
   try {
-    const response = await anthropic.messages.create({
+    const response = await getAnthropicClient().messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 300,
       messages: [{ role: "user", content: prompt }],
@@ -428,7 +439,7 @@ export async function scoreDefensibility(
     .replace("{risks}", plan.risks?.join(", ") || "Not identified");
 
   try {
-    const response = await anthropic.messages.create({
+    const response = await getAnthropicClient().messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 300,
       messages: [{ role: "user", content: prompt }],

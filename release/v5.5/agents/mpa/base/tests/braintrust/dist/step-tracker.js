@@ -1,20 +1,17 @@
-"use strict";
 /**
  * Step Tracker for Multi-Turn MPA Evaluation
  *
  * Tracks conversation progress through the 10-step MPA process.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.StepTracker = void 0;
-const mpa_multi_turn_types_js_1 = require("./mpa-multi-turn-types.js");
+import { MPA_STEPS, } from "./mpa-multi-turn-types.js";
 /**
  * Step Tracker class
  */
-class StepTracker {
+export class StepTracker {
     stepDefinitions;
     constructor() {
         this.stepDefinitions = new Map();
-        for (const step of mpa_multi_turn_types_js_1.MPA_STEPS) {
+        for (const step of MPA_STEPS) {
             this.stepDefinitions.set(step.step, step);
         }
     }
@@ -278,6 +275,5 @@ class StepTracker {
         return `${completed}/10 steps complete. Currently on: ${current}. Completed: ${steps || "None"}`;
     }
 }
-exports.StepTracker = StepTracker;
-exports.default = StepTracker;
+export default StepTracker;
 //# sourceMappingURL=step-tracker.js.map

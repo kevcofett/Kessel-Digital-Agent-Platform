@@ -1,16 +1,13 @@
-"use strict";
 /**
  * Full 10-Step Planning Scenario
  *
  * Tests the agent's ability to guide a user through all 10 steps
  * of the media planning process in a complete session.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.full10StepScenario = exports.intermediateUserPersona = void 0;
 /**
  * Intermediate user persona - marketing director at ecommerce company
  */
-exports.intermediateUserPersona = {
+export const intermediateUserPersona = {
     id: "intermediate-ecommerce",
     name: "Jennifer",
     title: "Marketing Director",
@@ -66,11 +63,11 @@ exports.intermediateUserPersona = {
 /**
  * Full 10-Step Test Scenario
  */
-exports.full10StepScenario = {
+export const full10StepScenario = {
     id: "full-10-step",
     name: "Full 10-Step Media Planning",
     description: "Tests complete media planning flow through all 10 steps with an intermediate user",
-    persona: exports.intermediateUserPersona,
+    persona: intermediateUserPersona,
     openingMessage: "Hi! I'm the Marketing Director at HomeStyle Decor. We sell home decor and furniture online. I'm looking to build a comprehensive media plan for next year. Our annual budget is $750K and we want to acquire 15,000 new customers.",
     expectedCompletedSteps: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     maxTurns: 50,
@@ -184,5 +181,5 @@ exports.full10StepScenario = {
         ],
     },
 };
-exports.default = exports.full10StepScenario;
+export default full10StepScenario;
 //# sourceMappingURL=full-10-step.js.map

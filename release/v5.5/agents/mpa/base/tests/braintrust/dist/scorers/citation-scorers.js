@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Citation Scorers - Tests data attribution and citation accuracy
  *
@@ -15,22 +14,11 @@
  * 4. Consistent citation format
  * 5. Appropriate confidence levels communicated
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CitationType = void 0;
-exports.scoreCitationPresence = scoreCitationPresence;
-exports.scoreCitationAccuracy = scoreCitationAccuracy;
-exports.scoreCitationConsistency = scoreCitationConsistency;
-exports.scoreConfidenceLevel = scoreConfidenceLevel;
-exports.scoreCitationQuality = scoreCitationQuality;
-exports.calculateCitationScore = calculateCitationScore;
-const sdk_1 = __importDefault(require("@anthropic-ai/sdk"));
+import Anthropic from "@anthropic-ai/sdk";
 /**
  * Citation types recognized by the system
  */
-var CitationType;
+export var CitationType;
 (function (CitationType) {
     CitationType["USER_INPUT"] = "user_input";
     CitationType["KB_BENCHMARK"] = "kb_benchmark";
@@ -38,7 +26,7 @@ var CitationType;
     CitationType["AGENT_ESTIMATE"] = "agent_estimate";
     CitationType["DIRECT_API"] = "direct_api";
     CitationType["EXTERNAL_SOURCE"] = "external_source";
-})(CitationType || (exports.CitationType = CitationType = {}));
+})(CitationType || (CitationType = {}));
 /**
  * Patterns for detecting citation types
  */
@@ -93,7 +81,7 @@ const QUANTITATIVE_CLAIM_PATTERNS = [
 /**
  * Score citation presence - does agent cite sources for claims?
  */
-function scoreCitationPresence(agentResponse) {
+export function scoreCitationPresence(agentResponse) {
     // Find all quantitative claims
     const quantitativeClaims = QUANTITATIVE_CLAIM_PATTERNS.filter((p) => p.test(agentResponse)).length;
     // Find all citations
@@ -148,7 +136,7 @@ function scoreCitationPresence(agentResponse) {
  * - Claiming user input for general benchmarks
  * - Claiming web search when search wasn't performed
  */
-function scoreCitationAccuracy(agentResponse, context) {
+export function scoreCitationAccuracy(agentResponse, context) {
     const detectedCitations = [];
     const potentialMisattributions = [];
     // Check KB citations
@@ -209,7 +197,7 @@ function scoreCitationAccuracy(agentResponse, context) {
 /**
  * Score citation consistency - are citations formatted consistently?
  */
-function scoreCitationConsistency(agentResponse) {
+export function scoreCitationConsistency(agentResponse) {
     // Standard citation formats we expect
     const standardFormats = [
         /based on (?:your|the|kb|web|my)/i,
@@ -259,7 +247,7 @@ function scoreCitationConsistency(agentResponse) {
 /**
  * Score confidence level communication - does agent convey appropriate confidence?
  */
-function scoreConfidenceLevel(agentResponse) {
+export function scoreConfidenceLevel(agentResponse) {
     // High confidence indicators (should be used with verified data)
     const highConfidence = [
         /(?:definite|certain|clear|confirmed|verified)/i,
@@ -318,8 +306,8 @@ function scoreConfidenceLevel(agentResponse) {
 /**
  * LLM-as-judge for comprehensive citation quality
  */
-async function scoreCitationQuality(userMessage, agentResponse, context) {
-    const anthropic = new sdk_1.default({
+export async function scoreCitationQuality(userMessage, agentResponse, context) {
+    const anthropic = new Anthropic({
         apiKey: process.env.ANTHROPIC_API_KEY,
     });
     const prompt = `You are evaluating the citation and attribution quality of an AI agent's response.
@@ -378,7 +366,7 @@ Reply with ONLY a single letter: A, B, C, D, or F`;
 /**
  * Calculate combined citation score
  */
-function calculateCitationScore(scores) {
+export function calculateCitationScore(scores) {
     const weights = {
         presence: 0.25,
         accuracy: 0.3,
@@ -402,7 +390,7 @@ function calculateCitationScore(scores) {
     }
     return weightedSum / totalWeight;
 }
-exports.default = {
+export default {
     CitationType,
     scoreCitationPresence,
     scoreCitationAccuracy,

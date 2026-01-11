@@ -2,9 +2,10 @@
  * KB Injector for Multi-Turn MPA Evaluation
  *
  * Simulates RAG by injecting relevant KB content at each step.
+ * Updated to reference actual KB files that exist in the repository.
  */
 /**
- * KB file mapping by step
+ * KB file mapping by step - uses ACTUAL files that exist
  */
 export declare const KB_FILES_BY_STEP: Record<number, string[]>;
 /**

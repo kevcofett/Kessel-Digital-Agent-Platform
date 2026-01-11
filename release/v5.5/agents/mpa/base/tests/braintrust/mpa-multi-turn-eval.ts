@@ -42,9 +42,15 @@ import { config } from "dotenv";
 import { Eval } from "braintrust";
 import * as fs from "fs";
 import * as path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Load environment variables from .env file
-config();
+// Look for .env in the source directory (parent of dist/)
+const envPath = path.resolve(__dirname, '..', '.env');
+config({ path: envPath });
 import { ConversationEngine } from "./conversation-engine.js";
 import {
   ALL_SCENARIOS,

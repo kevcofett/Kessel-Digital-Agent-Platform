@@ -1,66 +1,39 @@
-"use strict";
 /**
  * KB Injector for Multi-Turn MPA Evaluation
  *
  * Simulates RAG by injecting relevant KB content at each step.
+ * Updated to reference actual KB files that exist in the repository.
  */
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.KBInjector = exports.KB_FILES_BY_STEP = void 0;
-const fs = __importStar(require("fs/promises"));
-const path = __importStar(require("path"));
+import * as fs from "fs/promises";
+import * as path from "path";
 const KB_BASE_PATH = "/Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/agents/mpa/base/kb";
 /**
- * KB file mapping by step
+ * KB file mapping by step - uses ACTUAL files that exist
  */
-exports.KB_FILES_BY_STEP = {
-    1: ["MPA_Supporting_Instructions_v5_5.txt"],
+export const KB_FILES_BY_STEP = {
+    1: [
+        "Strategic_Wisdom_v5_5.txt",
+        "MPA_Conversation_Examples_v5_5.txt",
+    ],
     2: [
-        "MPA_Supporting_Instructions_v5_5.txt",
+        "Analytics_Engine_v5_5.txt",
         "MPA_Expert_Lens_Budget_Allocation_v5_5.txt",
     ],
     3: [
         "MPA_Expert_Lens_Audience_Strategy_v5_5.txt",
         "MPA_Implications_Audience_Targeting_v5_5.txt",
     ],
-    4: ["MPA_Geography_DMA_Planning_v5_5.txt"],
+    4: [
+        "MPA_Implications_Audience_Targeting_v5_5.txt",
+    ],
     5: [
         "MPA_Expert_Lens_Budget_Allocation_v5_5.txt",
         "MPA_Implications_Budget_Decisions_v5_5.txt",
     ],
-    6: ["MPA_Conversation_Examples_v5_5.txt"],
+    6: [
+        "MPA_Conversation_Examples_v5_5.txt",
+        "BRAND_PERFORMANCE_FRAMEWORK_v5_5.txt",
+    ],
     7: [
         "MPA_Expert_Lens_Channel_Mix_v5_5.txt",
         "MPA_Implications_Channel_Shifts_v5_5.txt",
@@ -68,17 +41,25 @@ exports.KB_FILES_BY_STEP = {
     8: [
         "MPA_Expert_Lens_Measurement_Attribution_v5_5.txt",
         "MPA_Implications_Measurement_Choices_v5_5.txt",
+        "MEASUREMENT_FRAMEWORK_v5_5.txt",
     ],
-    9: ["MPA_Supporting_Instructions_v5_5.txt"],
-    10: ["MPA_Supporting_Instructions_v5_5.txt"],
+    9: [
+        "Gap_Detection_Playbook_v5_5.txt",
+        "MPA_Implications_Timing_Pacing_v5_5.txt",
+    ],
+    10: [
+        "Gap_Detection_Playbook_v5_5.txt",
+        "Confidence_Level_Framework_v5_5.txt",
+    ],
 };
 /**
  * KB files that are always included in every step
+ * These files MUST exist in the kb directory
  */
 const ALWAYS_INCLUDE_KB = [
-    "MPA_Adaptive_Language_v5_5.txt", // Sophistication matching
-    "MPA_Calculation_Display_v5_5.txt", // Visible math patterns
-    "MPA_Step_Boundary_Guidance_v5_5.txt", // Step boundary and question discipline
+    "KB_00_Agent_Core_Operating_Standards.txt",
+    "Data_Provenance_Framework_v5_5.txt",
+    "MPA_Supporting_Instructions_v5_5.txt",
 ];
 /**
  * Maximum characters per KB file to include
@@ -87,7 +68,7 @@ const MAX_KB_CHARS = 4000;
 /**
  * KB Injector class
  */
-class KBInjector {
+export class KBInjector {
     kbCache = new Map();
     basePath;
     constructor(basePath = KB_BASE_PATH) {
@@ -97,7 +78,7 @@ class KBInjector {
      * Get KB content for a specific step
      */
     async getKBForStep(step, customKBMap) {
-        const kbFiles = customKBMap?.[step] || exports.KB_FILES_BY_STEP[step] || [];
+        const kbFiles = customKBMap?.[step] || KB_FILES_BY_STEP[step] || [];
         const contents = [];
         // Always include required KB files
         for (const alwaysFile of ALWAYS_INCLUDE_KB) {
@@ -152,6 +133,7 @@ class KBInjector {
     formatKBContent(fileName, content) {
         const docName = fileName
             .replace(/_v5_5\.txt$/, "")
+            .replace(/\.txt$/, "")
             .replace(/_/g, " ")
             .toUpperCase();
         return `[KNOWLEDGE BASE: ${docName}]\n\n${content}\n\n[END KB: ${docName}]`;
@@ -190,7 +172,7 @@ class KBInjector {
         for (const alwaysFile of ALWAYS_INCLUDE_KB) {
             allFiles.add(alwaysFile);
         }
-        for (const files of Object.values(exports.KB_FILES_BY_STEP)) {
+        for (const files of Object.values(KB_FILES_BY_STEP)) {
             for (const file of files) {
                 allFiles.add(file);
             }
@@ -217,9 +199,8 @@ class KBInjector {
      * Get list of KB files for a step
      */
     getKBFilesForStep(step) {
-        return [...ALWAYS_INCLUDE_KB, ...(exports.KB_FILES_BY_STEP[step] || [])];
+        return [...ALWAYS_INCLUDE_KB, ...(KB_FILES_BY_STEP[step] || [])];
     }
 }
-exports.KBInjector = KBInjector;
-exports.default = KBInjector;
+export default KBInjector;
 //# sourceMappingURL=kb-injector.js.map

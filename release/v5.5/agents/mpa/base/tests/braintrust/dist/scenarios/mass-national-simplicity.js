@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Mass National Simplicity Scenario
  *
@@ -21,12 +20,10 @@
  * - Agent SHOULD discuss national media buying efficiency
  * - Agent SHOULD keep geographic strategy simple (national buy)
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.massNationalSimplicityContext = exports.massNationalSimplicityScenario = exports.massNationalPersona = void 0;
 /**
  * Brand marketing director with simple national campaign needs
  */
-exports.massNationalPersona = {
+export const massNationalPersona = {
     id: "mass-national-brand",
     name: "Michelle",
     title: "VP of Brand Marketing",
@@ -88,14 +85,14 @@ exports.massNationalPersona = {
 /**
  * Mass National Simplicity Test Scenario
  */
-exports.massNationalSimplicityScenario = {
+export const massNationalSimplicityScenario = {
     id: "mass-national-simplicity",
     name: "Mass National Campaign - Simplicity Test",
     category: "phase1-quality",
     description: "Tests agent's ability to handle a simple broad-reach national campaign without " +
         "over-complicating. Agent should recognize when simplicity is appropriate and " +
         "focus on reach/frequency rather than precision targeting.",
-    persona: exports.massNationalPersona,
+    persona: massNationalPersona,
     openingMessage: "Hi! I'm the VP of Brand Marketing at FreshBite Snacks. We're launching a new snack " +
         "line nationally and need to build a media plan to drive awareness. Budget is $8M. " +
         "Target audience is pretty broad - adults 18-54 who buy snacks. We want to reach as " +
@@ -285,11 +282,11 @@ exports.massNationalSimplicityScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.massNationalSimplicityContext = {
+export const massNationalSimplicityContext = {
     budget: 8000000,
     funnel: "awareness",
     kpiAggressiveness: "conservative",
     userSophistication: "medium",
 };
-exports.default = exports.massNationalSimplicityScenario;
+export default massNationalSimplicityScenario;
 //# sourceMappingURL=mass-national-simplicity.js.map

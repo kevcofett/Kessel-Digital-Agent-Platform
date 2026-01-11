@@ -1,10 +1,23 @@
 /**
  * Scorers Index - Exports and Composite Score Calculation
+ *
+ * SCORER_SPECIFICATION_v2: 14 optimized scorers with three-tier weighting
+ * - Tier 1: Core Quality (65%)
+ * - Tier 2: Structural Compliance (20%)
+ * - Tier 3: Advanced Quality (15%)
  */
 import { TurnScore, FailureCondition } from "../mpa-multi-turn-types.js";
-export { scoreResponseLength, scoreSingleQuestion, scoreStepBoundary, scoreSourceCitation, scoreAcronymDefinition, scoreIdkProtocol, scoreAdaptiveSophistication, scoreProactiveIntelligence, scoreProgressOverPerfection, scoreRiskOpportunityFlagging, scoreCalculationPresence, scoreAudienceCompleteness, scoreAudienceSizing, scorePrecisionConnection, scoreResponseFormatting, scoreTurn, } from "./turn-scorers.js";
-export { scoreStepCompletionRate, scoreConversationEfficiency, scoreContextRetention, scoreGreetingUniqueness, scoreLoopDetection, calculateFailurePenalty, scoreStepTransitionQuality, scoreOverallCoherence, scoreConversation, } from "./conversation-scorers.js";
-export { scoreTeachingBehavior, scoreProactiveCalculation, scoreBenchmarkCitation, scoreCriticalThinking, scoreStrategicSynthesis, calculateMentorshipScore, scoreMentorship, } from "./mentorship-scorers.js";
+export { callLLMJudge, JUDGE_PROMPTS, type JudgeResult, type JudgePromptContext } from "./llm-judge.js";
+export { scoreProactiveCalculation, type ProactiveCalculationContext } from "./proactive-calculation.js";
+export { scoreTeachingBehavior, type TeachingBehaviorContext } from "./teaching-behavior.js";
+export { scoreFeasibilityFraming, type FeasibilityFramingContext } from "./feasibility-framing.js";
+export { scoreSourceCitation as scoreSourceCitationV2, type SourceCitationResult } from "./source-citation.js";
+export { scoreRecalculationOnChange, type RecalculationContext } from "./recalculation-on-change.js";
+export { scoreAudienceSizingCompleteness, type AudienceSizingResult, type TableAnalysis } from "./audience-sizing-completeness.js";
+export { scoreCrossStepSynthesis, type CrossStepSynthesisContext } from "./cross-step-synthesis.js";
+export { scoreResponseLength, scoreSingleQuestion, scoreStepBoundary, scoreSourceCitation, scoreAcronymDefinition, scoreIdkProtocol, scoreAdaptiveSophistication, scoreRiskOpportunityFlagging, scoreResponseFormatting, scoreTurn, } from "./turn-scorers.js";
+export { calculateFailurePenalty, scoreStepTransitionQuality, scoreOverallCoherence, scoreConversation, } from "./conversation-scorers.js";
+export { scoreTeachingBehavior as scoreTeachingBehaviorLegacy, scoreProactiveCalculation as scoreProactiveCalculationLegacy, scoreBenchmarkCitation, scoreCriticalThinking, scoreStrategicSynthesis, calculateMentorshipScore, scoreMentorship, } from "./mentorship-scorers.js";
 export { type ScenarioContext, type StepRequirements, type StepQualityInput, getStepRequirements, scoreStepQuality, scoreStepDataCompleteness, scoreStepTurnEfficiency, scoreStepSynthesis, calculateStepQualityScore, scoreStepTransitionQuality as scoreStepTransitionQualityPhase1, } from "./step-quality-scorers.js";
 export { type MediaPlan, type IndustryBenchmarks, scoreMathematicalConsistency, scoreStrategicCoherence, scoreDefensibility, scorePlanComprehensiveness, scoreEfficiencyRealism, calculatePlanCoherenceScore, scorePlanCoherence, } from "./plan-coherence-scorers.js";
 export { DataSourcePriority, scoreDataSourceAttribution, scoreEstimateLabeling, scoreValidationRecommendation, scoreDataHierarchyAdherence, calculateDataQualityScore, } from "./data-quality-scorers.js";

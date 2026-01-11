@@ -1,4 +1,3 @@
-"use strict";
 /**
  * KB Document Update Pipeline
  *
@@ -23,53 +22,10 @@
  *   # Full pipeline: analyze, apply, upload, re-evaluate
  *   npx ts-node --esm kb-update-pipeline.ts --full-pipeline
  */
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.KBUpdateType = void 0;
-exports.createKBBaseline = createKBBaseline;
-exports.saveKBBaseline = saveKBBaseline;
-exports.loadLatestKBBaseline = loadLatestKBBaseline;
-exports.compareKBBaselines = compareKBBaselines;
-exports.generateKBUpdates = generateKBUpdates;
-exports.applyKBUpdate = applyKBUpdate;
-exports.applyAllKBUpdates = applyAllKBUpdates;
-exports.uploadToSharePoint = uploadToSharePoint;
-const fs = __importStar(require("fs"));
-const path = __importStar(require("path"));
-const child_process_1 = require("child_process");
-const kb_impact_tracker_js_1 = require("./kb-impact-tracker.js");
+import * as fs from "fs";
+import * as path from "path";
+import { execSync } from "child_process";
+import { MPA_KB_DOCUMENTS, generateKBOptimizationRecommendations, generateKBImpactReport, } from "./kb-impact-tracker.js";
 // =============================================================================
 // CONFIGURATION
 // =============================================================================
@@ -103,7 +59,7 @@ function calculateContentHash(content) {
  */
 function createKBBaseline(promptVersion) {
     const documents = [];
-    for (const doc of kb_impact_tracker_js_1.MPA_KB_DOCUMENTS) {
+    for (const doc of MPA_KB_DOCUMENTS) {
         const filePath = path.join(KB_BASE_PATH, doc.filename);
         if (fs.existsSync(filePath)) {
             const content = fs.readFileSync(filePath, "utf-8");
@@ -193,7 +149,7 @@ function compareKBBaselines(before, after) {
 /**
  * Update types supported by the pipeline
  */
-var KBUpdateType;
+export var KBUpdateType;
 (function (KBUpdateType) {
     KBUpdateType["ADD_BENCHMARK"] = "add_benchmark";
     KBUpdateType["CLARIFY_SECTION"] = "clarify_section";
@@ -202,7 +158,7 @@ var KBUpdateType;
     KBUpdateType["ADD_SOURCE_CITATION"] = "add_source_citation";
     KBUpdateType["CONSOLIDATE_CONTENT"] = "consolidate_content";
     KBUpdateType["RESTRUCTURE_HEADERS"] = "restructure_headers";
-})(KBUpdateType || (exports.KBUpdateType = KBUpdateType = {}));
+})(KBUpdateType || (KBUpdateType = {}));
 /**
  * Generate KB updates from optimization recommendations
  */
@@ -245,7 +201,7 @@ function generateKBUpdates(recommendations) {
  * Apply a single update to a KB document
  */
 function applyKBUpdate(update) {
-    const doc = kb_impact_tracker_js_1.MPA_KB_DOCUMENTS.find((d) => d.id === update.documentId);
+    const doc = MPA_KB_DOCUMENTS.find((d) => d.id === update.documentId);
     if (!doc) {
         console.error(`Document not found: ${update.documentId}`);
         return false;
@@ -358,11 +314,11 @@ async function uploadToSharePoint(documentIds) {
     if (!SHAREPOINT_CONFIG.siteUrl || !SHAREPOINT_CONFIG.clientId) {
         console.error("SharePoint configuration missing. Set environment variables:");
         console.error("  SHAREPOINT_SITE_URL, SHAREPOINT_CLIENT_ID, SHAREPOINT_CLIENT_SECRET, SHAREPOINT_TENANT_ID");
-        return { uploaded, failed: documentIds || kb_impact_tracker_js_1.MPA_KB_DOCUMENTS.map((d) => d.id) };
+        return { uploaded, failed: documentIds || MPA_KB_DOCUMENTS.map((d) => d.id) };
     }
     const docsToUpload = documentIds
-        ? kb_impact_tracker_js_1.MPA_KB_DOCUMENTS.filter((d) => documentIds.includes(d.id))
-        : kb_impact_tracker_js_1.MPA_KB_DOCUMENTS;
+        ? MPA_KB_DOCUMENTS.filter((d) => documentIds.includes(d.id))
+        : MPA_KB_DOCUMENTS;
     for (const doc of docsToUpload) {
         const filePath = path.join(KB_BASE_PATH, doc.filename);
         if (!fs.existsSync(filePath)) {
@@ -374,7 +330,7 @@ async function uploadToSharePoint(documentIds) {
             // Use the existing Python upload script
             const scriptPath = path.join(__dirname, "..", "..", "..", "..", "..", "scripts", "upload_kb_to_library.py");
             if (fs.existsSync(scriptPath)) {
-                (0, child_process_1.execSync)(`python "${scriptPath}" --file "${filePath}" --library "${SHAREPOINT_CONFIG.libraryName}"`, {
+                execSync(`python "${scriptPath}" --file "${filePath}" --library "${SHAREPOINT_CONFIG.libraryName}"`, {
                     env: {
                         ...process.env,
                         SHAREPOINT_SITE_URL: SHAREPOINT_CONFIG.siteUrl,
@@ -502,8 +458,8 @@ async function runPipeline() {
         console.log("   Example: node dist/mpa-multi-turn-eval.js --track-kb");
         return;
     }
-    const recommendations = (0, kb_impact_tracker_js_1.generateKBOptimizationRecommendations)(impactMetrics);
-    const report = (0, kb_impact_tracker_js_1.generateKBImpactReport)(impactMetrics, recommendations);
+    const recommendations = generateKBOptimizationRecommendations(impactMetrics);
+    const report = generateKBImpactReport(impactMetrics, recommendations);
     console.log(report);
     // Stage 2: Generate and optionally apply updates
     if (args.apply || args.fullPipeline) {
@@ -550,7 +506,7 @@ async function runPipeline() {
         console.log("─".repeat(80));
         console.log("Triggering evaluation...");
         try {
-            (0, child_process_1.execSync)(`node dist/mpa-multi-turn-eval.js --efficiency --track-kb --prompt-version ${args.promptVersion}-kb-updated`, { stdio: "inherit" });
+            execSync(`node dist/mpa-multi-turn-eval.js --efficiency --track-kb --prompt-version ${args.promptVersion}-kb-updated`, { stdio: "inherit" });
         }
         catch (error) {
             console.error("Evaluation failed:", error);
@@ -562,4 +518,5 @@ async function runPipeline() {
 }
 // Run if executed directly
 runPipeline().catch(console.error);
+export { createKBBaseline, saveKBBaseline, loadLatestKBBaseline, compareKBBaselines, generateKBUpdates, applyKBUpdate, applyAllKBUpdates, uploadToSharePoint, };
 //# sourceMappingURL=kb-update-pipeline.js.map

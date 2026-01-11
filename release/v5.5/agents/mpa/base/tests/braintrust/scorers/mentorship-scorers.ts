@@ -9,9 +9,20 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { TurnScore, GRADE_SCORES } from "../mpa-multi-turn-types.js";
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+// Lazy initialization - only create client when needed
+let anthropic: Anthropic | null = null;
+
+function getAnthropicClient(): Anthropic {
+  if (!anthropic) {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error('ANTHROPIC_API_KEY environment variable is not set');
+    }
+    anthropic = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
+    });
+  }
+  return anthropic;
+}
 
 // =============================================================================
 // LLM-AS-JUDGE PROMPTS
@@ -143,7 +154,8 @@ async function llmJudgeJson(
   prompt: string
 ): Promise<{ score: number; rationale: string }> {
   try {
-    const response = await anthropic.messages.create({
+    const client = getAnthropicClient();
+    const response = await client.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 200,
       messages: [{ role: "user", content: prompt }],

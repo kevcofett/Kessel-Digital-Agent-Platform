@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Sophisticated User - IDK Protocol Scenario
  *
@@ -6,12 +5,10 @@
  * "I don't know" to certain questions, verifying the IDK protocol
  * is properly followed.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.sophisticatedIdkScenario = exports.sophisticatedUserPersona = void 0;
 /**
  * Sophisticated user persona - growth lead at fintech
  */
-exports.sophisticatedUserPersona = {
+export const sophisticatedUserPersona = {
     id: "sophisticated-fintech",
     name: "Marcus",
     title: "Growth Lead",
@@ -64,11 +61,11 @@ exports.sophisticatedUserPersona = {
 /**
  * Sophisticated User IDK Protocol Test Scenario
  */
-exports.sophisticatedIdkScenario = {
+export const sophisticatedIdkScenario = {
     id: "sophisticated-idk-protocol",
     name: "Sophisticated User - IDK Protocol",
     description: "Tests agent's ability to handle uncertainty, model with assumptions, and continue progress when user says 'I don't know'",
-    persona: exports.sophisticatedUserPersona,
+    persona: sophisticatedUserPersona,
     openingMessage: "Hey, I'm the growth lead at QuickSend. We're a remittance fintech looking to acquire 10,000 new users this quarter with a $500K media spend. Let's build out the media strategy.",
     expectedCompletedSteps: [1, 2],
     maxTurns: 15,
@@ -164,5 +161,5 @@ exports.sophisticatedIdkScenario = {
         ],
     },
 };
-exports.default = exports.sophisticatedIdkScenario;
+export default sophisticatedIdkScenario;
 //# sourceMappingURL=sophisticated-idk.js.map

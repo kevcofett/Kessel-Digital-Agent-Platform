@@ -507,6 +507,8 @@ export interface ConversationEngineConfig {
     systemPrompt: string;
     /** Whether to log verbose output */
     verbose: boolean;
+    /** Enable agentic RAG with tool use (default: true) */
+    useAgenticRAG?: boolean;
 }
 /**
  * Step definition with requirements
@@ -526,7 +528,14 @@ export interface StepDefinition {
  */
 export declare const MPA_STEPS: StepDefinition[];
 /**
- * Scorer weight configuration
+ * Scorer weight configuration (SCORER_SPECIFICATION_v2)
+ *
+ * 14 optimized scorers in 3 tiers:
+ * - Tier 1: Core Quality (65%)
+ * - Tier 2: Structural Compliance (20%)
+ * - Tier 3: Advanced Quality (15%)
+ *
+ * Total: 100%
  */
 export declare const SCORER_WEIGHTS: Record<string, number>;
 /**

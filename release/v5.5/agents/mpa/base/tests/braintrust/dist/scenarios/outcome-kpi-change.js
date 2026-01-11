@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Outcome KPI Change Scenario
  *
@@ -17,12 +16,10 @@
  * This tests the "Re-run forecasts after every meaningful input" requirement
  * for fundamental outcome/KPI changes.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.outcomeKPIChangeContext = exports.outcomeKPIChangeScenario = exports.outcomeKPIPersona = void 0;
 /**
  * Insurance marketer with shifting objectives
  */
-exports.outcomeKPIPersona = {
+export const outcomeKPIPersona = {
     id: "outcome-kpi-insurance-head",
     name: "Robert",
     title: "Head of Marketing",
@@ -115,13 +112,13 @@ const outcomeKPIChange = {
  *
  * Quality Focus: Proactive Reforecasting for objective/KPI changes
  */
-exports.outcomeKPIChangeScenario = {
+export const outcomeKPIChangeScenario = {
     id: "outcome-kpi-change",
     name: "Outcome KPI Change",
     category: "reforecasting",
     description: "Tests proactive reforecasting when user reveals fundamental objective shift mid-conversation. " +
         "Agent MUST recalculate channel strategy, explain awareness vs acquisition differences, and recommend approach.",
-    persona: exports.outcomeKPIPersona,
+    persona: outcomeKPIPersona,
     openingMessage: "Hi, I'm Head of Marketing at TrustGuard Insurance. " +
         "We need to build a media plan to drive 25,000 new policy acquisitions with a $5M budget. " +
         "Our target is homeowners 35-65 with $100K+ household income, particularly those going through " +
@@ -303,11 +300,11 @@ exports.outcomeKPIChangeScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.outcomeKPIChangeContext = {
+export const outcomeKPIChangeContext = {
     budget: 5000000,
     funnel: "awareness", // Final state
     kpiAggressiveness: "moderate",
     userSophistication: "high",
 };
-exports.default = exports.outcomeKPIChangeScenario;
+export default outcomeKPIChangeScenario;
 //# sourceMappingURL=outcome-kpi-change.js.map

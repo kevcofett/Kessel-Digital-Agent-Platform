@@ -1,5 +1,10 @@
 /**
  * Scorers Index - Exports and Composite Score Calculation
+ *
+ * SCORER_SPECIFICATION_v2: 14 optimized scorers with three-tier weighting
+ * - Tier 1: Core Quality (65%)
+ * - Tier 2: Structural Compliance (20%)
+ * - Tier 3: Advanced Quality (15%)
  */
 
 import {
@@ -7,6 +12,28 @@ import {
   FailureCondition,
   SCORER_WEIGHTS,
 } from "../mpa-multi-turn-types.js";
+
+// =============================================================================
+// SCORER_SPECIFICATION_v2: NEW SCORERS
+// =============================================================================
+
+// LLM Judge Infrastructure
+export { callLLMJudge, JUDGE_PROMPTS, type JudgeResult, type JudgePromptContext } from "./llm-judge.js";
+
+// Tier 1: Core Quality Scorers (65%)
+export { scoreProactiveCalculation, type ProactiveCalculationContext } from "./proactive-calculation.js";
+export { scoreTeachingBehavior, type TeachingBehaviorContext } from "./teaching-behavior.js";
+export { scoreFeasibilityFraming, type FeasibilityFramingContext } from "./feasibility-framing.js";
+export { scoreSourceCitation as scoreSourceCitationV2, type SourceCitationResult } from "./source-citation.js";
+export { scoreRecalculationOnChange, type RecalculationContext } from "./recalculation-on-change.js";
+
+// Tier 3: Advanced Quality Scorers (15%)
+export { scoreAudienceSizingCompleteness, type AudienceSizingResult, type TableAnalysis } from "./audience-sizing-completeness.js";
+export { scoreCrossStepSynthesis, type CrossStepSynthesisContext } from "./cross-step-synthesis.js";
+
+// =============================================================================
+// TURN SCORERS (Tier 2 Compliance + Legacy)
+// =============================================================================
 
 // Re-export turn scorers
 export {
@@ -17,24 +44,17 @@ export {
   scoreAcronymDefinition,
   scoreIdkProtocol,
   scoreAdaptiveSophistication,
-  scoreProactiveIntelligence,
-  scoreProgressOverPerfection,
   scoreRiskOpportunityFlagging,
-  scoreCalculationPresence,
-  scoreAudienceCompleteness,
-  scoreAudienceSizing,
-  scorePrecisionConnection,
   scoreResponseFormatting,
   scoreTurn,
 } from "./turn-scorers.js";
 
+// =============================================================================
+// CONVERSATION SCORERS
+// =============================================================================
+
 // Re-export conversation scorers
 export {
-  scoreStepCompletionRate,
-  scoreConversationEfficiency,
-  scoreContextRetention,
-  scoreGreetingUniqueness,
-  scoreLoopDetection,
   calculateFailurePenalty,
   scoreStepTransitionQuality,
   scoreOverallCoherence,
@@ -42,13 +62,13 @@ export {
 } from "./conversation-scorers.js";
 
 // =============================================================================
-// PHASE 1: QUALITY-FOCUSED SCORERS
+// LEGACY SCORERS (for backward compatibility)
 // =============================================================================
 
-// Re-export mentorship scorers
+// Re-export mentorship scorers (legacy)
 export {
-  scoreTeachingBehavior,
-  scoreProactiveCalculation,
+  scoreTeachingBehavior as scoreTeachingBehaviorLegacy,
+  scoreProactiveCalculation as scoreProactiveCalculationLegacy,
   scoreBenchmarkCitation,
   scoreCriticalThinking,
   scoreStrategicSynthesis,

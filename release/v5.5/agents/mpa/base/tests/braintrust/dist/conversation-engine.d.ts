@@ -15,13 +15,16 @@ export declare class ConversationEngine {
     private failureDetector;
     private kbInjector;
     private config;
+    private ragEngine;
+    private toolExecutor;
+    private useAgenticRAG;
     constructor(config?: Partial<ConversationEngineConfig>);
     /**
      * Run a complete conversation for a scenario
      */
     runConversation(scenario: TestScenario): Promise<ConversationResult>;
     /**
-     * Get response from MPA agent
+     * Get response from MPA agent with RAG tool support
      */
     private getAgentResponse;
     /**

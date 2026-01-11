@@ -11,9 +11,20 @@ import {
   GRADE_SCORES,
 } from "../mpa-multi-turn-types.js";
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+// Lazy initialization - only create client when needed
+let anthropic: Anthropic | null = null;
+
+function getAnthropicClient(): Anthropic {
+  if (!anthropic) {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error('ANTHROPIC_API_KEY environment variable is not set');
+    }
+    anthropic = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
+    });
+  }
+  return anthropic;
+}
 
 // Use Haiku for LLM judges when FAST_SCORING=true (10x faster, minimal quality loss)
 const SCORER_MODEL = process.env.FAST_SCORING === "true"
@@ -27,29 +38,52 @@ const SCORER_MODEL = process.env.FAST_SCORING === "true"
 /**
  * Score response length
  *
- * Scoring is lenient for longer responses as long as they add value.
- * - Under 100 words: optimal (1.0)
- * - 100-200 words: acceptable (0.8)
- * - 200-300 words: slightly verbose (0.5)
- * - Over 300 words: too long (0.2)
+ * KB says "under 75 words when possible".
+ * - ≤75 words: optimal (1.0)
+ * - 76-125 words: acceptable (0.8)
+ * - 126-200 words: slightly verbose (0.5)
+ * - 201-300 words: too long (0.2)
+ * - >300 words: way too long (0.0)
+ *
+ * Exception: Responses containing tables or multi-row calculations are exempt.
  */
 export function scoreResponseLength(output: string): TurnScore {
-  const wordCount = output.trim().split(/\s+/).length;
+  // Check for table exception
+  const hasTable = /\|.*\|.*\|/m.test(output);
+  // Check for multi-row calculation
+  const calcLines = output.split('\n').filter(line =>
+    /^\s*\$[\d,]+/.test(line) || /=\s*\$?[\d,]+/.test(line)
+  );
+  const hasMultiRowCalc = calcLines.length >= 2;
+
+  if (hasTable || hasMultiRowCalc) {
+    return {
+      scorer: "response-length",
+      score: 1.0,
+      metadata: { status: "exempt", hasTable, hasMultiRowCalc },
+      scope: "turn",
+    };
+  }
+
+  const wordCount = output.trim().split(/\s+/).filter(w => w.length > 0).length;
   let score = 0;
   let status = "too_long";
 
-  if (wordCount <= 100) {
+  if (wordCount <= 75) {
     score = 1.0;
     status = "optimal";
-  } else if (wordCount <= 200) {
+  } else if (wordCount <= 125) {
     score = 0.8;
     status = "acceptable";
-  } else if (wordCount <= 300) {
+  } else if (wordCount <= 200) {
     score = 0.5;
     status = "slightly_verbose";
-  } else {
+  } else if (wordCount <= 300) {
     score = 0.2;
     status = "too_long";
+  } else {
+    score = 0.0;
+    status = "way_too_long";
   }
 
   return {
@@ -63,30 +97,45 @@ export function scoreResponseLength(output: string): TurnScore {
 /**
  * Score question discipline
  *
- * Two-part questions are acceptable when focused on the immediate step.
+ * KB says "ONE question per response. Maximum. No exceptions."
  * - 0-1 questions: optimal (1.0)
- * - 2 questions: acceptable (0.8) - allows focused two-part questions
- * - 3 questions: slightly excessive (0.4)
- * - 4+ questions: too many (0)
+ * - 2 questions: partial (0.5)
+ * - 3+ questions: fail (0.0)
+ *
+ * Also detects implicit questions without question marks.
  */
 export function scoreSingleQuestion(output: string): TurnScore {
+  // Count explicit question marks
   const questionMarks = (output.match(/\?/g) || []).length;
-  let score = 0;
 
-  if (questionMarks <= 1) {
+  // Also detect implicit questions without question marks
+  const implicitPatterns = [
+    /could you (tell|share|provide)/i,
+    /would you (say|describe)/i,
+    /what about/i,
+    /how about/i,
+  ];
+
+  let implicitCount = 0;
+  for (const pattern of implicitPatterns) {
+    if (pattern.test(output)) implicitCount++;
+  }
+
+  const totalQuestions = questionMarks + implicitCount;
+
+  let score = 0;
+  if (totalQuestions <= 1) {
     score = 1.0;
-  } else if (questionMarks === 2) {
-    score = 0.8;
-  } else if (questionMarks === 3) {
-    score = 0.4;
+  } else if (totalQuestions === 2) {
+    score = 0.5;
   } else {
-    score = 0;
+    score = 0.0;
   }
 
   return {
     scorer: "single-question",
     score,
-    metadata: { questionCount: questionMarks },
+    metadata: { questionCount: questionMarks, implicitQuestions: implicitCount, totalQuestions },
     scope: "turn",
   };
 }
@@ -141,15 +190,21 @@ export function scoreStepBoundary(
  * Score source citation (data claims should have sources)
  *
  * The agent MUST cite one of five sources for every data claim:
- * 1. Knowledge Base - data from KB documents
- * 2. Websearch - fresh data from web search (must include link)
- * 3. API Call - data from direct API call
- * 4. User Provided - data the user gave
- * 5. Benchmark - broad industry data from stale/general websearch (must include link)
+ * 1. "Based on Knowledge Base, [claim]." - No link required
+ * 2. "Based on Websearch, [claim] [source: URL]." - MUST include link
+ * 3. "Based on API Call, [claim]." - No link required
+ * 4. "Based on User Provided, [claim]." - No link required
+ * 5. "Based on Benchmark, [claim] [source: URL]." - MUST include link
+ *
+ * Scoring:
+ * - 1.0: Explicit source with correct format
+ * - 0.7: Implicit source ("you mentioned", "typical range")
+ * - 0.3: Numbers without any source attribution
+ * - 0.0: Fabricated citation or claims KB data when not retrieved
  */
 export function scoreSourceCitation(output: string): TurnScore {
   const hasNumbers =
-    /\$[\d,]+|\d+%|\d+\s*(dollars|percent|customers|leads)/i.test(output);
+    /\$[\d,]+|\d+%|\d+\s*(dollars|percent|customers|leads|conversions)/i.test(output);
 
   if (!hasNumbers) {
     return {
@@ -162,55 +217,54 @@ export function scoreSourceCitation(output: string): TurnScore {
 
   // The five required source types (explicit citations)
   const explicitSourcePatterns = [
-    /based on knowledge base/i,
-    /based on websearch/i,
-    /based on web search/i,
-    /based on api call/i,
-    /based on user provided/i,
-    /based on benchmark/i,
-    // Also accept shorter forms
-    /based on kb/i,
-    /\[source:/i, // Link citation format
+    { pattern: /based on knowledge base/i, requiresLink: false },
+    { pattern: /based on kb/i, requiresLink: false },
+    { pattern: /based on websearch/i, requiresLink: true },
+    { pattern: /based on web search/i, requiresLink: true },
+    { pattern: /based on api call/i, requiresLink: false },
+    { pattern: /based on user provided/i, requiresLink: false },
+    { pattern: /based on benchmark/i, requiresLink: true },
   ];
+
+  // Check for explicit sources
+  let hasExplicitSource = false;
+  for (const { pattern, requiresLink } of explicitSourcePatterns) {
+    if (pattern.test(output)) {
+      if (requiresLink) {
+        // Check for link near the citation
+        const hasLink = /\[source:\s*\S+\]/i.test(output) || /https?:\/\/\S+/i.test(output);
+        hasExplicitSource = hasLink;
+      } else {
+        hasExplicitSource = true;
+      }
+      if (hasExplicitSource) break;
+    }
+  }
 
   // Implicit contextual patterns (acceptable but lower score)
   const implicitPatterns = [
     /you (mentioned|said|told|provided|shared)/i,
     /your (budget|target|goal|kpi|objective)/i,
+    /typical(ly)?( range)?/i,
+    /industry (data|benchmarks?)/i,
+    /generally (runs?|ranges?)/i,
+    /as you (mentioned|said|noted)/i,
+    /per your/i,
+    /based on (your|what you)/i,
     /with (a |your )\$[\d,]+/i,
     /at \$[\d,]+ per/i,
     /the \$[\d,]+ you/i,
-    /that('s| is) \$[\d,]+/i,
-    /divid(ed|ing) by/i,
-    /equals|= \$/i,
-    /let me (run|do|calculate)/i,
-    /industry.*typical/i,
-    /market.*shows/i,
-    /typical.*range/i,
-    // Additional patterns for benchmark citations
-    /typical(ly)?\s+(runs?|costs?|is|are|around)/i,
-    /benchmark(s)?\s+(show|suggest|indicate|run|are)/i,
-    /for\s+\w+\s*(,|where)?\s*(typical|benchmark)/i,
-    /\w+\s+benchmarks?\s+(run|show|are)/i,
-    /where\s+typical/i,
-    // More implicit patterns
-    /in line with\s+(best\s+)?practice/i,
-    /roughly\s+\d+/i,
-    /approximately\s+\d+/i,
-    /about\s+\d+-?\d*%/i,
-    /around\s+\d+/i,
   ];
 
-  const hasExplicitSource = explicitSourcePatterns.some((p) => p.test(output));
   const hasImplicitSource = implicitPatterns.some((p) => p.test(output));
 
   let score = 0;
   if (hasExplicitSource) {
     score = 1.0;
   } else if (hasImplicitSource) {
-    score = 0.8;
+    score = 0.7;
   } else {
-    score = 0.3; // Partial credit - numbers in response but no clear source
+    score = 0.3; // Numbers in response but no clear source
   }
 
   return {
@@ -222,27 +276,37 @@ export function scoreSourceCitation(output: string): TurnScore {
 }
 
 /**
- * Score acronym definition (acronyms must be defined on first use)
+ * Score acronym definition (acronyms must be defined on first use in conversation)
+ *
+ * @param output - Current agent response
+ * @param conversationHistory - All previous agent responses concatenated (optional)
  */
-export function scoreAcronymDefinition(output: string): TurnScore {
+export function scoreAcronymDefinition(output: string, conversationHistory?: string): TurnScore {
   const acronymPatterns: { acronym: string; definition: RegExp }[] = [
-    { acronym: "CAC", definition: /customer acquisition cost/i },
+    { acronym: "CAC", definition: /customer acquisition cost|cost per acquisition/i },
     { acronym: "ROAS", definition: /return on ad spend/i },
     { acronym: "LTV", definition: /lifetime value/i },
     { acronym: "CPM", definition: /cost per (thousand|mille)/i },
     { acronym: "CPA", definition: /cost per acquisition/i },
     { acronym: "CPC", definition: /cost per click/i },
     { acronym: "CTR", definition: /click.?through rate/i },
+    { acronym: "AOV", definition: /average order value/i },
+    { acronym: "KPI", definition: /key performance indicator/i },
   ];
+
+  // Combine conversation history with current output to check for prior definitions
+  const fullContext = conversationHistory ? conversationHistory + "\n" + output : output;
 
   const usedAcronyms: string[] = [];
   const undefinedAcronyms: string[] = [];
 
   for (const { acronym, definition } of acronymPatterns) {
     const acronymRegex = new RegExp(`\\b${acronym}\\b`, "g");
+    // Check if acronym is used in current response
     if (acronymRegex.test(output)) {
       usedAcronyms.push(acronym);
-      if (!definition.test(output)) {
+      // Check if definition exists ANYWHERE in conversation (including current turn)
+      if (!definition.test(fullContext)) {
         undefinedAcronyms.push(acronym);
       }
     }
@@ -265,7 +329,7 @@ export function scoreAcronymDefinition(output: string): TurnScore {
   return {
     scorer: "acronym-definition",
     score,
-    metadata: { usedAcronyms, undefinedAcronyms },
+    metadata: { usedAcronyms, undefinedAcronyms, hadConversationContext: !!conversationHistory },
     scope: "turn",
   };
 }
@@ -334,7 +398,8 @@ export function scoreIdkProtocol(
  * Helper to get LLM grade
  */
 async function llmJudge(prompt: string): Promise<string> {
-  const response = await anthropic.messages.create({
+  const client = getAnthropicClient();
+  const response = await client.messages.create({
     model: SCORER_MODEL,
     max_tokens: 100,
     messages: [{ role: "user", content: prompt }],
@@ -887,7 +952,8 @@ export async function scoreTurn(
   currentStep: number,
   stepState: StepTrackingState,
   userSophistication: string,
-  cacAggressiveness: "aggressive" | "moderate" | "conservative" | "unknown" = "unknown"
+  cacAggressiveness: "aggressive" | "moderate" | "conservative" | "unknown" = "unknown",
+  conversationHistory?: string
 ): Promise<Record<string, TurnScore>> {
   const scores: Record<string, TurnScore> = {};
 
@@ -896,7 +962,7 @@ export async function scoreTurn(
   scores["single-question"] = scoreSingleQuestion(agentResponse);
   scores["step-boundary"] = scoreStepBoundary(agentResponse, currentStep);
   scores["source-citation"] = scoreSourceCitation(agentResponse);
-  scores["acronym-definition"] = scoreAcronymDefinition(agentResponse);
+  scores["acronym-definition"] = scoreAcronymDefinition(agentResponse, conversationHistory);
   scores["idk-protocol"] = scoreIdkProtocol(userMessage, agentResponse);
   scores["calculation-presence"] = scoreCalculationPresence(agentResponse, userMessage);
   scores["response-formatting"] = scoreResponseFormatting(agentResponse);

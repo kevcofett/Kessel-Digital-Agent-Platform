@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Efficiency Shock Scenario
  *
@@ -16,12 +15,10 @@
  *
  * This tests proactive reforecasting when underlying assumptions are invalidated.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.efficiencyShockContext = exports.efficiencyShockScenario = exports.efficiencyShockPersona = void 0;
 /**
  * Insurance marketer facing CAC reality check
  */
-exports.efficiencyShockPersona = {
+export const efficiencyShockPersona = {
     id: "efficiency-shock-insurance-director",
     name: "Patricia",
     title: "Director of Digital Marketing",
@@ -110,13 +107,13 @@ const efficiencyShockChange = {
  *
  * Quality Focus: Proactive Reforecasting + Trade-off Analysis
  */
-exports.efficiencyShockScenario = {
+export const efficiencyShockScenario = {
     id: "efficiency-shock",
     name: "Efficiency Shock",
     category: "reforecasting",
     description: "Tests proactive reforecasting when user reveals industry constraints invalidate " +
         "initial calculations. Agent MUST remodel, explain trade-offs, and recommend options.",
-    persona: exports.efficiencyShockPersona,
+    persona: efficiencyShockPersona,
     openingMessage: "Hi, I'm the Director of Digital Marketing at SecureLife Insurance. We sell " +
         "life and annuity products. I need to build a media plan for next year. " +
         "We have a $750K budget and need 15,000 new policy applications. " +
@@ -315,11 +312,11 @@ exports.efficiencyShockScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.efficiencyShockContext = {
+export const efficiencyShockContext = {
     budget: 750000,
     funnel: "performance",
     kpiAggressiveness: "aggressive", // Because original target is now impossible
     userSophistication: "medium",
 };
-exports.default = exports.efficiencyShockScenario;
+export default efficiencyShockScenario;
 //# sourceMappingURL=efficiency-shock.js.map

@@ -14,9 +14,20 @@ import {
   GRADE_SCORES,
 } from "../mpa-multi-turn-types.js";
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+// Lazy initialization - only create client when needed
+let anthropic: Anthropic | null = null;
+
+function getAnthropicClient(): Anthropic {
+  if (!anthropic) {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error('ANTHROPIC_API_KEY environment variable is not set');
+    }
+    anthropic = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
+    });
+  }
+  return anthropic;
+}
 
 // Use Haiku for LLM judges when FAST_SCORING=true (10x faster, minimal quality loss)
 const SCORER_MODEL = process.env.FAST_SCORING === "true"
@@ -323,7 +334,8 @@ export function calculateFailurePenalty(failures: {
  * Helper to get LLM grade
  */
 async function llmJudge(prompt: string): Promise<string> {
-  const response = await anthropic.messages.create({
+  const client = getAnthropicClient();
+  const response = await client.messages.create({
     model: SCORER_MODEL,
     max_tokens: 100,
     messages: [{ role: "user", content: prompt }],

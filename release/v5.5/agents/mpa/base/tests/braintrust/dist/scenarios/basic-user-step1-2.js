@@ -1,16 +1,13 @@
-"use strict";
 /**
  * Basic User - Steps 1-2 Scenario
  *
  * Tests the agent's ability to handle a basic marketing manager
  * with simple language, completing Steps 1 (Outcomes) and 2 (Economics).
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.basicUserStep1_2Scenario = exports.basicUserPersona = void 0;
 /**
  * Basic user persona - marketing manager at a shoe retailer
  */
-exports.basicUserPersona = {
+export const basicUserPersona = {
     id: "basic-shoe-retailer",
     name: "Sarah",
     title: "Marketing Manager",
@@ -62,11 +59,11 @@ exports.basicUserPersona = {
 /**
  * Basic User Steps 1-2 Test Scenario
  */
-exports.basicUserStep1_2Scenario = {
+export const basicUserStep1_2Scenario = {
     id: "basic-user-step1-2",
     name: "Basic User - Steps 1-2 Completion",
     description: "Tests agent ability to guide a basic user through Outcomes and Economics steps using simple language",
-    persona: exports.basicUserPersona,
+    persona: basicUserPersona,
     openingMessage: "Hi! I'm looking to get more people to buy shoes from our online store. Can you help me figure out the best way to do that?",
     expectedCompletedSteps: [1, 2],
     maxTurns: 12,
@@ -141,5 +138,5 @@ exports.basicUserStep1_2Scenario = {
         ],
     },
 };
-exports.default = exports.basicUserStep1_2Scenario;
+export default basicUserStep1_2Scenario;
 //# sourceMappingURL=basic-user-step1-2.js.map

@@ -1,11 +1,8 @@
-"use strict";
 /**
  * Failure Detector for Multi-Turn MPA Evaluation
  *
  * Detects conversation failures like loops, context loss, and greeting repetition.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.FailureDetector = exports.BUILTIN_FAILURES = void 0;
 /**
  * Built-in failure patterns
  *
@@ -21,7 +18,7 @@ exports.FailureDetector = exports.BUILTIN_FAILURES = void 0;
  * - Referencing channels for economic validation
  * - Thorough discovery to achieve KPI objectives
  */
-exports.BUILTIN_FAILURES = [
+export const BUILTIN_FAILURES = [
     {
         id: "greeting-repetition",
         description: "Agent repeats the 10-step greeting after first turn",
@@ -81,7 +78,7 @@ exports.BUILTIN_FAILURES = [
  * - TRUE failures: Agent stuck in loop, interrogating without teaching
  * - NOT failures: Thorough discovery to achieve KPI objectives
  */
-class FailureDetector {
+export class FailureDetector {
     providedData = new Map();
     previousUserSaidIDK = false;
     idkTopic = "";
@@ -98,7 +95,7 @@ class FailureDetector {
      */
     detectFailures(turnNumber, agentResponse, previousTurns, customFailures, currentStep = 1, userSaidIDK = false) {
         const detected = [];
-        const allFailures = [...exports.BUILTIN_FAILURES, ...customFailures];
+        const allFailures = [...BUILTIN_FAILURES, ...customFailures];
         // Update provided data from previous turns
         this.updateProvidedData(previousTurns);
         for (const failure of allFailures) {
@@ -550,6 +547,5 @@ class FailureDetector {
         return `Failures: ${parts.join(", ")}`;
     }
 }
-exports.FailureDetector = FailureDetector;
-exports.default = FailureDetector;
+export default FailureDetector;
 //# sourceMappingURL=failure-detector.js.map

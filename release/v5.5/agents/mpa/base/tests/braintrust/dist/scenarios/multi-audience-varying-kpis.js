@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Multi-Audience Varying KPIs Scenario
  *
@@ -26,12 +25,10 @@
  * - Agent SHOULD discuss how to report across heterogeneous objectives
  * - Agent MUST calculate segment-specific targets appropriately
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.multiAudienceVaryingKpisContext = exports.multiAudienceVaryingKpisScenario = exports.multiAudienceVaryingKpisPersona = void 0;
 /**
  * CMO with multi-segment, multi-KPI campaign requirements
  */
-exports.multiAudienceVaryingKpisPersona = {
+export const multiAudienceVaryingKpisPersona = {
     id: "multi-audience-varying-kpis",
     name: "Victoria",
     title: "Chief Marketing Officer",
@@ -121,14 +118,14 @@ exports.multiAudienceVaryingKpisPersona = {
 /**
  * Multi-Audience Varying KPIs Test Scenario
  */
-exports.multiAudienceVaryingKpisScenario = {
+export const multiAudienceVaryingKpisScenario = {
     id: "multi-audience-varying-kpis",
     name: "Multi-Audience with Different KPIs Per Segment",
     category: "phase1-quality",
     description: "Most complex multi-audience test: Three segments with completely different " +
         "primary KPIs (awareness vs leads vs retention). Agent MUST track different " +
         "objectives and metrics per segment, not apply a single KPI across all.",
-    persona: exports.multiAudienceVaryingKpisPersona,
+    persona: multiAudienceVaryingKpisPersona,
     openingMessage: "I'm the CMO at Velocity Auto Group - we operate 12 dealerships across 3 brands. " +
         "I need a media plan that serves three completely different objectives for three segments.\n\n" +
         "Total budget: $4.5M across all segments.\n\n" +
@@ -361,11 +358,11 @@ exports.multiAudienceVaryingKpisScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.multiAudienceVaryingKpisContext = {
+export const multiAudienceVaryingKpisContext = {
     budget: 4500000,
     funnel: "consideration", // Mixed funnel
     kpiAggressiveness: "moderate",
     userSophistication: "high",
 };
-exports.default = exports.multiAudienceVaryingKpisScenario;
+export default multiAudienceVaryingKpisScenario;
 //# sourceMappingURL=multi-audience-varying-kpis.js.map

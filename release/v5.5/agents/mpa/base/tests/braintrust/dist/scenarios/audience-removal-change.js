@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Audience Removal Change Scenario
  *
@@ -17,12 +16,10 @@
  * This tests the "Re-run forecasts after every meaningful input" requirement
  * for audience consolidation.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.audienceRemovalChangeContext = exports.audienceRemovalChangeScenario = exports.audienceRemovalPersona = void 0;
 /**
  * Automotive marketer consolidating audience segments
  */
-exports.audienceRemovalPersona = {
+export const audienceRemovalPersona = {
     id: "audience-removal-auto-director",
     name: "Michael",
     title: "Director of Marketing",
@@ -128,13 +125,13 @@ const audienceRemovalChange = {
  *
  * Quality Focus: Proactive Reforecasting for audience consolidation
  */
-exports.audienceRemovalChangeScenario = {
+export const audienceRemovalChangeScenario = {
     id: "audience-removal-change",
     name: "Audience Removal Change",
     category: "reforecasting",
     description: "Tests proactive reforecasting when user removes audience segment mid-conversation. " +
         "Agent MUST recalculate allocations, explain benefits of consolidation, and recommend prioritization.",
-    persona: exports.audienceRemovalPersona,
+    persona: audienceRemovalPersona,
     openingMessage: "Hi, I'm Director of Marketing at ElectraDrive Motors. We're launching a new EV and " +
         "I need help building a media plan. Budget is $4M, goal is 15,000 test drives. " +
         "We're targeting three segments: eco-conscious early adopters 25-45, luxury buyers 45-65 " +
@@ -314,11 +311,11 @@ exports.audienceRemovalChangeScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.audienceRemovalChangeContext = {
+export const audienceRemovalChangeContext = {
     budget: 4000000,
     funnel: "consideration",
     kpiAggressiveness: "moderate",
     userSophistication: "medium",
 };
-exports.default = exports.audienceRemovalChangeScenario;
+export default audienceRemovalChangeScenario;
 //# sourceMappingURL=audience-removal-change.js.map

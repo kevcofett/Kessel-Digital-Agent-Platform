@@ -7,21 +7,25 @@ import { TurnScore, StepTrackingState } from "../mpa-multi-turn-types.js";
 /**
  * Score response length
  *
- * Scoring is lenient for longer responses as long as they add value.
- * - Under 100 words: optimal (1.0)
- * - 100-200 words: acceptable (0.8)
- * - 200-300 words: slightly verbose (0.5)
- * - Over 300 words: too long (0.2)
+ * KB says "under 75 words when possible".
+ * - ≤75 words: optimal (1.0)
+ * - 76-125 words: acceptable (0.8)
+ * - 126-200 words: slightly verbose (0.5)
+ * - 201-300 words: too long (0.2)
+ * - >300 words: way too long (0.0)
+ *
+ * Exception: Responses containing tables or multi-row calculations are exempt.
  */
 export declare function scoreResponseLength(output: string): TurnScore;
 /**
  * Score question discipline
  *
- * Two-part questions are acceptable when focused on the immediate step.
+ * KB says "ONE question per response. Maximum. No exceptions."
  * - 0-1 questions: optimal (1.0)
- * - 2 questions: acceptable (0.8) - allows focused two-part questions
- * - 3 questions: slightly excessive (0.4)
- * - 4+ questions: too many (0)
+ * - 2 questions: partial (0.5)
+ * - 3+ questions: fail (0.0)
+ *
+ * Also detects implicit questions without question marks.
  */
 export declare function scoreSingleQuestion(output: string): TurnScore;
 /**
@@ -38,17 +42,26 @@ export declare function scoreStepBoundary(output: string, currentStep: number): 
  * Score source citation (data claims should have sources)
  *
  * The agent MUST cite one of five sources for every data claim:
- * 1. Knowledge Base - data from KB documents
- * 2. Websearch - fresh data from web search (must include link)
- * 3. API Call - data from direct API call
- * 4. User Provided - data the user gave
- * 5. Benchmark - broad industry data from stale/general websearch (must include link)
+ * 1. "Based on Knowledge Base, [claim]." - No link required
+ * 2. "Based on Websearch, [claim] [source: URL]." - MUST include link
+ * 3. "Based on API Call, [claim]." - No link required
+ * 4. "Based on User Provided, [claim]." - No link required
+ * 5. "Based on Benchmark, [claim] [source: URL]." - MUST include link
+ *
+ * Scoring:
+ * - 1.0: Explicit source with correct format
+ * - 0.7: Implicit source ("you mentioned", "typical range")
+ * - 0.3: Numbers without any source attribution
+ * - 0.0: Fabricated citation or claims KB data when not retrieved
  */
 export declare function scoreSourceCitation(output: string): TurnScore;
 /**
- * Score acronym definition (acronyms must be defined on first use)
+ * Score acronym definition (acronyms must be defined on first use in conversation)
+ *
+ * @param output - Current agent response
+ * @param conversationHistory - All previous agent responses concatenated (optional)
  */
-export declare function scoreAcronymDefinition(output: string): TurnScore;
+export declare function scoreAcronymDefinition(output: string, conversationHistory?: string): TurnScore;
 /**
  * Score IDK protocol compliance
  */
@@ -128,6 +141,6 @@ export declare function scoreResponseFormatting(output: string): TurnScore;
 /**
  * Score a single turn with all applicable scorers
  */
-export declare function scoreTurn(userMessage: string, agentResponse: string, currentStep: number, stepState: StepTrackingState, userSophistication: string, cacAggressiveness?: "aggressive" | "moderate" | "conservative" | "unknown"): Promise<Record<string, TurnScore>>;
+export declare function scoreTurn(userMessage: string, agentResponse: string, currentStep: number, stepState: StepTrackingState, userSophistication: string, cacAggressiveness?: "aggressive" | "moderate" | "conservative" | "unknown", conversationHistory?: string): Promise<Record<string, TurnScore>>;
 export default scoreTurn;
 //# sourceMappingURL=turn-scorers.d.ts.map

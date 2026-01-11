@@ -1,25 +1,23 @@
-"use strict";
 /**
  * Plan Coherence Scorers for Quality-Focused MPA Evaluation
  *
  * Phase 1 Scorers: End-to-end plan quality evaluation.
  * Evaluates mathematical consistency, strategic coherence, and defensibility.
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.scoreMathematicalConsistency = scoreMathematicalConsistency;
-exports.scoreStrategicCoherence = scoreStrategicCoherence;
-exports.scoreDefensibility = scoreDefensibility;
-exports.scorePlanComprehensiveness = scorePlanComprehensiveness;
-exports.scoreEfficiencyRealism = scoreEfficiencyRealism;
-exports.calculatePlanCoherenceScore = calculatePlanCoherenceScore;
-exports.scorePlanCoherence = scorePlanCoherence;
-const sdk_1 = __importDefault(require("@anthropic-ai/sdk"));
-const anthropic = new sdk_1.default({
-    apiKey: process.env.ANTHROPIC_API_KEY,
-});
+import Anthropic from "@anthropic-ai/sdk";
+// Lazy initialization - only create client when needed
+let anthropic = null;
+function getAnthropicClient() {
+    if (!anthropic) {
+        if (!process.env.ANTHROPIC_API_KEY) {
+            throw new Error('ANTHROPIC_API_KEY environment variable is not set');
+        }
+        anthropic = new Anthropic({
+            apiKey: process.env.ANTHROPIC_API_KEY,
+        });
+    }
+    return anthropic;
+}
 // =============================================================================
 // DEFAULT BENCHMARKS
 // =============================================================================
@@ -200,7 +198,7 @@ function checkChannelMixPercentages(channelMix) {
  *
  * Validates that all numbers in the plan add up correctly.
  */
-function scoreMathematicalConsistency(plan) {
+export function scoreMathematicalConsistency(plan) {
     const checks = [
         checkBudgetSums(plan.channelAllocations, plan.totalBudget),
         checkGeographySpend(plan.geoAllocations, plan.totalBudget),
@@ -227,7 +225,7 @@ function scoreMathematicalConsistency(plan) {
  *
  * Evaluates whether all plan elements reinforce each other.
  */
-async function scoreStrategicCoherence(plan) {
+export async function scoreStrategicCoherence(plan) {
     const prompt = STRATEGIC_COHERENCE_JUDGE_PROMPT.replace("{objective}", plan.objective || "Not defined")
         .replace("{budget}", String(plan.totalBudget || "Not defined"))
         .replace("{volume_target}", String(plan.volumeTarget || "Not defined"))
@@ -239,7 +237,7 @@ async function scoreStrategicCoherence(plan) {
         .replace("{measurement}", plan.attributionModel || "Not defined")
         .replace("{value_prop}", plan.valueProp || "Not defined");
     try {
-        const response = await anthropic.messages.create({
+        const response = await getAnthropicClient().messages.create({
             model: "claude-sonnet-4-20250514",
             max_tokens: 300,
             messages: [{ role: "user", content: prompt }],
@@ -281,7 +279,7 @@ async function scoreStrategicCoherence(plan) {
  *
  * Evaluates whether the plan would survive client scrutiny.
  */
-async function scoreDefensibility(plan, benchmarks = DEFAULT_BENCHMARKS) {
+export async function scoreDefensibility(plan, benchmarks = DEFAULT_BENCHMARKS) {
     const prompt = DEFENSIBILITY_JUDGE_PROMPT.replace("{budget}", String(plan.totalBudget || "Not defined"))
         .replace("{volume_target}", String(plan.volumeTarget || "Not defined"))
         .replace("{volume_unit}", plan.volumeUnit || "customers")
@@ -296,7 +294,7 @@ async function scoreDefensibility(plan, benchmarks = DEFAULT_BENCHMARKS) {
         .replace("{test_budget}", String(plan.testBudget || "Not allocated"))
         .replace("{risks}", plan.risks?.join(", ") || "Not identified");
     try {
-        const response = await anthropic.messages.create({
+        const response = await getAnthropicClient().messages.create({
             model: "claude-sonnet-4-20250514",
             max_tokens: 300,
             messages: [{ role: "user", content: prompt }],
@@ -339,7 +337,7 @@ async function scoreDefensibility(plan, benchmarks = DEFAULT_BENCHMARKS) {
  *
  * Checks if all major plan elements are present.
  */
-function scorePlanComprehensiveness(plan) {
+export function scorePlanComprehensiveness(plan) {
     const requiredElements = [
         { name: "objective", present: !!plan.objective },
         { name: "volumeTarget", present: plan.volumeTarget !== undefined },
@@ -372,7 +370,7 @@ function scorePlanComprehensiveness(plan) {
  *
  * Checks if efficiency targets are realistic vs. benchmarks.
  */
-function scoreEfficiencyRealism(plan, benchmarks = DEFAULT_BENCHMARKS) {
+export function scoreEfficiencyRealism(plan, benchmarks = DEFAULT_BENCHMARKS) {
     if (!plan.impliedCAC) {
         return {
             scorer: "efficiency-realism",
@@ -422,7 +420,7 @@ function scoreEfficiencyRealism(plan, benchmarks = DEFAULT_BENCHMARKS) {
 /**
  * Calculate overall plan coherence score
  */
-function calculatePlanCoherenceScore(scores) {
+export function calculatePlanCoherenceScore(scores) {
     const mathScore = scores["mathematical-consistency"]?.score || 0;
     const stratScore = scores["strategic-coherence"]?.score || 0;
     const defScore = scores["defensibility"]?.score || 0;
@@ -444,7 +442,7 @@ function calculatePlanCoherenceScore(scores) {
 /**
  * Score all plan coherence dimensions
  */
-async function scorePlanCoherence(plan, benchmarks = DEFAULT_BENCHMARKS) {
+export async function scorePlanCoherence(plan, benchmarks = DEFAULT_BENCHMARKS) {
     const scores = {};
     // Rule-based scorers (synchronous)
     scores["mathematical-consistency"] = scoreMathematicalConsistency(plan);
@@ -459,5 +457,5 @@ async function scorePlanCoherence(plan, benchmarks = DEFAULT_BENCHMARKS) {
     scores["defensibility"] = defensibilityScore;
     return scores;
 }
-exports.default = scorePlanCoherence;
+export default scorePlanCoherence;
 //# sourceMappingURL=plan-coherence-scorers.js.map

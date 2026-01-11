@@ -1,25 +1,23 @@
-"use strict";
 /**
  * Step Quality Scorers for Quality-Focused MPA Evaluation
  *
  * Phase 1 Scorers: Context-aware step quality evaluation.
  * Requirements scale based on budget, funnel type, and KPI aggressiveness.
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStepRequirements = getStepRequirements;
-exports.scoreStepQuality = scoreStepQuality;
-exports.scoreStepDataCompleteness = scoreStepDataCompleteness;
-exports.scoreStepTurnEfficiency = scoreStepTurnEfficiency;
-exports.scoreStepSynthesis = scoreStepSynthesis;
-exports.calculateStepQualityScore = calculateStepQualityScore;
-exports.scoreStepTransitionQuality = scoreStepTransitionQuality;
-const sdk_1 = __importDefault(require("@anthropic-ai/sdk"));
-const anthropic = new sdk_1.default({
-    apiKey: process.env.ANTHROPIC_API_KEY,
-});
+import Anthropic from "@anthropic-ai/sdk";
+// Lazy initialization - only create client when needed
+let anthropic = null;
+function getAnthropicClient() {
+    if (!anthropic) {
+        if (!process.env.ANTHROPIC_API_KEY) {
+            throw new Error('ANTHROPIC_API_KEY environment variable is not set');
+        }
+        anthropic = new Anthropic({
+            apiKey: process.env.ANTHROPIC_API_KEY,
+        });
+    }
+    return anthropic;
+}
 // =============================================================================
 // CONTEXT-AWARE REQUIREMENTS
 // =============================================================================
@@ -99,7 +97,7 @@ function getAggressivenessMultiplier(aggressiveness) {
 /**
  * Get context-aware step requirements
  */
-function getStepRequirements(step, context) {
+export function getStepRequirements(step, context) {
     const baseReq = STEP_BASE_REQUIREMENTS[step] || {
         minDataPoints: 2,
         requiresCalculation: false,
@@ -238,7 +236,7 @@ const STEP_NAMES = {
 /**
  * Score step quality using LLM-as-judge
  */
-async function scoreStepQuality(input, context) {
+export async function scoreStepQuality(input, context) {
     const requirements = getStepRequirements(input.stepNumber, context);
     const prompt = STEP_DEPTH_JUDGE_PROMPT.replace("{step_number}", String(input.stepNumber))
         .replace("{step_name}", STEP_NAMES[input.stepNumber] || "Unknown")
@@ -252,7 +250,8 @@ async function scoreStepQuality(input, context) {
         .replace("{min_data_points}", String(requirements.minDataPoints))
         .replace("{requires_calculation}", String(requirements.requiresCalculation));
     try {
-        const response = await anthropic.messages.create({
+        const client = getAnthropicClient();
+        const response = await client.messages.create({
             model: "claude-sonnet-4-20250514",
             max_tokens: 300,
             messages: [{ role: "user", content: prompt }],
@@ -302,7 +301,7 @@ async function scoreStepQuality(input, context) {
  *
  * Checks if minimum viable data was collected before step transition.
  */
-function scoreStepDataCompleteness(input, context) {
+export function scoreStepDataCompleteness(input, context) {
     const requirements = getStepRequirements(input.stepNumber, context);
     const dataPointRatio = input.dataPointsCollected.length / requirements.minDataPoints;
     let score = Math.min(1.0, dataPointRatio);
@@ -334,7 +333,7 @@ function scoreStepDataCompleteness(input, context) {
  *
  * Checks if appropriate time was spent on the step given context.
  */
-function scoreStepTurnEfficiency(input, context) {
+export function scoreStepTurnEfficiency(input, context) {
     const requirements = getStepRequirements(input.stepNumber, context);
     const turnRatio = input.turnsInStep / requirements.minTurns;
     let score = 1.0;
@@ -367,7 +366,7 @@ function scoreStepTurnEfficiency(input, context) {
  *
  * For steps > 4, checks if agent referenced earlier step insights.
  */
-function scoreStepSynthesis(input, priorStepInsights) {
+export function scoreStepSynthesis(input, priorStepInsights) {
     // Synthesis not expected for early steps
     if (input.stepNumber <= 4) {
         return {
@@ -443,7 +442,7 @@ function scoreStepSynthesis(input, priorStepInsights) {
 /**
  * Calculate overall step quality score from individual components
  */
-function calculateStepQualityScore(scores) {
+export function calculateStepQualityScore(scores) {
     const stepScorers = [
         "step-quality",
         "step-data-completeness",
@@ -469,7 +468,7 @@ function calculateStepQualityScore(scores) {
 /**
  * Score all step quality dimensions when transitioning out of a step
  */
-async function scoreStepTransitionQuality(input, context, priorStepInsights) {
+export async function scoreStepTransitionQuality(input, context, priorStepInsights) {
     const scores = {};
     // LLM-based comprehensive step quality
     scores["step-quality"] = await scoreStepQuality(input, context);
@@ -479,5 +478,5 @@ async function scoreStepTransitionQuality(input, context, priorStepInsights) {
     scores["step-synthesis"] = scoreStepSynthesis(input, priorStepInsights);
     return scores;
 }
-exports.default = scoreStepTransitionQuality;
+export default scoreStepTransitionQuality;
 //# sourceMappingURL=step-quality-scorers.js.map

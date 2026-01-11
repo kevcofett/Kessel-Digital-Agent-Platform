@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Multi-Audience Channel Allocation Scenario
  *
@@ -22,12 +21,10 @@
  * - Agent MUST maintain tracking/measurement approach per segment-channel
  * - Agent SHOULD discuss creative requirements per segment-channel combo
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.multiAudienceChannelAllocationContext = exports.multiAudienceChannelAllocationScenario = exports.multiAudienceChannelPersona = void 0;
 /**
  * VP Marketing with complex multi-segment, multi-channel requirements
  */
-exports.multiAudienceChannelPersona = {
+export const multiAudienceChannelPersona = {
     id: "multi-audience-channel-expert",
     name: "Alexandra",
     title: "VP of Marketing",
@@ -116,14 +113,14 @@ exports.multiAudienceChannelPersona = {
 /**
  * Multi-Audience Channel Allocation Test Scenario
  */
-exports.multiAudienceChannelAllocationScenario = {
+export const multiAudienceChannelAllocationScenario = {
     id: "multi-audience-channel-allocation",
     name: "Multi-Audience with Segment-Specific Channels",
     category: "phase1-quality",
     description: "Advanced test: Multiple target audiences with different channel allocations " +
         "for each segment. Agent MUST recommend distinct channel mixes based on segment " +
         "behaviors and justify the segment-channel-budget matrix.",
-    persona: exports.multiAudienceChannelPersona,
+    persona: multiAudienceChannelPersona,
     openingMessage: "I'm the VP of Marketing at EduPath Online Learning. We need a sophisticated media " +
         "plan that targets three very different learner segments - each requires its own channel strategy.\n\n" +
         "Total budget: $5M for 50,000 enrollments.\n\n" +
@@ -323,11 +320,11 @@ exports.multiAudienceChannelAllocationScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.multiAudienceChannelAllocationContext = {
+export const multiAudienceChannelAllocationContext = {
     budget: 5000000,
     funnel: "performance",
     kpiAggressiveness: "moderate",
     userSophistication: "high",
 };
-exports.default = exports.multiAudienceChannelAllocationScenario;
+export default multiAudienceChannelAllocationScenario;
 //# sourceMappingURL=multi-audience-channel-allocation.js.map

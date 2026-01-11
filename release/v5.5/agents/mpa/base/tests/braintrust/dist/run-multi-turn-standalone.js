@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Standalone Multi-Turn Evaluation Runner
  *
@@ -9,10 +8,9 @@
  *   ANTHROPIC_API_KEY=xxx npx ts-node --esm run-multi-turn-standalone.ts
  *   ANTHROPIC_API_KEY=xxx npx ts-node --esm run-multi-turn-standalone.ts --scenario full-10-step
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-const conversation_engine_js_1 = require("./conversation-engine.js");
-const index_js_1 = require("./scenarios/index.js");
-const index_js_2 = require("./scorers/index.js");
+import { ConversationEngine } from "./conversation-engine.js";
+import { ALL_SCENARIOS, getScenarioById, getScenariosByCategory, } from "./scenarios/index.js";
+import { formatScoreReport } from "./scorers/index.js";
 function parseArgs() {
     const args = process.argv.slice(2);
     const result = {
@@ -47,15 +45,15 @@ function parseArgs() {
 }
 function getScenariosToRun(args) {
     if (args.scenario) {
-        const scenario = (0, index_js_1.getScenarioById)(args.scenario);
+        const scenario = getScenarioById(args.scenario);
         if (!scenario) {
             console.error(`Unknown scenario: ${args.scenario}`);
-            console.error("Available scenarios:", index_js_1.ALL_SCENARIOS.map((s) => s.id).join(", "));
+            console.error("Available scenarios:", ALL_SCENARIOS.map((s) => s.id).join(", "));
             process.exit(1);
         }
         return [scenario];
     }
-    return (0, index_js_1.getScenariosByCategory)(args.category);
+    return getScenariosByCategory(args.category);
 }
 function formatDuration(ms) {
     if (ms < 1000)
@@ -101,7 +99,7 @@ function generateReport(result) {
     }
     // Score breakdown
     lines.push(`\n--- SCORE BREAKDOWN ---`);
-    lines.push((0, index_js_2.formatScoreReport)(result.turnScoreAggregates, result.conversationScores, result.compositeScore, result.passed));
+    lines.push(formatScoreReport(result.turnScoreAggregates, result.conversationScores, result.compositeScore, result.passed));
     return lines.join("\n");
 }
 function generateConversationLog(result) {
@@ -139,7 +137,7 @@ async function main() {
             engineConfig.agentModel = args.model;
         if (args.promptVersion)
             engineConfig.promptVersion = args.promptVersion;
-        const engine = new conversation_engine_js_1.ConversationEngine(engineConfig);
+        const engine = new ConversationEngine(engineConfig);
         try {
             const result = await engine.runConversation(scenario);
             results.push(result);

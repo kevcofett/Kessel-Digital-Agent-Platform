@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Budget Revision Midstream Scenario
  *
@@ -16,12 +15,10 @@
  *
  * This tests the "Re-run forecasts after every meaningful input" requirement.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.budgetRevisionMidstreamContext = exports.budgetRevisionMidstreamScenario = exports.budgetRevisionPersona = void 0;
 /**
  * Mid-market SaaS marketer with evolving budget
  */
-exports.budgetRevisionPersona = {
+export const budgetRevisionPersona = {
     id: "budget-revision-saas-director",
     name: "Rachel",
     title: "Director of Marketing",
@@ -102,13 +99,13 @@ const budgetIncreaseChange = {
  *
  * Quality Focus: Proactive Reforecasting
  */
-exports.budgetRevisionMidstreamScenario = {
+export const budgetRevisionMidstreamScenario = {
     id: "budget-revision-midstream",
     name: "Budget Revision Midstream",
     category: "reforecasting",
     description: "Tests proactive reforecasting when user reveals budget increase mid-conversation. " +
         "Agent MUST recalculate, explain impact, and recommend allocation changes.",
-    persona: exports.budgetRevisionPersona,
+    persona: budgetRevisionPersona,
     openingMessage: "Hi, I'm the Director of Marketing at CloudMetrics, a B2B analytics SaaS company. " +
         "I need help building a media plan for next year. Our budget is $500K and we're " +
         "targeting 10,000 new customers. LTV is about $2,400 per customer. Can you help?",
@@ -291,11 +288,11 @@ exports.budgetRevisionMidstreamScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.budgetRevisionMidstreamContext = {
+export const budgetRevisionMidstreamContext = {
     budget: 750000, // Final budget after revision
     funnel: "performance",
     kpiAggressiveness: "moderate",
     userSophistication: "medium",
 };
-exports.default = exports.budgetRevisionMidstreamScenario;
+export default budgetRevisionMidstreamScenario;
 //# sourceMappingURL=budget-revision-midstream.js.map

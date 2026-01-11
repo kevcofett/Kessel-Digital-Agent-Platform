@@ -1,4 +1,3 @@
-"use strict";
 /**
  * KB Document Impact Tracker
  *
@@ -15,53 +14,15 @@
  * - Finding correlations between KB content and quality scores
  * - Guiding KB document improvements based on evaluation gaps
  */
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MPA_KB_DOCUMENTS = void 0;
-exports.filenameToDocId = filenameToDocId;
-exports.trackKBUsage = trackKBUsage;
-exports.calculateKBImpactMetrics = calculateKBImpactMetrics;
-exports.generateKBOptimizationRecommendations = generateKBOptimizationRecommendations;
-exports.generateKBImpactReport = generateKBImpactReport;
-exports.saveKBImpactData = saveKBImpactData;
-const fs = __importStar(require("fs"));
-const path = __importStar(require("path"));
+import * as fs from "fs";
+import * as path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 /**
  * Catalog of MPA KB documents
  */
-exports.MPA_KB_DOCUMENTS = [
+export const MPA_KB_DOCUMENTS = [
     {
         id: "supporting-instructions",
         filename: "MPA_Supporting_Instructions_v5_5.txt",
@@ -194,13 +155,13 @@ exports.MPA_KB_DOCUMENTS = [
  * Used to convert filenames from conversation engine to document IDs for tracking
  */
 const FILENAME_TO_ID_MAP = {};
-for (const doc of exports.MPA_KB_DOCUMENTS) {
+for (const doc of MPA_KB_DOCUMENTS) {
     FILENAME_TO_ID_MAP[doc.filename] = doc.id;
 }
 /**
  * Convert a filename to its document ID
  */
-function filenameToDocId(filename) {
+export function filenameToDocId(filename) {
     return FILENAME_TO_ID_MAP[filename] || filename;
 }
 /**
@@ -265,7 +226,7 @@ const KB_REFERENCE_PATTERNS = {
  * Note: injectedDocuments may contain filenames or document IDs
  * This function converts filenames to IDs for consistent tracking
  */
-function trackKBUsage(agentResponse, injectedDocuments, step, turnNumber) {
+export function trackKBUsage(agentResponse, injectedDocuments, step, turnNumber) {
     const records = [];
     for (const filenameOrId of injectedDocuments) {
         // Convert filename to document ID if necessary
@@ -294,10 +255,10 @@ function trackKBUsage(agentResponse, injectedDocuments, step, turnNumber) {
 /**
  * Aggregate KB usage records into impact metrics
  */
-function calculateKBImpactMetrics(usageRecords, qualityScores) {
+export function calculateKBImpactMetrics(usageRecords, qualityScores) {
     const metrics = {};
     // Initialize metrics for all documents
-    for (const doc of exports.MPA_KB_DOCUMENTS) {
+    for (const doc of MPA_KB_DOCUMENTS) {
         metrics[doc.id] = {
             documentId: doc.id,
             documentName: doc.filename,
@@ -376,7 +337,7 @@ function calculateKBImpactMetrics(usageRecords, qualityScores) {
 /**
  * Generate optimization recommendations based on impact analysis
  */
-function generateKBOptimizationRecommendations(impactMetrics) {
+export function generateKBOptimizationRecommendations(impactMetrics) {
     const recommendations = [];
     for (const metric of impactMetrics) {
         // Low reference rate - document not being used
@@ -448,7 +409,7 @@ function generateKBOptimizationRecommendations(impactMetrics) {
 /**
  * Generate a formatted report of KB impact analysis
  */
-function generateKBImpactReport(impactMetrics, recommendations) {
+export function generateKBImpactReport(impactMetrics, recommendations) {
     const lines = [];
     lines.push("# KB Document Impact Analysis Report");
     lines.push("");
@@ -535,7 +496,7 @@ function formatDelta(delta) {
 /**
  * Save KB impact data for trend analysis
  */
-function saveKBImpactData(impactMetrics, promptVersion, filePath) {
+export function saveKBImpactData(impactMetrics, promptVersion, filePath) {
     const targetPath = filePath || path.join(__dirname, "kb-impact", `impact-${promptVersion}-${Date.now()}.json`);
     const dir = path.dirname(targetPath);
     if (!fs.existsSync(dir)) {
@@ -549,8 +510,8 @@ function saveKBImpactData(impactMetrics, promptVersion, filePath) {
     fs.writeFileSync(targetPath, JSON.stringify(data, null, 2));
     console.log(`KB impact data saved to ${targetPath}`);
 }
-exports.default = {
-    MPA_KB_DOCUMENTS: exports.MPA_KB_DOCUMENTS,
+export default {
+    MPA_KB_DOCUMENTS,
     trackKBUsage,
     calculateKBImpactMetrics,
     generateKBOptimizationRecommendations,

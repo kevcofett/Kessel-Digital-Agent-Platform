@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Mentorship Scorers for Quality-Focused MPA Evaluation
  *
@@ -6,21 +5,20 @@
  * These scorers measure whether the agent TAUGHT and GUIDED the user,
  * rather than simply interrogating them.
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.scoreTeachingBehavior = scoreTeachingBehavior;
-exports.scoreProactiveCalculation = scoreProactiveCalculation;
-exports.scoreBenchmarkCitation = scoreBenchmarkCitation;
-exports.scoreCriticalThinking = scoreCriticalThinking;
-exports.scoreStrategicSynthesis = scoreStrategicSynthesis;
-exports.calculateMentorshipScore = calculateMentorshipScore;
-exports.scoreMentorship = scoreMentorship;
-const sdk_1 = __importDefault(require("@anthropic-ai/sdk"));
-const anthropic = new sdk_1.default({
-    apiKey: process.env.ANTHROPIC_API_KEY,
-});
+import Anthropic from "@anthropic-ai/sdk";
+// Lazy initialization - only create client when needed
+let anthropic = null;
+function getAnthropicClient() {
+    if (!anthropic) {
+        if (!process.env.ANTHROPIC_API_KEY) {
+            throw new Error('ANTHROPIC_API_KEY environment variable is not set');
+        }
+        anthropic = new Anthropic({
+            apiKey: process.env.ANTHROPIC_API_KEY,
+        });
+    }
+    return anthropic;
+}
 // =============================================================================
 // LLM-AS-JUDGE PROMPTS
 // =============================================================================
@@ -144,7 +142,8 @@ Return JSON: { "score": X.X, "rationale": "..." }`;
  */
 async function llmJudgeJson(prompt) {
     try {
-        const response = await anthropic.messages.create({
+        const client = getAnthropicClient();
+        const response = await client.messages.create({
             model: "claude-sonnet-4-20250514",
             max_tokens: 200,
             messages: [{ role: "user", content: prompt }],
@@ -184,7 +183,7 @@ async function llmJudgeJson(prompt) {
  * Evaluates whether the agent explains WHY questions matter,
  * rather than just asking them in checklist fashion.
  */
-async function scoreTeachingBehavior(agentResponse, currentStep) {
+export async function scoreTeachingBehavior(agentResponse, currentStep) {
     const prompt = TEACHING_BEHAVIOR_JUDGE_PROMPT.replace("{agent_response}", agentResponse);
     const result = await llmJudgeJson(prompt);
     return {
@@ -203,7 +202,7 @@ async function scoreTeachingBehavior(agentResponse, currentStep) {
  * Checks if the agent performed calculations when data was available,
  * rather than asking for more info it could derive itself.
  */
-function scoreProactiveCalculation(agentResponse, availableData) {
+export function scoreProactiveCalculation(agentResponse, availableData) {
     // Check if we have enough data to calculate
     const canCalculate = availableData.hasBudget && availableData.hasVolume;
     if (!canCalculate) {
@@ -259,7 +258,7 @@ function scoreProactiveCalculation(agentResponse, availableData) {
  * Checks if the agent cited industry benchmarks or KB data
  * when making claims or providing guidance.
  */
-function scoreBenchmarkCitation(agentResponse, stepContext) {
+export function scoreBenchmarkCitation(agentResponse, stepContext) {
     // Check if response contains data claims that should be sourced
     const hasQuantitativeClaims = /\$[\d,]+|\d+%|\d+\s*(dollars|customers|leads)/i.test(agentResponse) ||
         /(typical|average|benchmark|industry|standard)/i.test(agentResponse);
@@ -315,7 +314,7 @@ function scoreBenchmarkCitation(agentResponse, stepContext) {
  * Evaluates whether the agent challenged unrealistic inputs
  * and validated user-provided assumptions.
  */
-async function scoreCriticalThinking(userInput, agentResponse, context) {
+export async function scoreCriticalThinking(userInput, agentResponse, context) {
     // Only applicable if user provided data to challenge
     const hasDataToChallenge = /\$[\d,]+|\d+%|\d+\s*(customers|leads|users)/i.test(userInput);
     if (!hasDataToChallenge) {
@@ -349,7 +348,7 @@ async function scoreCriticalThinking(userInput, agentResponse, context) {
  * Evaluates whether the agent connected current step insights
  * to the overall plan and referenced earlier collected data.
  */
-async function scoreStrategicSynthesis(agentResponse, conversationContext) {
+export async function scoreStrategicSynthesis(agentResponse, conversationContext) {
     // Less relevant in early steps (1-2)
     if (conversationContext.currentStep <= 2) {
         return {
@@ -383,7 +382,7 @@ async function scoreStrategicSynthesis(agentResponse, conversationContext) {
 /**
  * Calculate mentorship category score from individual scorers
  */
-function calculateMentorshipScore(scores) {
+export function calculateMentorshipScore(scores) {
     const mentorshipScorers = [
         "teaching-behavior",
         "proactive-calculation",
@@ -411,7 +410,7 @@ function calculateMentorshipScore(scores) {
 /**
  * Score all mentorship dimensions for a turn
  */
-async function scoreMentorship(userMessage, agentResponse, context) {
+export async function scoreMentorship(userMessage, agentResponse, context) {
     const scores = {};
     // Calculate implied efficiency if we have the data
     const impliedEfficiency = context.budget && context.volumeTarget
@@ -448,5 +447,5 @@ async function scoreMentorship(userMessage, agentResponse, context) {
     });
     return scores;
 }
-exports.default = scoreMentorship;
+export default scoreMentorship;
 //# sourceMappingURL=mentorship-scorers.js.map

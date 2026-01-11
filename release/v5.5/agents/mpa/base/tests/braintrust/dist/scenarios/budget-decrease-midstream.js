@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Budget Decrease Midstream Scenario
  *
@@ -17,12 +16,10 @@
  * This tests the "Re-run forecasts after every meaningful input" requirement
  * in a NEGATIVE change scenario (harder than increases).
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.budgetDecreaseMidstreamContext = exports.budgetDecreaseMidstreamScenario = exports.budgetDecreasePersona = void 0;
 /**
  * Enterprise tech marketer facing budget cuts
  */
-exports.budgetDecreasePersona = {
+export const budgetDecreasePersona = {
     id: "budget-decrease-enterprise-vp",
     name: "Marcus",
     title: "VP of Demand Generation",
@@ -104,13 +101,13 @@ const budgetDecreaseChange = {
  *
  * Quality Focus: Proactive Reforecasting under constraint
  */
-exports.budgetDecreaseMidstreamScenario = {
+export const budgetDecreaseMidstreamScenario = {
     id: "budget-decrease-midstream",
     name: "Budget Decrease Midstream",
     category: "reforecasting",
     description: "Tests proactive reforecasting when user reveals significant budget CUT mid-conversation. " +
         "Agent MUST recalculate, explain trade-offs, and recommend prioritization.",
-    persona: exports.budgetDecreasePersona,
+    persona: budgetDecreasePersona,
     openingMessage: "Hi, I'm VP of Demand Gen at DataScale Systems. We sell enterprise data infrastructure " +
         "with an average deal size of $150K. I need to build a media plan for next year. " +
         "We have $1M budget and need to generate 500 qualified opportunities. " +
@@ -300,11 +297,11 @@ exports.budgetDecreaseMidstreamScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.budgetDecreaseMidstreamContext = {
+export const budgetDecreaseMidstreamContext = {
     budget: 600000, // Final budget after cut
     funnel: "performance",
     kpiAggressiveness: "aggressive",
     userSophistication: "high",
 };
-exports.default = exports.budgetDecreaseMidstreamScenario;
+export default budgetDecreaseMidstreamScenario;
 //# sourceMappingURL=budget-decrease-midstream.js.map

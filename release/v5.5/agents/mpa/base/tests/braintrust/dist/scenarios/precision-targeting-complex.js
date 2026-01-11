@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Precision Targeting Complex Scenario
  *
@@ -21,12 +20,10 @@
  * - Agent MUST calculate reach vs precision tradeoffs
  * - Agent SHOULD recommend test structures for targeting hypotheses
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.precisionTargetingComplexContext = exports.precisionTargetingComplexScenario = exports.precisionTargetingPersona = void 0;
 /**
  * Expert performance marketer with complex targeting requirements
  */
-exports.precisionTargetingPersona = {
+export const precisionTargetingPersona = {
     id: "precision-targeting-expert",
     name: "David",
     title: "Director of Performance Marketing",
@@ -125,14 +122,14 @@ exports.precisionTargetingPersona = {
 /**
  * Precision Targeting Complex Test Scenario
  */
-exports.precisionTargetingComplexScenario = {
+export const precisionTargetingComplexScenario = {
     id: "precision-targeting-complex",
     name: "Precision Targeting with Complex Attributes",
     category: "phase1-quality",
     description: "Tests agent's ability to handle highly complex geographic, behavioral, demographic, " +
         "and contextual targeting attributes for a precision campaign. Agent MUST demonstrate " +
         "deep understanding of audience segmentation and targeting tradeoffs.",
-    persona: exports.precisionTargetingPersona,
+    persona: precisionTargetingPersona,
     openingMessage: "I'm the Director of Performance Marketing at LuxeFinance, a wealth management firm. " +
         "We need to build a precision media plan to acquire high-net-worth individuals - " +
         "specifically people with $1M+ in investable assets, typically 45-65, executives and " +
@@ -331,11 +328,11 @@ exports.precisionTargetingComplexScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.precisionTargetingComplexContext = {
+export const precisionTargetingComplexContext = {
     budget: 1500000,
     funnel: "performance",
     kpiAggressiveness: "moderate",
     userSophistication: "high",
 };
-exports.default = exports.precisionTargetingComplexScenario;
+export default precisionTargetingComplexScenario;
 //# sourceMappingURL=precision-targeting-complex.js.map

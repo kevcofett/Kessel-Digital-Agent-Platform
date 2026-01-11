@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Aggressive KPI Narrow Targeting Scenario
  *
@@ -22,12 +21,10 @@
  * - Agent MUST help user understand volume vs efficiency tradeoff
  * - Agent SHOULD recommend test-and-scale approach
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.aggressiveKpiNarrowTargetingContext = exports.aggressiveKpiNarrowTargetingScenario = exports.aggressiveKpiPersona = void 0;
 /**
  * Growth marketer with aggressive efficiency requirements
  */
-exports.aggressiveKpiPersona = {
+export const aggressiveKpiPersona = {
     id: "aggressive-kpi-growth",
     name: "Ryan",
     title: "Head of Growth",
@@ -107,14 +104,14 @@ exports.aggressiveKpiPersona = {
 /**
  * Aggressive KPI Narrow Targeting Test Scenario
  */
-exports.aggressiveKpiNarrowTargetingScenario = {
+export const aggressiveKpiNarrowTargetingScenario = {
     id: "aggressive-kpi-narrow-targeting",
     name: "Aggressive KPI - Must Narrow to Achieve",
     category: "phase1-quality",
     description: "Tests agent's ability to handle aggressive efficiency targets that require " +
         "sacrificing volume. Agent MUST challenge unrealistic targets and guide user " +
         "to narrow audience/channels to achieve aggressive KPI, even if volume suffers.",
-    persona: exports.aggressiveKpiPersona,
+    persona: aggressiveKpiPersona,
     openingMessage: "Hey, I'm the Head of Growth at SwiftDeliver - we're a B2B SaaS for logistics. " +
         "I need to build a media plan with aggressive targets. Budget is $750K, and we " +
         "need 5,000 new customers at $150 CAC or better. Our LTV is $2,400 so the math " +
@@ -329,11 +326,11 @@ exports.aggressiveKpiNarrowTargetingScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.aggressiveKpiNarrowTargetingContext = {
+export const aggressiveKpiNarrowTargetingContext = {
     budget: 750000,
     funnel: "performance",
     kpiAggressiveness: "aggressive",
     userSophistication: "high",
 };
-exports.default = exports.aggressiveKpiNarrowTargetingScenario;
+export default aggressiveKpiNarrowTargetingScenario;
 //# sourceMappingURL=aggressive-kpi-narrow-targeting.js.map

@@ -1,0 +1,23 @@
+{
+  "name": "mpa-braintrust-eval",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "eval": "node dist/mpa-multi-turn-eval.js",
+    "eval:fast": "node dist/mpa-multi-turn-eval.js --fast",
+    "index-kb": "node dist/rag/index-kb.js",
+    "test:rag": "node dist/rag/test-rag.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.0",
+    "braintrust": "^0.0.160",
+    "dotenv": "^16.3.1",
+    "natural": "^6.10.0"
+  },
+  "devDependencies": {
+    "@types/natural": "^5.1.5",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
+  }
+}

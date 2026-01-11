@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Channel Mix Change Scenario
  *
@@ -17,12 +16,10 @@
  * This tests the "Re-run forecasts after every meaningful input" requirement
  * for channel mix changes.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.channelMixChangeContext = exports.channelMixChangeScenario = exports.channelMixChangePersona = void 0;
 /**
  * CPG brand manager with channel constraints
  */
-exports.channelMixChangePersona = {
+export const channelMixChangePersona = {
     id: "channel-mix-cpg-manager",
     name: "Jennifer",
     title: "Senior Brand Manager",
@@ -104,13 +101,13 @@ const channelExclusionChange = {
  *
  * Quality Focus: Proactive Reforecasting for channel constraints
  */
-exports.channelMixChangeScenario = {
+export const channelMixChangeScenario = {
     id: "channel-mix-change",
     name: "Channel Mix Change",
     category: "reforecasting",
     description: "Tests proactive reforecasting when user reveals channel exclusions mid-conversation. " +
         "Agent MUST recalculate allocations, explain impact, and recommend alternatives.",
-    persona: exports.channelMixChangePersona,
+    persona: channelMixChangePersona,
     openingMessage: "Hi, I'm a Senior Brand Manager at PureLife Organics. We're launching a new organic snack line " +
         "and I need help building a media plan. Budget is $3M, targeting health-conscious families nationally. " +
         "We need to reach about 2 million households to hit our awareness goals. Open to your channel recommendations.",
@@ -298,11 +295,11 @@ exports.channelMixChangeScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.channelMixChangeContext = {
+export const channelMixChangeContext = {
     budget: 3000000,
     funnel: "awareness",
     kpiAggressiveness: "moderate",
     userSophistication: "medium",
 };
-exports.default = exports.channelMixChangeScenario;
+export default channelMixChangeScenario;
 //# sourceMappingURL=channel-mix-change.js.map

@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Geography Expansion Change Scenario
  *
@@ -17,12 +16,10 @@
  * This tests the "Re-run forecasts after every meaningful input" requirement
  * for geography changes.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.geoExpansionChangeContext = exports.geoExpansionChangeScenario = exports.geoExpansionPersona = void 0;
 /**
  * Retail brand expanding internationally
  */
-exports.geoExpansionPersona = {
+export const geoExpansionPersona = {
     id: "geo-expansion-retail-director",
     name: "Carlos",
     title: "Director of Marketing, North America",
@@ -104,13 +101,13 @@ const geoExpansionChange = {
  *
  * Quality Focus: Proactive Reforecasting for geography changes
  */
-exports.geoExpansionChangeScenario = {
+export const geoExpansionChangeScenario = {
     id: "geo-expansion-change",
     name: "Geography Expansion Change",
     category: "reforecasting",
     description: "Tests proactive reforecasting when user reveals geography expansion mid-conversation. " +
         "Agent MUST recalculate allocations, explain complexity, and recommend market prioritization.",
-    persona: exports.geoExpansionPersona,
+    persona: geoExpansionPersona,
     openingMessage: "Hi, I'm Director of Marketing for ActiveWear Pro, an athletic apparel brand. " +
         "I need to build a media plan for next year. We have $2.5M budget and want to drive " +
         "500,000 store visits and online conversions combined. Currently planning for the US market. " +
@@ -293,11 +290,11 @@ exports.geoExpansionChangeScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.geoExpansionChangeContext = {
+export const geoExpansionChangeContext = {
     budget: 2500000,
     funnel: "consideration",
     kpiAggressiveness: "moderate",
     userSophistication: "medium",
 };
-exports.default = exports.geoExpansionChangeScenario;
+export default geoExpansionChangeScenario;
 //# sourceMappingURL=geo-expansion-change.js.map

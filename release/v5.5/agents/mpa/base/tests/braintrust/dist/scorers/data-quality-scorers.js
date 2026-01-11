@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Data Quality Scorers - Tests adherence to data quality hierarchy
  *
@@ -15,28 +14,18 @@
  * - Doesn't claim higher-priority sources when using lower ones
  * - Recommends validation for estimates
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DataSourcePriority = void 0;
-exports.scoreDataSourceAttribution = scoreDataSourceAttribution;
-exports.scoreEstimateLabeling = scoreEstimateLabeling;
-exports.scoreValidationRecommendation = scoreValidationRecommendation;
-exports.scoreDataHierarchyAdherence = scoreDataHierarchyAdherence;
-exports.calculateDataQualityScore = calculateDataQualityScore;
-const sdk_1 = __importDefault(require("@anthropic-ai/sdk"));
+import Anthropic from "@anthropic-ai/sdk";
 /**
  * Data source types in priority order (highest to lowest)
  */
-var DataSourcePriority;
+export var DataSourcePriority;
 (function (DataSourcePriority) {
     DataSourcePriority[DataSourcePriority["API_DATA"] = 1] = "API_DATA";
     DataSourcePriority[DataSourcePriority["WEB_RESEARCH"] = 2] = "WEB_RESEARCH";
     DataSourcePriority[DataSourcePriority["USER_PROVIDED"] = 3] = "USER_PROVIDED";
     DataSourcePriority[DataSourcePriority["KB_BENCHMARK"] = 4] = "KB_BENCHMARK";
     DataSourcePriority[DataSourcePriority["AGENT_ESTIMATE"] = 5] = "AGENT_ESTIMATE";
-})(DataSourcePriority || (exports.DataSourcePriority = DataSourcePriority = {}));
+})(DataSourcePriority || (DataSourcePriority = {}));
 /**
  * Patterns to detect data source claims
  */
@@ -68,7 +57,7 @@ const DATA_SOURCE_PATTERNS = {
 /**
  * Score data source attribution - does agent correctly attribute data?
  */
-function scoreDataSourceAttribution(agentResponse, expectedSource) {
+export function scoreDataSourceAttribution(agentResponse, expectedSource) {
     const detectedSources = [];
     let highestPriorityDetected = null;
     // Check for each source type
@@ -143,7 +132,7 @@ function scoreDataSourceAttribution(agentResponse, expectedSource) {
 /**
  * Score estimate labeling - does agent clearly label estimates?
  */
-function scoreEstimateLabeling(agentResponse) {
+export function scoreEstimateLabeling(agentResponse) {
     // Patterns that indicate an estimate is being made
     const estimateIndicators = [
         /(?:approximately|roughly|about|around|~)\s*\$?\d/i,
@@ -188,7 +177,7 @@ function scoreEstimateLabeling(agentResponse) {
 /**
  * Score validation recommendation - does agent recommend validation for estimates?
  */
-function scoreValidationRecommendation(agentResponse) {
+export function scoreValidationRecommendation(agentResponse) {
     const estimateIndicators = [
         /(?:my|i|agent).*(?:estimate|assumption)/i,
         /(?:assume|assumption|model)/i,
@@ -227,8 +216,8 @@ function scoreValidationRecommendation(agentResponse) {
  * This is an LLM-as-judge scorer that evaluates whether the agent
  * appropriately used the data hierarchy given the context.
  */
-async function scoreDataHierarchyAdherence(userMessage, agentResponse, availableData) {
-    const anthropic = new sdk_1.default({
+export async function scoreDataHierarchyAdherence(userMessage, agentResponse, availableData) {
+    const anthropic = new Anthropic({
         apiKey: process.env.ANTHROPIC_API_KEY,
     });
     const prompt = `You are evaluating whether an AI agent correctly followed the data quality hierarchy.
@@ -288,7 +277,7 @@ Reply with ONLY a single letter: A, B, C, D, or F`;
 /**
  * Combined data quality score
  */
-function calculateDataQualityScore(scores) {
+export function calculateDataQualityScore(scores) {
     const weights = {
         sourceAttribution: 0.3,
         estimateLabeling: 0.25,
@@ -309,7 +298,7 @@ function calculateDataQualityScore(scores) {
     }
     return weightedSum / totalWeight;
 }
-exports.default = {
+export default {
     scoreDataSourceAttribution,
     scoreEstimateLabeling,
     scoreValidationRecommendation,

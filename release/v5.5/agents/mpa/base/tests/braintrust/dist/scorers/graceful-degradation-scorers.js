@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Graceful Degradation Scorers - Tests agent behavior when APIs/tools fail
  *
@@ -14,29 +13,18 @@
  * 4. Agent recommends validation/follow-up
  * 5. Agent maintains forward progress (doesn't get stuck)
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.FailureType = void 0;
-exports.scoreFailureAcknowledgment = scoreFailureAcknowledgment;
-exports.scoreFallbackBehavior = scoreFallbackBehavior;
-exports.scoreFollowUpRecommendation = scoreFollowUpRecommendation;
-exports.scoreForwardProgress = scoreForwardProgress;
-exports.scoreGracefulDegradation = scoreGracefulDegradation;
-exports.calculateGracefulDegradationScore = calculateGracefulDegradationScore;
-const sdk_1 = __importDefault(require("@anthropic-ai/sdk"));
+import Anthropic from "@anthropic-ai/sdk";
 /**
  * Types of failures that can occur
  */
-var FailureType;
+export var FailureType;
 (function (FailureType) {
     FailureType["WEB_SEARCH_UNAVAILABLE"] = "web_search_unavailable";
     FailureType["API_TIMEOUT"] = "api_timeout";
     FailureType["API_ERROR"] = "api_error";
     FailureType["KB_RETRIEVAL_FAILED"] = "kb_retrieval_failed";
     FailureType["RATE_LIMITED"] = "rate_limited";
-})(FailureType || (exports.FailureType = FailureType = {}));
+})(FailureType || (FailureType = {}));
 /**
  * Expected fallback behaviors per failure type
  */
@@ -114,7 +102,7 @@ const FALLBACK_EXPECTATIONS = {
 /**
  * Score acknowledgment of failure - does agent recognize the limitation?
  */
-function scoreFailureAcknowledgment(agentResponse, failureType) {
+export function scoreFailureAcknowledgment(agentResponse, failureType) {
     const expectations = FALLBACK_EXPECTATIONS[failureType];
     const acknowledged = expectations.acknowledgmentPatterns.some((p) => p.test(agentResponse));
     // Also check for generic acknowledgment patterns
@@ -137,7 +125,7 @@ function scoreFailureAcknowledgment(agentResponse, failureType) {
 /**
  * Score fallback behavior - does agent use appropriate fallback?
  */
-function scoreFallbackBehavior(agentResponse, failureType) {
+export function scoreFallbackBehavior(agentResponse, failureType) {
     const expectations = FALLBACK_EXPECTATIONS[failureType];
     const usedFallback = expectations.fallbackPatterns.some((p) => p.test(agentResponse));
     // Also check for generic fallback patterns
@@ -160,7 +148,7 @@ function scoreFallbackBehavior(agentResponse, failureType) {
 /**
  * Score recommendation presence - does agent recommend follow-up?
  */
-function scoreFollowUpRecommendation(agentResponse, failureType) {
+export function scoreFollowUpRecommendation(agentResponse, failureType) {
     const expectations = FALLBACK_EXPECTATIONS[failureType];
     const hasRecommendation = expectations.recommendationPatterns.some((p) => p.test(agentResponse));
     // Generic recommendation patterns
@@ -183,7 +171,7 @@ function scoreFollowUpRecommendation(agentResponse, failureType) {
 /**
  * Score forward progress - does agent maintain momentum despite failure?
  */
-function scoreForwardProgress(agentResponse) {
+export function scoreForwardProgress(agentResponse) {
     // Signs of forward progress
     const progressIndicators = [
         /(?:let's|let us|we can|I can).*(?:proceed|continue|move)/i,
@@ -233,8 +221,8 @@ function scoreForwardProgress(agentResponse) {
  *
  * Evaluates overall quality of graceful degradation behavior
  */
-async function scoreGracefulDegradation(userMessage, agentResponse, failureContext) {
-    const anthropic = new sdk_1.default({
+export async function scoreGracefulDegradation(userMessage, agentResponse, failureContext) {
+    const anthropic = new Anthropic({
         apiKey: process.env.ANTHROPIC_API_KEY,
     });
     const prompt = `You are evaluating how gracefully an AI agent handled a system failure.
@@ -286,7 +274,7 @@ Reply with ONLY a single letter: A, B, C, D, or F`;
 /**
  * Calculate combined graceful degradation score
  */
-function calculateGracefulDegradationScore(scores) {
+export function calculateGracefulDegradationScore(scores) {
     const weights = {
         acknowledgment: 0.2,
         fallback: 0.25,
@@ -310,7 +298,7 @@ function calculateGracefulDegradationScore(scores) {
     }
     return weightedSum / totalWeight;
 }
-exports.default = {
+export default {
     FailureType,
     scoreFailureAcknowledgment,
     scoreFallbackBehavior,

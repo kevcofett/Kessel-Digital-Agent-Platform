@@ -30,14 +30,18 @@ import {
 // Import MPA system prompt
 import { MPA_SYSTEM_PROMPT } from "./mpa-prompt-content.js";
 
+// Import RAG system
+import { RetrievalEngine, ToolExecutor, ToolUseBlock } from "./rag/index.js";
+
 const DEFAULT_ENGINE_CONFIG: ConversationEngineConfig = {
   agentModel: "claude-sonnet-4-20250514",
   simulatorModel: "claude-sonnet-4-20250514",
   agentTemperature: 0.7,
   agentMaxTokens: 1024,
-  promptVersion: "v5_7_5",
+  promptVersion: "v5_8_rag",
   systemPrompt: MPA_SYSTEM_PROMPT,
   verbose: false,
+  useAgenticRAG: true,
 };
 
 /**
@@ -50,6 +54,9 @@ export class ConversationEngine {
   private failureDetector: FailureDetector;
   private kbInjector: KBInjector;
   private config: ConversationEngineConfig;
+  private ragEngine: RetrievalEngine;
+  private toolExecutor: ToolExecutor;
+  private useAgenticRAG: boolean;
 
   constructor(config: Partial<ConversationEngineConfig> = {}) {
     this.config = { ...DEFAULT_ENGINE_CONFIG, ...config };
@@ -62,6 +69,11 @@ export class ConversationEngine {
     this.stepTracker = new StepTracker();
     this.failureDetector = new FailureDetector();
     this.kbInjector = new KBInjector();
+
+    // Initialize RAG system
+    this.ragEngine = new RetrievalEngine();
+    this.toolExecutor = new ToolExecutor(this.ragEngine);
+    this.useAgenticRAG = config.useAgenticRAG ?? true;
   }
 
   /**
@@ -76,6 +88,16 @@ export class ConversationEngine {
       major: FailureCondition[];
       critical: FailureCondition[];
     } = { warnings: [], major: [], critical: [] };
+
+    // Initialize RAG engine if enabled
+    if (this.useAgenticRAG) {
+      try {
+        await this.ragEngine.initialize();
+      } catch (error) {
+        console.warn('RAG initialization failed, falling back to static KB:', error);
+        this.useAgenticRAG = false;
+      }
+    }
 
     // Reset failure detector for new conversation
     this.failureDetector.reset();
@@ -223,13 +245,18 @@ export class ConversationEngine {
         }
       }
 
+      // Build conversation history from prior agent responses for acronym tracking
+      const conversationHistory = turns.map(t => t.agentResponse).join("\n");
+
       // Score this turn
       const turnScores = await scoreTurn(
         userResponse.message,
         agentResult.response,
         currentStep,
         stepState,
-        scenario.persona.sophisticationLevel
+        scenario.persona.sophisticationLevel,
+        "unknown",
+        conversationHistory
       );
 
       // Create turn record
@@ -314,7 +341,7 @@ export class ConversationEngine {
   }
 
   /**
-   * Get response from MPA agent
+   * Get response from MPA agent with RAG tool support
    */
   private async getAgentResponse(
     systemPrompt: string,
@@ -323,38 +350,134 @@ export class ConversationEngine {
   ): Promise<{
     response: string;
     tokenCounts: ConversationTurn["tokenCounts"];
+    toolCalls: number;
+    citations: string[];
   }> {
-    // Inject KB content into system prompt
+    // Inject base KB content into system prompt
     const fullSystemPrompt = kbContent
       ? `${systemPrompt}\n\n=== KNOWLEDGE BASE CONTEXT ===\n${kbContent}`
       : systemPrompt;
 
     // Handle empty message history (opening greeting)
-    const messages =
+    let messages: Anthropic.MessageParam[] =
       messageHistory.length > 0
-        ? messageHistory
+        ? [...messageHistory]
         : [{ role: "user" as const, content: "Hello, I need help with media planning." }];
 
-    const response = await this.anthropic.messages.create({
-      model: this.config.agentModel,
-      max_tokens: this.config.agentMaxTokens,
-      temperature: this.config.agentTemperature,
-      system: fullSystemPrompt,
-      messages,
-    });
+    let finalResponse = "";
+    let toolCallCount = 0;
+    let allCitations: string[] = [];
+    const maxToolCalls = 3; // Prevent infinite loops
 
-    const textBlock = response.content.find((block) => block.type === "text");
+    // Tool use loop
+    while (toolCallCount < maxToolCalls) {
+      const requestParams: Anthropic.MessageCreateParams = {
+        model: this.config.agentModel,
+        max_tokens: this.config.agentMaxTokens,
+        temperature: this.config.agentTemperature,
+        system: fullSystemPrompt,
+        messages,
+      };
+
+      // Add tools if agentic RAG is enabled
+      if (this.useAgenticRAG) {
+        requestParams.tools = this.toolExecutor.getToolDefinitions() as Anthropic.Tool[];
+      }
+
+      const response = await this.anthropic.messages.create(requestParams);
+
+      // Extract text content (may exist alongside tool use)
+      const textBlock = response.content.find(
+        (block): block is Anthropic.TextBlock => block.type === "text"
+      );
+
+      // Check for tool use
+      const toolUseBlocks = response.content.filter(
+        (block): block is Anthropic.ToolUseBlock => block.type === "tool_use"
+      );
+
+      // If no tool use or RAG disabled, we're done
+      if (toolUseBlocks.length === 0 || !this.useAgenticRAG) {
+        finalResponse = textBlock?.text || "";
+        break;
+      }
+
+      // If response has ONLY tool use (no text), and stop_reason is end_turn,
+      // we may need to get a final response after processing tools
+      const hasTextContent = textBlock && textBlock.text.trim().length > 0;
+
+      // Execute tools
+      toolCallCount++;
+
+      // Add assistant message with tool use (must have content)
+      // The response.content always has at least the tool_use blocks
+      messages.push({
+        role: "assistant",
+        content: response.content,
+      });
+
+      // Execute each tool and collect results
+      const toolResults: Anthropic.ToolResultBlockParam[] = [];
+
+      for (const toolUse of toolUseBlocks) {
+        const result = await this.toolExecutor.execute({
+          type: "tool_use",
+          id: toolUse.id,
+          name: toolUse.name,
+          input: toolUse.input as Record<string, unknown>,
+        });
+
+        allCitations.push(...result.citations);
+
+        toolResults.push({
+          type: "tool_result",
+          tool_use_id: toolUse.id,
+          content: result.content || "No result", // Ensure non-empty content
+        });
+      }
+
+      // Add tool results (must have at least one result with content)
+      if (toolResults.length > 0) {
+        messages.push({
+          role: "user",
+          content: toolResults,
+        });
+      }
+
+      // If we had meaningful text content alongside tool use, save it
+      // (the model may have provided a partial response while requesting tools)
+      if (hasTextContent && !finalResponse) {
+        finalResponse = textBlock.text;
+      }
+    }
+
+    // Get last response if we hit tool call limit
+    if (toolCallCount >= maxToolCalls && !finalResponse) {
+      const lastMsg = messages[messages.length - 1];
+      if (lastMsg.role === "assistant" && Array.isArray(lastMsg.content)) {
+        const textBlock = lastMsg.content.find(
+          (block): block is Anthropic.TextBlock =>
+            typeof block === "object" && block.type === "text"
+        );
+        finalResponse = textBlock?.text || "[Max tool calls reached]";
+      }
+    }
+
+    // Ensure we never return an empty response (which would cause API errors in subsequent calls)
+    if (!finalResponse || finalResponse.trim().length === 0) {
+      finalResponse = "I understand. Let me continue with the media planning process.";
+    }
 
     return {
-      response: (textBlock as Anthropic.TextBlock)?.text || "",
+      response: finalResponse,
       tokenCounts: {
-        userTokens: response.usage?.input_tokens || 0,
-        agentTokens: response.usage?.output_tokens || 0,
-        kbTokens: Math.round(kbContent.length / 4), // Rough estimate
-        totalContextTokens:
-          (response.usage?.input_tokens || 0) +
-          (response.usage?.output_tokens || 0),
+        userTokens: 0, // Would need to accumulate from all responses
+        agentTokens: 0,
+        kbTokens: Math.round(kbContent.length / 4),
+        totalContextTokens: 0,
       },
+      toolCalls: toolCallCount,
+      citations: [...new Set(allCitations)], // Deduplicate
     };
   }
 

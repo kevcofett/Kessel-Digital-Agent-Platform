@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Demographic Shift Change Scenario
  *
@@ -17,12 +16,10 @@
  * This tests the "Re-run forecasts after every meaningful input" requirement
  * for demographic targeting changes.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.demographicShiftChangeContext = exports.demographicShiftChangeScenario = exports.demographicShiftPersona = void 0;
 /**
  * Fashion brand marketer with evolving target demo
  */
-exports.demographicShiftPersona = {
+export const demographicShiftPersona = {
     id: "demographic-shift-fashion-manager",
     name: "Taylor",
     title: "Marketing Manager",
@@ -104,13 +101,13 @@ const demographicShiftChange = {
  *
  * Quality Focus: Proactive Reforecasting for demographic changes
  */
-exports.demographicShiftChangeScenario = {
+export const demographicShiftChangeScenario = {
     id: "demographic-shift-change",
     name: "Demographic Shift Change",
     category: "reforecasting",
     description: "Tests proactive reforecasting when user reveals demographic target shift mid-conversation. " +
         "Agent MUST recalculate channel mix, explain generational differences, and recommend adjustments.",
-    persona: exports.demographicShiftPersona,
+    persona: demographicShiftPersona,
     openingMessage: "Hey, I'm Marketing Manager at UrbanStyle Collective, a streetwear brand. " +
         "Need help building our media plan for the year. Budget is $1.5M, goal is 100K new customers. " +
         "We're targeting Millennials 25-40 who are into streetwear and urban fashion. " +
@@ -290,11 +287,11 @@ exports.demographicShiftChangeScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.demographicShiftChangeContext = {
+export const demographicShiftChangeContext = {
     budget: 1500000,
     funnel: "awareness",
     kpiAggressiveness: "moderate",
     userSophistication: "medium",
 };
-exports.default = exports.demographicShiftChangeScenario;
+export default demographicShiftChangeScenario;
 //# sourceMappingURL=demographic-shift-change.js.map

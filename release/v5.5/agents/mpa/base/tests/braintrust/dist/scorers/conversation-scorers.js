@@ -1,27 +1,23 @@
-"use strict";
 /**
  * Conversation-Level Scorers for Multi-Turn MPA Evaluation
  *
  * Scorers that are applied once to the complete conversation.
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.scoreStepCompletionRate = scoreStepCompletionRate;
-exports.scoreConversationEfficiency = scoreConversationEfficiency;
-exports.scoreContextRetention = scoreContextRetention;
-exports.scoreGreetingUniqueness = scoreGreetingUniqueness;
-exports.scoreLoopDetection = scoreLoopDetection;
-exports.calculateFailurePenalty = calculateFailurePenalty;
-exports.scoreStepTransitionQuality = scoreStepTransitionQuality;
-exports.scoreOverallCoherence = scoreOverallCoherence;
-exports.scoreConversation = scoreConversation;
-const sdk_1 = __importDefault(require("@anthropic-ai/sdk"));
-const mpa_multi_turn_types_js_1 = require("../mpa-multi-turn-types.js");
-const anthropic = new sdk_1.default({
-    apiKey: process.env.ANTHROPIC_API_KEY,
-});
+import Anthropic from "@anthropic-ai/sdk";
+import { GRADE_SCORES, } from "../mpa-multi-turn-types.js";
+// Lazy initialization - only create client when needed
+let anthropic = null;
+function getAnthropicClient() {
+    if (!anthropic) {
+        if (!process.env.ANTHROPIC_API_KEY) {
+            throw new Error('ANTHROPIC_API_KEY environment variable is not set');
+        }
+        anthropic = new Anthropic({
+            apiKey: process.env.ANTHROPIC_API_KEY,
+        });
+    }
+    return anthropic;
+}
 // Use Haiku for LLM judges when FAST_SCORING=true (10x faster, minimal quality loss)
 const SCORER_MODEL = process.env.FAST_SCORING === "true"
     ? "claude-3-5-haiku-20241022"
@@ -32,7 +28,7 @@ const SCORER_MODEL = process.env.FAST_SCORING === "true"
 /**
  * Score step completion rate
  */
-function scoreStepCompletionRate(turns, scenario) {
+export function scoreStepCompletionRate(turns, scenario) {
     if (turns.length === 0) {
         return {
             scorer: "step-completion-rate",
@@ -66,7 +62,7 @@ function scoreStepCompletionRate(turns, scenario) {
  * mode's 20-turn cap) that's below the scenario's natural minTurns, hitting that
  * cap is not the agent's fault and should not be harshly penalized.
  */
-function scoreConversationEfficiency(turns, scenario) {
+export function scoreConversationEfficiency(turns, scenario) {
     const actualTurns = turns.length;
     const naturalMin = scenario.minExpectedTurns || scenario.minTurns || 1;
     const maxAllowed = scenario.maxTurns;
@@ -115,7 +111,7 @@ function scoreConversationEfficiency(turns, scenario) {
  * Improved to detect both numeric data and textual concept references.
  * In a natural conversation, the agent builds on previous information.
  */
-function scoreContextRetention(turns) {
+export function scoreContextRetention(turns) {
     if (turns.length < 3) {
         return {
             scorer: "context-retention",
@@ -181,7 +177,7 @@ function scoreContextRetention(turns) {
 /**
  * Score greeting uniqueness (greeting should appear only once)
  */
-function scoreGreetingUniqueness(turns) {
+export function scoreGreetingUniqueness(turns) {
     const greetingPatterns = [
         /hi!?\s*i('m| am) excited to build/i,
         /we will cover ten areas/i,
@@ -209,7 +205,7 @@ function scoreGreetingUniqueness(turns) {
 /**
  * Score loop detection (no repeated questions)
  */
-function scoreLoopDetection(turns) {
+export function scoreLoopDetection(turns) {
     const questionPatterns = [];
     let loopScore = 1.0;
     for (const turn of turns) {
@@ -254,7 +250,7 @@ function calculateStringSimilarity(a, b) {
 /**
  * Calculate failure penalty
  */
-function calculateFailurePenalty(failures) {
+export function calculateFailurePenalty(failures) {
     let penalty = 0;
     penalty += failures.warnings.length * 0.05;
     penalty += failures.major.length * 0.15;
@@ -279,7 +275,8 @@ function calculateFailurePenalty(failures) {
  * Helper to get LLM grade
  */
 async function llmJudge(prompt) {
-    const response = await anthropic.messages.create({
+    const client = getAnthropicClient();
+    const response = await client.messages.create({
         model: SCORER_MODEL,
         max_tokens: 100,
         messages: [{ role: "user", content: prompt }],
@@ -290,7 +287,7 @@ async function llmJudge(prompt) {
 /**
  * Score step transition quality
  */
-async function scoreStepTransitionQuality(turns) {
+export async function scoreStepTransitionQuality(turns) {
     // Find step transitions
     const transitions = [];
     for (let i = 1; i < turns.length; i++) {
@@ -327,7 +324,7 @@ Reply with ONLY one letter: A, B, C, D, or F`;
     const letter = await llmJudge(prompt);
     return {
         scorer: "step-transition-quality",
-        score: mpa_multi_turn_types_js_1.GRADE_SCORES[letter] ?? 0.5,
+        score: GRADE_SCORES[letter] ?? 0.5,
         metadata: { transitions: transitions.length, sampleGrade: letter },
         scope: "conversation",
     };
@@ -335,7 +332,7 @@ Reply with ONLY one letter: A, B, C, D, or F`;
 /**
  * Score overall conversation coherence
  */
-async function scoreOverallCoherence(turns, scenario) {
+export async function scoreOverallCoherence(turns, scenario) {
     if (turns.length < 2) {
         return {
             scorer: "overall-coherence",
@@ -367,7 +364,7 @@ Reply with ONLY one letter: A, B, C, D, or F`;
     const letter = await llmJudge(prompt);
     return {
         scorer: "overall-coherence",
-        score: mpa_multi_turn_types_js_1.GRADE_SCORES[letter] ?? 0.5,
+        score: GRADE_SCORES[letter] ?? 0.5,
         metadata: { grade: letter, turnsEvaluated: Math.min(5, turns.length) },
         scope: "conversation",
     };
@@ -378,7 +375,7 @@ Reply with ONLY one letter: A, B, C, D, or F`;
 /**
  * Score the complete conversation
  */
-async function scoreConversation(turns, scenario, events, failures) {
+export async function scoreConversation(turns, scenario, events, failures) {
     const scores = {};
     // Code-based scorers
     scores["step-completion-rate"] = scoreStepCompletionRate(turns, scenario);
@@ -396,5 +393,5 @@ async function scoreConversation(turns, scenario, events, failures) {
     scores["overall-coherence"] = coherenceScore;
     return scores;
 }
-exports.default = scoreConversation;
+export default scoreConversation;
 //# sourceMappingURL=conversation-scorers.js.map

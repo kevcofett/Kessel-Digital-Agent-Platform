@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Brand Building with Limited Data Scenario
  *
@@ -20,12 +19,10 @@
  * - Agent SHOULD recommend reach/frequency/brand lift measurement
  * - Agent MUST NOT ask 10+ questions about unit economics for awareness
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.brandBuildingLimitedDataContext = exports.brandBuildingLimitedDataScenario = exports.brandBuildingLimitedDataPersona = void 0;
 /**
  * Basic marketing manager persona entering new market with brand awareness goal
  */
-exports.brandBuildingLimitedDataPersona = {
+export const brandBuildingLimitedDataPersona = {
     id: "brand-building-basic",
     name: "Sarah",
     title: "Marketing Manager",
@@ -92,13 +89,13 @@ exports.brandBuildingLimitedDataPersona = {
  *
  * Quality Focus: Teaching + IDK Handling + Funnel-Appropriate Guidance
  */
-exports.brandBuildingLimitedDataScenario = {
+export const brandBuildingLimitedDataScenario = {
     id: "brand-building-limited-data",
     name: "Brand Building with Limited Data",
     category: "phase1-quality",
     description: "Tests quality of guidance for awareness campaign with limited data. " +
         "Agent MUST model with assumptions and avoid performance metric fixation.",
-    persona: exports.brandBuildingLimitedDataPersona,
+    persona: brandBuildingLimitedDataPersona,
     openingMessage: "Hi! I'm the Marketing Manager at GreenLeaf Wellness. We sell natural supplements " +
         "and wellness products. We're launching into the West Coast market - California, " +
         "Oregon, and Washington - and want to build brand awareness there. We have a $500K " +
@@ -322,11 +319,11 @@ exports.brandBuildingLimitedDataScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.brandBuildingLimitedDataContext = {
+export const brandBuildingLimitedDataContext = {
     budget: 500000,
     funnel: "awareness",
     kpiAggressiveness: "moderate",
     userSophistication: "medium",
 };
-exports.default = exports.brandBuildingLimitedDataScenario;
+export default brandBuildingLimitedDataScenario;
 //# sourceMappingURL=brand-building-limited-data.js.map

@@ -1,4 +1,3 @@
-"use strict";
 /**
  * High-Stakes Performance Scenario
  *
@@ -20,12 +19,10 @@
  * - Agent MUST NOT accept aggressive targets without validation
  * - Agent SHOULD teach user about realistic efficiency expectations
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.highStakesPerformanceContext = exports.highStakesPerformanceScenario = exports.highStakesPerformancePersona = void 0;
 /**
  * Sophisticated fintech VP persona with aggressive growth targets
  */
-exports.highStakesPerformancePersona = {
+export const highStakesPerformancePersona = {
     id: "high-stakes-fintech-vp",
     name: "Marcus",
     title: "VP of Growth",
@@ -95,13 +92,13 @@ exports.highStakesPerformancePersona = {
  *
  * Quality Focus: Mentorship + Critical Thinking + Plan Coherence
  */
-exports.highStakesPerformanceScenario = {
+export const highStakesPerformanceScenario = {
     id: "high-stakes-performance",
     name: "High-Stakes Performance Campaign",
     category: "phase1-quality",
     description: "Tests quality of guidance for $2M budget with aggressive $40 CAC target. " +
         "Agent MUST challenge unrealistic targets and show calculations.",
-    persona: exports.highStakesPerformancePersona,
+    persona: highStakesPerformancePersona,
     openingMessage: "Hi, I'm the VP of Growth at PayStream Financial. We're a fintech payments platform. " +
         "I need to build a media plan for next year. We have a $2M budget and need to acquire " +
         "50,000 new merchants. Our merchant LTV is about $850. Can you help me structure this?",
@@ -279,11 +276,11 @@ exports.highStakesPerformanceScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.highStakesPerformanceContext = {
+export const highStakesPerformanceContext = {
     budget: 2000000,
     funnel: "performance",
     kpiAggressiveness: "aggressive",
     userSophistication: "high",
 };
-exports.default = exports.highStakesPerformanceScenario;
+export default highStakesPerformanceScenario;
 //# sourceMappingURL=high-stakes-performance.js.map

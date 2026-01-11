@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Baseline Tracker - Tracks and compares evaluation results against baselines
  *
@@ -9,54 +8,17 @@
  * 4. Improvement tracking
  * 5. Report generation for optimization cycles
  */
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.V5_7_BASELINE_SCORES = void 0;
-exports.loadBaseline = loadBaseline;
-exports.saveBaseline = saveBaseline;
-exports.calculateAggregates = calculateAggregates;
-exports.compareToBaseline = compareToBaseline;
-exports.generateComparisonReport = generateComparisonReport;
-const fs = __importStar(require("fs"));
-const path = __importStar(require("path"));
+import * as fs from "fs";
+import * as path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 // Default baseline file path
 const DEFAULT_BASELINE_PATH = path.join(__dirname, "baselines", "v5_7_baseline.json");
 /**
  * V5.7 Baseline Scores - Established from evaluation run
  */
-exports.V5_7_BASELINE_SCORES = {
+export const V5_7_BASELINE_SCORES = {
     promptVersion: "v5_7_5",
     model: "claude-sonnet-4-20250514",
     timestamp: 1768084084080,
@@ -121,7 +83,7 @@ exports.V5_7_BASELINE_SCORES = {
 /**
  * Load baseline from file or use defaults
  */
-function loadBaseline(filePath) {
+export function loadBaseline(filePath) {
     const targetPath = filePath || DEFAULT_BASELINE_PATH;
     try {
         if (fs.existsSync(targetPath)) {
@@ -137,7 +99,7 @@ function loadBaseline(filePath) {
 /**
  * Save baseline to file
  */
-function saveBaseline(baseline, filePath) {
+export function saveBaseline(baseline, filePath) {
     const targetPath = filePath || DEFAULT_BASELINE_PATH;
     const dir = path.dirname(targetPath);
     if (!fs.existsSync(dir)) {
@@ -149,7 +111,7 @@ function saveBaseline(baseline, filePath) {
 /**
  * Calculate aggregate metrics from scenario scores
  */
-function calculateAggregates(scenarioScores) {
+export function calculateAggregates(scenarioScores) {
     const scores = Object.values(scenarioScores);
     const count = scores.length;
     if (count === 0) {
@@ -185,7 +147,7 @@ function calculateAggregates(scenarioScores) {
 /**
  * Compare current results against baseline
  */
-function compareToBaseline(current, baseline) {
+export function compareToBaseline(current, baseline) {
     const scenarioChanges = [];
     const regressions = [];
     const improvements = [];
@@ -269,7 +231,7 @@ function compareToBaseline(current, baseline) {
 /**
  * Generate a formatted report from comparison results
  */
-function generateComparisonReport(comparison) {
+export function generateComparisonReport(comparison) {
     const lines = [];
     lines.push("# MPA Evaluation Comparison Report");
     lines.push("");
@@ -359,12 +321,12 @@ function formatChangeAbs(change) {
         return val;
     return "0.0";
 }
-exports.default = {
+export default {
     loadBaseline,
     saveBaseline,
     calculateAggregates,
     compareToBaseline,
     generateComparisonReport,
-    V5_7_BASELINE_SCORES: exports.V5_7_BASELINE_SCORES,
+    V5_7_BASELINE_SCORES,
 };
 //# sourceMappingURL=baseline-tracker.js.map

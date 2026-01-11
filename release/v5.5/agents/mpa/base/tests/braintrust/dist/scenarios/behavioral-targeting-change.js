@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Behavioral Targeting Change Scenario
  *
@@ -17,12 +16,10 @@
  * This tests the "Re-run forecasts after every meaningful input" requirement
  * for behavioral targeting changes.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.behavioralTargetingChangeContext = exports.behavioralTargetingChangeScenario = exports.behavioralTargetingPersona = void 0;
 /**
  * Sports nutrition marketer with evolving behavioral focus
  */
-exports.behavioralTargetingPersona = {
+export const behavioralTargetingPersona = {
     id: "behavioral-targeting-nutrition-director",
     name: "Amanda",
     title: "Director of Digital Marketing",
@@ -113,13 +110,13 @@ const behavioralTargetingChange = {
  *
  * Quality Focus: Proactive Reforecasting for behavioral targeting changes
  */
-exports.behavioralTargetingChangeScenario = {
+export const behavioralTargetingChangeScenario = {
     id: "behavioral-targeting-change",
     name: "Behavioral Targeting Change",
     category: "reforecasting",
     description: "Tests proactive reforecasting when user reveals narrow behavioral targeting mid-conversation. " +
         "Agent MUST recalculate audience/efficiency, explain trade-offs, and recommend targeting approach.",
-    persona: exports.behavioralTargetingPersona,
+    persona: behavioralTargetingPersona,
     openingMessage: "Hi, I'm Director of Digital Marketing at EnduraFuel Nutrition. We sell subscription-based " +
         "endurance nutrition products. I need a media plan with $800K budget to acquire 50K new subscribers. " +
         "LTV is about $420. Initially targeting fitness enthusiasts 25-55 across the US.",
@@ -298,11 +295,11 @@ exports.behavioralTargetingChangeScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.behavioralTargetingChangeContext = {
+export const behavioralTargetingChangeContext = {
     budget: 800000,
     funnel: "performance",
     kpiAggressiveness: "moderate",
     userSophistication: "high",
 };
-exports.default = exports.behavioralTargetingChangeScenario;
+export default behavioralTargetingChangeScenario;
 //# sourceMappingURL=behavioral-targeting-change.js.map

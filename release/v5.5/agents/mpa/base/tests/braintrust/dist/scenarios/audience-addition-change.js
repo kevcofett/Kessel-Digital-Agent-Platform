@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Audience Addition Change Scenario
  *
@@ -17,12 +16,10 @@
  * This tests the "Re-run forecasts after every meaningful input" requirement
  * for audience expansion.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.audienceAdditionChangeContext = exports.audienceAdditionChangeScenario = exports.audienceAdditionPersona = void 0;
 /**
  * Financial services marketer adding audience segment
  */
-exports.audienceAdditionPersona = {
+export const audienceAdditionPersona = {
     id: "audience-addition-finserv-vp",
     name: "Christine",
     title: "VP of Marketing",
@@ -122,13 +119,13 @@ const audienceAdditionChange = {
  *
  * Quality Focus: Proactive Reforecasting for audience expansion
  */
-exports.audienceAdditionChangeScenario = {
+export const audienceAdditionChangeScenario = {
     id: "audience-addition-change",
     name: "Audience Addition Change",
     category: "reforecasting",
     description: "Tests proactive reforecasting when user reveals additional audience segment mid-conversation. " +
         "Agent MUST recalculate allocations, explain complexity, and recommend multi-audience approach.",
-    persona: exports.audienceAdditionPersona,
+    persona: audienceAdditionPersona,
     openingMessage: "Hi, I'm VP of Marketing at WealthPath Advisors, a wealth management firm. " +
         "I need to build a media plan to generate 5,000 qualified leads with a $2M budget. " +
         "Our target is high-net-worth individuals 55+ who are approaching or in retirement, " +
@@ -310,11 +307,11 @@ exports.audienceAdditionChangeScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.audienceAdditionChangeContext = {
+export const audienceAdditionChangeContext = {
     budget: 2000000,
     funnel: "consideration",
     kpiAggressiveness: "moderate",
     userSophistication: "high",
 };
-exports.default = exports.audienceAdditionChangeScenario;
+export default audienceAdditionChangeScenario;
 //# sourceMappingURL=audience-addition-change.js.map

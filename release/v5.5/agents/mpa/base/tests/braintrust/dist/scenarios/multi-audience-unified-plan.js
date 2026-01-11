@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Multi-Audience Unified Plan Scenario
  *
@@ -22,12 +21,10 @@
  * - Agent MUST maintain clarity on which signals apply to which segment
  * - Agent SHOULD recommend segment-level measurement approach
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.multiAudienceUnifiedPlanContext = exports.multiAudienceUnifiedPlanScenario = exports.multiAudienceUnifiedPersona = void 0;
 /**
  * Marketing director with multi-segment campaign requirements
  */
-exports.multiAudienceUnifiedPersona = {
+export const multiAudienceUnifiedPersona = {
     id: "multi-audience-unified",
     name: "Jennifer",
     title: "Director of Marketing",
@@ -101,14 +98,14 @@ exports.multiAudienceUnifiedPersona = {
 /**
  * Multi-Audience Unified Plan Test Scenario
  */
-exports.multiAudienceUnifiedPlanScenario = {
+export const multiAudienceUnifiedPlanScenario = {
     id: "multi-audience-unified-plan",
     name: "Multi-Audience Unified Media Plan",
     category: "phase1-quality",
     description: "Tests agent's ability to handle multiple distinct target audiences with " +
         "different geo, demographic, behavioral, and contextual signals within " +
         "a single media plan. Agent MUST maintain clarity on segment definitions.",
-    persona: exports.multiAudienceUnifiedPersona,
+    persona: multiAudienceUnifiedPersona,
     openingMessage: "Hi, I'm the Director of Marketing at TrueHealth Insurance. We need to build a " +
         "media plan targeting three very different audience segments for our health insurance products. " +
         "Total budget is $3M, goal is 25,000 new enrollees across all segments.\n\n" +
@@ -296,11 +293,11 @@ exports.multiAudienceUnifiedPlanScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.multiAudienceUnifiedPlanContext = {
+export const multiAudienceUnifiedPlanContext = {
     budget: 3000000,
     funnel: "performance",
     kpiAggressiveness: "moderate",
     userSophistication: "high",
 };
-exports.default = exports.multiAudienceUnifiedPlanScenario;
+export default multiAudienceUnifiedPlanScenario;
 //# sourceMappingURL=multi-audience-unified-plan.js.map

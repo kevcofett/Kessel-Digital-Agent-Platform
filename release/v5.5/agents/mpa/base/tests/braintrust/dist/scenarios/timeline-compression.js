@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Timeline Compression Scenario
  *
@@ -16,12 +15,10 @@
  *
  * This tests proactive reforecasting when constraints become tighter.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.timelineCompressionContext = exports.timelineCompressionScenario = exports.timelineCompressionPersona = void 0;
 /**
  * Retail marketer with changing timeline
  */
-exports.timelineCompressionPersona = {
+export const timelineCompressionPersona = {
     id: "timeline-compression-retail-vp",
     name: "Michelle",
     title: "VP of Marketing",
@@ -106,13 +103,13 @@ const timelineCompressionChange = {
  *
  * Quality Focus: Proactive Reforecasting + Pacing Strategy
  */
-exports.timelineCompressionScenario = {
+export const timelineCompressionScenario = {
     id: "timeline-compression",
     name: "Timeline Compression",
     category: "reforecasting",
     description: "Tests proactive reforecasting when user reveals compressed timeline. " +
         "Agent MUST recalculate pacing, flag saturation risks, and recommend strategy.",
-    persona: exports.timelineCompressionPersona,
+    persona: timelineCompressionPersona,
     openingMessage: "Hi, I'm the VP of Marketing at Urban Essentials, a fashion retail brand. " +
         "We're planning our media strategy for the coming year. Budget is $1.2M, " +
         "and we need to acquire 25,000 new customers over the next 12 months. " +
@@ -298,11 +295,11 @@ exports.timelineCompressionScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.timelineCompressionContext = {
+export const timelineCompressionContext = {
     budget: 1200000,
     funnel: "performance",
     kpiAggressiveness: "aggressive", // After timeline compression
     userSophistication: "high",
 };
-exports.default = exports.timelineCompressionScenario;
+export default timelineCompressionScenario;
 //# sourceMappingURL=timeline-compression.js.map

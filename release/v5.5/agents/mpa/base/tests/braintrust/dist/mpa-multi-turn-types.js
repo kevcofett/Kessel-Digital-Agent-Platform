@@ -1,16 +1,12 @@
-"use strict";
 /**
  * MPA Multi-Turn Evaluation Type Definitions
  *
  * Comprehensive type system for multi-turn conversation evaluation.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.GRADE_SCORES = exports.SCORER_WEIGHTS = exports.MPA_STEPS = void 0;
-exports.createInitialConversationState = createInitialConversationState;
 /**
  * Initialize empty conversation state
  */
-function createInitialConversationState(budget = 0, funnel = "performance", kpiAggressiveness = "moderate", userSophistication = "medium") {
+export function createInitialConversationState(budget = 0, funnel = "performance", kpiAggressiveness = "moderate", userSophistication = "medium") {
     return {
         collectedData: {},
         calculationsPerformed: [],
@@ -28,7 +24,7 @@ function createInitialConversationState(budget = 0, funnel = "performance", kpiA
 /**
  * The 10 MPA steps
  */
-exports.MPA_STEPS = [
+export const MPA_STEPS = [
     {
         step: 1,
         name: "Outcomes",
@@ -114,37 +110,39 @@ exports.MPA_STEPS = [
 // SCORING CONSTANTS
 // =============================================================================
 /**
- * Scorer weight configuration
+ * Scorer weight configuration (SCORER_SPECIFICATION_v2)
+ *
+ * 14 optimized scorers in 3 tiers:
+ * - Tier 1: Core Quality (65%)
+ * - Tier 2: Structural Compliance (20%)
+ * - Tier 3: Advanced Quality (15%)
+ *
+ * Total: 100%
  */
-exports.SCORER_WEIGHTS = {
-    // Per-turn scorers - Quality behaviors (in priority order)
-    "proactive-intelligence": 0.12, // #1: Does agent do math proactively?
-    "calculation-presence": 0.10, // #2: Is agent modeling/calculating?
-    "precision-connection": 0.08, // #3: Connects precision to CAC target
-    "risk-opportunity-flagging": 0.07, // #4: Does agent flag risks/opportunities?
-    "audience-completeness": 0.07, // #5: Collects all 4 dimensions with appropriate depth
-    "audience-sizing": 0.06, // #6: Presents audience SIZE table properly
-    "progress-over-perfection": 0.05, // #7: Maintains momentum
-    "adaptive-sophistication": 0.04, // #8: Language matches user
-    "response-formatting": 0.03, // #9: Visual hierarchy, calculations on own line
-    // Per-turn scorers - Compliance behaviors (in priority order)
-    "source-citation": 0.08, // #1: Cite data sources - CRITICAL
-    "step-boundary": 0.05, // #2: Don't discuss channels in Steps 1-2
-    "idk-protocol": 0.04, // #3: Handle "I don't know" properly
-    "single-question": 0.03, // #4: Question discipline
-    "acronym-definition": 0.02, // #5: Define acronyms
-    "response-length": 0.02, // #6: Keep responses concise
-    // Conversation-level scorers (in priority order)
-    "context-retention": 0.05, // #1: Remember user data
-    "step-completion-rate": 0.04, // #2: Complete the steps
-    "conversation-efficiency": 0.03, // #3: Efficient turn count
-    "loop-detection": 0.01, // #4: No question loops
-    "greeting-uniqueness": 0.01, // #5: Don't repeat greeting
+export const SCORER_WEIGHTS = {
+    // Tier 1: Core Quality (65%)
+    "proactive-calculation": 0.15, // Shows math when data available, compares to benchmark
+    "teaching-behavior": 0.12, // Teaches strategic reasoning vs interrogates
+    "feasibility-framing": 0.10, // Frames target feasibility with evidence + path forward
+    "source-citation": 0.10, // 5-source citation format
+    "recalculation-on-change": 0.08, // Recalculates when data changes
+    "risk-opportunity-flagging": 0.05, // Proactively flags risks/opportunities
+    "adaptive-sophistication": 0.05, // Language matches user level
+    // Tier 2: Structural Compliance (20%)
+    "step-boundary": 0.06, // No channel recommendations in Steps 1-2
+    "single-question": 0.05, // One question per response, max
+    "idk-protocol": 0.04, // Handle "I don't know" properly
+    "response-length": 0.03, // Under 75 words when possible
+    "acronym-definition": 0.02, // Define acronyms on first use
+    // Tier 3: Advanced Quality (15%)
+    "audience-sizing-completeness": 0.06, // Table with 7 components
+    "cross-step-synthesis": 0.05, // References earlier step insights
+    "response-formatting": 0.04, // Visual hierarchy, calculations on own line
 };
 /**
  * LLM grade to score mapping
  */
-exports.GRADE_SCORES = {
+export const GRADE_SCORES = {
     A: 1.0,
     B: 0.8,
     C: 0.5,

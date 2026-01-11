@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Reforecasting Scorers for Multi-Turn MPA Evaluation
  *
@@ -9,10 +8,6 @@
  * 3. Explain the strategic impact
  * 4. Recommend actions to address
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.scoreReforecasting = scoreReforecasting;
-exports.createDataRevisionRecord = createDataRevisionRecord;
-exports.updateRevisionRecord = updateRevisionRecord;
 // =============================================================================
 // DETECTION HELPERS
 // =============================================================================
@@ -155,7 +150,7 @@ function detectsActionRecommendation(response) {
  *
  * If no data changes occurred, returns 1.0 (perfect - nothing to reforecast)
  */
-function scoreReforecasting(turns, dataRevisions) {
+export function scoreReforecasting(turns, dataRevisions) {
     // If no data revisions occurred, no reforecasting was needed
     if (!dataRevisions || dataRevisions.length === 0) {
         return {
@@ -225,7 +220,7 @@ function scoreReforecasting(turns, dataRevisions) {
  * Call this after the user simulator triggers a data change to create
  * the revision record for tracking agent response.
  */
-function createDataRevisionRecord(turnNumber, dataChange) {
+export function createDataRevisionRecord(turnNumber, dataChange) {
     return {
         turnNumber,
         field: dataChange.field,
@@ -243,7 +238,7 @@ function createDataRevisionRecord(turnNumber, dataChange) {
  * Call this after getting the agent's response to a data change
  * to record how well the agent handled it.
  */
-function updateRevisionRecord(record, agentResponse) {
+export function updateRevisionRecord(record, agentResponse) {
     return {
         ...record,
         agentAcknowledged: detectsChangeAcknowledgment(agentResponse, record.field),

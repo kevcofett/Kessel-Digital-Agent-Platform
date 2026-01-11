@@ -14,9 +14,20 @@ import { config } from "dotenv";
 // Load environment variables
 config({ path: "/Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/integrations/vercel-ai-gateway/.env" });
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+// Lazy initialization - only create client when needed
+let anthropic: Anthropic | null = null;
+
+function getAnthropicClient(): Anthropic {
+  if (!anthropic) {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error('ANTHROPIC_API_KEY environment variable is not set');
+    }
+    anthropic = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
+    });
+  }
+  return anthropic;
+}
 
 // MPA v5_7_3 System Prompt
 const MPA_SYSTEM_PROMPT = `FIRST RESPONSE FORMAT
@@ -328,7 +339,7 @@ async function runMPA(input: { message: string; context?: string }, kbContent?: 
     content: input.message,
   });
 
-  const response = await anthropic.messages.create({
+  const response = await getAnthropicClient().messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 1024,
     system: systemPrompt,
@@ -399,7 +410,7 @@ function scoreStepBoundary(output: string, currentStep: number): { score: number
 }
 
 async function scoreProgressOverPerfection(input: string, output: string): Promise<{ score: number; metadata: Record<string, unknown> }> {
-  const response = await anthropic.messages.create({
+  const response = await getAnthropicClient().messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 100,
     messages: [{
@@ -426,7 +437,7 @@ Reply with ONLY a single letter: A, B, C, D, or F`,
 }
 
 async function scoreAdaptiveSophistication(input: string, output: string): Promise<{ score: number; metadata: Record<string, unknown> }> {
-  const response = await anthropic.messages.create({
+  const response = await getAnthropicClient().messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 100,
     messages: [{
@@ -457,7 +468,7 @@ async function scoreProactiveIntelligence(input: string, output: string, hasEnou
     return { score: 1.0, metadata: { status: "not_applicable" } };
   }
 
-  const response = await anthropic.messages.create({
+  const response = await getAnthropicClient().messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 100,
     messages: [{

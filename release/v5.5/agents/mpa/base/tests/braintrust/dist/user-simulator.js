@@ -1,17 +1,9 @@
-"use strict";
 /**
  * User Simulator for Multi-Turn MPA Evaluation
  *
  * Simulates realistic user behavior based on defined personas.
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserSimulator = void 0;
-exports.buildUserSimulatorPrompt = buildUserSimulatorPrompt;
-exports.parseUserResponse = parseUserResponse;
-const sdk_1 = __importDefault(require("@anthropic-ai/sdk"));
+import Anthropic from "@anthropic-ai/sdk";
 const DEFAULT_CONFIG = {
     model: "claude-sonnet-4-20250514",
     temperature: 0.8, // Slightly higher for natural variation
@@ -168,12 +160,12 @@ function parseUserResponse(response, persona) {
 /**
  * User Simulator class
  */
-class UserSimulator {
+export class UserSimulator {
     anthropic;
     config;
     constructor(config = {}) {
         this.config = { ...DEFAULT_CONFIG, ...config };
-        this.anthropic = new sdk_1.default({
+        this.anthropic = new Anthropic({
             apiKey: process.env.ANTHROPIC_API_KEY,
         });
     }
@@ -262,5 +254,5 @@ class UserSimulator {
         };
     }
 }
-exports.UserSimulator = UserSimulator;
+export { buildUserSimulatorPrompt, parseUserResponse };
 //# sourceMappingURL=user-simulator.js.map

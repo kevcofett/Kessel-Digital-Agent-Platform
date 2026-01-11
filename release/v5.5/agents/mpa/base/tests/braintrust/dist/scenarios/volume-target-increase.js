@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Volume Target Increase Scenario
  *
@@ -16,12 +15,10 @@
  *
  * This tests proactive reforecasting when targets become more aggressive.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.volumeTargetIncreaseContext = exports.volumeTargetIncreaseScenario = exports.volumeTargetIncreasePersona = void 0;
 /**
  * E-commerce marketer with changing volume targets
  */
-exports.volumeTargetIncreasePersona = {
+export const volumeTargetIncreasePersona = {
     id: "volume-increase-ecom-manager",
     name: "Jason",
     title: "Marketing Manager",
@@ -106,13 +103,13 @@ const volumeTargetIncreaseChange = {
  *
  * Quality Focus: Proactive Reforecasting + Critical Thinking
  */
-exports.volumeTargetIncreaseScenario = {
+export const volumeTargetIncreaseScenario = {
     id: "volume-target-increase",
     name: "Volume Target Increase",
     category: "reforecasting",
     description: "Tests proactive reforecasting when user reveals increased volume targets. " +
         "Agent MUST recalculate efficiency, flag feasibility concerns, and recommend changes.",
-    persona: exports.volumeTargetIncreasePersona,
+    persona: volumeTargetIncreasePersona,
     openingMessage: "Hi, I'm the Marketing Manager at HomeStyle Direct. We're an e-commerce company " +
         "selling home goods. I need to build a media plan for Q1-Q2. We have a $400K budget " +
         "and need to acquire 5,000 new customers. Our average customer LTV is $320. " +
@@ -297,11 +294,11 @@ exports.volumeTargetIncreaseScenario = {
 /**
  * Context configuration for quality scoring
  */
-exports.volumeTargetIncreaseContext = {
+export const volumeTargetIncreaseContext = {
     budget: 400000,
     funnel: "performance",
     kpiAggressiveness: "aggressive", // After target increase
     userSophistication: "medium",
 };
-exports.default = exports.volumeTargetIncreaseScenario;
+export default volumeTargetIncreaseScenario;
 //# sourceMappingURL=volume-target-increase.js.map

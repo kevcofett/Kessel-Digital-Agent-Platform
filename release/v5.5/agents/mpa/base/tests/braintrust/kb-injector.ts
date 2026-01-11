@@ -2,6 +2,7 @@
  * KB Injector for Multi-Turn MPA Evaluation
  *
  * Simulates RAG by injecting relevant KB content at each step.
+ * Updated to reference actual KB files that exist in the repository.
  */
 
 import * as fs from "fs/promises";
@@ -11,24 +12,32 @@ const KB_BASE_PATH =
   "/Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/agents/mpa/base/kb";
 
 /**
- * KB file mapping by step
+ * KB file mapping by step - uses ACTUAL files that exist
  */
 export const KB_FILES_BY_STEP: Record<number, string[]> = {
-  1: ["MPA_Supporting_Instructions_v5_5.txt"],
+  1: [
+    "Strategic_Wisdom_v5_5.txt",
+    "MPA_Conversation_Examples_v5_5.txt",
+  ],
   2: [
-    "MPA_Supporting_Instructions_v5_5.txt",
+    "Analytics_Engine_v5_5.txt",
     "MPA_Expert_Lens_Budget_Allocation_v5_5.txt",
   ],
   3: [
     "MPA_Expert_Lens_Audience_Strategy_v5_5.txt",
     "MPA_Implications_Audience_Targeting_v5_5.txt",
   ],
-  4: ["MPA_Geography_DMA_Planning_v5_5.txt"],
+  4: [
+    "MPA_Implications_Audience_Targeting_v5_5.txt",
+  ],
   5: [
     "MPA_Expert_Lens_Budget_Allocation_v5_5.txt",
     "MPA_Implications_Budget_Decisions_v5_5.txt",
   ],
-  6: ["MPA_Conversation_Examples_v5_5.txt"],
+  6: [
+    "MPA_Conversation_Examples_v5_5.txt",
+    "BRAND_PERFORMANCE_FRAMEWORK_v5_5.txt",
+  ],
   7: [
     "MPA_Expert_Lens_Channel_Mix_v5_5.txt",
     "MPA_Implications_Channel_Shifts_v5_5.txt",
@@ -36,18 +45,26 @@ export const KB_FILES_BY_STEP: Record<number, string[]> = {
   8: [
     "MPA_Expert_Lens_Measurement_Attribution_v5_5.txt",
     "MPA_Implications_Measurement_Choices_v5_5.txt",
+    "MEASUREMENT_FRAMEWORK_v5_5.txt",
   ],
-  9: ["MPA_Supporting_Instructions_v5_5.txt"],
-  10: ["MPA_Supporting_Instructions_v5_5.txt"],
+  9: [
+    "Gap_Detection_Playbook_v5_5.txt",
+    "MPA_Implications_Timing_Pacing_v5_5.txt",
+  ],
+  10: [
+    "Gap_Detection_Playbook_v5_5.txt",
+    "Confidence_Level_Framework_v5_5.txt",
+  ],
 };
 
 /**
  * KB files that are always included in every step
+ * These files MUST exist in the kb directory
  */
 const ALWAYS_INCLUDE_KB = [
-  "MPA_Adaptive_Language_v5_5.txt",      // Sophistication matching
-  "MPA_Calculation_Display_v5_5.txt",    // Visible math patterns
-  "MPA_Step_Boundary_Guidance_v5_5.txt", // Step boundary and question discipline
+  "KB_00_Agent_Core_Operating_Standards.txt",
+  "Data_Provenance_Framework_v5_5.txt",
+  "MPA_Supporting_Instructions_v5_5.txt",
 ];
 
 /**
@@ -139,6 +156,7 @@ export class KBInjector {
   private formatKBContent(fileName: string, content: string): string {
     const docName = fileName
       .replace(/_v5_5\.txt$/, "")
+      .replace(/\.txt$/, "")
       .replace(/_/g, " ")
       .toUpperCase();
     return `[KNOWLEDGE BASE: ${docName}]\n\n${content}\n\n[END KB: ${docName}]`;

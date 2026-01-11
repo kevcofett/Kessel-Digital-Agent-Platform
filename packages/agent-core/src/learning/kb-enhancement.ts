@@ -82,7 +82,7 @@ interface EnhancementIndex {
 /**
  * KB Enhancement system for identifying knowledge gaps
  */
-export class KBEnhancement {
+export class KBEnhancementSystem {
   private storage: StorageProvider;
   private config: KBEnhancementConfig;
   private indexCache: EnhancementIndex | null = null;
@@ -526,4 +526,4 @@ export class KBEnhancement {
   }
 }
 
-export default KBEnhancement;
+export default KBEnhancementSystem;

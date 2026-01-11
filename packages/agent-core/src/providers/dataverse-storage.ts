@@ -26,6 +26,8 @@ export class DataverseStorageProvider implements StorageProvider {
   private url: string | undefined;
   private clientId: string | undefined;
   private clientSecret: string | undefined;
+  // Reserved for future OAuth2 implementation
+  // @ts-expect-error Reserved for future implementation
   private accessToken: string | undefined;
 
   constructor(config?: EnvironmentConfig) {

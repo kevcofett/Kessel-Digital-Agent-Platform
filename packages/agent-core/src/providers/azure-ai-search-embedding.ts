@@ -25,6 +25,8 @@ export class AzureAISearchEmbeddingProvider implements EmbeddingProvider {
 
   private endpoint: string | undefined;
   private apiKey: string | undefined;
+  // Reserved for future implementation of index operations
+  // @ts-expect-error Reserved for future implementation
   private indexName: string | undefined;
   private initialized: boolean = false;
   private dimension: number = 1536; // Default for text-embedding-ada-002

@@ -12,23 +12,51 @@ export const RAG_CONFIG = {
         overlapTokens: 50,
     },
     embedding: {
-        maxFeatures: 1000,
+        maxFeatures: 1500, // Increased from 1000 for larger vocabulary
         minDocFreq: 2,
         maxDocFreqRatio: 0.95,
     },
     retrieval: {
         defaultTopK: 5,
-        minScore: 0.2,
+        minScore: 0.25, // Increased from 0.2 to reduce noise
         semanticWeight: 0.6,
         keywordWeight: 0.4,
-        benchmarkBoost: 1.5,
-        exactMatchBoost: 2.0,
+        benchmarkBoost: 2.0, // Increased from 1.5 for stronger benchmark priority
+        exactMatchBoost: 1.5, // Reduced from 2.0 to reduce over-emphasis
     },
     paths: {
         kbDirectory: '../../../kb',
         chunksCache: './rag-cache/kb-chunks.json',
         indexCache: './rag-cache/kb-index.json',
+    },
+    cache: {
+        queryEmbeddingCacheSize: 100, // LRU cache size for query embeddings
     }
+};
+// ============================================================================
+// SYNONYM MAPPINGS (for query expansion and document processing)
+// ============================================================================
+/**
+ * Synonym mappings for key MPA terms.
+ * Maps canonical terms to their variations for improved search matching.
+ * Used by both document processor (for indexing) and retrieval engine (for query expansion).
+ */
+export const SYNONYM_MAPPINGS = {
+    'ltv': ['lifetime value', 'customer lifetime value', 'clv', 'cltv'],
+    'cac': ['customer acquisition cost', 'acquisition cost', 'cost of acquisition'],
+    'roas': ['return on ad spend', 'return on advertising spend', 'ad return'],
+    'cpm': ['cost per thousand', 'cost per mille'],
+    'cpa': ['cost per acquisition', 'cost per action', 'acquisition cost'],
+    'ctr': ['click through rate', 'click-through rate', 'clickthrough rate'],
+    'cvr': ['conversion rate', 'conv rate'],
+    'aov': ['average order value', 'avg order value'],
+    'channel mix': ['media mix', 'allocation', 'channel allocation', 'media allocation'],
+    'benchmark': ['typical', 'industry standard', 'average', 'baseline', 'norm'],
+    'kpi': ['key performance indicator', 'metric', 'target metric'],
+    'incrementality': ['incremental lift', 'incremental value', 'lift'],
+    'attribution': ['credit', 'contribution', 'touchpoint credit'],
+    'reach': ['audience reach', 'addressable audience'],
+    'frequency': ['ad frequency', 'exposure frequency', 'avg frequency'],
 };
 // ============================================================================
 // KEYWORD MAPPINGS

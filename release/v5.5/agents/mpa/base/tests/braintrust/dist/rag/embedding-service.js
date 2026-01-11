@@ -11,11 +11,15 @@ export class EmbeddingService {
     idfValues;
     dimension;
     initialized = false;
+    // LRU cache for query embeddings
+    queryCache = new Map();
+    cacheSize;
     constructor() {
         this.tfidf = new TfIdf();
         this.vocabulary = new Map();
         this.idfValues = new Map();
         this.dimension = RAG_CONFIG.embedding.maxFeatures;
+        this.cacheSize = RAG_CONFIG.cache.queryEmbeddingCacheSize;
     }
     /**
      * Initialize with corpus to build vocabulary
@@ -56,14 +60,24 @@ export class EmbeddingService {
         console.log(`Vocabulary built with ${this.vocabulary.size} terms`);
     }
     /**
-     * Generate embedding for text
+     * Generate embedding for text (with LRU caching)
      */
     embed(text) {
         if (!this.initialized) {
             throw new Error('EmbeddingService not initialized. Call initialize() first.');
         }
+        // Check cache first
+        const cacheKey = text.toLowerCase().trim();
+        if (this.queryCache.has(cacheKey)) {
+            // Move to end (most recently used) by re-inserting
+            const cached = this.queryCache.get(cacheKey);
+            this.queryCache.delete(cacheKey);
+            this.queryCache.set(cacheKey, cached);
+            return cached;
+        }
+        // Generate new embedding
         const embedding = new Array(this.dimension).fill(0);
-        const tokens = tokenizer.tokenize(text.toLowerCase()) || [];
+        const tokens = tokenizer.tokenize(cacheKey) || [];
         const termFreq = new Map();
         // Count term frequencies
         for (const token of tokens) {
@@ -80,7 +94,17 @@ export class EmbeddingService {
             }
         }
         // L2 normalize
-        return this.normalize(embedding);
+        const normalizedEmbedding = this.normalize(embedding);
+        // Add to cache with LRU eviction
+        if (this.queryCache.size >= this.cacheSize) {
+            // Delete oldest entry (first key in Map)
+            const firstKey = this.queryCache.keys().next().value;
+            if (firstKey !== undefined) {
+                this.queryCache.delete(firstKey);
+            }
+        }
+        this.queryCache.set(cacheKey, normalizedEmbedding);
+        return normalizedEmbedding;
     }
     /**
      * Generate embeddings for multiple texts

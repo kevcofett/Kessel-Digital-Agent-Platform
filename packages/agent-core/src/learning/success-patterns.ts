@@ -14,7 +14,6 @@ import {
   SuccessPattern,
   PatternType,
   ResponseElement,
-  PatternExample,
   ResponseCritique,
   LearningConfig,
   DEFAULT_LEARNING_CONFIG,

@@ -23,6 +23,6 @@ export {
 
 // KB enhancement
 export {
-  KBEnhancement,
+  KBEnhancementSystem,
   type KBEnhancementConfig,
 } from './kb-enhancement.js';

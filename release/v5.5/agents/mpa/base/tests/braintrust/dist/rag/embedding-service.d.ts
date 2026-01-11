@@ -8,13 +8,15 @@ export declare class EmbeddingService {
     private idfValues;
     private dimension;
     private initialized;
+    private queryCache;
+    private readonly cacheSize;
     constructor();
     /**
      * Initialize with corpus to build vocabulary
      */
     initialize(chunks: DocumentChunk[]): Promise<void>;
     /**
-     * Generate embedding for text
+     * Generate embedding for text (with LRU caching)
      */
     embed(text: string): number[];
     /**

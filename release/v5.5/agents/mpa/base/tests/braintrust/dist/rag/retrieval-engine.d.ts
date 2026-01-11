@@ -19,6 +19,11 @@ export declare class RetrievalEngine {
      */
     private ensureInitialized;
     /**
+     * Expand query with synonyms for improved retrieval.
+     * If query contains any synonym, adds the canonical term.
+     */
+    private expandQuery;
+    /**
      * General knowledge search
      */
     search(query: string, options?: SearchOptions): Promise<RetrievalResult[]>;

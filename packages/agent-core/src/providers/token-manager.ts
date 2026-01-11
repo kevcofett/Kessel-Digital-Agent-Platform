@@ -85,15 +85,31 @@ export class TokenAcquisitionError extends Error {
 }
 
 /**
+ * Token manager resolved configuration (with defaults applied)
+ */
+interface ResolvedTokenManagerConfig {
+  tenantId: string;
+  clientId: string;
+  clientSecret: string | undefined;
+  scope: string;
+  tokenEndpoint: string;
+  refreshBuffer: number;
+  maxRetries: number;
+}
+
+/**
  * Token Manager for handling OAuth2 authentication
  */
 export class TokenManager {
-  private config: Required<TokenManagerConfig>;
+  private config: ResolvedTokenManagerConfig;
   private tokenCache: Map<string, CachedToken> = new Map();
 
   constructor(config: TokenManagerConfig) {
     this.config = {
-      ...config,
+      tenantId: config.tenantId,
+      clientId: config.clientId,
+      clientSecret: config.clientSecret,
+      scope: config.scope,
       tokenEndpoint: config.tokenEndpoint ||
         `https://login.microsoftonline.com/${config.tenantId}/oauth2/v2.0/token`,
       refreshBuffer: config.refreshBuffer ?? 300,

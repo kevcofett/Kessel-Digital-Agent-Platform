@@ -1,7 +1,7 @@
 /**
  * Retrieval Engine - High-level RAG interface
  */
-import { RAG_CONFIG, } from './types.js';
+import { RAG_CONFIG, SYNONYM_MAPPINGS, } from './types.js';
 import { DocumentProcessor } from './document-processor.js';
 import { EmbeddingService } from './embedding-service.js';
 import { VectorStore } from './vector-store.js';
@@ -64,20 +64,47 @@ export class RetrievalEngine {
         }
     }
     /**
+     * Expand query with synonyms for improved retrieval.
+     * If query contains any synonym, adds the canonical term.
+     */
+    expandQuery(query) {
+        let expanded = query.toLowerCase();
+        const addedTerms = [];
+        for (const [canonical, synonyms] of Object.entries(SYNONYM_MAPPINGS)) {
+            // If query already contains the canonical term, skip
+            if (expanded.includes(canonical))
+                continue;
+            // Check if query contains any synonym
+            for (const syn of synonyms) {
+                if (expanded.includes(syn)) {
+                    addedTerms.push(canonical);
+                    break;
+                }
+            }
+        }
+        // Append canonical terms to query
+        if (addedTerms.length > 0) {
+            expanded = `${expanded} ${addedTerms.join(' ')}`;
+        }
+        return expanded;
+    }
+    /**
      * General knowledge search
      */
     async search(query, options = {}) {
         await this.ensureInitialized();
         const { topK = RAG_CONFIG.retrieval.defaultTopK, minScore = RAG_CONFIG.retrieval.minScore, filters, } = options;
-        // Generate query embedding
-        const queryEmbedding = this.embeddingService.embed(query);
-        // Search
+        // Expand query with synonyms
+        const expandedQuery = this.expandQuery(query);
+        // Generate query embedding (using expanded query)
+        const queryEmbedding = this.embeddingService.embed(expandedQuery);
+        // Search (use original query for keyword matching, expanded for semantic)
         let results;
         if (filters) {
-            results = this.vectorStore.searchFiltered(query, queryEmbedding, filters, topK);
+            results = this.vectorStore.searchFiltered(expandedQuery, queryEmbedding, filters, topK);
         }
         else {
-            results = this.vectorStore.searchHybrid(query, queryEmbedding, topK);
+            results = this.vectorStore.searchHybrid(expandedQuery, queryEmbedding, topK);
         }
         // Filter by minimum score and format results
         return results
@@ -89,11 +116,12 @@ export class RetrievalEngine {
      */
     async getBenchmark(vertical, metric) {
         await this.ensureInitialized();
-        // Build targeted query
-        const query = `${vertical} ${metric} benchmark typical range`;
-        const queryEmbedding = this.embeddingService.embed(query);
+        // Build targeted query with expansion
+        const baseQuery = `${vertical} ${metric} benchmark typical range`;
+        const expandedQuery = this.expandQuery(baseQuery);
+        const queryEmbedding = this.embeddingService.embed(expandedQuery);
         // Search with benchmark filter
-        const results = this.vectorStore.searchFiltered(query, queryEmbedding, {
+        const results = this.vectorStore.searchFiltered(expandedQuery, queryEmbedding, {
             mustHaveBenchmarks: true,
             verticals: [vertical.toLowerCase()],
         }, 10);
@@ -182,11 +210,12 @@ export class RetrievalEngine {
      */
     async getAudienceSizing(audienceType, geography) {
         await this.ensureInitialized();
-        // Build query
-        const query = `${audienceType} audience size ${geography || 'national'} population percentage`;
-        const queryEmbedding = this.embeddingService.embed(query);
+        // Build query with expansion
+        const baseQuery = `${audienceType} audience size ${geography || 'national'} population percentage`;
+        const expandedQuery = this.expandQuery(baseQuery);
+        const queryEmbedding = this.embeddingService.embed(expandedQuery);
         // Search with audience filter
-        const results = this.vectorStore.searchFiltered(query, queryEmbedding, {
+        const results = this.vectorStore.searchFiltered(expandedQuery, queryEmbedding, {
             topics: ['audience'],
         }, 10);
         if (results.length > 0) {

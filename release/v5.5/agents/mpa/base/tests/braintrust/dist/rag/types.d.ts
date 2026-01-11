@@ -109,24 +109,33 @@ export declare const RAG_CONFIG: {
         readonly overlapTokens: 50;
     };
     readonly embedding: {
-        readonly maxFeatures: 1000;
+        readonly maxFeatures: 1500;
         readonly minDocFreq: 2;
         readonly maxDocFreqRatio: 0.95;
     };
     readonly retrieval: {
         readonly defaultTopK: 5;
-        readonly minScore: 0.2;
+        readonly minScore: 0.25;
         readonly semanticWeight: 0.6;
         readonly keywordWeight: 0.4;
-        readonly benchmarkBoost: 1.5;
-        readonly exactMatchBoost: 2;
+        readonly benchmarkBoost: 2;
+        readonly exactMatchBoost: 1.5;
     };
     readonly paths: {
         readonly kbDirectory: "../../../kb";
         readonly chunksCache: "./rag-cache/kb-chunks.json";
         readonly indexCache: "./rag-cache/kb-index.json";
     };
+    readonly cache: {
+        readonly queryEmbeddingCacheSize: 100;
+    };
 };
+/**
+ * Synonym mappings for key MPA terms.
+ * Maps canonical terms to their variations for improved search matching.
+ * Used by both document processor (for indexing) and retrieval engine (for query expansion).
+ */
+export declare const SYNONYM_MAPPINGS: Record<string, string[]>;
 export declare const TOPIC_KEYWORDS: Record<Topic, string[]>;
 export declare const STEP_KEYWORDS: Record<number, string[]>;
 export declare const DOCUMENT_TYPE_PATTERNS: Record<DocumentType, RegExp[]>;

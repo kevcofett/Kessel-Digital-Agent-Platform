@@ -10,28 +10,7 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import { RAG_CONFIG, TOPIC_KEYWORDS, STEP_KEYWORDS, DOCUMENT_TYPE_PATTERNS, } from './types.js';
-/**
- * Synonym mappings for key MPA terms
- * Maps variations to canonical forms for improved search matching
- */
-const SYNONYM_MAPPINGS = {
-    'ltv': ['lifetime value', 'customer lifetime value', 'clv', 'cltv'],
-    'cac': ['customer acquisition cost', 'acquisition cost', 'cost of acquisition'],
-    'roas': ['return on ad spend', 'return on advertising spend', 'ad return'],
-    'cpm': ['cost per thousand', 'cost per mille'],
-    'cpa': ['cost per acquisition', 'cost per action', 'acquisition cost'],
-    'ctr': ['click through rate', 'click-through rate', 'clickthrough rate'],
-    'cvr': ['conversion rate', 'conv rate'],
-    'aov': ['average order value', 'avg order value'],
-    'channel mix': ['media mix', 'allocation', 'channel allocation', 'media allocation'],
-    'benchmark': ['typical', 'industry standard', 'average', 'baseline', 'norm'],
-    'kpi': ['key performance indicator', 'metric', 'target metric'],
-    'incrementality': ['incremental lift', 'incremental value', 'lift'],
-    'attribution': ['credit', 'contribution', 'touchpoint credit'],
-    'reach': ['audience reach', 'addressable audience'],
-    'frequency': ['ad frequency', 'exposure frequency', 'avg frequency'],
-};
+import { RAG_CONFIG, TOPIC_KEYWORDS, STEP_KEYWORDS, DOCUMENT_TYPE_PATTERNS, SYNONYM_MAPPINGS, } from './types.js';
 const DOCUMENT_PURPOSE_PATTERNS = {
     definitive: [/analytics_engine/i, /confidence_level/i, /gap_detection/i],
     guidance: [/expert_lens/i, /strategic_wisdom/i, /implications/i],

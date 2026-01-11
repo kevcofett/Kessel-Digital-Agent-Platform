@@ -91,7 +91,7 @@ export class VectorStore {
     const results: SearchResult[] = [];
 
     // Get BM25 scores
-    this.bm25.tfidfs(queryLower, (docIndex, measure) => {
+    this.bm25.tfidfs(queryLower, (docIndex: number, measure: number) => {
       if (docIndex < this.chunks.length) {
         results.push({
           chunk: this.chunks[docIndex],

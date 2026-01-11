@@ -9,7 +9,7 @@
  * that can be stored by the caller using any storage provider.
  */
 
-import { LLMProvider, LLMMessage } from '../providers/interfaces.js';
+import { LLMProvider } from '../providers/interfaces.js';
 import {
   ResponseCritique,
   CritiqueDimension,

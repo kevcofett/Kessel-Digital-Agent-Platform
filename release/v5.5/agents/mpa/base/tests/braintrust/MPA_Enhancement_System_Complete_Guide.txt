@@ -1,0 +1,485 @@
+# MPA ENHANCEMENT SYSTEM - COMPLETE IMPLEMENTATION GUIDE
+# Version 1.0 | January 11, 2026
+
+================================================================================
+EXECUTIVE SUMMARY
+================================================================================
+
+This document provides complete specifications for implementing two major 
+enhancement systems for the MPA (Media Planning Agent) Braintrust evaluation:
+
+1. AGENTIC RAG SYSTEM - Agent-driven semantic retrieval with tool use
+2. CONTINUOUS LEARNING SYSTEM - Self-improvement through critique and patterns
+
+TARGET OUTCOME: Improve composite score from 86.8% to 96%+
+
+================================================================================
+PART 1: AGENTIC RAG SYSTEM
+================================================================================
+
+OVERVIEW
+--------
+Replace static KB injection with agent-driven semantic retrieval using Claude's 
+tool_use capability. The agent decides WHEN to retrieve information and receives
+properly attributed results.
+
+ARCHITECTURE
+------------
+
+CONVERSATION ENGINE
+├── MPA Agent (Claude Sonnet) with 3 RAG Tools:
+│   ├── search_knowledge_base  (general search)
+│   ├── get_benchmark          (specific metrics)
+│   └── get_audience_sizing    (audience data)
+│
+├── TOOL EXECUTOR → RAG SYSTEM
+│   └── RETRIEVAL ENGINE (hybrid semantic + keyword)
+│       └── VECTOR STORE (in-memory, TF-IDF embeddings)
+│           └── DOCUMENT PROCESSOR (chunks KB files)
+│               └── KB DOCUMENTS (23 files)
+
+
+FILES TO CREATE
+---------------
+
+braintrust/
+├── package.json                    # NEW - adds natural dependency
+├── rag/
+│   ├── types.ts                    # Type definitions
+│   ├── document-processor.ts       # Chunks KB files
+│   ├── embedding-service.ts        # TF-IDF embeddings
+│   ├── vector-store.ts             # In-memory store
+│   ├── retrieval-engine.ts         # Search interface
+│   ├── tool-executor.ts            # Executes RAG tools
+│   ├── index.ts                    # Exports
+│   ├── test-rag.ts                 # Test suite
+│   └── index-kb.ts                 # Standalone indexer
+
+
+FILES TO MODIFY
+---------------
+
+- conversation-engine.ts    Add RAG imports, tool executor, tool_use loop
+- mpa-prompt-content.ts     Add RAG_TOOL_INSTRUCTIONS to system prompt
+- mpa-multi-turn-types.ts   Add useAgenticRAG config option
+
+
+PACKAGE.JSON
+------------
+
+{
+  "name": "mpa-braintrust-eval",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "eval": "node dist/mpa-multi-turn-eval.js",
+    "eval:fast": "node dist/mpa-multi-turn-eval.js --fast",
+    "index-kb": "node dist/rag/index-kb.js",
+    "test:rag": "node dist/rag/test-rag.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.0",
+    "braintrust": "^0.0.160",
+    "dotenv": "^16.3.1",
+    "natural": "^6.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/natural": "^5.1.0",
+    "typescript": "^5.3.0"
+  }
+}
+
+
+RAG TOOL DEFINITIONS
+--------------------
+
+Tool 1: search_knowledge_base
+  Description: Search KB for relevant information, benchmarks, frameworks
+  Parameters:
+    - query (string, required): Search query
+    - topic (enum, optional): audience|budget|channel|measurement|benchmark|efficiency|general
+  Returns: Top 5 results with pre-formatted citations
+
+Tool 2: get_benchmark
+  Description: Get specific benchmark value for vertical and metric
+  Parameters:
+    - vertical (string, required): Industry vertical (ecommerce, saas, retail, etc.)
+    - metric (string, required): Metric name (CAC, LTV:CAC ratio, CPM, etc.)
+  Returns: Value, qualifier, and citation string
+
+Tool 3: get_audience_sizing
+  Description: Get audience size estimates with methodology
+  Parameters:
+    - audience_type (string, required): Type of audience
+    - geography (string, optional): Geographic scope
+  Returns: Size estimate, methodology, and citation
+
+
+EMBEDDING STRATEGY
+------------------
+
+Using TF-IDF from natural library (no external API calls):
+- Build vocabulary from all KB chunks during initialization
+- Generate sparse TF-IDF vectors, normalize to dense
+- Cosine similarity for semantic matching
+- BM25 for keyword matching
+- Hybrid search combines both (60% semantic, 40% keyword)
+
+
+CHUNKING CONFIGURATION
+----------------------
+
+Target chunk size: 400 tokens
+Maximum chunk size: 600 tokens
+Minimum chunk size: 100 tokens
+Overlap between chunks: 50 tokens
+Section boundary aware: Yes (respects ALL CAPS headers)
+
+
+TOOL USE LOOP (conversation-engine.ts)
+--------------------------------------
+
+while (toolCallCount < 3) {
+  const response = await anthropic.messages.create({
+    model, max_tokens, temperature, system, messages,
+    tools: this.toolExecutor.getToolDefinitions()
+  });
+
+  const toolUseBlocks = response.content.filter(b => b.type === 'tool_use');
+
+  if (toolUseBlocks.length === 0) {
+    // Final text response - done
+    break;
+  }
+
+  // Execute tools, add results to messages
+  for (const toolUse of toolUseBlocks) {
+    const result = await this.toolExecutor.execute(toolUse);
+    // Add assistant message + tool_result to messages
+  }
+
+  toolCallCount++;
+}
+
+
+RAG SYSTEM TESTS (7 tests)
+--------------------------
+
+1. Search for CAC benchmarks
+2. Get ecommerce CAC benchmark
+3. Get SaaS LTV:CAC ratio
+4. Search for audience targeting guidance
+5. Get fitness enthusiast audience sizing
+6. Search for channel mix guidance
+7. Search for measurement framework
+
+
+================================================================================
+PART 2: CONTINUOUS LEARNING SYSTEM
+================================================================================
+
+OVERVIEW
+--------
+Four-layer learning system enabling self-improvement through real-time critique,
+pattern mining, KB enhancement, and user feedback. All storage-dependent features
+gracefully degrade when storage is unavailable.
+
+
+ARCHITECTURE
+------------
+
+LAYER C: SELF-CRITIQUE (Always ON)
+  - Real-time quality check before response delivery
+  - Uses Claude Haiku for speed (~200ms)
+  - Checks: source-citation, acronym-definition, response-length, 
+            single-question, calculation-presence
+  - No storage required
+
+LAYER B: SUCCESS PATTERNS (Optional - needs storage)
+  - Few-shot examples from high-scoring past responses
+  - Stores responses scoring >95%
+  - Retrieves similar patterns for prompt injection
+  - Storage: JSON file (dev) or Dataverse (production)
+
+LAYER A: KB ENHANCEMENT (Offline)
+  - Analyzes eval results for scoring gaps
+  - Generates KB content suggestions via Claude
+  - Outputs to files for human review
+  - No storage required
+
+LAYER D: USER FEEDBACK (Optional - needs Dataverse)
+  - Captures thumbs up/down, response edits
+  - Stores in Dataverse for production
+  - Feeds into KB enhancement pipeline
+
+
+FILES TO CREATE
+---------------
+
+braintrust/
+├── learning/
+│   ├── types.ts                    # Type definitions
+│   ├── storage/
+│   │   ├── storage-interface.ts    # Abstract interface
+│   │   ├── json-storage.ts         # JSON file backend
+│   │   └── dataverse-storage.ts    # Dataverse stub
+│   ├── criteria/
+│   │   └── critique-criteria.ts    # Self-critique rules
+│   ├── self-critique.ts            # Layer C
+│   ├── success-patterns.ts         # Layer B
+│   ├── kb-enhancement-pipeline.ts  # Layer A
+│   ├── user-feedback.ts            # Layer D
+│   ├── index.ts                    # Exports + default config
+│   └── test-learning.ts            # Test suite
+├── learning-outputs/               # Generated content (gitignored)
+│   ├── kb-suggestions/
+│   ├── patterns/
+│   └── feedback/
+
+
+DEFAULT CONFIGURATION
+---------------------
+
+const DEFAULT_LEARNING_CONFIG = {
+  selfCritique: {
+    enabled: true,              // ALWAYS ON
+    model: 'claude-3-5-haiku-20241022',
+    maxRevisions: 1,
+    criteriaToCheck: [
+      'source-citation',
+      'acronym-definition',
+      'response-length',
+      'single-question',
+      'calculation-presence'
+    ],
+  },
+  successPatterns: {
+    enabled: false,             // OFF until storage configured
+    storageBackend: 'none',
+    minScoreThreshold: 0.95,
+    maxPatternsToRetrieve: 2,
+  },
+  kbEnhancement: {
+    enabled: true,              // ON - outputs to files only
+    autoApply: false,
+    outputDirectory: './learning-outputs/kb-suggestions',
+    minGapThreshold: 0.92,
+  },
+  userFeedback: {
+    enabled: false,             // OFF until Dataverse configured
+    storageBackend: 'none',
+    feedbackTypes: ['thumbs', 'edit'],
+  },
+};
+
+
+CRITIQUE CRITERIA
+-----------------
+
+source-citation:
+  Rule: All benchmark claims must cite "Based on Knowledge Base" or "My estimate"
+  Check: Does response cite source when mentioning numbers?
+  Fix: Add "Based on Knowledge Base, " before benchmark claims
+  Bad: "Typical ecommerce CAC runs $25-45."
+  Good: "Based on Knowledge Base, typical ecommerce CAC runs $25-45."
+
+acronym-definition:
+  Rule: First use of acronym must include definition
+  Check: Are CAC, CPM, LTV, etc. defined on first use?
+  Fix: Add parenthetical: "cost per acquisition (CPA)"
+  Bad: "Your CAC of $50 is reasonable."
+  Good: "Your cost per acquisition (CAC) of $50 is reasonable."
+
+response-length:
+  Rule: Responses under 75 words
+  Check: Is response concise?
+  Fix: Remove redundant phrases, cut examples
+
+single-question:
+  Rule: Ask only ONE question
+  Check: More than one question mark?
+  Fix: Keep only most important question
+
+calculation-presence:
+  Rule: Show math when citing numbers
+  Check: Is calculation shown?
+  Fix: Add: "$50K ÷ $25 = 2,000 customers"
+
+
+LEARNING SYSTEM TESTS (4 tests)
+-------------------------------
+
+1. Self-critique adds missing citation
+2. Self-critique defines undefined acronym
+3. Self-critique passes good response unchanged
+4. Success patterns store and retrieve correctly
+
+
+================================================================================
+PART 3: IMPLEMENTATION ORDER
+================================================================================
+
+PHASE 1: Project Setup
+----------------------
+1. Create package.json with natural dependency
+2. Run npm install
+3. Create rag/ directory
+4. Create learning/ directory structure
+
+
+PHASE 2: RAG Core Files (9 files)
+---------------------------------
+1. rag/types.ts
+2. rag/document-processor.ts
+3. rag/embedding-service.ts
+4. rag/vector-store.ts
+5. rag/retrieval-engine.ts
+6. rag/tool-executor.ts
+7. rag/index.ts
+8. rag/test-rag.ts
+9. rag/index-kb.ts
+
+
+PHASE 3: RAG Integration
+------------------------
+1. Modify conversation-engine.ts for tool use
+2. Update mpa-prompt-content.ts with RAG instructions
+3. Update mpa-multi-turn-types.ts with config
+
+
+PHASE 4: Learning Core Files (11 files)
+---------------------------------------
+1. learning/types.ts
+2. learning/storage/storage-interface.ts
+3. learning/storage/json-storage.ts
+4. learning/storage/dataverse-storage.ts
+5. learning/criteria/critique-criteria.ts
+6. learning/self-critique.ts
+7. learning/success-patterns.ts
+8. learning/kb-enhancement-pipeline.ts
+9. learning/user-feedback.ts
+10. learning/index.ts
+11. learning/test-learning.ts
+
+
+PHASE 5: Learning Integration
+-----------------------------
+1. Modify conversation-engine.ts for learning
+2. Update mpa-multi-turn-types.ts with learning config
+
+
+PHASE 6: Build and Test
+-----------------------
+1. npx tsc
+2. node dist/rag/test-rag.js (7 tests)
+3. node dist/learning/test-learning.js (4 tests)
+4. node dist/rag/index-kb.js (build index)
+5. node dist/mpa-multi-turn-eval.js --fast (full eval)
+
+
+================================================================================
+PART 4: EXPECTED OUTCOMES
+================================================================================
+
+SCORER IMPROVEMENTS
+-------------------
+
+Scorer              | Before | After RAG | After Learning | Combined
+--------------------|--------|-----------|----------------|----------
+source-citation     | 52-62% | 92%+      | 95%+           | 96%+
+acronym-definition  | 0-23%  | 0-23%     | 85%+           | 85%+
+response-length     | 57-78% | 57-78%    | 90%+           | 90%+
+single-question     | 57-82% | 57-82%    | 90%+           | 90%+
+audience-sizing     | 25-40% | 92%+      | 92%+           | 94%+
+calculation-presence| 66-85% | 92%+      | 92%+           | 94%+
+
+
+COMPOSITE SCORE PROGRESSION
+---------------------------
+
+Current baseline:     86.8%
+After RAG only:       92-94%
+After RAG + Learning: 96%+
+
+
+================================================================================
+PART 5: SUCCESS CRITERIA
+================================================================================
+
+RAG System:
+- [ ] All 7 RAG tests pass
+- [ ] TypeScript compiles without errors
+- [ ] KB index loads in < 2 seconds
+- [ ] Tool calls complete in < 100ms average
+
+Learning System:
+- [ ] All 4 learning tests pass
+- [ ] Self-critique adds < 300ms latency
+- [ ] Success patterns store and retrieve correctly
+- [ ] All systems gracefully degrade when storage unavailable
+
+Combined:
+- [ ] Composite score > 92%
+- [ ] source-citation scorer > 90%
+- [ ] No regressions > 5% on any scenario
+
+
+================================================================================
+PART 6: COPILOT STUDIO DEPLOYMENT NOTES
+================================================================================
+
+LAYER MAPPING
+-------------
+
+Layer          | Braintrust          | Copilot Studio
+---------------|---------------------|------------------------------------
+Self-Critique  | conversation-engine | Topic with AI Builder action
+Success        | JSON files          | Dataverse table + Power Automate
+Patterns       |                     |
+User Feedback  | JSON files          | Dataverse table + Adaptive Card
+KB Enhancement | Offline script      | Scheduled Power Automate flow
+
+
+DATAVERSE TABLES
+----------------
+
+mpa_success_patterns:
+  - id (GUID)
+  - scenario (text)
+  - user_message (text)
+  - agent_response (text)
+  - scores (JSON)
+  - composite_score (decimal)
+  - created_at (datetime)
+
+mpa_user_feedback:
+  - id (GUID)
+  - type (choice: thumbs/edit/explicit)
+  - session_id (text)
+  - user_message (text)
+  - agent_response (text)
+  - edited_response (text, nullable)
+  - feedback_value (text)
+  - created_at (datetime)
+
+
+================================================================================
+REFERENCE: FULL SPECIFICATION DOCUMENTS
+================================================================================
+
+For complete implementation details, see these files in the repository:
+
+1. AGENTIC_RAG_SPECIFICATION.md - Full RAG architecture
+2. VSCODE_RAG_IMPLEMENTATION_PART1.md - RAG Phases 1-5
+3. VSCODE_RAG_IMPLEMENTATION_PART2.md - RAG Phases 6-11
+4. CONTINUOUS_LEARNING_SPECIFICATION.md - Full learning specification
+5. VSCODE_LEARNING_IMPLEMENTATION.md - Learning quick reference
+
+Location: release/v5.5/agents/mpa/base/tests/braintrust/
+
+
+================================================================================
+END OF DOCUMENT
+================================================================================

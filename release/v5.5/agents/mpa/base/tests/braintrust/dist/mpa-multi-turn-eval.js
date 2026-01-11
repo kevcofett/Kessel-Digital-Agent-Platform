@@ -9,22 +9,34 @@
  *
  * Usage:
  *   # Standard run (all scenarios, baseline comparison)
- *   ANTHROPIC_API_KEY=xxx npx ts-node --esm mpa-multi-turn-eval.ts
+ *   npx ts-node --esm mpa-multi-turn-eval.ts
+ *
+ *   # Fast mode (RECOMMENDED for iteration) - parallel + 12 turn cap + Haiku simulator
+ *   node dist/mpa-multi-turn-eval.js --fast --track-kb
  *
  *   # Run specific scenario (still compares to baseline)
- *   ANTHROPIC_API_KEY=xxx npx ts-node --esm mpa-multi-turn-eval.ts --scenario basic-user-step1-2
+ *   node dist/mpa-multi-turn-eval.js --scenario basic-user-step1-2
  *
- *   # Parallel execution for faster runs
- *   ANTHROPIC_API_KEY=xxx npx ts-node --esm mpa-multi-turn-eval.ts --parallel
+ *   # Parallel execution for faster runs (5 concurrent scenarios)
+ *   node dist/mpa-multi-turn-eval.js --parallel
  *
- *   # Efficiency mode (caps turns for faster iteration)
- *   ANTHROPIC_API_KEY=xxx npx ts-node --esm mpa-multi-turn-eval.ts --efficiency
+ *   # Efficiency mode (caps at 20 turns per scenario)
+ *   node dist/mpa-multi-turn-eval.js --efficiency
+ *
+ *   # Use Haiku for user simulator (faster, maintains quality)
+ *   node dist/mpa-multi-turn-eval.js --parallel --haiku-simulator
  *
  *   # Track KB document impact
- *   ANTHROPIC_API_KEY=xxx npx ts-node --esm mpa-multi-turn-eval.ts --track-kb
+ *   node dist/mpa-multi-turn-eval.js --track-kb
  *
  *   # With Braintrust logging
- *   BRAINTRUST_API_KEY=xxx ANTHROPIC_API_KEY=xxx npx braintrust eval mpa-multi-turn-eval.ts
+ *   BRAINTRUST_API_KEY=xxx npx braintrust eval mpa-multi-turn-eval.ts
+ *
+ * Speed Optimization Flags:
+ *   --fast             Enable all speed optimizations (parallel + 12 turn cap + Haiku simulator)
+ *   --parallel         Run scenarios in parallel (5 concurrent)
+ *   --efficiency       Cap scenarios at 20 turns
+ *   --haiku-simulator  Use Claude 3.5 Haiku for user simulation (faster, no quality loss)
  */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -105,9 +117,17 @@ const OUTPUT_BASE_DIR = path.join(getSourceDir(), "outputs");
  */
 const EFFICIENCY_MODE_MAX_TURNS = 20;
 /**
+ * Fast mode max turns (aggressive cap for rapid iteration)
+ */
+const FAST_MODE_MAX_TURNS = 12;
+/**
  * Parallel execution concurrency limit
  */
-const PARALLEL_CONCURRENCY = 3;
+const PARALLEL_CONCURRENCY = 5;
+/**
+ * Fast simulator model (Haiku for speed, maintains quality for user simulation)
+ */
+const FAST_SIMULATOR_MODEL = "claude-3-5-haiku-20241022";
 /**
  * Parse command line arguments
  */
@@ -118,6 +138,8 @@ function parseArgs() {
         verbose: false,
         parallel: false,
         efficiency: false,
+        fast: false,
+        haikuSimulator: false,
         trackKb: false,
         saveBaseline: false,
         skipBaselineComparison: false,
@@ -149,6 +171,16 @@ function parseArgs() {
                 break;
             case "--efficiency":
                 result.efficiency = true;
+                break;
+            case "--fast":
+                // Fast mode: implies parallel, efficiency, and haiku simulator
+                result.fast = true;
+                result.parallel = true;
+                result.efficiency = true;
+                result.haikuSimulator = true;
+                break;
+            case "--haiku-simulator":
+                result.haikuSimulator = true;
                 break;
             case "--track-kb":
                 result.trackKb = true;
@@ -186,10 +218,11 @@ function getScenariosToRun(args) {
 /**
  * Apply efficiency mode caps to scenarios
  */
-function applyEfficiencyMode(scenarios) {
+function applyEfficiencyMode(scenarios, fastMode = false) {
+    const maxTurns = fastMode ? FAST_MODE_MAX_TURNS : EFFICIENCY_MODE_MAX_TURNS;
     return scenarios.map((s) => ({
         ...s,
-        maxTurns: Math.min(s.maxTurns, EFFICIENCY_MODE_MAX_TURNS),
+        maxTurns: Math.min(s.maxTurns, maxTurns),
     }));
 }
 /**
@@ -750,18 +783,25 @@ async function runScenariosSequential(scenarios, config, verbose) {
 async function main() {
     const args = parseArgs();
     let scenarios = getScenariosToRun(args);
-    // Apply efficiency mode if requested
-    if (args.efficiency) {
-        console.log(`\n⚡ Efficiency mode enabled (max ${EFFICIENCY_MODE_MAX_TURNS} turns per scenario)`);
-        scenarios = applyEfficiencyMode(scenarios);
+    // Apply efficiency/fast mode if requested
+    if (args.fast) {
+        console.log(`\n🚀 Fast mode enabled (max ${FAST_MODE_MAX_TURNS} turns, ${PARALLEL_CONCURRENCY} parallel, Haiku simulator)`);
+        scenarios = applyEfficiencyMode(scenarios, true);
     }
+    else if (args.efficiency) {
+        console.log(`\n⚡ Efficiency mode enabled (max ${EFFICIENCY_MODE_MAX_TURNS} turns per scenario)`);
+        scenarios = applyEfficiencyMode(scenarios, false);
+    }
+    // Determine simulator model
+    const simulatorModel = args.haikuSimulator ? FAST_SIMULATOR_MODEL : "claude-sonnet-4-20250514";
     console.log(`\n${"═".repeat(80)}`);
     console.log(`MPA MULTI-TURN EVALUATION`);
     console.log(`${"═".repeat(80)}`);
     console.log(`Scenarios to run: ${scenarios.length}`);
-    console.log(`Mode: ${args.parallel ? "Parallel" : "Sequential"}${args.efficiency ? " + Efficiency" : ""}`);
+    console.log(`Mode: ${args.parallel ? "Parallel" : "Sequential"}${args.fast ? " + Fast" : args.efficiency ? " + Efficiency" : ""}`);
     console.log(`Verbose: ${args.verbose}`);
-    console.log(`Model: ${args.model || "claude-sonnet-4-20250514"}`);
+    console.log(`Agent Model: ${args.model || "claude-sonnet-4-20250514"}`);
+    console.log(`Simulator Model: ${simulatorModel}`);
     console.log(`Track KB Impact: ${args.trackKb}`);
     console.log("");
     // Load baseline
@@ -777,6 +817,7 @@ async function main() {
     }
     const engineConfig = {
         verbose: args.verbose,
+        simulatorModel: simulatorModel,
     };
     if (args.model) {
         engineConfig.agentModel = args.model;

@@ -8,22 +8,34 @@
  *
  * Usage:
  *   # Standard run (all scenarios, baseline comparison)
- *   ANTHROPIC_API_KEY=xxx npx ts-node --esm mpa-multi-turn-eval.ts
+ *   npx ts-node --esm mpa-multi-turn-eval.ts
+ *
+ *   # Fast mode (RECOMMENDED for iteration) - parallel + 12 turn cap + Haiku simulator
+ *   node dist/mpa-multi-turn-eval.js --fast --track-kb
  *
  *   # Run specific scenario (still compares to baseline)
- *   ANTHROPIC_API_KEY=xxx npx ts-node --esm mpa-multi-turn-eval.ts --scenario basic-user-step1-2
+ *   node dist/mpa-multi-turn-eval.js --scenario basic-user-step1-2
  *
- *   # Parallel execution for faster runs
- *   ANTHROPIC_API_KEY=xxx npx ts-node --esm mpa-multi-turn-eval.ts --parallel
+ *   # Parallel execution for faster runs (5 concurrent scenarios)
+ *   node dist/mpa-multi-turn-eval.js --parallel
  *
- *   # Efficiency mode (caps turns for faster iteration)
- *   ANTHROPIC_API_KEY=xxx npx ts-node --esm mpa-multi-turn-eval.ts --efficiency
+ *   # Efficiency mode (caps at 20 turns per scenario)
+ *   node dist/mpa-multi-turn-eval.js --efficiency
+ *
+ *   # Use Haiku for user simulator (faster, maintains quality)
+ *   node dist/mpa-multi-turn-eval.js --parallel --haiku-simulator
  *
  *   # Track KB document impact
- *   ANTHROPIC_API_KEY=xxx npx ts-node --esm mpa-multi-turn-eval.ts --track-kb
+ *   node dist/mpa-multi-turn-eval.js --track-kb
  *
  *   # With Braintrust logging
- *   BRAINTRUST_API_KEY=xxx ANTHROPIC_API_KEY=xxx npx braintrust eval mpa-multi-turn-eval.ts
+ *   BRAINTRUST_API_KEY=xxx npx braintrust eval mpa-multi-turn-eval.ts
+ *
+ * Speed Optimization Flags:
+ *   --fast             Enable all speed optimizations (parallel + 12 turn cap + Haiku simulator)
+ *   --parallel         Run scenarios in parallel (5 concurrent)
+ *   --efficiency       Cap scenarios at 20 turns
+ *   --haiku-simulator  Use Claude 3.5 Haiku for user simulation (faster, no quality loss)
  */
 import { TestScenario, ConversationResult, ConversationEngineConfig } from "./mpa-multi-turn-types.js";
 interface EvalArgs {
@@ -34,6 +46,8 @@ interface EvalArgs {
     promptVersion?: string;
     parallel: boolean;
     efficiency: boolean;
+    fast: boolean;
+    haikuSimulator: boolean;
     trackKb: boolean;
     saveBaseline: boolean;
     skipBaselineComparison: boolean;

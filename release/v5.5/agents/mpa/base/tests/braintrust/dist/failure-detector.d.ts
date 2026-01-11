@@ -78,6 +78,16 @@ export declare class FailureDetector {
     private checkStepBoundaryViolation;
     /**
      * Check for context loss
+     *
+     * Detects when the agent asks for data that was already provided.
+     * IMPORTANT: Must distinguish between:
+     * - Asking for original data again (BAD - context loss)
+     * - Asking follow-up questions about related topics (GOOD - thorough discovery)
+     *
+     * Example FALSE POSITIVES to avoid:
+     * - "What's your budget allocation preference?" is NOT asking for the budget
+     * - "How do you want to split budget across channels?" is NOT asking for budget
+     * - "What's your target audience segment?" is NOT asking for the volume target
      */
     private checkContextLoss;
     /**

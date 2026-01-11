@@ -378,20 +378,59 @@ export class FailureDetector {
 
   /**
    * Check for context loss
+   *
+   * Detects when the agent asks for data that was already provided.
+   * IMPORTANT: Must distinguish between:
+   * - Asking for original data again (BAD - context loss)
+   * - Asking follow-up questions about related topics (GOOD - thorough discovery)
+   *
+   * Example FALSE POSITIVES to avoid:
+   * - "What's your budget allocation preference?" is NOT asking for the budget
+   * - "How do you want to split budget across channels?" is NOT asking for budget
+   * - "What's your target audience segment?" is NOT asking for the volume target
    */
   private checkContextLoss(response: string): boolean {
     // Patterns that suggest asking for already-provided data
+    // These patterns are STRICT - they should only match direct re-asks, not follow-ups
     const askPatterns = [
-      { pattern: /what('?s| is) your budget/i, dataKey: "budget" },
-      { pattern: /how many (customers|leads)/i, dataKey: "volumeTarget" },
-      { pattern: /what('?s| is) your target/i, dataKey: "volumeTarget" },
-      { pattern: /what('?s| is) your objective/i, dataKey: "objective" },
-      { pattern: /what('?s| is) your ltv/i, dataKey: "ltv" },
-      { pattern: /what('?s| is) your cac/i, dataKey: "cac" },
+      // Budget: only match direct "what is your budget" not "budget allocation" or "budget split"
+      {
+        pattern: /what('?s| is) your (total |overall |media |marketing )?budget\?/i,
+        excludePattern: /allocation|split|preference|across|between/i,
+        dataKey: "budget",
+      },
+      // Volume: match direct volume questions, not segment questions
+      {
+        pattern: /how many (customers|leads|conversions) (do you need|are you targeting)\?/i,
+        excludePattern: /per segment|per audience|breakdown/i,
+        dataKey: "volumeTarget",
+      },
+      // Objective: match direct objective questions
+      {
+        pattern: /what('?s| is) your (primary |main |overall )?objective\?/i,
+        excludePattern: /secondary|per segment|for this/i,
+        dataKey: "objective",
+      },
+      // LTV: match direct LTV questions
+      {
+        pattern: /what('?s| is) your (average |customer )?ltv\?/i,
+        excludePattern: /by segment|per cohort|breakdown/i,
+        dataKey: "ltv",
+      },
+      // CAC: match direct CAC questions
+      {
+        pattern: /what('?s| is) your (target |current )?cac\?/i,
+        excludePattern: /by channel|per segment|breakdown/i,
+        dataKey: "cac",
+      },
     ];
 
-    for (const { pattern, dataKey } of askPatterns) {
+    for (const { pattern, excludePattern, dataKey } of askPatterns) {
       if (pattern.test(response)) {
+        // Check for exclusion patterns that indicate follow-up questions
+        if (excludePattern && excludePattern.test(response)) {
+          continue; // This is a follow-up question, not a re-ask
+        }
         // Check if we already have this data
         if (this.providedData.has(dataKey)) {
           return true;

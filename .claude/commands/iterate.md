@@ -9,7 +9,7 @@ STEP 1 - LOAD CONTEXT
 Read these files to understand the iteration framework, formatting rules, and current state:
 - /release/v5.5/agents/mpa/base/docs/MPA_Instruction_Iteration_Framework.md
 - /release/v5.5/agents/mpa/base/docs/INSTRUCTION_CHANGE_LOG.md
-- /release/v5.5/agents/mpa/base/copilot/MPA_Copilot_Instructions_v5_7.txt (baseline)
+- /release/v5.5/agents/mpa/base/copilot/MPA_Copilot_Instructions_v5_7_4.txt (current version)
 
 STEP 2 - FETCH BRAINTRUST RESULTS
 

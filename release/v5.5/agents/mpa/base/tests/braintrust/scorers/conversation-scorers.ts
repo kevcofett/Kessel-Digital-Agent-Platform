@@ -18,6 +18,11 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
+// Use Haiku for LLM judges when FAST_SCORING=true (10x faster, minimal quality loss)
+const SCORER_MODEL = process.env.FAST_SCORING === "true"
+  ? "claude-3-5-haiku-20241022"
+  : "claude-sonnet-4-20250514";
+
 // =============================================================================
 // CODE-BASED CONVERSATION SCORERS
 // =============================================================================
@@ -319,7 +324,7 @@ export function calculateFailurePenalty(failures: {
  */
 async function llmJudge(prompt: string): Promise<string> {
   const response = await anthropic.messages.create({
-    model: "claude-sonnet-4-20250514",
+    model: SCORER_MODEL,
     max_tokens: 100,
     messages: [{ role: "user", content: prompt }],
   });

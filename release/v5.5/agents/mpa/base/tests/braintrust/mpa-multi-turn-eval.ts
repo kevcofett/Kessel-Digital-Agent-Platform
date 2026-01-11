@@ -109,9 +109,9 @@ const OUTPUT_BASE_DIR = path.join(getSourceDir(), "outputs");
 const EFFICIENCY_MODE_MAX_TURNS = 20;
 
 /**
- * Fast mode max turns (aggressive cap for rapid iteration)
+ * Fast mode max turns (allows full conversations while using faster models)
  */
-const FAST_MODE_MAX_TURNS = 12;
+const FAST_MODE_MAX_TURNS = 40;
 
 /**
  * Parallel execution concurrency limit
@@ -1166,8 +1166,11 @@ async function main() {
     console.log(`\n✅ New baseline saved to ${BASELINE_PATH}`);
   }
 
-  // Also run via Braintrust for logging
-  await Eval("MPA-Multi-Turn", {
+  // Also run via Braintrust for logging (only if API key is configured)
+  if (!process.env.BRAINTRUST_API_KEY) {
+    console.log("\n⚠️  Skipping Braintrust logging (BRAINTRUST_API_KEY not set)");
+  } else {
+    await Eval("MPA-Multi-Turn", {
     experimentName: `multi-turn-${promptVersion}-${Date.now()}`,
     metadata: {
       promptVersion,
@@ -1253,6 +1256,7 @@ async function main() {
       (args: { output: { compositeScore: number } }) => args.output.compositeScore,
     ],
   });
+  }
 
   console.log("\n✅ Evaluation complete!");
 }

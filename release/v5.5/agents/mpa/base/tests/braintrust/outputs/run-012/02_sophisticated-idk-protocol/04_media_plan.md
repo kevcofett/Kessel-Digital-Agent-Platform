@@ -1,0 +1,59 @@
+# Media Plan Output: Sophisticated User - IDK Protocol
+
+This document contains the key outputs from the media planning conversation.
+
+## Step 1: Outcomes
+
+Turn 1:
+Hi! I'm excited to build a media plan with you. We'll cover ten areas: Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, and Risks. Each step builds on the last.
+
+Let me start with some quick math on your targets: $500K / 10,000 users = $50 per user acquisition. For fintech remittance, this is achievable - typical CAC runs $40-80 based on market benchmarks.
+
+What specific business outcome are you trying to achieve beyond user acquisition? For example, are you focused on transaction volume, revenue growth, or market share in specific corridors?
+
+Turn 2:
+Perfect. So transaction volume growth is your primary objective, with revenue as the ultimate goal. That's smart - dormant users don't drive business value.
+
+Let me update our projections: At $50 CAC for 10,000 active users, assuming a typical 2-3% take rate for remittance, each user needs to generate $1,667-$2,500 in transaction volume to break even on acquisition costs alone. 
+
+For your primary KPI measuring success, what specific volume target are you aiming for? Are you thinking total transaction volume across all 10,000 users, or average volume per user, or perhaps volume within the first 90 days after acquisition?
+
+────────────────────────────────────────
+
+## Step 3: Audience
+
+Turn 3:
+Got it. I'll model using typical remittance benchmarks while you refine internally. Based on industry data, new remittance users typically generate $800-1,200 in transaction volume within their first 90 days, with high-intent users reaching $1,500-2,000. You can adjust these targets anytime.
+
+This creates an interesting efficiency challenge: your $50 CAC requires users to transact $1,667-2,500 to break even, but typical new users only generate $800-1,200 in 90 days. This means you'll need to target high-intent users or optimize for users likely to exceed average volumes.
+
+Moving on - what's your target customer count for this quarter? You mentioned 10,000 users, but I want to confirm if that's your firm target or if there's flexibility based on efficiency.
+
+Turn 4:
+Excellent - that 8,000-12,000 range gives us good flexibility to optimize for quality over pure volume.
+
+Let me update our efficiency scenarios:
+- 8,000 users: $500K / 8,000 = $62.50 CAC (more selective, higher intent)
+- 10,000 users: $500K / 10,000 = $50 CAC (baseline target)  
+- 12,000 users: $500K / 12,000 = $41.67 CAC (aggressive efficiency)
+
+The $62.50 CAC for higher-intent users actually aligns better with your break-even math if those users generate $1,800+ in 90-day volume.
+
+For high-intent targeting strategies - we'll dive deep into audience signals in Step 3, but the key is layering behavioral and demographic indicators that predict regular sending patterns.
+
+Before we move to audience strategy, I need to understand your unit economics better. What's your actual take rate percentage, and do you have any data on customer lifetime value beyond the first 90 days?
+
+Turn 5:
+Perfect, 2.5% take rate is solid. I'll model using industry benchmarks for LTV - remittance users typically generate 60-80% of their lifetime value in the first year, with active users averaging $3,000-5,000 annual volume. I'll use conservative estimates and you can refine when your cohort data comes online.
+
+Let me recalculate with 2.5% take rate:
+- Break-even volume: $50 CAC / 2.5% = $2,000 per user
+- Your target range: $1,667-2,500 (my earlier calc was close)
+- Industry 90-day average: $800-1,200
+- High-intent 90-day target: $1,500-2,000
+
+This confirms you need above-average users. At $2,000 volume per user with 2.5% take rate, each user generates $50 revenue - perfectly matching your $50 CAC for immediate payback.
+
+Step 1 complete - we have clear objectives and realistic efficiency targets. Ready to move to audience strategy to identify those high-intent users?
+
+────────────────────────────────────────

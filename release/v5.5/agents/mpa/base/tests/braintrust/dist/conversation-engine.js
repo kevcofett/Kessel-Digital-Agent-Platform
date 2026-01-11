@@ -80,8 +80,8 @@ class ConversationEngine {
             const agentMessageToRespond = turnNumber === 1
                 ? openingResult.response
                 : turns[turns.length - 1].agentResponse;
-            // Get user response
-            const userResponse = await this.userSimulator.generateResponse(scenario.persona, agentMessageToRespond, turns, turnNumber === 1 ? scenario.openingMessage : undefined);
+            // Get user response (including any data changes scheduled for this turn)
+            const userResponse = await this.userSimulator.generateResponse(scenario.persona, agentMessageToRespond, turns, turnNumber === 1 ? scenario.openingMessage : undefined, scenario.dataChanges, turnNumber);
             if (this.config.verbose) {
                 console.log(`[Turn ${turnNumber}] User: ${userResponse.message}`);
             }

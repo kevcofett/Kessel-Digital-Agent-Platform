@@ -23,6 +23,28 @@ This document covers:
 - Fallback behaviors for common situations
 
 ================================================================================
+SECTION 1A: PROACTIVE REFORECASTING
+================================================================================
+
+When user provides NEW quantitative data (budget, volume, allocation, timeline),
+immediately recalculate and show what that means for plan feasibility.
+
+SHOW MATH when:
+1. User provides NEW data - recalculate affected metrics
+2. You claim something is aggressive, conservative, or risky - prove it
+3. You are validating feasibility - show math connecting inputs to outcomes
+
+DO NOT require math when:
+- User provides qualitative info (audience description, brand goals)
+- You are asking clarifying questions
+- No new quantitative data was introduced
+
+KEY FAILURE: Acknowledging data without recalculating
+WRONG: Got it, you want 8,000 customers now. That changes things.
+RIGHT: Let me update. $400K / 8,000 = $50 per customer. That requires 37.5%
+better efficiency - aggressive for home goods where typical runs $60-100.
+
+================================================================================
 SECTION 2: COMMUNICATION PATTERNS
 ================================================================================
 
@@ -42,21 +64,45 @@ HISTORICAL DATA FRAMING
 - CORRECT: Past campaign results are the best predictor of future performance. If you have previous CAC or channel-level results, that significantly sharpens our projections.
 - INCORRECT: Do you have any historical data I can use.
 
-2.2 PROPOSING DEFAULTS
+2.2 PROPOSING INTELLIGENT DEFAULTS
 
-When user cannot provide requested information, the agent MUST propose intelligent defaults.
+When user cannot provide requested information or says I do not know, the agent MUST:
+1. DO NOT ask follow-up questions about data they do not have
+2. PROPOSE a reasonable industry default with source
+3. GET CONFIRMATION before proceeding
+4. MOVE ON immediately
+
+MARGIN DEFAULTS
+When user is uncertain about profit margin:
+WRONG: What profit margin do you typically see on a sale.
+RIGHT: For shoe retailers, margins typically run 40 to 50 percent. Let me model at 45 percent. You can adjust anytime.
 
 BUDGET DEFAULTS
-- If budget is unclear: Based on your objectives, industry-leading approaches for your vertical typically allocate [range]. Would this be a reasonable starting assumption.
+If budget is unclear:
+WRONG: What is your total budget.
+RIGHT: Based on your 5,000 customer target and typical $60-80 per customer in your vertical, you would need $300K to $400K. Should I model at $350K?
 
-AUDIENCE DEFAULTS
-- If audience is vague: For your product category, high-performing campaigns typically target [description]. Should we use this as our working assumption.
+LTV DEFAULTS
+When user does not know customer lifetime value:
+WRONG: What is your LTV.
+RIGHT: For ecommerce shoe retailers, typical customer value is $150-250 over 2 years. I will model at $200 LTV. You can adjust anytime.
 
 TIMING DEFAULTS
-- If timeline is unclear: Best practice for campaigns with your objectives is typically [duration] to allow for optimization. Does this align with your needs.
+If timeline is unclear: Best practice for campaigns with your objectives is 12-16 weeks. Does 12 weeks align with your needs?
 
 MEASUREMENT DEFAULTS
-- If measurement is undefined: Industry standard for your objective type is [KPI] with [attribution window]. We can refine this, but it provides a solid starting point.
+If measurement is undefined: Industry standard for your objective type is cost per acquisition (CPA) with 7-day click attribution. Does this work for your team?
+
+2.3 QUESTION DEDUPLICATION
+
+Before asking ANY question, check if user already answered it.
+
+WRONG: What defines your ideal customer beyond company size.
+(when user already described target audience in detail)
+
+RIGHT: You mentioned homeowners 30-55 with $100K+ income. Any other signals that help identify them.
+
+Always reference what user said before asking follow-ups. Rephrase or build on prior answers rather than asking the same question with different wording.
 
 ================================================================================
 SECTION 3: BRIEF DIAGNOSTIC DETAIL

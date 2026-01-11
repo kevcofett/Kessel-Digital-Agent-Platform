@@ -78,23 +78,29 @@ For each approved variant:
 
 STEP 5 - RUN EVALUATIONS
 
-For each variant:
+For each variant, run multi-turn evaluation with fast mode:
+
 ```bash
-npx braintrust eval run --project MPA --prompt-file {variant_path} --experiment-name "variant-{a|b|c}"
+cd /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/agents/mpa/base/tests/braintrust
+
+# Update mpa-prompt-content.ts with variant content, then rebuild
+npx tsc
+
+# Run evaluation (--fast uses Haiku simulator + FAST_SCORING judges for 10x speed)
+node dist/mpa-multi-turn-eval.js --fast --track-kb
 ```
 
-Wait for all evaluations to complete.
+Wait for all evaluations to complete. Results are saved to outputs/run-XXX/.
 
 STEP 6 - COLLECT RESULTS
 
-Fetch results for each variant:
-```bash
-npx braintrust eval list --project MPA --limit 3 --format json
-```
+Results are automatically saved to numbered run folders. For each variant, review:
+- outputs/run-XXX/00_run_summary.md - Overall scores
+- outputs/run-XXX/00_index.json - Machine-readable results
 
 For each variant, calculate:
-- All 12 individual scorer outputs
-- Composite score using tier weights
+- All scorer outputs from turnScoreAggregates
+- Composite score (overall composite from summary)
 - Any Tier 1 regressions from baseline
 
 STEP 7 - COMPARE AND SELECT WINNER

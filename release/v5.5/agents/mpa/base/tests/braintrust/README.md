@@ -2,6 +2,49 @@
 
 This package contains custom scorers and test datasets for evaluating the Media Planning Agent (MPA) Copilot against the v5.7 instruction set requirements.
 
+## What We Are Testing
+
+We test the **combination** of:
+1. **Core Instructions** - The main copilot instruction file
+2. **Knowledge Base Documents** - Supporting KB documents injected via RAG
+
+The core instructions define behavior. The KB documents provide detailed guidance, examples, and benchmarks. They work together in harmony to achieve target scores.
+
+## Critical Requirements
+
+### Instruction Character Limits
+
+**MANDATORY**: Core instructions MUST be between **7,500 and 7,999 characters**.
+
+| File | Min | Max | Reason |
+|------|-----|-----|--------|
+| `MPA_Copilot_Instructions_v5_7_4.txt` | 7,500 | 7,999 | Copilot has 8K char limit; truncation causes failures |
+
+**Before any evaluation run:**
+```bash
+wc -c ../../copilot/MPA_Copilot_Instructions_v5_7_4.txt
+# Must show between 7500 and 7999
+```
+
+### When Instructions Exceed 8K
+
+If you need to add content to instructions:
+1. **DO NOT exceed 8K** - Copilot will truncate, breaking critical sections
+2. **Move detail to KB documents** - Create or update KB docs with expanded guidance
+3. **Keep only essential rules in instructions** - Instructions = what to do, KB = how/why/examples
+
+### Key Files
+
+| File | Purpose | Char Limit |
+|------|---------|------------|
+| `../../copilot/MPA_Copilot_Instructions_v5_7_4.txt` | Production instructions | 7,500-7,999 |
+| `mpa-prompt-content.ts` | Test system prompt (must sync with above) | No limit |
+| `../../kb/*.txt` | Knowledge base documents | No limit |
+
+### Syncing Instructions
+
+When you update `MPA_Copilot_Instructions_v5_7_4.txt`, you MUST also update `mpa-prompt-content.ts` to keep tests in sync with production.
+
 ## Files
 
 - `mpa-braintrust-scorers.ts` - 12 custom scorers (6 code-based, 6 LLM-as-a-judge)

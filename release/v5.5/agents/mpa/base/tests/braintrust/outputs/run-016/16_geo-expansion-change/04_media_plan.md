@@ -1,0 +1,155 @@
+# Media Plan Output: Geography Expansion Change
+
+This document contains the key outputs from the media planning conversation.
+
+## Step 1: Outcomes
+
+Turn 1:
+Hi! I'm excited to build a media plan with you. We'll cover ten areas: Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, and Risks. Each step builds on the last.
+
+I can see you want 500,000 store visits and online conversions combined with a $2.5M budget. Let me clarify your primary objective - are you focused on driving immediate transactions and sales, or building brand awareness and consideration for ActiveWear Pro?
+
+Turn 2:
+Perfect - driving transactions while building brand recognition. That's a smart dual approach for athletic apparel.
+
+For measuring success, what's your primary KPI? Are you tracking total revenue from those 500,000 visits/conversions, or focusing on the volume of transactions itself? Knowing your main success metric helps me model whether $5 per visit/conversion ($2.5M ÷ 500K) is realistic for your market.
+
+────────────────────────────────────────
+
+## Step 2: Economics
+
+Turn 5:
+Perfect! 83K high-quality transactions at $30 CAC gives us a solid foundation. I can see you're ready to dive into channels, but let's first define your target audience precisely - this directly impacts which channels will deliver those quality transactions most efficiently.
+
+You mentioned active adults 25-45, but high-performing campaigns get much more specific. Within that group, are you targeting serious fitness enthusiasts who work out 5+ times weekly, casual gym-goers, outdoor activity lovers, or a specific segment? The tighter we define your ideal customer, the better we can optimize those channels for quality over volume.
+
+────────────────────────────────────────
+
+## Step 3: Audience
+
+Turn 3:
+Excellent - $180 AOV targeting $90M in revenue is substantial scale. Let me model your efficiency targets.
+
+$2.5M budget ÷ 500K transactions = $5 acquisition cost per transaction. With $180 AOV, that's a 36:1 return on ad spend ($180 ÷ $5). 
+
+That's extremely aggressive for athletic apparel. Based on industry benchmarks, performance campaigns typically see 3-8x ROAS, while brand campaigns run 2-4x. Your target would require exceptional conversion rates and attribution.
+
+To hit 36x ROAS realistically, you'd likely need to increase budget to $8-12M or adjust volume expectations to 150-200K transactions. Which direction makes more sense for ActiveWear Pro's growth strategy?
+
+Turn 4:
+Smart approach - disciplined scaling beats vanity metrics every time. Let's model realistic scenarios.
+
+If we target a more achievable 6x ROAS (strong for athletic apparel), your $2.5M budget projects to $15M revenue. At $180 AOV, that's ~83K transactions - still substantial growth but more realistic.
+
+For 83K high-quality transactions vs 500K aggressive targets, you'd have:
+- $30 cost per customer ($2.5M ÷ 83K) 
+- Much better customer quality and LTV potential
+- Room for brand building alongside performance
+- Sustainable efficiency your board will appreciate
+
+This assumes good conversion rates and targeting. Does 83K transactions with strong unit economics align better with your disciplined scaling approach, or do you have specific reasons the 500K target is non-negotiable?
+
+Turn 6:
+Excellent - serious fitness enthusiasts with premium mindset. That audience typically has strong purchase intent and higher AOV, which supports your $180 target.
+
+For 83K transactions, we need to size this audience realistically. Serious fitness enthusiasts (5+ workouts/week, premium gear buyers) represent roughly 8-12% of the general fitness market. In the US 25-45 demographic, that's approximately 3-4 million people.
+
+At 83K transactions, you'd be targeting about 2-3% of this total addressable market - aggressive but achievable for a premium brand with strong value proposition.
+
+Does this audience sizing feel right for ActiveWear Pro? And within this group, do you have stronger resonance with any particular fitness communities - CrossFit, running, strength training, or specific sports?
+
+Turn 7:
+Let me update our projections. Adding Canada and Mexico changes your efficiency targets and market dynamics significantly.
+
+With $2.5M across three markets instead of US-only, your per-market budget shrinks. If we allocate roughly 60% US, 30% Canada, 10% Mexico based on market maturity:
+- US: $1.5M → ~50K transactions  
+- Canada: $750K → ~20K transactions
+- Mexico: $250K → ~13K transactions
+
+This actually improves feasibility - smaller volumes per market are easier to achieve efficiently. Canada's fitness market mirrors the US for premium athletic wear, while Mexico offers growth potential at lower competition.
+
+Your $30 CAC target becomes more realistic when spread across markets with different competitive landscapes. Does this allocation feel right, or do you want different splits between the three markets?
+
+Turn 8:
+Perfect - leveraging North American similarities while testing in Mexico is smart strategy. Your audience of serious fitness enthusiasts translates well across all three markets, with some cultural nuances.
+
+Now let's define your value proposition for this audience. Premium fitness enthusiasts have specific motivations - are you positioning ActiveWear Pro primarily on performance benefits (technical features, workout optimization), lifestyle identity (fitness-first mindset, community belonging), or quality/durability (investment pieces that last)?
+
+Understanding your core value proposition helps determine which channels and messaging will resonate most with serious fitness enthusiasts across North America.
+
+────────────────────────────────────────
+
+## Step 4: Geography
+
+Turn 9:
+Excellent positioning - "professional-grade performance wear that makes you feel like an athlete" perfectly captures the premium fitness enthusiast mindset. That value proposition supports your $180 AOV and justifies premium pricing.
+
+Now for channels. With your defined audience (serious fitness enthusiasts), three-market scope, and performance-lifestyle positioning, let's build your media mix.
+
+Meta/Instagram will likely be your workhorse - exceptional for fitness content, strong in all three markets, and perfect for showcasing lifestyle + performance. Google Search captures high-intent moments when athletes research gear.
+
+For your $2.5M budget, I'd model starting allocation around:
+- Meta/Instagram: 45-50% ($1.1-1.25M)
+- Google Search/Shopping: 25-30% ($625-750K)  
+- Emerging channels: 20-25% ($500-625K)
+
+Does this foundation align with your channel thinking, or do you have strong preferences for specific platforms based on ActiveWear Pro's current performance?
+
+────────────────────────────────────────
+
+## Step 6: Value Proposition
+
+Turn 10:
+Perfect instinct on emerging channels! For serious fitness enthusiasts, consider:
+
+**Podcast Advertising** (strong choice) - Fitness/wellness podcasts have highly engaged audiences who trust host recommendations. Think Joe Rogan, Ben Greenfield, or niche CrossFit shows.
+
+**Connected TV/Streaming** - Target fitness content on Hulu, YouTube TV during workout programming or sports content.
+
+**Fitness App Partnerships** - In-app advertising on MyFitnessPal, Strava, or CrossFit-specific apps where your audience actively tracks performance.
+
+**YouTube Fitness Creators** - Partner with serious fitness influencers who align with your "elite athlete" positioning.
+
+For your $500-625K emerging budget, I'd test:
+- Podcast advertising: 40% ($200-250K)
+- Connected TV: 35% ($175-220K) 
+- Fitness app partnerships: 25% ($125-155K)
+
+Which of these resonates most with where you've seen ActiveWear Pro's audience engage? And do you have existing relationships with fitness creators or podcast networks?
+
+────────────────────────────────────────
+
+## Step 7: Channels
+
+Turn 11:
+Excellent - host-read podcast ads and CTV showcase are perfect for your "elite athlete" positioning. Authentic endorsements from trusted fitness voices carry serious weight with your audience.
+
+Now let's establish measurement. For tracking your 83K transactions across channels and markets, what attribution and analytics setup does ActiveWear Pro currently have? 
+
+Are you using GA4 with enhanced ecommerce, any incrementality testing, or primarily relying on platform reporting? With your multi-channel, multi-market approach, we'll need solid measurement to optimize that $30 CAC target and prove ROI to your board.
+
+────────────────────────────────────────
+
+## Step 8: Measurement
+
+Turn 12:
+Perfect timing to strengthen measurement before scaling. With $2.5M across three markets and emerging channels, solid attribution is crucial for optimizing that $30 CAC.
+
+**Priority 1: Enhanced Conversion Tracking**
+- Implement GA4 enhanced ecommerce properly across all markets
+- Set up server-side tracking to combat iOS changes
+- Use UTM parameters consistently across all channels
+
+**Priority 2: Incrementality Foundation**
+- Start with geo-holdout tests (easier than complex lift studies)
+- Test one major channel at a time to isolate true impact
+- Budget ~$50K for proper incrementality testing
+
+**Priority 3: Attribution Strategy**
+- Use blended approach: 7-day click, 1-day view for platforms
+- Track first-touch for brand building, last-touch for performance
+- Weekly reporting that triangulates platform data with GA4
+
+For your board presentations, focus on validated incrementality over platform ROAS. Should we budget measurement infrastructure into your $2.5M, or is this a separate investment ActiveWear Pro can make?
+
+────────────────────────────────────────

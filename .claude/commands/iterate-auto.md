@@ -47,10 +47,11 @@ WHILE stopping conditions not met:
 
     B. RUN MULTI-TURN EVALUATION (All 23 Scenarios)
 
+       Use --fast for 10x faster evaluation (Haiku simulator + parallel + FAST_SCORING judges):
+
        ```bash
        cd /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/agents/mpa/base/tests/braintrust
-       export $(grep -E "^[A-Z_]+=" /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/integrations/vercel-ai-gateway/.env | xargs) && \
-       node dist/mpa-multi-turn-eval.js --parallel --track-kb
+       node dist/mpa-multi-turn-eval.js --fast --track-kb
        ```
 
        Parse results for all 23 scenarios.
@@ -142,10 +143,9 @@ WHILE stopping conditions not met:
 
     J. EVALUATE CHANGE
 
-       Re-run multi-turn evaluation:
+       Re-run multi-turn evaluation with fast mode:
        ```bash
-       export $(grep -E "^[A-Z_]+=" /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/integrations/vercel-ai-gateway/.env | xargs) && \
-       node dist/mpa-multi-turn-eval.js --parallel --track-kb
+       node dist/mpa-multi-turn-eval.js --fast --track-kb
        ```
 
        Calculate new composite.

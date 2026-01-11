@@ -1,0 +1,234 @@
+{
+  "scenario": {
+    "id": "basic-user-step1-2",
+    "name": "Basic User - Steps 1-2 Completion",
+    "persona": "basic-shoe-retailer"
+  },
+  "result": {
+    "compositeScore": 0.7480000000000001,
+    "passed": true,
+    "totalTurns": 6,
+    "stepsCompleted": [
+      1,
+      2
+    ],
+    "turnsPerStep": {
+      "1": 2,
+      "2": 4
+    },
+    "failures": {
+      "warnings": [
+        {
+          "id": "overwhelming-questions",
+          "description": "Agent asks about LTV, margin, ROAS to basic user",
+          "type": "custom_pattern",
+          "detectionPattern": "what is your LTV|lifetime value|profit margin|ROAS target",
+          "severity": "warning",
+          "scorePenalty": 0.05,
+          "terminateOnDetect": false
+        }
+      ],
+      "major": [
+        {
+          "id": "step-boundary-violation",
+          "description": "Agent recommends channel strategy or allocations in Steps 1-2",
+          "type": "step_boundary_violation",
+          "detectionPattern": "facebook ads|google ads|tiktok|instagram|linkedin ads|programmatic|channel mix|media mix|display ads|video ads|ctv|connected tv",
+          "severity": "major",
+          "scorePenalty": 0.15,
+          "terminateOnDetect": false
+        }
+      ],
+      "critical": []
+    },
+    "primeDirective": {
+      "planQualityScore": 0.9466666666666668,
+      "dataCompleteness": 1,
+      "feasibilityAssessment": 1,
+      "riskIdentification": 1,
+      "mentorshipScore": 0.9083333333333334,
+      "explanationClarity": 0.8666666666666667,
+      "calculationTransparency": 1,
+      "userGrowth": 0.9166666666666667,
+      "turnsPerDirectiveAchievement": 6.469002695417789,
+      "tokensPerInsight": 17296,
+      "stepsPerDecisionPoint": 3,
+      "combinedEfficiency": 0.9565
+    }
+  },
+  "turnScoreAggregates": {
+    "response-length": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "single-question": {
+      "min": 0.8,
+      "max": 1,
+      "mean": 0.9,
+      "median": 0.9,
+      "scores": [
+        0.8,
+        0.8,
+        1,
+        1,
+        1,
+        0.8
+      ]
+    },
+    "step-boundary": {
+      "min": 0,
+      "max": 1,
+      "mean": 0.8333333333333334,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        0,
+        1,
+        1
+      ]
+    },
+    "source-citation": {
+      "min": 0.3,
+      "max": 1,
+      "mean": 0.7333333333333334,
+      "median": 0.9,
+      "scores": [
+        1,
+        1,
+        0.3,
+        0.8,
+        0.3,
+        1
+      ]
+    },
+    "acronym-definition": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "idk-protocol": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "calculation-presence": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "adaptive-sophistication": {
+      "min": 0.6,
+      "max": 1,
+      "mean": 0.8666666666666667,
+      "median": 1,
+      "scores": [
+        0.6,
+        1,
+        1,
+        1,
+        0.6,
+        1
+      ]
+    },
+    "proactive-intelligence": {
+      "min": 0.5,
+      "max": 1,
+      "mean": 0.8333333333333334,
+      "median": 1,
+      "scores": [
+        1,
+        0.5,
+        1,
+        1,
+        1,
+        0.5
+      ]
+    },
+    "progress-over-perfection": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "risk-opportunity-flagging": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  },
+  "conversationScores": {
+    "step-completion-rate": 1,
+    "conversation-efficiency": 1,
+    "context-retention": 1,
+    "greeting-uniqueness": 1,
+    "loop-detection": 1,
+    "failure-penalty": 0.8,
+    "step-transition-quality": 1,
+    "overall-coherence": 1
+  },
+  "executionMetadata": {
+    "startTime": 1768141125747,
+    "endTime": 1768141176971,
+    "totalDurationMs": 51224,
+    "averageLatencyMs": 7889.666666666667,
+    "totalTokensUsed": 34592,
+    "modelUsed": "claude-sonnet-4-20250514",
+    "promptVersion": "v5_7_5"
+  }
+}

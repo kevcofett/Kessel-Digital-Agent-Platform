@@ -25,6 +25,10 @@ const mpa_multi_turn_types_js_1 = require("../mpa-multi-turn-types.js");
 const anthropic = new sdk_1.default({
     apiKey: process.env.ANTHROPIC_API_KEY,
 });
+// Use Haiku for LLM judges when FAST_SCORING=true (10x faster, minimal quality loss)
+const SCORER_MODEL = process.env.FAST_SCORING === "true"
+    ? "claude-3-5-haiku-20241022"
+    : "claude-sonnet-4-20250514";
 // =============================================================================
 // CODE-BASED SCORERS
 // =============================================================================
@@ -96,7 +100,13 @@ function scoreSingleQuestion(output) {
     };
 }
 /**
- * Score step boundary compliance (no channels in Steps 1-2)
+ * Score step boundary compliance (no channel RECOMMENDATIONS in Steps 1-2)
+ *
+ * This scorer detects actual channel recommendations, not just mentions.
+ * - "I recommend Facebook ads" = VIOLATION
+ * - "You should allocate 40% to Google" = VIOLATION
+ * - "This gives flexibility for channel mix" = OK (general observation)
+ * - "That pacing makes sense" = OK (acknowledging user input)
  */
 function scoreStepBoundary(output, currentStep) {
     if (currentStep > 2) {
@@ -107,12 +117,18 @@ function scoreStepBoundary(output, currentStep) {
             scope: "turn",
         };
     }
+    // Only flag actual channel/budget RECOMMENDATIONS, not mentions
     const forbiddenPatterns = [
-        /\b(pacing|flighting)\b/i,
-        /\b(channel mix|media mix)\b/i,
-        /\b(facebook ads|google ads|tiktok|instagram|linkedin)\b/i,
-        /\b(programmatic|display|video|ctv)\b/i,
-        /\b(creative|messaging|ad copy)\b/i,
+        // Recommending specific channels
+        /\b(recommend|suggest|propose|advise)\b.{0,30}\b(facebook|google|tiktok|instagram|linkedin|meta|programmatic|display|ctv|youtube)\b/i,
+        // Should/would/could + action + channel
+        /\b(should|would|could)\s+(run|use|try|test|launch|start)\s+.{0,20}\b(facebook|google|tiktok|instagram|linkedin|meta)\b/i,
+        // Percentage allocations to specific channels
+        /\b(\d+%)\s*(to|for|of|on)\s*.{0,10}\b(facebook|google|social|search|display|programmatic)\b/i,
+        // Budget allocations to channels
+        /\b(allocate|invest|spend|put)\s+.{0,20}\b(facebook|google|tiktok|social|search|display)\b/i,
+        // Creative recommendations (not just mentions)
+        /\b(creative|messaging|ad copy)\s+(should|needs to|must|will need)\b/i,
     ];
     const violations = forbiddenPatterns.filter((p) => p.test(output));
     return {
@@ -125,8 +141,12 @@ function scoreStepBoundary(output, currentStep) {
 /**
  * Score source citation (data claims should have sources)
  *
- * More lenient scoring - the agent often naturally integrates user data
- * without explicit citation phrases. We look for contextual indicators.
+ * The agent MUST cite one of five sources for every data claim:
+ * 1. Knowledge Base - data from KB documents
+ * 2. Websearch - fresh data from web search (must include link)
+ * 3. API Call - data from direct API call
+ * 4. User Provided - data the user gave
+ * 5. Benchmark - broad industry data from stale/general websearch (must include link)
  */
 function scoreSourceCitation(output) {
     const hasNumbers = /\$[\d,]+|\d+%|\d+\s*(dollars|percent|customers|leads)/i.test(output);
@@ -138,20 +158,19 @@ function scoreSourceCitation(output) {
             scope: "turn",
         };
     }
-    // Explicit source patterns (highest score)
+    // The five required source types (explicit citations)
     const explicitSourcePatterns = [
-        /based on your input/i,
-        /based on kb/i,
         /based on knowledge base/i,
+        /based on websearch/i,
         /based on web search/i,
-        /based on.*benchmark/i,
-        /my estimate/i,
-        /industry.*typical/i,
-        /market.*shows/i,
-        /according to/i,
-        /typical.*range/i,
+        /based on api call/i,
+        /based on user provided/i,
+        /based on benchmark/i,
+        // Also accept shorter forms
+        /based on kb/i,
+        /\[source:/i, // Link citation format
     ];
-    // Implicit contextual patterns (still acceptable)
+    // Implicit contextual patterns (acceptable but lower score)
     const implicitPatterns = [
         /you (mentioned|said|told|provided|shared)/i,
         /your (budget|target|goal|kpi|objective)/i,
@@ -162,6 +181,21 @@ function scoreSourceCitation(output) {
         /divid(ed|ing) by/i,
         /equals|= \$/i,
         /let me (run|do|calculate)/i,
+        /industry.*typical/i,
+        /market.*shows/i,
+        /typical.*range/i,
+        // Additional patterns for benchmark citations
+        /typical(ly)?\s+(runs?|costs?|is|are|around)/i,
+        /benchmark(s)?\s+(show|suggest|indicate|run|are)/i,
+        /for\s+\w+\s*(,|where)?\s*(typical|benchmark)/i,
+        /\w+\s+benchmarks?\s+(run|show|are)/i,
+        /where\s+typical/i,
+        // More implicit patterns
+        /in line with\s+(best\s+)?practice/i,
+        /roughly\s+\d+/i,
+        /approximately\s+\d+/i,
+        /about\s+\d+-?\d*%/i,
+        /around\s+\d+/i,
     ];
     const hasExplicitSource = explicitSourcePatterns.some((p) => p.test(output));
     const hasImplicitSource = implicitPatterns.some((p) => p.test(output));
@@ -274,7 +308,7 @@ function scoreIdkProtocol(input, output) {
  */
 async function llmJudge(prompt) {
     const response = await anthropic.messages.create({
-        model: "claude-sonnet-4-20250514",
+        model: SCORER_MODEL,
         max_tokens: 100,
         messages: [{ role: "user", content: prompt }],
     });
@@ -424,41 +458,90 @@ Reply with ONLY one letter: A, B, C, D, or F`;
     };
 }
 /**
- * Score calculation and modeling presence
+ * Score proactive reforecasting behavior
  *
- * Code-based check for whether the response contains calculations,
- * projections, or mathematical modeling.
+ * This scorer detects whether the agent proactively recalculates and
+ * remodels when new data comes in. The agent should show math when:
+ * 1. User provides new data that changes the model (budget, volume, etc.)
+ * 2. Justifying why something is aggressive, conservative, or infeasible
+ * 3. Validating feasibility against benchmarks
+ *
+ * The scorer does NOT require math on every turn - only when reforecasting
+ * is triggered by new data or when math is needed to justify a conclusion.
  */
-function scoreCalculationPresence(output) {
-    // Patterns that indicate calculations or modeling
-    const calculationPatterns = [
-        /\$[\d,]+\s*[\/×x]\s*[\d,]+/i, // $X / Y or $X x Y
-        /[\d,]+\s*[\/×x]\s*[\d,]+\s*=\s*[\$\d]/i, // X / Y = $Z
-        /equals?\s*\$?[\d,]+/i, // equals $X
-        /=\s*\$?[\d,]+/i, // = $X
-        /approximately\s*\$?[\d,]+/i, // approximately $X
-        /\b(project(ed|ion)|forecast|model(ing|ed)?|estimat(e|ed|ing))\b/i,
-        /\b(implies|suggests|indicates)\s+\$?[\d,]+/i,
-        /\bper\s+(customer|lead|unit|acquisition)/i,
+function scoreCalculationPresence(output, input, previousInput) {
+    // Detect if user provided new quantitative data in this turn
+    const newDataPatterns = [
+        /\$[\d,]+k?/i, // Dollar amounts
+        /[\d,]+\s*(customers?|leads?|users?|conversions?)/i, // Volume targets
+        /[\d]+%/i, // Percentages
+        /budget\s*(is|of|around|about)?\s*\$?[\d,]+/i, // Budget mentions
+        /(target|goal|need|want)\s*(is|of)?\s*[\d,]+/i, // Targets
+        /increase(d)?\s*(to|by)\s*[\d,]+/i, // Changes
+        /decrease(d)?\s*(to|by)\s*[\d,]+/i, // Changes
+        /(actually|instead|now|change(d)?)\s*.{0,20}[\d,]+/i, // Mid-stream changes
     ];
-    const hasCalculation = calculationPatterns.some((p) => p.test(output));
-    // Also check for percentage calculations
-    const percentagePatterns = [
-        /[\d]+%\s*(of|allocation)/i,
-        /\b(allocat(e|ing)|budget(ed)?)\s*[\d]+%/i,
+    const userProvidedNewData = newDataPatterns.some((p) => p.test(input));
+    // Detect if agent is making claims that require justification
+    const justificationNeededPatterns = [
+        /\b(aggressive|ambitious|challenging|difficult|unrealistic)\b/i,
+        /\b(conservative|safe|achievable|realistic)\b/i,
+        /\b(above|below|higher|lower)\s*(than)?\s*(typical|benchmark|average)/i,
+        /\b(won'?t|cannot|can'?t)\s*(hit|reach|achieve|meet)/i,
+        /\b(need to|would need|requires?)\s*(increase|decrease|adjust)/i,
+        /\b(gap|shortfall|deficit)\b/i,
     ];
-    const hasPercentage = percentagePatterns.some((p) => p.test(output));
-    let score = 0;
-    if (hasCalculation)
-        score = 1.0;
-    else if (hasPercentage)
-        score = 0.7;
-    else
-        score = 0.5; // Neutral - calculation may not be applicable
+    const agentMakesJustifiableClaim = justificationNeededPatterns.some((p) => p.test(output));
+    // Patterns that indicate the agent DID show math/reforecasting
+    const reforecastingPatterns = [
+        /\$[\d,]+k?\s*[\/÷×x]\s*[\d,]+/i, // $X / Y or $X x Y
+        /[\d,]+\s*[\/÷×x]\s*[\d,]+\s*=\s*[\$\d]/i, // X / Y = $Z
+        /=\s*\$[\d,]+/i, // = $X (with dollar sign)
+        /\bper\s+(customer|lead|acquisition|unit)\b/i, // Per-unit language
+        /let me (update|recalculate|model|run)/i, // Reforecasting language
+        /updat(e|ing)\s*(our|the)?\s*(projections?|numbers?|model)/i,
+        /recalculat(e|ing)/i,
+        /that (means|implies|equals|projects|works out)/i,
+        /this (means|implies|equals|projects|works out)/i,
+    ];
+    const agentShowedMath = reforecastingPatterns.some((p) => p.test(output));
+    // Scoring logic:
+    // 1. If user provided new data AND agent showed reforecasting → 1.0
+    // 2. If agent made justifiable claim AND showed math → 1.0
+    // 3. If user provided new data but agent didn't reforecast → 0.5 (missed opportunity)
+    // 4. If agent made claim without math justification → 0.5 (should show work)
+    // 5. If neither triggered, calculation not needed → 1.0 (neutral pass)
+    let score = 1.0; // Default: calculation not needed this turn
+    let status = "not_triggered";
+    if (userProvidedNewData) {
+        if (agentShowedMath) {
+            score = 1.0;
+            status = "reforecasted_on_new_data";
+        }
+        else {
+            score = 0.5;
+            status = "missed_reforecast_opportunity";
+        }
+    }
+    else if (agentMakesJustifiableClaim) {
+        if (agentShowedMath) {
+            score = 1.0;
+            status = "justified_with_math";
+        }
+        else {
+            score = 0.5;
+            status = "claim_without_justification";
+        }
+    }
     return {
         scorer: "calculation-presence",
         score,
-        metadata: { hasCalculation, hasPercentage },
+        metadata: {
+            userProvidedNewData,
+            agentMakesJustifiableClaim,
+            agentShowedMath,
+            status,
+        },
         scope: "turn",
     };
 }
@@ -477,7 +560,7 @@ async function scoreTurn(userMessage, agentResponse, currentStep, stepState, use
     scores["source-citation"] = scoreSourceCitation(agentResponse);
     scores["acronym-definition"] = scoreAcronymDefinition(agentResponse);
     scores["idk-protocol"] = scoreIdkProtocol(userMessage, agentResponse);
-    scores["calculation-presence"] = scoreCalculationPresence(agentResponse);
+    scores["calculation-presence"] = scoreCalculationPresence(agentResponse, userMessage);
     // LLM-based scorers (run in parallel)
     const hasEnoughData = stepState.collectedData[currentStep]?.minimumViableMet || false;
     const [adaptiveScore, proactiveScore, progressScore, riskScore] = await Promise.all([

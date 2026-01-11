@@ -75,7 +75,13 @@ export interface KBOptimizationRecommendation {
  */
 export declare const MPA_KB_DOCUMENTS: KBDocument[];
 /**
+ * Convert a filename to its document ID
+ */
+export declare function filenameToDocId(filename: string): string;
+/**
  * Track KB usage in a single turn
+ * Note: injectedDocuments may contain filenames or document IDs
+ * This function converts filenames to IDs for consistent tracking
  */
 export declare function trackKBUsage(agentResponse: string, injectedDocuments: string[], step: number, turnNumber: number): KBUsageRecord[];
 /**

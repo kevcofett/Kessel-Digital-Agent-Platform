@@ -50,6 +50,7 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MPA_KB_DOCUMENTS = void 0;
+exports.filenameToDocId = filenameToDocId;
 exports.trackKBUsage = trackKBUsage;
 exports.calculateKBImpactMetrics = calculateKBImpactMetrics;
 exports.generateKBOptimizationRecommendations = generateKBOptimizationRecommendations;
@@ -169,7 +170,39 @@ exports.MPA_KB_DOCUMENTS = [
         lastModified: "2026-01-10",
         contentSummary: "Calculation formatting, math display, efficiency computations",
     },
+    {
+        id: "adaptive-language",
+        filename: "MPA_Adaptive_Language_v5_5.txt",
+        category: "supporting",
+        step: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        version: "5.5",
+        lastModified: "2026-01-10",
+        contentSummary: "Sophistication matching, language adaptation, acronym handling",
+    },
+    {
+        id: "step-boundary",
+        filename: "MPA_Step_Boundary_Guidance_v5_5.txt",
+        category: "supporting",
+        step: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        version: "5.5",
+        lastModified: "2026-01-10",
+        contentSummary: "Step boundary enforcement, question discipline, transition guidance",
+    },
 ];
+/**
+ * Filename to Document ID mapping
+ * Used to convert filenames from conversation engine to document IDs for tracking
+ */
+const FILENAME_TO_ID_MAP = {};
+for (const doc of exports.MPA_KB_DOCUMENTS) {
+    FILENAME_TO_ID_MAP[doc.filename] = doc.id;
+}
+/**
+ * Convert a filename to its document ID
+ */
+function filenameToDocId(filename) {
+    return FILENAME_TO_ID_MAP[filename] || filename;
+}
 /**
  * Patterns to detect KB document references in agent responses
  */
@@ -211,13 +244,32 @@ const KB_REFERENCE_PATTERNS = {
         /\$[\d,]+\s*[÷\/]\s*[\d,]+\s*=\s*\$?[\d,]+/i, // Math calculations
         /(?:implied|calculated).*(?:cac|efficiency|cost)/i,
     ],
+    "adaptive-language": [
+        /cost per customer/i,
+        /customer value/i,
+        /what a customer is worth/i,
+        /what you spend in ads/i,
+        /simple terms/i,
+        /let me explain/i,
+    ],
+    "step-boundary": [
+        /step \d/i,
+        /moving to/i,
+        /let us proceed/i,
+        /before we discuss/i,
+        /one question at a time/i,
+    ],
 };
 /**
  * Track KB usage in a single turn
+ * Note: injectedDocuments may contain filenames or document IDs
+ * This function converts filenames to IDs for consistent tracking
  */
 function trackKBUsage(agentResponse, injectedDocuments, step, turnNumber) {
     const records = [];
-    for (const docId of injectedDocuments) {
+    for (const filenameOrId of injectedDocuments) {
+        // Convert filename to document ID if necessary
+        const docId = filenameToDocId(filenameOrId);
         const patterns = KB_REFERENCE_PATTERNS[docId] || [];
         const wasReferenced = patterns.some((p) => p.test(agentResponse));
         // Find specific content matches

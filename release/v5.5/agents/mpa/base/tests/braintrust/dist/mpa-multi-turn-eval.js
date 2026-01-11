@@ -117,9 +117,9 @@ const OUTPUT_BASE_DIR = path.join(getSourceDir(), "outputs");
  */
 const EFFICIENCY_MODE_MAX_TURNS = 20;
 /**
- * Fast mode max turns (aggressive cap for rapid iteration)
+ * Fast mode max turns (allows full conversations while using faster models)
  */
-const FAST_MODE_MAX_TURNS = 12;
+const FAST_MODE_MAX_TURNS = 40;
 /**
  * Parallel execution concurrency limit
  */
@@ -914,87 +914,92 @@ async function main() {
         (0, baseline_tracker_js_1.saveBaseline)(newBaseline, BASELINE_PATH);
         console.log(`\n✅ New baseline saved to ${BASELINE_PATH}`);
     }
-    // Also run via Braintrust for logging
-    await (0, braintrust_1.Eval)("MPA-Multi-Turn", {
-        experimentName: `multi-turn-${promptVersion}-${Date.now()}`,
-        metadata: {
-            promptVersion,
-            model: args.model || "claude-sonnet-4-20250514",
-            scenarioCount: scenarios.length,
-            category: args.category,
-            efficiencyMode: args.efficiency,
-            parallel: args.parallel,
-        },
-        data: () => {
-            return scenarios.map((scenario) => ({
-                input: {
-                    scenarioId: scenario.id,
-                    scenarioName: scenario.name,
-                    persona: scenario.persona.id,
-                    openingMessage: scenario.openingMessage,
-                    maxTurns: scenario.maxTurns,
-                },
-                expected: {
-                    minimumScore: scenario.successCriteria.minimumOverallScore,
-                    requiredSteps: scenario.successCriteria.requiredStepsComplete,
-                },
-                metadata: {
-                    ...index_js_1.SCENARIO_METADATA[scenario.id],
-                },
-            }));
-        },
-        task: async (input) => {
-            // Use cached result if available
-            const cachedResult = results.get(input.scenarioId);
-            if (cachedResult) {
-                const primeDirective = calculatePrimeDirectiveEfficiency(cachedResult);
+    // Also run via Braintrust for logging (only if API key is configured)
+    if (!process.env.BRAINTRUST_API_KEY) {
+        console.log("\n⚠️  Skipping Braintrust logging (BRAINTRUST_API_KEY not set)");
+    }
+    else {
+        await (0, braintrust_1.Eval)("MPA-Multi-Turn", {
+            experimentName: `multi-turn-${promptVersion}-${Date.now()}`,
+            metadata: {
+                promptVersion,
+                model: args.model || "claude-sonnet-4-20250514",
+                scenarioCount: scenarios.length,
+                category: args.category,
+                efficiencyMode: args.efficiency,
+                parallel: args.parallel,
+            },
+            data: () => {
+                return scenarios.map((scenario) => ({
+                    input: {
+                        scenarioId: scenario.id,
+                        scenarioName: scenario.name,
+                        persona: scenario.persona.id,
+                        openingMessage: scenario.openingMessage,
+                        maxTurns: scenario.maxTurns,
+                    },
+                    expected: {
+                        minimumScore: scenario.successCriteria.minimumOverallScore,
+                        requiredSteps: scenario.successCriteria.requiredStepsComplete,
+                    },
+                    metadata: {
+                        ...index_js_1.SCENARIO_METADATA[scenario.id],
+                    },
+                }));
+            },
+            task: async (input) => {
+                // Use cached result if available
+                const cachedResult = results.get(input.scenarioId);
+                if (cachedResult) {
+                    const primeDirective = calculatePrimeDirectiveEfficiency(cachedResult);
+                    return {
+                        compositeScore: cachedResult.compositeScore,
+                        passed: cachedResult.passed,
+                        totalTurns: cachedResult.totalTurns,
+                        completedSteps: cachedResult.finalStepState.completedSteps,
+                        stepsCompleted: cachedResult.finalStepState.completedSteps.length,
+                        criticalFailures: cachedResult.failures.critical.length,
+                        majorFailures: cachedResult.failures.major.length,
+                        warnings: cachedResult.failures.warnings.length,
+                        primeDirectiveEfficiency: primeDirective.combinedEfficiency,
+                        planQuality: primeDirective.planQualityScore,
+                        mentorshipQuality: primeDirective.mentorshipScore,
+                        durationMs: cachedResult.executionMetadata.totalDurationMs,
+                        tokensUsed: cachedResult.executionMetadata.totalTokensUsed,
+                        turnScoreAggregates: cachedResult.turnScoreAggregates,
+                        conversationScores: Object.fromEntries(Object.entries(cachedResult.conversationScores).map(([k, v]) => [k, v.score])),
+                    };
+                }
+                // Fallback to running scenario
+                const scenario = (0, index_js_1.getScenarioById)(input.scenarioId);
+                if (!scenario) {
+                    throw new Error(`Scenario not found: ${input.scenarioId}`);
+                }
+                const result = await runScenario(scenario, engineConfig);
+                const primeDirective = calculatePrimeDirectiveEfficiency(result);
                 return {
-                    compositeScore: cachedResult.compositeScore,
-                    passed: cachedResult.passed,
-                    totalTurns: cachedResult.totalTurns,
-                    completedSteps: cachedResult.finalStepState.completedSteps,
-                    stepsCompleted: cachedResult.finalStepState.completedSteps.length,
-                    criticalFailures: cachedResult.failures.critical.length,
-                    majorFailures: cachedResult.failures.major.length,
-                    warnings: cachedResult.failures.warnings.length,
+                    compositeScore: result.compositeScore,
+                    passed: result.passed,
+                    totalTurns: result.totalTurns,
+                    completedSteps: result.finalStepState.completedSteps,
+                    stepsCompleted: result.finalStepState.completedSteps.length,
+                    criticalFailures: result.failures.critical.length,
+                    majorFailures: result.failures.major.length,
+                    warnings: result.failures.warnings.length,
                     primeDirectiveEfficiency: primeDirective.combinedEfficiency,
                     planQuality: primeDirective.planQualityScore,
                     mentorshipQuality: primeDirective.mentorshipScore,
-                    durationMs: cachedResult.executionMetadata.totalDurationMs,
-                    tokensUsed: cachedResult.executionMetadata.totalTokensUsed,
-                    turnScoreAggregates: cachedResult.turnScoreAggregates,
-                    conversationScores: Object.fromEntries(Object.entries(cachedResult.conversationScores).map(([k, v]) => [k, v.score])),
+                    durationMs: result.executionMetadata.totalDurationMs,
+                    tokensUsed: result.executionMetadata.totalTokensUsed,
+                    turnScoreAggregates: result.turnScoreAggregates,
+                    conversationScores: Object.fromEntries(Object.entries(result.conversationScores).map(([k, v]) => [k, v.score])),
                 };
-            }
-            // Fallback to running scenario
-            const scenario = (0, index_js_1.getScenarioById)(input.scenarioId);
-            if (!scenario) {
-                throw new Error(`Scenario not found: ${input.scenarioId}`);
-            }
-            const result = await runScenario(scenario, engineConfig);
-            const primeDirective = calculatePrimeDirectiveEfficiency(result);
-            return {
-                compositeScore: result.compositeScore,
-                passed: result.passed,
-                totalTurns: result.totalTurns,
-                completedSteps: result.finalStepState.completedSteps,
-                stepsCompleted: result.finalStepState.completedSteps.length,
-                criticalFailures: result.failures.critical.length,
-                majorFailures: result.failures.major.length,
-                warnings: result.failures.warnings.length,
-                primeDirectiveEfficiency: primeDirective.combinedEfficiency,
-                planQuality: primeDirective.planQualityScore,
-                mentorshipQuality: primeDirective.mentorshipScore,
-                durationMs: result.executionMetadata.totalDurationMs,
-                tokensUsed: result.executionMetadata.totalTokensUsed,
-                turnScoreAggregates: result.turnScoreAggregates,
-                conversationScores: Object.fromEntries(Object.entries(result.conversationScores).map(([k, v]) => [k, v.score])),
-            };
-        },
-        scores: [
-            (args) => args.output.compositeScore,
-        ],
-    });
+            },
+            scores: [
+                (args) => args.output.compositeScore,
+            ],
+        });
+    }
     console.log("\n✅ Evaluation complete!");
 }
 // Run if executed directly

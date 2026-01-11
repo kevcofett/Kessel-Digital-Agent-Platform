@@ -25,14 +25,24 @@ export declare function scoreResponseLength(output: string): TurnScore;
  */
 export declare function scoreSingleQuestion(output: string): TurnScore;
 /**
- * Score step boundary compliance (no channels in Steps 1-2)
+ * Score step boundary compliance (no channel RECOMMENDATIONS in Steps 1-2)
+ *
+ * This scorer detects actual channel recommendations, not just mentions.
+ * - "I recommend Facebook ads" = VIOLATION
+ * - "You should allocate 40% to Google" = VIOLATION
+ * - "This gives flexibility for channel mix" = OK (general observation)
+ * - "That pacing makes sense" = OK (acknowledging user input)
  */
 export declare function scoreStepBoundary(output: string, currentStep: number): TurnScore;
 /**
  * Score source citation (data claims should have sources)
  *
- * More lenient scoring - the agent often naturally integrates user data
- * without explicit citation phrases. We look for contextual indicators.
+ * The agent MUST cite one of five sources for every data claim:
+ * 1. Knowledge Base - data from KB documents
+ * 2. Websearch - fresh data from web search (must include link)
+ * 3. API Call - data from direct API call
+ * 4. User Provided - data the user gave
+ * 5. Benchmark - broad industry data from stale/general websearch (must include link)
  */
 export declare function scoreSourceCitation(output: string): TurnScore;
 /**
@@ -63,12 +73,18 @@ export declare function scoreProgressOverPerfection(input: string, output: strin
  */
 export declare function scoreRiskOpportunityFlagging(input: string, output: string, currentStep: number): Promise<TurnScore>;
 /**
- * Score calculation and modeling presence
+ * Score proactive reforecasting behavior
  *
- * Code-based check for whether the response contains calculations,
- * projections, or mathematical modeling.
+ * This scorer detects whether the agent proactively recalculates and
+ * remodels when new data comes in. The agent should show math when:
+ * 1. User provides new data that changes the model (budget, volume, etc.)
+ * 2. Justifying why something is aggressive, conservative, or infeasible
+ * 3. Validating feasibility against benchmarks
+ *
+ * The scorer does NOT require math on every turn - only when reforecasting
+ * is triggered by new data or when math is needed to justify a conclusion.
  */
-export declare function scoreCalculationPresence(output: string): TurnScore;
+export declare function scoreCalculationPresence(output: string, input: string, previousInput?: string): TurnScore;
 /**
  * Score a single turn with all applicable scorers
  */

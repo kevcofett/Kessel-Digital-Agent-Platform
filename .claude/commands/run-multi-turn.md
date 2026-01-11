@@ -51,17 +51,23 @@ Navigate to the braintrust directory and run the evaluation:
 cd /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/agents/mpa/base/tests/braintrust
 ```
 
-For all scenarios (standard):
+For all scenarios (FAST MODE - RECOMMENDED):
 
 ```bash
-export $(grep -E "^[A-Z_]+=" /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/integrations/vercel-ai-gateway/.env | xargs) && \
+node dist/mpa-multi-turn-eval.js --fast --track-kb
+```
+
+This uses Haiku simulator + parallel execution + FAST_SCORING judges for 10x faster runs.
+
+For all scenarios (standard, slower):
+
+```bash
 node dist/mpa-multi-turn-eval.js
 ```
 
-For all scenarios (parallel - recommended for iteration):
+For all scenarios (parallel only, no Haiku):
 
 ```bash
-export $(grep -E "^[A-Z_]+=" /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/integrations/vercel-ai-gateway/.env | xargs) && \
 node dist/mpa-multi-turn-eval.js --parallel
 ```
 
@@ -88,11 +94,15 @@ node dist/mpa-multi-turn-eval.js --parallel --track-kb
 
 Command-line flags:
 
-- `--parallel` - Run scenarios concurrently (3 at a time) for faster completion
+- `--fast` - RECOMMENDED: Enable all speed optimizations (parallel + Haiku simulator + 40 turn cap)
+- `--parallel` - Run scenarios concurrently (5 at a time) for faster completion
+- `--haiku-simulator` - Use Haiku for user simulation (faster, no quality loss)
 - `--track-kb` - Track KB document impact and generate optimization recommendations
 - `--save-baseline` - Save current results as new baseline
 - `--verbose` - Show full conversation logs
 - `--scenario [id]` - Run specific scenario only
+
+Note: FAST_SCORING=true is set in .env by default, which uses Haiku for LLM judges (10x faster).
 
 STEP 3 - PARSE RESULTS
 

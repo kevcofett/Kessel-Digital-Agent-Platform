@@ -240,7 +240,7 @@ export interface FailureCondition {
     /** Description of what constitutes this failure */
     description: string;
     /** Detection pattern type */
-    type: "loop_detection" | "context_loss" | "greeting_repetition" | "step_boundary_violation" | "excessive_questions" | "blocked_progress" | "custom_pattern";
+    type: "loop_detection" | "duplicate_question" | "context_loss" | "greeting_repetition" | "step_boundary_violation" | "excessive_questions" | "interrogation_without_teaching" | "blocked_progress" | "custom_pattern";
     /** Regex or custom detection logic identifier */
     detectionPattern?: string;
     /** Severity determines scoring impact */

@@ -346,11 +346,13 @@ export interface FailureCondition {
 
   /** Detection pattern type */
   type:
-    | "loop_detection"
+    | "loop_detection" // Legacy - maps to duplicate_question
+    | "duplicate_question" // Agent asks same question again (80%+ similarity)
     | "context_loss"
     | "greeting_repetition"
     | "step_boundary_violation"
-    | "excessive_questions"
+    | "excessive_questions" // Legacy - maps to interrogation_without_teaching
+    | "interrogation_without_teaching" // 3+ questions without teaching/explanation
     | "blocked_progress"
     | "custom_pattern";
 

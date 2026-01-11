@@ -6,13 +6,29 @@
 import { ConversationTurn, FailureCondition } from "./mpa-multi-turn-types.js";
 /**
  * Built-in failure patterns
+ *
+ * PHILOSOPHY: Detect actual behavioral failures, not natural thorough discovery.
+ *
+ * TRUE FAILURES:
+ * - Asking the EXACT same question repeatedly (agent stuck in loop)
+ * - Asking 3+ questions in a row WITHOUT teaching (interrogation)
+ * - Recommending channel strategy before Step 7 (premature tactics)
+ *
+ * NOT FAILURES:
+ * - Asking multiple related questions with teaching/explanation
+ * - Referencing channels for economic validation
+ * - Thorough discovery to achieve KPI objectives
  */
 export declare const BUILTIN_FAILURES: FailureCondition[];
 /**
  * Failure Detector class
+ *
+ * Detects actual behavioral failures, not natural thorough discovery.
+ * The philosophy is to distinguish between:
+ * - TRUE failures: Agent stuck in loop, interrogating without teaching
+ * - NOT failures: Thorough discovery to achieve KPI objectives
  */
 export declare class FailureDetector {
-    private questionHistory;
     private providedData;
     private previousUserSaidIDK;
     private idkTopic;
@@ -37,11 +53,27 @@ export declare class FailureDetector {
      */
     private checkGreetingRepetition;
     /**
-     * Check for excessive questions
+     * Check for interrogation without teaching
+     *
+     * An interrogation occurs when the agent asks multiple questions without:
+     * 1. Explaining why the information matters
+     * 2. Connecting to previous insights
+     * 3. Providing calculations or analysis
+     * 4. Teaching the user something valuable
+     *
+     * This is different from thorough discovery where questions are accompanied
+     * by teaching, calculations, or goal-oriented explanations.
      */
-    private checkExcessiveQuestions;
+    private checkInterrogationWithoutTeaching;
     /**
      * Check for step boundary violations
+     *
+     * Context-aware detection that distinguishes between:
+     * - TRUE VIOLATION: Agent recommends channel strategy, allocations, or tactics
+     * - FALSE POSITIVE: Agent references channels for economic validation (activation rates, CAC by channel)
+     *
+     * The key insight is that sophisticated users often provide channel-level performance data
+     * when discussing economics (Step 2), and the agent should validate this without penalty.
      */
     private checkStepBoundaryViolation;
     /**
@@ -49,18 +81,23 @@ export declare class FailureDetector {
      */
     private checkContextLoss;
     /**
-     * Check for question loops
+     * Check for duplicate questions
      *
-     * A true loop is when the agent repeatedly asks the SAME question type
-     * within a SHORT window (e.g., 4 consecutive turns). In a 10-step planning
-     * session, it's natural to revisit topics across different steps.
+     * Detects when the agent asks the SAME question repeatedly (80%+ similarity).
+     * This is different from asking RELATED questions about a topic.
      *
-     * This detector focuses on detecting ACTUAL loops where the agent is stuck,
-     * not natural topic revisitation across steps.
+     * A TRUE loop is when the agent is stuck and not progressing.
+     * Asking different questions about the same topic (e.g., demographics,
+     * then behaviors, then geography) is NOT a loop - it's thorough discovery.
      */
-    private checkLoopDetection;
+    private checkDuplicateQuestion;
     /**
-     * Categorize question type
+     * Normalize a question for comparison
+     * Removes common words, punctuation, and normalizes whitespace
+     */
+    private normalizeQuestion;
+    /**
+     * Categorize question type (kept for legacy support)
      */
     private getQuestionType;
     /**

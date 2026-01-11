@@ -66,9 +66,12 @@ exports.parseArgs = parseArgs;
 exports.calculatePrimeDirectiveEfficiency = calculatePrimeDirectiveEfficiency;
 exports.runScenariosParallel = runScenariosParallel;
 exports.runScenariosSequential = runScenariosSequential;
+const dotenv_1 = require("dotenv");
 const braintrust_1 = require("braintrust");
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
+// Load environment variables from .env file
+(0, dotenv_1.config)();
 const conversation_engine_js_1 = require("./conversation-engine.js");
 const index_js_1 = require("./scenarios/index.js");
 const index_js_2 = require("./scorers/index.js");

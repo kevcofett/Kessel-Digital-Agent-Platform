@@ -26,9 +26,13 @@
  *   BRAINTRUST_API_KEY=xxx ANTHROPIC_API_KEY=xxx npx braintrust eval mpa-multi-turn-eval.ts
  */
 
+import { config } from "dotenv";
 import { Eval } from "braintrust";
 import * as fs from "fs";
 import * as path from "path";
+
+// Load environment variables from .env file
+config();
 import { ConversationEngine } from "./conversation-engine.js";
 import {
   ALL_SCENARIOS,

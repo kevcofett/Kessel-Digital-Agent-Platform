@@ -8,6 +8,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FailureDetector = exports.BUILTIN_FAILURES = void 0;
 /**
  * Built-in failure patterns
+ *
+ * PHILOSOPHY: Detect actual behavioral failures, not natural thorough discovery.
+ *
+ * TRUE FAILURES:
+ * - Asking the EXACT same question repeatedly (agent stuck in loop)
+ * - Asking 3+ questions in a row WITHOUT teaching (interrogation)
+ * - Recommending channel strategy before Step 7 (premature tactics)
+ *
+ * NOT FAILURES:
+ * - Asking multiple related questions with teaching/explanation
+ * - Referencing channels for economic validation
+ * - Thorough discovery to achieve KPI objectives
  */
 exports.BUILTIN_FAILURES = [
     {
@@ -20,16 +32,16 @@ exports.BUILTIN_FAILURES = [
         terminateOnDetect: false,
     },
     {
-        id: "multiple-questions",
-        description: "Agent asks more than 2 questions in a single response",
-        type: "excessive_questions",
-        severity: "warning",
-        scorePenalty: 0.05,
+        id: "interrogation-without-teaching",
+        description: "Agent asks 3+ questions without explaining importance or providing value",
+        type: "interrogation_without_teaching",
+        severity: "major",
+        scorePenalty: 0.1,
         terminateOnDetect: false,
     },
     {
         id: "step-boundary-violation",
-        description: "Agent discusses channels or tactics in Steps 1-2",
+        description: "Agent recommends channel strategy or allocations in Steps 1-2",
         type: "step_boundary_violation",
         detectionPattern: "facebook ads|google ads|tiktok|instagram|linkedin ads|programmatic|channel mix|media mix|display ads|video ads|ctv|connected tv",
         severity: "major",
@@ -45,9 +57,9 @@ exports.BUILTIN_FAILURES = [
         terminateOnDetect: false,
     },
     {
-        id: "question-loop",
-        description: "Agent asks same question type 6+ times within recent turns",
-        type: "loop_detection",
+        id: "duplicate-question",
+        description: "Agent asks the same question again (80%+ similarity)",
+        type: "duplicate_question",
         severity: "major",
         scorePenalty: 0.15,
         terminateOnDetect: false,
@@ -63,9 +75,13 @@ exports.BUILTIN_FAILURES = [
 ];
 /**
  * Failure Detector class
+ *
+ * Detects actual behavioral failures, not natural thorough discovery.
+ * The philosophy is to distinguish between:
+ * - TRUE failures: Agent stuck in loop, interrogating without teaching
+ * - NOT failures: Thorough discovery to achieve KPI objectives
  */
 class FailureDetector {
-    questionHistory = [];
     providedData = new Map();
     previousUserSaidIDK = false;
     idkTopic = "";
@@ -73,7 +89,6 @@ class FailureDetector {
      * Reset detector state for a new conversation
      */
     reset() {
-        this.questionHistory = [];
         this.providedData = new Map();
         this.previousUserSaidIDK = false;
         this.idkTopic = "";
@@ -115,14 +130,20 @@ class FailureDetector {
         switch (failure.type) {
             case "greeting_repetition":
                 return this.checkGreetingRepetition(turnNumber, agentResponse, failure);
+            case "interrogation_without_teaching":
+                return this.checkInterrogationWithoutTeaching(agentResponse, previousTurns);
+            // Legacy support for old failure definitions
             case "excessive_questions":
-                return this.checkExcessiveQuestions(agentResponse);
+                return this.checkInterrogationWithoutTeaching(agentResponse, previousTurns);
             case "step_boundary_violation":
                 return this.checkStepBoundaryViolation(agentResponse, currentStep, failure);
             case "context_loss":
                 return this.checkContextLoss(agentResponse);
+            case "duplicate_question":
+                return this.checkDuplicateQuestion(agentResponse, previousTurns);
+            // Legacy support for old failure definitions
             case "loop_detection":
-                return this.checkLoopDetection(agentResponse);
+                return this.checkDuplicateQuestion(agentResponse, previousTurns);
             case "blocked_progress":
                 return this.checkBlockedProgress(agentResponse, previousTurns);
             case "custom_pattern":
@@ -146,21 +167,128 @@ class FailureDetector {
         return pattern.test(response);
     }
     /**
-     * Check for excessive questions
+     * Check for interrogation without teaching
+     *
+     * An interrogation occurs when the agent asks multiple questions without:
+     * 1. Explaining why the information matters
+     * 2. Connecting to previous insights
+     * 3. Providing calculations or analysis
+     * 4. Teaching the user something valuable
+     *
+     * This is different from thorough discovery where questions are accompanied
+     * by teaching, calculations, or goal-oriented explanations.
      */
-    checkExcessiveQuestions(response) {
-        const questionCount = (response.match(/\?/g) || []).length;
-        return questionCount > 2;
+    checkInterrogationWithoutTeaching(response, previousTurns) {
+        const questions = response.match(/\?/g) || [];
+        const questionCount = questions.length;
+        // Less than 3 questions is not interrogation
+        if (questionCount < 3)
+            return false;
+        // Check for teaching indicators in the SAME response
+        // If the agent is explaining WHY or providing VALUE, it's not interrogation
+        const teachingIndicators = [
+            /because|this matters because|why this is important/i,
+            /let me explain|here's why|the reason/i,
+            /this affects|this impacts|this determines|this influences/i,
+            /based on|given that|considering|with your/i,
+            /typical|benchmark|industry standard|industry average/i,
+            /\$[\d,]+\s*[÷\/]\s*[\d,]+/i, // Division calculations like $500K / 10K
+            /[\d,]+\s*[×x*]\s*[\d,]+/i, // Multiplication calculations
+            /=\s*\$?[\d,]+/i, // Result patterns like = $50
+            /\d+%\s*(?:of|to|for|in)/i, // Percentage patterns
+            /tradeoff|balance|tension between/i,
+            /to hit|to achieve|to reach|for your.*target/i, // Goal-oriented language
+            /precision|efficiency|realistic/i,
+        ];
+        // If response contains teaching along with questions, NOT interrogation
+        for (const pattern of teachingIndicators) {
+            if (pattern.test(response)) {
+                return false;
+            }
+        }
+        // Check last 3 turns for sustained interrogation pattern
+        // TRUE interrogation = multiple consecutive turns of questions without teaching
+        const recentResponses = previousTurns.slice(-3).map((t) => t.agentResponse);
+        let interrogationTurns = 0;
+        for (const r of recentResponses) {
+            const qs = (r.match(/\?/g) || []).length;
+            const hasTeaching = teachingIndicators.some((p) => p.test(r));
+            if (qs >= 2 && !hasTeaching) {
+                interrogationTurns++;
+            }
+        }
+        // Only flag if we have 3+ consecutive turns of questions without teaching
+        // This is a TRUE pattern of interrogation, not just one response with multiple questions
+        return interrogationTurns >= 3;
     }
     /**
      * Check for step boundary violations
+     *
+     * Context-aware detection that distinguishes between:
+     * - TRUE VIOLATION: Agent recommends channel strategy, allocations, or tactics
+     * - FALSE POSITIVE: Agent references channels for economic validation (activation rates, CAC by channel)
+     *
+     * The key insight is that sophisticated users often provide channel-level performance data
+     * when discussing economics (Step 2), and the agent should validate this without penalty.
      */
     checkStepBoundaryViolation(response, currentStep, failure) {
         // Only check in Steps 1-2
         if (currentStep > 2)
             return false;
         const pattern = new RegExp(failure.detectionPattern || "", "i");
-        return pattern.test(response);
+        // First check if channel names are present at all
+        if (!pattern.test(response))
+            return false;
+        // Check for ECONOMIC CONTEXT - these patterns indicate the agent is discussing
+        // channel-level data for economic validation, NOT channel strategy
+        const economicContextPatterns = [
+            /activation rate/i,
+            /conversion rate/i,
+            /\d+%?\s*activation/i,
+            /effective CAC/i,
+            /cost per/i,
+            /performance.*channel/i,
+            /channel.*performance/i,
+            /acquisition cost.*channel/i,
+            /channel.*acquisition cost/i,
+            /you mentioned.*channel/i,
+            /your data.*channel/i,
+            /channel-level.*data/i,
+            /varies by.*channel/i,
+            /by.*source/i,
+            /source.*performance/i,
+        ];
+        // If the response has economic context, it's likely validating user-provided
+        // channel data, not recommending channel strategy - NOT a violation
+        for (const contextPattern of economicContextPatterns) {
+            if (contextPattern.test(response)) {
+                return false;
+            }
+        }
+        // Check for STRATEGY CONTEXT - these patterns indicate the agent is
+        // recommending channel strategy prematurely - TRUE violation
+        const strategyContextPatterns = [
+            /recommend.*channel/i,
+            /channel.*allocation/i,
+            /allocate.*channel/i,
+            /should.*run.*ads/i,
+            /consider.*platform/i,
+            /channel mix/i,
+            /media mix/i,
+            /prioritize.*channel/i,
+            /channel.*strategy/i,
+            /\d+%.*to.*(?:facebook|google|linkedin|tiktok|instagram)/i,
+        ];
+        // If strategy patterns are present, this is a true violation
+        for (const strategyPattern of strategyContextPatterns) {
+            if (strategyPattern.test(response)) {
+                return true;
+            }
+        }
+        // Default: If channel is mentioned but no clear strategy context,
+        // be permissive - sophisticated conversations naturally reference channels
+        // when discussing economics
+        return false;
     }
     /**
      * Check for context loss
@@ -186,51 +314,115 @@ class FailureDetector {
         return false;
     }
     /**
-     * Check for question loops
+     * Check for duplicate questions
      *
-     * A true loop is when the agent repeatedly asks the SAME question type
-     * within a SHORT window (e.g., 4 consecutive turns). In a 10-step planning
-     * session, it's natural to revisit topics across different steps.
+     * Detects when the agent asks the SAME question repeatedly (80%+ similarity).
+     * This is different from asking RELATED questions about a topic.
      *
-     * This detector focuses on detecting ACTUAL loops where the agent is stuck,
-     * not natural topic revisitation across steps.
+     * A TRUE loop is when the agent is stuck and not progressing.
+     * Asking different questions about the same topic (e.g., demographics,
+     * then behaviors, then geography) is NOT a loop - it's thorough discovery.
      */
-    checkLoopDetection(response) {
-        // Extract questions from current response
-        const questions = response.match(/[^.!?]*\?/g) || [];
-        for (const q of questions) {
-            const normalized = q
-                .toLowerCase()
-                .replace(/[^\w\s]/g, "")
-                .trim();
-            this.questionHistory.push(normalized);
-        }
-        // Keep only questions from recent turns (last 8 questions ~= 4 turns with 2 questions each)
-        // This prevents flagging natural topic revisitation across different steps
-        const recentWindow = 8;
-        if (this.questionHistory.length > recentWindow) {
-            this.questionHistory = this.questionHistory.slice(-recentWindow);
-        }
-        // Check for repeated similar questions within the recent window
-        const questionClusters = new Map();
-        for (const q of this.questionHistory) {
-            const key = this.getQuestionType(q);
-            // Don't count generic "other" questions as they're too diverse
-            if (key !== "other") {
-                questionClusters.set(key, (questionClusters.get(key) || 0) + 1);
+    checkDuplicateQuestion(response, previousTurns) {
+        const currentQuestions = response.match(/[^.!?]*\?/g) || [];
+        for (const currentQ of currentQuestions) {
+            const normalizedCurrent = this.normalizeQuestion(currentQ);
+            // Skip very short questions (less than 3 words after normalization)
+            if (normalizedCurrent.split(" ").filter((w) => w.length > 0).length < 3) {
+                continue;
             }
-        }
-        // Flag if same question type asked 6+ times within recent window
-        // This indicates the agent is truly stuck in a loop
-        for (const count of questionClusters.values()) {
-            if (count >= 6) {
-                return true;
+            // Check if this EXACT question (normalized) was asked in last 3 turns
+            for (const turn of previousTurns.slice(-3)) {
+                const prevQuestions = turn.agentResponse.match(/[^.!?]*\?/g) || [];
+                for (const prevQ of prevQuestions) {
+                    const normalizedPrev = this.normalizeQuestion(prevQ);
+                    // Skip very short questions
+                    if (normalizedPrev.split(" ").filter((w) => w.length > 0).length < 3) {
+                        continue;
+                    }
+                    const similarity = this.calculateStringSimilarity(normalizedCurrent, normalizedPrev);
+                    // 80%+ similarity = asking the same question again
+                    if (similarity > 0.8) {
+                        return true;
+                    }
+                }
             }
         }
         return false;
     }
     /**
-     * Categorize question type
+     * Normalize a question for comparison
+     * Removes common words, punctuation, and normalizes whitespace
+     */
+    normalizeQuestion(q) {
+        const stopWords = [
+            "the",
+            "a",
+            "an",
+            "your",
+            "you",
+            "what",
+            "is",
+            "are",
+            "do",
+            "does",
+            "can",
+            "could",
+            "would",
+            "should",
+            "how",
+            "why",
+            "when",
+            "where",
+            "which",
+            "who",
+            "that",
+            "this",
+            "these",
+            "those",
+            "be",
+            "been",
+            "being",
+            "have",
+            "has",
+            "had",
+            "will",
+            "about",
+            "with",
+            "for",
+            "from",
+            "into",
+            "of",
+            "on",
+            "to",
+            "in",
+            "at",
+            "by",
+            "or",
+            "and",
+            "if",
+            "any",
+            "there",
+            "their",
+            "they",
+            "them",
+            "we",
+            "our",
+            "us",
+            "me",
+            "my",
+            "i",
+        ];
+        return q
+            .toLowerCase()
+            .replace(/[^\w\s]/g, "")
+            .split(/\s+/)
+            .filter((w) => w.length > 0 && !stopWords.includes(w))
+            .join(" ")
+            .trim();
+    }
+    /**
+     * Categorize question type (kept for legacy support)
      */
     getQuestionType(question) {
         if (/budget|spend|cost/i.test(question))

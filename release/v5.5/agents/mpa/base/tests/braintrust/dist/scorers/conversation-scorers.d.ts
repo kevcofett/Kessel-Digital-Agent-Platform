@@ -13,6 +13,10 @@ export declare function scoreStepCompletionRate(turns: ConversationTurn[], scena
  *
  * Rewards efficient conversations that complete steps without unnecessary turns.
  * A conversation that completes 10 steps in 13 turns is excellent.
+ *
+ * IMPORTANT: When the maxAllowed cap is an artificial global limit (like efficiency
+ * mode's 20-turn cap) that's below the scenario's natural minTurns, hitting that
+ * cap is not the agent's fault and should not be harshly penalized.
  */
 export declare function scoreConversationEfficiency(turns: ConversationTurn[], scenario: TestScenario): TurnScore;
 /**

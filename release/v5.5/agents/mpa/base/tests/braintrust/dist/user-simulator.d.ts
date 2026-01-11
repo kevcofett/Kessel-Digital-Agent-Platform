@@ -3,7 +3,7 @@
  *
  * Simulates realistic user behavior based on defined personas.
  */
-import { UserPersona, ConversationTurn, UserSimulatorResponse, UserSimulatorConfig } from "./mpa-multi-turn-types.js";
+import { UserPersona, ConversationTurn, UserSimulatorResponse, UserSimulatorConfig, DataChange } from "./mpa-multi-turn-types.js";
 /**
  * Build the user simulator system prompt
  */
@@ -20,9 +20,22 @@ export declare class UserSimulator {
     private config;
     constructor(config?: Partial<UserSimulatorConfig>);
     /**
-     * Generate the user's response to an agent message
+     * Check if a data change should be triggered at this turn
      */
-    generateResponse(persona: UserPersona, agentMessage: string, conversationHistory: ConversationTurn[], openingMessage?: string): Promise<UserSimulatorResponse>;
+    private checkForDataChange;
+    /**
+     * Generate the user's response to an agent message
+     *
+     * @param persona - The user persona to simulate
+     * @param agentMessage - The agent's most recent message
+     * @param conversationHistory - All previous turns
+     * @param openingMessage - Optional specific opening message
+     * @param dataChanges - Optional data changes to inject mid-conversation
+     * @param currentTurn - Current turn number (for data change timing)
+     */
+    generateResponse(persona: UserPersona, agentMessage: string, conversationHistory: ConversationTurn[], openingMessage?: string, dataChanges?: DataChange[], currentTurn?: number): Promise<UserSimulatorResponse & {
+        dataChangeTriggered?: DataChange;
+    }>;
     /**
      * Generate a "goodbye" or conversation-ending response
      */

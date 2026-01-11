@@ -15,14 +15,29 @@ import { aggressiveKpiNarrowTargetingScenario, aggressiveKpiPersona, aggressiveK
 import { multiAudienceUnifiedPlanScenario, multiAudienceUnifiedPersona, multiAudienceUnifiedPlanContext } from "./multi-audience-unified-plan.js";
 import { multiAudienceChannelAllocationScenario, multiAudienceChannelPersona, multiAudienceChannelAllocationContext } from "./multi-audience-channel-allocation.js";
 import { multiAudienceVaryingKpisScenario, multiAudienceVaryingKpisPersona, multiAudienceVaryingKpisContext } from "./multi-audience-varying-kpis.js";
+import { budgetRevisionMidstreamScenario, budgetRevisionPersona, budgetRevisionMidstreamContext } from "./budget-revision-midstream.js";
+import { volumeTargetIncreaseScenario, volumeTargetIncreasePersona, volumeTargetIncreaseContext } from "./volume-target-increase.js";
+import { timelineCompressionScenario, timelineCompressionPersona, timelineCompressionContext } from "./timeline-compression.js";
+import { efficiencyShockScenario, efficiencyShockPersona, efficiencyShockContext } from "./efficiency-shock.js";
 export { basicUserStep1_2Scenario, basicUserPersona, sophisticatedIdkScenario, sophisticatedUserPersona, full10StepScenario, intermediateUserPersona, };
 export { highStakesPerformanceScenario, highStakesPerformancePersona, highStakesPerformanceContext, brandBuildingLimitedDataScenario, brandBuildingLimitedDataPersona, brandBuildingLimitedDataContext, };
 export { precisionTargetingComplexScenario, precisionTargetingPersona, precisionTargetingComplexContext, massNationalSimplicityScenario, massNationalPersona, massNationalSimplicityContext, aggressiveKpiNarrowTargetingScenario, aggressiveKpiPersona, aggressiveKpiNarrowTargetingContext, };
 export { multiAudienceUnifiedPlanScenario, multiAudienceUnifiedPersona, multiAudienceUnifiedPlanContext, multiAudienceChannelAllocationScenario, multiAudienceChannelPersona, multiAudienceChannelAllocationContext, multiAudienceVaryingKpisScenario, multiAudienceVaryingKpisPersona, multiAudienceVaryingKpisContext, };
+export { budgetRevisionMidstreamScenario, budgetRevisionPersona, budgetRevisionMidstreamContext, volumeTargetIncreaseScenario, volumeTargetIncreasePersona, volumeTargetIncreaseContext, timelineCompressionScenario, timelineCompressionPersona, timelineCompressionContext, efficiencyShockScenario, efficiencyShockPersona, efficiencyShockContext, };
 /**
  * All available test scenarios
  */
 export declare const ALL_SCENARIOS: TestScenario[];
+/**
+ * Reforecasting Scenarios
+ *
+ * These scenarios test proactive reforecasting when data changes mid-conversation:
+ * - Budget revision midstream
+ * - Volume target increase
+ * - Timeline compression
+ * - Efficiency shock (CAC reality check)
+ */
+export declare const REFORECASTING_SCENARIOS: TestScenario[];
 /**
  * Quick test scenarios (faster execution, fewer turns)
  */
@@ -65,7 +80,7 @@ export declare function getScenarioById(id: string): TestScenario | undefined;
 /**
  * Get scenarios by tag/category
  */
-export declare function getScenariosByCategory(category: "quick" | "full" | "phase1" | "targeting" | "multi-audience" | "all"): TestScenario[];
+export declare function getScenariosByCategory(category: "quick" | "full" | "phase1" | "targeting" | "multi-audience" | "reforecasting" | "all"): TestScenario[];
 /**
  * Scenario metadata for reporting
  */
@@ -219,6 +234,30 @@ export declare const SCENARIO_CONTEXTS: {
         kpiAggressiveness: "moderate";
         userSophistication: "high";
     };
+    "budget-revision-midstream": {
+        budget: number;
+        funnel: "performance";
+        kpiAggressiveness: "moderate";
+        userSophistication: "medium";
+    };
+    "volume-target-increase": {
+        budget: number;
+        funnel: "performance";
+        kpiAggressiveness: "aggressive";
+        userSophistication: "medium";
+    };
+    "timeline-compression": {
+        budget: number;
+        funnel: "performance";
+        kpiAggressiveness: "aggressive";
+        userSophistication: "high";
+    };
+    "efficiency-shock": {
+        budget: number;
+        funnel: "performance";
+        kpiAggressiveness: "aggressive";
+        userSophistication: "medium";
+    };
 };
 export declare const PHASE1_CONTEXTS: {
     "high-stakes-performance": {
@@ -268,6 +307,30 @@ export declare const PHASE1_CONTEXTS: {
         funnel: "consideration";
         kpiAggressiveness: "moderate";
         userSophistication: "high";
+    };
+    "budget-revision-midstream": {
+        budget: number;
+        funnel: "performance";
+        kpiAggressiveness: "moderate";
+        userSophistication: "medium";
+    };
+    "volume-target-increase": {
+        budget: number;
+        funnel: "performance";
+        kpiAggressiveness: "aggressive";
+        userSophistication: "medium";
+    };
+    "timeline-compression": {
+        budget: number;
+        funnel: "performance";
+        kpiAggressiveness: "aggressive";
+        userSophistication: "high";
+    };
+    "efficiency-shock": {
+        budget: number;
+        funnel: "performance";
+        kpiAggressiveness: "aggressive";
+        userSophistication: "medium";
     };
 };
 export default ALL_SCENARIOS;

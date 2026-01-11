@@ -178,12 +178,53 @@ class UserSimulator {
         });
     }
     /**
-     * Generate the user's response to an agent message
+     * Check if a data change should be triggered at this turn
      */
-    async generateResponse(persona, agentMessage, conversationHistory, openingMessage) {
+    checkForDataChange(turnNumber, agentMessage, dataChanges) {
+        if (!dataChanges || dataChanges.length === 0)
+            return null;
+        for (const change of dataChanges) {
+            // Check turn-based trigger
+            if (change.triggerTurn === turnNumber) {
+                return change;
+            }
+            // Check condition-based trigger
+            if (change.triggerCondition) {
+                const regex = new RegExp(change.triggerCondition, "i");
+                if (regex.test(agentMessage)) {
+                    return change;
+                }
+            }
+        }
+        return null;
+    }
+    /**
+     * Generate the user's response to an agent message
+     *
+     * @param persona - The user persona to simulate
+     * @param agentMessage - The agent's most recent message
+     * @param conversationHistory - All previous turns
+     * @param openingMessage - Optional specific opening message
+     * @param dataChanges - Optional data changes to inject mid-conversation
+     * @param currentTurn - Current turn number (for data change timing)
+     */
+    async generateResponse(persona, agentMessage, conversationHistory, openingMessage, dataChanges, currentTurn) {
         // If this is the first turn and we have a specific opening, use it
         if (conversationHistory.length === 0 && openingMessage) {
             return parseUserResponse(openingMessage, persona);
+        }
+        // Check if we should inject a data change at this turn
+        const turnNum = currentTurn ?? conversationHistory.length + 1;
+        const triggeredChange = this.checkForDataChange(turnNum, agentMessage, dataChanges);
+        // If a data change is triggered, use its predefined message
+        if (triggeredChange) {
+            const response = parseUserResponse(triggeredChange.userMessage, persona);
+            // Add the new value to revealed data
+            response.revealedData[triggeredChange.field] = triggeredChange.newValue;
+            return {
+                ...response,
+                dataChangeTriggered: triggeredChange,
+            };
         }
         const systemPrompt = buildUserSimulatorPrompt(persona);
         const conversationContext = buildConversationContext(conversationHistory);

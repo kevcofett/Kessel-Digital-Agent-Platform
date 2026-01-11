@@ -5,7 +5,8 @@
  * Exports all test scenarios for the multi-turn MPA evaluation system.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PHASE1_CONTEXTS = exports.SCENARIO_CONTEXTS = exports.SCENARIO_METADATA = exports.MULTI_AUDIENCE_SCENARIOS = exports.ADVANCED_TARGETING_SCENARIOS = exports.PHASE1_QUALITY_SCENARIOS = exports.FULL_SCENARIOS = exports.QUICK_SCENARIOS = exports.ALL_SCENARIOS = exports.multiAudienceVaryingKpisContext = exports.multiAudienceVaryingKpisPersona = exports.multiAudienceVaryingKpisScenario = exports.multiAudienceChannelAllocationContext = exports.multiAudienceChannelPersona = exports.multiAudienceChannelAllocationScenario = exports.multiAudienceUnifiedPlanContext = exports.multiAudienceUnifiedPersona = exports.multiAudienceUnifiedPlanScenario = exports.aggressiveKpiNarrowTargetingContext = exports.aggressiveKpiPersona = exports.aggressiveKpiNarrowTargetingScenario = exports.massNationalSimplicityContext = exports.massNationalPersona = exports.massNationalSimplicityScenario = exports.precisionTargetingComplexContext = exports.precisionTargetingPersona = exports.precisionTargetingComplexScenario = exports.brandBuildingLimitedDataContext = exports.brandBuildingLimitedDataPersona = exports.brandBuildingLimitedDataScenario = exports.highStakesPerformanceContext = exports.highStakesPerformancePersona = exports.highStakesPerformanceScenario = exports.intermediateUserPersona = exports.full10StepScenario = exports.sophisticatedUserPersona = exports.sophisticatedIdkScenario = exports.basicUserPersona = exports.basicUserStep1_2Scenario = void 0;
+exports.SCENARIO_METADATA = exports.MULTI_AUDIENCE_SCENARIOS = exports.ADVANCED_TARGETING_SCENARIOS = exports.PHASE1_QUALITY_SCENARIOS = exports.FULL_SCENARIOS = exports.QUICK_SCENARIOS = exports.REFORECASTING_SCENARIOS = exports.ALL_SCENARIOS = exports.efficiencyShockContext = exports.efficiencyShockPersona = exports.efficiencyShockScenario = exports.timelineCompressionContext = exports.timelineCompressionPersona = exports.timelineCompressionScenario = exports.volumeTargetIncreaseContext = exports.volumeTargetIncreasePersona = exports.volumeTargetIncreaseScenario = exports.budgetRevisionMidstreamContext = exports.budgetRevisionPersona = exports.budgetRevisionMidstreamScenario = exports.multiAudienceVaryingKpisContext = exports.multiAudienceVaryingKpisPersona = exports.multiAudienceVaryingKpisScenario = exports.multiAudienceChannelAllocationContext = exports.multiAudienceChannelPersona = exports.multiAudienceChannelAllocationScenario = exports.multiAudienceUnifiedPlanContext = exports.multiAudienceUnifiedPersona = exports.multiAudienceUnifiedPlanScenario = exports.aggressiveKpiNarrowTargetingContext = exports.aggressiveKpiPersona = exports.aggressiveKpiNarrowTargetingScenario = exports.massNationalSimplicityContext = exports.massNationalPersona = exports.massNationalSimplicityScenario = exports.precisionTargetingComplexContext = exports.precisionTargetingPersona = exports.precisionTargetingComplexScenario = exports.brandBuildingLimitedDataContext = exports.brandBuildingLimitedDataPersona = exports.brandBuildingLimitedDataScenario = exports.highStakesPerformanceContext = exports.highStakesPerformancePersona = exports.highStakesPerformanceScenario = exports.intermediateUserPersona = exports.full10StepScenario = exports.sophisticatedUserPersona = exports.sophisticatedIdkScenario = exports.basicUserPersona = exports.basicUserStep1_2Scenario = void 0;
+exports.PHASE1_CONTEXTS = exports.SCENARIO_CONTEXTS = void 0;
 exports.getScenarioById = getScenarioById;
 exports.getScenariosByCategory = getScenariosByCategory;
 // Import individual scenarios
@@ -53,6 +54,23 @@ const multi_audience_varying_kpis_js_1 = require("./multi-audience-varying-kpis.
 Object.defineProperty(exports, "multiAudienceVaryingKpisScenario", { enumerable: true, get: function () { return multi_audience_varying_kpis_js_1.multiAudienceVaryingKpisScenario; } });
 Object.defineProperty(exports, "multiAudienceVaryingKpisPersona", { enumerable: true, get: function () { return multi_audience_varying_kpis_js_1.multiAudienceVaryingKpisPersona; } });
 Object.defineProperty(exports, "multiAudienceVaryingKpisContext", { enumerable: true, get: function () { return multi_audience_varying_kpis_js_1.multiAudienceVaryingKpisContext; } });
+// Import Reforecasting Scenarios
+const budget_revision_midstream_js_1 = require("./budget-revision-midstream.js");
+Object.defineProperty(exports, "budgetRevisionMidstreamScenario", { enumerable: true, get: function () { return budget_revision_midstream_js_1.budgetRevisionMidstreamScenario; } });
+Object.defineProperty(exports, "budgetRevisionPersona", { enumerable: true, get: function () { return budget_revision_midstream_js_1.budgetRevisionPersona; } });
+Object.defineProperty(exports, "budgetRevisionMidstreamContext", { enumerable: true, get: function () { return budget_revision_midstream_js_1.budgetRevisionMidstreamContext; } });
+const volume_target_increase_js_1 = require("./volume-target-increase.js");
+Object.defineProperty(exports, "volumeTargetIncreaseScenario", { enumerable: true, get: function () { return volume_target_increase_js_1.volumeTargetIncreaseScenario; } });
+Object.defineProperty(exports, "volumeTargetIncreasePersona", { enumerable: true, get: function () { return volume_target_increase_js_1.volumeTargetIncreasePersona; } });
+Object.defineProperty(exports, "volumeTargetIncreaseContext", { enumerable: true, get: function () { return volume_target_increase_js_1.volumeTargetIncreaseContext; } });
+const timeline_compression_js_1 = require("./timeline-compression.js");
+Object.defineProperty(exports, "timelineCompressionScenario", { enumerable: true, get: function () { return timeline_compression_js_1.timelineCompressionScenario; } });
+Object.defineProperty(exports, "timelineCompressionPersona", { enumerable: true, get: function () { return timeline_compression_js_1.timelineCompressionPersona; } });
+Object.defineProperty(exports, "timelineCompressionContext", { enumerable: true, get: function () { return timeline_compression_js_1.timelineCompressionContext; } });
+const efficiency_shock_js_1 = require("./efficiency-shock.js");
+Object.defineProperty(exports, "efficiencyShockScenario", { enumerable: true, get: function () { return efficiency_shock_js_1.efficiencyShockScenario; } });
+Object.defineProperty(exports, "efficiencyShockPersona", { enumerable: true, get: function () { return efficiency_shock_js_1.efficiencyShockPersona; } });
+Object.defineProperty(exports, "efficiencyShockContext", { enumerable: true, get: function () { return efficiency_shock_js_1.efficiencyShockContext; } });
 /**
  * All available test scenarios
  */
@@ -72,6 +90,26 @@ exports.ALL_SCENARIOS = [
     multi_audience_unified_plan_js_1.multiAudienceUnifiedPlanScenario,
     multi_audience_channel_allocation_js_1.multiAudienceChannelAllocationScenario,
     multi_audience_varying_kpis_js_1.multiAudienceVaryingKpisScenario,
+    // Reforecasting scenarios
+    budget_revision_midstream_js_1.budgetRevisionMidstreamScenario,
+    volume_target_increase_js_1.volumeTargetIncreaseScenario,
+    timeline_compression_js_1.timelineCompressionScenario,
+    efficiency_shock_js_1.efficiencyShockScenario,
+];
+/**
+ * Reforecasting Scenarios
+ *
+ * These scenarios test proactive reforecasting when data changes mid-conversation:
+ * - Budget revision midstream
+ * - Volume target increase
+ * - Timeline compression
+ * - Efficiency shock (CAC reality check)
+ */
+exports.REFORECASTING_SCENARIOS = [
+    budget_revision_midstream_js_1.budgetRevisionMidstreamScenario,
+    volume_target_increase_js_1.volumeTargetIncreaseScenario,
+    timeline_compression_js_1.timelineCompressionScenario,
+    efficiency_shock_js_1.efficiencyShockScenario,
 ];
 /**
  * Quick test scenarios (faster execution, fewer turns)
@@ -143,6 +181,8 @@ function getScenariosByCategory(category) {
             return exports.ADVANCED_TARGETING_SCENARIOS;
         case "multi-audience":
             return exports.MULTI_AUDIENCE_SCENARIOS;
+        case "reforecasting":
+            return exports.REFORECASTING_SCENARIOS;
         case "all":
         default:
             return exports.ALL_SCENARIOS;
@@ -269,6 +309,11 @@ exports.SCENARIO_CONTEXTS = {
     "multi-audience-unified-plan": multi_audience_unified_plan_js_1.multiAudienceUnifiedPlanContext,
     "multi-audience-channel-allocation": multi_audience_channel_allocation_js_1.multiAudienceChannelAllocationContext,
     "multi-audience-varying-kpis": multi_audience_varying_kpis_js_1.multiAudienceVaryingKpisContext,
+    // Reforecasting scenarios
+    "budget-revision-midstream": budget_revision_midstream_js_1.budgetRevisionMidstreamContext,
+    "volume-target-increase": volume_target_increase_js_1.volumeTargetIncreaseContext,
+    "timeline-compression": timeline_compression_js_1.timelineCompressionContext,
+    "efficiency-shock": efficiency_shock_js_1.efficiencyShockContext,
 };
 // Backwards compatibility
 exports.PHASE1_CONTEXTS = exports.SCENARIO_CONTEXTS;

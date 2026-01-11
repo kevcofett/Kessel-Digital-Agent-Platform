@@ -180,6 +180,41 @@ export interface UserLanguagePatterns {
     avoidedTerms?: string[];
 }
 /**
+ * Expected behavior when agent receives a data change
+ */
+export interface DataChangeExpectedBehavior {
+    /** Agent should explicitly acknowledge the change */
+    acknowledges: boolean;
+    /** Agent should recalculate affected metrics */
+    recalculates: boolean;
+    /** Agent should explain what the change means strategically */
+    explainsImpact: boolean;
+    /** Agent should recommend actions to address the change */
+    recommendsAction: boolean;
+}
+/**
+ * Definition of a mid-conversation data change
+ *
+ * Used to test proactive reforecasting behavior when user reveals
+ * updated inputs that invalidate previous calculations.
+ */
+export interface DataChange {
+    /** Turn number at which to inject the change */
+    triggerTurn: number;
+    /** Alternative: regex pattern in agent response to trigger the change */
+    triggerCondition?: string;
+    /** Which data field is changing (budget, volumeTarget, timeline, etc.) */
+    field: string;
+    /** The original value the user provided earlier */
+    oldValue: unknown;
+    /** The new value the user is now revealing */
+    newValue: unknown;
+    /** The exact message the user will send to communicate the change */
+    userMessage: string;
+    /** What the agent should do in response */
+    expectedBehavior: DataChangeExpectedBehavior;
+}
+/**
  * Test scenario defining the full conversation setup
  */
 export interface TestScenario {
@@ -215,6 +250,14 @@ export interface TestScenario {
     kbInjectionMap: Record<number, string[]>;
     /** Success criteria for the overall scenario */
     successCriteria: ScenarioSuccessCriteria;
+    /**
+     * Mid-conversation data changes to test proactive reforecasting
+     *
+     * When defined, the user simulator will inject these data changes
+     * at the specified turn or when the trigger condition is met.
+     * The agent should acknowledge, recalculate, explain impact, and recommend actions.
+     */
+    dataChanges?: DataChange[];
 }
 /**
  * Expectations for a specific step in the conversation

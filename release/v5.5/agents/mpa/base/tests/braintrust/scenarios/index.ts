@@ -66,6 +66,28 @@ import {
   multiAudienceVaryingKpisContext,
 } from "./multi-audience-varying-kpis.js";
 
+// Import Reforecasting Scenarios
+import {
+  budgetRevisionMidstreamScenario,
+  budgetRevisionPersona,
+  budgetRevisionMidstreamContext,
+} from "./budget-revision-midstream.js";
+import {
+  volumeTargetIncreaseScenario,
+  volumeTargetIncreasePersona,
+  volumeTargetIncreaseContext,
+} from "./volume-target-increase.js";
+import {
+  timelineCompressionScenario,
+  timelineCompressionPersona,
+  timelineCompressionContext,
+} from "./timeline-compression.js";
+import {
+  efficiencyShockScenario,
+  efficiencyShockPersona,
+  efficiencyShockContext,
+} from "./efficiency-shock.js";
+
 // Export individual scenarios
 export {
   basicUserStep1_2Scenario,
@@ -112,6 +134,22 @@ export {
   multiAudienceVaryingKpisContext,
 };
 
+// Export Reforecasting Scenarios
+export {
+  budgetRevisionMidstreamScenario,
+  budgetRevisionPersona,
+  budgetRevisionMidstreamContext,
+  volumeTargetIncreaseScenario,
+  volumeTargetIncreasePersona,
+  volumeTargetIncreaseContext,
+  timelineCompressionScenario,
+  timelineCompressionPersona,
+  timelineCompressionContext,
+  efficiencyShockScenario,
+  efficiencyShockPersona,
+  efficiencyShockContext,
+};
+
 /**
  * All available test scenarios
  */
@@ -131,6 +169,27 @@ export const ALL_SCENARIOS: TestScenario[] = [
   multiAudienceUnifiedPlanScenario,
   multiAudienceChannelAllocationScenario,
   multiAudienceVaryingKpisScenario,
+  // Reforecasting scenarios
+  budgetRevisionMidstreamScenario,
+  volumeTargetIncreaseScenario,
+  timelineCompressionScenario,
+  efficiencyShockScenario,
+];
+
+/**
+ * Reforecasting Scenarios
+ *
+ * These scenarios test proactive reforecasting when data changes mid-conversation:
+ * - Budget revision midstream
+ * - Volume target increase
+ * - Timeline compression
+ * - Efficiency shock (CAC reality check)
+ */
+export const REFORECASTING_SCENARIOS: TestScenario[] = [
+  budgetRevisionMidstreamScenario,
+  volumeTargetIncreaseScenario,
+  timelineCompressionScenario,
+  efficiencyShockScenario,
 ];
 
 /**
@@ -204,6 +263,7 @@ export function getScenariosByCategory(
     | "phase1"
     | "targeting"
     | "multi-audience"
+    | "reforecasting"
     | "all"
 ): TestScenario[] {
   switch (category) {
@@ -217,6 +277,8 @@ export function getScenariosByCategory(
       return ADVANCED_TARGETING_SCENARIOS;
     case "multi-audience":
       return MULTI_AUDIENCE_SCENARIOS;
+    case "reforecasting":
+      return REFORECASTING_SCENARIOS;
     case "all":
     default:
       return ALL_SCENARIOS;
@@ -353,6 +415,11 @@ export const SCENARIO_CONTEXTS = {
   "multi-audience-unified-plan": multiAudienceUnifiedPlanContext,
   "multi-audience-channel-allocation": multiAudienceChannelAllocationContext,
   "multi-audience-varying-kpis": multiAudienceVaryingKpisContext,
+  // Reforecasting scenarios
+  "budget-revision-midstream": budgetRevisionMidstreamContext,
+  "volume-target-increase": volumeTargetIncreaseContext,
+  "timeline-compression": timelineCompressionContext,
+  "efficiency-shock": efficiencyShockContext,
 };
 
 // Backwards compatibility

@@ -57,26 +57,41 @@ function scoreStepCompletionRate(turns, scenario) {
  *
  * Rewards efficient conversations that complete steps without unnecessary turns.
  * A conversation that completes 10 steps in 13 turns is excellent.
+ *
+ * IMPORTANT: When the maxAllowed cap is an artificial global limit (like efficiency
+ * mode's 20-turn cap) that's below the scenario's natural minTurns, hitting that
+ * cap is not the agent's fault and should not be harshly penalized.
  */
 function scoreConversationEfficiency(turns, scenario) {
     const actualTurns = turns.length;
-    const expectedMin = scenario.minExpectedTurns || scenario.minTurns || 1;
+    const naturalMin = scenario.minExpectedTurns || scenario.minTurns || 1;
     const maxAllowed = scenario.maxTurns;
+    // Check if the cap is artificially restrictive (below natural minimum)
+    // This happens in efficiency mode where complex scenarios get capped at 20
+    const isCappedBeforeNatural = maxAllowed < naturalMin;
     // Efficiency is about completing steps without excessive turns
     // Perfect: within expected range
     // Good: slightly over but not excessive
-    // Poor: much over or hit max turns
+    // Poor: much over or hit max turns (unless cap is artificial)
     let score = 1.0;
     if (actualTurns >= maxAllowed) {
-        score = 0.1; // Hit max turns
+        if (isCappedBeforeNatural) {
+            // Cap is artificial - don't penalize harshly
+            // Score based on how close to cap vs how much of natural was covered
+            const progressRatio = actualTurns / naturalMin;
+            score = Math.min(1.0, progressRatio); // Can't exceed 1.0
+        }
+        else {
+            score = 0.1; // Hit max turns when it was achievable
+        }
     }
-    else if (actualTurns > expectedMin * 3) {
+    else if (actualTurns > naturalMin * 3) {
         score = 0.3; // Very inefficient
     }
-    else if (actualTurns > expectedMin * 2) {
+    else if (actualTurns > naturalMin * 2) {
         score = 0.5; // Somewhat inefficient
     }
-    else if (actualTurns >= expectedMin) {
+    else if (actualTurns >= naturalMin) {
         score = 1.0; // Within expected range - perfect
     }
     else {
@@ -86,7 +101,7 @@ function scoreConversationEfficiency(turns, scenario) {
     return {
         scorer: "conversation-efficiency",
         score,
-        metadata: { actualTurns, expectedMin, maxAllowed },
+        metadata: { actualTurns, expectedMin: naturalMin, maxAllowed, isCappedBeforeNatural },
         scope: "conversation",
     };
 }

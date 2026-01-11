@@ -2,7 +2,7 @@
  * Scorers Index - Exports and Composite Score Calculation
  */
 import { TurnScore, FailureCondition } from "../mpa-multi-turn-types.js";
-export { scoreResponseLength, scoreSingleQuestion, scoreStepBoundary, scoreSourceCitation, scoreAcronymDefinition, scoreIdkProtocol, scoreAdaptiveSophistication, scoreProactiveIntelligence, scoreProgressOverPerfection, scoreRiskOpportunityFlagging, scoreCalculationPresence, scoreTurn, } from "./turn-scorers.js";
+export { scoreResponseLength, scoreSingleQuestion, scoreStepBoundary, scoreSourceCitation, scoreAcronymDefinition, scoreIdkProtocol, scoreAdaptiveSophistication, scoreProactiveIntelligence, scoreProgressOverPerfection, scoreRiskOpportunityFlagging, scoreCalculationPresence, scoreAudienceCompleteness, scoreAudienceSizing, scorePrecisionConnection, scoreResponseFormatting, scoreTurn, } from "./turn-scorers.js";
 export { scoreStepCompletionRate, scoreConversationEfficiency, scoreContextRetention, scoreGreetingUniqueness, scoreLoopDetection, calculateFailurePenalty, scoreStepTransitionQuality, scoreOverallCoherence, scoreConversation, } from "./conversation-scorers.js";
 export { scoreTeachingBehavior, scoreProactiveCalculation, scoreBenchmarkCitation, scoreCriticalThinking, scoreStrategicSynthesis, calculateMentorshipScore, scoreMentorship, } from "./mentorship-scorers.js";
 export { type ScenarioContext, type StepRequirements, type StepQualityInput, getStepRequirements, scoreStepQuality, scoreStepDataCompleteness, scoreStepTurnEfficiency, scoreStepSynthesis, calculateStepQualityScore, scoreStepTransitionQuality as scoreStepTransitionQualityPhase1, } from "./step-quality-scorers.js";

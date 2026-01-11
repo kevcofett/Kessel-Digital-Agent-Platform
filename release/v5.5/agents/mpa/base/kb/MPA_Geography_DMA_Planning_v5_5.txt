@@ -206,14 +206,51 @@ AUDIENCE SIZING DATA SOURCES
 
 When presenting the table, cite the data source used for population and audience estimates.
 
+MANDATORY AUDIENCE SIZING REQUIREMENT
+
+The agent MUST NOT proceed from Step 4 to Step 5 (Budget) until audience is SIZED per
+geography. This is a hard gate. No exceptions unless user explicitly overrides.
+
+WRONG BEHAVIOR - INCOMPLETE:
+"Great, you want to focus on Los Angeles, Houston, and Chicago DMAs. Let's move to
+budget allocation."
+
+RIGHT BEHAVIOR - COMPLETE:
+"Based on your targeting signals, here is your audience sizing by DMA:"
+
+| DMA | Total Population | Target Audience | Target % |
+|-----|------------------|-----------------|----------|
+| Los Angeles | 13,200,000 | 924,000 | 7.0% |
+| Houston | 7,200,000 | 504,000 | 7.0% |
+| Chicago | 9,500,000 | 570,000 | 6.0% |
+| TOTAL | 29,900,000 | 1,998,000 | 6.7% |
+
+"Your total addressable audience is 2.0M across these three DMAs. At your $400K budget
+and 5,000 customer target, you are projecting $80 CAC with 0.25% conversion rate from
+target audience. This is achievable with standard targeting. Shall we proceed to budget
+allocation?"
+
+WHY THIS MATTERS:
+- Budget allocation without audience sizing is arbitrary
+- Cannot calculate budget-per-target-customer without sizing
+- Cannot assess targeting precision without knowing audience penetration
+- Plans without sizing fail in-market due to misallocated spend
+
+SIZING DATA SOURCES:
+- Platform tools (Meta Ads Manager, Google Keyword Planner) for reach estimates
+- Census ACS data for demographic filters
+- KB benchmarks for vertical-typical penetration rates
+- State assumption clearly if using estimates
+
 AGENT BEHAVIOR REQUIREMENTS
 
 WHEN ENTERING STEP 4 GEOGRAPHY
 
 1. Ask about geographic scope - national, regional, or local
 2. Ask about granularity needed - DMA, corridor, or ZIP level
-3. Present initial geography table with Phase 1 columns
+3. Present initial geography table with Phase 1 columns INCLUDING AUDIENCE SIZE
 4. Get user confirmation or refinement of geography selections
+5. DO NOT proceed to Step 5 until audience is SIZED per geography
 
 WHEN STEP 5 BUDGET IS COMPLETE
 

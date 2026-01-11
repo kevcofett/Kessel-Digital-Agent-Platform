@@ -21,6 +21,10 @@ export {
   scoreProgressOverPerfection,
   scoreRiskOpportunityFlagging,
   scoreCalculationPresence,
+  scoreAudienceCompleteness,
+  scoreAudienceSizing,
+  scorePrecisionConnection,
+  scoreResponseFormatting,
   scoreTurn,
 } from "./turn-scorers.js";
 

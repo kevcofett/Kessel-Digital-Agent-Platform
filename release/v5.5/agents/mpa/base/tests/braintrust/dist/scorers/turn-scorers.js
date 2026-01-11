@@ -19,6 +19,10 @@ exports.scoreProactiveIntelligence = scoreProactiveIntelligence;
 exports.scoreProgressOverPerfection = scoreProgressOverPerfection;
 exports.scoreRiskOpportunityFlagging = scoreRiskOpportunityFlagging;
 exports.scoreCalculationPresence = scoreCalculationPresence;
+exports.scoreAudienceCompleteness = scoreAudienceCompleteness;
+exports.scoreAudienceSizing = scoreAudienceSizing;
+exports.scorePrecisionConnection = scorePrecisionConnection;
+exports.scoreResponseFormatting = scoreResponseFormatting;
 exports.scoreTurn = scoreTurn;
 const sdk_1 = __importDefault(require("@anthropic-ai/sdk"));
 const mpa_multi_turn_types_js_1 = require("../mpa-multi-turn-types.js");
@@ -546,12 +550,238 @@ function scoreCalculationPresence(output, input, previousInput) {
     };
 }
 // =============================================================================
+// AUDIENCE QUALITY SCORERS
+// =============================================================================
+/**
+ * Score audience completeness relative to plan economics
+ *
+ * Aggressive efficiency targets (30%+ below benchmark) require tight targeting
+ * across all 4 dimensions with significant depth. Moderate targets allow
+ * standard targeting. Brand awareness allows broad targeting.
+ *
+ * This scorer evaluates whether the agent collected appropriate targeting
+ * depth for the efficiency requirements of the plan.
+ */
+async function scoreAudienceCompleteness(output, currentStep, cacAggressiveness) {
+    // Only score in Steps 3-4 when audience is being defined
+    if (currentStep < 3 || currentStep > 4) {
+        return {
+            scorer: "audience-completeness",
+            score: 1.0,
+            metadata: { status: "not_applicable" },
+            scope: "turn",
+        };
+    }
+    const prompt = `Evaluate if this agent response collects appropriate audience targeting depth.
+
+AGENT RESPONSE: "${output}"
+
+CAC AGGRESSIVENESS: ${cacAggressiveness}
+- aggressive = 30%+ below benchmark, requires tight targeting (20-40 signals across all 4 dimensions)
+- moderate = within benchmark range, requires standard targeting (10-20 signals)
+- conservative/brand awareness = broad targeting acceptable (5-10 signals)
+
+FOUR TARGETING DIMENSIONS:
+1. DEMOGRAPHIC: Age, income, household composition, life stage
+2. BEHAVIORAL: Purchase patterns, triggers, frequency, brand affinity
+3. CONTEXTUAL: Interests, platform preferences, content consumption
+4. GEOGRAPHIC: DMA scope, audience SIZE per geography
+
+SCORING CRITERIA:
+- Does agent probe for ALL relevant dimensions (not just demographics)?
+- Does depth match efficiency requirements (aggressive CAC = more signals)?
+- Does agent connect targeting precision to CAC achievability?
+- Does agent avoid treating partial definitions as complete?
+
+A = Probes all 4 dimensions with depth appropriate to CAC target, connects precision to efficiency
+B = Probes multiple dimensions, mostly appropriate depth
+C = Probes some dimensions but misses important ones or insufficient depth for CAC target
+D = Only demographic targeting, treating partial as complete
+F = Skips audience depth entirely, moves to budget prematurely
+
+Reply with ONLY one letter: A, B, C, D, or F`;
+    const letter = await llmJudge(prompt);
+    return {
+        scorer: "audience-completeness",
+        score: mpa_multi_turn_types_js_1.GRADE_SCORES[letter] ?? 0.5,
+        metadata: { grade: letter, cacAggressiveness, currentStep },
+        scope: "turn",
+    };
+}
+/**
+ * Score audience sizing table format and completeness
+ *
+ * The agent MUST present audience sizing in proper table format:
+ * | DMA | Total Population | Target Audience | Target % |
+ *
+ * - DMA/Geo in left column
+ * - Total population next
+ * - Target audience as whole numbers (not just %)
+ * - Target audience as % of total population
+ * - TOTAL row with rollups
+ */
+function scoreAudienceSizing(output, currentStep) {
+    // Only score in Step 4 (Geography) or when transitioning to Step 5
+    if (currentStep < 4) {
+        return {
+            scorer: "audience-sizing",
+            score: 1.0,
+            metadata: { status: "not_applicable" },
+            scope: "turn",
+        };
+    }
+    // Check for table presence
+    const hasTable = /\|.*\|.*\|/.test(output);
+    // Check for proper column structure (DMA/Geo, Population, Target Audience, %)
+    const hasGeoColumn = /\|\s*(dma|geo|market|city|region|location)/i.test(output);
+    const hasPopulationColumn = /\|\s*(total\s*)?(pop|population)/i.test(output);
+    const hasTargetAudienceColumn = /\|\s*(target\s*)?(aud|audience|size)/i.test(output);
+    const hasPercentColumn = /\|\s*(target\s*)?(%|pct|percent|penetration)/i.test(output);
+    // Check for absolute numbers in target audience (not just percentages)
+    const hasAbsoluteNumbers = /\|\s*[\d,]{4,}\s*\|/g.test(output); // Numbers with 4+ digits
+    // Check for TOTAL/rollup row
+    const hasTotalRow = /\|\s*(total|grand total|sum|rollup)/i.test(output);
+    // Check for multiple DMAs (at least 2 data rows plus header and total)
+    const tableRows = (output.match(/\|[^|]+\|[^|]+\|[^|]+\|/g) || []).length;
+    const hasMultipleDMAs = tableRows >= 4; // header + 2 DMAs + total
+    let score = 0;
+    const checks = {
+        hasTable,
+        hasGeoColumn,
+        hasPopulationColumn,
+        hasTargetAudienceColumn,
+        hasPercentColumn,
+        hasAbsoluteNumbers,
+        hasTotalRow,
+        hasMultipleDMAs,
+    };
+    // Scoring: each component contributes to the score
+    if (hasTable)
+        score += 0.15;
+    if (hasGeoColumn)
+        score += 0.15;
+    if (hasPopulationColumn)
+        score += 0.15;
+    if (hasTargetAudienceColumn)
+        score += 0.15;
+    if (hasPercentColumn)
+        score += 0.1;
+    if (hasAbsoluteNumbers)
+        score += 0.15;
+    if (hasTotalRow)
+        score += 0.1;
+    if (hasMultipleDMAs)
+        score += 0.05;
+    // If no table at all in Step 4, that's a problem
+    if (!hasTable && currentStep === 4) {
+        score = 0.3; // Partial credit for being in right step but missing table
+    }
+    return {
+        scorer: "audience-sizing",
+        score: Math.min(1.0, score),
+        metadata: { ...checks, tableRows },
+        scope: "turn",
+    };
+}
+/**
+ * Score precision-to-CAC connection
+ *
+ * The agent MUST connect targeting precision to CAC achievability:
+ * - Aggressive CAC targets require tight targeting
+ * - Moderate targets allow standard approaches
+ * - Agent should explicitly state this connection
+ */
+async function scorePrecisionConnection(output, currentStep) {
+    // Only score in Steps 2-4 when economics and audience are being discussed
+    if (currentStep < 2 || currentStep > 4) {
+        return {
+            scorer: "precision-connection",
+            score: 1.0,
+            metadata: { status: "not_applicable" },
+            scope: "turn",
+        };
+    }
+    const prompt = `Does this agent response connect targeting precision to efficiency/CAC achievability?
+
+AGENT RESPONSE: "${output}"
+
+LOOK FOR:
+- Explicit connection between CAC target and required targeting precision
+- Language like "to hit $X CAC, we need tight/standard/broad targeting"
+- Acknowledgment that aggressive efficiency requires more targeting signals
+- Warning if targeting is too loose for stated efficiency goals
+
+A = Explicitly connects precision to CAC target with clear rationale
+B = Mentions both precision and efficiency but connection is implicit
+C = Discusses targeting OR efficiency but doesn't connect them
+D = Discusses neither meaningfully
+F = Moves past targeting without addressing precision requirements
+
+Reply with ONLY one letter: A, B, C, D, or F`;
+    const letter = await llmJudge(prompt);
+    return {
+        scorer: "precision-connection",
+        score: mpa_multi_turn_types_js_1.GRADE_SCORES[letter] ?? 0.5,
+        metadata: { grade: letter, currentStep },
+        scope: "turn",
+    };
+}
+/**
+ * Score response formatting (visual hierarchy)
+ *
+ * Checks if calculations are on their own lines, tables used for
+ * comparative data, and visual breaks separate distinct concepts.
+ */
+function scoreResponseFormatting(output) {
+    // Check for calculations on own line (equation followed by newline or at start of line)
+    const hasCalculations = /[\d,]+\s*[\/×x÷]\s*[\d,]+\s*=/.test(output) ||
+        /=\s*\$[\d,]+/.test(output);
+    // If there are calculations, check if they're on their own line
+    const calculationsOnOwnLine = hasCalculations ?
+        /(\n|^)\s*\$?[\d,]+\s*[\/×x÷]\s*[\d,]+\s*=\s*\$?[\d,]+/.test(output) ||
+            /(\n|^)\s*\$[\d,]+\s*[\/÷]\s*[\d,]+\s*=/.test(output) : true;
+    // Check for table usage when multiple items are compared
+    const hasMultipleItems = /\b(los angeles|new york|chicago|houston|dallas|phoenix|dma|market)\b/gi.test(output);
+    const itemMatches = output.match(/\b(los angeles|new york|chicago|houston|dallas|phoenix)\b/gi) || [];
+    const multipleGeographies = itemMatches.length >= 2;
+    const hasTable = /\|.*\|.*\|/.test(output);
+    const tableUsedForComparison = !multipleGeographies || hasTable;
+    // Check for visual breaks (blank lines between sections)
+    const hasParagraphBreaks = /\n\s*\n/.test(output);
+    // Check for wall-of-text (long paragraphs without breaks)
+    const sentences = output.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    const isWallOfText = sentences.length > 4 && !hasParagraphBreaks;
+    let score = 1.0;
+    if (hasCalculations && !calculationsOnOwnLine) {
+        score -= 0.3; // Calculations embedded in prose
+    }
+    if (multipleGeographies && !hasTable) {
+        score -= 0.3; // Multiple items without table
+    }
+    if (isWallOfText) {
+        score -= 0.2; // Wall of text without breaks
+    }
+    return {
+        scorer: "response-formatting",
+        score: Math.max(0, score),
+        metadata: {
+            hasCalculations,
+            calculationsOnOwnLine,
+            multipleGeographies,
+            hasTable,
+            hasParagraphBreaks,
+            isWallOfText,
+        },
+        scope: "turn",
+    };
+}
+// =============================================================================
 // AGGREGATED SCORER
 // =============================================================================
 /**
  * Score a single turn with all applicable scorers
  */
-async function scoreTurn(userMessage, agentResponse, currentStep, stepState, userSophistication) {
+async function scoreTurn(userMessage, agentResponse, currentStep, stepState, userSophistication, cacAggressiveness = "unknown") {
     const scores = {};
     // Code-based scorers (run synchronously)
     scores["response-length"] = scoreResponseLength(agentResponse);
@@ -561,18 +791,24 @@ async function scoreTurn(userMessage, agentResponse, currentStep, stepState, use
     scores["acronym-definition"] = scoreAcronymDefinition(agentResponse);
     scores["idk-protocol"] = scoreIdkProtocol(userMessage, agentResponse);
     scores["calculation-presence"] = scoreCalculationPresence(agentResponse, userMessage);
+    scores["response-formatting"] = scoreResponseFormatting(agentResponse);
+    scores["audience-sizing"] = scoreAudienceSizing(agentResponse, currentStep);
     // LLM-based scorers (run in parallel)
     const hasEnoughData = stepState.collectedData[currentStep]?.minimumViableMet || false;
-    const [adaptiveScore, proactiveScore, progressScore, riskScore] = await Promise.all([
+    const [adaptiveScore, proactiveScore, progressScore, riskScore, audienceCompletenessScore, precisionConnectionScore,] = await Promise.all([
         scoreAdaptiveSophistication(userMessage, agentResponse, userSophistication),
         scoreProactiveIntelligence(userMessage, agentResponse, hasEnoughData),
         scoreProgressOverPerfection(userMessage, agentResponse),
         scoreRiskOpportunityFlagging(userMessage, agentResponse, currentStep),
+        scoreAudienceCompleteness(agentResponse, currentStep, cacAggressiveness),
+        scorePrecisionConnection(agentResponse, currentStep),
     ]);
     scores["adaptive-sophistication"] = adaptiveScore;
     scores["proactive-intelligence"] = proactiveScore;
     scores["progress-over-perfection"] = progressScore;
     scores["risk-opportunity-flagging"] = riskScore;
+    scores["audience-completeness"] = audienceCompletenessScore;
+    scores["precision-connection"] = precisionConnectionScore;
     return scores;
 }
 exports.default = scoreTurn;

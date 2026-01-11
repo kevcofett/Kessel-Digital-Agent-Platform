@@ -117,25 +117,29 @@ exports.MPA_STEPS = [
  * Scorer weight configuration
  */
 exports.SCORER_WEIGHTS = {
-    // Per-turn scorers - Quality behaviors
-    "proactive-intelligence": 0.12, // Critical: Does agent do math proactively?
-    "risk-opportunity-flagging": 0.10, // Critical: Does agent flag risks/opportunities?
-    "calculation-presence": 0.08, // Important: Is agent modeling/calculating?
-    "progress-over-perfection": 0.08, // Important: Maintains momentum
-    "adaptive-sophistication": 0.08, // Important: Language matches user
-    // Per-turn scorers - Compliance behaviors
-    "step-boundary": 0.08, // Don't discuss channels in Steps 1-2
-    "idk-protocol": 0.07, // Handle "I don't know" properly
-    "source-citation": 0.06, // Cite data sources
-    "single-question": 0.05, // Question discipline
-    "acronym-definition": 0.04, // Define acronyms
-    "response-length": 0.04, // Keep responses concise
-    // Conversation-level scorers
-    "step-completion-rate": 0.08, // Complete the steps
-    "conversation-efficiency": 0.04, // Efficient turn count
-    "context-retention": 0.04, // Remember user data
-    "greeting-uniqueness": 0.02, // Don't repeat greeting
-    "loop-detection": 0.02, // No question loops
+    // Per-turn scorers - Quality behaviors (in priority order)
+    "proactive-intelligence": 0.12, // #1: Does agent do math proactively?
+    "calculation-presence": 0.10, // #2: Is agent modeling/calculating?
+    "precision-connection": 0.08, // #3: Connects precision to CAC target
+    "risk-opportunity-flagging": 0.07, // #4: Does agent flag risks/opportunities?
+    "audience-completeness": 0.07, // #5: Collects all 4 dimensions with appropriate depth
+    "audience-sizing": 0.06, // #6: Presents audience SIZE table properly
+    "progress-over-perfection": 0.05, // #7: Maintains momentum
+    "adaptive-sophistication": 0.04, // #8: Language matches user
+    "response-formatting": 0.03, // #9: Visual hierarchy, calculations on own line
+    // Per-turn scorers - Compliance behaviors (in priority order)
+    "source-citation": 0.08, // #1: Cite data sources - CRITICAL
+    "step-boundary": 0.05, // #2: Don't discuss channels in Steps 1-2
+    "idk-protocol": 0.04, // #3: Handle "I don't know" properly
+    "single-question": 0.03, // #4: Question discipline
+    "acronym-definition": 0.02, // #5: Define acronyms
+    "response-length": 0.02, // #6: Keep responses concise
+    // Conversation-level scorers (in priority order)
+    "context-retention": 0.05, // #1: Remember user data
+    "step-completion-rate": 0.04, // #2: Complete the steps
+    "conversation-efficiency": 0.03, // #3: Efficient turn count
+    "loop-detection": 0.01, // #4: No question loops
+    "greeting-uniqueness": 0.01, // #5: Don't repeat greeting
 };
 /**
  * LLM grade to score mapping

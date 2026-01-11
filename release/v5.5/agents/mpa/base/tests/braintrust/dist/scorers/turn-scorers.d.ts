@@ -86,8 +86,48 @@ export declare function scoreRiskOpportunityFlagging(input: string, output: stri
  */
 export declare function scoreCalculationPresence(output: string, input: string, previousInput?: string): TurnScore;
 /**
+ * Score audience completeness relative to plan economics
+ *
+ * Aggressive efficiency targets (30%+ below benchmark) require tight targeting
+ * across all 4 dimensions with significant depth. Moderate targets allow
+ * standard targeting. Brand awareness allows broad targeting.
+ *
+ * This scorer evaluates whether the agent collected appropriate targeting
+ * depth for the efficiency requirements of the plan.
+ */
+export declare function scoreAudienceCompleteness(output: string, currentStep: number, cacAggressiveness: "aggressive" | "moderate" | "conservative" | "unknown"): Promise<TurnScore>;
+/**
+ * Score audience sizing table format and completeness
+ *
+ * The agent MUST present audience sizing in proper table format:
+ * | DMA | Total Population | Target Audience | Target % |
+ *
+ * - DMA/Geo in left column
+ * - Total population next
+ * - Target audience as whole numbers (not just %)
+ * - Target audience as % of total population
+ * - TOTAL row with rollups
+ */
+export declare function scoreAudienceSizing(output: string, currentStep: number): TurnScore;
+/**
+ * Score precision-to-CAC connection
+ *
+ * The agent MUST connect targeting precision to CAC achievability:
+ * - Aggressive CAC targets require tight targeting
+ * - Moderate targets allow standard approaches
+ * - Agent should explicitly state this connection
+ */
+export declare function scorePrecisionConnection(output: string, currentStep: number): Promise<TurnScore>;
+/**
+ * Score response formatting (visual hierarchy)
+ *
+ * Checks if calculations are on their own lines, tables used for
+ * comparative data, and visual breaks separate distinct concepts.
+ */
+export declare function scoreResponseFormatting(output: string): TurnScore;
+/**
  * Score a single turn with all applicable scorers
  */
-export declare function scoreTurn(userMessage: string, agentResponse: string, currentStep: number, stepState: StepTrackingState, userSophistication: string): Promise<Record<string, TurnScore>>;
+export declare function scoreTurn(userMessage: string, agentResponse: string, currentStep: number, stepState: StepTrackingState, userSophistication: string, cacAggressiveness?: "aggressive" | "moderate" | "conservative" | "unknown"): Promise<Record<string, TurnScore>>;
 export default scoreTurn;
 //# sourceMappingURL=turn-scorers.d.ts.map

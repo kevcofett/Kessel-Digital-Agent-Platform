@@ -6,7 +6,15 @@ Automated MPA instruction optimization loop. Runs iterations until composite sco
 
 This command uses multi-turn evaluation as the primary scoring mechanism.
 
-TARGET: 95% overall composite score across all 11 multi-turn scenarios.
+TARGET: 95% overall composite score across all 15 multi-turn scenarios.
+
+SCENARIO CATEGORIES:
+
+- Core scenarios (3): basic-user, sophisticated-idk, full-10-step
+- Phase 1 Quality (2): high-stakes-performance, brand-building-limited-data
+- Advanced Targeting (3): precision-targeting, mass-national, aggressive-kpi
+- Multi-Audience (3): unified-plan, channel-allocation, varying-kpis
+- Reforecasting (4): budget-revision, volume-increase, timeline-compression, efficiency-shock
 
 STEP 1 - LOAD CONFIGURATION
 
@@ -37,15 +45,15 @@ WHILE stopping conditions not met:
        iteration_count += 1
        Report: "Starting iteration {iteration_count}"
 
-    B. RUN MULTI-TURN EVALUATION (All 11 Scenarios)
+    B. RUN MULTI-TURN EVALUATION (All 15 Scenarios)
 
        ```bash
        cd /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/agents/mpa/base/tests/braintrust
        export $(grep -E "^[A-Z_]+=" /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/integrations/vercel-ai-gateway/.env | xargs) && \
-       node dist/mpa-multi-turn-eval.js --parallel --efficiency --track-kb
+       node dist/mpa-multi-turn-eval.js --parallel --track-kb
        ```
 
-       Parse results for all 11 scenarios.
+       Parse results for all 15 scenarios.
        Calculate overall composite score.
 
     C. CHECK STOPPING CONDITIONS
@@ -137,7 +145,7 @@ WHILE stopping conditions not met:
        Re-run multi-turn evaluation:
        ```bash
        export $(grep -E "^[A-Z_]+=" /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/integrations/vercel-ai-gateway/.env | xargs) && \
-       node dist/mpa-multi-turn-eval.js --parallel --efficiency --track-kb
+       node dist/mpa-multi-turn-eval.js --parallel --track-kb
        ```
 
        Calculate new composite.
@@ -188,7 +196,7 @@ Improvement: {delta} ({percentage}%)
 Best version: {current_best_version}
 Stopping reason: {reason}
 
-MULTI-TURN RESULTS (11 Scenarios):
+MULTI-TURN RESULTS (15 Scenarios):
 Scenario                          | Score  | Change |
 ----------------------------------|--------|--------|
 basic-user-step1-2                | XX.X%  | +X.X%  |
@@ -202,6 +210,10 @@ aggressive-kpi-narrow-targeting   | XX.X%  | +X.X%  |
 multi-audience-unified-plan       | XX.X%  | +X.X%  |
 multi-audience-channel-allocation | XX.X%  | +X.X%  |
 multi-audience-varying-kpis       | XX.X%  | +X.X%  |
+budget-revision-midstream         | XX.X%  | +X.X%  |
+volume-target-increase            | XX.X%  | +X.X%  |
+timeline-compression              | XX.X%  | +X.X%  |
+efficiency-shock                  | XX.X%  | +X.X%  |
 ----------------------------------|--------|--------|
 OVERALL                           | XX.X%  | +X.X%  |
 

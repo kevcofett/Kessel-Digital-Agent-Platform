@@ -10,7 +10,7 @@ Ask the user which scenario(s) to run:
 
 Options:
 
-- `all` - Run all 11 scenarios (full evaluation suite)
+- `all` - Run all 15 scenarios (full evaluation suite)
 - `quick` - Run quick scenarios only (basic-user, sophisticated-idk, high-stakes-performance)
 - `full` - Run only the full-10-step scenario
 - `scenario [id]` - Run a specific scenario by ID
@@ -28,6 +28,10 @@ Available scenarios:
 9. multi-audience-unified-plan - Multiple audiences in one plan
 10. multi-audience-channel-allocation - Multiple audiences with different channels
 11. multi-audience-varying-kpis - Multiple audiences with varying KPIs
+12. budget-revision-midstream - Budget increases mid-conversation (reforecasting)
+13. volume-target-increase - Volume target increases mid-conversation (reforecasting)
+14. timeline-compression - Timeline compresses mid-conversation (reforecasting)
+15. efficiency-shock - CAC reality check mid-conversation (reforecasting)
 
 If user specified a scope in the command arguments, use that. Otherwise default to `all`.
 
@@ -46,11 +50,11 @@ export $(grep -E "^[A-Z_]+=" /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Age
 node dist/mpa-multi-turn-eval.js
 ```
 
-For all scenarios (parallel + efficiency mode - recommended for iteration):
+For all scenarios (parallel - recommended for iteration):
 
 ```bash
 export $(grep -E "^[A-Z_]+=" /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/integrations/vercel-ai-gateway/.env | xargs) && \
-node dist/mpa-multi-turn-eval.js --parallel --efficiency
+node dist/mpa-multi-turn-eval.js --parallel
 ```
 
 For specific scenario:
@@ -71,13 +75,12 @@ For KB document impact tracking:
 
 ```bash
 export $(grep -E "^[A-Z_]+=" /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/integrations/vercel-ai-gateway/.env | xargs) && \
-node dist/mpa-multi-turn-eval.js --parallel --efficiency --track-kb
+node dist/mpa-multi-turn-eval.js --parallel --track-kb
 ```
 
 Command-line flags:
 
 - `--parallel` - Run scenarios concurrently (3 at a time) for faster completion
-- `--efficiency` - Cap turns at 20 for faster iteration
 - `--track-kb` - Track KB document impact and generate optimization recommendations
 - `--save-baseline` - Save current results as new baseline
 - `--verbose` - Show full conversation logs
@@ -103,6 +106,10 @@ aggressive-kpi-narrow-targeting         | 0.XXX  | 0.70      |   ✅   |
 multi-audience-unified-plan             | 0.XXX  | 0.70      |   ✅   |
 multi-audience-channel-allocation       | 0.XXX  | 0.70      |   ✅   |
 multi-audience-varying-kpis             | 0.XXX  | 0.70      |   ✅   |
+budget-revision-midstream               | 0.XXX  | 0.70      |   ✅   |
+volume-target-increase                  | 0.XXX  | 0.70      |   ✅   |
+timeline-compression                    | 0.XXX  | 0.70      |   ✅   |
+efficiency-shock                        | 0.XXX  | 0.70      |   ✅   |
 ----------------------------------------|--------|-----------|--------|
 Average                                 | 0.XXX  | 0.70      |   ✅   |
 Critical Failures                       |   X    |    0      |   ✅   |
@@ -225,4 +232,32 @@ multi-audience-varying-kpis:
 - Persona: Full-funnel marketer with varying KPIs per segment
 - Tests: Different success metrics per audience, unified reporting
 - Expected turns: 18-45
+- Pass threshold: 0.70
+
+budget-revision-midstream:
+- Persona: B2B SaaS director of marketing
+- Tests: Proactive reforecasting when budget increases mid-conversation
+- Data change: Budget increases from $500K to $750K at turn 6
+- Expected turns: 12-35
+- Pass threshold: 0.70
+
+volume-target-increase:
+- Persona: E-commerce marketing manager
+- Tests: Proactive reforecasting when volume target increases mid-conversation
+- Data change: Volume target increases from 5,000 to 8,000 at turn 8
+- Expected turns: 14-40
+- Pass threshold: 0.70
+
+timeline-compression:
+- Persona: Retail marketing director
+- Tests: Proactive reforecasting when timeline compresses mid-conversation
+- Data change: Timeline compresses from 12 months to 6 months at turn 7
+- Expected turns: 12-35
+- Pass threshold: 0.70
+
+efficiency-shock:
+- Persona: Insurance director of digital marketing
+- Tests: Proactive reforecasting when CAC constraints invalidate calculations
+- Data change: User reveals $120 CAC floor after agent calculates $50 implied CAC
+- Expected turns: 12-35
 - Pass threshold: 0.70

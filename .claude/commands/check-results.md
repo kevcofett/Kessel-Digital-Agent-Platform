@@ -150,12 +150,12 @@ Multi-turn validation is REQUIRED when ANY of these conditions are met:
 
 IF multi-turn validation is required:
 
-Run multi-turn evaluation (all 11 scenarios):
+Run multi-turn evaluation (all 15 scenarios):
 
 ```bash
 cd /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/agents/mpa/base/tests/braintrust
 export $(grep -E "^[A-Z_]+=" /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/integrations/vercel-ai-gateway/.env | xargs) && \
-node dist/mpa-multi-turn-eval.js --parallel --efficiency
+node dist/mpa-multi-turn-eval.js --parallel
 ```
 
 Parse multi-turn results for each scenario:
@@ -176,6 +176,10 @@ aggressive-kpi-narrow-targeting         | 0.XXX  | 0.70      |   ✅   |
 multi-audience-unified-plan             | 0.XXX  | 0.70      |   ✅   |
 multi-audience-channel-allocation       | 0.XXX  | 0.70      |   ✅   |
 multi-audience-varying-kpis             | 0.XXX  | 0.70      |   ✅   |
+budget-revision-midstream               | 0.XXX  | 0.70      |   ✅   |
+volume-target-increase                  | 0.XXX  | 0.70      |   ✅   |
+timeline-compression                    | 0.XXX  | 0.70      |   ✅   |
+efficiency-shock                        | 0.XXX  | 0.70      |   ✅   |
 ----------------------------------------|--------|-----------|--------|
 Average                                 | 0.XXX  | 0.70      |   ✅   |
 Critical Failures                       |   X    |    0      |   ✅   |

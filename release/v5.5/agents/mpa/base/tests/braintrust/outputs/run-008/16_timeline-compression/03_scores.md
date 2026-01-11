@@ -1,0 +1,35 @@
+# Score Breakdown: Timeline Compression
+
+## Score Report
+
+**Composite Score:** 76.9%
+**Status:** PASSED
+
+### Per-Turn Scores (Mean)
+
+| Scorer | Mean | Min | Max |
+|--------|------|-----|-----|
+| response-length | 86.7% | 80.0% | 100.0% |
+| single-question | 96.0% | 80.0% | 100.0% |
+| step-boundary | 93.3% | 0.0% | 100.0% |
+| source-citation | 74.7% | 30.0% | 100.0% |
+| acronym-definition | 63.3% | 0.0% | 100.0% |
+| idk-protocol | 100.0% | 100.0% | 100.0% |
+| calculation-presence | 71.3% | 50.0% | 100.0% |
+| adaptive-sophistication | 94.7% | 60.0% | 100.0% |
+| proactive-intelligence | 95.3% | 50.0% | 100.0% |
+| progress-over-perfection | 98.7% | 80.0% | 100.0% |
+| risk-opportunity-flagging | 80.7% | 50.0% | 100.0% |
+
+### Conversation-Level Scores
+
+| Scorer | Score |
+|--------|-------|
+| step-completion-rate | 100.0% |
+| conversation-efficiency | 100.0% |
+| context-retention | 100.0% |
+| greeting-uniqueness | 100.0% |
+| loop-detection | 100.0% |
+| failure-penalty | 85.0% |
+| step-transition-quality | 100.0% |
+| overall-coherence | 50.0% |

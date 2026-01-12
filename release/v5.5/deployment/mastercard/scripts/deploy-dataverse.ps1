@@ -1,102 +1,164 @@
-# Deploy Dataverse Solution and Seed Data
-# Imports solution and reference data for specified agent(s)
+<#
+.SYNOPSIS
+    Deploy Dataverse tables and solution to target environment.
+
+.DESCRIPTION
+    Imports Dataverse solution containing tables, relationships, and configurations.
+    Creates tables from JSON schema files if solution import not available.
+
+.PARAMETER SolutionPath
+    Path to solution zip file or folder containing table JSON schemas
+
+.PARAMETER Environment
+    Target environment: 'personal' or 'mastercard'
+
+.EXAMPLE
+    ./deploy-dataverse.ps1 -SolutionPath "./release/v5.5/agents/mpa/base/dataverse" -Environment "personal"
+#>
 
 param(
-    [string]$Agent = "all",
-    [switch]$SeedDataOnly
+    [Parameter(Mandatory=$true)]
+    [string]$SolutionPath,
+    
+    [Parameter(Mandatory=$true)]
+    [ValidateSet("personal", "mastercard")]
+    [string]$Environment
 )
 
-$ErrorActionPreference = "Stop"
-$repoRoot = (Get-Item $PSScriptRoot).Parent.Parent.Parent.Parent.FullName
+Write-Host "========================================"
+Write-Host "Dataverse Deployment"
+Write-Host "========================================"
+Write-Host "Environment: $Environment"
+Write-Host "Source: $SolutionPath"
+Write-Host "========================================"
 
-Write-Host "=== Dataverse Deployment ===" -ForegroundColor Cyan
-Write-Host "Agent: $Agent"
-Write-Host "Seed Data Only: $SeedDataOnly"
-Write-Host ""
-
-# Check for PAC CLI
-$pacPath = Get-Command pac -ErrorAction SilentlyContinue
-if (-not $pacPath) {
-    Write-Host "Error: Power Platform CLI (pac) not found" -ForegroundColor Red
-    Write-Host "Install with: winget install Microsoft.PowerPlatformCLI" -ForegroundColor Yellow
+# Verify pac CLI is available
+$pacVersion = pac --version 2>$null
+if (-not $pacVersion) {
+    Write-Error "Power Platform CLI (pac) not found. Install from: https://aka.ms/PowerAppsCLI"
     exit 1
 }
 
-# Authenticate if needed
-Write-Host "Checking authentication..." -ForegroundColor Yellow
-$authList = pac auth list 2>&1
+Write-Host "pac CLI version: $pacVersion"
+
+# Check authentication
+Write-Host "Checking authentication..."
+$authList = pac auth list
 if ($authList -match "No profiles") {
-    Write-Host "Creating authentication profile..." -ForegroundColor Yellow
-    pac auth create --environment $env:DATAVERSE_ENVIRONMENT_URL
+    Write-Error "Not authenticated. Run: pac auth create --environment [URL]"
+    exit 1
 }
 
-# Import solution (unless seed data only)
-if (-not $SeedDataOnly) {
-    Write-Host "`nImporting Dataverse solution..." -ForegroundColor Yellow
+Write-Host "Authentication OK"
 
-    $solutionPath = Join-Path $repoRoot "release/v5.5/dataverse/solution.zip"
+# Determine deployment method
+$solutionZip = Get-ChildItem -Path $SolutionPath -Filter "*.zip" -ErrorAction SilentlyContinue | Select-Object -First 1
+$tableJsons = Get-ChildItem -Path $SolutionPath -Filter "*.json" -Recurse -ErrorAction SilentlyContinue
 
-    if (Test-Path $solutionPath) {
-        pac solution import --path $solutionPath --activate-plugins --force-overwrite
-        Write-Host "  ✓ Solution imported successfully" -ForegroundColor Green
-    } else {
-        Write-Host "  Warning: Solution file not found at $solutionPath" -ForegroundColor Yellow
-        Write-Host "  Using existing customizations.xml from project..." -ForegroundColor Yellow
-
-        # Alternative: use customizations.xml if available
-        $customizationsPath = "/mnt/project/customizations.xml"
-        if (Test-Path $customizationsPath) {
-            Write-Host "  Found customizations.xml - manual import required via Power Platform" -ForegroundColor Yellow
+if ($solutionZip) {
+    # Method 1: Import solution zip
+    Write-Host ""
+    Write-Host "Found solution zip: $($solutionZip.Name)"
+    Write-Host "Importing solution..."
+    
+    try {
+        pac solution import `
+            --path $solutionZip.FullName `
+            --activate-plugins `
+            --force-overwrite `
+            --async
+        
+        Write-Host "Solution import initiated. Waiting for completion..."
+        
+        # Wait for import
+        $timeout = 300  # 5 minutes
+        $elapsed = 0
+        $checkInterval = 10
+        
+        while ($elapsed -lt $timeout) {
+            Start-Sleep -Seconds $checkInterval
+            $elapsed += $checkInterval
+            Write-Host "  Waiting... ($elapsed seconds)"
+            
+            # Check solution status
+            $solutions = pac solution list
+            if ($solutions -match "AgentPlatform.*Managed") {
+                Write-Host "Solution import complete!" -ForegroundColor Green
+                break
+            }
         }
-    }
-}
-
-# Import seed data
-Write-Host "`nImporting seed data..." -ForegroundColor Yellow
-
-$seedDataDir = Join-Path $repoRoot "release/v5.5/seed-data"
-
-# Create seed-data directory if it doesn't exist
-if (-not (Test-Path $seedDataDir)) {
-    New-Item -ItemType Directory -Path $seedDataDir -Force | Out-Null
-
-    # Copy seed data from project files
-    $projectSeedFiles = @(
-        "/mnt/project/mpa_vertical_seed.csv",
-        "/mnt/project/mpa_kpi_seed_updated.csv",
-        "/mnt/project/mpa_channel_seed_updated.csv",
-        "/mnt/project/mpa_benchmark_seed.csv"
-    )
-
-    foreach ($file in $projectSeedFiles) {
-        if (Test-Path $file) {
-            Copy-Item $file $seedDataDir
+        
+        if ($elapsed -ge $timeout) {
+            Write-Warning "Timeout waiting for solution import. Check Power Platform admin center."
         }
+    } catch {
+        Write-Error "Solution import failed: $_"
+        exit 1
     }
-}
-
-# Import each seed file
-$seedFiles = @{
-    "cr_verticals" = "mpa_vertical_seed.csv"
-    "cr_kpis" = "mpa_kpi_seed_updated.csv"
-    "cr_channels" = "mpa_channel_seed_updated.csv"
-    "cr_benchmarks" = "mpa_benchmark_seed.csv"
-}
-
-foreach ($table in $seedFiles.Keys) {
-    $seedFile = Join-Path $seedDataDir $seedFiles[$table]
-
-    if (Test-Path $seedFile) {
-        Write-Host "  Importing $($seedFiles[$table]) to $table..." -ForegroundColor Gray
+    
+} elseif ($tableJsons.Count -gt 0) {
+    # Method 2: Create tables from JSON schemas
+    Write-Host ""
+    Write-Host "Found $($tableJsons.Count) table JSON schemas"
+    Write-Host "Creating tables from schemas..."
+    
+    $created = 0
+    $skipped = 0
+    $failed = 0
+    
+    foreach ($json in $tableJsons) {
+        $tableName = [System.IO.Path]::GetFileNameWithoutExtension($json.Name)
+        Write-Host "Processing: $tableName..." -NoNewline
+        
         try {
-            pac data import --data $seedFile --target-table $table --verbose
-            Write-Host "    ✓ Imported successfully" -ForegroundColor Green
+            $schema = Get-Content $json.FullName | ConvertFrom-Json
+            
+            # Extract table metadata
+            $displayName = $schema.displayName ?? $tableName
+            $pluralName = $schema.pluralName ?? "${displayName}s"
+            $description = $schema.description ?? ""
+            
+            # Check if table exists
+            $existingTables = pac table list 2>$null
+            if ($existingTables -match $tableName) {
+                Write-Host " [SKIP - exists]" -ForegroundColor Yellow
+                $skipped++
+                continue
+            }
+            
+            # Create table (basic creation - columns must be added separately)
+            # Note: pac CLI has limited table creation - may need Web API calls
+            Write-Host " [PENDING]" -ForegroundColor Cyan
+            $created++
+            
         } catch {
-            Write-Host "    ✗ Import failed: $_" -ForegroundColor Red
+            Write-Host " [FAILED]" -ForegroundColor Red
+            $failed++
         }
-    } else {
-        Write-Host "  Warning: Seed file not found: $seedFile" -ForegroundColor Yellow
     }
+    
+    Write-Host ""
+    Write-Host "Summary:"
+    Write-Host "  Created/Pending: $created"
+    Write-Host "  Skipped (exists): $skipped"
+    Write-Host "  Failed: $failed"
+    
+    if ($created -gt 0) {
+        Write-Host ""
+        Write-Host "NOTE: Full table creation with columns requires:" -ForegroundColor Yellow
+        Write-Host "  1. Manual creation in Power Apps maker portal, OR"
+        Write-Host "  2. Solution import (preferred), OR"
+        Write-Host "  3. Dataverse Web API calls"
+        Write-Host ""
+        Write-Host "Recommend: Create solution in dev environment, export, then import here."
+    }
+    
+} else {
+    Write-Error "No solution zip or JSON schemas found in: $SolutionPath"
+    exit 1
 }
 
-Write-Host "`n=== Dataverse Deployment Complete ===" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "========================================"
+Write-Host "Dataverse Deployment Complete"
+Write-Host "========================================"

@@ -1,219 +1,195 @@
-# Validate Mastercard Deployment Environment
-# Run before deployment to verify all prerequisites
+<#
+.SYNOPSIS
+    Validate environment prerequisites before deployment.
+
+.DESCRIPTION
+    Checks authentication, connectivity, and permissions for all
+    target services (SharePoint, Dataverse, Power Automate).
+
+.PARAMETER Environment
+    Target environment: 'personal' or 'mastercard'
+
+.EXAMPLE
+    ./validate-environment.ps1 -Environment "personal"
+#>
 
 param(
-    [switch]$Verbose
+    [Parameter(Mandatory=$true)]
+    [ValidateSet("personal", "mastercard")]
+    [string]$Environment
 )
 
-$ErrorActionPreference = "Stop"
+Write-Host "========================================"
+Write-Host "Environment Validation"
+Write-Host "========================================"
+Write-Host "Target: $Environment"
+Write-Host "Time: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+Write-Host "========================================"
 
-Write-Host "=== Mastercard Environment Validation ===" -ForegroundColor Cyan
-Write-Host ""
-
+$checks = @()
 $allPassed = $true
-$results = @()
 
-# Function to check environment variable
-function Test-EnvVar {
-    param([string]$Name, [string]$Description, [bool]$Required = $true)
-
-    $value = [Environment]::GetEnvironmentVariable($Name)
-    if ($value) {
-        $masked = if ($Name -match "SECRET|KEY|PASSWORD") { "****" + $value.Substring([Math]::Max(0, $value.Length - 4)) } else { $value }
-        Write-Host "  ✓ $Name = $masked" -ForegroundColor Green
-        return $true
-    } elseif ($Required) {
-        Write-Host "  ✗ $Name - NOT SET (Required)" -ForegroundColor Red
-        return $false
-    } else {
-        Write-Host "  - $Name - Not set (Optional)" -ForegroundColor Yellow
-        return $true
+function Add-Check {
+    param(
+        [string]$Name,
+        [bool]$Passed,
+        [string]$Details
+    )
+    
+    $script:checks += @{
+        Name = $Name
+        Passed = $Passed
+        Details = $Details
+    }
+    
+    if (-not $Passed) {
+        $script:allPassed = $false
+    }
+    
+    $status = if ($Passed) { "✓ PASS" } else { "✗ FAIL" }
+    $color = if ($Passed) { "Green" } else { "Red" }
+    
+    Write-Host "$status - $Name" -ForegroundColor $color
+    if ($Details) {
+        Write-Host "       $Details" -ForegroundColor Gray
     }
 }
 
-# Check required environment variables
-Write-Host "Checking Environment Variables..." -ForegroundColor White
+Write-Host ""
+Write-Host "Checking Prerequisites..."
+Write-Host "-----------------------------------------"
 
-Write-Host "`nAzure AD:" -ForegroundColor Yellow
-$results += Test-EnvVar "AZURE_TENANT_ID" "Azure AD Tenant"
-$results += Test-EnvVar "AZURE_CLIENT_ID" "App Registration Client ID"
-$results += Test-EnvVar "AZURE_CLIENT_SECRET" "App Registration Secret"
+# Check 1: PowerShell version
+$psVersion = $PSVersionTable.PSVersion
+$psVersionOk = $psVersion.Major -ge 7
+Add-Check -Name "PowerShell Version" -Passed $psVersionOk -Details "Version: $($psVersion.ToString())"
 
-Write-Host "`nAzure OpenAI:" -ForegroundColor Yellow
-$results += Test-EnvVar "AZURE_OPENAI_ENDPOINT" "Azure OpenAI Endpoint"
-$results += Test-EnvVar "AZURE_OPENAI_DEPLOYMENT" "Azure OpenAI Deployment Name"
-$results += Test-EnvVar "AZURE_OPENAI_API_KEY" "Azure OpenAI API Key" -Required $false
+# Check 2: pac CLI installed
+$pacInstalled = $null -ne (Get-Command pac -ErrorAction SilentlyContinue)
+$pacVersion = if ($pacInstalled) { pac --version 2>$null } else { "Not installed" }
+Add-Check -Name "Power Platform CLI (pac)" -Passed $pacInstalled -Details $pacVersion
 
-Write-Host "`nDataverse:" -ForegroundColor Yellow
-$results += Test-EnvVar "DATAVERSE_ENVIRONMENT_URL" "Dataverse Environment URL"
+# Check 3: Azure CLI installed
+$azInstalled = $null -ne (Get-Command az -ErrorAction SilentlyContinue)
+$azVersion = if ($azInstalled) { az --version 2>$null | Select-Object -First 1 } else { "Not installed" }
+Add-Check -Name "Azure CLI (az)" -Passed $azInstalled -Details $azVersion
 
-Write-Host "`nSharePoint:" -ForegroundColor Yellow
-$results += Test-EnvVar "SHAREPOINT_SITE_URL" "SharePoint Site URL"
+# Check 4: PnP PowerShell module
+$pnpInstalled = $null -ne (Get-Module -ListAvailable -Name "PnP.PowerShell")
+$pnpVersion = if ($pnpInstalled) { (Get-Module -ListAvailable -Name "PnP.PowerShell" | Select-Object -First 1).Version.ToString() } else { "Not installed" }
+Add-Check -Name "PnP PowerShell Module" -Passed $pnpInstalled -Details $pnpVersion
 
-Write-Host "`nCopilot Studio:" -ForegroundColor Yellow
-$results += Test-EnvVar "COPILOT_STUDIO_BOT_ID" "Copilot Studio Bot ID" -Required $false
-$results += Test-EnvVar "COPILOT_STUDIO_ENV_URL" "Copilot Studio Environment URL" -Required $false
+Write-Host ""
+Write-Host "Checking Authentication..."
+Write-Host "-----------------------------------------"
 
-# Check if all required passed
-if ($results -contains $false) {
-    $allPassed = $false
-}
-
-# Test Azure AD Authentication
-Write-Host "`nTesting Azure AD Authentication..." -ForegroundColor White
+# Check 5: Azure CLI authentication
+$azAccount = $null
 try {
-    $tenantId = $env:AZURE_TENANT_ID
-    $clientId = $env:AZURE_CLIENT_ID
-    $clientSecret = $env:AZURE_CLIENT_SECRET
+    $azAccount = az account show 2>$null | ConvertFrom-Json
+} catch {}
+$azLoggedIn = $null -ne $azAccount
+$azDetails = if ($azLoggedIn) { "Tenant: $($azAccount.tenantId.Substring(0,8))..." } else { "Run: az login" }
+Add-Check -Name "Azure CLI Authentication" -Passed $azLoggedIn -Details $azDetails
 
-    if ($tenantId -and $clientId -and $clientSecret) {
-        $tokenUrl = "https://login.microsoftonline.com/$tenantId/oauth2/v2.0/token"
-        $body = @{
-            client_id = $clientId
-            client_secret = $clientSecret
-            scope = "https://graph.microsoft.com/.default"
-            grant_type = "client_credentials"
+# Check 6: pac CLI authentication
+$pacAuth = pac auth list 2>&1
+$pacLoggedIn = $pacAuth -notmatch "No profiles"
+$pacDetails = if ($pacLoggedIn) { "Profile active" } else { "Run: pac auth create" }
+Add-Check -Name "Power Platform CLI Auth" -Passed $pacLoggedIn -Details $pacDetails
+
+Write-Host ""
+Write-Host "Checking Environment Configuration..."
+Write-Host "-----------------------------------------"
+
+# Check 7: Environment file exists
+$envFile = Join-Path $PSScriptRoot "../../.env.$Environment"
+$envFileExists = Test-Path $envFile
+Add-Check -Name "Environment File (.env.$Environment)" -Passed $envFileExists -Details $(if ($envFileExists) { "Found" } else { "Create: .env.$Environment" })
+
+# Load environment variables if file exists
+$envVars = @{}
+if ($envFileExists) {
+    Get-Content $envFile | ForEach-Object {
+        if ($_ -match "^([^=]+)=(.*)$") {
+            $envVars[$matches[1]] = $matches[2]
         }
-
-        $response = Invoke-RestMethod -Uri $tokenUrl -Method Post -Body $body -ContentType "application/x-www-form-urlencoded"
-
-        if ($response.access_token) {
-            Write-Host "  ✓ Azure AD authentication successful" -ForegroundColor Green
-        }
-    } else {
-        Write-Host "  - Skipped (missing credentials)" -ForegroundColor Yellow
     }
-} catch {
-    Write-Host "  ✗ Azure AD authentication failed: $_" -ForegroundColor Red
-    $allPassed = $false
 }
 
-# Test Dataverse Connection
-Write-Host "`nTesting Dataverse Connection..." -ForegroundColor White
-try {
-    $dataverseUrl = $env:DATAVERSE_ENVIRONMENT_URL
-    if ($dataverseUrl) {
-        # Get token for Dataverse
-        $tokenUrl = "https://login.microsoftonline.com/$env:AZURE_TENANT_ID/oauth2/v2.0/token"
-        $body = @{
-            client_id = $env:AZURE_CLIENT_ID
-            client_secret = $env:AZURE_CLIENT_SECRET
-            scope = "$dataverseUrl/.default"
-            grant_type = "client_credentials"
-        }
+# Check 8: Required environment variables
+$requiredVars = @("SHAREPOINT_SITE", "SHAREPOINT_LIBRARY", "DATAVERSE_URL")
+$missingVars = $requiredVars | Where-Object { -not $envVars[$_] }
+$varsOk = $missingVars.Count -eq 0
+$varsDetails = if ($varsOk) { "All required vars set" } else { "Missing: $($missingVars -join ', ')" }
+Add-Check -Name "Required Environment Variables" -Passed $varsOk -Details $varsDetails
 
-        $tokenResponse = Invoke-RestMethod -Uri $tokenUrl -Method Post -Body $body -ContentType "application/x-www-form-urlencoded"
+Write-Host ""
+Write-Host "Checking Connectivity..."
+Write-Host "-----------------------------------------"
 
-        # Test Dataverse API
-        $headers = @{
-            Authorization = "Bearer $($tokenResponse.access_token)"
-            "OData-MaxVersion" = "4.0"
-            "OData-Version" = "4.0"
-        }
-
-        $whoamiUrl = "$dataverseUrl/api/data/v9.2/WhoAmI"
-        $whoami = Invoke-RestMethod -Uri $whoamiUrl -Headers $headers -Method Get
-
-        Write-Host "  ✓ Dataverse connection successful (User ID: $($whoami.UserId))" -ForegroundColor Green
-    } else {
-        Write-Host "  - Skipped (DATAVERSE_ENVIRONMENT_URL not set)" -ForegroundColor Yellow
+# Check 9: SharePoint connectivity (if configured)
+$spConnected = $false
+$spDetails = "Not tested"
+if ($envVars["SHAREPOINT_SITE"]) {
+    try {
+        # Quick connectivity test
+        $response = Invoke-WebRequest -Uri $envVars["SHAREPOINT_SITE"] -Method Head -TimeoutSec 10 -UseBasicParsing 2>$null
+        $spConnected = $response.StatusCode -eq 200
+        $spDetails = "Site reachable"
+    } catch {
+        $spDetails = "Cannot reach site"
     }
-} catch {
-    Write-Host "  ✗ Dataverse connection failed: $_" -ForegroundColor Red
-    $allPassed = $false
+} else {
+    $spDetails = "SHAREPOINT_SITE not configured"
 }
+Add-Check -Name "SharePoint Connectivity" -Passed $spConnected -Details $spDetails
 
-# Test SharePoint Connection
-Write-Host "`nTesting SharePoint Connection..." -ForegroundColor White
-try {
-    $sharePointUrl = $env:SHAREPOINT_SITE_URL
-    if ($sharePointUrl) {
-        # Extract tenant from SharePoint URL
-        $uri = [System.Uri]$sharePointUrl
-        $sharePointResource = "https://$($uri.Host)"
-
-        # Get token for SharePoint
-        $tokenUrl = "https://login.microsoftonline.com/$env:AZURE_TENANT_ID/oauth2/v2.0/token"
-        $body = @{
-            client_id = $env:AZURE_CLIENT_ID
-            client_secret = $env:AZURE_CLIENT_SECRET
-            scope = "$sharePointResource/.default"
-            grant_type = "client_credentials"
-        }
-
-        $tokenResponse = Invoke-RestMethod -Uri $tokenUrl -Method Post -Body $body -ContentType "application/x-www-form-urlencoded"
-
-        # Test SharePoint API
-        $headers = @{
-            Authorization = "Bearer $($tokenResponse.access_token)"
-            Accept = "application/json"
-        }
-
-        $siteInfoUrl = "$sharePointUrl/_api/web/title"
-        $siteInfo = Invoke-RestMethod -Uri $siteInfoUrl -Headers $headers -Method Get
-
-        Write-Host "  ✓ SharePoint connection successful" -ForegroundColor Green
-    } else {
-        Write-Host "  - Skipped (SHAREPOINT_SITE_URL not set)" -ForegroundColor Yellow
+# Check 10: Dataverse connectivity
+$dvConnected = $false
+$dvDetails = "Not tested"
+if ($pacLoggedIn) {
+    try {
+        $orgList = pac org list 2>&1
+        $dvConnected = $orgList -notmatch "error"
+        $dvDetails = if ($dvConnected) { "Dataverse accessible" } else { "Check permissions" }
+    } catch {
+        $dvDetails = "Connection test failed"
     }
-} catch {
-    Write-Host "  ✗ SharePoint connection failed: $_" -ForegroundColor Red
-    $allPassed = $false
 }
+Add-Check -Name "Dataverse Connectivity" -Passed $dvConnected -Details $dvDetails
 
-# Test Azure OpenAI Connection
-Write-Host "`nTesting Azure OpenAI Connection..." -ForegroundColor White
-try {
-    $aoaiEndpoint = $env:AZURE_OPENAI_ENDPOINT
-    $aoaiDeployment = $env:AZURE_OPENAI_DEPLOYMENT
-    $aoaiKey = $env:AZURE_OPENAI_API_KEY
+Write-Host ""
+Write-Host "========================================"
+Write-Host "Validation Summary"
+Write-Host "========================================"
 
-    if ($aoaiEndpoint -and $aoaiDeployment) {
-        $headers = @{}
+$passCount = ($checks | Where-Object { $_.Passed }).Count
+$failCount = ($checks | Where-Object { -not $_.Passed }).Count
 
-        if ($aoaiKey) {
-            $headers["api-key"] = $aoaiKey
-        } else {
-            # Use Azure AD token
-            $tokenUrl = "https://login.microsoftonline.com/$env:AZURE_TENANT_ID/oauth2/v2.0/token"
-            $body = @{
-                client_id = $env:AZURE_CLIENT_ID
-                client_secret = $env:AZURE_CLIENT_SECRET
-                scope = "https://cognitiveservices.azure.com/.default"
-                grant_type = "client_credentials"
-            }
-            $tokenResponse = Invoke-RestMethod -Uri $tokenUrl -Method Post -Body $body -ContentType "application/x-www-form-urlencoded"
-            $headers["Authorization"] = "Bearer $($tokenResponse.access_token)"
-        }
+Write-Host "Total Checks: $($checks.Count)"
+Write-Host "Passed: $passCount" -ForegroundColor Green
+Write-Host "Failed: $failCount" -ForegroundColor $(if ($failCount -gt 0) { "Red" } else { "Green" })
 
-        $headers["Content-Type"] = "application/json"
-
-        # Test with a simple completion
-        $testUrl = "$aoaiEndpoint/openai/deployments/$aoaiDeployment/chat/completions?api-version=2024-02-01"
-        $testBody = @{
-            messages = @(
-                @{ role = "user"; content = "Say 'OK'" }
-            )
-            max_tokens = 10
-        } | ConvertTo-Json
-
-        $response = Invoke-RestMethod -Uri $testUrl -Headers $headers -Method Post -Body $testBody
-
-        Write-Host "  ✓ Azure OpenAI connection successful" -ForegroundColor Green
-    } else {
-        Write-Host "  - Skipped (endpoint or deployment not set)" -ForegroundColor Yellow
-    }
-} catch {
-    Write-Host "  ✗ Azure OpenAI connection failed: $_" -ForegroundColor Red
-    $allPassed = $false
-}
-
-# Summary
-Write-Host "`n=== Validation Summary ===" -ForegroundColor Cyan
 if ($allPassed) {
-    Write-Host "✓ All validations passed - Ready for deployment" -ForegroundColor Green
+    Write-Host ""
+    Write-Host "✓ Environment ready for deployment" -ForegroundColor Green
     exit 0
 } else {
-    Write-Host "✗ Some validations failed - Please fix issues before deployment" -ForegroundColor Red
+    Write-Host ""
+    Write-Host "✗ Environment has issues that must be resolved" -ForegroundColor Red
+    Write-Host ""
+    Write-Host "Fix these issues:"
+    
+    foreach ($check in ($checks | Where-Object { -not $_.Passed })) {
+        Write-Host "  - $($check.Name): $($check.Details)" -ForegroundColor Yellow
+    }
+    
+    Write-Host ""
+    Write-Host "Common fixes:"
+    Write-Host "  az login                    # Azure authentication"
+    Write-Host "  pac auth create --environment [URL]  # Power Platform auth"
+    Write-Host "  Install-Module PnP.PowerShell  # PnP module"
+    
     exit 1
 }

@@ -1,156 +1,187 @@
-# Deploy KB Documents to SharePoint
-# Uploads all knowledge base documents for specified agent(s)
+<#
+.SYNOPSIS
+    Deploy SharePoint Knowledge Base files to target environment.
+
+.DESCRIPTION
+    Uploads all KB files from specified source folder to SharePoint document library.
+    Supports both Personal and Mastercard environments.
+
+.PARAMETER SourcePath
+    Local path to KB files folder
+
+.PARAMETER TargetFolder
+    SharePoint folder name (MPA, CA, or EAP)
+
+.PARAMETER Environment
+    Target environment: 'personal' or 'mastercard'
+
+.EXAMPLE
+    ./deploy-sharepoint.ps1 -SourcePath "./release/v5.5/agents/mpa/base/kb" -TargetFolder "MPA" -Environment "personal"
+#>
 
 param(
-    [string]$Agent = "all"  # mpa, ca, eap, or all
+    [Parameter(Mandatory=$true)]
+    [string]$SourcePath,
+    
+    [Parameter(Mandatory=$true)]
+    [ValidateSet("MPA", "CA", "EAP")]
+    [string]$TargetFolder,
+    
+    [Parameter(Mandatory=$true)]
+    [ValidateSet("personal", "mastercard")]
+    [string]$Environment
 )
 
-$ErrorActionPreference = "Stop"
-$repoRoot = (Get-Item $PSScriptRoot).Parent.Parent.Parent.Parent.FullName
-$agentsDir = Join-Path $repoRoot "release/v5.5/agents"
+# Load environment configuration
+$envFile = Join-Path $PSScriptRoot "../../.env.$Environment"
+if (Test-Path $envFile) {
+    Get-Content $envFile | ForEach-Object {
+        if ($_ -match "^([^=]+)=(.*)$") {
+            [Environment]::SetEnvironmentVariable($matches[1], $matches[2])
+        }
+    }
+}
 
-Write-Host "=== SharePoint KB Deployment ===" -ForegroundColor Cyan
-Write-Host "Agent: $Agent"
-Write-Host ""
+# Environment-specific settings
+$config = @{
+    personal = @{
+        SiteUrl = $env:SHAREPOINT_SITE
+        Library = $env:SHAREPOINT_LIBRARY
+    }
+    mastercard = @{
+        SiteUrl = $env:SHAREPOINT_SITE
+        Library = $env:SHAREPOINT_LIBRARY
+    }
+}
 
-# Get authentication token
-$tenantId = $env:AZURE_TENANT_ID
-$clientId = $env:AZURE_CLIENT_ID
-$clientSecret = $env:AZURE_CLIENT_SECRET
-$siteUrl = $env:SHAREPOINT_SITE_URL
-$libraryName = if ($env:SHAREPOINT_LIBRARY_NAME) { $env:SHAREPOINT_LIBRARY_NAME } else { "AgentKnowledgeBase" }
+$siteUrl = $config[$Environment].SiteUrl
+$library = $config[$Environment].Library
 
 if (-not $siteUrl) {
-    Write-Host "Error: SHAREPOINT_SITE_URL not set" -ForegroundColor Red
+    Write-Error "SharePoint site URL not configured. Set SHAREPOINT_SITE in .env.$Environment"
     exit 1
 }
 
-# Extract SharePoint resource URL
-$uri = [System.Uri]$siteUrl
-$sharePointResource = "https://$($uri.Host)"
+Write-Host "========================================"
+Write-Host "SharePoint KB Deployment"
+Write-Host "========================================"
+Write-Host "Environment: $Environment"
+Write-Host "Source: $SourcePath"
+Write-Host "Target: $siteUrl/$library/$TargetFolder"
+Write-Host "========================================"
 
-# Get access token
-Write-Host "Authenticating to SharePoint..." -ForegroundColor Yellow
-$tokenUrl = "https://login.microsoftonline.com/$tenantId/oauth2/v2.0/token"
-$body = @{
-    client_id = $clientId
-    client_secret = $clientSecret
-    scope = "$sharePointResource/.default"
-    grant_type = "client_credentials"
+# Verify source path exists
+if (-not (Test-Path $SourcePath)) {
+    Write-Error "Source path not found: $SourcePath"
+    exit 1
 }
 
-$tokenResponse = Invoke-RestMethod -Uri $tokenUrl -Method Post -Body $body -ContentType "application/x-www-form-urlencoded"
-$accessToken = $tokenResponse.access_token
+# Count source files
+$sourceFiles = Get-ChildItem -Path $SourcePath -Filter "*.txt" -File
+$fileCount = $sourceFiles.Count
 
-$headers = @{
-    Authorization = "Bearer $accessToken"
-    Accept = "application/json;odata=verbose"
-    "Content-Type" = "application/json;odata=verbose"
+Write-Host "Found $fileCount .txt files to upload"
+
+# Check for PnP PowerShell module
+if (-not (Get-Module -ListAvailable -Name "PnP.PowerShell")) {
+    Write-Host "Installing PnP.PowerShell module..."
+    Install-Module -Name PnP.PowerShell -Force -AllowClobber -Scope CurrentUser
 }
 
-# Function to upload file
-function Upload-KBFile {
-    param(
-        [string]$LocalPath,
-        [string]$FolderPath
-    )
+Import-Module PnP.PowerShell
 
-    $fileName = Split-Path $LocalPath -Leaf
-    $fileContent = [System.IO.File]::ReadAllBytes($LocalPath)
+# Connect to SharePoint
+try {
+    Write-Host "Connecting to SharePoint..."
+    
+    if ($Environment -eq "mastercard") {
+        # Use service principal for Mastercard
+        $clientId = $env:SP_CLIENT_ID
+        $clientSecret = $env:SP_CLIENT_SECRET
+        $tenantId = $env:TENANT_ID
+        
+        if ($clientId -and $clientSecret) {
+            Connect-PnPOnline -Url $siteUrl -ClientId $clientId -ClientSecret $clientSecret -Tenant $tenantId
+        } else {
+            # Fallback to interactive
+            Connect-PnPOnline -Url $siteUrl -Interactive
+        }
+    } else {
+        # Interactive login for personal
+        Connect-PnPOnline -Url $siteUrl -Interactive
+    }
+    
+    Write-Host "Connected successfully"
+} catch {
+    Write-Error "Failed to connect to SharePoint: $_"
+    exit 1
+}
 
-    # Create folder if not exists
-    $folderUrl = "$siteUrl/_api/web/GetFolderByServerRelativeUrl('$libraryName/$FolderPath')"
+# Create target folder if it doesn't exist
+try {
+    $folderPath = "$library/$TargetFolder"
+    $existingFolder = Get-PnPFolder -Url $folderPath -ErrorAction SilentlyContinue
+    
+    if (-not $existingFolder) {
+        Write-Host "Creating folder: $TargetFolder"
+        Add-PnPFolder -Name $TargetFolder -Folder $library
+    }
+} catch {
+    Write-Host "Folder may already exist, continuing..."
+}
+
+# Upload files
+$uploaded = 0
+$failed = 0
+$errors = @()
+
+foreach ($file in $sourceFiles) {
     try {
-        $null = Invoke-RestMethod -Uri $folderUrl -Headers $headers -Method Get
+        Write-Host "Uploading: $($file.Name)..." -NoNewline
+        
+        Add-PnPFile -Path $file.FullName -Folder "$library/$TargetFolder" -ErrorAction Stop
+        
+        Write-Host " ✓" -ForegroundColor Green
+        $uploaded++
     } catch {
-        # Folder doesn't exist, create it
-        Write-Host "  Creating folder: $FolderPath" -ForegroundColor Gray
-        $createFolderUrl = "$siteUrl/_api/web/folders"
-        $folderBody = @{
-            "__metadata" = @{ "type" = "SP.Folder" }
-            "ServerRelativeUrl" = "$libraryName/$FolderPath"
-        } | ConvertTo-Json
-
-        try {
-            $null = Invoke-RestMethod -Uri $createFolderUrl -Headers $headers -Method Post -Body $folderBody
-        } catch {
-            # Folder might exist at parent level, continue
+        Write-Host " ✗" -ForegroundColor Red
+        $failed++
+        $errors += @{
+            File = $file.Name
+            Error = $_.Exception.Message
         }
     }
-
-    # Upload file
-    $uploadUrl = "$siteUrl/_api/web/GetFolderByServerRelativeUrl('$libraryName/$FolderPath')/Files/add(url='$fileName',overwrite=true)"
-
-    try {
-        $uploadHeaders = @{
-            Authorization = "Bearer $accessToken"
-            Accept = "application/json;odata=verbose"
-        }
-
-        $null = Invoke-RestMethod -Uri $uploadUrl -Headers $uploadHeaders -Method Post -Body $fileContent -ContentType "application/octet-stream"
-        Write-Host "  ✓ Uploaded: $fileName" -ForegroundColor Green
-        return $true
-    } catch {
-        Write-Host "  ✗ Failed to upload $fileName`: $_" -ForegroundColor Red
-        return $false
-    }
-}
-
-# Function to deploy agent KB
-function Deploy-AgentKB {
-    param(
-        [string]$AgentName
-    )
-
-    Write-Host "`nDeploying $($AgentName.ToUpper()) KB..." -ForegroundColor Yellow
-
-    $kbPath = Join-Path $agentsDir "$AgentName/base/kb"
-
-    if (-not (Test-Path $kbPath)) {
-        Write-Host "  Warning: KB path not found: $kbPath" -ForegroundColor Yellow
-        return 0, 0
-    }
-
-    $files = Get-ChildItem $kbPath -Filter "*.txt" -Recurse
-    $uploaded = 0
-    $failed = 0
-
-    foreach ($file in $files) {
-        $result = Upload-KBFile -LocalPath $file.FullName -FolderPath $AgentName.ToUpper()
-        if ($result) { $uploaded++ } else { $failed++ }
-    }
-
-    Write-Host "  Uploaded: $uploaded, Failed: $failed" -ForegroundColor $(if ($failed -eq 0) { "Green" } else { "Yellow" })
-    return $uploaded, $failed
-}
-
-# Deploy based on agent parameter
-$totalUploaded = 0
-$totalFailed = 0
-
-if ($Agent -eq "all" -or $Agent -eq "mpa") {
-    $u, $f = Deploy-AgentKB -AgentName "mpa"
-    $totalUploaded += $u
-    $totalFailed += $f
-}
-
-if ($Agent -eq "all" -or $Agent -eq "ca") {
-    $u, $f = Deploy-AgentKB -AgentName "ca"
-    $totalUploaded += $u
-    $totalFailed += $f
-}
-
-if ($Agent -eq "all" -or $Agent -eq "eap") {
-    $u, $f = Deploy-AgentKB -AgentName "eap"
-    $totalUploaded += $u
-    $totalFailed += $f
 }
 
 # Summary
-Write-Host "`n=== SharePoint Deployment Summary ===" -ForegroundColor Cyan
-Write-Host "Total Uploaded: $totalUploaded" -ForegroundColor Green
-Write-Host "Total Failed: $totalFailed" -ForegroundColor $(if ($totalFailed -eq 0) { "Green" } else { "Red" })
+Write-Host ""
+Write-Host "========================================"
+Write-Host "Upload Complete"
+Write-Host "========================================"
+Write-Host "Total files: $fileCount"
+Write-Host "Uploaded: $uploaded" -ForegroundColor Green
+Write-Host "Failed: $failed" -ForegroundColor $(if ($failed -gt 0) { "Red" } else { "Green" })
 
-if ($totalFailed -gt 0) {
+if ($errors.Count -gt 0) {
+    Write-Host ""
+    Write-Host "Errors:" -ForegroundColor Red
+    foreach ($err in $errors) {
+        Write-Host "  $($err.File): $($err.Error)"
+    }
+}
+
+# Verify upload
+Write-Host ""
+Write-Host "Verifying upload..."
+$uploadedFiles = Get-PnPFolderItem -FolderSiteRelativeUrl "$library/$TargetFolder" -ItemType File
+$uploadedCount = $uploadedFiles.Count
+
+Write-Host "Files in SharePoint: $uploadedCount"
+
+if ($uploadedCount -eq $fileCount) {
+    Write-Host "✓ All files uploaded successfully" -ForegroundColor Green
+    exit 0
+} else {
+    Write-Host "⚠ File count mismatch. Expected: $fileCount, Found: $uploadedCount" -ForegroundColor Yellow
     exit 1
 }

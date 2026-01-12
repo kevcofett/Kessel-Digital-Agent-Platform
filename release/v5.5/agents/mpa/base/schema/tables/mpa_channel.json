@@ -1,0 +1,188 @@
+{
+  "schemaName": "mpa_channel",
+  "displayName": "Channel",
+  "pluralName": "Channels",
+  "description": "Media planning channel definitions with cost and performance parameters",
+  "tier": 1,
+  "featureGate": null,
+  "category": "MediaPlanning",
+  "primaryKey": "mpa_channelid",
+  "primaryNameColumn": "mpa_newcolumn",
+  "ownershipType": "UserOwned",
+  "publisherPrefix": "mpa",
+  "columns": [
+    {
+      "schemaName": "mpa_channelid",
+      "displayName": "Channel",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Unique identifier for entity instances"
+    },
+    {
+      "schemaName": "mpa_newcolumn",
+      "displayName": "Channel Name",
+      "dataType": "Text",
+      "maxLength": 850,
+      "required": true,
+      "description": "Primary name field for the channel"
+    },
+    {
+      "schemaName": "mpa_channelcode",
+      "displayName": "Channel Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique code identifying the channel"
+    },
+    {
+      "schemaName": "mpa_category",
+      "displayName": "Category",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Channel category classification"
+    },
+    {
+      "schemaName": "mpa_funnelstage",
+      "displayName": "Funnel Stage",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": false,
+      "description": "Marketing funnel stage the channel targets"
+    },
+    {
+      "schemaName": "mpa_cpmlow",
+      "displayName": "CPM Low",
+      "dataType": "Decimal",
+      "precision": 2,
+      "required": false,
+      "description": "Low end of CPM range"
+    },
+    {
+      "schemaName": "mpa_cpmhigh",
+      "displayName": "CPM High",
+      "dataType": "Currency",
+      "precision": 2,
+      "required": false,
+      "description": "High end of CPM range"
+    },
+    {
+      "schemaName": "mpa_cpclow",
+      "displayName": "CPC Low",
+      "dataType": "Decimal",
+      "precision": 2,
+      "required": false,
+      "description": "Low end of CPC range"
+    },
+    {
+      "schemaName": "mpa_cpchigh",
+      "displayName": "CPC High",
+      "dataType": "Decimal",
+      "precision": 2,
+      "required": false,
+      "description": "High end of CPC range"
+    },
+    {
+      "schemaName": "mpa_minbudget",
+      "displayName": "Min Budget",
+      "dataType": "Currency",
+      "precision": 2,
+      "required": false,
+      "description": "Minimum recommended budget for the channel"
+    },
+    {
+      "schemaName": "mpa_isactive",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "options": ["Yes", "No"],
+      "description": "Indicates if the channel is currently active"
+    },
+    {
+      "schemaName": "mpa_notes",
+      "displayName": "Notes",
+      "dataType": "MultilineText",
+      "maxLength": 4000,
+      "required": false,
+      "description": "Additional notes about the channel"
+    },
+    {
+      "schemaName": "mpa_platforms",
+      "displayName": "Platforms",
+      "dataType": "MultilineText",
+      "maxLength": 1000,
+      "required": false,
+      "description": "Platforms associated with this channel"
+    },
+    {
+      "schemaName": "statecode",
+      "displayName": "Status",
+      "dataType": "State",
+      "required": true,
+      "options": ["Active", "Inactive"],
+      "description": "Status of the Channel"
+    },
+    {
+      "schemaName": "statuscode",
+      "displayName": "Status Reason",
+      "dataType": "Status",
+      "required": false,
+      "options": ["Active", "Inactive"],
+      "description": "Reason for the status of the Channel"
+    },
+    {
+      "schemaName": "ownerid",
+      "displayName": "Owner",
+      "dataType": "Owner",
+      "required": true,
+      "description": "Owner Id"
+    },
+    {
+      "schemaName": "transactioncurrencyid",
+      "displayName": "Currency",
+      "dataType": "Lookup",
+      "lookupTable": "transactioncurrency",
+      "required": false,
+      "description": "Unique identifier of the currency associated with the entity"
+    },
+    {
+      "schemaName": "createdon",
+      "displayName": "Created On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was created"
+    },
+    {
+      "schemaName": "modifiedon",
+      "displayName": "Modified On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_channel_code",
+      "columns": ["mpa_channelcode"],
+      "unique": true
+    },
+    {
+      "name": "idx_channel_category",
+      "columns": ["mpa_category"],
+      "unique": false
+    },
+    {
+      "name": "idx_channel_funnel",
+      "columns": ["mpa_funnelstage"],
+      "unique": false
+    },
+    {
+      "name": "idx_channel_active",
+      "columns": ["mpa_isactive"],
+      "unique": false
+    }
+  ],
+  "seedDataNote": "Channel definitions populated from media planning knowledge base"
+}

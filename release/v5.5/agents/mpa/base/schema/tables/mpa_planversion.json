@@ -1,0 +1,162 @@
+{
+  "schemaName": "mpa_planversion",
+  "displayName": "Plan Version",
+  "pluralName": "Plan Versions",
+  "description": "Version tracking for media plans enabling revision history and approval workflows",
+  "tier": 1,
+  "featureGate": null,
+  "category": "MediaPlanning",
+  "primaryKey": "mpa_planversionid",
+  "primaryNameColumn": "mpa_versionname",
+  "ownershipType": "UserOwned",
+  "publisherPrefix": "mpa",
+  "columns": [
+    {
+      "schemaName": "mpa_planversionid",
+      "displayName": "Plan Version",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Unique identifier for entity instances"
+    },
+    {
+      "schemaName": "mpa_versionname",
+      "displayName": "Version Name",
+      "dataType": "Text",
+      "maxLength": 850,
+      "required": true,
+      "description": "Primary name field for the plan version"
+    },
+    {
+      "schemaName": "mpa_versioncode",
+      "displayName": "Version Code",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Unique code identifier for the version"
+    },
+    {
+      "schemaName": "mpa_versionnumber",
+      "displayName": "Version Number",
+      "dataType": "Integer",
+      "minValue": 1,
+      "maxValue": 2147483647,
+      "required": true,
+      "description": "Sequential version number"
+    },
+    {
+      "schemaName": "mpa_mediaplan",
+      "displayName": "Media Plan",
+      "dataType": "Lookup",
+      "targetEntity": "mpa_mediaplan",
+      "required": true,
+      "description": "Reference to the parent media plan"
+    },
+    {
+      "schemaName": "mpa_versionstatus",
+      "displayName": "Version Status",
+      "dataType": "Picklist",
+      "required": true,
+      "options": ["Draft", "Active", "Archived"],
+      "description": "Current status of the plan version"
+    },
+    {
+      "schemaName": "mpa_approvedby",
+      "displayName": "Approved By",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "User who approved the version"
+    },
+    {
+      "schemaName": "mpa_approvedat",
+      "displayName": "Approved At",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the version was approved"
+    },
+    {
+      "schemaName": "mpa_createdat",
+      "displayName": "Created At",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the version was created"
+    },
+    {
+      "schemaName": "mpa_createdby",
+      "displayName": "Created By",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "User who created the version"
+    },
+    {
+      "schemaName": "statecode",
+      "displayName": "Status",
+      "dataType": "State",
+      "required": true,
+      "options": ["Active", "Inactive"],
+      "description": "Status of the Plan Version"
+    },
+    {
+      "schemaName": "statuscode",
+      "displayName": "Status Reason",
+      "dataType": "Status",
+      "required": false,
+      "options": ["Active", "Inactive"],
+      "description": "Reason for the status of the Plan Version"
+    },
+    {
+      "schemaName": "ownerid",
+      "displayName": "Owner",
+      "dataType": "Owner",
+      "required": true,
+      "description": "Owner Id"
+    },
+    {
+      "schemaName": "createdon",
+      "displayName": "Created On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was created"
+    },
+    {
+      "schemaName": "modifiedon",
+      "displayName": "Modified On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_planversion_code",
+      "columns": ["mpa_versioncode"],
+      "unique": true
+    },
+    {
+      "name": "idx_planversion_mediaplan",
+      "columns": ["mpa_mediaplan"],
+      "unique": false
+    },
+    {
+      "name": "idx_planversion_status",
+      "columns": ["mpa_versionstatus"],
+      "unique": false
+    }
+  ],
+  "relationships": [
+    {
+      "name": "mpa_planversion_allocations",
+      "relatedTable": "mpa_planallocation",
+      "type": "OneToMany",
+      "lookupColumn": "mpa_planversion"
+    },
+    {
+      "name": "mpa_planversion_plandata",
+      "relatedTable": "mpa_plandata",
+      "type": "OneToMany",
+      "lookupColumn": "mpa_planversion"
+    }
+  ],
+  "seedDataNote": "Plan versions created dynamically through agent workflow"
+}

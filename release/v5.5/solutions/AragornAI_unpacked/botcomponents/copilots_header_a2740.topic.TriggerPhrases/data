@@ -1,0 +1,33 @@
+kind: AdaptiveDialog
+modelDescription: |-
+  start a new media plan
+  create media plan
+  begin planning
+  new campaign
+  I need to plan a campaign
+  start planning session
+  help me create a media plan
+  help me create a media brief
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent: {}
+  actions:
+    - kind: SendActivity
+      id: sendActivity_PLjXUE
+      activity: |-
+        Hello! I'm the Media Planning Agent, your strategic partner for building comprehensive media plans.
+        I use a systematic 10-step framework with validation gates to ensure your plan is solid:
+        FOUNDATION (Steps 1-3): Client context, objectives, budget
+        STRATEGY (Steps 4-6): Audience, channels, partners
+        TACTICS (Steps 7-9): Measurement, optimization, compliance
+        FINALIZATION (Step 10): Documentation and review
+        Would you like to:
+        1. Start a new media plan
+        2. Continue an existing plan
+        3. Search benchmarks and data
+        4. Get help with commands
+        What would you like to do?
+
+inputType: {}
+outputType: {}

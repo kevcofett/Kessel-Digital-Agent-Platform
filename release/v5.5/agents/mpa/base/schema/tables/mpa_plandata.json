@@ -1,0 +1,205 @@
+{
+  "schemaName": "mpa_plandata",
+  "displayName": "Plan Data",
+  "pluralName": "Plan Data",
+  "description": "Section-level data storage for media plan content including client context, objectives, budgets, and learnings",
+  "tier": 1,
+  "featureGate": null,
+  "category": "MediaPlanning",
+  "primaryKey": "mpa_plandataid",
+  "primaryNameColumn": "mpa_datatitle",
+  "ownershipType": "UserOwned",
+  "publisherPrefix": "mpa",
+  "columns": [
+    {
+      "schemaName": "mpa_plandataid",
+      "displayName": "Plan Data",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Unique identifier for entity instances"
+    },
+    {
+      "schemaName": "mpa_datatitle",
+      "displayName": "Data Title",
+      "dataType": "Text",
+      "maxLength": 850,
+      "required": true,
+      "description": "Primary name field for the plan data section"
+    },
+    {
+      "schemaName": "mpa_datacode",
+      "displayName": "Data Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": false,
+      "description": "Optional code identifier for the data section"
+    },
+    {
+      "schemaName": "mpa_mediaplan",
+      "displayName": "Media Plan",
+      "dataType": "Lookup",
+      "targetEntity": "mpa_mediaplan",
+      "required": true,
+      "description": "Reference to the parent media plan"
+    },
+    {
+      "schemaName": "mpa_planversion",
+      "displayName": "Plan Version",
+      "dataType": "Lookup",
+      "targetEntity": "mpa_planversion",
+      "required": true,
+      "description": "Reference to the specific plan version"
+    },
+    {
+      "schemaName": "mpa_stepnumber",
+      "displayName": "Step Number",
+      "dataType": "Integer",
+      "minValue": 1,
+      "maxValue": 10,
+      "required": true,
+      "description": "Workflow step number (1-10) this data belongs to"
+    },
+    {
+      "schemaName": "mpa_sectiontype",
+      "displayName": "Section Type",
+      "dataType": "Picklist",
+      "required": true,
+      "options": [
+        "ClientContext",
+        "Objectives",
+        "Budget",
+        "Audience",
+        "Channel Mix",
+        "Partners",
+        "Measurement",
+        "Optimization",
+        "Compliance",
+        "FinalPlan",
+        "PerformanceImport",
+        "PerformanceRecord",
+        "PostMortem",
+        "Learning"
+      ],
+      "description": "Type of planning section this data represents"
+    },
+    {
+      "schemaName": "mpa_sectionstatus",
+      "displayName": "Section Status",
+      "dataType": "Picklist",
+      "required": true,
+      "options": ["NotStarted", "InProgress", "Complete", "NeedsReview"],
+      "description": "Current completion status of the section"
+    },
+    {
+      "schemaName": "mpa_sectiondata",
+      "displayName": "Section Data",
+      "dataType": "Memo",
+      "maxLength": 1048576,
+      "required": false,
+      "description": "JSON or text content for the section (up to 1MB)"
+    },
+    {
+      "schemaName": "mpa_datasource",
+      "displayName": "Data Source",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Source of the data (e.g., user input, AI generated, imported)"
+    },
+    {
+      "schemaName": "mpa_ispromoted",
+      "displayName": "Is Promoted",
+      "dataType": "Boolean",
+      "required": false,
+      "defaultValue": false,
+      "description": "Indicates if this data has been promoted to organizational learning"
+    },
+    {
+      "schemaName": "mpa_createdat",
+      "displayName": "Created At",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the data was created"
+    },
+    {
+      "schemaName": "mpa_createdby",
+      "displayName": "Created By",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "User who created the data"
+    },
+    {
+      "schemaName": "mpa_updatedat",
+      "displayName": "Updated At",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the data was last updated"
+    },
+    {
+      "schemaName": "statecode",
+      "displayName": "Status",
+      "dataType": "State",
+      "required": true,
+      "options": ["Active", "Inactive"],
+      "description": "Status of the Plan Data"
+    },
+    {
+      "schemaName": "statuscode",
+      "displayName": "Status Reason",
+      "dataType": "Status",
+      "required": false,
+      "options": ["Active", "Inactive"],
+      "description": "Reason for the status of the Plan Data"
+    },
+    {
+      "schemaName": "ownerid",
+      "displayName": "Owner",
+      "dataType": "Owner",
+      "required": true,
+      "description": "Owner Id"
+    },
+    {
+      "schemaName": "createdon",
+      "displayName": "Created On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was created"
+    },
+    {
+      "schemaName": "modifiedon",
+      "displayName": "Modified On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_plandata_mediaplan",
+      "columns": ["mpa_mediaplan"],
+      "unique": false
+    },
+    {
+      "name": "idx_plandata_version",
+      "columns": ["mpa_planversion"],
+      "unique": false
+    },
+    {
+      "name": "idx_plandata_sectiontype",
+      "columns": ["mpa_sectiontype"],
+      "unique": false
+    },
+    {
+      "name": "idx_plandata_step",
+      "columns": ["mpa_stepnumber"],
+      "unique": false
+    },
+    {
+      "name": "idx_plandata_composite",
+      "columns": ["mpa_planversion", "mpa_stepnumber", "mpa_sectiontype"],
+      "unique": true
+    }
+  ],
+  "seedDataNote": "Plan data created dynamically through agent workflow"
+}

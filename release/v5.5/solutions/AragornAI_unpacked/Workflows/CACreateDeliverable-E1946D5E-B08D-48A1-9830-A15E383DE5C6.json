@@ -1,0 +1,68 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {"defaultValue": {}, "type": "Object"},
+        "$authentication": {"defaultValue": {}, "type": "SecureObject"}
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "session_id": {"type": "string"},
+                "deliverable_type": {"type": "string", "enum": ["Executive Summary", "Full Report", "Presentation", "Action Plan"]},
+                "title": {"type": "string"},
+                "content": {"type": "string"}
+              },
+              "required": ["session_id", "deliverable_type", "title"]
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "InitializeDeliverableId": {
+          "runAfter": {},
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [{"name": "deliverable_id", "type": "string", "value": "@{concat('DEL-', formatDateTime(utcNow(), 'yyyyMMddHHmmss'))}"}]
+          }
+        },
+        "SuccessResponse": {
+          "runAfter": {"InitializeDeliverableId": ["Succeeded"]},
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "Success",
+              "deliverable_id": "@{variables('deliverable_id')}",
+              "deliverable_type": "@{triggerBody()?['deliverable_type']}",
+              "title": "@{triggerBody()?['title']}",
+              "created_at": "@{utcNow()}"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

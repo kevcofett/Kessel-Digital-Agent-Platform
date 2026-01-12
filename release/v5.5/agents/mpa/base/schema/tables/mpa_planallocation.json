@@ -1,0 +1,155 @@
+{
+  "schemaName": "mpa_planallocation",
+  "displayName": "Plan Allocation",
+  "pluralName": "Plan Allocations",
+  "description": "Budget allocation per channel within a media plan version",
+  "tier": 1,
+  "featureGate": null,
+  "category": "MediaPlanning",
+  "primaryKey": "mpa_planallocationid",
+  "primaryNameColumn": "mpa_allocationname",
+  "ownershipType": "UserOwned",
+  "publisherPrefix": "mpa",
+  "columns": [
+    {
+      "schemaName": "mpa_planallocationid",
+      "displayName": "Plan Allocation",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Unique identifier for entity instances"
+    },
+    {
+      "schemaName": "mpa_allocationname",
+      "displayName": "Allocation Name",
+      "dataType": "Text",
+      "maxLength": 850,
+      "required": true,
+      "description": "Primary name field for the allocation"
+    },
+    {
+      "schemaName": "mpa_channelcode",
+      "displayName": "Channel Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Code identifying the media channel for this allocation"
+    },
+    {
+      "schemaName": "mpa_planversion",
+      "displayName": "Plan Version",
+      "dataType": "Lookup",
+      "targetEntity": "mpa_planversion",
+      "required": true,
+      "description": "Reference to the parent plan version"
+    },
+    {
+      "schemaName": "mpa_allocatedbudget",
+      "displayName": "Allocated Budget",
+      "dataType": "Money",
+      "precision": 2,
+      "required": true,
+      "description": "Budget amount allocated to this channel"
+    },
+    {
+      "schemaName": "mpa_allocationpercent",
+      "displayName": "Allocation Percent",
+      "dataType": "Decimal",
+      "precision": 2,
+      "minValue": 0,
+      "maxValue": 100,
+      "required": false,
+      "description": "Percentage of total budget allocated to this channel"
+    },
+    {
+      "schemaName": "mpa_startdate",
+      "displayName": "Start Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Start date for this channel allocation"
+    },
+    {
+      "schemaName": "mpa_enddate",
+      "displayName": "End Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "End date for this channel allocation"
+    },
+    {
+      "schemaName": "mpa_createdat",
+      "displayName": "Created At",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the allocation was created"
+    },
+    {
+      "schemaName": "mpa_createdby",
+      "displayName": "Created By",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "User who created the allocation"
+    },
+    {
+      "schemaName": "mpa_updatedat",
+      "displayName": "Updated At",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the allocation was last updated"
+    },
+    {
+      "schemaName": "statecode",
+      "displayName": "Status",
+      "dataType": "State",
+      "required": true,
+      "options": ["Active", "Inactive"],
+      "description": "Status of the Plan Allocation"
+    },
+    {
+      "schemaName": "statuscode",
+      "displayName": "Status Reason",
+      "dataType": "Status",
+      "required": false,
+      "options": ["Active", "Inactive"],
+      "description": "Reason for the status of the Plan Allocation"
+    },
+    {
+      "schemaName": "ownerid",
+      "displayName": "Owner",
+      "dataType": "Owner",
+      "required": true,
+      "description": "Owner Id"
+    },
+    {
+      "schemaName": "createdon",
+      "displayName": "Created On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was created"
+    },
+    {
+      "schemaName": "modifiedon",
+      "displayName": "Modified On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_planallocation_version",
+      "columns": ["mpa_planversion"],
+      "unique": false
+    },
+    {
+      "name": "idx_planallocation_channel",
+      "columns": ["mpa_channelcode"],
+      "unique": false
+    },
+    {
+      "name": "idx_planallocation_composite",
+      "columns": ["mpa_planversion", "mpa_channelcode"],
+      "unique": true
+    }
+  ],
+  "seedDataNote": "Allocations created dynamically through agent workflow"
+}

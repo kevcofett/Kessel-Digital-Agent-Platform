@@ -1,0 +1,65 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {"defaultValue": {}, "type": "Object"},
+        "$authentication": {"defaultValue": {}, "type": "SecureObject"}
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "industry": {"type": "string"},
+                "metric_type": {"type": "string"},
+                "company_size": {"type": "string"}
+              }
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "SuccessResponse": {
+          "runAfter": {},
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "Success",
+              "benchmarks": [
+                {"metric": "Revenue Growth", "value": "8-12%", "industry": "Technology", "percentile": "Top Quartile"},
+                {"metric": "Operating Margin", "value": "15-20%", "industry": "Technology", "percentile": "Median"},
+                {"metric": "Customer Retention", "value": "85-90%", "industry": "SaaS", "percentile": "Top Quartile"}
+              ],
+              "count": 3,
+              "query": {
+                "industry": "@{triggerBody()?['industry']}",
+                "metric_type": "@{triggerBody()?['metric_type']}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

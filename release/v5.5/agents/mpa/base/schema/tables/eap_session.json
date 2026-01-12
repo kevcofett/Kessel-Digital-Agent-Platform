@@ -1,0 +1,157 @@
+{
+  "schemaName": "eap_session",
+  "displayName": "Session",
+  "pluralName": "Sessions",
+  "description": "Session tracking entity for the Enterprise Agent Platform logging user interactions with agents",
+  "tier": 1,
+  "featureGate": null,
+  "category": "Platform",
+  "primaryKey": "eap_sessionid",
+  "primaryNameColumn": "eap_sessioncode",
+  "ownershipType": "UserOwned",
+  "publisherPrefix": "eap",
+  "columns": [
+    {
+      "schemaName": "eap_sessionid",
+      "displayName": "Session",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Unique identifier for entity instances"
+    },
+    {
+      "schemaName": "eap_sessioncode",
+      "displayName": "Session Code",
+      "dataType": "Text",
+      "maxLength": 850,
+      "required": true,
+      "description": "Primary name field and unique code for the session"
+    },
+    {
+      "schemaName": "eap_agentcode",
+      "displayName": "Agent Code",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Code identifying which agent is being used (e.g., MPA, CA)"
+    },
+    {
+      "schemaName": "eap_clientid",
+      "displayName": "Client ID",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Reference to the client for this session"
+    },
+    {
+      "schemaName": "eap_userid",
+      "displayName": "User ID",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Identifier for the user conducting the session"
+    },
+    {
+      "schemaName": "eap_planid",
+      "displayName": "Plan ID",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Reference to associated plan (if applicable)"
+    },
+    {
+      "schemaName": "eap_status",
+      "displayName": "Session Status",
+      "dataType": "Picklist",
+      "required": true,
+      "options": ["Active", "Paused", "Completed", "Abandoned"],
+      "description": "Current status of the session"
+    },
+    {
+      "schemaName": "eap_sessiondata",
+      "displayName": "Session Data",
+      "dataType": "Memo",
+      "maxLength": 2000,
+      "required": false,
+      "description": "JSON data storing session state and context"
+    },
+    {
+      "schemaName": "eap_startedat",
+      "displayName": "Started At",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the session started"
+    },
+    {
+      "schemaName": "eap_endedat",
+      "displayName": "Ended At",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the session ended"
+    },
+    {
+      "schemaName": "statecode",
+      "displayName": "Status",
+      "dataType": "State",
+      "required": true,
+      "options": ["Active", "Inactive"],
+      "description": "Status of the Session"
+    },
+    {
+      "schemaName": "statuscode",
+      "displayName": "Status Reason",
+      "dataType": "Status",
+      "required": false,
+      "options": ["Active", "Inactive"],
+      "description": "Reason for the status of the Session"
+    },
+    {
+      "schemaName": "ownerid",
+      "displayName": "Owner",
+      "dataType": "Owner",
+      "required": true,
+      "description": "Owner Id"
+    },
+    {
+      "schemaName": "createdon",
+      "displayName": "Created On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was created"
+    },
+    {
+      "schemaName": "modifiedon",
+      "displayName": "Modified On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_session_code",
+      "columns": ["eap_sessioncode"],
+      "unique": true
+    },
+    {
+      "name": "idx_session_agent",
+      "columns": ["eap_agentcode"],
+      "unique": false
+    },
+    {
+      "name": "idx_session_client",
+      "columns": ["eap_clientid"],
+      "unique": false
+    },
+    {
+      "name": "idx_session_status",
+      "columns": ["eap_status"],
+      "unique": false
+    },
+    {
+      "name": "idx_session_user",
+      "columns": ["eap_userid"],
+      "unique": false
+    }
+  ],
+  "seedDataNote": "Sessions created dynamically through agent interactions"
+}

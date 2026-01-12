@@ -1,0 +1,305 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_microsoftcopilotstudio": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "new_sharedmicrosoftcopilotstudio_e3dc2"
+        },
+        "api": {
+          "name": "shared_microsoftcopilotstudio"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "428b10a4-5277-4321-b991-e86b88eb7640"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "parameters": {
+              "subscriptionRequest/message": 1,
+              "subscriptionRequest/entityname": "new_mpatestcase",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filterexpression": "mpa_status eq 'Pending'"
+            },
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            }
+          },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "runs": 1
+            }
+          }
+        }
+      },
+      "actions": {
+        "Set_Status_Running": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "71189c09-3511-4f33-b07a-0da379343f8d"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "entityName": "new_mpatestcases",
+              "recordId": "@triggerOutputs()?['body/mpa_testcaseid']",
+              "item/new_mpa_status": 100000001
+            },
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "UpdateOnlyRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            }
+          }
+        },
+        "ResponseText": {
+          "runAfter": {
+            "StartTime": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e6f2d331-e208-4789-8802-21831d9b839e"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ResponseText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "ErrorText": {
+          "runAfter": {
+            "ResponseText": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3e3c5f8e-48bb-4f90-a6ce-99495f456b77"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ErrorText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "ConversationId": {
+          "runAfter": {
+            "ErrorText": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "272e85c2-408f-4188-b445-d740fd95a4c9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ConversationId",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "TryExecuteCopilot": {
+          "actions": {
+            "Execute_Agent_and_wait": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "9f552a29-d5e6-4f9b-a17a-ba753b988bdc"
+              },
+              "type": "OpenApiConnectionWebhook",
+              "inputs": {
+                "parameters": {
+                  "Copilot": "copilots_header_a2740",
+                  "environmentId": "@triggerOutputs()?['body/new_mpa_prompt']"
+                },
+                "host": {
+                  "connectionName": "shared_microsoftcopilotstudio",
+                  "operationId": "ExecuteCopilotAsyncV2",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_microsoftcopilotstudio"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "ConversationId": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0fa63ba2-8253-48ca-818f-1d7edde53700"
+          },
+          "type": "Scope"
+        },
+        "Catch_Error": {
+          "actions": {
+            "ErrText": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "9c4c1543-bd79-463d-8ef8-343bf319845e"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorText",
+                "value": "@concat('Execution failed: ', coalesce(result('TryExecuteCopilot')?['error']?['message'], 'Unknown error'))"
+              }
+            }
+          },
+          "runAfter": {
+            "TryExecuteCopilot": [
+              "Failed",
+              "TimedOut"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "73eb9c26-1951-4c08-90be-d3c09576834d"
+          },
+          "type": "Scope"
+        },
+        "CalculateResponseTime": {
+          "runAfter": {
+            "Catch_Error": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d06f858d-52a4-42f9-9c13-ea32ced708e1"
+          },
+          "type": "Compose",
+          "inputs": "@div(sub(ticks(utcNow()), ticks(variables('StartTime'))), 10000)"
+        },
+        "Create_Test_Result": {
+          "runAfter": {
+            "CalculateResponseTime": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c078a02a-da03-4a1e-83c7-6f86324feebe"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "entityName": "new_mpa_testresults",
+              "item/new_mpa_resultname": "@concat(triggerOutputs()?['body/mpa_testid'], ' - ', utcNow())",
+              "item/new_mpa_runid": "@triggerOutputs()?['body/new_mpa_runid']",
+              "item/new_mpa_testcase@odata.bind": "@triggerOutputs()?['body/mpa_testcaseid']",
+              "item/new_mpa_conversationid": "@variables('ConversationId')",
+              "item/new_mpa_copilotresponse": "@outputs('Execute_Agent_and_wait')?['body/lastResponse']",
+              "item/new_mpa_error": "@variables('ErrorText')",
+              "item/new_mpa_executedon": "@utcNow()",
+              "item/new_mpa_responsetime_ms": "@outputs('CalculateResponseTime')"
+            },
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            }
+          }
+        },
+        "Condition": {
+          "actions": {
+            "Set_Status_Failed": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "00576c0c-5e73-40b1-99b3-671a512577e1"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "entityName": "new_mpatestcases",
+                  "recordId": "@triggerOutputs()?['body/mpa_testcaseid']",
+                  "item/new_mpa_status": 100000003,
+                  "item/new_mpa_error": "@variables('ErrorText')"
+                },
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateOnlyRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Create_Test_Result": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@empty(variables('ErrorText'))",
+                  true
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "085058e1-5136-453c-9159-85c5d2316cae"
+          },
+          "type": "If"
+        },
+        "StartTime": {
+          "runAfter": {
+            "Set_Status_Running": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f942c364-1d64-4bb2-8539-23745257c2c0"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "StartTime",
+                "type": "string",
+                "value": "@utcNow()"
+              }
+            ]
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

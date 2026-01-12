@@ -1,0 +1,62 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {"defaultValue": {}, "type": "Object"},
+        "$authentication": {"defaultValue": {}, "type": "SecureObject"}
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "category": {"type": "string", "description": "Framework category"},
+                "industry": {"type": "string", "description": "Industry filter"},
+                "search_text": {"type": "string", "description": "Text to search"}
+              }
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "SuccessResponse": {
+          "runAfter": {},
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "Success",
+              "frameworks": [
+                {"name": "Porter Five Forces", "category": "Strategy", "description": "Analyze competitive forces"},
+                {"name": "SWOT Analysis", "category": "Strategy", "description": "Strengths, Weaknesses, Opportunities, Threats"},
+                {"name": "McKinsey 7S", "category": "Organization", "description": "Internal organizational alignment"},
+                {"name": "Value Chain Analysis", "category": "Operations", "description": "Analyze activities that create value"}
+              ],
+              "count": 4
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

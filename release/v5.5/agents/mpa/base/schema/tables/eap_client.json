@@ -1,0 +1,133 @@
+{
+  "schemaName": "eap_client",
+  "displayName": "Client",
+  "pluralName": "Clients",
+  "description": "Client entity for the Enterprise Agent Platform tracking organizations using the agents",
+  "tier": 1,
+  "featureGate": null,
+  "category": "Platform",
+  "primaryKey": "eap_clientid",
+  "primaryNameColumn": "eap_clientname",
+  "ownershipType": "UserOwned",
+  "publisherPrefix": "eap",
+  "columns": [
+    {
+      "schemaName": "eap_clientid",
+      "displayName": "Client",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Unique identifier for entity instances"
+    },
+    {
+      "schemaName": "eap_clientname",
+      "displayName": "Client Name",
+      "dataType": "Text",
+      "maxLength": 850,
+      "required": true,
+      "description": "Primary name field for the client"
+    },
+    {
+      "schemaName": "eap_clientcode",
+      "displayName": "Client Code",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Unique code identifier for the client"
+    },
+    {
+      "schemaName": "eap_contactemail",
+      "displayName": "Contact Email",
+      "dataType": "Email",
+      "maxLength": 100,
+      "required": false,
+      "description": "Primary contact email for the client"
+    },
+    {
+      "schemaName": "eap_industry",
+      "displayName": "Industry",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Industry classification for the client"
+    },
+    {
+      "schemaName": "eap_verticalcode",
+      "displayName": "Vertical Code",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Code identifying the industry vertical"
+    },
+    {
+      "schemaName": "eap_isactive",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Indicates if the client is currently active"
+    },
+    {
+      "schemaName": "statecode",
+      "displayName": "Status",
+      "dataType": "State",
+      "required": true,
+      "options": ["Active", "Inactive"],
+      "description": "Status of the Client"
+    },
+    {
+      "schemaName": "statuscode",
+      "displayName": "Status Reason",
+      "dataType": "Status",
+      "required": false,
+      "options": ["Active", "Inactive"],
+      "description": "Reason for the status of the Client"
+    },
+    {
+      "schemaName": "ownerid",
+      "displayName": "Owner",
+      "dataType": "Owner",
+      "required": true,
+      "description": "Owner Id"
+    },
+    {
+      "schemaName": "createdon",
+      "displayName": "Created On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was created"
+    },
+    {
+      "schemaName": "modifiedon",
+      "displayName": "Modified On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_client_code",
+      "columns": ["eap_clientcode"],
+      "unique": true
+    },
+    {
+      "name": "idx_client_vertical",
+      "columns": ["eap_verticalcode"],
+      "unique": false
+    },
+    {
+      "name": "idx_client_active",
+      "columns": ["eap_isactive"],
+      "unique": false
+    }
+  ],
+  "relationships": [
+    {
+      "name": "eap_client_sessions",
+      "relatedTable": "eap_session",
+      "type": "OneToMany",
+      "lookupColumn": "eap_clientid"
+    }
+  ],
+  "seedDataNote": "Clients created through agent onboarding workflow"
+}

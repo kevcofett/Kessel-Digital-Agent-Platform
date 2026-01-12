@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Unified MPA Evaluation Runner
  *
@@ -17,15 +16,14 @@
  *   # Run multi-turn with specific scenario
  *   ANTHROPIC_API_KEY=xxx npx ts-node --esm run-eval.ts --multi-turn --scenario basic-user-step1-2
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const child_process_1 = require("child_process");
-const path_1 = __importDefault(require("path"));
-const url_1 = require("url");
-const __filename = (0, url_1.fileURLToPath)(import.meta.url);
-const __dirname = path_1.default.dirname(__filename);
+import { spawn } from "child_process";
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+// For CommonJS compatibility when compiled
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const currentDir = typeof __dirname !== "undefined" ? __dirname : process.cwd();
 function parseArgs() {
     const args = process.argv.slice(2);
     const result = {
@@ -66,7 +64,7 @@ function parseArgs() {
 }
 async function runCommand(command, args, cwd) {
     return new Promise((resolve) => {
-        const proc = (0, child_process_1.spawn)(command, args, {
+        const proc = spawn(command, args, {
             cwd,
             shell: true,
             env: process.env,

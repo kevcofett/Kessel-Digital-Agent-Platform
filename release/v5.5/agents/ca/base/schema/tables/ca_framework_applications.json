@@ -1,0 +1,31 @@
+{
+  "schemaName": "ca_framework_applications",
+  "displayName": "Framework Application",
+  "pluralName": "Framework Applications",
+  "description": "Log of framework usage in sessions",
+  "tier": 2,
+  "featureGate": null,
+  "category": "Consulting",
+  "primaryKey": "application_id",
+  "primaryNameColumn": "application_id",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "application_id", "displayName": "Application ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "session_id", "displayName": "Session", "dataType": "Lookup", "lookupTable": "eap_session", "required": true, "description": "Source session" },
+    { "schemaName": "framework_id", "displayName": "Framework", "dataType": "Lookup", "lookupTable": "ca_frameworks", "required": true, "description": "Framework used" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "User" },
+    { "schemaName": "client_id", "displayName": "Client", "dataType": "Lookup", "lookupTable": "eap_client", "required": false, "description": "Client context" },
+    { "schemaName": "application_depth", "displayName": "Application Depth", "dataType": "Choice", "required": true, "options": ["Quick", "Standard", "Comprehensive"], "description": "Depth applied" },
+    { "schemaName": "context_summary", "displayName": "Context Summary", "dataType": "MultilineText", "required": false, "description": "Application context" },
+    { "schemaName": "inputs_json", "displayName": "Inputs", "dataType": "MultilineText", "required": false, "description": "Framework inputs JSON" },
+    { "schemaName": "outputs_json", "displayName": "Outputs", "dataType": "MultilineText", "required": false, "description": "Framework outputs JSON" },
+    { "schemaName": "analysis_id", "displayName": "Analysis", "dataType": "Lookup", "lookupTable": "ca_analyses", "required": false, "description": "Resulting analysis" },
+    { "schemaName": "was_helpful", "displayName": "Was Helpful", "dataType": "Boolean", "required": false, "description": "User feedback" },
+    { "schemaName": "application_date", "displayName": "Application Date", "dataType": "DateTime", "required": true, "description": "When applied" }
+  ],
+  "indexes": [
+    { "name": "idx_session", "columns": ["session_id"], "unique": false },
+    { "name": "idx_framework", "columns": ["framework_id"], "unique": false },
+    { "name": "idx_user", "columns": ["user_id"], "unique": false }
+  ]
+}

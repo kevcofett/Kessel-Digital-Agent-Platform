@@ -1,0 +1,256 @@
+{
+  "schemaName": "ca_benchmarks",
+  "displayName": "Benchmarks",
+  "pluralName": "Benchmarks",
+  "description": "Consulting benchmark data for industry comparisons",
+  "tier": 1,
+  "category": "Consulting",
+  "primaryKey": "benchmark_id",
+  "primaryNameColumn": "benchmark_name",
+  "ownershipType": "OrganizationOwned",
+  "publisherPrefix": "ca",
+  "columns": [
+    {
+      "schemaName": "benchmark_id",
+      "displayName": "Benchmark ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "benchmark_code",
+      "displayName": "Benchmark Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique benchmark code"
+    },
+    {
+      "schemaName": "benchmark_name",
+      "displayName": "Benchmark Name",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": true,
+      "description": "Benchmark name"
+    },
+    {
+      "schemaName": "benchmark_category",
+      "displayName": "Benchmark Category",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Industry", "Operational", "Financial", "Performance", "Quality", "Custom"],
+      "description": "Benchmark category"
+    },
+    {
+      "schemaName": "industry",
+      "displayName": "Industry",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Applicable industry"
+    },
+    {
+      "schemaName": "metric_name",
+      "displayName": "Metric Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Metric name"
+    },
+    {
+      "schemaName": "metric_unit",
+      "displayName": "Metric Unit",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": false,
+      "description": "Measurement unit"
+    },
+    {
+      "schemaName": "value_type",
+      "displayName": "Value Type",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Single", "Range", "Percentile"],
+      "description": "Value type"
+    },
+    {
+      "schemaName": "value_low",
+      "displayName": "Value Low",
+      "dataType": "Decimal",
+      "required": false,
+      "description": "Low value"
+    },
+    {
+      "schemaName": "value_mid",
+      "displayName": "Value Mid",
+      "dataType": "Decimal",
+      "required": false,
+      "description": "Mid/typical value"
+    },
+    {
+      "schemaName": "value_high",
+      "displayName": "Value High",
+      "dataType": "Decimal",
+      "required": false,
+      "description": "High value"
+    },
+    {
+      "schemaName": "percentile_25",
+      "displayName": "25th Percentile",
+      "dataType": "Decimal",
+      "required": false,
+      "description": "25th percentile"
+    },
+    {
+      "schemaName": "percentile_50",
+      "displayName": "50th Percentile",
+      "dataType": "Decimal",
+      "required": false,
+      "description": "50th percentile (median)"
+    },
+    {
+      "schemaName": "percentile_75",
+      "displayName": "75th Percentile",
+      "dataType": "Decimal",
+      "required": false,
+      "description": "75th percentile"
+    },
+    {
+      "schemaName": "percentile_90",
+      "displayName": "90th Percentile",
+      "dataType": "Decimal",
+      "required": false,
+      "description": "90th percentile"
+    },
+    {
+      "schemaName": "source",
+      "displayName": "Source",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": false,
+      "description": "Data source"
+    },
+    {
+      "schemaName": "source_url",
+      "displayName": "Source URL",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Source URL"
+    },
+    {
+      "schemaName": "source_date",
+      "displayName": "Source Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Source date"
+    },
+    {
+      "schemaName": "geography",
+      "displayName": "Geography",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Geographic scope"
+    },
+    {
+      "schemaName": "company_size_segment",
+      "displayName": "Company Size Segment",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Company size segment"
+    },
+    {
+      "schemaName": "is_verified",
+      "displayName": "Is Verified",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Verified data"
+    },
+    {
+      "schemaName": "confidence_level",
+      "displayName": "Confidence Level",
+      "dataType": "Choice",
+      "required": false,
+      "options": ["High", "Medium", "Low"],
+      "description": "Data confidence"
+    },
+    {
+      "schemaName": "notes",
+      "displayName": "Notes",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Notes"
+    },
+    {
+      "schemaName": "valid_from",
+      "displayName": "Valid From",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Valid from date"
+    },
+    {
+      "schemaName": "valid_until",
+      "displayName": "Valid Until",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Valid until date"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_benchmark_code",
+      "columns": ["benchmark_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_benchmark_category",
+      "columns": ["benchmark_category"],
+      "unique": false
+    },
+    {
+      "name": "idx_industry",
+      "columns": ["industry"],
+      "unique": false
+    },
+    {
+      "name": "idx_is_active",
+      "columns": ["is_active"],
+      "unique": false
+    }
+  ],
+  "seedDataNote": "Industry benchmarks populated from consulting knowledge base"
+}

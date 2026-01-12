@@ -1,0 +1,35 @@
+{
+  "schemaName": "ca_analyses",
+  "displayName": "Analysis",
+  "pluralName": "Analyses",
+  "description": "Consulting analyses and assessments",
+  "tier": 2,
+  "featureGate": null,
+  "category": "Consulting",
+  "primaryKey": "analysis_id",
+  "primaryNameColumn": "analysis_title",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "analysis_id", "displayName": "Analysis ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "session_id", "displayName": "Session", "dataType": "Lookup", "lookupTable": "eap_session", "required": true, "description": "Source session" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Creator" },
+    { "schemaName": "client_id", "displayName": "Client", "dataType": "Lookup", "lookupTable": "eap_client", "required": false, "description": "Associated client" },
+    { "schemaName": "analysis_title", "displayName": "Analysis Title", "dataType": "Text", "maxLength": 500, "required": true, "description": "Analysis title" },
+    { "schemaName": "analysis_type", "displayName": "Analysis Type", "dataType": "Choice", "required": true, "options": ["Strategic", "Competitive", "Financial", "Operational", "Market", "Custom"], "description": "Type of analysis" },
+    { "schemaName": "framework_id", "displayName": "Framework", "dataType": "Lookup", "lookupTable": "ca_frameworks", "required": false, "description": "Framework used" },
+    { "schemaName": "industry_id", "displayName": "Industry", "dataType": "Lookup", "lookupTable": "eap_industries", "required": false, "description": "Industry context" },
+    { "schemaName": "analysis_content", "displayName": "Analysis Content", "dataType": "MultilineText", "required": true, "description": "Full analysis" },
+    { "schemaName": "key_findings_json", "displayName": "Key Findings", "dataType": "MultilineText", "required": false, "description": "Key findings JSON" },
+    { "schemaName": "data_sources_json", "displayName": "Data Sources", "dataType": "MultilineText", "required": false, "description": "Data sources used JSON" },
+    { "schemaName": "confidence_level", "displayName": "Confidence Level", "dataType": "Choice", "required": true, "defaultValue": "Medium", "options": ["High", "Medium", "Medium-Low", "Low"], "description": "Confidence level" },
+    { "schemaName": "status", "displayName": "Status", "dataType": "Choice", "required": true, "defaultValue": "Draft", "options": ["Draft", "InReview", "Approved", "Archived"], "description": "Analysis status" },
+    { "schemaName": "version", "displayName": "Version", "dataType": "WholeNumber", "required": true, "defaultValue": 1, "description": "Version number" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_session", "columns": ["session_id"], "unique": false },
+    { "name": "idx_client", "columns": ["client_id"], "unique": false },
+    { "name": "idx_framework", "columns": ["framework_id"], "unique": false }
+  ]
+}

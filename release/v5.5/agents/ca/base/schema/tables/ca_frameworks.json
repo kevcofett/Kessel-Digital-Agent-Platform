@@ -1,0 +1,191 @@
+{
+  "schemaName": "ca_frameworks",
+  "displayName": "Consulting Frameworks",
+  "pluralName": "Consulting Frameworks",
+  "description": "Library of consulting frameworks and methodologies",
+  "tier": 1,
+  "category": "Consulting",
+  "primaryKey": "framework_id",
+  "primaryNameColumn": "framework_name",
+  "ownershipType": "OrganizationOwned",
+  "isReferenceData": true,
+  "columns": [
+    {
+      "schemaName": "framework_id",
+      "displayName": "Framework ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "framework_code",
+      "displayName": "Framework Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique framework identifier"
+    },
+    {
+      "schemaName": "framework_name",
+      "displayName": "Framework Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Display name"
+    },
+    {
+      "schemaName": "framework_category",
+      "displayName": "Framework Category",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Strategic", "Competitive", "Customer", "Innovation", "Operations", "Financial"],
+      "description": "Category of framework"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "dataType": "MultilineText",
+      "required": true,
+      "description": "Framework description and purpose"
+    },
+    {
+      "schemaName": "methodology",
+      "displayName": "Methodology",
+      "dataType": "MultilineText",
+      "required": true,
+      "description": "How to apply the framework"
+    },
+    {
+      "schemaName": "typical_use_cases_json",
+      "displayName": "Typical Use Cases",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "JSON array of typical use cases"
+    },
+    {
+      "schemaName": "output_components_json",
+      "displayName": "Output Components",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "JSON array of expected output components"
+    },
+    {
+      "schemaName": "time_estimate_quick",
+      "displayName": "Time Estimate (Quick)",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Minutes for quick analysis"
+    },
+    {
+      "schemaName": "time_estimate_standard",
+      "displayName": "Time Estimate (Standard)",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Minutes for standard analysis"
+    },
+    {
+      "schemaName": "time_estimate_comprehensive",
+      "displayName": "Time Estimate (Comprehensive)",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Minutes for comprehensive analysis"
+    },
+    {
+      "schemaName": "related_frameworks_json",
+      "displayName": "Related Frameworks",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "JSON array of related framework codes"
+    },
+    {
+      "schemaName": "source",
+      "displayName": "Source",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": false,
+      "description": "Original source or author"
+    },
+    {
+      "schemaName": "usage_count",
+      "displayName": "Usage Count",
+      "dataType": "WholeNumber",
+      "required": true,
+      "defaultValue": 0,
+      "description": "Number of times framework has been applied"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_framework_code",
+      "columns": ["framework_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_framework_category",
+      "columns": ["framework_category"],
+      "unique": false
+    },
+    {
+      "name": "idx_usage_count",
+      "columns": ["usage_count"],
+      "unique": false
+    }
+  ],
+  "seedData": [
+    { "framework_code": "SWOT", "framework_name": "SWOT Analysis", "framework_category": "Strategic", "description": "Evaluate Strengths, Weaknesses, Opportunities, and Threats to understand competitive position.", "methodology": "Identify internal strengths and weaknesses, external opportunities and threats.", "time_estimate_quick": 15, "time_estimate_standard": 45, "time_estimate_comprehensive": 90 },
+    { "framework_code": "PORTERS_FIVE", "framework_name": "Porter's Five Forces", "framework_category": "Competitive", "description": "Analyze industry structure through five competitive forces.", "methodology": "Assess threat of new entrants, supplier power, buyer power, threat of substitutes, and competitive rivalry.", "time_estimate_quick": 20, "time_estimate_standard": 60, "time_estimate_comprehensive": 120 },
+    { "framework_code": "PESTEL", "framework_name": "PESTEL Analysis", "framework_category": "Strategic", "description": "Analyze macro-environmental factors: Political, Economic, Social, Technological, Environmental, Legal.", "methodology": "Systematically evaluate each factor's impact on the organization.", "time_estimate_quick": 20, "time_estimate_standard": 50, "time_estimate_comprehensive": 100 },
+    { "framework_code": "BCG_MATRIX", "framework_name": "BCG Growth-Share Matrix", "framework_category": "Strategic", "description": "Portfolio analysis tool categorizing products by market growth and share.", "methodology": "Plot units on growth vs share matrix: Stars, Cash Cows, Question Marks, Dogs.", "time_estimate_quick": 15, "time_estimate_standard": 40, "time_estimate_comprehensive": 80 },
+    { "framework_code": "VALUE_CHAIN", "framework_name": "Value Chain Analysis", "framework_category": "Operations", "description": "Analyze activities that create value and competitive advantage.", "methodology": "Map primary and support activities, identify value-adding steps.", "time_estimate_quick": 20, "time_estimate_standard": 60, "time_estimate_comprehensive": 120 },
+    { "framework_code": "JTBD", "framework_name": "Jobs-to-be-Done", "framework_category": "Customer", "description": "Understand customer needs through the lens of jobs they are trying to accomplish.", "methodology": "Identify functional, emotional, and social jobs.", "time_estimate_quick": 20, "time_estimate_standard": 60, "time_estimate_comprehensive": 120 },
+    { "framework_code": "CUSTOMER_JOURNEY", "framework_name": "Customer Journey Mapping", "framework_category": "Customer", "description": "Visualize the end-to-end customer experience across touchpoints.", "methodology": "Map stages, touchpoints, actions, emotions, pain points.", "time_estimate_quick": 25, "time_estimate_standard": 75, "time_estimate_comprehensive": 150 },
+    { "framework_code": "VALUE_PROPOSITION", "framework_name": "Value Proposition Canvas", "framework_category": "Customer", "description": "Design and test value propositions that resonate with customer needs.", "methodology": "Map customer profile and value map.", "time_estimate_quick": 20, "time_estimate_standard": 50, "time_estimate_comprehensive": 100 },
+    { "framework_code": "KANO", "framework_name": "Kano Model", "framework_category": "Customer", "description": "Categorize product features by customer satisfaction impact.", "methodology": "Classify features as Must-be, One-dimensional, Attractive, Indifferent, or Reverse.", "time_estimate_quick": 15, "time_estimate_standard": 40, "time_estimate_comprehensive": 80 },
+    { "framework_code": "ANSOFF", "framework_name": "Ansoff Matrix", "framework_category": "Strategic", "description": "Strategic planning tool for growth strategy evaluation.", "methodology": "Evaluate four strategies: Market Penetration, Product Development, Market Development, Diversification.", "time_estimate_quick": 15, "time_estimate_standard": 40, "time_estimate_comprehensive": 80 },
+    { "framework_code": "VRIO", "framework_name": "VRIO Framework", "framework_category": "Competitive", "description": "Assess resources and capabilities for sustainable competitive advantage.", "methodology": "Evaluate resources on Value, Rarity, Imitability, Organization.", "time_estimate_quick": 20, "time_estimate_standard": 50, "time_estimate_comprehensive": 100 },
+    { "framework_code": "BLUE_OCEAN", "framework_name": "Blue Ocean Strategy", "framework_category": "Innovation", "description": "Create uncontested market space by differentiating from competition.", "methodology": "Apply ERRC grid (Eliminate, Reduce, Raise, Create) to redefine value curve.", "time_estimate_quick": 25, "time_estimate_standard": 60, "time_estimate_comprehensive": 120 },
+    { "framework_code": "DESIGN_THINKING", "framework_name": "Design Thinking", "framework_category": "Innovation", "description": "Human-centered approach to innovation and problem-solving.", "methodology": "Progress through Empathize, Define, Ideate, Prototype, Test phases.", "time_estimate_quick": 30, "time_estimate_standard": 90, "time_estimate_comprehensive": 180 },
+    { "framework_code": "LEAN_CANVAS", "framework_name": "Lean Canvas", "framework_category": "Innovation", "description": "One-page business model for startups and new ventures.", "methodology": "Complete nine blocks: Problem, Solution, Key Metrics, UVP, etc.", "time_estimate_quick": 20, "time_estimate_standard": 50, "time_estimate_comprehensive": 100 },
+    { "framework_code": "BUSINESS_MODEL", "framework_name": "Business Model Canvas", "framework_category": "Strategic", "description": "Visual tool for developing and documenting business models.", "methodology": "Complete nine building blocks covering customers, value, infrastructure, finances.", "time_estimate_quick": 25, "time_estimate_standard": 60, "time_estimate_comprehensive": 120 },
+    { "framework_code": "MCKINSEYS_7S", "framework_name": "McKinsey 7-S Framework", "framework_category": "Operations", "description": "Analyze organizational effectiveness across seven interconnected elements.", "methodology": "Assess Strategy, Structure, Systems, Shared Values, Style, Staff, Skills.", "time_estimate_quick": 25, "time_estimate_standard": 60, "time_estimate_comprehensive": 120 },
+    { "framework_code": "BALANCED_SCORECARD", "framework_name": "Balanced Scorecard", "framework_category": "Operations", "description": "Strategic management system translating vision into operational objectives.", "methodology": "Define objectives, measures, targets, initiatives across four perspectives.", "time_estimate_quick": 30, "time_estimate_standard": 90, "time_estimate_comprehensive": 180 },
+    { "framework_code": "ROOT_CAUSE", "framework_name": "Root Cause Analysis (5 Whys)", "framework_category": "Operations", "description": "Iterative questioning technique to identify root causes.", "methodology": "Ask Why repeatedly until root cause is identified.", "time_estimate_quick": 10, "time_estimate_standard": 25, "time_estimate_comprehensive": 50 },
+    { "framework_code": "FISHBONE", "framework_name": "Ishikawa (Fishbone) Diagram", "framework_category": "Operations", "description": "Visual tool for categorizing potential causes of problems.", "methodology": "Map causes across categories (6Ms).", "time_estimate_quick": 15, "time_estimate_standard": 35, "time_estimate_comprehensive": 70 },
+    { "framework_code": "RACI", "framework_name": "RACI Matrix", "framework_category": "Operations", "description": "Responsibility assignment matrix for project roles.", "methodology": "Map activities to stakeholders with RACI designations.", "time_estimate_quick": 15, "time_estimate_standard": 30, "time_estimate_comprehensive": 60 },
+    { "framework_code": "ADKAR", "framework_name": "ADKAR Change Model", "framework_category": "Operations", "description": "Individual-focused change management framework.", "methodology": "Build Awareness, Desire, Knowledge, Ability, Reinforcement.", "time_estimate_quick": 20, "time_estimate_standard": 50, "time_estimate_comprehensive": 100 },
+    { "framework_code": "MECE", "framework_name": "MECE Problem Decomposition", "framework_category": "Strategic", "description": "Mutually Exclusive, Collectively Exhaustive approach to problem structuring.", "methodology": "Break down problems into non-overlapping, complete categories.", "time_estimate_quick": 15, "time_estimate_standard": 30, "time_estimate_comprehensive": 60 },
+    { "framework_code": "GAP_ANALYSIS", "framework_name": "Gap Analysis", "framework_category": "Strategic", "description": "Compare current state to desired future state to identify gaps.", "methodology": "Define current state, target state, identify gaps, develop action plan.", "time_estimate_quick": 20, "time_estimate_standard": 50, "time_estimate_comprehensive": 100 },
+    { "framework_code": "SCENARIO_PLANNING", "framework_name": "Scenario Planning", "framework_category": "Strategic", "description": "Develop multiple plausible future scenarios to inform strategy.", "methodology": "Identify driving forces, uncertainties, create scenarios.", "time_estimate_quick": 30, "time_estimate_standard": 90, "time_estimate_comprehensive": 180 },
+    { "framework_code": "COMPETITOR_ANALYSIS", "framework_name": "Competitive Analysis", "framework_category": "Competitive", "description": "Systematic assessment of competitors strengths, weaknesses, and strategies.", "methodology": "Profile competitors, analyze capabilities, compare positioning.", "time_estimate_quick": 25, "time_estimate_standard": 60, "time_estimate_comprehensive": 120 },
+    { "framework_code": "FINANCIAL_ANALYSIS", "framework_name": "Financial Analysis", "framework_category": "Financial", "description": "Comprehensive assessment of financial health and performance.", "methodology": "Analyze ratios, trends, benchmarks across profitability, liquidity, solvency.", "time_estimate_quick": 25, "time_estimate_standard": 60, "time_estimate_comprehensive": 120 },
+    { "framework_code": "ROI_ANALYSIS", "framework_name": "ROI Analysis", "framework_category": "Financial", "description": "Calculate and compare return on investment for initiatives.", "methodology": "Identify costs, quantify benefits, calculate ROI, sensitivity analysis.", "time_estimate_quick": 20, "time_estimate_standard": 45, "time_estimate_comprehensive": 90 },
+    { "framework_code": "TCO", "framework_name": "Total Cost of Ownership", "framework_category": "Financial", "description": "Calculate full lifecycle cost of assets or solutions.", "methodology": "Identify all direct and indirect costs across acquisition, operation, disposal.", "time_estimate_quick": 20, "time_estimate_standard": 50, "time_estimate_comprehensive": 100 },
+    { "framework_code": "RISK_ASSESSMENT", "framework_name": "Risk Assessment Matrix", "framework_category": "Financial", "description": "Evaluate and prioritize risks by likelihood and impact.", "methodology": "Identify risks, assess probability and severity, develop mitigation.", "time_estimate_quick": 20, "time_estimate_standard": 45, "time_estimate_comprehensive": 90 },
+    { "framework_code": "STAKEHOLDER_ANALYSIS", "framework_name": "Stakeholder Analysis", "framework_category": "Operations", "description": "Identify and analyze stakeholders to inform engagement strategies.", "methodology": "Map stakeholders by influence and interest, develop engagement strategies.", "time_estimate_quick": 15, "time_estimate_standard": 40, "time_estimate_comprehensive": 80 },
+    { "framework_code": "PRIORITIZATION_MATRIX", "framework_name": "Prioritization Matrix", "framework_category": "Operations", "description": "Evaluate and rank options based on weighted criteria.", "methodology": "Define criteria, assign weights, score options, calculate weighted scores.", "time_estimate_quick": 15, "time_estimate_standard": 35, "time_estimate_comprehensive": 70 },
+    { "framework_code": "OKR", "framework_name": "OKR Framework", "framework_category": "Operations", "description": "Objectives and Key Results framework for goal setting.", "methodology": "Define inspiring objectives, set measurable key results, track progress.", "time_estimate_quick": 15, "time_estimate_standard": 40, "time_estimate_comprehensive": 80 }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schemaName": "ca_handoffs",
+  "displayName": "Handoff",
+  "pluralName": "Handoffs",
+  "description": "Session handoffs to human consultants",
+  "tier": 2,
+  "featureGate": null,
+  "category": "Consulting",
+  "primaryKey": "handoff_id",
+  "primaryNameColumn": "handoff_title",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "handoff_id", "displayName": "Handoff ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "session_id", "displayName": "Session", "dataType": "Lookup", "lookupTable": "eap_session", "required": true, "description": "Source session" },
+    { "schemaName": "from_user_id", "displayName": "From User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Originating user" },
+    { "schemaName": "to_user_id", "displayName": "To User", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "Target user (null for pool)" },
+    { "schemaName": "client_id", "displayName": "Client", "dataType": "Lookup", "lookupTable": "eap_client", "required": false, "description": "Associated client" },
+    { "schemaName": "handoff_title", "displayName": "Handoff Title", "dataType": "Text", "maxLength": 500, "required": true, "description": "Handoff title" },
+    { "schemaName": "handoff_reason", "displayName": "Handoff Reason", "dataType": "Choice", "required": true, "options": ["Expertise", "Complexity", "Relationship", "Escalation", "Capacity", "Other"], "description": "Why handed off" },
+    { "schemaName": "urgency", "displayName": "Urgency", "dataType": "Choice", "required": true, "defaultValue": "Normal", "options": ["Critical", "High", "Normal", "Low"], "description": "Urgency level" },
+    { "schemaName": "context_summary", "displayName": "Context Summary", "dataType": "MultilineText", "required": true, "description": "Handoff context" },
+    { "schemaName": "work_completed_summary", "displayName": "Work Completed", "dataType": "MultilineText", "required": false, "description": "What was done" },
+    { "schemaName": "next_steps_json", "displayName": "Next Steps", "dataType": "MultilineText", "required": false, "description": "Suggested next steps JSON" },
+    { "schemaName": "related_artifacts_json", "displayName": "Related Artifacts", "dataType": "MultilineText", "required": false, "description": "Related artifact IDs JSON" },
+    { "schemaName": "status", "displayName": "Status", "dataType": "Choice", "required": true, "defaultValue": "Pending", "options": ["Pending", "Accepted", "InProgress", "Completed", "Declined"], "description": "Handoff status" },
+    { "schemaName": "accepted_date", "displayName": "Accepted Date", "dataType": "DateTime", "required": false, "description": "When accepted" },
+    { "schemaName": "completed_date", "displayName": "Completed Date", "dataType": "DateTime", "required": false, "description": "When completed" },
+    { "schemaName": "resolution_notes", "displayName": "Resolution Notes", "dataType": "MultilineText", "required": false, "description": "How resolved" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" }
+  ],
+  "indexes": [
+    { "name": "idx_session", "columns": ["session_id"], "unique": false },
+    { "name": "idx_to_user", "columns": ["to_user_id", "status"], "unique": false },
+    { "name": "idx_status", "columns": ["status"], "unique": false }
+  ]
+}

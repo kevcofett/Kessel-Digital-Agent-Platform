@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "metadata": {
+    "tableName": "mpa_feedback",
+    "version": "1.0.0",
+    "created": "2026-01-12",
+    "purpose": "Store user feedback on agent responses for learning"
+  },
+  "table": {
+    "schemaName": "mpa_feedback",
+    "displayName": "Agent Feedback",
+    "pluralName": "Agent Feedback",
+    "description": "Stores user feedback on agent responses for self-learning system",
+    "primaryColumn": "mpa_feedback_id",
+    "ownership": "Organization",
+    "tableType": "Standard"
+  },
+  "fields": [
+    {
+      "schemaName": "mpa_feedback_id",
+      "displayName": "Feedback ID",
+      "dataType": "Uniqueidentifier",
+      "isPrimaryKey": true,
+      "isRequired": true
+    },
+    {
+      "schemaName": "mpa_session_id",
+      "displayName": "Session ID",
+      "dataType": "Lookup",
+      "relatedTable": "eap_session",
+      "isRequired": true,
+      "description": "Link to parent session"
+    },
+    {
+      "schemaName": "mpa_message_id",
+      "displayName": "Message ID",
+      "dataType": "SingleLineOfText",
+      "maxLength": 100,
+      "description": "Unique identifier for the message within the session"
+    },
+    {
+      "schemaName": "mpa_feedback_type",
+      "displayName": "Feedback Type",
+      "dataType": "Choice",
+      "isRequired": true,
+      "options": [
+        {"value": 100000000, "label": "Positive"},
+        {"value": 100000001, "label": "Negative"},
+        {"value": 100000002, "label": "Neutral"},
+        {"value": 100000003, "label": "Correction"}
+      ]
+    },
+    {
+      "schemaName": "mpa_feedback_text",
+      "displayName": "Feedback Text",
+      "dataType": "MultilineText",
+      "maxLength": 4000,
+      "description": "Optional text explanation of feedback"
+    },
+    {
+      "schemaName": "mpa_user_query",
+      "displayName": "User Query",
+      "dataType": "MultilineText",
+      "maxLength": 4000,
+      "description": "The user message that prompted the response"
+    },
+    {
+      "schemaName": "mpa_agent_response",
+      "displayName": "Agent Response",
+      "dataType": "MultilineText",
+      "maxLength": 50000,
+      "description": "The agent response that received feedback"
+    },
+    {
+      "schemaName": "mpa_kb_files_used",
+      "displayName": "KB Files Used",
+      "dataType": "MultilineText",
+      "maxLength": 4000,
+      "format": "JSON",
+      "description": "JSON array of KB file names referenced in response"
+    },
+    {
+      "schemaName": "mpa_agent_type",
+      "displayName": "Agent Type",
+      "dataType": "Choice",
+      "isRequired": true,
+      "options": [
+        {"value": 100000000, "label": "MPA"},
+        {"value": 100000001, "label": "CA"},
+        {"value": 100000002, "label": "EAP"}
+      ]
+    },
+    {
+      "schemaName": "mpa_created_at",
+      "displayName": "Created At",
+      "dataType": "DateTime",
+      "isRequired": true,
+      "description": "Timestamp when feedback was submitted"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_feedback_session",
+      "fields": ["mpa_session_id"],
+      "isUnique": false
+    },
+    {
+      "name": "idx_feedback_type_agent",
+      "fields": ["mpa_feedback_type", "mpa_agent_type"],
+      "isUnique": false
+    }
+  ]
+}

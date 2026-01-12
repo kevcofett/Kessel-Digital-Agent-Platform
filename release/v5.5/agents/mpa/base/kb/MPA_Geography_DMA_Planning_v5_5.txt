@@ -96,56 +96,62 @@ These columns use WEIGHTED AVERAGE aggregation:
 
 EXAMPLE TABLE STRUCTURES
 
-EXAMPLE 1 - DMA LEVEL TABLE PHASE 1
+EXAMPLE 1 - DMA LEVEL PHASE 1
 
-| DMA | Total Population | Target Audience | Target Pct |
-| New York NY | 20,100,000 | 1,206,000 | 6.0% |
-| Los Angeles CA | 13,200,000 | 924,000 | 7.0% |
-| Chicago IL | 9,500,000 | 570,000 | 6.0% |
-| Houston TX | 7,200,000 | 504,000 | 7.0% |
-| Phoenix AZ | 4,900,000 | 343,000 | 7.0% |
-| TOTAL | 54,900,000 | 3,547,000 | 6.5% |
+DMA Breakdown with Population and Target Audience:
+- New York NY: Total population 20,100,000, Target audience 1,206,000 (6.0% of population)
+- Los Angeles CA: Total population 13,200,000, Target audience 924,000 (7.0% of population)
+- Chicago IL: Total population 9,500,000, Target audience 570,000 (6.0% of population)
+- Houston TX: Total population 7,200,000, Target audience 504,000 (7.0% of population)
+- Phoenix AZ: Total population 4,900,000, Target audience 343,000 (7.0% of population)
+- TOTAL: Total population 54,900,000, Target audience 3,547,000 (6.5% of population)
 
-Note the TOTAL row Target Pct of 6.5 percent is the weighted average, not simple average of the percentages.
+Note the TOTAL Target Percent of 6.5 percent is the weighted average, not simple average of the percentages.
 
-EXAMPLE 2 - DMA LEVEL TABLE PHASE 2 WITH BUDGET AND OUTCOMES
+EXAMPLE 2 - DMA LEVEL PHASE 2 WITH BUDGET AND OUTCOMES
 
-| DMA | Population | Target Aud | Tgt Pct | Spend | Spend Per Tgt | Proj Conv | Proj CAC |
-| New York NY | 20,100,000 | 1,206,000 | 6.0% | $85,000 | $0.070 | 850 | $100.00 |
-| Los Angeles CA | 13,200,000 | 924,000 | 7.0% | $65,000 | $0.070 | 650 | $100.00 |
-| Chicago IL | 9,500,000 | 570,000 | 6.0% | $45,000 | $0.079 | 400 | $112.50 |
-| Houston TX | 7,200,000 | 504,000 | 7.0% | $35,000 | $0.069 | 350 | $100.00 |
-| Phoenix AZ | 4,900,000 | 343,000 | 7.0% | $20,000 | $0.058 | 175 | $114.29 |
-| TOTAL | 54,900,000 | 3,547,000 | 6.5% | $250,000 | $0.070 | 2,425 | $103.09 |
+DMA Breakdown with Budget, Spend Efficiency, and Projected Outcomes:
+- New York NY: Population 20,100,000, Target audience 1,206,000 (6.0%), Spend $85,000 at $0.070 per target, projecting 850 conversions at $100.00 CAC
+- Los Angeles CA: Population 13,200,000, Target audience 924,000 (7.0%), Spend $65,000 at $0.070 per target, projecting 650 conversions at $100.00 CAC
+- Chicago IL: Population 9,500,000, Target audience 570,000 (6.0%), Spend $45,000 at $0.079 per target, projecting 400 conversions at $112.50 CAC
+- Houston TX: Population 7,200,000, Target audience 504,000 (7.0%), Spend $35,000 at $0.069 per target, projecting 350 conversions at $100.00 CAC
+- Phoenix AZ: Population 4,900,000, Target audience 343,000 (7.0%), Spend $20,000 at $0.058 per target, projecting 175 conversions at $114.29 CAC
+- TOTAL: Population 54,900,000, Target audience 3,547,000 (6.5%), Spend $250,000 at $0.070 per target, projecting 2,425 conversions at $103.09 CAC
 
-Note TOTAL row Proj CAC of $103.09 is weighted average by conversions, not simple average.
+Note TOTAL Projected CAC of $103.09 is weighted average by conversions, not simple average.
 
-EXAMPLE 3 - DMA PLUS CORRIDOR TABLE
+EXAMPLE 3 - DMA PLUS CORRIDOR BREAKDOWN
 
-| DMA | Corridor | Population | Target Aud | Tgt Pct | Spend | Proj Conv |
-| Los Angeles CA | Downtown | 2,500,000 | 200,000 | 8.0% | $20,000 | 200 |
-| Los Angeles CA | Westside | 1,800,000 | 162,000 | 9.0% | $18,000 | 180 |
-| Los Angeles CA | Valley | 3,200,000 | 224,000 | 7.0% | $15,000 | 150 |
-| Los Angeles CA | South Bay | 2,100,000 | 147,000 | 7.0% | $12,000 | 120 |
-| LA SUBTOTAL | | 9,600,000 | 733,000 | 7.6% | $65,000 | 650 |
-| San Diego CA | Central | 1,400,000 | 98,000 | 7.0% | $8,000 | 80 |
-| San Diego CA | North County | 900,000 | 72,000 | 8.0% | $7,000 | 70 |
-| SD SUBTOTAL | | 2,300,000 | 170,000 | 7.4% | $15,000 | 150 |
-| GRAND TOTAL | | 11,900,000 | 903,000 | 7.6% | $80,000 | 800 |
+Los Angeles CA DMA by Corridor:
+- Downtown: Population 2,500,000, Target audience 200,000 (8.0%), Spend $20,000, Projected conversions 200
+- Westside: Population 1,800,000, Target audience 162,000 (9.0%), Spend $18,000, Projected conversions 180
+- Valley: Population 3,200,000, Target audience 224,000 (7.0%), Spend $15,000, Projected conversions 150
+- South Bay: Population 2,100,000, Target audience 147,000 (7.0%), Spend $12,000, Projected conversions 120
+- LA SUBTOTAL: Population 9,600,000, Target audience 733,000 (7.6%), Spend $65,000, Projected conversions 650
 
-EXAMPLE 4 - ZIP CODE TABLE WITH DMA ROLLUPS
+San Diego CA DMA by Corridor:
+- Central: Population 1,400,000, Target audience 98,000 (7.0%), Spend $8,000, Projected conversions 80
+- North County: Population 900,000, Target audience 72,000 (8.0%), Spend $7,000, Projected conversions 70
+- SD SUBTOTAL: Population 2,300,000, Target audience 170,000 (7.4%), Spend $15,000, Projected conversions 150
 
-| DMA | ZIP | Population | Target Aud | Tgt Pct | Spend |
-| Chicago IL | 60601 | 28,000 | 2,240 | 8.0% | $1,500 |
-| Chicago IL | 60602 | 12,000 | 960 | 8.0% | $800 |
-| Chicago IL | 60603 | 8,500 | 595 | 7.0% | $500 |
-| Chicago IL | 60604 | 15,000 | 1,050 | 7.0% | $700 |
-| CHICAGO SUBTOTAL | | 63,500 | 4,845 | 7.6% | $3,500 |
-| Milwaukee WI | 53201 | 22,000 | 1,540 | 7.0% | $900 |
-| Milwaukee WI | 53202 | 18,000 | 1,260 | 7.0% | $750 |
-| Milwaukee WI | 53203 | 14,000 | 980 | 7.0% | $600 |
-| MILWAUKEE SUBTOTAL | | 54,000 | 3,780 | 7.0% | $2,250 |
-| GRAND TOTAL | | 117,500 | 8,625 | 7.3% | $5,750 |
+GRAND TOTAL: Population 11,900,000, Target audience 903,000 (7.6%), Spend $80,000, Projected conversions 800
+
+EXAMPLE 4 - ZIP CODE BREAKDOWN WITH DMA ROLLUPS
+
+Chicago IL DMA by ZIP Code:
+- ZIP 60601: Population 28,000, Target audience 2,240 (8.0%), Spend $1,500
+- ZIP 60602: Population 12,000, Target audience 960 (8.0%), Spend $800
+- ZIP 60603: Population 8,500, Target audience 595 (7.0%), Spend $500
+- ZIP 60604: Population 15,000, Target audience 1,050 (7.0%), Spend $700
+- CHICAGO SUBTOTAL: Population 63,500, Target audience 4,845 (7.6%), Spend $3,500
+
+Milwaukee WI DMA by ZIP Code:
+- ZIP 53201: Population 22,000, Target audience 1,540 (7.0%), Spend $900
+- ZIP 53202: Population 18,000, Target audience 1,260 (7.0%), Spend $750
+- ZIP 53203: Population 14,000, Target audience 980 (7.0%), Spend $600
+- MILWAUKEE SUBTOTAL: Population 54,000, Target audience 3,780 (7.0%), Spend $2,250
+
+GRAND TOTAL: Population 117,500, Target audience 8,625 (7.3%), Spend $5,750
 
 TARGET AUDIENCE SIZING METHODOLOGY
 
@@ -216,16 +222,15 @@ WRONG BEHAVIOR - INCOMPLETE:
 budget allocation."
 
 RIGHT BEHAVIOR - COMPLETE:
-"Based on your targeting signals, here is your audience sizing by DMA:"
+"Based on your targeting signals, here is your audience sizing by DMA:
 
-| DMA | Total Population | Target Audience | Target % |
-|-----|------------------|-----------------|----------|
-| Los Angeles | 13,200,000 | 924,000 | 7.0% |
-| Houston | 7,200,000 | 504,000 | 7.0% |
-| Chicago | 9,500,000 | 570,000 | 6.0% |
-| TOTAL | 29,900,000 | 1,998,000 | 6.7% |
+DMA Breakdown:
+- Los Angeles: Total population 13,200,000, Target audience 924,000 (7.0%)
+- Houston: Total population 7,200,000, Target audience 504,000 (7.0%)
+- Chicago: Total population 9,500,000, Target audience 570,000 (6.0%)
+- TOTAL: Total population 29,900,000, Target audience 1,998,000 (6.7%)
 
-"Your total addressable audience is 2.0M across these three DMAs. At your $400K budget
+Your total addressable audience is 2.0M across these three DMAs. At your $400K budget
 and 5,000 customer target, you are projecting $80 CAC with 0.25% conversion rate from
 target audience. This is achievable with standard targeting. Shall we proceed to budget
 allocation?"

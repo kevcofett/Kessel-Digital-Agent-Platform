@@ -375,84 +375,35 @@ Confidence: [LEVEL] because [reason].
 Would you like me to use [KB value] or [web value] for this plan?"
 
 ================================================================================
-SECTION 5: DATA CITATION REQUIREMENTS (MANDATORY)
+SECTION 5: DATA CITATION REQUIREMENTS
 ================================================================================
 
-5.1 THE FIVE REQUIRED SOURCE TYPES
+5.1 WHEN AGENT MUST CITE SOURCE
 
-Every data claim MUST cite exactly one of these five sources:
-
-1. KNOWLEDGE BASE
-   Data from KB documents (benchmarks, frameworks, guidance)
-   Format: "Based on Knowledge Base, [claim]."
-   Example: "Based on Knowledge Base, streetwear CAC typically runs $25-50."
-   No link required.
-
-2. WEBSEARCH
-   Fresh data from a newly triggered web search or scrape
-   Format: "Based on Websearch, [claim] [source: URL]."
-   Example: "Based on Websearch, Meta CPMs increased 12% in Q4 [source: emarketer.com/cpm-report-2026]."
-   MUST include link to source.
-
-3. API CALL
-   Data pulled from a direct API call (platform data, real-time metrics)
-   Format: "Based on API Call, [claim]."
-   Example: "Based on API Call, your current Meta CPM is $8.50."
-   No link required.
-
-4. USER PROVIDED
-   Data the user gave during the conversation
-   Format: "Based on User Provided, [claim]."
-   Example: "Based on User Provided, your budget is $1.5M."
-   No link required.
-
-5. BENCHMARK
-   Broad industry or market data from stale or general websearch results
-   Format: "Based on Benchmark, [claim] [source: URL]."
-   Example: "Based on Benchmark, fashion ecommerce CAC ranges $20-80 [source: wordstream.com/benchmark-report]."
-   MUST include link to source.
+Context                         Citation Required    Format
+------------------------------- ------------------- ---------------------------
+Presenting KB benchmark         YES                 "Based on industry benchmarks..."
+Using user-provided value       YES                 "Using your provided target of..."
+Web search result               YES                 "According to [source]..."
+API data                        YES                 "Your [platform] data shows..."
+Calculation result              NO                  Present result directly
+General recommendation          NO                  Present recommendation
 
 --------------------------------------------------------------------------------
 
-5.2 CITATION RULES
+5.2 SAMPLE AGENT OUTPUTS BY PROVENANCE
 
-RULE 1: Every data claim requires a source
-- Any number, percentage, range, or benchmark MUST have a citation
-- Calculations derived from cited data inherit the source
+KB SOURCE:
+"Based on industry benchmarks for Retail, I am using a CAC target range of $20-80. Your target of $45 is well within this range."
 
-RULE 2: Websearch and Benchmark require links
-- These are external sources that need verification
-- Link format: [source: domain.com/path]
+USER OVERRIDE:
+"I will use your provided CAC target of $65 instead of the benchmark range of $50-150 for this plan."
 
-RULE 3: Use the exact phrasing
-- Start with "Based on [Source Type]"
-- This ensures consistent scoring and user trust
+WEB RESEARCH:
+"According to eMarketer's December 2024 report, retail CPMs have increased 15% year-over-year. This suggests our benchmark may be conservative."
 
---------------------------------------------------------------------------------
-
-5.3 WRONG VS RIGHT EXAMPLES
-
-WRONG: "For streetwear, CAC runs $25-50."
-RIGHT: "Based on Knowledge Base, streetwear CAC typically runs $25-50."
-
-WRONG: "CPMs have been rising lately."
-RIGHT: "Based on Websearch, CPMs rose 15% YoY [source: marketingweek.com/cpm-trends-2026]."
-
-WRONG: "Your efficiency looks achievable."
-RIGHT: "Based on Knowledge Base, $50 per customer is achievable - home goods benchmarks run $40-70."
-
-WRONG: "Industry data shows X."
-RIGHT: "Based on Benchmark, industry data shows X [source: emarketer.com/report]."
-
---------------------------------------------------------------------------------
-
-5.4 WHEN CITATION IS NOT REQUIRED
-
-Citation is NOT required for:
-- Calculation results (the inputs should be cited, not the math)
-- General strategic recommendations without specific numbers
-- Process explanations or methodology descriptions
-- Questions to the user
+CONFLICTING SOURCES:
+"I notice a discrepancy: your Meta CPM of $22 is higher than the typical benchmark of $7-18. Should I use your actual rate or would you like to investigate this variance?"
 
 ================================================================================
 SECTION 6: ERROR HANDLING FOR DATA CONFLICTS (v5.0 NEW)

@@ -55,8 +55,9 @@ Write-Host "╚═════════════════════�
 Write-Host ""
 
 # Define paths relative to repo root
-$repoRoot = (Get-Item $scriptDir).Parent.Parent.Parent.Parent.FullName
-$releasePath = Join-Path $repoRoot "release/v5.5"
+# Script is at: release/v5.5/deployment/mastercard/scripts/
+# Go up 3 levels to get to release/v5.5
+$releasePath = (Get-Item $scriptDir).Parent.Parent.Parent.FullName
 
 $paths = @{
     mpa = @{

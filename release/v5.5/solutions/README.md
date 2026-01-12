@@ -4,141 +4,274 @@ This folder contains exported Power Platform solutions for the Kessel Digital Ag
 
 ---
 
-## IMPORTANT: Solutions Must Be Built Before They Can Be Stored Here
+## QUICK START
 
-**Current Status:** EMPTY - Awaiting initial manual build
+### First Time Export (from your dev environment)
 
-Solutions are created by:
-1. Building an agent manually in Copilot Studio (dev environment)
-2. Exporting the solution from Power Apps
-3. Committing the .zip file to this folder
+```powershell
+# 1. Authenticate to your dev environment
+pac auth create --environment "https://[your-org].crm.dynamics.com"
+
+# 2. Run export script
+cd release/v5.5/deployment/mastercard/scripts
+./export-solution.ps1 -Version "5.5.0.0" -ExportManaged
+```
+
+**Detailed guide:** [SOLUTION_EXPORT_STEP_BY_STEP.md](../deployment/SOLUTION_EXPORT_STEP_BY_STEP.md)
+
+### Import to Mastercard
+
+```powershell
+# 1. Authenticate to Mastercard environment
+pac auth create --environment "https://[mastercard-org].crm.dynamics.com"
+
+# 2. Run import script
+./import-solution.ps1 -SolutionPath "../../solutions/KesselAgentPlatform_5_5_0_0.zip" -Environment "mastercard"
+```
+
+**Detailed guide:** [SOLUTION_EXPORT_IMPORT_WORKFLOW.md](../deployment/SOLUTION_EXPORT_IMPORT_WORKFLOW.md)
 
 ---
 
-## Expected Files After Initial Build
+## CURRENT SOLUTIONS
 
-```
-solutions/
-├── README.md                                          ← This file
-├── CHANGELOG.md                                       ← Version history
-├── MPA/
-│   ├── KesselMPA_1_0_0_0.zip                         ← Unmanaged (dev/test)
-│   ├── KesselMPA_1_0_0_0_managed.zip                 ← Managed (production)
-│   └── release-notes.md                              ← What's in this version
-├── CA/
-│   ├── KesselCA_1_0_0_0.zip
-│   ├── KesselCA_1_0_0_0_managed.zip
-│   └── release-notes.md
-└── Combined/
-    ├── KesselAgentPlatform_5_5_0_0.zip               ← All agents in one solution
-    ├── KesselAgentPlatform_5_5_0_0_managed.zip
-    └── release-notes.md
-```
+| Solution | Version | Type | Status |
+|----------|---------|------|--------|
+| MediaPlanningAgentv52_export.zip | 5.2.0.0 | Unmanaged | Legacy |
+| MediaPlanningAgentv52_updated.zip | 5.2.0.0 | Unmanaged | Legacy |
+| KesselAgentPlatform_5_5_0_0.zip | 5.5.0.0 | Unmanaged | **PENDING EXPORT** |
+| KesselAgentPlatform_5_5_0_0_managed.zip | 5.5.0.0 | Managed | **PENDING EXPORT** |
 
 ---
 
-## Solution Naming Convention
+## SOLUTION NAMING CONVENTION
 
 ```
 [Publisher][AgentName]_[Major]_[Minor]_[Build]_[Revision].zip
 
 Examples:
-- KesselMPA_1_0_0_0.zip           (MPA v1.0.0.0 unmanaged)
-- KesselMPA_1_0_0_0_managed.zip   (MPA v1.0.0.0 managed)
-- KesselCA_1_0_0_0.zip            (CA v1.0.0.0 unmanaged)
-- KesselAgentPlatform_5_5_0_0.zip (Combined v5.5.0.0)
+- KesselAgentPlatform_5_5_0_0.zip           (Combined, unmanaged)
+- KesselAgentPlatform_5_5_0_0_managed.zip   (Combined, managed/production)
+- KesselMPA_1_0_0_0.zip                     (MPA only, unmanaged)
+- KesselCA_1_0_0_0.zip                      (CA only, unmanaged)
 ```
 
 ---
 
-## Managed vs Unmanaged
+## MANAGED VS UNMANAGED
 
-| Type | Use Case | Can Edit After Import? |
-|------|----------|----------------------|
-| **Unmanaged** | Development, testing | Yes |
-| **Managed** | Production | No (locked) |
+| Type | Use Case | Can Edit After Import? | Recommended For |
+|------|----------|----------------------|-----------------|
+| **Unmanaged** | Development, testing | Yes | Personal environment |
+| **Managed** | Production | No (locked) | Mastercard environment |
 
-**Recommendation:**
-- Use **unmanaged** for Personal environment (dev/test)
-- Use **managed** for Mastercard environment (production)
+**Best Practice:**
+- Export BOTH unmanaged and managed
+- Use unmanaged for testing
+- Use managed for production (prevents accidental changes)
 
 ---
 
-## How to Export a Solution
+## SOLUTION CONTENTS CHECKLIST
 
-### From Power Apps (make.powerapps.com)
+### Combined Solution (KesselAgentPlatform)
 
-1. Select your DEV environment
-2. Go to **Solutions**
-3. Find your solution (e.g., "Kessel MPA")
-4. Click **Export**
-5. Choose version number (increment from last)
-6. Select **Unmanaged** or **Managed**
-7. Click **Export**
-8. Download the .zip file
-9. Move to this folder
-10. Commit to git
+| Component | MPA | CA | EAP |
+|-----------|-----|----|----|
+| Agent (Copilot) | ✓ | ✓ | ✓ |
+| Topics | 7 | 8 | 5 |
+| Cloud Flows | 4 | 5 | 3 |
+| Tables | 5 | 5 | 4 |
+| Environment Variables | 4 | 4 | 4 |
+| Connection References | 3 | 3 | 3 |
 
-### Using pac CLI
+### MPA Solution Contents
+
+- [ ] **Agent:** Media Planning Agent
+- [ ] **Topics:** Greeting, StartPlanning, SearchBenchmarks, SearchChannels, GenerateDocument, ProvideFeedback, Fallback
+- [ ] **Flows:** InitializeSession, SearchBenchmarks, GenerateDocument, CaptureFeedback
+- [ ] **Tables:** mpa_session, mpa_interaction, mpa_plan, mpa_benchmark, mpa_feedback
+- [ ] **Environment Variables:** SharePointSiteUrl, SharePointLibrary, DataverseUrl, AzureFunctionUrl
+- [ ] **Connection References:** Dataverse, SharePoint, HTTP
+
+### CA Solution Contents
+
+- [ ] **Agent:** Consulting Agent
+- [ ] **Topics:** Greeting, StartAnalysis, SelectFramework, ApplyFramework, GenerateReport, BenchmarkQuery, ProvideFeedback, Fallback
+- [ ] **Flows:** InitializeSession, SelectFramework, ApplyFramework, GenerateDocument, CaptureFeedback
+- [ ] **Tables:** ca_session, ca_analysis, ca_framework, ca_insight, ca_feedback
+- [ ] **Environment Variables:** SharePointSiteUrl, SharePointLibrary, DataverseUrl, AzureFunctionUrl
+- [ ] **Connection References:** Dataverse, SharePoint, HTTP
+
+---
+
+## FOLDER STRUCTURE
+
+```
+solutions/
+├── README.md                              ← This file
+├── CHANGELOG.md                           ← Version history
+├── MPA/
+│   └── README.md                          ← MPA-specific notes
+├── CA/
+│   └── README.md                          ← CA-specific notes
+├── MediaPlanningAgentv52_export.zip       ← Legacy v5.2
+├── MediaPlanningAgentv52_updated.zip      ← Legacy v5.2
+├── MediaPlanningAgentv52_unpacked/        ← Unpacked for inspection
+│   ├── Entities/
+│   ├── OptionSets/
+│   ├── Other/
+│   └── Workflows/
+├── KesselAgentPlatform_5_5_0_0.zip        ← Current unmanaged (pending)
+└── KesselAgentPlatform_5_5_0_0_managed.zip← Current managed (pending)
+```
+
+---
+
+## HOW TO EXPORT
+
+### Option 1: Using Export Script (Recommended)
 
 ```powershell
+cd release/v5.5/deployment/mastercard/scripts
+
+# Export both unmanaged and managed
+./export-solution.ps1 -Version "5.5.0.0" -ExportManaged
+
+# Export unmanaged only
+./export-solution.ps1 -Version "5.5.0.0"
+
+# Export specific agent only
+./export-solution.ps1 -Version "1.0.0.0" -SolutionName "KesselMPA" -Agent "MPA"
+```
+
+### Option 2: Using Power Apps UI
+
+1. Go to https://make.powerapps.com
+2. Select your dev environment
+3. Solutions → Select solution
+4. Click **Export**
+5. Choose version and type (unmanaged/managed)
+6. Download .zip file
+7. Save to this folder
+
+### Option 3: Using pac CLI Directly
+
+```powershell
+# Authenticate
+pac auth create --environment "https://[org].crm.dynamics.com"
+
 # Export unmanaged
-pac solution export --name "KesselMPA" --path "./KesselMPA_1_0_0_0.zip"
+pac solution export --name "KesselAgentPlatform" --path "./KesselAgentPlatform_5_5_0_0.zip"
 
 # Export managed
-pac solution export --name "KesselMPA" --path "./KesselMPA_1_0_0_0_managed.zip" --managed
+pac solution export --name "KesselAgentPlatform" --path "./KesselAgentPlatform_5_5_0_0_managed.zip" --managed
 ```
 
 ---
 
-## How to Import a Solution
+## HOW TO IMPORT
 
-See: `/release/v5.5/deployment/SOLUTION_EXPORT_IMPORT_WORKFLOW.md`
+### Option 1: Using Import Script (Recommended)
 
-Quick command:
 ```powershell
-./release/v5.5/deployment/mastercard/scripts/import-solution.ps1 `
-    -SolutionPath "./release/v5.5/solutions/MPA/KesselMPA_1_0_0_0.zip" `
-    -Environment "personal"
+cd release/v5.5/deployment/mastercard/scripts
+
+# Import to personal environment
+./import-solution.ps1 -SolutionPath "../../solutions/KesselAgentPlatform_5_5_0_0.zip" -Environment "personal"
+
+# Import to Mastercard (managed)
+./import-solution.ps1 -SolutionPath "../../solutions/KesselAgentPlatform_5_5_0_0_managed.zip" -Environment "mastercard" -Managed
+```
+
+### Option 2: Using pac CLI Directly
+
+```powershell
+# Authenticate to target
+pac auth create --environment "https://[target].crm.dynamics.com"
+
+# Import
+pac solution import --path "./KesselAgentPlatform_5_5_0_0.zip" --activate-plugins --force-overwrite
 ```
 
 ---
 
-## Solution Contents Checklist
+## POST-IMPORT STEPS
 
-Each solution should contain:
+After importing a solution, you must:
 
-### MPA Solution
-- [ ] Agent: Media Planning Agent
-- [ ] Topics (7): Greeting, StartPlanning, SearchBenchmarks, SearchChannels, GenerateDocument, ProvideFeedback, Fallback
-- [ ] Global Variables (6): SessionID, Objective, Budget, Channels, CurrentStep, Vertical
-- [ ] Flows (4): InitializeSession, SearchBenchmarks, GenerateDocument, CaptureFeedback
-- [ ] Connection References (3): Dataverse, SharePoint, HTTP
-- [ ] Environment Variables (4): SharePointSiteUrl, SharePointLibrary, DataverseUrl, AzureFunctionUrl
+1. **Set Environment Variables**
+   - Update SharePoint URL for target environment
+   - Update Dataverse URL for target environment
 
-### CA Solution
-- [ ] Agent: Consulting Agent
-- [ ] Topics (8): Greeting, StartAnalysis, SelectFramework, ApplyFramework, GenerateReport, BenchmarkQuery, ProvideFeedback, Fallback
-- [ ] Global Variables (6): SessionID, AnalysisType, SelectedFramework, AnalysisDepth, Industry, AnalysisComplete
-- [ ] Flows (5): InitializeSession, SelectFramework, ApplyFramework, GenerateDocument, CaptureFeedback
-- [ ] Connection References (3): Dataverse, SharePoint, HTTP
-- [ ] Environment Variables (4): SharePointSiteUrl, SharePointLibrary, DataverseUrl, AzureFunctionUrl
+2. **Configure Connection References**
+   - Create/select connections for Dataverse, SharePoint
+   - Authenticate with appropriate credentials
 
----
+3. **Enable Flows**
+   - Turn on each imported flow
+   - Verify no connection errors
 
-## Next Steps
+4. **Reconnect Knowledge Source**
+   - In Copilot Studio, verify/reconnect SharePoint
+   - Wait for indexing
 
-1. Complete manual build using: `/release/v5.5/deployment/MANUAL_BUILD_CHECKLIST.md`
-2. Export solutions to this folder
-3. Test import to Personal environment
-4. Test import to Mastercard environment
-5. Document any issues in CHANGELOG.md
+5. **Publish Agent**
+   - In Copilot Studio, click Publish
+
+**Detailed steps:** [SOLUTION_EXPORT_IMPORT_WORKFLOW.md](../deployment/SOLUTION_EXPORT_IMPORT_WORKFLOW.md)
 
 ---
 
-## Related Documentation
+## ENVIRONMENT-SPECIFIC VALUES
 
-- [Manual Build Checklist](../deployment/MANUAL_BUILD_CHECKLIST.md)
-- [Solution Export/Import Workflow](../deployment/SOLUTION_EXPORT_IMPORT_WORKFLOW.md)
-- [Copilot Studio Manual Steps](../deployment/COPILOT_STUDIO_MANUAL_STEPS.md)
-- [Import Script](../deployment/mastercard/scripts/import-solution.ps1)
+### Personal Environment
+```
+SharePointSiteUrl = https://aragornai.sharepoint.com/sites/AgentKnowledgeBase
+SharePointLibrary = AgentKnowledgeBase
+```
+
+### Mastercard Environment
+```
+SharePointSiteUrl = https://mastercard.sharepoint.com/sites/CAEConsultingProduct
+SharePointLibrary = Shared Documents
+```
+
+**Agent Folder URLs:**
+| Agent | Mastercard Folder URL |
+|-------|----------------------|
+| MPA | https://mastercard.sharepoint.com/:f:/s/CAEConsultingProduct/lgCZ7qTFJCgASKcb204jJRn0AfB5alCc74AMyE2etdchqA4 |
+| CA | https://mastercard.sharepoint.com/:f:/s/CAEConsultingProduct/IgDzc0ufDknYTpTghwRGqCXGAUvoLc-7BLhVv8c7TrZEPAI |
+| EAP | https://mastercard.sharepoint.com/:f:/s/CAEConsultingProduct/lgAMlDUM-pK9Rqol_B77NT8JAWaSvFONRHLabpRleGIwxko |
+
+---
+
+## TROUBLESHOOTING
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| Export fails | Dependencies not in solution | Add all dependent components |
+| Import fails | Missing connector | Enable connector in admin center |
+| Flows not working | Connection refs not configured | Configure each connection reference |
+| Agent not visible | Not published | Open in Copilot Studio and publish |
+| KB not connected | References not transferred | Reconnect SharePoint in target |
+
+---
+
+## RELATED DOCUMENTATION
+
+| Document | Description |
+|----------|-------------|
+| [SOLUTION_EXPORT_STEP_BY_STEP.md](../deployment/SOLUTION_EXPORT_STEP_BY_STEP.md) | Complete first-time export guide |
+| [SOLUTION_EXPORT_IMPORT_WORKFLOW.md](../deployment/SOLUTION_EXPORT_IMPORT_WORKFLOW.md) | Full workflow documentation |
+| [export-solution.ps1](../deployment/mastercard/scripts/export-solution.ps1) | Export automation script |
+| [import-solution.ps1](../deployment/mastercard/scripts/import-solution.ps1) | Import automation script |
+| [MASTERCARD_CORE_INSTRUCTIONS.md](../deployment/MASTERCARD_CORE_INSTRUCTIONS.md) | Mastercard deployment guide |
+
+---
+
+## VERSION HISTORY
+
+See [CHANGELOG.md](./CHANGELOG.md) for detailed version history.
+
+---

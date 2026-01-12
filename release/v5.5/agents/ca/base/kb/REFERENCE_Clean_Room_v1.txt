@@ -1,0 +1,385 @@
+============================================================
+REFERENCE_Clean_Room_v1.txt
+Consulting Agent V12 Knowledge Base
+Category: REFERENCE
+============================================================
+
+Clean Room Reference Guide
+
+Version 7.0
+
+Last Updated: December 2024
+
+Document Purpose
+
+This reference document provides comprehensive information on data clean room platforms for privacy-preserving data collaboration. It covers technical requirements, use cases, partner ecosystems, and pricing models to support vendor evaluation and selection decisions.
+
+Market Overview
+
+Data clean rooms have emerged as critical infrastructure for marketing and advertising in a privacy-first world. These platforms enable brands, publishers, and partners to collaborate on data without exposing underlying customer information. The market has consolidated around two primary approaches: dedicated clean room platforms built specifically for data collaboration, and clean room features native to cloud data platforms.
+
+Key market trends include integration with retail media networks, support for privacy-enhancing technologies like differential privacy and secure multi-party computation, and convergence with identity resolution capabilities. The total addressable market for clean rooms is estimated at 1.5 billion dollars in 2024, growing to 4 billion dollars by 2027.
+
+Selection Criteria
+
+When evaluating clean room platforms, consider the following factors.
+
+Technical Fit: Does the platform support your existing cloud infrastructure and data formats? Consider deployment model, integration requirements, and technical team capabilities.
+
+Use Case Alignment: Does the platform have pre-built templates and partner integrations for your primary use cases? Advertising, retail media, and financial services have different requirements.
+
+Partner Ecosystem: Can your key collaboration partners access the platform? Consider whether partners are already on the platform or if onboarding is required.
+
+Privacy Architecture: Does the technical approach meet your privacy and compliance requirements? Evaluate non-movement versus query-based architectures.
+
+Total Cost: Consider platform fees, implementation costs, ongoing compute expenses, and partner fees when calculating total cost of ownership.
+
+LiveRamp Data Collaboration Platform (Habu)
+
+Overview
+
+LiveRamp acquired Habu in 2024 to create the leading data collaboration platform. Combines LiveRamps identity graph with Habus clean room technology for privacy-preserving data collaboration across partners.
+
+Technical Requirements
+
+Cloud agnostic deployment supporting AWS, Google Cloud, Azure, and Snowflake. Data can remain in place with federated queries. Supports hashed PII including email (SHA-256), phone, MAIDs, and CTV IDs. API-first architecture with REST APIs and batch processing. Native integrations with major CDPs, DMPs, and activation platforms.
+
+Primary Use Cases
+
+Second-party data collaboration between brands and publishers. Retail media measurement and attribution. Cross-device identity resolution. Audience enrichment and overlap analysis. Multi-touch attribution across walled gardens. Lookalike modeling with privacy controls.
+
+Partner Ecosystem
+
+Native connectors to The Trade Desk, Google, Meta, Amazon, Roku. CDP integrations with Segment, Tealium, mParticle, Adobe. Measurement partners including Nielsen, Comscore, iSpot. Over 500 direct publisher integrations.
+
+Pricing Model
+
+Platform fee based on data volume and query complexity. Typical annual contracts range from $150,000 to $500,000 for mid-market and $500,000 to $2,000,000 plus for enterprise. Identity resolution fees are usage-based. Implementation fees typically $50,000 to $150,000.
+
+Strengths
+
+Largest identity graph with 250 million plus US consumers. Most extensive partner ecosystem. Strong in retail media and publisher collaboration. Proven at scale with major brands.
+
+Limitations
+
+Premium pricing positions it for enterprise. Integration complexity can extend implementation timelines. Some overlap with existing LiveRamp contracts may cause confusion.
+
+Snowflake Data Clean Rooms
+
+Overview
+
+Native clean room functionality built into Snowflake Data Cloud. Enables secure data sharing and collaboration between Snowflake customers without data movement. Leverages Snowflakes existing governance and security infrastructure.
+
+Technical Requirements
+
+Requires Snowflake Enterprise Edition or higher. Data must reside in Snowflake or be loaded via standard ingestion. Supports structured data with SQL-based analysis. Secure Data Sharing enables zero-copy data access. Snowpark enables Python, Java, and Scala for advanced analytics. Native integration with Snowflakes access controls and audit logging.
+
+Primary Use Cases
+
+Customer overlap analysis between partners. Aggregate insights without exposing row-level data. Joint campaign measurement and attribution. Supplier and retailer data collaboration. Financial services regulatory compliant data sharing. Healthcare HIPAA-compliant analytics.
+
+Partner Ecosystem
+
+Native within Snowflake ecosystem. Integrations with dbt, Fivetran, Informatica for data pipelines. BI tools including Tableau, Looker, Power BI. Growing list of Snowflake Native Apps for clean room workflows. Data marketplace enables third-party data access.
+
+Pricing Model
+
+No separate clean room licensing fee. Standard Snowflake compute and storage costs apply. Credits consumed based on query complexity and data volume. Typical clean room workloads add 10 to 30 percent to existing Snowflake spend. Enterprise customers often negotiate committed use discounts.
+
+Strengths
+
+No additional platform cost for existing Snowflake customers. Familiar SQL interface reduces training requirements. Strong security and compliance certifications. Scales with existing Snowflake infrastructure.
+
+Limitations
+
+Requires both parties to be on Snowflake. Less sophisticated identity resolution than dedicated platforms. Limited pre-built use case templates. Advanced analytics require Snowpark expertise.
+
+AWS Clean Rooms
+
+Overview
+
+AWS native service launched in 2023 enabling AWS customers to collaborate on combined datasets without sharing underlying data. Part of AWSs broader data and analytics suite with native integrations across AWS services.
+
+Technical Requirements
+
+Data must reside in Amazon S3 with AWS Glue Data Catalog metadata. Supports SQL-based analysis through pre-defined analysis templates. Configurable query controls and output constraints. Cryptographic computing options available for enhanced privacy. Native integration with AWS IAM for access management. Supports cross-account collaboration within AWS.
+
+Primary Use Cases
+
+Advertising measurement and attribution. Publisher and advertiser collaboration. Retail and CPG joint analysis. Media and entertainment audience insights. Cross-industry data partnerships. Aggregate analytics with differential privacy.
+
+Partner Ecosystem
+
+Native AWS service integrations including Redshift, Athena, QuickSight. AWS Data Exchange for third-party data. Partner solutions from Acxiom, Experian, TransUnion available. Growing ISV ecosystem building on AWS Clean Rooms APIs. AWS Advertising and Marketing Tech Competency partners.
+
+Pricing Model
+
+Per-query pricing based on data scanned. Analysis rule evaluation charges. Cross-account query charges apply. Typical costs range from $0.01 to $0.05 per query for simple analyses. Complex multi-table joins and aggregations cost more. No minimum commitments required.
+
+Strengths
+
+Pay-per-use model ideal for experimentation. Deep AWS ecosystem integration. Strong security with AWS compliance certifications. Cryptographic computing for maximum privacy.
+
+Limitations
+
+Limited to AWS ecosystem. Nascent feature set compared to dedicated platforms. Less sophisticated identity matching. Requires AWS technical expertise.
+
+InfoSum
+
+Overview
+
+Privacy-first data collaboration platform using patented non-movement architecture. Data never leaves the owners environment while enabling secure matching and analysis. Strong presence in media and advertising sectors.
+
+Technical Requirements
+
+Deploys as a cloud-agnostic container in customers infrastructure. Supports AWS, Google Cloud, Azure, and on-premise. Data normalized through InfoSums data bunker technology. Supports hashed identifiers and probabilistic matching. APIs for automation and integration. Query results aggregated and anonymized before sharing.
+
+Primary Use Cases
+
+Publisher and advertiser audience matching. Retail media network measurement. Cross-platform reach and frequency analysis. Audience segmentation without data sharing. Campaign planning and forecasting. Second-party data enrichment.
+
+Partner Ecosystem
+
+Strong media partnerships including NBCUniversal, ITV, Channel 4. Retail partners including Boots, Sainsburys. Agency partnerships with GroupM, Dentsu. Technology integrations with The Trade Desk, LiveRamp, various CDPs.
+
+Pricing Model
+
+Annual platform subscription based on data volume and use cases. Mid-market contracts typically $100,000 to $300,000 annually. Enterprise deals range from $300,000 to $1,000,000 plus. Implementation and onboarding fees additional. Some query-based pricing options available.
+
+Strengths
+
+True non-movement architecture for maximum privacy. Strong in UK and European markets with GDPR expertise. Excellent media and publishing relationships. Sophisticated probabilistic matching.
+
+Limitations
+
+Smaller US market presence compared to competitors. Complex implementation process. Higher cost for smaller organizations. Less extensive DSP and activation integrations.
+
+Google Ads Data Hub
+
+Overview
+
+Googles clean room solution for analyzing Google advertising data. Enables advertisers to combine first-party data with Google campaign data for measurement and insights. Operates within Google Cloud infrastructure.
+
+Technical Requirements
+
+Requires Google Cloud Platform with BigQuery. Customer data uploaded to BigQuery for matching. Analysis via SQL queries with privacy constraints. Aggregation thresholds prevent individual-level insights. Results exportable to BigQuery for further analysis. Google Ads and DV360 campaign data available for matching.
+
+Primary Use Cases
+
+Cross-channel attribution including Google and non-Google. Audience overlap between first-party and Google data. Reach and frequency analysis across Google properties. Custom audience creation for Google activation. Conversion path analysis. Incrementality measurement.
+
+Partner Ecosystem
+
+Native to Google ecosystem including Google Ads, DV360, YouTube. BigQuery ML for advanced analytics. Looker for visualization. Limited direct integrations outside Google. Third-party measurement partners can access aggregated results.
+
+Pricing Model
+
+No direct ADH fee for Google advertisers. BigQuery compute and storage costs apply. Typical monthly costs range from $5,000 to $50,000 based on query volume. Requires Google Cloud commitment. Premium features may require additional agreements.
+
+Strengths
+
+Only way to access granular Google advertising data. No additional platform cost beyond GCP. Direct integration with Google activation. Strong for advertisers with significant Google spend.
+
+Limitations
+
+Limited to Google ecosystem data. Strict privacy constraints limit some analyses. Requires BigQuery and SQL expertise. Cannot include non-Google campaign data in same queries.
+
+Databricks Clean Rooms
+
+Overview
+
+Databricks introduced clean room capabilities leveraging Delta Sharing and Unity Catalog. Enables secure data collaboration with governance controls for Databricks customers. Strong focus on data science and ML use cases.
+
+Technical Requirements
+
+Requires Databricks workspace with Unity Catalog. Delta Sharing enables cross-organization data access. Supports SQL and Python through notebooks and Spark. Row-level and column-level access controls. Audit logging through Unity Catalog. Supports structured and semi-structured data formats.
+
+Primary Use Cases
+
+Joint machine learning model development. Feature engineering with partner data. Aggregate analytics and reporting. Customer overlap and audience analysis. Predictive modeling with privacy controls. Data science collaboration.
+
+Partner Ecosystem
+
+Native Databricks integrations. Partner connect ecosystem for data ingestion. BI tool integrations including Tableau, Power BI. MLflow for model management. Growing clean room partner ecosystem.
+
+Pricing Model
+
+Delta Sharing included with Unity Catalog. Standard Databricks compute charges apply. DBU consumption varies by workload complexity. Enterprise customers negotiate committed DBU pricing. Typical incremental cost 15 to 25 percent above standard usage.
+
+Strengths
+
+Advanced analytics and ML capabilities. Familiar environment for data science teams. Strong governance with Unity Catalog. Cost-effective for existing Databricks users.
+
+Limitations
+
+Requires both parties on Databricks. Less mature clean room features than dedicated platforms. Limited pre-built advertising use cases. Identity resolution requires custom development.
+
+Optable
+
+Overview
+
+Purpose-built clean room platform for the advertising ecosystem. Focuses on publisher and advertiser collaboration with strong identity and activation capabilities. Founded by former Google executives with deep ad tech expertise.
+
+Technical Requirements
+
+Cloud-native SaaS platform. Supports AWS and Google Cloud deployments. First-party data onboarding via APIs and batch uploads. Supports hashed emails, MAIDs, CTV IDs, and probabilistic identifiers. Pre-built integrations with major DSPs and ad servers. Real-time and batch activation supported.
+
+Primary Use Cases
+
+Publisher audience monetization. Advertiser audience targeting and measurement. Seller-defined audiences for programmatic. Cross-publisher collaboration. Retail media enablement. CTV and streaming measurement.
+
+Partner Ecosystem
+
+DSP integrations with The Trade Desk, Google DV360, Xandr. SSP and ad server connections. Publisher partnerships across premium media. Identity partners including UID2, ID5. Measurement integrations.
+
+Pricing Model
+
+Platform fee plus usage-based pricing. Typical publisher contracts $50,000 to $200,000 annually. Advertiser contracts vary by scale. Activation fees may apply for DSP connections. Implementation support included.
+
+Strengths
+
+Purpose-built for advertising use cases. Strong publisher tools and relationships. Direct activation pathways. Experienced ad tech leadership.
+
+Limitations
+
+Smaller company with less brand recognition. Limited outside advertising vertical. North American focus primarily. Enterprise features still developing.
+
+AppsFlyer Data Collaboration
+
+Overview
+
+AppsFlyer Data Clean Room provides privacy-safe data collaboration specifically designed for mobile app marketing and measurement. The platform leverages AppsFlyers mobile attribution expertise and invests heavily in advanced cryptographic security including Homomorphic Encryption (HE) and Private Set Intersection (PSI). AppsFlyer enables mobile app advertisers and publishers to collaborate on measurement and audience insights without exposing user-level data.
+
+Technical Requirements
+
+Integration with AppsFlyer SDK for mobile apps. Supports iOS and Android platforms. Homomorphic Encryption for computation on encrypted data. Private Set Intersection for secure matching. Custom business logic for tailored queries. Self-owned data buckets for maximum control. REST APIs for automation.
+
+Primary Use Cases
+
+Mobile app install attribution. Cross-app audience analysis. Publisher and advertiser measurement collaboration. iOS privacy compliance including SKAdNetwork. Retargeting audience creation. Mobile gaming monetization insights. App-to-web attribution.
+
+Partner Ecosystem
+
+Native AppsFlyer platform integration. Mobile measurement partner ecosystem. Ad network integrations for activation. Gaming platform partnerships. Mobile DSP connections. Apple and Google ecosystem compliance.
+
+Pricing Model
+
+Included with AppsFlyer attribution platform for some use cases. Premium pricing for advanced clean room features. Volume-based pricing for data processing. Enterprise contracts with custom terms. Competitive for mobile-focused advertisers.
+
+Strengths
+
+Leading mobile attribution expertise. Advanced cryptographic security with HE and PSI. Purpose-built for app marketing. iOS privacy compliance. Custom query capabilities. Self-owned data control.
+
+Limitations
+
+Mobile and app focused with limited web capabilities. Requires AppsFlyer platform relationship. Less applicable for non-mobile use cases. Smaller ecosystem than cloud-native alternatives.
+
+Decentriq
+
+Overview
+
+Decentriq provides confidential computing clean rooms using advanced privacy-enhancing technologies (PETs) including secure enclaves and differential privacy. The platform enables data collaboration where no party, including Decentriq, can access the underlying data. Decentriq is particularly strong for highly regulated industries including financial services and healthcare where maximum privacy guarantees are required.
+
+Technical Requirements
+
+Confidential computing using Intel SGX and AMD SEV secure enclaves. Data encrypted at rest, in transit, and during computation. No data access by platform operator or other parties. Python and SQL interfaces for analysis. Docker container support for custom workflows. Multi-cloud deployment on AWS, Azure, and GCP.
+
+Primary Use Cases
+
+Healthcare data collaboration with HIPAA compliance. Financial services joint analytics. Highly regulated cross-industry partnerships. Pharmaceutical research collaboration. Government data sharing. Anti-money laundering joint analysis. Insurance risk pooling.
+
+Partner Ecosystem
+
+Enterprise customer focus rather than pre-built marketing integrations. Healthcare and life sciences partnerships. Financial services implementations. Government and public sector deployments. Growing advertising use case development.
+
+Pricing Model
+
+Enterprise licensing with custom pricing. Compute-based pricing for data room usage. Implementation services for complex deployments. Premium pricing reflecting advanced privacy technology. Annual contracts typical.
+
+Strengths
+
+Maximum privacy guarantees through confidential computing. No data access by any party including operator. HIPAA and financial services compliance. Advanced PET capabilities. Multi-cloud deployment flexibility.
+
+Limitations
+
+Higher complexity than standard clean rooms. Less pre-built advertising use cases. Enterprise sales process. Premium pricing. Requires technical expertise for implementation.
+
+Samooha (Snowflake Native)
+
+Overview
+
+Samooha is Snowflakes dedicated clean room product, providing a user-friendly interface for data collaboration built natively on Snowflake Data Cloud. Samooha simplifies clean room setup and management for Snowflake customers, enabling advertising measurement, retail media, and data monetization use cases. The product represents Snowflakes strategic investment in the clean room market beyond basic Secure Data Sharing.
+
+Technical Requirements
+
+Requires Snowflake Enterprise Edition or higher. Native Snowflake Data Cloud integration. No-code interface for clean room setup. Pre-built templates for common use cases. SQL-based analysis with privacy controls. Differential privacy options available. Native integration with Snowflake governance.
+
+Primary Use Cases
+
+Retail media network measurement. Advertiser and publisher collaboration. Cross-brand audience insights. Data monetization for data providers. Financial services joint analytics. CPG and retailer collaboration. CTV and streaming measurement.
+
+Partner Ecosystem
+
+Native Snowflake ecosystem integration. Growing partner marketplace for clean room templates. Retail media network partnerships. Measurement vendor integrations. Data provider connections through Snowflake Marketplace. Identity partner integrations including LiveRamp.
+
+Pricing Model
+
+Consumption-based pricing aligned with Snowflake. Compute charges for clean room queries. No separate platform licensing for Snowflake customers. Enterprise negotiated rates available. Implementation support included for complex deployments.
+
+Strengths
+
+Native Snowflake integration eliminates platform complexity. No-code interface reduces technical barriers. Pre-built templates accelerate time to value. Consumption-based pricing aligns costs with usage. Strong Snowflake governance foundation.
+
+Limitations
+
+Requires both parties on Snowflake. Newer product with evolving feature set. Less extensive media integrations than dedicated platforms. Some advanced features still in development.
+
+Platform Comparison Summary
+
+By Primary Use Case
+
+Advertising Measurement: LiveRamp Data Collaboration Platform and Optable offer the most comprehensive advertising and media measurement capabilities with direct DSP integrations.
+
+Google Campaign Analysis: Google Ads Data Hub is required for granular access to Google advertising data and provides the deepest YouTube and Search insights.
+
+General Data Collaboration: Snowflake Clean Rooms and AWS Clean Rooms provide flexible collaboration infrastructure for customers already on those platforms.
+
+Advanced Analytics and ML: Databricks Clean Rooms excels for data science teams requiring sophisticated modeling capabilities.
+
+Privacy-First Architecture: InfoSums non-movement approach offers maximum privacy assurance for sensitive data collaboration.
+
+By Organization Size
+
+Enterprise: LiveRamp Data Collaboration Platform and InfoSum offer comprehensive capabilities and dedicated support for complex enterprise requirements.
+
+Mid-Market: Snowflake Clean Rooms and Optable provide strong functionality at accessible price points for mid-sized organizations.
+
+Experimental and Testing: AWS Clean Rooms pay-per-query model enables low-cost experimentation before larger commitments.
+
+By Technical Environment
+
+AWS Native: AWS Clean Rooms provides deepest integration with AWS data and analytics services.
+
+Google Cloud Native: Google Ads Data Hub integrates tightly with BigQuery and Google marketing platforms.
+
+Snowflake Native: Snowflake Clean Rooms require no additional platform for existing Snowflake customers.
+
+Multi-Cloud: LiveRamp, InfoSum, and Optable support deployment across multiple cloud environments.
+
+Data Sources and Methodology
+
+Information in this document was compiled from vendor documentation, analyst reports, industry publications, and direct vendor communications. Pricing information represents typical ranges and may vary based on specific use cases, volume, and negotiated terms. All information current as of December 2024.
+
+Primary sources include vendor websites and documentation, Gartner and Forrester analyst reports, AdExchanger and Digiday industry coverage, and disclosed partnership announcements.
+
+Document Information
+
+Version: 6.0
+
+Category: Reference Data
+
+Last Updated: December 2024
+
+Next Review: March 2025
+
+Owner: Kessel Digital Consulting

@@ -1,0 +1,527 @@
+============================================================
+REFERENCE_DSP_Display_v1.txt
+Consulting Agent V12 Knowledge Base
+Category: REFERENCE
+============================================================
+
+DSP Reference Guide - Display and Programmatic Platforms V7.0
+
+Version 7.0 - Last Updated: December 2025
+
+This document provides comprehensive reference data for major Demand Side Platforms used in display and programmatic advertising. Information includes technical requirements, pricing models, capabilities, and integration specifications.
+
+----------------------------------------
+THE TRADE DESK
+----------------------------------------
+
+Overview
+
+The Trade Desk is the largest independent demand-side platform, enabling advertisers and agencies to purchase digital advertising inventory across display, video, audio, native, and connected TV channels. The platform operates on an open internet model, providing full transparency in bidding, costs, and performance. The Trade Desk processes over 12 million ad impressions per second globally.
+
+Technical Requirements
+
+Data Formats Accepted: CSV, JSON via API, server-to-server integrations, Snowflake data share
+
+Identity Solutions: UID2 (Unified ID 2.0), EUID (European UID), TDID (Trade Desk ID), IDFA, AAID, DAID, NAID, IDL
+
+Hashing Requirements: SHA-256 hashing required for PII data onboarding
+
+API Access: RESTful API available through Partner Portal, requires certification
+
+Minimum Technical Stack: Tag management system, conversion tracking pixel (Universal Pixel), data clean room integration recommended
+
+Capabilities
+
+Channels: Display, Video, CTV, Audio, Native, DOOH, In-Game
+
+Targeting Options: First-party data, third-party data segments, contextual, geographic (down to ZIP), behavioral, demographic, device type, dayparting, weather-based
+
+AI and Optimization: Koa AI engine automates bid adjustments, pacing, budget allocation, and performance optimization against KPIs
+
+Measurement: Full-funnel attribution, cross-device measurement, incrementality testing, brand lift studies
+
+Clean Room Integration: Native integration with major clean rooms including Snowflake, LiveRamp Habu, AWS Clean Rooms
+
+Pricing Model
+
+Fee Structure: Percentage of media spend (platform fee), typically 10-20% depending on volume commitments
+
+Self-Service Access: Available through certified partners and agencies
+
+Managed Service: Available for enterprise clients with dedicated account support
+
+Minimum Spend: No published minimum for self-service through partners, enterprise agreements vary
+
+CPM Benchmarks: Platform average CPM approximately USD 1.07 for display inventory
+
+Best Use Cases
+
+The Trade Desk is ideal for mid-market to enterprise advertisers seeking transparency, cross-channel reach, and sophisticated targeting without walled garden limitations. Particularly strong for CTV campaigns, retail media activation, and cookieless identity strategies through UID2.
+
+----------------------------------------
+GOOGLE DISPLAY AND VIDEO 360 (DV360)
+----------------------------------------
+
+Overview
+
+Display and Video 360 is Googles enterprise demand-side platform, part of the Google Marketing Platform. DV360 provides access to Googles proprietary inventory plus third-party exchanges, making it the largest DSP by market share at approximately 47% of programmatic spend. The platform integrates natively with other Google products including Campaign Manager 360, Google Analytics 4, and Google Cloud.
+
+Technical Requirements
+
+Data Formats Accepted: CSV upload, API integration, Customer Match (hashed emails), Google Cloud BigQuery
+
+Identity Solutions: Google first-party signals, PPID (Publisher Provided ID), Customer Match, Privacy Sandbox APIs
+
+Hashing Requirements: SHA-256 for Customer Match data
+
+API Access: Display and Video 360 API, requires Google Cloud project setup
+
+Minimum Technical Stack: Campaign Manager 360 recommended for full attribution, Floodlight tags for conversion tracking
+
+Capabilities
+
+Channels: Display, Video, YouTube, CTV, Audio, Native
+
+Targeting Options: Google audiences (affinity, in-market, custom intent), first-party data, third-party data, contextual, geographic, device, remarketing
+
+AI and Optimization: Automated bidding strategies including target CPA, target ROAS, maximize conversions
+
+Measurement: Integrated with Campaign Manager 360 for cross-channel attribution, Data-Driven Attribution available
+
+Unique Advantage: Exclusive access to YouTube TrueView inventory and Google owned-and-operated properties
+
+Pricing Model
+
+Platform Fee: 15% of gross media cost
+
+Advanced Creative Fee: Additional USD 0.12 CPM for rich media formats
+
+Self-Service Access: Available but requires Google partnership or agency relationship
+
+Minimum Spend: Not publicly disclosed, typically requires significant enterprise commitment, negotiated per agreement
+
+CPM Benchmarks: Platform average CPM approximately USD 0.89 for display, lowest among major DSPs
+
+Best Use Cases
+
+DV360 is ideal for advertisers already invested in the Google ecosystem, those prioritizing YouTube video campaigns, and enterprises requiring integration with Google Cloud data infrastructure. The platform offers the lowest average CPMs but requires commitment to Googles measurement and attribution frameworks.
+
+----------------------------------------
+AMAZON DSP
+----------------------------------------
+
+Overview
+
+Amazon DSP enables advertisers to programmatically buy display, video, and audio ads both on Amazon properties (including Amazon.com, Fire TV, IMDb, Twitch) and across the open web through Amazon Publisher Services. The platform provides unique access to Amazons purchase behavior data, making it particularly valuable for retail and e-commerce advertisers. Amazon DSP holds approximately 20% DSP market share.
+
+Technical Requirements
+
+Data Formats Accepted: Amazon Marketing Cloud (clean room), API integration, bulk uploads
+
+Identity Solutions: Amazon shopper graph, hashed email matching, Amazon Attribution
+
+Hashing Requirements: SHA-256 for audience matching
+
+API Access: Amazon Ads API, Amazon Marketing Cloud API
+
+Minimum Technical Stack: Amazon Attribution pixel for off-Amazon conversion tracking, Amazon Marketing Cloud access recommended for advanced measurement
+
+Capabilities
+
+Channels: Display, Video, OTT/CTV (Fire TV, Freevee), Audio (Amazon Music), Twitch
+
+Targeting Options: Amazon audiences based on shopping behavior, in-market segments, lifestyle segments, lookalike audiences, retargeting, contextual
+
+AI and Optimization: Automated optimization toward ROAS, conversions, reach goals
+
+Measurement: Amazon Attribution for full-funnel measurement, Amazon Marketing Cloud for custom analytics
+
+Unique Advantage: Access to purchase intent signals and closed-loop measurement connecting ad exposure to actual Amazon purchases
+
+Pricing Model
+
+Fee Structure: vCPM (viewable cost per thousand) based pricing
+
+Self-Service Minimum: Recommended minimum USD 10,000 per month
+
+Managed Service Minimum: USD 50,000 per month minimum (varies by country)
+
+Agency Partner Route: Minimum approximately USD 5,000 per month plus agency fees through Amazon Ads Partners
+
+CPM Benchmarks: Platform average CPM approximately USD 1.17 for display
+
+Best Use Cases
+
+Amazon DSP is ideal for retail and e-commerce brands selling on Amazon or competing with Amazon sellers, advertisers seeking purchase-based targeting signals, and those wanting closed-loop measurement from ad impression to purchase. Particularly strong for product launches and competitive conquesting in retail categories.
+
+----------------------------------------
+YAHOO DSP
+----------------------------------------
+
+Overview
+
+Yahoo DSP (formerly Verizon Media DSP) is a complete demand-side platform offering omnichannel advertising across display, video, CTV, audio, native, and digital out-of-home. The platform provides access to Yahoos proprietary first-party data from over 1 billion logged-in users across Yahoo, AOL, and Microsoft properties. Yahoo DSP has been regaining market share by offering lower fees and more transparent reporting compared to competitors like The Trade Desk and DV360.
+
+Technical Requirements
+
+Data Formats Accepted: API integration, batch uploads, CRM onboarding, Yahoo ConnectID
+
+Identity Solutions: Yahoo ConnectID (deterministic, email-based), over 450 curated audience segments, integration with 60+ third-party DMPs
+
+Hashing Requirements: SHA-256 for email-based matching
+
+API Access: Yahoo DSP API for campaign management and reporting
+
+Minimum Technical Stack: Yahoo Universal Tag for conversion tracking, Yahoo CAPI (Conversion API) for server-side tracking
+
+Capabilities
+
+Channels: Display, Video, CTV (108 million households, largest direct-access premium TV footprint via Yahoo Backstage), Audio, Native, DOOH
+
+Targeting Options: Yahoo first-party audiences based on content consumption and interests, behavioral, demographic, life stage, search behavior, custom audiences via Audience Builder
+
+AI and Optimization: Yahoo Blueprint AI automates bidding, delivers more impressions at lower costs, and optimizes placement. Blueprint IQ provides natural language query interface for campaign insights
+
+Measurement: Proprietary identity graph connecting touchpoints to outcomes without cookies, real-time conversion tracking via CAPI
+
+Unique Advantage: First DSP to adopt IAB Data Transparency Labels (2025), deterministic data from one-to-one consumer relationships
+
+Pricing Model
+
+Fee Structure: Lower fees than competitors, transparent reporting attracting spend from DV360 and The Trade Desk
+
+Self-Service Access: Available with full platform capabilities
+
+Yahoo Creative: Usage-based pricing, no contracts, no hidden production fees
+
+CPM Benchmarks: Platform average CPM approximately USD 1.78 for display
+
+Commission Rates: Among the lowest in the industry for programmatic video
+
+Best Use Cases
+
+Yahoo DSP is ideal for advertisers seeking cost-effective programmatic buying with lower platform fees, those wanting access to premium CTV inventory through Yahoo Backstage, and brands valuing deterministic identity and transparent data practices. Particularly strong for reaching Yahoo, AOL, and Microsoft audiences with first-party targeting.
+
+----------------------------------------
+CRITEO
+----------------------------------------
+
+Overview
+
+Criteo is a global commerce media company providing demand-side platform capabilities with particular strength in retargeting, dynamic creative optimization, and commerce audiences. Ranked among the top 10 DSP providers globally, Criteo processes over 5 billion transactions annually and maintains direct relationships with over 22,000 marketers and thousands of publishers. The platform specializes in connecting advertising to commerce outcomes.
+
+Technical Requirements
+
+Data Formats Accepted: Product catalog feeds (required for dynamic creative), API integration, pixel-based data collection
+
+Identity Solutions: Criteo Shopper Graph spanning 2.5 billion cross-device IDs, first-party media network, contextual targeting
+
+Hashing Requirements: Standard hashing for PII, product catalog integration required for dynamic ads
+
+API Access: Criteo Marketing Solutions API for campaign management and reporting
+
+Minimum Technical Stack: Criteo OneTag for tracking, product catalog feed for dynamic creative optimization
+
+Capabilities
+
+Channels: Display, Video, Native, CTV, App, Web
+
+Targeting Options: Retargeting based on browse and purchase behavior, similar audiences, commerce audiences, contextual, first-party data activation
+
+AI and Optimization: Kinetic Design AI generates billions of personalized ad variations, predictive bidding based on likelihood to purchase
+
+Measurement: Closed-loop commerce attribution, incrementality measurement, cross-device conversion tracking
+
+Unique Advantage: Commerce data from 700+ million daily active users and direct transaction data, specialized in performance and retargeting
+
+Pricing Model
+
+Fee Structure: Cost-per-click (CPC) or cost-per-acquisition (CPA) performance models available
+
+Minimum Spend: Accessible to mid-market advertisers, specific minimums vary by region and product
+
+Self-Service: Criteo Commerce Growth platform for self-service access
+
+Retail Media: Criteo Retail Media powers retail media networks for retailers
+
+Best Use Cases
+
+Criteo is ideal for e-commerce and retail advertisers prioritizing retargeting and lower-funnel conversions, those seeking dynamic creative optimization at scale, and brands wanting performance-based pricing models. The platform excels at converting known shoppers and driving repeat purchases with personalized product recommendations.
+
+----------------------------------------
+ADFORM
+----------------------------------------
+
+Overview
+
+Adform is a European-headquartered independent advertising platform providing DSP, DMP, and ad server capabilities in an integrated stack. The platform holds approximately 28% market share by customer count globally and is particularly strong in European markets. Adform differentiates through its integrated technology stack, privacy-first approach aligned with GDPR, and transparent, open architecture.
+
+Technical Requirements
+
+Data Formats Accepted: API integration, batch uploads, server-to-server, Adform DMP integration
+
+Identity Solutions: First-party ID support, Adform ID, integration with ID5, LiveRamp, and other identity providers
+
+Hashing Requirements: Standard SHA-256 for PII
+
+API Access: Comprehensive API for campaign management, reporting, and creative
+
+Minimum Technical Stack: Adform pixel for tracking, optional DMP integration for advanced audience management
+
+Capabilities
+
+Channels: Display, Video, CTV, Audio, Native, DOOH, Mobile
+
+Targeting Options: First-party data, third-party data partners, contextual, geographic, behavioral, lookalike audiences
+
+AI and Optimization: Machine learning for bid optimization, audience prediction, and campaign performance
+
+Measurement: Integrated measurement across DSP, DMP, and ad server, multi-touch attribution
+
+Unique Advantage: Integrated ad tech stack (DSP+DMP+Ad Server), European privacy expertise, transparent fee structure
+
+Pricing Model
+
+Fee Structure: Transparent pricing model, percentage of media spend
+
+Minimum Spend: Flexible minimums accessible to mid-market advertisers
+
+Self-Service: Full self-service platform with managed service options
+
+Regional Strength: Particularly cost-effective for European market campaigns
+
+Best Use Cases
+
+Adform is ideal for European advertisers prioritizing GDPR compliance and data sovereignty, organizations seeking an integrated ad tech stack rather than point solutions, and mid-market to enterprise advertisers wanting transparent pricing and open architecture. Strong for cross-channel campaigns requiring unified reporting.
+
+----------------------------------------
+STACKADAPT
+----------------------------------------
+
+Overview
+
+StackAdapt is a self-serve programmatic advertising platform known for accessibility and ease of use. The platform serves mid-market agencies and brands with particular strength in native advertising, CTV, and multi-channel campaigns. In early 2025, StackAdapt raised USD 235 million, bringing total funding past USD 500 million. The platform is recognized for not requiring minimum spend commitments.
+
+Technical Requirements
+
+Data Formats Accepted: CSV upload, CRM integrations, API access
+
+Identity Solutions: Third-party identity partners, contextual targeting, first-party data onboarding
+
+Hashing Requirements: Standard hashing for PII
+
+API Access: Reporting API, integrations with Google Data Studio, Funnel.io, TapClicks
+
+Minimum Technical Stack: Conversion pixel for tracking, no complex prerequisites
+
+Capabilities
+
+Channels: Display, Native, Video, CTV, Audio, In-App, DOOH
+
+Targeting Options: Demographic, behavioral, contextual, geographic, retargeting, lookalike modeling
+
+AI and Optimization: Machine learning for fraud detection and bid optimization, campaign forecasting tools
+
+Measurement: Built-in reporting, third-party verification integrations
+
+User Experience: Highly rated for intuitive interface, free certification course available, strong customer support
+
+Pricing Model
+
+Fee Structure: Custom pricing, percentage of spend model
+
+Minimum Spend: No minimum spend requirement - accessible for smaller campaigns
+
+Self-Service: Full self-service access with optional managed service support
+
+Pricing Transparency: Some users note pricing could be more transparent upfront
+
+Comparison: Generally less expensive than The Trade Desk with more flexible fee structures
+
+Best Use Cases
+
+StackAdapt is ideal for mid-market agencies, brands with smaller budgets who cannot meet enterprise DSP minimums, and advertisers prioritizing native advertising. The platform offers strong multi-channel capabilities without requiring significant technical expertise or large spending commitments.
+
+----------------------------------------
+QUANTCAST
+----------------------------------------
+
+Overview
+
+Quantcast is an AI-powered programmatic advertising platform with approximately USD 750 million in annual revenue and over 500 employees. The platform differentiates through proprietary first-party measurement data collected across more than 100 million digital destinations. Quantcast emphasizes cookieless solutions and privacy-first advertising approaches. According to Forrester research, Quantcast consistently outperforms traditional DSPs by 44%.
+
+Technical Requirements
+
+Data Formats Accepted: API integration, pixel-based data collection
+
+Identity Solutions: Privacy-first, cookieless targeting built into platform, no complex identity integrations required
+
+Hashing Requirements: Standard requirements for any PII handling
+
+API Access: Reporting and campaign management APIs available
+
+Minimum Technical Stack: Quantcast pixel for measurement and optimization
+
+Capabilities
+
+Channels: Display, Video, CTV, Mobile (in-app and browser), Native, Audio
+
+Targeting Options: AI-driven predictive audiences, behavioral patterns, lookalike modeling, contextual, geographic
+
+AI and Optimization: Proprietary machine learning models trained on individual advertiser KPIs, real-time behavioral analysis
+
+Measurement: Real-time audience measurement across 100M+ digital destinations
+
+Unique Advantage: Privacy-centric, cookieless targeting is native to platform with no complex integrations needed
+
+Pricing Model
+
+Fee Structure: Custom pricing based on requirements
+
+Minimum Spend: Not publicly disclosed, contact vendor directly
+
+Trial Offer: 30-day no-cost platform preview available
+
+Self-Service: Available with hands-on support
+
+Best Use Cases
+
+Quantcast is ideal for advertisers prioritizing cookieless future-proofing, those seeking AI-driven optimization without extensive manual management, and brands wanting access to real-time behavioral data for audience insights. The platform is particularly strong for prospecting campaigns and audience discovery.
+
+----------------------------------------
+ADOBE ADVERTISING DSP
+----------------------------------------
+
+Overview
+
+Adobe Advertising DSP (formerly Adobe Advertising Cloud) is an enterprise demand-side platform that integrates natively with the Adobe Experience Cloud ecosystem including Adobe Analytics, Adobe Real-Time CDP, and Adobe Audience Manager. The platform provides cross-channel media buying with strong emphasis on connecting advertising to broader customer experience and marketing technology workflows.
+
+Technical Requirements
+
+Data Formats Accepted: Adobe Experience Platform integration, API access, third-party data connectors
+
+Identity Solutions: Adobe Experience Cloud ID, integration with Adobe Real-Time CDP identity resolution
+
+Hashing Requirements: Standard Adobe data governance requirements
+
+API Access: Adobe Experience Platform APIs
+
+Minimum Technical Stack: Adobe Experience Cloud subscription recommended for full value, Adobe Analytics integration for attribution
+
+Capabilities
+
+Channels: Display, Video, CTV, Audio, Native, DOOH
+
+Targeting Options: Adobe Audience segments, first-party data from Real-Time CDP, third-party data, contextual, cross-device
+
+AI and Optimization: Adobe Sensei AI for bid optimization, audience discovery, and performance prediction
+
+Measurement: Native integration with Adobe Analytics for cross-channel attribution and customer journey analysis
+
+Unique Advantage: Seamless integration with Adobe marketing technology stack, unified view of advertising and marketing touchpoints
+
+Pricing Model
+
+Fee Structure: Percentage of gross media cost (Tech/Service Fee), example: 30% fee means USD 10,000 media buy incurs USD 3,000 platform fee
+
+Minimum Spend: Enterprise commitment required, specific minimums not publicly disclosed
+
+Contract Terms: Typically annual agreements as part of broader Adobe Experience Cloud licensing
+
+Total Cost Consideration: Additional investment in Adobe Experience Cloud products may be required to realize full platform value
+
+Best Use Cases
+
+Adobe Advertising DSP is ideal for enterprises already using Adobe Experience Cloud products, organizations prioritizing unified marketing and advertising data, and advertisers seeking tight integration between paid media and owned channel experiences. The platform requires significant investment but provides comprehensive cross-channel orchestration for mature marketing organizations.
+
+----------------------------------------
+MEDIAMATH BY INFILLION
+----------------------------------------
+
+Overview
+
+MediaMath was one of the original programmatic DSPs, founded in 2007. The company filed for Chapter 11 bankruptcy in June 2023 owing USD 125 million to supply chain partners. Infillion acquired MediaMath assets for USD 22 million in September 2023 and relaunched the platform in 2024. The renewed MediaMath focuses on cookieless solutions, supply path optimization, and CTV advertising. Notable: Walmart Connect integrated MediaMath technology to power its retail media DSP.
+
+Current Status and Considerations
+
+MediaMath is now operating as MediaMath by Infillion with renewed focus on CTV, display, and live sports out-of-home advertising. The platform has re-signed major SSPs including PubMatic and Magnite. Platform spending reached a run rate of USD 500,000 per month in early 2024 with month-over-month growth. Advertisers should evaluate the platforms stability and roadmap given the recent ownership change.
+
+Technical Requirements
+
+Data Formats Accepted: Standard programmatic data formats, API integration
+
+Identity Solutions: Cookieless identity solutions, supply path optimization
+
+Integration Status: Re-establishing partner ecosystem post-acquisition
+
+Pricing Model
+
+Pricing details should be obtained directly from Infillion as the platform continues post-acquisition development. Historical MediaMath pricing was competitive with other independent DSPs.
+
+Best Use Cases
+
+MediaMath by Infillion may be suitable for advertisers interested in CTV and sports-focused inventory, those seeking alternatives to major DSPs, or organizations evaluating emerging platforms. Due diligence on platform stability and roadmap is recommended given the 2023-2024 transition.
+
+----------------------------------------
+MICROSOFT INVEST (FORMERLY XANDR) - PLATFORM SUNSETTING
+----------------------------------------
+
+Overview and Status
+
+Microsoft acquired Xandr from AT&T in 2022 for approximately USD 1 billion and consolidated it under Microsoft Advertising. In May 2025, Microsoft announced that Microsoft Invest DSP will be shut down by February 2026. Microsoft has designated Amazon DSP as the preferred transition partner for existing Microsoft Invest customers.
+
+Migration Guidance
+
+Microsoft Invest customers across North America, Latin America, Europe, and Asia-Pacific regions should plan platform transitions before the February 2026 discontinuation date. Amazon DSP serves as the Microsoft-designated alternative. Microsoft Monetize (the SSP component) will continue operating and has joined Amazons Certified Supply Exchange.
+
+Historical Context
+
+The Xandr/Microsoft Invest shutdown reflects broader DSP market consolidation. Industry analysis suggests the DSP market is moving toward a natural oligopoly dominated by Google, The Trade Desk, and Amazon, with independent DSPs facing challenging economics in a low-margin, high-volume business.
+
+----------------------------------------
+INDUSTRY CPM BENCHMARKS BY CHANNEL
+----------------------------------------
+
+Display Advertising
+
+Display CPM benchmarks for 2024-2025 show most bids in the USD 0-2 range. Average programmatic display CPM is approximately USD 2-5 depending on targeting sophistication and inventory quality. Premium publisher inventory commands USD 5-15 CPM while remnant inventory runs USD 0.50-2.
+
+Video Advertising
+
+Video CPM benchmarks show average CPMs of USD 13-16 with recent trends showing approximately 11% year-over-year decrease. Pre-roll video typically commands USD 15-25 CPM, mid-roll USD 12-20, and outstream video USD 8-15.
+
+Connected TV (CTV)
+
+CTV CPM benchmarks show most bids between USD 22-26 with most CPMs paid between USD 17-21. Private marketplace CTV averages USD 15 CPM while open marketplace CTV averages USD 5.54. CTV represents 28% of all programmatic ad spending in 2024.
+
+DSP Platform Average CPMs
+
+Platform-specific display CPM averages: DV360 approximately USD 0.89 (lowest), The Trade Desk approximately USD 1.07, Amazon DSP approximately USD 1.17, Yahoo DSP approximately USD 1.78, LinkedIn approximately USD 2.47.
+
+TOP 10 DSPs BY VOLUME SUMMARY
+
+This document covers the top 10 DSPs by market volume and advertiser adoption. Based on 2024 market data: Google DV360 leads with 64% usage among US advertising executives and 47% market share by spend. The Trade Desk is recognized as the global leader among independent DSPs by Frost & Sullivan. Amazon DSP is used by one in three US advertising executives with 20% market share. Yahoo DSP is regaining share with competitive fees and transparent reporting. StackAdapt leads by customer count with 41% adoption. Criteo ranks among top 10 globally for commerce and retargeting. Adform holds 28% market share by customer count, particularly strong in Europe. Quantcast differentiates with AI-driven cookieless targeting. Adobe Advertising DSP serves the enterprise Adobe ecosystem. Microsoft Invest (Xandr) is sunsetting in February 2026.
+
+----------------------------------------
+DSP MARKET CONTEXT 2025
+----------------------------------------
+
+The DSP market in 2024 represents a USD 31.4 billion industry with projected 21.1% compound annual growth rate reaching nearly USD 149 billion by 2032. Market share by spend is concentrated with DV360 leading at 47%, followed by Amazon DSP at 20% and The Trade Desk at 19%. By customer adoption, StackAdapt leads at 41%, Adform at 28%, and others distributed across the remaining share.
+
+Key 2025 trends include the continued shift toward private marketplace deals (66% of programmatic spend in 2024 vs 41% in 2023), CTV growth driving overall CPM increases, and ongoing consolidation as evidenced by the Microsoft Invest shutdown. Advertisers typically see 25-45% lower CPMs with programmatic versus direct buy, and 10-30% improved conversion rates when paired with audience data.
+
+----------------------------------------
+DOCUMENT METADATA
+----------------------------------------
+
+Document: DSP_Reference_Display_Programmatic_V7
+
+Version: 6.0
+
+Last Updated: December 2025
+
+Next Scheduled Review: March 2026
+
+Refresh Frequency: Quarterly for vendor specifications, Monthly for CPM benchmarks
+
+Data sources include vendor documentation, industry publications (AdExchanger, Digiday, eMarketer), analyst reports, and publicly available pricing information. Specific pricing and minimum spend requirements should be verified directly with vendors as terms vary by region and contract.

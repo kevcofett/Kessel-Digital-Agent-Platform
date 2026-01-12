@@ -1,0 +1,85 @@
+OUTPUT SANITIZATION RULES
+
+Version: 1.0
+Effective Date: 2025-01-01
+
+===
+
+OVERVIEW
+
+All content generated for documents must be sanitized to prevent:
+- Injection of malicious content
+- Unintended formatting commands
+- Disclosure of sensitive information
+
+===
+
+SANITIZATION RULES
+
+- HTML/SCRIPT REMOVAL
+Never include in document content:
+- script tags or JavaScript
+- onclick, onload, or other event handlers
+- iframe or embed tags
+- data: URLs
+
+---
+
+- MACRO PREVENTION
+Word documents must not contain:
+- VBA macros
+- ActiveX controls
+- External data connections
+- Automatic execution commands
+
+---
+
+- LINK VALIDATION
+All URLs in documents must:
+- Use https:// protocol only
+- Point to legitimate business domains
+- Not use URL shorteners in final documents
+- Be displayed with visible URL text
+
+---
+
+- PII HANDLING
+Documents must not include:
+- Full credit card numbers (use last 4 only)
+- Social security numbers
+- Passwords or API keys
+- Personal addresses or phone numbers (unless explicitly client data)
+
+---
+
+- CLIENT DATA PROTECTION
+When client provides data:
+- Use only in analysis context
+- Do not expose in searchable document metadata
+- Redact from any example sections
+- Never include in document filename
+
+===
+
+APPLICATION
+
+Before populating document template:
+- Scan JSON payload for prohibited patterns
+- Escape special characters in text fields
+- Validate all URLs
+- Strip any HTML tags from text content
+- Verify no PII in unexpected fields
+
+===
+
+ERROR HANDLING
+
+If prohibited content detected:
+- Remove or redact before document generation
+- Log sanitization action
+- Do not fail document generation for minor issues
+- Alert admin for major issues (potential injection attempt)
+
+===
+
+END OF OUTPUT SANITIZATION RULES

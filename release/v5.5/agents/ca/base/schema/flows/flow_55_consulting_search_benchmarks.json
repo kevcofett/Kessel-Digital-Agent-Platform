@@ -1,0 +1,68 @@
+{
+  "flowId": "flow_55",
+  "name": "consulting_search_benchmarks",
+  "displayName": "CA Search Benchmarks",
+  "description": "Query ca_benchmarks table for industry benchmark data",
+  "version": "1.0.0",
+  "status": "specification",
+  "trigger": {
+    "type": "http_request",
+    "method": "POST"
+  },
+  "inputs": {
+    "industry": {
+      "type": "string",
+      "required": false,
+      "allowedValues": ["Retail", "QSR", "CPG", "Financial Services", "Travel", "Healthcare", "Technology"]
+    },
+    "category": {
+      "type": "string",
+      "required": false,
+      "allowedValues": ["Financial", "Operational", "Performance", "Quality", "SaaS"]
+    },
+    "metricName": {
+      "type": "string",
+      "required": false
+    },
+    "limit": {
+      "type": "integer",
+      "default": 20
+    }
+  },
+  "outputs": {
+    "benchmarks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "benchmarkId": "string",
+          "industry": "string",
+          "category": "string",
+          "metricName": "string",
+          "percentile25": "number",
+          "percentile50": "number",
+          "percentile75": "number",
+          "percentile90": "number",
+          "notes": "string"
+        }
+      }
+    },
+    "totalCount": {
+      "type": "integer"
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "action": "list_records",
+      "table": "ca_benchmarks",
+      "filter": {
+        "industry": "@{triggerBody()?['industry']}",
+        "category": "@{triggerBody()?['category']}",
+        "metricName": "@{triggerBody()?['metricName']}"
+      },
+      "top": "@{triggerBody()?['limit']}"
+    }
+  ],
+  "notes": "This flow specification defines the Power Automate flow to be deployed in the target environment."
+}

@@ -1,0 +1,55 @@
+{
+  "flowId": "flow_52",
+  "name": "consulting_record_framework_use",
+  "displayName": "CA Record Framework Use",
+  "description": "Log framework application to ca_framework_applications",
+  "version": "1.0.0",
+  "status": "specification",
+  "trigger": {
+    "type": "http_request",
+    "method": "POST"
+  },
+  "dependencies": ["flow_51"],
+  "inputs": {
+    "consultingSessionId": {
+      "type": "string",
+      "required": true
+    },
+    "frameworkId": {
+      "type": "string",
+      "required": true
+    },
+    "applicationContext": {
+      "type": "object",
+      "required": false,
+      "properties": {
+        "inputData": "string",
+        "customizations": "object",
+        "depth": "string"
+      }
+    }
+  },
+  "outputs": {
+    "applicationId": {
+      "type": "string"
+    },
+    "success": {
+      "type": "boolean"
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "action": "create_record",
+      "table": "ca_framework_applications",
+      "fields": {
+        "application_id": "@{guid()}",
+        "consulting_session_id": "@{triggerBody()?['consultingSessionId']}",
+        "framework_id": "@{triggerBody()?['frameworkId']}",
+        "applied_at": "@{utcNow()}",
+        "input_context": "@{triggerBody()?['applicationContext']}"
+      }
+    }
+  ],
+  "notes": "This flow specification defines the Power Automate flow to be deployed in the target environment."
+}

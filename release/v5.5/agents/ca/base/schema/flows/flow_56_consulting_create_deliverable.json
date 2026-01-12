@@ -1,0 +1,87 @@
+{
+  "flowId": "flow_56",
+  "name": "consulting_create_deliverable",
+  "displayName": "CA Create Deliverable",
+  "description": "Create ca_deliverables record for formal deliverable documents",
+  "version": "1.0.0",
+  "status": "specification",
+  "trigger": {
+    "type": "http_request",
+    "method": "POST"
+  },
+  "dependencies": ["flow_53", "flow_54"],
+  "inputs": {
+    "consultingSessionId": {
+      "type": "string",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "deliverableType": {
+      "type": "string",
+      "required": true,
+      "allowedValues": ["strategic_assessment", "market_analysis", "competitive_analysis", "recommendation_deck", "workshop_summary", "executive_brief"]
+    },
+    "content": {
+      "type": "string",
+      "required": true
+    },
+    "format": {
+      "type": "string",
+      "default": "markdown",
+      "allowedValues": ["markdown", "html", "json"]
+    },
+    "analysisIds": {
+      "type": "array",
+      "items": "string",
+      "required": false
+    },
+    "recommendationIds": {
+      "type": "array",
+      "items": "string",
+      "required": false
+    }
+  },
+  "outputs": {
+    "deliverableId": {
+      "type": "string"
+    },
+    "outputId": {
+      "type": "string"
+    },
+    "success": {
+      "type": "boolean"
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "action": "create_record",
+      "table": "eap_outputs",
+      "fields": {
+        "output_id": "@{guid()}",
+        "output_type": "deliverable",
+        "title": "@{triggerBody()?['title']}",
+        "content": "@{triggerBody()?['content']}",
+        "format": "@{triggerBody()?['format']}",
+        "created_at": "@{utcNow()}"
+      }
+    },
+    {
+      "order": 2,
+      "action": "create_record",
+      "table": "ca_deliverables",
+      "fields": {
+        "deliverable_id": "@{guid()}",
+        "output_id": "@{outputs('create_output')?['output_id']}",
+        "consulting_session_id": "@{triggerBody()?['consultingSessionId']}",
+        "deliverable_type": "@{triggerBody()?['deliverableType']}",
+        "analysis_ids": "@{triggerBody()?['analysisIds']}",
+        "recommendation_ids": "@{triggerBody()?['recommendationIds']}"
+      }
+    }
+  ],
+  "notes": "This flow specification defines the Power Automate flow to be deployed in the target environment."
+}

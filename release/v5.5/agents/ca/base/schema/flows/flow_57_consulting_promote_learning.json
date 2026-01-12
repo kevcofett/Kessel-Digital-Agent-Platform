@@ -1,0 +1,69 @@
+{
+  "flowId": "flow_57",
+  "name": "consulting_promote_learning",
+  "displayName": "CA Promote Learning",
+  "description": "Store insights from consulting sessions to learning resources",
+  "version": "1.0.0",
+  "status": "specification",
+  "trigger": {
+    "type": "http_request",
+    "method": "POST"
+  },
+  "dependencies": ["shared_flows"],
+  "inputs": {
+    "consultingSessionId": {
+      "type": "string",
+      "required": true
+    },
+    "insightType": {
+      "type": "string",
+      "required": true,
+      "allowedValues": ["framework_adaptation", "benchmark_update", "methodology_improvement", "client_learning"]
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "content": {
+      "type": "string",
+      "required": true
+    },
+    "sourceAnalysisId": {
+      "type": "string",
+      "required": false
+    },
+    "tags": {
+      "type": "array",
+      "items": "string",
+      "required": false
+    }
+  },
+  "outputs": {
+    "learningResourceId": {
+      "type": "string"
+    },
+    "success": {
+      "type": "boolean"
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "action": "create_record",
+      "table": "eap_learning_resources",
+      "fields": {
+        "learning_resource_id": "@{guid()}",
+        "agent_code": "CONSULTING",
+        "insight_type": "@{triggerBody()?['insightType']}",
+        "title": "@{triggerBody()?['title']}",
+        "content": "@{triggerBody()?['content']}",
+        "source_session_id": "@{triggerBody()?['consultingSessionId']}",
+        "source_analysis_id": "@{triggerBody()?['sourceAnalysisId']}",
+        "tags": "@{triggerBody()?['tags']}",
+        "created_at": "@{utcNow()}",
+        "status": "pending_review"
+      }
+    }
+  ],
+  "notes": "This flow specification defines the Power Automate flow to be deployed in the target environment. Learning resources are stored with status 'pending_review' for human validation before promotion to KB."
+}

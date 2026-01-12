@@ -1,0 +1,78 @@
+{
+  "flowId": "flow_53",
+  "name": "consulting_create_analysis",
+  "displayName": "CA Create Analysis",
+  "description": "Create ca_analyses record with analysis output",
+  "version": "1.0.0",
+  "status": "specification",
+  "trigger": {
+    "type": "http_request",
+    "method": "POST"
+  },
+  "dependencies": ["flow_52"],
+  "inputs": {
+    "consultingSessionId": {
+      "type": "string",
+      "required": true
+    },
+    "frameworkApplicationId": {
+      "type": "string",
+      "required": false
+    },
+    "analysisType": {
+      "type": "string",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "content": {
+      "type": "string",
+      "required": true
+    },
+    "confidenceLevel": {
+      "type": "string",
+      "allowedValues": ["HIGH", "MEDIUM", "MEDIUM-LOW", "LOW"]
+    }
+  },
+  "outputs": {
+    "analysisId": {
+      "type": "string"
+    },
+    "outputId": {
+      "type": "string"
+    },
+    "success": {
+      "type": "boolean"
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "action": "create_record",
+      "table": "eap_outputs",
+      "fields": {
+        "output_id": "@{guid()}",
+        "output_type": "analysis",
+        "title": "@{triggerBody()?['title']}",
+        "content": "@{triggerBody()?['content']}",
+        "created_at": "@{utcNow()}"
+      }
+    },
+    {
+      "order": 2,
+      "action": "create_record",
+      "table": "ca_analyses",
+      "fields": {
+        "analysis_id": "@{guid()}",
+        "output_id": "@{outputs('create_output')?['output_id']}",
+        "consulting_session_id": "@{triggerBody()?['consultingSessionId']}",
+        "framework_application_id": "@{triggerBody()?['frameworkApplicationId']}",
+        "analysis_type": "@{triggerBody()?['analysisType']}",
+        "confidence_level": "@{triggerBody()?['confidenceLevel']}"
+      }
+    }
+  ],
+  "notes": "This flow specification defines the Power Automate flow to be deployed in the target environment."
+}

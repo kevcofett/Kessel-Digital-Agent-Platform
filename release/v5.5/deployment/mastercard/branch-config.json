@@ -1,0 +1,52 @@
+{
+  "branch": "deploy/mastercard",
+  "environment": "production",
+  "organization": "mastercard",
+
+  "defaults": {
+    "stack": "microsoft",
+    "allowStackSwitch": true
+  },
+
+  "agents": {
+    "mpa": {
+      "enabled": true,
+      "instructionsFile": "agents/mpa/mastercard/instructions/MPA_Copilot_Instructions_PRODUCTION.txt",
+      "kbFolder": "MPA",
+      "flows": ["session-init", "kb-retrieve", "generate-response", "track-impact"]
+    },
+    "ca": {
+      "enabled": true,
+      "instructionsFile": "agents/ca/mastercard/instructions/CA_Copilot_Instructions_PRODUCTION.txt",
+      "kbFolder": "CA",
+      "flows": ["session-init", "kb-retrieve", "generate-response"]
+    },
+    "eap": {
+      "enabled": true,
+      "instructionsFile": "agents/eap/mastercard/instructions/EAP_Copilot_Instructions_PRODUCTION.txt",
+      "kbFolder": "EAP",
+      "flows": ["session-init", "kb-retrieve"]
+    }
+  },
+
+  "dataverse": {
+    "solutionName": "KesselDigitalAgentPlatform",
+    "solutionVersion": "5.5.0.0",
+    "tables": [
+      "cr_agentsessions",
+      "cr_kbdocuments",
+      "cr_kbusagerecords",
+      "cr_kbdocumentimpacts",
+      "cr_kbupdateproposals",
+      "cr_verticals",
+      "cr_kpis",
+      "cr_channels",
+      "cr_benchmarks"
+    ]
+  },
+
+  "sharepoint": {
+    "libraryName": "AgentKnowledgeBase",
+    "folders": ["MPA", "CA", "EAP"]
+  }
+}

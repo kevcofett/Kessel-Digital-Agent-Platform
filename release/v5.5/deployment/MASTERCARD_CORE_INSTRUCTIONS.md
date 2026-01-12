@@ -3,6 +3,29 @@
 
 ---
 
+## RECOMMENDED DEPLOYMENT METHOD: SOLUTION IMPORT
+
+**For fastest deployment, use the Solution Export/Import workflow:**
+
+1. Build and test agent in Personal/Dev environment
+2. Export as Power Platform Solution
+3. Import to Mastercard via pac CLI
+
+```powershell
+# Quick commands
+cd /release/v5.5/deployment/mastercard/scripts
+
+# Import solution (includes agent, flows, topics, variables)
+./import-solution.ps1 -SolutionPath "../../solutions/KesselAgentPlatform_5_5_0_0.zip" -Environment "mastercard"
+```
+
+**Detailed guides:**
+- [SOLUTION_EXPORT_STEP_BY_STEP.md](./SOLUTION_EXPORT_STEP_BY_STEP.md) - First-time export guide
+- [SOLUTION_EXPORT_IMPORT_WORKFLOW.md](./SOLUTION_EXPORT_IMPORT_WORKFLOW.md) - Complete workflow
+- [VSCODE_DEPLOY_TO_MASTERCARD.md](./mastercard/VSCODE_DEPLOY_TO_MASTERCARD.md) - VS Code automation
+
+---
+
 ## QUICK REFERENCE
 
 | Component | Automated | Manual Required |

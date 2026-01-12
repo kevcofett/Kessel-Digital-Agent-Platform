@@ -26,3 +26,43 @@ export {
   KBEnhancementSystem,
   type KBEnhancementConfig,
 } from './kb-enhancement.js';
+
+// ============================================================================
+// KB IMPACT TRACKING
+// ============================================================================
+
+// Types
+export {
+  type KBUsageRecord,
+  type KBDocumentImpact,
+  type KBDocumentAction,
+  type KBChunkImpact,
+  type KBUpdateProposal,
+  type KBUpdateType,
+  type KBUpdateStatus,
+  type KBProposedChange,
+  type KBImpactTrackerConfig,
+  type KBImpactStorage,
+  type KBUsageFilter,
+  type KBProposalFilter,
+  DEFAULT_KB_IMPACT_CONFIG,
+} from './kb-impact-types.js';
+
+// Base Tracker
+export {
+  BaseKBImpactTracker,
+} from './base-kb-impact-tracker.js';
+
+// Local Storage
+export {
+  LocalKBImpactStorage,
+  createLocalKBImpactStorage,
+} from './local-kb-impact-storage.js';
+
+// Update Pipeline
+export {
+  KBUpdatePipeline,
+  createKBUpdatePipeline,
+  type KBUpdatePipelineConfig,
+  DEFAULT_UPDATE_PIPELINE_CONFIG,
+} from './kb-update-pipeline.js';

@@ -18,6 +18,13 @@
 | Power Automate | https://make.powerautomate.com/environments/Default-f06fa858-824b-4a85-aacv-f372cfdc282e/home |
 | Copilot Studio | https://copilotstudio.microsoft.com (select Mastercard environment) |
 
+### Agent KB Folder URLs
+| Agent | Folder URL |
+|-------|------------|
+| MPA | https://mastercard.sharepoint.com/:f:/s/CAEConsultingProduct/lgCZ7qTFJCgASKcb204jJRn0AfB5alCc74AMyE2etdchqA4?e=urKrHq |
+| CA | https://mastercard.sharepoint.com/:f:/s/CAEConsultingProduct/IgDzc0ufDknYTpTghwRGqCXGAUvoLc-7BLhVv8c7TrZEPAI?e=JrfOGP |
+| EAP | https://mastercard.sharepoint.com/:f:/s/CAEConsultingProduct/lgAMlDUM-pK9Rqol_B77NT8JAWaSvFONRHLabpRleGIwxko?e=24fqOR |
+
 ### Environment IDs
 - Power Apps Environment ID: `ea9d500a-9299-e7b2-8754-53ebea0cb818`
 - Power Automate Environment ID: `Default-f06fa858-824b-4a85-aacv-f372cfdc282e`

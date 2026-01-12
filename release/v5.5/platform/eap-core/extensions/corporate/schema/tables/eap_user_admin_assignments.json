@@ -1,0 +1,30 @@
+{
+  "schemaName": "eap_user_admin_assignments",
+  "displayName": "User Admin Assignments",
+  "pluralName": "User Admin Assignments",
+  "description": "Admin role assignments for users",
+  "tier": 2,
+  "category": "Admin",
+  "primaryKey": "assignment_id",
+  "primaryNameColumn": "assignment_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "assignment_id", "displayName": "Assignment ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "User" },
+    { "schemaName": "admin_role_id", "displayName": "Admin Role", "dataType": "Lookup", "lookupTable": "eap_admin_roles", "required": true, "description": "Admin role" },
+    { "schemaName": "scope_type", "displayName": "Scope Type", "dataType": "Choice", "required": true, "defaultValue": "Platform", "options": ["Platform", "Division", "BusinessUnit", "ProductUnit", "Agent"], "description": "Scope of admin access" },
+    { "schemaName": "scope_entity_id", "displayName": "Scope Entity ID", "dataType": "UniqueIdentifier", "required": false, "description": "Specific scope entity" },
+    { "schemaName": "effective_date", "displayName": "Effective Date", "dataType": "DateTime", "required": true, "description": "Start date" },
+    { "schemaName": "end_date", "displayName": "End Date", "dataType": "DateTime", "required": false, "description": "End date" },
+    { "schemaName": "granted_by", "displayName": "Granted By", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Who granted" },
+    { "schemaName": "granted_date", "displayName": "Granted Date", "dataType": "DateTime", "required": true, "description": "When granted" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": true, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_user_id", "columns": ["user_id"], "unique": false },
+    { "name": "idx_admin_role", "columns": ["admin_role_id"], "unique": false },
+    { "name": "idx_user_role_scope", "columns": ["user_id", "admin_role_id", "scope_type"], "unique": false }
+  ]
+}

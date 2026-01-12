@@ -1,0 +1,11 @@
+config_key,config_name,config_value,environment_profile,is_enabled,description
+api_openai,OpenAI API,"{""endpoint"":"""",""model"":"""",""api_key_ref"":""""}",corporate,false,Disabled in corporate
+api_anthropic,Anthropic API,"{""endpoint"":"""",""model"":"""",""api_key_ref"":""""}",corporate,false,Disabled in corporate
+api_azure_openai,Azure OpenAI,"{""endpoint"":""https://corporate.openai.azure.com"",""deployment"":""gpt-4"",""api_key_ref"":""kv-corp-azure-openai""}",corporate,true,Corporate Azure OpenAI only
+api_serper,Serper Search,"{""endpoint"":"""",""api_key_ref"":""""}",corporate,false,Disabled - use Bing
+api_firecrawl,Firecrawl,"{""endpoint"":"""",""api_key_ref"":""""}",corporate,false,Disabled in corporate
+api_bing,Bing Search,"{""endpoint"":""https://api.bing.microsoft.com/v7.0/search"",""api_key_ref"":""kv-corp-bing""}",corporate,true,Corporate approved search
+api_azure_doc_intel,Azure Doc Intelligence,"{""endpoint"":""https://corporate.cognitiveservices.azure.com"",""api_key_ref"":""kv-corp-doc-intel""}",corporate,true,Corporate document processing
+api_azure_ai_search,Azure AI Search,"{""endpoint"":""https://corporate-search.search.windows.net"",""api_key_ref"":""kv-corp-ai-search""}",corporate,true,Corporate semantic search
+crawl_whitelist,URL Crawl Whitelist,"{""mode"":""whitelist"",""patterns"":[""*.company.com"",""*.sharepoint.com"",""docs.microsoft.com"",""en.wikipedia.org"",""*.gov""]}",corporate,true,Approved domains only
+crawl_rate_limit,Crawl Rate Limit,"{""requests_per_minute"":10,""concurrent"":2}",corporate,true,Conservative rate limits

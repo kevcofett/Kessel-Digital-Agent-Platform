@@ -1,0 +1,29 @@
+{
+  "schemaName": "eap_agent_feature_assignments",
+  "displayName": "Agent Feature Assignments",
+  "pluralName": "Agent Feature Assignments",
+  "description": "Feature assignments to agents",
+  "tier": 3,
+  "featureGate": "MULTI_AGENT",
+  "category": "MultiAgent",
+  "primaryKey": "assignment_id",
+  "primaryNameColumn": "assignment_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "assignment_id", "displayName": "Assignment ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "agent_id", "displayName": "Agent", "dataType": "Lookup", "lookupTable": "eap_agent", "required": true, "description": "Agent" },
+    { "schemaName": "feature_id", "displayName": "Feature", "dataType": "Lookup", "lookupTable": "eap_agent_features", "required": true, "description": "Feature" },
+    { "schemaName": "is_enabled", "displayName": "Is Enabled", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Feature enabled" },
+    { "schemaName": "config_override_json", "displayName": "Config Override", "dataType": "MultilineText", "required": false, "description": "Feature-specific config" },
+    { "schemaName": "enabled_date", "displayName": "Enabled Date", "dataType": "DateTime", "required": false, "description": "When enabled" },
+    { "schemaName": "enabled_by", "displayName": "Enabled By", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "Who enabled" },
+    { "schemaName": "disabled_date", "displayName": "Disabled Date", "dataType": "DateTime", "required": false, "description": "When disabled" },
+    { "schemaName": "disabled_by", "displayName": "Disabled By", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "Who disabled" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": true, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_agent_feature", "columns": ["agent_id", "feature_id"], "unique": true }
+  ]
+}

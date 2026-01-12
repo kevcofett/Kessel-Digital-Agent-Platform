@@ -1,0 +1,26 @@
+{
+  "schemaName": "eap_domains",
+  "displayName": "Domains",
+  "pluralName": "Domains",
+  "description": "Industry expertise domains",
+  "tier": 3,
+  "featureGate": "PRACTICES_DOMAINS",
+  "category": "Horizontal",
+  "primaryKey": "domain_id",
+  "primaryNameColumn": "domain_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "domain_id", "displayName": "Domain ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "domain_code", "displayName": "Domain Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique domain code" },
+    { "schemaName": "domain_name", "displayName": "Domain Name", "dataType": "Text", "maxLength": 100, "required": true, "description": "Domain display name" },
+    { "schemaName": "description", "displayName": "Description", "dataType": "Text", "maxLength": 500, "required": false, "description": "Domain description" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "sort_order", "displayName": "Sort Order", "dataType": "WholeNumber", "required": false, "description": "Display order" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": true, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_domain_code", "columns": ["domain_code"], "unique": true }
+  ],
+  "seedDataNote": "Retail, Financial Services, Healthcare, Travel, CPG, QSR, Technology"
+}

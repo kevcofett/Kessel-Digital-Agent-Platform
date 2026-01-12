@@ -1,0 +1,385 @@
+{
+  "schemaName": "eap_outputs",
+  "displayName": "Outputs",
+  "pluralName": "Outputs",
+  "description": "Deliverables produced by agents including documents, analyses, and recommendations",
+  "tier": 1,
+  "category": "Core",
+  "primaryKey": "output_id",
+  "primaryNameColumn": "title",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    {
+      "schemaName": "output_id",
+      "displayName": "Output ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "output_code",
+      "displayName": "Output Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique output code"
+    },
+    {
+      "schemaName": "session_id",
+      "displayName": "Session",
+      "dataType": "Lookup",
+      "lookupTable": "eap_session",
+      "required": true,
+      "description": "Parent session"
+    },
+    {
+      "schemaName": "exchange_id",
+      "displayName": "Exchange",
+      "dataType": "Lookup",
+      "lookupTable": "eap_exchanges",
+      "required": false,
+      "description": "Generating exchange"
+    },
+    {
+      "schemaName": "user_id",
+      "displayName": "User",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator (denormalized)"
+    },
+    {
+      "schemaName": "client_id",
+      "displayName": "Client",
+      "dataType": "Lookup",
+      "lookupTable": "eap_client",
+      "required": false,
+      "description": "Client (denormalized)"
+    },
+    {
+      "schemaName": "engagement_id",
+      "displayName": "Engagement",
+      "dataType": "Lookup",
+      "lookupTable": "eap_engagements",
+      "required": false,
+      "description": "Engagement (denormalized)"
+    },
+    {
+      "schemaName": "project_id",
+      "displayName": "Project",
+      "dataType": "Lookup",
+      "lookupTable": "eap_projects",
+      "required": false,
+      "description": "Project (denormalized)"
+    },
+    {
+      "schemaName": "output_type",
+      "displayName": "Output Type",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Document", "Analysis", "Recommendation", "Plan", "Report", "Presentation", "Email", "Other"],
+      "description": "Type of output"
+    },
+    {
+      "schemaName": "output_subtype",
+      "displayName": "Output Subtype",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Specific subtype"
+    },
+    {
+      "schemaName": "title",
+      "displayName": "Title",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": true,
+      "description": "Output title"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Output description"
+    },
+    {
+      "schemaName": "content_summary",
+      "displayName": "Content Summary",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Summary of content"
+    },
+    {
+      "schemaName": "content_json",
+      "displayName": "Content JSON",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Structured content in JSON"
+    },
+    {
+      "schemaName": "file_url",
+      "displayName": "File URL",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "SharePoint file URL"
+    },
+    {
+      "schemaName": "file_name",
+      "displayName": "File Name",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": false,
+      "description": "File name"
+    },
+    {
+      "schemaName": "file_type",
+      "displayName": "File Type",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": false,
+      "description": "File extension"
+    },
+    {
+      "schemaName": "file_size_bytes",
+      "displayName": "File Size (bytes)",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "File size in bytes"
+    },
+    {
+      "schemaName": "version",
+      "displayName": "Version",
+      "dataType": "WholeNumber",
+      "required": true,
+      "defaultValue": 1,
+      "description": "Version number"
+    },
+    {
+      "schemaName": "version_notes",
+      "displayName": "Version Notes",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Version change notes"
+    },
+    {
+      "schemaName": "previous_version_id",
+      "displayName": "Previous Version",
+      "dataType": "Lookup",
+      "lookupTable": "eap_outputs",
+      "required": false,
+      "description": "Previous version"
+    },
+    {
+      "schemaName": "is_draft",
+      "displayName": "Is Draft",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Draft status"
+    },
+    {
+      "schemaName": "is_final",
+      "displayName": "Is Final",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Final status"
+    },
+    {
+      "schemaName": "audience_type",
+      "displayName": "Audience Type",
+      "dataType": "Choice",
+      "required": false,
+      "options": ["Internal", "Client", "Executive", "Public"],
+      "description": "Target audience"
+    },
+    {
+      "schemaName": "data_classification",
+      "displayName": "Data Classification",
+      "dataType": "Choice",
+      "required": false,
+      "options": ["Public", "Internal", "Confidential", "Restricted"],
+      "description": "Data sensitivity"
+    },
+    {
+      "schemaName": "approval_status",
+      "displayName": "Approval Status",
+      "dataType": "Choice",
+      "required": true,
+      "defaultValue": "NotRequired",
+      "options": ["NotRequired", "Pending", "Approved", "Rejected"],
+      "description": "Approval status"
+    },
+    {
+      "schemaName": "approval_request_id",
+      "displayName": "Approval Request",
+      "dataType": "Lookup",
+      "lookupTable": "eap_approval_requests",
+      "required": false,
+      "description": "Active approval request"
+    },
+    {
+      "schemaName": "approved_date",
+      "displayName": "Approved Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "When approved"
+    },
+    {
+      "schemaName": "approved_by_user_id",
+      "displayName": "Approved By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": false,
+      "description": "Approver"
+    },
+    {
+      "schemaName": "frameworks_used_json",
+      "displayName": "Frameworks Used",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "JSON array of frameworks applied"
+    },
+    {
+      "schemaName": "confidence_level",
+      "displayName": "Confidence Level",
+      "dataType": "Choice",
+      "required": false,
+      "options": ["High", "Medium", "MediumLow", "Low"],
+      "description": "Output confidence"
+    },
+    {
+      "schemaName": "quality_score",
+      "displayName": "Quality Score",
+      "dataType": "Decimal",
+      "required": false,
+      "description": "Calculated quality score"
+    },
+    {
+      "schemaName": "feedback_count",
+      "displayName": "Feedback Count",
+      "dataType": "WholeNumber",
+      "required": true,
+      "defaultValue": 0,
+      "description": "Number of feedback entries"
+    },
+    {
+      "schemaName": "average_rating",
+      "displayName": "Average Rating",
+      "dataType": "Decimal",
+      "required": false,
+      "description": "Average rating from feedback"
+    },
+    {
+      "schemaName": "view_count",
+      "displayName": "View Count",
+      "dataType": "WholeNumber",
+      "required": true,
+      "defaultValue": 0,
+      "description": "View count"
+    },
+    {
+      "schemaName": "download_count",
+      "displayName": "Download Count",
+      "dataType": "WholeNumber",
+      "required": true,
+      "defaultValue": 0,
+      "description": "Download count"
+    },
+    {
+      "schemaName": "is_archived",
+      "displayName": "Is Archived",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Archived flag"
+    },
+    {
+      "schemaName": "archived_date",
+      "displayName": "Archived Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Archive date"
+    },
+    {
+      "schemaName": "retention_policy_id",
+      "displayName": "Retention Policy",
+      "dataType": "Lookup",
+      "lookupTable": "eap_retention_policies",
+      "required": false,
+      "description": "Retention policy"
+    },
+    {
+      "schemaName": "scheduled_delete_date",
+      "displayName": "Scheduled Delete Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Scheduled deletion date"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    },
+    {
+      "schemaName": "modified_by",
+      "displayName": "Modified By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Modifier"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_output_code",
+      "columns": ["output_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_session_id",
+      "columns": ["session_id"],
+      "unique": false
+    },
+    {
+      "name": "idx_user_output_type",
+      "columns": ["user_id", "output_type"],
+      "unique": false
+    },
+    {
+      "name": "idx_client_created",
+      "columns": ["client_id", "created_date"],
+      "unique": false
+    },
+    {
+      "name": "idx_approval_status",
+      "columns": ["approval_status"],
+      "unique": false
+    },
+    {
+      "name": "idx_draft_final",
+      "columns": ["is_draft", "is_final"],
+      "unique": false
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "schemaName": "eap_markets",
+  "displayName": "Market",
+  "pluralName": "Markets",
+  "description": "Market definitions for geographic and segment targeting",
+  "tier": 3,
+  "featureGate": "MARKETS",
+  "category": "Configuration",
+  "primaryKey": "market_id",
+  "primaryNameColumn": "market_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "market_id", "displayName": "Market ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "market_code", "displayName": "Market Code", "dataType": "Text", "maxLength": 20, "required": true, "unique": true, "description": "Unique market code" },
+    { "schemaName": "market_name", "displayName": "Market Name", "dataType": "Text", "maxLength": 100, "required": true, "description": "Market display name" },
+    { "schemaName": "market_type", "displayName": "Market Type", "dataType": "Choice", "required": true, "options": ["Geographic", "Segment", "Channel", "Custom"], "description": "Type of market" },
+    { "schemaName": "parent_market_id", "displayName": "Parent Market", "dataType": "Lookup", "lookupTable": "eap_markets", "required": false, "description": "Parent market for hierarchy" },
+    { "schemaName": "region_id", "displayName": "Region", "dataType": "Lookup", "lookupTable": "eap_regions", "required": false, "description": "Associated region" },
+    { "schemaName": "currency_code", "displayName": "Currency Code", "dataType": "Text", "maxLength": 3, "required": false, "description": "Default currency" },
+    { "schemaName": "timezone", "displayName": "Timezone", "dataType": "Text", "maxLength": 50, "required": false, "description": "Default timezone" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_market_code", "columns": ["market_code"], "unique": true },
+    { "name": "idx_parent", "columns": ["parent_market_id"], "unique": false }
+  ]
+}

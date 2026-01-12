@@ -1,0 +1,32 @@
+{
+  "schemaName": "eap_dashboards",
+  "displayName": "Dashboard",
+  "pluralName": "Dashboards",
+  "description": "Dashboard configurations",
+  "tier": 3,
+  "featureGate": "DASHBOARDS",
+  "category": "Analytics",
+  "primaryKey": "dashboard_id",
+  "primaryNameColumn": "dashboard_name",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "dashboard_id", "displayName": "Dashboard ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "dashboard_code", "displayName": "Dashboard Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique code" },
+    { "schemaName": "dashboard_name", "displayName": "Dashboard Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Display name" },
+    { "schemaName": "description", "displayName": "Description", "dataType": "MultilineText", "required": false, "description": "Dashboard description" },
+    { "schemaName": "owner_user_id", "displayName": "Owner", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Dashboard owner" },
+    { "schemaName": "layout_json", "displayName": "Layout", "dataType": "MultilineText", "required": true, "description": "Layout config JSON" },
+    { "schemaName": "widgets_json", "displayName": "Widgets", "dataType": "MultilineText", "required": true, "description": "Widget configs JSON" },
+    { "schemaName": "default_filters_json", "displayName": "Default Filters", "dataType": "MultilineText", "required": false, "description": "Default filters JSON" },
+    { "schemaName": "refresh_interval_seconds", "displayName": "Refresh Interval", "dataType": "WholeNumber", "required": true, "defaultValue": 300, "description": "Auto-refresh seconds" },
+    { "schemaName": "visibility", "displayName": "Visibility", "dataType": "Choice", "required": true, "defaultValue": "Private", "options": ["Private", "Shared", "Public"], "description": "Who can view" },
+    { "schemaName": "is_default", "displayName": "Is Default", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Default dashboard" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_dashboard_code", "columns": ["dashboard_code"], "unique": true },
+    { "name": "idx_owner", "columns": ["owner_user_id"], "unique": false }
+  ]
+}

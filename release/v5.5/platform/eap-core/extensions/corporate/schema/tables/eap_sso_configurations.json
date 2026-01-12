@@ -1,0 +1,34 @@
+{
+  "schemaName": "eap_sso_configurations",
+  "displayName": "SSO Configuration",
+  "pluralName": "SSO Configurations",
+  "description": "Single sign-on provider configurations",
+  "tier": 3,
+  "featureGate": "SSO",
+  "category": "Security",
+  "primaryKey": "sso_id",
+  "primaryNameColumn": "provider_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "sso_id", "displayName": "SSO ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "provider_code", "displayName": "Provider Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique code" },
+    { "schemaName": "provider_name", "displayName": "Provider Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Display name" },
+    { "schemaName": "provider_type", "displayName": "Provider Type", "dataType": "Choice", "required": true, "options": ["SAML", "OIDC", "OAuth2", "AzureAD", "Okta", "Custom"], "description": "SSO type" },
+    { "schemaName": "client_id", "displayName": "Client ID", "dataType": "Text", "maxLength": 500, "required": false, "description": "OAuth client ID" },
+    { "schemaName": "metadata_url", "displayName": "Metadata URL", "dataType": "Text", "maxLength": 1000, "required": false, "description": "SAML metadata URL" },
+    { "schemaName": "authorization_url", "displayName": "Auth URL", "dataType": "Text", "maxLength": 1000, "required": false, "description": "Authorization endpoint" },
+    { "schemaName": "token_url", "displayName": "Token URL", "dataType": "Text", "maxLength": 1000, "required": false, "description": "Token endpoint" },
+    { "schemaName": "userinfo_url", "displayName": "UserInfo URL", "dataType": "Text", "maxLength": 1000, "required": false, "description": "UserInfo endpoint" },
+    { "schemaName": "claim_mappings_json", "displayName": "Claim Mappings", "dataType": "MultilineText", "required": false, "description": "Claim mappings JSON" },
+    { "schemaName": "default_role_id", "displayName": "Default Role", "dataType": "Lookup", "lookupTable": "eap_roles", "required": false, "description": "Default role for new users" },
+    { "schemaName": "auto_provision_users", "displayName": "Auto Provision", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Auto-create users" },
+    { "schemaName": "is_default", "displayName": "Is Default", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Default provider" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_provider_code", "columns": ["provider_code"], "unique": true },
+    { "name": "idx_provider_type", "columns": ["provider_type"], "unique": false }
+  ]
+}

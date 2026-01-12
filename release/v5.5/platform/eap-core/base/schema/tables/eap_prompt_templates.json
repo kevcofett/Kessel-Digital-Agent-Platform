@@ -1,0 +1,33 @@
+{
+  "schemaName": "eap_prompt_templates",
+  "displayName": "Prompt Template",
+  "pluralName": "Prompt Templates",
+  "description": "Reusable prompt templates",
+  "tier": 3,
+  "featureGate": "PROMPT_LIBRARY",
+  "category": "Configuration",
+  "primaryKey": "template_id",
+  "primaryNameColumn": "template_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "template_id", "displayName": "Template ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "template_code", "displayName": "Template Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique code" },
+    { "schemaName": "template_name", "displayName": "Template Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Display name" },
+    { "schemaName": "template_category", "displayName": "Category", "dataType": "Choice", "required": true, "options": ["System", "User", "Analysis", "Generation", "Summary", "Custom"], "description": "Template category" },
+    { "schemaName": "description", "displayName": "Description", "dataType": "MultilineText", "required": false, "description": "Template description" },
+    { "schemaName": "prompt_text", "displayName": "Prompt Text", "dataType": "MultilineText", "required": true, "description": "Prompt with placeholders" },
+    { "schemaName": "variables_schema_json", "displayName": "Variables Schema", "dataType": "MultilineText", "required": false, "description": "Variable definitions JSON" },
+    { "schemaName": "example_output", "displayName": "Example Output", "dataType": "MultilineText", "required": false, "description": "Example result" },
+    { "schemaName": "agent_id", "displayName": "Agent", "dataType": "Lookup", "lookupTable": "eap_agent", "required": false, "description": "Agent-specific template" },
+    { "schemaName": "use_count", "displayName": "Use Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Times used" },
+    { "schemaName": "version", "displayName": "Version", "dataType": "WholeNumber", "required": true, "defaultValue": 1, "description": "Version number" },
+    { "schemaName": "is_public", "displayName": "Is Public", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Available to all" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_template_code", "columns": ["template_code"], "unique": true },
+    { "name": "idx_category", "columns": ["template_category"], "unique": false }
+  ]
+}

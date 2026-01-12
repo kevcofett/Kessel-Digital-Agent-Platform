@@ -1,0 +1,27 @@
+{
+  "schemaName": "eap_ip_allowlists",
+  "displayName": "IP Allowlist",
+  "pluralName": "IP Allowlists",
+  "description": "IP address allowlists for access control",
+  "tier": 3,
+  "featureGate": "IP_RESTRICTIONS",
+  "category": "Security",
+  "primaryKey": "allowlist_id",
+  "primaryNameColumn": "allowlist_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "allowlist_id", "displayName": "Allowlist ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "allowlist_name", "displayName": "Allowlist Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Display name" },
+    { "schemaName": "description", "displayName": "Description", "dataType": "MultilineText", "required": false, "description": "Description" },
+    { "schemaName": "ip_addresses_json", "displayName": "IP Addresses", "dataType": "MultilineText", "required": true, "description": "IPs and CIDRs JSON" },
+    { "schemaName": "scope_type", "displayName": "Scope Type", "dataType": "Choice", "required": true, "defaultValue": "Global", "options": ["Global", "User", "Agent", "APIKey"], "description": "What it applies to" },
+    { "schemaName": "scope_entity_id", "displayName": "Scope Entity ID", "dataType": "UniqueIdentifier", "required": false, "description": "Specific entity ID" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_scope", "columns": ["scope_type", "scope_entity_id"], "unique": false },
+    { "name": "idx_active", "columns": ["is_active"], "unique": false }
+  ]
+}

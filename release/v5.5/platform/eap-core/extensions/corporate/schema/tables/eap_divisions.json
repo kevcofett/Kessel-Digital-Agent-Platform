@@ -1,0 +1,136 @@
+{
+  "schemaName": "eap_divisions",
+  "displayName": "Divisions",
+  "pluralName": "Divisions",
+  "description": "Top-level organizational divisions",
+  "tier": 1,
+  "category": "Org",
+  "primaryKey": "division_id",
+  "primaryNameColumn": "division_name",
+  "ownershipType": "OrganizationOwned",
+  "notes": "Created with 'Default' value at Tier 1, populated with real data when ORG_HIERARCHY enabled",
+  "columns": [
+    {
+      "schemaName": "division_id",
+      "displayName": "Division ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "division_code",
+      "displayName": "Division Code",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": true,
+      "unique": true,
+      "description": "Unique division code"
+    },
+    {
+      "schemaName": "division_name",
+      "displayName": "Division Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Division name"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Description"
+    },
+    {
+      "schemaName": "division_head_user_id",
+      "displayName": "Division Head",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": false,
+      "description": "Division head"
+    },
+    {
+      "schemaName": "primary_region_id",
+      "displayName": "Primary Region",
+      "dataType": "Lookup",
+      "lookupTable": "eap_regions",
+      "required": false,
+      "description": "Primary region"
+    },
+    {
+      "schemaName": "is_global",
+      "displayName": "Is Global",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Global scope flag"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "sort_order",
+      "displayName": "Sort Order",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Display order"
+    },
+    {
+      "schemaName": "config_json",
+      "displayName": "Config JSON",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Division-specific config"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    },
+    {
+      "schemaName": "modified_by",
+      "displayName": "Modified By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Modifier"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_division_code",
+      "columns": ["division_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_is_active",
+      "columns": ["is_active"],
+      "unique": false
+    }
+  ],
+  "seedData": [
+    { "division_code": "DEFAULT", "division_name": "Default Division", "is_global": true, "is_active": true, "sort_order": 1, "description": "Default division for Level 0/1 deployment" }
+  ]
+}

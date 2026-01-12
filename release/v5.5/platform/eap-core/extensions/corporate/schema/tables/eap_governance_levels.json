@@ -1,0 +1,124 @@
+{
+  "schemaName": "eap_governance_levels",
+  "displayName": "Governance Levels",
+  "pluralName": "Governance Levels",
+  "description": "Governance and data classification levels",
+  "tier": 1,
+  "category": "Governance",
+  "primaryKey": "governance_level_id",
+  "primaryNameColumn": "level_name",
+  "ownershipType": "OrganizationOwned",
+  "isReferenceData": true,
+  "columns": [
+    {
+      "schemaName": "governance_level_id",
+      "displayName": "Governance Level ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "level_code",
+      "displayName": "Level Code",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": true,
+      "unique": true,
+      "description": "Unique level code"
+    },
+    {
+      "schemaName": "level_name",
+      "displayName": "Level Name",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Level name"
+    },
+    {
+      "schemaName": "level_number",
+      "displayName": "Level Number",
+      "dataType": "WholeNumber",
+      "required": true,
+      "description": "Numeric level (higher = more restrictive)"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Description"
+    },
+    {
+      "schemaName": "requires_approval",
+      "displayName": "Requires Approval",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Requires approval before delivery"
+    },
+    {
+      "schemaName": "min_approver_level",
+      "displayName": "Min Approver Level",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Minimum role level required to approve"
+    },
+    {
+      "schemaName": "retention_days",
+      "displayName": "Retention Days",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Default retention period"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "sort_order",
+      "displayName": "Sort Order",
+      "dataType": "WholeNumber",
+      "required": true,
+      "description": "Display order"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_level_code",
+      "columns": ["level_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_level_number",
+      "columns": ["level_number"],
+      "unique": true
+    }
+  ],
+  "seedData": [
+    { "level_code": "PUBLIC", "level_name": "Public", "level_number": 1, "requires_approval": false, "retention_days": 365, "sort_order": 1, "description": "Publicly shareable content" },
+    { "level_code": "INTERNAL", "level_name": "Internal", "level_number": 2, "requires_approval": false, "retention_days": 365, "sort_order": 2, "description": "Internal company use only" },
+    { "level_code": "CONFIDENTIAL", "level_name": "Confidential", "level_number": 3, "requires_approval": true, "min_approver_level": 5, "retention_days": 730, "sort_order": 3, "description": "Confidential business information" },
+    { "level_code": "RESTRICTED", "level_name": "Restricted", "level_number": 4, "requires_approval": true, "min_approver_level": 4, "retention_days": 1095, "sort_order": 4, "description": "Highly restricted access" },
+    { "level_code": "CLIENT_CONF", "level_name": "Client Confidential", "level_number": 3, "requires_approval": true, "min_approver_level": 5, "retention_days": 730, "sort_order": 5, "description": "Client confidential information" },
+    { "level_code": "REGULATED", "level_name": "Regulated", "level_number": 5, "requires_approval": true, "min_approver_level": 3, "retention_days": 2555, "sort_order": 6, "description": "Subject to regulatory requirements" }
+  ]
+}

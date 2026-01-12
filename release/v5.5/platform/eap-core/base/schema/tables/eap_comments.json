@@ -1,0 +1,32 @@
+{
+  "schemaName": "eap_comments",
+  "displayName": "Comment",
+  "pluralName": "Comments",
+  "description": "User comments on outputs and content",
+  "tier": 3,
+  "featureGate": "COMMENTS",
+  "category": "Collaboration",
+  "primaryKey": "comment_id",
+  "primaryNameColumn": "comment_id",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "comment_id", "displayName": "Comment ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "entity_type", "displayName": "Entity Type", "dataType": "Text", "maxLength": 100, "required": true, "description": "Type of commented entity" },
+    { "schemaName": "entity_id", "displayName": "Entity ID", "dataType": "UniqueIdentifier", "required": true, "description": "ID of commented entity" },
+    { "schemaName": "parent_comment_id", "displayName": "Parent Comment", "dataType": "Lookup", "lookupTable": "eap_comments", "required": false, "description": "Parent for replies" },
+    { "schemaName": "user_id", "displayName": "Author", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Comment author" },
+    { "schemaName": "comment_text", "displayName": "Comment Text", "dataType": "MultilineText", "required": true, "description": "Comment content" },
+    { "schemaName": "comment_type", "displayName": "Comment Type", "dataType": "Choice", "required": true, "defaultValue": "General", "options": ["General", "Question", "Suggestion", "Issue", "Praise", "Internal"], "description": "Type of comment" },
+    { "schemaName": "is_resolved", "displayName": "Is Resolved", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Comment resolved" },
+    { "schemaName": "resolved_by_user_id", "displayName": "Resolved By", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "Who resolved" },
+    { "schemaName": "resolved_date", "displayName": "Resolved Date", "dataType": "DateTime", "required": false, "description": "When resolved" },
+    { "schemaName": "is_private", "displayName": "Is Private", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Private comment" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_entity", "columns": ["entity_type", "entity_id"], "unique": false },
+    { "name": "idx_user", "columns": ["user_id"], "unique": false },
+    { "name": "idx_parent", "columns": ["parent_comment_id"], "unique": false }
+  ]
+}

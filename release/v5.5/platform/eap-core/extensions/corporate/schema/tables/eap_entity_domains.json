@@ -1,0 +1,24 @@
+{
+  "schemaName": "eap_entity_domains",
+  "displayName": "Entity Domains",
+  "pluralName": "Entity Domains",
+  "description": "Domain associations for entities",
+  "tier": 3,
+  "featureGate": "PRACTICES_DOMAINS",
+  "category": "Association",
+  "primaryKey": "entity_domain_id",
+  "primaryNameColumn": "entity_domain_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "entity_domain_id", "displayName": "Entity Domain ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "entity_type", "displayName": "Entity Type", "dataType": "Choice", "required": true, "options": ["User", "Client", "Engagement", "Project", "Session", "Output"], "description": "Entity type" },
+    { "schemaName": "entity_id", "displayName": "Entity ID", "dataType": "UniqueIdentifier", "required": true, "description": "Entity ID" },
+    { "schemaName": "domain_id", "displayName": "Domain", "dataType": "Lookup", "lookupTable": "eap_domains", "required": true, "description": "Domain" },
+    { "schemaName": "is_primary", "displayName": "Is Primary", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Primary domain" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" }
+  ],
+  "indexes": [
+    { "name": "idx_entity", "columns": ["entity_type", "entity_id"], "unique": false },
+    { "name": "idx_domain", "columns": ["domain_id"], "unique": false }
+  ]
+}

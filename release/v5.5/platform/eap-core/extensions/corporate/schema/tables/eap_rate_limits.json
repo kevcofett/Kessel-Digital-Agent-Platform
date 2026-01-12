@@ -1,0 +1,31 @@
+{
+  "schemaName": "eap_rate_limits",
+  "displayName": "Rate Limit",
+  "pluralName": "Rate Limits",
+  "description": "API and usage rate limit configurations",
+  "tier": 3,
+  "featureGate": "RATE_LIMITS",
+  "category": "Security",
+  "primaryKey": "limit_id",
+  "primaryNameColumn": "limit_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "limit_id", "displayName": "Limit ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "limit_code", "displayName": "Limit Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique code" },
+    { "schemaName": "limit_name", "displayName": "Limit Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Display name" },
+    { "schemaName": "limit_type", "displayName": "Limit Type", "dataType": "Choice", "required": true, "options": ["Requests", "Tokens", "Sessions", "Queries", "Custom"], "description": "What to limit" },
+    { "schemaName": "scope_type", "displayName": "Scope Type", "dataType": "Choice", "required": true, "options": ["Global", "User", "Agent", "APIKey", "IP"], "description": "Scope of limit" },
+    { "schemaName": "scope_entity_id", "displayName": "Scope Entity ID", "dataType": "UniqueIdentifier", "required": false, "description": "Specific entity" },
+    { "schemaName": "limit_value", "displayName": "Limit Value", "dataType": "WholeNumber", "required": true, "description": "Limit amount" },
+    { "schemaName": "window_seconds", "displayName": "Window Seconds", "dataType": "WholeNumber", "required": true, "defaultValue": 3600, "description": "Time window" },
+    { "schemaName": "burst_limit", "displayName": "Burst Limit", "dataType": "WholeNumber", "required": false, "description": "Burst allowance" },
+    { "schemaName": "action_on_exceed", "displayName": "Action on Exceed", "dataType": "Choice", "required": true, "defaultValue": "Block", "options": ["Block", "Throttle", "Warn", "Log"], "description": "What to do" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_limit_code", "columns": ["limit_code"], "unique": true },
+    { "name": "idx_scope", "columns": ["scope_type", "scope_entity_id"], "unique": false }
+  ]
+}

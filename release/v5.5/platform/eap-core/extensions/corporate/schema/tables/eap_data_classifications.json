@@ -1,0 +1,32 @@
+{
+  "schemaName": "eap_data_classifications",
+  "displayName": "Data Classification",
+  "pluralName": "Data Classifications",
+  "description": "Data classification levels for governance",
+  "tier": 3,
+  "featureGate": "DATA_GOVERNANCE",
+  "category": "Governance",
+  "primaryKey": "classification_id",
+  "primaryNameColumn": "classification_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "classification_id", "displayName": "Classification ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "classification_code", "displayName": "Classification Code", "dataType": "Text", "maxLength": 20, "required": true, "unique": true, "description": "Unique code" },
+    { "schemaName": "classification_name", "displayName": "Classification Name", "dataType": "Text", "maxLength": 100, "required": true, "description": "Display name" },
+    { "schemaName": "classification_level", "displayName": "Level", "dataType": "WholeNumber", "required": true, "description": "Numeric level (higher = more sensitive)" },
+    { "schemaName": "description", "displayName": "Description", "dataType": "MultilineText", "required": true, "description": "Classification description" },
+    { "schemaName": "handling_requirements", "displayName": "Handling Requirements", "dataType": "MultilineText", "required": true, "description": "Required handling" },
+    { "schemaName": "allowed_actions_json", "displayName": "Allowed Actions", "dataType": "MultilineText", "required": false, "description": "Permitted actions JSON" },
+    { "schemaName": "prohibited_actions_json", "displayName": "Prohibited Actions", "dataType": "MultilineText", "required": false, "description": "Forbidden actions JSON" },
+    { "schemaName": "retention_days", "displayName": "Retention Days", "dataType": "WholeNumber", "required": false, "description": "Data retention period" },
+    { "schemaName": "requires_encryption", "displayName": "Requires Encryption", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Must encrypt" },
+    { "schemaName": "requires_audit", "displayName": "Requires Audit", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Must audit access" },
+    { "schemaName": "color_code", "displayName": "Color Code", "dataType": "Text", "maxLength": 7, "required": false, "description": "Display color hex" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" }
+  ],
+  "indexes": [
+    { "name": "idx_classification_code", "columns": ["classification_code"], "unique": true },
+    { "name": "idx_level", "columns": ["classification_level"], "unique": false }
+  ]
+}

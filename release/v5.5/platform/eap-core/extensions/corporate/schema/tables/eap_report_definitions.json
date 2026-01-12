@@ -1,0 +1,33 @@
+{
+  "schemaName": "eap_report_definitions",
+  "displayName": "Report Definition",
+  "pluralName": "Report Definitions",
+  "description": "Report templates and definitions",
+  "tier": 3,
+  "featureGate": "REPORTING",
+  "category": "Analytics",
+  "primaryKey": "report_id",
+  "primaryNameColumn": "report_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "report_id", "displayName": "Report ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "report_code", "displayName": "Report Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique code" },
+    { "schemaName": "report_name", "displayName": "Report Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Display name" },
+    { "schemaName": "report_category", "displayName": "Category", "dataType": "Choice", "required": true, "options": ["Usage", "Performance", "Quality", "Compliance", "Executive", "Custom"], "description": "Report category" },
+    { "schemaName": "description", "displayName": "Description", "dataType": "MultilineText", "required": false, "description": "Report description" },
+    { "schemaName": "query_definition_json", "displayName": "Query Definition", "dataType": "MultilineText", "required": true, "description": "Query config JSON" },
+    { "schemaName": "parameters_schema_json", "displayName": "Parameters Schema", "dataType": "MultilineText", "required": false, "description": "Parameters JSON" },
+    { "schemaName": "output_format", "displayName": "Output Format", "dataType": "Choice", "required": true, "defaultValue": "Table", "options": ["Table", "Chart", "Mixed", "Custom"], "description": "Output format" },
+    { "schemaName": "visualization_config_json", "displayName": "Visualization Config", "dataType": "MultilineText", "required": false, "description": "Viz config JSON" },
+    { "schemaName": "is_scheduled", "displayName": "Is Scheduled", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Runs on schedule" },
+    { "schemaName": "schedule_cron", "displayName": "Schedule Cron", "dataType": "Text", "maxLength": 100, "required": false, "description": "Cron if scheduled" },
+    { "schemaName": "is_public", "displayName": "Is Public", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Available to all" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_report_code", "columns": ["report_code"], "unique": true },
+    { "name": "idx_category", "columns": ["report_category"], "unique": false }
+  ]
+}

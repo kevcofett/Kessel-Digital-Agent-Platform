@@ -1,0 +1,31 @@
+{
+  "schemaName": "eap_regions",
+  "displayName": "Regions",
+  "pluralName": "Regions",
+  "description": "Geographic regions for organizational structure",
+  "tier": 3,
+  "featureGate": "GEO_HIERARCHY",
+  "category": "Geographic",
+  "primaryKey": "region_id",
+  "primaryNameColumn": "region_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "region_id", "displayName": "Region ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "region_code", "displayName": "Region Code", "dataType": "Text", "maxLength": 20, "required": true, "unique": true, "description": "Unique region code" },
+    { "schemaName": "region_name", "displayName": "Region Name", "dataType": "Text", "maxLength": 100, "required": true, "description": "Region display name" },
+    { "schemaName": "division_id", "displayName": "Division", "dataType": "Lookup", "lookupTable": "eap_divisions", "required": false, "description": "Parent division" },
+    { "schemaName": "description", "displayName": "Description", "dataType": "Text", "maxLength": 500, "required": false, "description": "Region description" },
+    { "schemaName": "timezone", "displayName": "Timezone", "dataType": "Text", "maxLength": 50, "required": false, "description": "Default timezone" },
+    { "schemaName": "currency_code", "displayName": "Currency Code", "dataType": "Text", "maxLength": 3, "required": false, "description": "Default currency" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "sort_order", "displayName": "Sort Order", "dataType": "WholeNumber", "required": false, "description": "Display order" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": true, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_region_code", "columns": ["region_code"], "unique": true },
+    { "name": "idx_division", "columns": ["division_id"], "unique": false },
+    { "name": "idx_is_active", "columns": ["is_active"], "unique": false }
+  ],
+  "seedDataNote": "NAM, EEMEA, APAC, LAC regions"
+}

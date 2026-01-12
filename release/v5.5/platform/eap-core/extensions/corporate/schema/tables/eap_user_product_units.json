@@ -1,0 +1,26 @@
+{
+  "schemaName": "eap_user_product_units",
+  "displayName": "User Product Units",
+  "pluralName": "User Product Units",
+  "description": "User associations to product units",
+  "tier": 3,
+  "featureGate": "ORG_HIERARCHY",
+  "category": "Association",
+  "primaryKey": "user_pu_id",
+  "primaryNameColumn": "user_pu_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "user_pu_id", "displayName": "User PU ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "User" },
+    { "schemaName": "product_unit_id", "displayName": "Product Unit", "dataType": "Lookup", "lookupTable": "eap_product_units", "required": true, "description": "Product unit" },
+    { "schemaName": "is_primary", "displayName": "Is Primary", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Primary PU" },
+    { "schemaName": "effective_date", "displayName": "Effective Date", "dataType": "DateTime", "required": true, "description": "Start date" },
+    { "schemaName": "end_date", "displayName": "End Date", "dataType": "DateTime", "required": false, "description": "End date" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" }
+  ],
+  "indexes": [
+    { "name": "idx_user", "columns": ["user_id"], "unique": false },
+    { "name": "idx_pu", "columns": ["product_unit_id"], "unique": false }
+  ]
+}

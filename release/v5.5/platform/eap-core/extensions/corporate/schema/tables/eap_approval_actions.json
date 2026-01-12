@@ -1,0 +1,27 @@
+{
+  "schemaName": "eap_approval_actions",
+  "displayName": "Approval Actions",
+  "pluralName": "Approval Actions",
+  "description": "Individual approval actions on requests",
+  "tier": 3,
+  "featureGate": "BASIC_APPROVAL",
+  "category": "Approval",
+  "primaryKey": "action_id",
+  "primaryNameColumn": "action_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "action_id", "displayName": "Action ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "request_id", "displayName": "Request", "dataType": "Lookup", "lookupTable": "eap_approval_requests", "required": true, "description": "Parent request" },
+    { "schemaName": "approver_user_id", "displayName": "Approver", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Approver" },
+    { "schemaName": "step_number", "displayName": "Step Number", "dataType": "WholeNumber", "required": false, "description": "Step in chain" },
+    { "schemaName": "action_type", "displayName": "Action Type", "dataType": "Choice", "required": true, "options": ["Approve", "Reject", "RequestChanges", "Delegate", "Expedite"], "description": "Action taken" },
+    { "schemaName": "action_date", "displayName": "Action Date", "dataType": "DateTime", "required": true, "description": "When action taken" },
+    { "schemaName": "comments", "displayName": "Comments", "dataType": "MultilineText", "required": false, "description": "Approver comments" },
+    { "schemaName": "delegated_to_user_id", "displayName": "Delegated To", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "Delegation target" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" }
+  ],
+  "indexes": [
+    { "name": "idx_request", "columns": ["request_id"], "unique": false },
+    { "name": "idx_approver", "columns": ["approver_user_id"], "unique": false }
+  ]
+}

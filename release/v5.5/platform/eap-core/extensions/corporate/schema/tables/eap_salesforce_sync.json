@@ -1,0 +1,33 @@
+{
+  "schemaName": "eap_salesforce_sync",
+  "displayName": "Salesforce Sync",
+  "pluralName": "Salesforce Sync",
+  "description": "Salesforce synchronization tracking",
+  "tier": 3,
+  "featureGate": "SALESFORCE_INTEGRATION",
+  "category": "Integration",
+  "primaryKey": "sync_id",
+  "primaryNameColumn": "sync_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "sync_id", "displayName": "Sync ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "sync_type", "displayName": "Sync Type", "dataType": "Choice", "required": true, "options": ["Full", "Incremental", "OnDemand"], "description": "Sync type" },
+    { "schemaName": "sync_direction", "displayName": "Sync Direction", "dataType": "Choice", "required": true, "options": ["Inbound", "Outbound", "Bidirectional"], "description": "Sync direction" },
+    { "schemaName": "entity_type", "displayName": "Entity Type", "dataType": "Text", "maxLength": 100, "required": true, "description": "Entity being synced" },
+    { "schemaName": "start_date", "displayName": "Start Date", "dataType": "DateTime", "required": true, "description": "Sync start" },
+    { "schemaName": "end_date", "displayName": "End Date", "dataType": "DateTime", "required": false, "description": "Sync end" },
+    { "schemaName": "status", "displayName": "Status", "dataType": "Choice", "required": true, "defaultValue": "Running", "options": ["Running", "Completed", "Failed", "PartialSuccess"], "description": "Sync status" },
+    { "schemaName": "records_processed", "displayName": "Records Processed", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Records processed" },
+    { "schemaName": "records_created", "displayName": "Records Created", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Records created" },
+    { "schemaName": "records_updated", "displayName": "Records Updated", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Records updated" },
+    { "schemaName": "records_failed", "displayName": "Records Failed", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Records failed" },
+    { "schemaName": "error_details_json", "displayName": "Error Details", "dataType": "MultilineText", "required": false, "description": "Error details JSON" },
+    { "schemaName": "triggered_by", "displayName": "Triggered By", "dataType": "Choice", "required": true, "options": ["Scheduled", "Manual", "Event"], "description": "How triggered" },
+    { "schemaName": "triggered_by_user_id", "displayName": "Triggered By User", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "User who triggered" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" }
+  ],
+  "indexes": [
+    { "name": "idx_entity_date", "columns": ["entity_type", "start_date"], "unique": false },
+    { "name": "idx_status", "columns": ["status"], "unique": false }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "schemaName": "eap_email_templates",
+  "displayName": "Email Template",
+  "pluralName": "Email Templates",
+  "description": "Email templates for notifications and communications",
+  "tier": 3,
+  "featureGate": "EMAIL_TEMPLATES",
+  "category": "Configuration",
+  "primaryKey": "template_id",
+  "primaryNameColumn": "template_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "template_id", "displayName": "Template ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "template_code", "displayName": "Template Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique template code" },
+    { "schemaName": "template_name", "displayName": "Template Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Template display name" },
+    { "schemaName": "template_category", "displayName": "Category", "dataType": "Choice", "required": true, "options": ["Notification", "Alert", "Report", "Welcome", "Reminder", "Custom"], "description": "Template category" },
+    { "schemaName": "subject_template", "displayName": "Subject Template", "dataType": "Text", "maxLength": 500, "required": true, "description": "Email subject with placeholders" },
+    { "schemaName": "body_template", "displayName": "Body Template", "dataType": "MultilineText", "required": true, "description": "Email body with placeholders" },
+    { "schemaName": "body_format", "displayName": "Body Format", "dataType": "Choice", "required": true, "defaultValue": "HTML", "options": ["HTML", "PlainText", "Both"], "description": "Email format" },
+    { "schemaName": "placeholder_schema_json", "displayName": "Placeholder Schema", "dataType": "MultilineText", "required": false, "description": "Available placeholders JSON" },
+    { "schemaName": "agent_id", "displayName": "Agent", "dataType": "Lookup", "lookupTable": "eap_agent", "required": false, "description": "Agent-specific template" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_template_code", "columns": ["template_code"], "unique": true },
+    { "name": "idx_category", "columns": ["template_category"], "unique": false }
+  ]
+}

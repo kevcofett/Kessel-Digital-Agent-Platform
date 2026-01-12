@@ -1,0 +1,36 @@
+{
+  "schemaName": "eap_audit_logs",
+  "displayName": "Audit Logs",
+  "pluralName": "Audit Logs",
+  "description": "Audit trail for significant actions",
+  "tier": 2,
+  "category": "Governance",
+  "primaryKey": "log_id",
+  "primaryNameColumn": "log_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "log_id", "displayName": "Log ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "event_timestamp", "displayName": "Event Timestamp", "dataType": "DateTime", "required": true, "description": "When event occurred" },
+    { "schemaName": "event_type", "displayName": "Event Type", "dataType": "Choice", "required": true, "options": ["Create", "Update", "Delete", "Access", "Login", "Logout", "Export", "Approval", "Config", "Error"], "description": "Type of event" },
+    { "schemaName": "event_category", "displayName": "Event Category", "dataType": "Choice", "required": true, "options": ["Session", "Output", "User", "Client", "Config", "Approval", "Security", "Integration"], "description": "Category of event" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "User who performed action" },
+    { "schemaName": "session_id", "displayName": "Session", "dataType": "Lookup", "lookupTable": "eap_session", "required": false, "description": "Related session" },
+    { "schemaName": "entity_type", "displayName": "Entity Type", "dataType": "Text", "maxLength": 100, "required": true, "description": "Affected entity type" },
+    { "schemaName": "entity_id", "displayName": "Entity ID", "dataType": "UniqueIdentifier", "required": false, "description": "Affected entity ID" },
+    { "schemaName": "entity_name", "displayName": "Entity Name", "dataType": "Text", "maxLength": 200, "required": false, "description": "Affected entity name" },
+    { "schemaName": "action_description", "displayName": "Action Description", "dataType": "Text", "maxLength": 500, "required": true, "description": "Description of action" },
+    { "schemaName": "old_value_json", "displayName": "Old Value", "dataType": "MultilineText", "required": false, "description": "Previous value JSON" },
+    { "schemaName": "new_value_json", "displayName": "New Value", "dataType": "MultilineText", "required": false, "description": "New value JSON" },
+    { "schemaName": "ip_address", "displayName": "IP Address", "dataType": "Text", "maxLength": 50, "required": false, "description": "Client IP address" },
+    { "schemaName": "user_agent", "displayName": "User Agent", "dataType": "Text", "maxLength": 500, "required": false, "description": "Client user agent" },
+    { "schemaName": "success", "displayName": "Success", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Action succeeded" },
+    { "schemaName": "error_message", "displayName": "Error Message", "dataType": "Text", "maxLength": 1000, "required": false, "description": "Error if failed" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" }
+  ],
+  "indexes": [
+    { "name": "idx_timestamp", "columns": ["event_timestamp"], "unique": false },
+    { "name": "idx_user", "columns": ["user_id"], "unique": false },
+    { "name": "idx_entity", "columns": ["entity_type", "entity_id"], "unique": false },
+    { "name": "idx_event_type", "columns": ["event_type"], "unique": false }
+  ]
+}

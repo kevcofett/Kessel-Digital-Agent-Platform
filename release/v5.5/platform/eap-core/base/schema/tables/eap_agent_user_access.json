@@ -1,0 +1,29 @@
+{
+  "schemaName": "eap_agent_user_access",
+  "displayName": "Agent User Access",
+  "pluralName": "Agent User Access",
+  "description": "User access control for agents",
+  "tier": 3,
+  "featureGate": "MULTI_AGENT",
+  "category": "MultiAgent",
+  "primaryKey": "access_id",
+  "primaryNameColumn": "access_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "access_id", "displayName": "Access ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "User" },
+    { "schemaName": "agent_id", "displayName": "Agent", "dataType": "Lookup", "lookupTable": "eap_agent", "required": true, "description": "Agent" },
+    { "schemaName": "access_role", "displayName": "Access Role", "dataType": "Choice", "required": true, "options": ["Viewer", "User", "PowerUser", "Admin"], "description": "Access role" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "effective_date", "displayName": "Effective Date", "dataType": "DateTime", "required": true, "description": "Start date" },
+    { "schemaName": "end_date", "displayName": "End Date", "dataType": "DateTime", "required": false, "description": "End date" },
+    { "schemaName": "granted_by", "displayName": "Granted By", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Who granted" },
+    { "schemaName": "granted_date", "displayName": "Granted Date", "dataType": "DateTime", "required": true, "description": "Grant date" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": true, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_user_agent", "columns": ["user_id", "agent_id"], "unique": false },
+    { "name": "idx_agent", "columns": ["agent_id"], "unique": false }
+  ]
+}

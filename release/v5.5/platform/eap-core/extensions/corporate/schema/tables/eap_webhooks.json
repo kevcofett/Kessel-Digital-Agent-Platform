@@ -1,0 +1,38 @@
+{
+  "schemaName": "eap_webhooks",
+  "displayName": "Webhook",
+  "pluralName": "Webhooks",
+  "description": "Webhook configurations for HMAC-signed event notifications with retry support",
+  "tier": 3,
+  "featureGate": "WEBHOOKS",
+  "category": "Integration",
+  "primaryKey": "eap_webhookid",
+  "primaryNameColumn": "eap_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "eap_webhookid", "displayName": "Webhook ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "eap_name", "displayName": "Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Friendly name for the webhook" },
+    { "schemaName": "eap_url", "displayName": "URL", "dataType": "Text", "maxLength": 2000, "required": true, "description": "HTTPS endpoint URL for webhook delivery" },
+    { "schemaName": "eap_secret", "displayName": "Secret", "dataType": "Text", "maxLength": 200, "required": true, "description": "HMAC signing secret for authenticity verification" },
+    { "schemaName": "eap_events", "displayName": "Events", "dataType": "MultilineText", "maxLength": 4000, "required": true, "description": "JSON array of subscribed event types" },
+    { "schemaName": "eap_tenant_id", "displayName": "Tenant ID", "dataType": "Text", "maxLength": 100, "required": false, "description": "Optional tenant scope" },
+    { "schemaName": "eap_agent_id", "displayName": "Agent ID", "dataType": "Text", "maxLength": 50, "required": false, "description": "Optional agent scope" },
+    { "schemaName": "eap_status", "displayName": "Status", "dataType": "Picklist", "required": true, "defaultValue": 1, "description": "Webhook status", "options": [
+      { "value": 1, "label": "Active" },
+      { "value": 2, "label": "Paused" },
+      { "value": 3, "label": "Disabled" }
+    ]},
+    { "schemaName": "eap_headers", "displayName": "Custom Headers", "dataType": "MultilineText", "maxLength": 4000, "required": false, "description": "Optional JSON object of custom headers" },
+    { "schemaName": "eap_consecutive_failures", "displayName": "Consecutive Failures", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Number of consecutive delivery failures" },
+    { "schemaName": "eap_last_delivery_at", "displayName": "Last Delivery At", "dataType": "DateTime", "required": false, "description": "Timestamp of last successful delivery" },
+    { "schemaName": "eap_last_failure_at", "displayName": "Last Failure At", "dataType": "DateTime", "required": false, "description": "Timestamp of last failed delivery" },
+    { "schemaName": "eap_created_at", "displayName": "Created At", "dataType": "DateTime", "required": true, "description": "When webhook was registered" },
+    { "schemaName": "eap_created_by", "displayName": "Created By", "dataType": "Text", "maxLength": 100, "required": false, "description": "User who registered webhook" },
+    { "schemaName": "eap_description", "displayName": "Description", "dataType": "MultilineText", "maxLength": 2000, "required": false, "description": "Optional description of webhook purpose" }
+  ],
+  "indexes": [
+    { "name": "idx_eap_webhook_status", "columns": ["eap_status", "eap_tenant_id", "eap_agent_id"], "unique": false, "description": "Find active webhooks by scope" },
+    { "name": "idx_eap_webhook_tenant", "columns": ["eap_tenant_id"], "unique": false, "description": "Tenant-specific queries" },
+    { "name": "idx_eap_webhook_agent", "columns": ["eap_agent_id"], "unique": false, "description": "Agent-specific queries" }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "schemaName": "eap_quality_scores",
+  "displayName": "Quality Score",
+  "pluralName": "Quality Scores",
+  "description": "Quality scoring for outputs and content",
+  "tier": 3,
+  "featureGate": "QUALITY_SCORING",
+  "category": "Analytics",
+  "primaryKey": "score_id",
+  "primaryNameColumn": "score_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "score_id", "displayName": "Score ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "entity_type", "displayName": "Entity Type", "dataType": "Text", "maxLength": 100, "required": true, "description": "Type of scored entity" },
+    { "schemaName": "entity_id", "displayName": "Entity ID", "dataType": "UniqueIdentifier", "required": true, "description": "ID of scored entity" },
+    { "schemaName": "score_type", "displayName": "Score Type", "dataType": "Choice", "required": true, "options": ["Accuracy", "Completeness", "Relevance", "Clarity", "Compliance", "Overall"], "description": "Type of quality score" },
+    { "schemaName": "score_value", "displayName": "Score Value", "dataType": "Decimal", "precision": 5, "scale": 2, "required": true, "description": "Score 0-100" },
+    { "schemaName": "confidence_level", "displayName": "Confidence Level", "dataType": "Decimal", "precision": 5, "scale": 2, "required": false, "description": "Confidence in score" },
+    { "schemaName": "scoring_method", "displayName": "Scoring Method", "dataType": "Choice", "required": true, "options": ["Automated", "Manual", "Hybrid", "AIAssisted"], "description": "How score was determined" },
+    { "schemaName": "scoring_criteria_json", "displayName": "Scoring Criteria", "dataType": "MultilineText", "required": false, "description": "Criteria used JSON" },
+    { "schemaName": "scored_by_user_id", "displayName": "Scored By", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "User who scored (if manual)" },
+    { "schemaName": "score_date", "displayName": "Score Date", "dataType": "DateTime", "required": true, "description": "When scored" },
+    { "schemaName": "notes", "displayName": "Notes", "dataType": "MultilineText", "required": false, "description": "Scoring notes" }
+  ],
+  "indexes": [
+    { "name": "idx_entity", "columns": ["entity_type", "entity_id"], "unique": false },
+    { "name": "idx_score_type", "columns": ["score_type"], "unique": false }
+  ]
+}

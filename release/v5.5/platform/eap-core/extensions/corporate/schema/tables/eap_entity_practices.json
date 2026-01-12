@@ -1,0 +1,24 @@
+{
+  "schemaName": "eap_entity_practices",
+  "displayName": "Entity Practices",
+  "pluralName": "Entity Practices",
+  "description": "Practice associations for entities",
+  "tier": 3,
+  "featureGate": "PRACTICES_DOMAINS",
+  "category": "Association",
+  "primaryKey": "entity_practice_id",
+  "primaryNameColumn": "entity_practice_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "entity_practice_id", "displayName": "Entity Practice ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "entity_type", "displayName": "Entity Type", "dataType": "Choice", "required": true, "options": ["User", "Client", "Engagement", "Project", "Session", "Output"], "description": "Entity type" },
+    { "schemaName": "entity_id", "displayName": "Entity ID", "dataType": "UniqueIdentifier", "required": true, "description": "Entity ID" },
+    { "schemaName": "practice_id", "displayName": "Practice", "dataType": "Lookup", "lookupTable": "eap_practices", "required": true, "description": "Practice" },
+    { "schemaName": "is_primary", "displayName": "Is Primary", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Primary practice" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" }
+  ],
+  "indexes": [
+    { "name": "idx_entity", "columns": ["entity_type", "entity_id"], "unique": false },
+    { "name": "idx_practice", "columns": ["practice_id"], "unique": false }
+  ]
+}

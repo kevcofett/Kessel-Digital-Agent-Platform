@@ -1,0 +1,33 @@
+{
+  "schemaName": "eap_usage_budgets",
+  "displayName": "Usage Budget",
+  "pluralName": "Usage Budgets",
+  "description": "Usage budgets and limits for cost control",
+  "tier": 3,
+  "featureGate": "USAGE_BUDGETS",
+  "category": "Governance",
+  "primaryKey": "budget_id",
+  "primaryNameColumn": "budget_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "budget_id", "displayName": "Budget ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "budget_name", "displayName": "Budget Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Budget display name" },
+    { "schemaName": "budget_type", "displayName": "Budget Type", "dataType": "Choice", "required": true, "options": ["User", "Team", "Department", "Agent", "Client", "Global"], "description": "Scope of budget" },
+    { "schemaName": "entity_id", "displayName": "Entity ID", "dataType": "UniqueIdentifier", "required": false, "description": "ID of budgeted entity" },
+    { "schemaName": "period_type", "displayName": "Period Type", "dataType": "Choice", "required": true, "options": ["Daily", "Weekly", "Monthly", "Quarterly", "Annual"], "description": "Budget period" },
+    { "schemaName": "budget_amount", "displayName": "Budget Amount", "dataType": "Decimal", "precision": 12, "scale": 2, "required": true, "description": "Budget limit amount" },
+    { "schemaName": "budget_unit", "displayName": "Budget Unit", "dataType": "Choice", "required": true, "options": ["Currency", "Tokens", "Sessions", "Queries", "Credits"], "description": "Unit of measurement" },
+    { "schemaName": "current_usage", "displayName": "Current Usage", "dataType": "Decimal", "precision": 12, "scale": 2, "required": true, "defaultValue": 0, "description": "Usage in current period" },
+    { "schemaName": "warning_threshold", "displayName": "Warning Threshold", "dataType": "Decimal", "precision": 5, "scale": 2, "required": true, "defaultValue": 80, "description": "Warning at % of budget" },
+    { "schemaName": "hard_limit", "displayName": "Hard Limit", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Block at 100%" },
+    { "schemaName": "period_start_date", "displayName": "Period Start", "dataType": "DateTime", "required": true, "description": "Current period start" },
+    { "schemaName": "period_end_date", "displayName": "Period End", "dataType": "DateTime", "required": true, "description": "Current period end" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_budget_type_entity", "columns": ["budget_type", "entity_id"], "unique": false },
+    { "name": "idx_period", "columns": ["period_start_date", "period_end_date"], "unique": false }
+  ]
+}

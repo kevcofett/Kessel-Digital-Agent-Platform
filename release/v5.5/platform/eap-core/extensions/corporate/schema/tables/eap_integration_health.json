@@ -1,0 +1,32 @@
+{
+  "schemaName": "eap_integration_health",
+  "displayName": "Integration Health",
+  "pluralName": "Integration Health",
+  "description": "Integration health monitoring",
+  "tier": 3,
+  "featureGate": "INTEGRATION_HEALTH",
+  "category": "Integration",
+  "primaryKey": "health_id",
+  "primaryNameColumn": "integration_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "health_id", "displayName": "Health ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "integration_code", "displayName": "Integration Code", "dataType": "Text", "maxLength": 50, "required": true, "description": "Integration identifier" },
+    { "schemaName": "integration_name", "displayName": "Integration Name", "dataType": "Text", "maxLength": 100, "required": true, "description": "Integration display name" },
+    { "schemaName": "health_status", "displayName": "Health Status", "dataType": "Choice", "required": true, "options": ["Healthy", "Degraded", "Unhealthy", "Unknown"], "description": "Current health" },
+    { "schemaName": "last_check_date", "displayName": "Last Check", "dataType": "DateTime", "required": true, "description": "Last health check" },
+    { "schemaName": "last_success_date", "displayName": "Last Success", "dataType": "DateTime", "required": false, "description": "Last successful call" },
+    { "schemaName": "last_failure_date", "displayName": "Last Failure", "dataType": "DateTime", "required": false, "description": "Last failed call" },
+    { "schemaName": "failure_count_24h", "displayName": "Failures (24h)", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Failures in last 24h" },
+    { "schemaName": "success_count_24h", "displayName": "Successes (24h)", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Successes in last 24h" },
+    { "schemaName": "avg_latency_ms", "displayName": "Avg Latency (ms)", "dataType": "WholeNumber", "required": false, "description": "Average response time" },
+    { "schemaName": "last_error_message", "displayName": "Last Error", "dataType": "Text", "maxLength": 1000, "required": false, "description": "Most recent error" },
+    { "schemaName": "notes", "displayName": "Notes", "dataType": "MultilineText", "required": false, "description": "Health notes" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": true, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_integration", "columns": ["integration_code"], "unique": true },
+    { "name": "idx_status", "columns": ["health_status"], "unique": false }
+  ]
+}

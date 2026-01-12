@@ -1,0 +1,32 @@
+{
+  "schemaName": "eap_confluence_connections",
+  "displayName": "Confluence Connection",
+  "pluralName": "Confluence Connections",
+  "description": "Confluence wiki connections for knowledge integration",
+  "tier": 3,
+  "featureGate": "CONFLUENCE_INTEGRATION",
+  "category": "Integration",
+  "primaryKey": "connection_id",
+  "primaryNameColumn": "connection_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "connection_id", "displayName": "Connection ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "connection_name", "displayName": "Connection Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Connection display name" },
+    { "schemaName": "base_url", "displayName": "Base URL", "dataType": "Text", "maxLength": 500, "required": true, "description": "Confluence base URL" },
+    { "schemaName": "space_keys", "displayName": "Space Keys", "dataType": "Text", "maxLength": 500, "required": false, "description": "Comma-separated space keys" },
+    { "schemaName": "authentication_type", "displayName": "Auth Type", "dataType": "Choice", "required": true, "options": ["APIToken", "OAuth", "ServiceAccount"], "description": "Authentication method" },
+    { "schemaName": "sync_frequency", "displayName": "Sync Frequency", "dataType": "Choice", "required": true, "defaultValue": "Daily", "options": ["Realtime", "Hourly", "Daily", "Weekly", "Manual"], "description": "Sync frequency" },
+    { "schemaName": "include_attachments", "displayName": "Include Attachments", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Sync attachments" },
+    { "schemaName": "include_comments", "displayName": "Include Comments", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Sync comments" },
+    { "schemaName": "last_sync_date", "displayName": "Last Sync", "dataType": "DateTime", "required": false, "description": "Last successful sync" },
+    { "schemaName": "pages_synced", "displayName": "Pages Synced", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Number of pages synced" },
+    { "schemaName": "sync_status", "displayName": "Sync Status", "dataType": "Choice", "required": true, "defaultValue": "Pending", "options": ["Pending", "Running", "Completed", "Failed"], "description": "Current sync status" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_base_url", "columns": ["base_url"], "unique": false },
+    { "name": "idx_sync_status", "columns": ["sync_status"], "unique": false }
+  ]
+}

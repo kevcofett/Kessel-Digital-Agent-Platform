@@ -1,0 +1,30 @@
+{
+  "schemaName": "eap_countries",
+  "displayName": "Countries",
+  "pluralName": "Countries",
+  "description": "Country definitions for geographic organization",
+  "tier": 3,
+  "featureGate": "GEO_HIERARCHY",
+  "category": "Geographic",
+  "primaryKey": "country_id",
+  "primaryNameColumn": "country_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "country_id", "displayName": "Country ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "country_code", "displayName": "Country Code", "dataType": "Text", "maxLength": 3, "required": true, "unique": true, "description": "ISO country code" },
+    { "schemaName": "country_name", "displayName": "Country Name", "dataType": "Text", "maxLength": 100, "required": true, "description": "Country display name" },
+    { "schemaName": "region_id", "displayName": "Region", "dataType": "Lookup", "lookupTable": "eap_regions", "required": true, "description": "Parent region" },
+    { "schemaName": "timezone", "displayName": "Timezone", "dataType": "Text", "maxLength": 50, "required": false, "description": "Primary timezone" },
+    { "schemaName": "currency_code", "displayName": "Currency Code", "dataType": "Text", "maxLength": 3, "required": false, "description": "Local currency" },
+    { "schemaName": "language_code", "displayName": "Language Code", "dataType": "Text", "maxLength": 10, "required": false, "description": "Primary language" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "sort_order", "displayName": "Sort Order", "dataType": "WholeNumber", "required": false, "description": "Display order" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": true, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_country_code", "columns": ["country_code"], "unique": true },
+    { "name": "idx_region", "columns": ["region_id"], "unique": false },
+    { "name": "idx_is_active", "columns": ["is_active"], "unique": false }
+  ]
+}

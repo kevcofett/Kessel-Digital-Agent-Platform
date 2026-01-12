@@ -1,0 +1,32 @@
+{
+  "schemaName": "eap_task_executions",
+  "displayName": "Task Execution",
+  "pluralName": "Task Executions",
+  "description": "Log of scheduled task executions",
+  "tier": 3,
+  "featureGate": "SCHEDULED_TASKS",
+  "category": "Operations",
+  "primaryKey": "execution_id",
+  "primaryNameColumn": "execution_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "execution_id", "displayName": "Execution ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "task_id", "displayName": "Task", "dataType": "Lookup", "lookupTable": "eap_scheduled_tasks", "required": true, "description": "Associated task" },
+    { "schemaName": "start_date", "displayName": "Start Date", "dataType": "DateTime", "required": true, "description": "Execution start" },
+    { "schemaName": "end_date", "displayName": "End Date", "dataType": "DateTime", "required": false, "description": "Execution end" },
+    { "schemaName": "status", "displayName": "Status", "dataType": "Choice", "required": true, "defaultValue": "Running", "options": ["Running", "Success", "Failed", "Partial", "Cancelled"], "description": "Execution status" },
+    { "schemaName": "trigger_type", "displayName": "Trigger Type", "dataType": "Choice", "required": true, "options": ["Scheduled", "Manual", "Event"], "description": "How triggered" },
+    { "schemaName": "triggered_by_user_id", "displayName": "Triggered By", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "User if manual" },
+    { "schemaName": "items_processed", "displayName": "Items Processed", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Items processed" },
+    { "schemaName": "items_succeeded", "displayName": "Items Succeeded", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Items succeeded" },
+    { "schemaName": "items_failed", "displayName": "Items Failed", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Items failed" },
+    { "schemaName": "error_message", "displayName": "Error Message", "dataType": "MultilineText", "required": false, "description": "Error if failed" },
+    { "schemaName": "execution_log", "displayName": "Execution Log", "dataType": "MultilineText", "required": false, "description": "Execution details" },
+    { "schemaName": "duration_ms", "displayName": "Duration MS", "dataType": "WholeNumber", "required": false, "description": "Duration in ms" }
+  ],
+  "indexes": [
+    { "name": "idx_task", "columns": ["task_id"], "unique": false },
+    { "name": "idx_start", "columns": ["start_date"], "unique": false },
+    { "name": "idx_status", "columns": ["status"], "unique": false }
+  ]
+}

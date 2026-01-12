@@ -1,0 +1,280 @@
+{
+  "schemaName": "eap_agent",
+  "displayName": "Agents",
+  "pluralName": "Agents",
+  "description": "AI Agent definitions including configuration and capabilities",
+  "tier": 1,
+  "category": "Multi-Agent",
+  "primaryKey": "agent_id",
+  "primaryNameColumn": "agent_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    {
+      "schemaName": "agent_id",
+      "displayName": "Agent ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "agent_code",
+      "displayName": "Agent Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique agent code"
+    },
+    {
+      "schemaName": "agent_name",
+      "displayName": "Agent Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Agent display name"
+    },
+    {
+      "schemaName": "agent_description",
+      "displayName": "Description",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Agent description"
+    },
+    {
+      "schemaName": "agent_type",
+      "displayName": "Agent Type",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Consulting", "Media", "Analytics", "Custom"],
+      "description": "Type of agent"
+    },
+    {
+      "schemaName": "ownership_type",
+      "displayName": "Ownership Type",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Internal", "ClientVendorManaged", "ClientManaged", "Hybrid"],
+      "description": "Agent ownership model"
+    },
+    {
+      "schemaName": "client_id",
+      "displayName": "Client",
+      "dataType": "Lookup",
+      "lookupTable": "eap_client",
+      "required": false,
+      "description": "Client owner (for client agents)"
+    },
+    {
+      "schemaName": "tenant_id",
+      "displayName": "Tenant",
+      "dataType": "Lookup",
+      "lookupTable": "eap_tenants",
+      "required": false,
+      "description": "Tenant (for multi-tenant)"
+    },
+    {
+      "schemaName": "product_unit_id",
+      "displayName": "Product Unit",
+      "dataType": "Lookup",
+      "lookupTable": "eap_product_units",
+      "required": false,
+      "description": "Product unit"
+    },
+    {
+      "schemaName": "business_unit_id",
+      "displayName": "Business Unit",
+      "dataType": "Lookup",
+      "lookupTable": "eap_business_units",
+      "required": false,
+      "description": "Business unit"
+    },
+    {
+      "schemaName": "division_id",
+      "displayName": "Division",
+      "dataType": "Lookup",
+      "lookupTable": "eap_divisions",
+      "required": false,
+      "description": "Division"
+    },
+    {
+      "schemaName": "brand_profile_id",
+      "displayName": "Brand Profile",
+      "dataType": "Lookup",
+      "lookupTable": "eap_brand_profiles",
+      "required": false,
+      "description": "Brand profile"
+    },
+    {
+      "schemaName": "is_white_labeled",
+      "displayName": "Is White Labeled",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "White-labeled agent"
+    },
+    {
+      "schemaName": "base_instructions_template",
+      "displayName": "Base Instructions Template",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Base instruction template"
+    },
+    {
+      "schemaName": "copilot_studio_id",
+      "displayName": "Copilot Studio ID",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Copilot Studio agent ID"
+    },
+    {
+      "schemaName": "kb_scope_config_json",
+      "displayName": "KB Scope Config",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "KB scope configuration JSON"
+    },
+    {
+      "schemaName": "features_enabled_json",
+      "displayName": "Features Enabled",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Enabled features JSON"
+    },
+    {
+      "schemaName": "integrations_enabled_json",
+      "displayName": "Integrations Enabled",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Enabled integrations JSON"
+    },
+    {
+      "schemaName": "proactive_config_json",
+      "displayName": "Proactive Config",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Proactive configuration JSON"
+    },
+    {
+      "schemaName": "supported_output_types_json",
+      "displayName": "Supported Output Types",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Supported output types JSON"
+    },
+    {
+      "schemaName": "max_tokens_per_session",
+      "displayName": "Max Tokens Per Session",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Token limit per session"
+    },
+    {
+      "schemaName": "max_sessions_per_day",
+      "displayName": "Max Sessions Per Day",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Session limit per day"
+    },
+    {
+      "schemaName": "status",
+      "displayName": "Status",
+      "dataType": "Choice",
+      "required": true,
+      "defaultValue": "Active",
+      "options": ["Active", "Inactive", "Suspended", "Trial", "Deprecated"],
+      "description": "Agent status"
+    },
+    {
+      "schemaName": "version",
+      "displayName": "Version",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": false,
+      "description": "Agent version"
+    },
+    {
+      "schemaName": "last_deployed_date",
+      "displayName": "Last Deployed Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Last deployment"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    },
+    {
+      "schemaName": "modified_by",
+      "displayName": "Modified By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Modifier"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_agent_code",
+      "columns": ["agent_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_agent_type",
+      "columns": ["agent_type"],
+      "unique": false
+    },
+    {
+      "name": "idx_status",
+      "columns": ["status"],
+      "unique": false
+    },
+    {
+      "name": "idx_client_id",
+      "columns": ["client_id"],
+      "unique": false
+    }
+  ],
+  "seedData": [
+    {
+      "agent_code": "CONSULTING_AGENT",
+      "agent_name": "Consulting Agent",
+      "agent_type": "Consulting",
+      "ownership_type": "Internal",
+      "status": "Active"
+    },
+    {
+      "agent_code": "MPA_AGENT",
+      "agent_name": "Media Planning Agent",
+      "agent_type": "Media",
+      "ownership_type": "Internal",
+      "status": "Active"
+    }
+  ]
+}

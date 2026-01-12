@@ -1,0 +1,263 @@
+{
+  "schemaName": "eap_kb_registry",
+  "displayName": "KB Registry",
+  "pluralName": "KB Registry",
+  "description": "Knowledge base file registry for content discovery",
+  "tier": 1,
+  "category": "Content",
+  "primaryKey": "kb_file_id",
+  "primaryNameColumn": "file_title",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    {
+      "schemaName": "kb_file_id",
+      "displayName": "KB File ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "file_code",
+      "displayName": "File Code",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "unique": true,
+      "description": "Unique file code"
+    },
+    {
+      "schemaName": "file_name",
+      "displayName": "File Name",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": true,
+      "description": "File name"
+    },
+    {
+      "schemaName": "file_title",
+      "displayName": "File Title",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": true,
+      "description": "Display title"
+    },
+    {
+      "schemaName": "file_description",
+      "displayName": "File Description",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Description"
+    },
+    {
+      "schemaName": "file_type",
+      "displayName": "File Type",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Txt", "Md", "Docx", "Pdf", "Json"],
+      "description": "File format"
+    },
+    {
+      "schemaName": "file_category",
+      "displayName": "File Category",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Architecture", "Framework", "Registry", "Behavioral", "Example", "Reference"],
+      "description": "Content category"
+    },
+    {
+      "schemaName": "sharepoint_path",
+      "displayName": "SharePoint Path",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": true,
+      "description": "SharePoint path"
+    },
+    {
+      "schemaName": "sharepoint_url",
+      "displayName": "SharePoint URL",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Full SharePoint URL"
+    },
+    {
+      "schemaName": "content_scope",
+      "displayName": "Content Scope",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Platform", "Client", "User"],
+      "description": "Content scope"
+    },
+    {
+      "schemaName": "scope_entity_id",
+      "displayName": "Scope Entity ID",
+      "dataType": "UniqueIdentifier",
+      "required": false,
+      "description": "Client or User ID"
+    },
+    {
+      "schemaName": "agent_ids_json",
+      "displayName": "Agent IDs",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Applicable agents JSON"
+    },
+    {
+      "schemaName": "version",
+      "displayName": "Version",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": false,
+      "description": "File version"
+    },
+    {
+      "schemaName": "word_count",
+      "displayName": "Word Count",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Word count"
+    },
+    {
+      "schemaName": "file_size_bytes",
+      "displayName": "File Size (bytes)",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "File size"
+    },
+    {
+      "schemaName": "is_6_rule_compliant",
+      "displayName": "Is 6-Rule Compliant",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "6-Rule format compliant"
+    },
+    {
+      "schemaName": "compliance_notes",
+      "displayName": "Compliance Notes",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Compliance notes"
+    },
+    {
+      "schemaName": "priority",
+      "displayName": "Priority",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Search priority (lower = higher)"
+    },
+    {
+      "schemaName": "last_content_update",
+      "displayName": "Last Content Update",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Content last updated"
+    },
+    {
+      "schemaName": "last_indexed_date",
+      "displayName": "Last Indexed Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Last indexed in AI Search"
+    },
+    {
+      "schemaName": "is_indexed",
+      "displayName": "Is Indexed",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Currently indexed"
+    },
+    {
+      "schemaName": "usage_count",
+      "displayName": "Usage Count",
+      "dataType": "WholeNumber",
+      "required": true,
+      "defaultValue": 0,
+      "description": "Usage count"
+    },
+    {
+      "schemaName": "average_rating",
+      "displayName": "Average Rating",
+      "dataType": "Decimal",
+      "required": false,
+      "description": "Average rating"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "deprecated_date",
+      "displayName": "Deprecated Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Deprecation date"
+    },
+    {
+      "schemaName": "replaced_by_file_id",
+      "displayName": "Replaced By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_kb_registry",
+      "required": false,
+      "description": "Replacement file"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    },
+    {
+      "schemaName": "modified_by",
+      "displayName": "Modified By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Modifier"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_file_code",
+      "columns": ["file_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_content_scope",
+      "columns": ["content_scope", "scope_entity_id"],
+      "unique": false
+    },
+    {
+      "name": "idx_file_category",
+      "columns": ["file_category"],
+      "unique": false
+    },
+    {
+      "name": "idx_is_active_priority",
+      "columns": ["is_active", "priority"],
+      "unique": false
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "schemaName": "eap_output_versions",
+  "displayName": "Output Versions",
+  "pluralName": "Output Versions",
+  "description": "Version history for outputs including content snapshots",
+  "tier": 2,
+  "category": "Content",
+  "primaryKey": "version_id",
+  "primaryNameColumn": "version_label",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    {
+      "schemaName": "version_id",
+      "displayName": "Version ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "output_id",
+      "displayName": "Output",
+      "dataType": "Lookup",
+      "lookupTable": "eap_outputs",
+      "required": true,
+      "description": "Parent output"
+    },
+    {
+      "schemaName": "version_number",
+      "displayName": "Version Number",
+      "dataType": "WholeNumber",
+      "required": true,
+      "description": "Sequential version number"
+    },
+    {
+      "schemaName": "version_label",
+      "displayName": "Version Label",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Display label (e.g., v1.0, Draft 2)"
+    },
+    {
+      "schemaName": "version_notes",
+      "displayName": "Version Notes",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Description of changes"
+    },
+    {
+      "schemaName": "content_snapshot_json",
+      "displayName": "Content Snapshot",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Snapshot of content at this version"
+    },
+    {
+      "schemaName": "file_url",
+      "displayName": "File URL",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "SharePoint file URL for this version"
+    },
+    {
+      "schemaName": "file_name",
+      "displayName": "File Name",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": false,
+      "description": "File name"
+    },
+    {
+      "schemaName": "file_size_bytes",
+      "displayName": "File Size (bytes)",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "File size in bytes"
+    },
+    {
+      "schemaName": "is_major_version",
+      "displayName": "Is Major Version",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Major version flag"
+    },
+    {
+      "schemaName": "is_current",
+      "displayName": "Is Current",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Current active version"
+    },
+    {
+      "schemaName": "approval_status",
+      "displayName": "Approval Status",
+      "dataType": "Choice",
+      "required": true,
+      "defaultValue": "NotRequired",
+      "options": ["NotRequired", "Pending", "Approved", "Rejected"],
+      "description": "Version approval status"
+    },
+    {
+      "schemaName": "approved_by_user_id",
+      "displayName": "Approved By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": false,
+      "description": "Approver"
+    },
+    {
+      "schemaName": "approved_date",
+      "displayName": "Approved Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Approval date"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Version created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Version creator"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_output_version",
+      "columns": ["output_id", "version_number"],
+      "unique": true
+    },
+    {
+      "name": "idx_output_current",
+      "columns": ["output_id", "is_current"],
+      "unique": false
+    }
+  ]
+}

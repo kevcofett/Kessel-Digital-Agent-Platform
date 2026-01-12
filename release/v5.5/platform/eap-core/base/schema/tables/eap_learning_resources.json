@@ -1,0 +1,33 @@
+{
+  "schemaName": "eap_learning_resources",
+  "displayName": "Learning Resource",
+  "pluralName": "Learning Resources",
+  "description": "Training and learning resources",
+  "tier": 3,
+  "featureGate": "LEARNING",
+  "category": "Training",
+  "primaryKey": "resource_id",
+  "primaryNameColumn": "resource_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "resource_id", "displayName": "Resource ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "resource_code", "displayName": "Resource Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique code" },
+    { "schemaName": "resource_name", "displayName": "Resource Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Display name" },
+    { "schemaName": "resource_type", "displayName": "Resource Type", "dataType": "Choice", "required": true, "options": ["Video", "Document", "Tutorial", "Quiz", "Guide", "FAQ"], "description": "Type of resource" },
+    { "schemaName": "description", "displayName": "Description", "dataType": "MultilineText", "required": false, "description": "Resource description" },
+    { "schemaName": "content_url", "displayName": "Content URL", "dataType": "Text", "maxLength": 1000, "required": false, "description": "URL to content" },
+    { "schemaName": "content_body", "displayName": "Content Body", "dataType": "MultilineText", "required": false, "description": "Inline content" },
+    { "schemaName": "duration_minutes", "displayName": "Duration Minutes", "dataType": "WholeNumber", "required": false, "description": "Estimated duration" },
+    { "schemaName": "difficulty_level", "displayName": "Difficulty", "dataType": "Choice", "required": true, "defaultValue": "Beginner", "options": ["Beginner", "Intermediate", "Advanced"], "description": "Difficulty level" },
+    { "schemaName": "agent_id", "displayName": "Agent", "dataType": "Lookup", "lookupTable": "eap_agent", "required": false, "description": "Agent-specific resource" },
+    { "schemaName": "tags_json", "displayName": "Tags", "dataType": "MultilineText", "required": false, "description": "Tags JSON" },
+    { "schemaName": "view_count", "displayName": "View Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Times viewed" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_resource_code", "columns": ["resource_code"], "unique": true },
+    { "name": "idx_type", "columns": ["resource_type"], "unique": false }
+  ]
+}

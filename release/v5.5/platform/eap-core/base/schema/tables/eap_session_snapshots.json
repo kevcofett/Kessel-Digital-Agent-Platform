@@ -1,0 +1,95 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/Power-Platform-Schema/main/schemas/dataverse/entity.json",
+  "name": "eap_session_snapshots",
+  "displayName": "Session Snapshots",
+  "displayCollectionName": "Session Snapshots",
+  "description": "Stores session state snapshots for recovery after timeout",
+  "ownershipType": "OrganizationOwned",
+  "isActivity": false,
+  "primaryNameAttribute": "eap_session_id",
+  "columns": [
+    {
+      "name": "eap_snapshotid",
+      "displayName": "Snapshot ID",
+      "type": "Uniqueidentifier",
+      "description": "Primary key for the session snapshot",
+      "isPrimaryKey": true
+    },
+    {
+      "name": "eap_session_id",
+      "displayName": "Session ID",
+      "type": "String",
+      "maxLength": 100,
+      "description": "ID of the original session",
+      "isRequired": true
+    },
+    {
+      "name": "eap_agent_id",
+      "displayName": "Agent ID",
+      "type": "String",
+      "maxLength": 50,
+      "description": "Agent that owned the session",
+      "isRequired": true
+    },
+    {
+      "name": "eap_user_id",
+      "displayName": "User ID",
+      "type": "String",
+      "maxLength": 100,
+      "description": "User who owned the session",
+      "isRequired": true
+    },
+    {
+      "name": "eap_tenant_id",
+      "displayName": "Tenant ID",
+      "type": "String",
+      "maxLength": 100,
+      "description": "Tenant ID if multi-tenant"
+    },
+    {
+      "name": "eap_snapshot_data",
+      "displayName": "Snapshot Data",
+      "type": "Memo",
+      "maxLength": 1048576,
+      "description": "JSON snapshot of session state including current step, exchange count, and session data"
+    },
+    {
+      "name": "eap_created_at",
+      "displayName": "Created At",
+      "type": "DateTime",
+      "format": "DateAndTime",
+      "description": "When the snapshot was created"
+    },
+    {
+      "name": "eap_expires_at",
+      "displayName": "Expires At",
+      "type": "DateTime",
+      "format": "DateAndTime",
+      "description": "When the snapshot expires and should be cleaned up"
+    },
+    {
+      "name": "eap_is_active",
+      "displayName": "Is Active",
+      "type": "Boolean",
+      "defaultValue": true,
+      "description": "Whether the snapshot is available for recovery (false if already used)"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_eap_snapshot_user_agent",
+      "columns": ["eap_user_id", "eap_agent_id", "eap_expires_at"],
+      "description": "Index for finding recoverable sessions for a user/agent"
+    },
+    {
+      "name": "idx_eap_snapshot_session",
+      "columns": ["eap_session_id"],
+      "description": "Index for finding snapshots by original session ID"
+    },
+    {
+      "name": "idx_eap_snapshot_cleanup",
+      "columns": ["eap_expires_at", "eap_is_active"],
+      "description": "Index for cleanup of expired snapshots"
+    }
+  ]
+}

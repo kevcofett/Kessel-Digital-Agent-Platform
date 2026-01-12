@@ -1,0 +1,28 @@
+{
+  "schemaName": "eap_client_associations",
+  "displayName": "Client Associations",
+  "pluralName": "Client Associations",
+  "description": "User associations to clients",
+  "tier": 2,
+  "category": "Association",
+  "primaryKey": "association_id",
+  "primaryNameColumn": "association_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "association_id", "displayName": "Association ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "User" },
+    { "schemaName": "client_id", "displayName": "Client", "dataType": "Lookup", "lookupTable": "eap_client", "required": true, "description": "Client" },
+    { "schemaName": "association_type", "displayName": "Association Type", "dataType": "Choice", "required": true, "options": ["Lead", "Member", "Contributor", "Viewer"], "description": "Type of association" },
+    { "schemaName": "is_primary", "displayName": "Is Primary", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Primary client" },
+    { "schemaName": "effective_date", "displayName": "Effective Date", "dataType": "DateTime", "required": true, "description": "Start date" },
+    { "schemaName": "end_date", "displayName": "End Date", "dataType": "DateTime", "required": false, "description": "End date" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "created_by", "displayName": "Created By", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Creator" }
+  ],
+  "indexes": [
+    { "name": "idx_user", "columns": ["user_id"], "unique": false },
+    { "name": "idx_client", "columns": ["client_id"], "unique": false },
+    { "name": "idx_user_client", "columns": ["user_id", "client_id"], "unique": false }
+  ]
+}

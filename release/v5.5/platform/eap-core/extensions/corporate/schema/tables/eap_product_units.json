@@ -1,0 +1,141 @@
+{
+  "schemaName": "eap_product_units",
+  "displayName": "Product Units",
+  "pluralName": "Product Units",
+  "description": "Product units within business units",
+  "tier": 1,
+  "category": "Org",
+  "primaryKey": "product_unit_id",
+  "primaryNameColumn": "product_name",
+  "ownershipType": "OrganizationOwned",
+  "notes": "Created with 'Default' value at Tier 1, populated with real data when ORG_HIERARCHY enabled",
+  "columns": [
+    {
+      "schemaName": "product_unit_id",
+      "displayName": "Product Unit ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "product_code",
+      "displayName": "Product Code",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": true,
+      "unique": true,
+      "description": "Unique product code"
+    },
+    {
+      "schemaName": "product_name",
+      "displayName": "Product Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Product unit name"
+    },
+    {
+      "schemaName": "business_unit_id",
+      "displayName": "Business Unit",
+      "dataType": "Lookup",
+      "lookupTable": "eap_business_units",
+      "required": true,
+      "description": "Parent BU"
+    },
+    {
+      "schemaName": "division_id",
+      "displayName": "Division",
+      "dataType": "Lookup",
+      "lookupTable": "eap_divisions",
+      "required": true,
+      "description": "Division (denormalized)"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Description"
+    },
+    {
+      "schemaName": "product_head_user_id",
+      "displayName": "Product Head",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": false,
+      "description": "Product head"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "sort_order",
+      "displayName": "Sort Order",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Display order"
+    },
+    {
+      "schemaName": "config_json",
+      "displayName": "Config JSON",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Product-specific config"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    },
+    {
+      "schemaName": "modified_by",
+      "displayName": "Modified By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Modifier"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_product_code",
+      "columns": ["product_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_business_unit_id",
+      "columns": ["business_unit_id"],
+      "unique": false
+    },
+    {
+      "name": "idx_is_active",
+      "columns": ["is_active"],
+      "unique": false
+    }
+  ],
+  "seedData": [
+    { "product_code": "DEFAULT_PROD", "product_name": "Default Product", "bu_code": "DEFAULT_BU", "division_code": "DEFAULT", "is_active": true, "sort_order": 1, "description": "Default product for Level 0/1 deployment" }
+  ]
+}

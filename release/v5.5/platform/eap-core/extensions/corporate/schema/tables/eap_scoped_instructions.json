@@ -1,0 +1,32 @@
+{
+  "schemaName": "eap_scoped_instructions",
+  "displayName": "Scoped Instruction",
+  "pluralName": "Scoped Instructions",
+  "description": "Agent instructions scoped to specific contexts",
+  "tier": 3,
+  "featureGate": "SCOPED_CONTEXT",
+  "category": "Configuration",
+  "primaryKey": "instruction_id",
+  "primaryNameColumn": "instruction_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "instruction_id", "displayName": "Instruction ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "instruction_code", "displayName": "Instruction Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique instruction code" },
+    { "schemaName": "instruction_name", "displayName": "Instruction Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Instruction display name" },
+    { "schemaName": "instruction_type", "displayName": "Instruction Type", "dataType": "Choice", "required": true, "options": ["Behavior", "Constraint", "Enhancement", "Override"], "description": "Type of instruction" },
+    { "schemaName": "instruction_text", "displayName": "Instruction Text", "dataType": "MultilineText", "required": true, "description": "Full instruction text" },
+    { "schemaName": "scope_type", "displayName": "Scope Type", "dataType": "Choice", "required": true, "options": ["Global", "Client", "Industry", "Region", "User"], "description": "Scope type" },
+    { "schemaName": "scope_entity_id", "displayName": "Scope Entity ID", "dataType": "UniqueIdentifier", "required": false, "description": "Specific entity for scope" },
+    { "schemaName": "agent_id", "displayName": "Agent", "dataType": "Lookup", "lookupTable": "eap_agent", "required": false, "description": "Agent-specific instruction" },
+    { "schemaName": "priority", "displayName": "Priority", "dataType": "WholeNumber", "required": true, "defaultValue": 100, "description": "Priority (lower first)" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "effective_start", "displayName": "Effective Start", "dataType": "DateTime", "required": false, "description": "When starts" },
+    { "schemaName": "effective_end", "displayName": "Effective End", "dataType": "DateTime", "required": false, "description": "When ends" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_instruction_code", "columns": ["instruction_code"], "unique": true },
+    { "name": "idx_scope", "columns": ["scope_type", "scope_entity_id"], "unique": false }
+  ]
+}

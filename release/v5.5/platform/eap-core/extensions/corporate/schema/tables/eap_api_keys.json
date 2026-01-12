@@ -1,0 +1,33 @@
+{
+  "schemaName": "eap_api_keys",
+  "displayName": "API Key",
+  "pluralName": "API Keys",
+  "description": "API keys for programmatic access",
+  "tier": 3,
+  "featureGate": "API_ACCESS",
+  "category": "Security",
+  "primaryKey": "key_id",
+  "primaryNameColumn": "key_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "key_id", "displayName": "Key ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "key_name", "displayName": "Key Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Display name" },
+    { "schemaName": "key_prefix", "displayName": "Key Prefix", "dataType": "Text", "maxLength": 10, "required": true, "description": "Visible prefix" },
+    { "schemaName": "key_hash", "displayName": "Key Hash", "dataType": "Text", "maxLength": 256, "required": true, "description": "Hashed key" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "Associated user" },
+    { "schemaName": "scope", "displayName": "Scope", "dataType": "Choice", "required": true, "options": ["Read", "Write", "Admin", "Full"], "description": "Access scope" },
+    { "schemaName": "allowed_agents_json", "displayName": "Allowed Agents", "dataType": "MultilineText", "required": false, "description": "Agent IDs or 'all'" },
+    { "schemaName": "allowed_ips_json", "displayName": "Allowed IPs", "dataType": "MultilineText", "required": false, "description": "IP whitelist JSON" },
+    { "schemaName": "rate_limit", "displayName": "Rate Limit", "dataType": "WholeNumber", "required": true, "defaultValue": 1000, "description": "Requests per hour" },
+    { "schemaName": "last_used_date", "displayName": "Last Used", "dataType": "DateTime", "required": false, "description": "Last used" },
+    { "schemaName": "usage_count", "displayName": "Usage Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Total uses" },
+    { "schemaName": "expires_date", "displayName": "Expires Date", "dataType": "DateTime", "required": false, "description": "Expiration" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "revoked_date", "displayName": "Revoked Date", "dataType": "DateTime", "required": false, "description": "When revoked" }
+  ],
+  "indexes": [
+    { "name": "idx_key_prefix", "columns": ["key_prefix"], "unique": false },
+    { "name": "idx_user", "columns": ["user_id"], "unique": false }
+  ]
+}

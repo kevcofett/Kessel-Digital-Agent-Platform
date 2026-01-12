@@ -1,0 +1,34 @@
+{
+  "schemaName": "eap_usage_tracking",
+  "displayName": "Usage Tracking",
+  "pluralName": "Usage Tracking",
+  "description": "Aggregated usage metrics",
+  "tier": 2,
+  "category": "Usage",
+  "primaryKey": "tracking_id",
+  "primaryNameColumn": "tracking_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "tracking_id", "displayName": "Tracking ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "tracking_date", "displayName": "Tracking Date", "dataType": "DateTime", "required": true, "description": "Date of metrics" },
+    { "schemaName": "granularity", "displayName": "Granularity", "dataType": "Choice", "required": true, "options": ["Daily", "Weekly", "Monthly"], "description": "Time granularity" },
+    { "schemaName": "scope_type", "displayName": "Scope Type", "dataType": "Choice", "required": true, "options": ["Platform", "Agent", "User", "Client", "Division", "BusinessUnit"], "description": "Aggregation scope" },
+    { "schemaName": "scope_entity_id", "displayName": "Scope Entity ID", "dataType": "UniqueIdentifier", "required": false, "description": "Specific scope entity" },
+    { "schemaName": "agent_id", "displayName": "Agent", "dataType": "Lookup", "lookupTable": "eap_agent", "required": false, "description": "Agent if agent-scoped" },
+    { "schemaName": "session_count", "displayName": "Session Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Number of sessions" },
+    { "schemaName": "exchange_count", "displayName": "Exchange Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Number of exchanges" },
+    { "schemaName": "output_count", "displayName": "Output Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Number of outputs" },
+    { "schemaName": "unique_users", "displayName": "Unique Users", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Unique user count" },
+    { "schemaName": "total_tokens", "displayName": "Total Tokens", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Total tokens used" },
+    { "schemaName": "avg_session_duration_minutes", "displayName": "Avg Session Duration", "dataType": "Decimal", "required": false, "description": "Average session minutes" },
+    { "schemaName": "avg_exchanges_per_session", "displayName": "Avg Exchanges/Session", "dataType": "Decimal", "required": false, "description": "Average exchanges per session" },
+    { "schemaName": "framework_usage_json", "displayName": "Framework Usage", "dataType": "MultilineText", "required": false, "description": "Framework usage counts JSON" },
+    { "schemaName": "output_type_usage_json", "displayName": "Output Type Usage", "dataType": "MultilineText", "required": false, "description": "Output type counts JSON" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": true, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_date_scope", "columns": ["tracking_date", "scope_type", "scope_entity_id"], "unique": true },
+    { "name": "idx_agent", "columns": ["agent_id"], "unique": false }
+  ]
+}

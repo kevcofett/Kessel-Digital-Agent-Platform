@@ -1,0 +1,308 @@
+DOCUMENT: REGISTRY_Available_Integrations_v1.txt
+CATEGORY: Registry
+TOPICS: integrations, external APIs, Nielsen, Comscore, Google Ads, Meta Ads, Trade Desk, DV360, Salesforce, HubSpot, SendGrid, Microsoft Teams, Census data, benchmarks
+
+AVAILABLE INTEGRATIONS REGISTRY
+Enterprise AI Platform v1.0
+Last Updated: January 2026
+
+PURPOSE
+
+This registry lists all external integrations that can be connected to the platform. Integrations provide access to external data, services, and APIs that enhance agent capabilities.
+
+INTEGRATION STATUS
+
+Each integration has a status indicating its connection state:
+- AVAILABLE: Integration is defined but not yet connected
+- CONNECTED: Credentials configured, ready to use
+- ACTIVE: Enabled and in use
+- DEGRADED: Experiencing issues, limited functionality
+- UNAVAILABLE: Temporarily offline
+
+MEASUREMENT AND ANALYTICS INTEGRATIONS
+
+NIELSEN AUDIENCE MEASUREMENT
+
+Code: nielsen
+Type: Measurement
+Agent Domains: MPA
+Status: AVAILABLE
+Description: Audience measurement, demographic data, reach and frequency analysis for media planning optimization.
+
+Operations Available:
+- get-audience-data: Retrieve audience segment demographics and size
+- get-reach-frequency: Calculate reach/frequency for media schedules
+- get-benchmarks: Industry benchmark data by vertical
+
+Data Provided:
+- Audience segment sizes and demographics
+- Viewing behavior patterns
+- Cross-platform measurement
+- Brand lift studies
+
+To Connect: Contact your Nielsen representative for API credentials.
+
+COMSCORE DIGITAL ANALYTICS
+
+Code: comscore
+Type: Analytics
+Agent Domains: MPA
+Status: AVAILABLE
+Description: Digital audience measurement and competitive intelligence for online media planning.
+
+Operations Available:
+- get-site-metrics: Website traffic and engagement metrics
+- get-competitive-data: Competitive share of voice and traffic
+
+Data Provided:
+- Unique visitors and page views
+- Audience demographics
+- Competitive traffic comparison
+- Mobile vs desktop breakdown
+
+To Connect: Contact your Comscore representative for API credentials.
+
+ADVERTISING PLATFORM INTEGRATIONS
+
+GOOGLE ADS
+
+Code: google-ads
+Type: AdPlatform
+Agent Domains: MPA
+Status: AVAILABLE
+Description: Google Ads campaign management and performance data for search, display, and video advertising.
+
+Operations Available:
+- get-campaigns: List campaigns and settings
+- get-performance: Campaign performance metrics
+- get-keyword-ideas: Keyword research and forecasting
+
+Data Provided:
+- Campaign spend and impressions
+- Click-through rates and conversions
+- Keyword performance
+- Audience insights
+
+To Connect: Grant OAuth access via Google Ads Manager.
+
+META ADS (FACEBOOK/INSTAGRAM)
+
+Code: meta-ads
+Type: AdPlatform
+Agent Domains: MPA
+Status: AVAILABLE
+Description: Meta advertising platform for Facebook, Instagram, and Audience Network campaign data.
+
+Operations Available:
+- get-ad-accounts: List connected ad accounts
+- get-insights: Campaign and ad set performance
+
+Data Provided:
+- Impressions and reach
+- Engagement metrics
+- Conversion tracking
+- Audience demographics
+
+To Connect: Grant OAuth access via Meta Business Manager.
+
+THE TRADE DESK
+
+Code: the-trade-desk
+Type: AdPlatform (DSP)
+Agent Domains: MPA
+Status: AVAILABLE
+Description: Programmatic advertising platform for display, video, CTV, and audio campaigns.
+
+Operations Available:
+- get-campaigns: Campaign list and settings
+- get-performance: Performance metrics by campaign/ad group
+- get-inventory: Available inventory and pricing
+
+Data Provided:
+- Bid performance and win rates
+- Viewability and completion rates
+- Audience reach and frequency
+- Inventory quality metrics
+
+To Connect: Request API access from your TTD account team.
+
+DV360 (DISPLAY AND VIDEO 360)
+
+Code: dv360
+Type: AdPlatform (DSP)
+Agent Domains: MPA
+Status: AVAILABLE
+Description: Google's programmatic buying platform for display, video, audio, and connected TV advertising.
+
+Operations Available:
+- get-campaigns: Campaign and insertion order list
+- get-performance: Performance reporting
+- get-reach-forecast: Reach and frequency forecasting
+
+Data Provided:
+- Campaign delivery and pacing
+- Viewability and brand safety metrics
+- Cross-channel reach
+- Audience composition
+
+To Connect: Grant OAuth access via Campaign Manager 360.
+
+CRM AND BUSINESS DATA INTEGRATIONS
+
+SALESFORCE CRM
+
+Code: salesforce
+Type: CRM
+Agent Domains: Both (MPA and Consulting)
+Status: AVAILABLE
+Description: Customer relationship management data for understanding client relationships and opportunities.
+
+Operations Available:
+- get-accounts: Retrieve account information
+- get-opportunities: Sales pipeline data
+- create-opportunity: Create new opportunities (with approval)
+
+Data Provided:
+- Client account details
+- Opportunity pipeline
+- Contact information
+- Activity history
+
+To Connect: Grant OAuth access via Salesforce Connected Apps.
+
+HUBSPOT
+
+Code: hubspot
+Type: CRM
+Agent Domains: Both
+Status: AVAILABLE
+Description: Marketing and sales CRM data for lead management and campaign attribution.
+
+Operations Available:
+- get-contacts: Contact list and properties
+- get-deals: Deal pipeline
+- get-campaigns: Marketing campaign data
+
+Data Provided:
+- Contact engagement history
+- Deal stages and values
+- Email campaign performance
+- Attribution data
+
+To Connect: Create private app in HubSpot settings.
+
+NOTIFICATION INTEGRATIONS
+
+SENDGRID EMAIL
+
+Code: sendgrid
+Type: Notification
+Agent Domains: Both
+Status: AVAILABLE
+Description: Email delivery service for sending reports, notifications, and deliverables.
+
+Operations Available:
+- send-email: Send transactional email
+
+Capabilities:
+- HTML and plain text emails
+- Attachments support
+- Delivery tracking
+- Template support
+
+To Connect: Create API key in SendGrid dashboard.
+
+MICROSOFT TEAMS
+
+Code: ms-teams
+Type: Notification
+Agent Domains: Both
+Status: AVAILABLE
+Description: Teams messaging for notifications, alerts, and collaboration integration.
+
+Operations Available:
+- send-message: Send message to channel or user
+- create-channel-post: Create formatted channel post
+
+Capabilities:
+- Adaptive cards
+- @mentions
+- Rich formatting
+- File sharing
+
+To Connect: Configure via Power Automate connector.
+
+DATA SOURCE INTEGRATIONS
+
+CENSUS DATA (US)
+
+Code: census-data
+Type: DataSource
+Agent Domains: Both
+Status: CONNECTED (Built-in)
+Description: US Census demographic and geographic data for market analysis and audience profiling.
+
+Operations Available:
+- get-demographics: DMA and market demographics
+- get-population: Population estimates
+
+Data Provided:
+- Age and gender distribution
+- Household income
+- Education levels
+- Housing data
+
+Note: This integration uses static data files and requires no credentials.
+
+INDUSTRY BENCHMARKS
+
+Code: industry-benchmarks
+Type: DataSource
+Agent Domains: Both
+Status: CONNECTED (Built-in)
+Description: Curated industry benchmark data for media, advertising, and business metrics.
+
+Operations Available:
+- get-media-benchmarks: CPM, CTR, viewability by channel
+- get-industry-benchmarks: Business metrics by vertical
+
+Data Provided:
+- Media performance benchmarks
+- Industry financial ratios
+- Competitive benchmarks
+- Trend data
+
+Note: This integration uses curated knowledge base files.
+
+REQUESTING NEW INTEGRATIONS
+
+To request a new integration:
+- Identify the service you need to connect
+- Confirm API access is available
+- Document:
+  - Service name and provider
+  - What data/operations you need
+  - Authentication type required
+  - Expected usage volume
+- Submit request to platform administrators
+- Await credential configuration and testing
+- Integration will appear as CONNECTED when ready
+
+INTEGRATION HEALTH
+
+Current health status is checked every 5 minutes. If an integration shows degraded or unavailable status:
+- The agent will acknowledge the limitation
+- Cached data may be used if available
+- Recommendations will be based on available data
+- You can request a retry when status returns to healthy
+
+VERSION HISTORY
+
+v1.0 (2025-01-15): Initial registry with core integrations
+- Measurement: Nielsen, Comscore
+- Ad Platforms: Google Ads, Meta Ads, TTD, DV360
+- CRM: Salesforce, HubSpot
+- Notifications: SendGrid, MS Teams
+- Data: Census, Benchmarks
+
+END OF DOCUMENT

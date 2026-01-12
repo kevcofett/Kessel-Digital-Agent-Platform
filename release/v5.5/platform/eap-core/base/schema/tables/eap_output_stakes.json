@@ -1,0 +1,144 @@
+{
+  "schemaName": "eap_output_stakes",
+  "displayName": "Output Stakes",
+  "pluralName": "Output Stakes",
+  "description": "Stakes modifiers for proactive level calculation",
+  "tier": 1,
+  "category": "Proactive",
+  "primaryKey": "stake_id",
+  "primaryNameColumn": "stake_name",
+  "ownershipType": "OrganizationOwned",
+  "isReferenceData": true,
+  "columns": [
+    {
+      "schemaName": "stake_id",
+      "displayName": "Stake ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "stake_code",
+      "displayName": "Stake Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique stake code"
+    },
+    {
+      "schemaName": "stake_name",
+      "displayName": "Stake Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Stake name"
+    },
+    {
+      "schemaName": "stake_category",
+      "displayName": "Stake Category",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Audience", "Value", "Urgency", "Relationship", "Context"],
+      "description": "Stake category"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Description"
+    },
+    {
+      "schemaName": "detection_method",
+      "displayName": "Detection Method",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Explicit", "Contextual", "DataDriven"],
+      "description": "How stake is detected"
+    },
+    {
+      "schemaName": "detection_config_json",
+      "displayName": "Detection Config",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Detection configuration JSON"
+    },
+    {
+      "schemaName": "proactive_modifier",
+      "displayName": "Proactive Modifier",
+      "dataType": "WholeNumber",
+      "required": true,
+      "description": "Score modifier (-1, 0, +1)"
+    },
+    {
+      "schemaName": "example_triggers_json",
+      "displayName": "Example Triggers",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Example trigger scenarios JSON"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "sort_order",
+      "displayName": "Sort Order",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Display order"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_stake_code",
+      "columns": ["stake_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_stake_category",
+      "columns": ["stake_category"],
+      "unique": false
+    }
+  ],
+  "seedData": [
+    { "stake_code": "CLIENT_FACING", "stake_name": "Client Facing", "stake_category": "Audience", "detection_method": "Contextual", "proactive_modifier": 1 },
+    { "stake_code": "EXECUTIVE_AUDIENCE", "stake_name": "Executive Audience", "stake_category": "Audience", "detection_method": "Explicit", "proactive_modifier": 1 },
+    { "stake_code": "STRATEGIC_CLIENT", "stake_name": "Strategic Client", "stake_category": "Relationship", "detection_method": "DataDriven", "proactive_modifier": 1 },
+    { "stake_code": "HIGH_VALUE_ENGAGEMENT", "stake_name": "High Value Engagement", "stake_category": "Value", "detection_method": "DataDriven", "proactive_modifier": 1 },
+    { "stake_code": "TIME_SENSITIVE", "stake_name": "Time Sensitive", "stake_category": "Urgency", "detection_method": "Explicit", "proactive_modifier": 1 },
+    { "stake_code": "COMPETITIVE_SITUATION", "stake_name": "Competitive Situation", "stake_category": "Context", "detection_method": "Contextual", "proactive_modifier": 1 },
+    { "stake_code": "NEW_CLIENT", "stake_name": "New Client", "stake_category": "Relationship", "detection_method": "DataDriven", "proactive_modifier": 1 },
+    { "stake_code": "INTERNAL_WORKING", "stake_name": "Internal Working Document", "stake_category": "Audience", "detection_method": "Contextual", "proactive_modifier": -1 },
+    { "stake_code": "PERSONAL_NOTES", "stake_name": "Personal Notes", "stake_category": "Context", "detection_method": "Explicit", "proactive_modifier": -1 },
+    { "stake_code": "QUICK_ANSWER", "stake_name": "Quick Answer Requested", "stake_category": "Context", "detection_method": "Explicit", "proactive_modifier": -1 }
+  ]
+}

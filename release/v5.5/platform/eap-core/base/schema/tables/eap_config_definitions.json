@@ -1,0 +1,157 @@
+{
+  "schemaName": "eap_config_definitions",
+  "displayName": "Config Definitions",
+  "pluralName": "Config Definitions",
+  "description": "Configuration parameter definitions with defaults and validation rules",
+  "tier": 1,
+  "category": "Config",
+  "primaryKey": "config_id",
+  "primaryNameColumn": "config_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    {
+      "schemaName": "config_id",
+      "displayName": "Config ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "config_code",
+      "displayName": "Config Code",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "unique": true,
+      "description": "Unique config code"
+    },
+    {
+      "schemaName": "config_name",
+      "displayName": "Config Name",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": true,
+      "description": "Config name"
+    },
+    {
+      "schemaName": "config_category",
+      "displayName": "Config Category",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Feature", "Limit", "Behavior", "Integration", "Security", "Display"],
+      "description": "Configuration category"
+    },
+    {
+      "schemaName": "data_type",
+      "displayName": "Data Type",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["String", "Integer", "Decimal", "Boolean", "JSON", "Choice"],
+      "description": "Value data type"
+    },
+    {
+      "schemaName": "default_value",
+      "displayName": "Default Value",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Default value"
+    },
+    {
+      "schemaName": "allowed_values_json",
+      "displayName": "Allowed Values",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Allowed values for Choice type"
+    },
+    {
+      "schemaName": "validation_rule_json",
+      "displayName": "Validation Rule",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Validation rules JSON"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Description"
+    },
+    {
+      "schemaName": "scope_level",
+      "displayName": "Scope Level",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Platform", "Division", "BU", "Product", "Agent", "Client", "User"],
+      "description": "Lowest scope that can override"
+    },
+    {
+      "schemaName": "is_overridable",
+      "displayName": "Is Overridable",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Can be overridden at lower scopes"
+    },
+    {
+      "schemaName": "requires_restart",
+      "displayName": "Requires Restart",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Requires agent restart to apply"
+    },
+    {
+      "schemaName": "is_sensitive",
+      "displayName": "Is Sensitive",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Sensitive configuration (audit changes)"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "sort_order",
+      "displayName": "Sort Order",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Display order"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_config_code",
+      "columns": ["config_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_config_category",
+      "columns": ["config_category"],
+      "unique": false
+    }
+  ],
+  "seedDataNote": "50+ config definitions populated from deployment guide"
+}

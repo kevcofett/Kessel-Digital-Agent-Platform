@@ -1,0 +1,141 @@
+{
+  "schemaName": "eap_industries",
+  "displayName": "Industries",
+  "pluralName": "Industries",
+  "description": "Industry verticals for categorization and benchmark selection",
+  "tier": 1,
+  "category": "Reference",
+  "primaryKey": "industry_id",
+  "primaryNameColumn": "industry_name",
+  "ownershipType": "OrganizationOwned",
+  "isReferenceData": true,
+  "columns": [
+    {
+      "schemaName": "industry_id",
+      "displayName": "Industry ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "industry_code",
+      "displayName": "Industry Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique industry identifier"
+    },
+    {
+      "schemaName": "industry_name",
+      "displayName": "Industry Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Display name"
+    },
+    {
+      "schemaName": "industry_description",
+      "displayName": "Description",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Industry description"
+    },
+    {
+      "schemaName": "industry_category",
+      "displayName": "Industry Category",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Consumer", "Financial", "Industrial", "Healthcare", "Technology", "Services", "Cross-Industry"],
+      "description": "Broad category"
+    },
+    {
+      "schemaName": "parent_industry_id",
+      "displayName": "Parent Industry",
+      "dataType": "Lookup",
+      "lookupTable": "eap_industries",
+      "required": false,
+      "description": "Parent industry for hierarchy"
+    },
+    {
+      "schemaName": "naics_codes_json",
+      "displayName": "NAICS Codes",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Associated NAICS codes JSON"
+    },
+    {
+      "schemaName": "typical_kpis_json",
+      "displayName": "Typical KPIs",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Common industry KPIs JSON"
+    },
+    {
+      "schemaName": "icon_name",
+      "displayName": "Icon Name",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": false,
+      "description": "Icon identifier"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "sort_order",
+      "displayName": "Sort Order",
+      "dataType": "WholeNumber",
+      "required": true,
+      "description": "Display order"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_industry_code",
+      "columns": ["industry_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_industry_category",
+      "columns": ["industry_category"],
+      "unique": false
+    }
+  ],
+  "seedData": [
+    { "industry_code": "FINANCIAL_SERVICES", "industry_name": "Financial Services", "industry_category": "Financial", "sort_order": 1 },
+    { "industry_code": "BANKING", "industry_name": "Banking", "industry_category": "Financial", "sort_order": 2 },
+    { "industry_code": "INSURANCE", "industry_name": "Insurance", "industry_category": "Financial", "sort_order": 3 },
+    { "industry_code": "RETAIL", "industry_name": "Retail", "industry_category": "Consumer", "sort_order": 4 },
+    { "industry_code": "CPG", "industry_name": "Consumer Packaged Goods", "industry_category": "Consumer", "sort_order": 5 },
+    { "industry_code": "QSR", "industry_name": "Quick Service Restaurants", "industry_category": "Consumer", "sort_order": 6 },
+    { "industry_code": "TRAVEL", "industry_name": "Travel & Hospitality", "industry_category": "Consumer", "sort_order": 7 },
+    { "industry_code": "HEALTHCARE", "industry_name": "Healthcare", "industry_category": "Healthcare", "sort_order": 8 },
+    { "industry_code": "PHARMA", "industry_name": "Pharmaceuticals", "industry_category": "Healthcare", "sort_order": 9 },
+    { "industry_code": "TECHNOLOGY", "industry_name": "Technology", "industry_category": "Technology", "sort_order": 10 },
+    { "industry_code": "MEDIA", "industry_name": "Media & Entertainment", "industry_category": "Services", "sort_order": 11 },
+    { "industry_code": "TELECOM", "industry_name": "Telecommunications", "industry_category": "Technology", "sort_order": 12 },
+    { "industry_code": "MANUFACTURING", "industry_name": "Manufacturing", "industry_category": "Industrial", "sort_order": 13 },
+    { "industry_code": "ENERGY", "industry_name": "Energy & Utilities", "industry_category": "Industrial", "sort_order": 14 },
+    { "industry_code": "CROSS_INDUSTRY", "industry_name": "Cross-Industry", "industry_category": "Cross-Industry", "sort_order": 99 }
+  ]
+}

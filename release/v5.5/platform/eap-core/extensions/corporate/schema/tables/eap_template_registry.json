@@ -1,0 +1,205 @@
+{
+  "schemaName": "eap_template_registry",
+  "displayName": "Template Registry",
+  "pluralName": "Template Registry",
+  "description": "Document template registry for output generation",
+  "tier": 1,
+  "category": "Content",
+  "primaryKey": "template_id",
+  "primaryNameColumn": "template_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    {
+      "schemaName": "template_id",
+      "displayName": "Template ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "template_code",
+      "displayName": "Template Code",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "unique": true,
+      "description": "Unique template code"
+    },
+    {
+      "schemaName": "template_name",
+      "displayName": "Template Name",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": true,
+      "description": "Template name"
+    },
+    {
+      "schemaName": "template_description",
+      "displayName": "Template Description",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Description"
+    },
+    {
+      "schemaName": "template_type",
+      "displayName": "Template Type",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Word", "Excel", "PowerPoint", "Visio", "PDF", "Email", "Image"],
+      "description": "Template format"
+    },
+    {
+      "schemaName": "output_type",
+      "displayName": "Output Type",
+      "dataType": "Choice",
+      "required": false,
+      "options": ["Document", "Analysis", "Recommendation", "Plan", "Report", "Presentation", "Email", "Other"],
+      "description": "Associated output type"
+    },
+    {
+      "schemaName": "sharepoint_path",
+      "displayName": "SharePoint Path",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": true,
+      "description": "SharePoint path"
+    },
+    {
+      "schemaName": "sharepoint_url",
+      "displayName": "SharePoint URL",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Full URL"
+    },
+    {
+      "schemaName": "content_scope",
+      "displayName": "Content Scope",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Platform", "Client", "User"],
+      "description": "Content scope"
+    },
+    {
+      "schemaName": "scope_entity_id",
+      "displayName": "Scope Entity ID",
+      "dataType": "UniqueIdentifier",
+      "required": false,
+      "description": "Client or User ID"
+    },
+    {
+      "schemaName": "agent_ids_json",
+      "displayName": "Agent IDs",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Applicable agents JSON"
+    },
+    {
+      "schemaName": "brand_profile_id",
+      "displayName": "Brand Profile",
+      "dataType": "Lookup",
+      "lookupTable": "eap_brand_profiles",
+      "required": false,
+      "description": "Brand profile"
+    },
+    {
+      "schemaName": "placeholders_json",
+      "displayName": "Placeholders",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Template placeholders JSON"
+    },
+    {
+      "schemaName": "sample_output_url",
+      "displayName": "Sample Output URL",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Sample output URL"
+    },
+    {
+      "schemaName": "version",
+      "displayName": "Version",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": false,
+      "description": "Template version"
+    },
+    {
+      "schemaName": "is_default",
+      "displayName": "Is Default",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Default template"
+    },
+    {
+      "schemaName": "usage_count",
+      "displayName": "Usage Count",
+      "dataType": "WholeNumber",
+      "required": true,
+      "defaultValue": 0,
+      "description": "Usage count"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    },
+    {
+      "schemaName": "modified_by",
+      "displayName": "Modified By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Modifier"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_template_code",
+      "columns": ["template_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_template_type_output",
+      "columns": ["template_type", "output_type"],
+      "unique": false
+    },
+    {
+      "name": "idx_content_scope",
+      "columns": ["content_scope", "scope_entity_id"],
+      "unique": false
+    },
+    {
+      "name": "idx_is_default",
+      "columns": ["is_default"],
+      "unique": false
+    }
+  ]
+}

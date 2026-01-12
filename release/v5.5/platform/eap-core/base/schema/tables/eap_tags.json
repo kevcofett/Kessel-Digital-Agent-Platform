@@ -1,0 +1,27 @@
+{
+  "schemaName": "eap_tags",
+  "displayName": "Tags",
+  "pluralName": "Tags",
+  "description": "Flexible tagging system",
+  "tier": 3,
+  "featureGate": "TAGS",
+  "category": "Tags",
+  "primaryKey": "tag_id",
+  "primaryNameColumn": "tag_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "tag_id", "displayName": "Tag ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "tag_name", "displayName": "Tag Name", "dataType": "Text", "maxLength": 100, "required": true, "unique": true, "description": "Tag display name" },
+    { "schemaName": "tag_category", "displayName": "Tag Category", "dataType": "Choice", "required": true, "options": ["Topic", "Skill", "Technology", "Industry", "Custom"], "description": "Tag category" },
+    { "schemaName": "description", "displayName": "Description", "dataType": "Text", "maxLength": 500, "required": false, "description": "Tag description" },
+    { "schemaName": "usage_count", "displayName": "Usage Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Times used" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "created_by", "displayName": "Created By", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Creator" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": true, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_tag_name", "columns": ["tag_name"], "unique": true },
+    { "name": "idx_category", "columns": ["tag_category"], "unique": false }
+  ]
+}

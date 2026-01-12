@@ -1,0 +1,31 @@
+{
+  "schemaName": "eap_proactive_triggers",
+  "displayName": "Proactive Triggers",
+  "pluralName": "Proactive Triggers",
+  "description": "Custom proactive behavior triggers",
+  "tier": 3,
+  "featureGate": "PROACTIVE_TRIGGERS",
+  "category": "Proactive",
+  "primaryKey": "trigger_id",
+  "primaryNameColumn": "trigger_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "trigger_id", "displayName": "Trigger ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "trigger_code", "displayName": "Trigger Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique trigger code" },
+    { "schemaName": "trigger_name", "displayName": "Trigger Name", "dataType": "Text", "maxLength": 100, "required": true, "description": "Trigger display name" },
+    { "schemaName": "trigger_type", "displayName": "Trigger Type", "dataType": "Choice", "required": true, "options": ["Keyword", "Pattern", "Context", "Time", "Event"], "description": "Trigger type" },
+    { "schemaName": "trigger_config_json", "displayName": "Trigger Config", "dataType": "MultilineText", "required": true, "description": "Trigger configuration JSON" },
+    { "schemaName": "action_type", "displayName": "Action Type", "dataType": "Choice", "required": true, "options": ["Suggestion", "Prompt", "Alert", "Workflow"], "description": "Action type" },
+    { "schemaName": "action_config_json", "displayName": "Action Config", "dataType": "MultilineText", "required": true, "description": "Action configuration JSON" },
+    { "schemaName": "priority", "displayName": "Priority", "dataType": "WholeNumber", "required": true, "defaultValue": 100, "description": "Trigger priority" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "created_by", "displayName": "Created By", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Creator" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": true, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_trigger_code", "columns": ["trigger_code"], "unique": true },
+    { "name": "idx_type", "columns": ["trigger_type"], "unique": false },
+    { "name": "idx_active", "columns": ["is_active", "priority"], "unique": false }
+  ]
+}

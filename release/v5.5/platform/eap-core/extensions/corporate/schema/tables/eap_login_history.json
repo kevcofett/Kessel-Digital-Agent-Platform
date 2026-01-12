@@ -1,0 +1,31 @@
+{
+  "schemaName": "eap_login_history",
+  "displayName": "Login History",
+  "pluralName": "Login History",
+  "description": "User login audit trail",
+  "tier": 2,
+  "featureGate": null,
+  "category": "Security",
+  "primaryKey": "login_id",
+  "primaryNameColumn": "login_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "login_id", "displayName": "Login ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "User (null if failed)" },
+    { "schemaName": "login_email", "displayName": "Login Email", "dataType": "Text", "maxLength": 320, "required": true, "description": "Email attempted" },
+    { "schemaName": "login_result", "displayName": "Result", "dataType": "Choice", "required": true, "options": ["Success", "Failed", "Locked", "Expired", "MFARequired"], "description": "Login result" },
+    { "schemaName": "failure_reason", "displayName": "Failure Reason", "dataType": "Text", "maxLength": 200, "required": false, "description": "Why failed" },
+    { "schemaName": "auth_method", "displayName": "Auth Method", "dataType": "Choice", "required": true, "options": ["Password", "SSO", "MFA", "Token", "Certificate"], "description": "Auth method" },
+    { "schemaName": "sso_id", "displayName": "SSO Provider", "dataType": "Lookup", "lookupTable": "eap_sso_configurations", "required": false, "description": "SSO provider if used" },
+    { "schemaName": "ip_address", "displayName": "IP Address", "dataType": "Text", "maxLength": 50, "required": false, "description": "Client IP" },
+    { "schemaName": "user_agent", "displayName": "User Agent", "dataType": "Text", "maxLength": 500, "required": false, "description": "Browser info" },
+    { "schemaName": "location_json", "displayName": "Location", "dataType": "MultilineText", "required": false, "description": "Geo location JSON" },
+    { "schemaName": "device_fingerprint", "displayName": "Device Fingerprint", "dataType": "Text", "maxLength": 256, "required": false, "description": "Device identifier" },
+    { "schemaName": "login_date", "displayName": "Login Date", "dataType": "DateTime", "required": true, "description": "When attempted" }
+  ],
+  "indexes": [
+    { "name": "idx_user", "columns": ["user_id"], "unique": false },
+    { "name": "idx_email", "columns": ["login_email"], "unique": false },
+    { "name": "idx_date", "columns": ["login_date"], "unique": false }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "schemaName": "eap_role_levels",
+  "displayName": "Role Levels",
+  "pluralName": "Role Levels",
+  "description": "Universal role levels (L1-L9) defining hierarchy and permissions",
+  "tier": 1,
+  "category": "Roles",
+  "primaryKey": "role_level_id",
+  "primaryNameColumn": "level_name",
+  "ownershipType": "OrganizationOwned",
+  "isReferenceData": true,
+  "columns": [
+    {
+      "schemaName": "role_level_id",
+      "displayName": "Role Level ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "level_code",
+      "displayName": "Level Code",
+      "dataType": "Text",
+      "maxLength": 5,
+      "required": true,
+      "unique": true,
+      "description": "L1, L2, ... L9"
+    },
+    {
+      "schemaName": "level_number",
+      "displayName": "Level Number",
+      "dataType": "WholeNumber",
+      "required": true,
+      "unique": true,
+      "description": "1-9 (lower = more senior)"
+    },
+    {
+      "schemaName": "level_name",
+      "displayName": "Level Name",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Level name"
+    },
+    {
+      "schemaName": "level_description",
+      "displayName": "Level Description",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Description"
+    },
+    {
+      "schemaName": "default_proactive_floor",
+      "displayName": "Default Proactive Floor",
+      "dataType": "Choice",
+      "required": false,
+      "options": ["Light", "Medium", "Heavy"],
+      "description": "Default proactive floor"
+    },
+    {
+      "schemaName": "default_proactive_ceiling",
+      "displayName": "Default Proactive Ceiling",
+      "dataType": "Choice",
+      "required": false,
+      "options": ["Light", "Medium", "Heavy"],
+      "description": "Default proactive ceiling"
+    },
+    {
+      "schemaName": "can_approve_up_to_level",
+      "displayName": "Can Approve Up To Level",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Max level this role can approve"
+    },
+    {
+      "schemaName": "can_be_admin",
+      "displayName": "Can Be Admin",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Eligible for admin roles"
+    },
+    {
+      "schemaName": "is_executive",
+      "displayName": "Is Executive",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Executive level"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "sort_order",
+      "displayName": "Sort Order",
+      "dataType": "WholeNumber",
+      "required": true,
+      "description": "Display order"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_level_code",
+      "columns": ["level_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_level_number",
+      "columns": ["level_number"],
+      "unique": true
+    }
+  ],
+  "seedData": [
+    { "level_code": "L1", "level_number": 1, "level_name": "C-Suite", "can_approve_up_to_level": 9, "can_be_admin": true, "is_executive": true, "sort_order": 1 },
+    { "level_code": "L2", "level_number": 2, "level_name": "SVP/EVP", "can_approve_up_to_level": 4, "can_be_admin": true, "is_executive": true, "sort_order": 2 },
+    { "level_code": "L3", "level_number": 3, "level_name": "VP/Senior Director", "can_approve_up_to_level": 5, "can_be_admin": true, "is_executive": true, "sort_order": 3 },
+    { "level_code": "L4", "level_number": 4, "level_name": "Principal/Director", "can_approve_up_to_level": 6, "can_be_admin": true, "is_executive": false, "sort_order": 4 },
+    { "level_code": "L5", "level_number": 5, "level_name": "Consultant/Manager", "can_approve_up_to_level": 7, "can_be_admin": true, "is_executive": false, "sort_order": 5 },
+    { "level_code": "L6", "level_number": 6, "level_name": "Senior Analyst", "can_approve_up_to_level": 9, "can_be_admin": false, "is_executive": false, "sort_order": 6 },
+    { "level_code": "L7", "level_number": 7, "level_name": "Analyst/Specialist", "can_approve_up_to_level": null, "can_be_admin": false, "is_executive": false, "sort_order": 7 },
+    { "level_code": "L8", "level_number": 8, "level_name": "Associate", "can_approve_up_to_level": null, "can_be_admin": false, "is_executive": false, "sort_order": 8 },
+    { "level_code": "L9", "level_number": 9, "level_name": "Junior/Entry", "can_approve_up_to_level": null, "can_be_admin": false, "is_executive": false, "sort_order": 9 }
+  ]
+}

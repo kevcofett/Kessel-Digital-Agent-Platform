@@ -1,0 +1,166 @@
+{
+  "schemaName": "eap_environment_config",
+  "displayName": "Environment Config",
+  "pluralName": "Environment Configs",
+  "description": "Environment-specific configuration settings",
+  "tier": 1,
+  "category": "Platform",
+  "primaryKey": "env_config_id",
+  "primaryNameColumn": "environment_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    {
+      "schemaName": "env_config_id",
+      "displayName": "Environment Config ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "environment_code",
+      "displayName": "Environment Code",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": true,
+      "unique": true,
+      "description": "Unique environment code"
+    },
+    {
+      "schemaName": "environment_name",
+      "displayName": "Environment Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Environment name"
+    },
+    {
+      "schemaName": "environment_type",
+      "displayName": "Environment Type",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Development", "Test", "Staging", "Production"],
+      "description": "Environment type"
+    },
+    {
+      "schemaName": "dataverse_url",
+      "displayName": "Dataverse URL",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": true,
+      "description": "Dataverse environment URL"
+    },
+    {
+      "schemaName": "sharepoint_site_url",
+      "displayName": "SharePoint Site URL",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "SharePoint site URL"
+    },
+    {
+      "schemaName": "azure_search_endpoint",
+      "displayName": "Azure Search Endpoint",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Azure AI Search endpoint"
+    },
+    {
+      "schemaName": "azure_search_index",
+      "displayName": "Azure Search Index",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Azure AI Search index name"
+    },
+    {
+      "schemaName": "key_vault_url",
+      "displayName": "Key Vault URL",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Azure Key Vault URL"
+    },
+    {
+      "schemaName": "copilot_studio_env_id",
+      "displayName": "Copilot Studio Env ID",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Copilot Studio environment ID"
+    },
+    {
+      "schemaName": "deployment_level",
+      "displayName": "Deployment Level",
+      "dataType": "Choice",
+      "required": true,
+      "defaultValue": "Level0",
+      "options": ["Level0", "Level1", "Level2", "Level3"],
+      "description": "Deployment level (0=Demo, 1=Pilot, 2=Dept, 3=Enterprise)"
+    },
+    {
+      "schemaName": "is_current",
+      "displayName": "Is Current",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Current active environment"
+    },
+    {
+      "schemaName": "config_json",
+      "displayName": "Config JSON",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Additional configuration JSON"
+    },
+    {
+      "schemaName": "last_deployment_date",
+      "displayName": "Last Deployment Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Last deployment"
+    },
+    {
+      "schemaName": "deployed_version",
+      "displayName": "Deployed Version",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": false,
+      "description": "Deployed version"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_environment_code",
+      "columns": ["environment_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_is_current",
+      "columns": ["is_current"],
+      "unique": false
+    }
+  ]
+}

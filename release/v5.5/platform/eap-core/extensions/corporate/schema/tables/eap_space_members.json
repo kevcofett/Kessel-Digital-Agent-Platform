@@ -1,0 +1,27 @@
+{
+  "schemaName": "eap_space_members",
+  "displayName": "Space Member",
+  "pluralName": "Space Members",
+  "description": "Members of collaboration spaces",
+  "tier": 3,
+  "featureGate": "COLLABORATION",
+  "category": "Collaboration",
+  "primaryKey": "membership_id",
+  "primaryNameColumn": "membership_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "membership_id", "displayName": "Membership ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "space_id", "displayName": "Space", "dataType": "Lookup", "lookupTable": "eap_collaboration_spaces", "required": true, "description": "Associated space" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Member user" },
+    { "schemaName": "member_role", "displayName": "Member Role", "dataType": "Choice", "required": true, "defaultValue": "Member", "options": ["Owner", "Admin", "Contributor", "Member", "Viewer"], "description": "Role in space" },
+    { "schemaName": "invited_by_user_id", "displayName": "Invited By", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "Who invited" },
+    { "schemaName": "joined_date", "displayName": "Joined Date", "dataType": "DateTime", "required": true, "description": "When joined" },
+    { "schemaName": "last_access_date", "displayName": "Last Access", "dataType": "DateTime", "required": false, "description": "Last accessed space" },
+    { "schemaName": "notification_preference", "displayName": "Notifications", "dataType": "Choice", "required": true, "defaultValue": "All", "options": ["All", "Mentions", "Important", "None"], "description": "Notification setting" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active membership" }
+  ],
+  "indexes": [
+    { "name": "idx_space_user", "columns": ["space_id", "user_id"], "unique": true },
+    { "name": "idx_user", "columns": ["user_id"], "unique": false }
+  ]
+}

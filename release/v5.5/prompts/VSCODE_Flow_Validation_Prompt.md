@@ -101,7 +101,7 @@ TABLE_CONFIG = {
 
 **Common errors to flag:**
 - ❌ mpa_is_active → Should be: mpa_isactive
-- ❌ mpa_channel_name → Should be: mpa_name
+- ❌ mpa_channel_name → Should be: mpa_newcolumn
 - ❌ mpa_vertical → Should be: mpa_verticalcode
 - ❌ mpa_benchmarktype → Does not exist (correct: mpa_channelcode)
 

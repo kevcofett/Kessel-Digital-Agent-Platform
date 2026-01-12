@@ -390,7 +390,7 @@ This guide provides step-by-step instructions for manually building all 11 MPA P
    - Table name: **Channels** (or type `mpa_channel`)
    - Filter rows: Dynamic content â†’ **filter_query**
    - Row count: `50`
-   - Sort by: `mpa_channel_name asc`
+   - Sort by: `mpa_newcolumn asc`
 
 6. **+ New step** â†’ **Response**
    - Status Code: `200`

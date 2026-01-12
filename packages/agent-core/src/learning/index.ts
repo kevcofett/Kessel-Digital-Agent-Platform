@@ -66,3 +66,13 @@ export {
   type KBUpdatePipelineConfig,
   DEFAULT_UPDATE_PIPELINE_CONFIG,
 } from './kb-update-pipeline.js';
+
+// ============================================================================
+// DATAVERSE KB IMPACT STORAGE
+// ============================================================================
+
+export {
+  DataverseKBImpactStorage,
+  createDataverseKBImpactStorage,
+  type DataverseKBImpactStorageConfig,
+} from './dataverse-kb-impact-storage.js';

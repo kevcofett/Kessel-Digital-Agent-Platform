@@ -19,10 +19,25 @@ export { ClaudeLLMProvider } from './claude-llm.js';
 export { LocalFSStorageProvider } from './local-fs-storage.js';
 export { TFIDFEmbeddingProvider } from './tfidf-embedding.js';
 
-// Corporate environment providers (stubs)
-export { AzureOpenAILLMProvider } from './azure-openai-llm.js';
-export { CopilotStudioLLMProvider } from './copilot-studio-llm.js';
-export { DataverseStorageProvider } from './dataverse-storage.js';
+// Corporate environment providers
+export {
+  AzureOpenAILLMProvider,
+  createAzureOpenAILLMProvider,
+  type AzureOpenAILLMConfig,
+} from './azure-openai-llm.js';
+
+export {
+  CopilotStudioLLMProvider,
+  createCopilotStudioLLMProvider,
+  type CopilotStudioLLMConfig,
+} from './copilot-studio-llm.js';
+
+export {
+  DataverseStorageProvider,
+  createDataverseStorageProvider,
+  type DataverseStorageConfig,
+} from './dataverse-storage.js';
+
 export { AzureAISearchEmbeddingProvider } from './azure-ai-search-embedding.js';
 
 // Multi-environment abstractions

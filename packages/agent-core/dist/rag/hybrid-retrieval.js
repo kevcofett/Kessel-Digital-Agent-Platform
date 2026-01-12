@@ -1,0 +1,219 @@
+/**
+ * Hybrid Retrieval Engine
+ *
+ * Combines keyword-based (TF-IDF) and semantic (embedding) search
+ * using Reciprocal Rank Fusion (RRF) for optimal results.
+ */
+import { cosineSimilarity } from '../providers/embedding-types.js';
+// ============================================================================
+// DEFAULT CONFIGURATION
+// ============================================================================
+export const DEFAULT_HYBRID_CONFIG = {
+    keywordWeight: 0.4,
+    semanticWeight: 0.6,
+    rrfConstant: 60,
+    enableKeyword: true,
+    enableSemantic: true,
+    candidateCount: 20,
+    topK: 5,
+    minScore: 0.0,
+};
+// ============================================================================
+// HYBRID RETRIEVAL ENGINE
+// ============================================================================
+export class HybridRetrievalEngine {
+    config;
+    embeddingProvider;
+    chunkEmbeddings = new Map();
+    isInitialized = false;
+    constructor(config = {}, embeddingProvider) {
+        this.config = { ...DEFAULT_HYBRID_CONFIG, ...config };
+        this.embeddingProvider = embeddingProvider || null;
+    }
+    /**
+     * Set the embedding provider after construction
+     */
+    setEmbeddingProvider(provider) {
+        this.embeddingProvider = provider;
+        this.isInitialized = false; // Need to re-index
+    }
+    /**
+     * Index chunks for semantic search
+     * Call this after loading documents
+     */
+    async indexChunks(chunks) {
+        if (!this.embeddingProvider) {
+            console.warn('No embedding provider available, skipping semantic indexing');
+            return;
+        }
+        // Filter chunks that don't have embeddings yet
+        const chunksToEmbed = chunks.filter(c => !c.embedding && !this.chunkEmbeddings.has(c.id));
+        if (chunksToEmbed.length === 0) {
+            this.isInitialized = true;
+            return;
+        }
+        console.log(`Indexing ${chunksToEmbed.length} chunks for semantic search...`);
+        // Batch embed all chunks
+        const texts = chunksToEmbed.map(c => c.content);
+        const embeddings = await this.embeddingProvider.embedBatch(texts);
+        // Store embeddings
+        for (let i = 0; i < chunksToEmbed.length; i++) {
+            this.chunkEmbeddings.set(chunksToEmbed[i].id, embeddings[i]);
+        }
+        // Also store any pre-computed embeddings
+        for (const chunk of chunks) {
+            if (chunk.embedding) {
+                this.chunkEmbeddings.set(chunk.id, chunk.embedding);
+            }
+        }
+        this.isInitialized = true;
+        console.log(`Indexed ${this.chunkEmbeddings.size} total chunks`);
+    }
+    /**
+     * Perform hybrid search combining keyword and semantic results
+     */
+    async search(query, keywordResults, chunks) {
+        const results = new Map();
+        // Process keyword results
+        if (this.config.enableKeyword && keywordResults.length > 0) {
+            for (let rank = 0; rank < keywordResults.length; rank++) {
+                const result = keywordResults[rank];
+                results.set(result.chunk.id, {
+                    ...result,
+                    keywordRank: rank,
+                    keywordScore: result.score,
+                    fusedScore: 0,
+                    source: 'keyword',
+                });
+            }
+        }
+        // Process semantic results
+        if (this.config.enableSemantic && this.embeddingProvider && this.chunkEmbeddings.size > 0) {
+            const semanticResults = await this.semanticSearch(query, chunks);
+            for (let rank = 0; rank < semanticResults.length; rank++) {
+                const result = semanticResults[rank];
+                const existing = results.get(result.chunk.id);
+                if (existing) {
+                    // Chunk found in both keyword and semantic
+                    existing.semanticRank = rank;
+                    existing.semanticScore = result.score;
+                    existing.source = 'both';
+                }
+                else {
+                    // Chunk only in semantic results
+                    results.set(result.chunk.id, {
+                        ...result,
+                        semanticRank: rank,
+                        semanticScore: result.score,
+                        fusedScore: 0,
+                        source: 'semantic',
+                    });
+                }
+            }
+        }
+        // Apply Reciprocal Rank Fusion
+        for (const result of results.values()) {
+            result.fusedScore = this.calculateRRFScore(result);
+        }
+        // Sort by fused score and apply topK
+        const sorted = Array.from(results.values())
+            .filter(r => r.fusedScore >= this.config.minScore)
+            .sort((a, b) => b.fusedScore - a.fusedScore)
+            .slice(0, this.config.topK);
+        return sorted;
+    }
+    /**
+     * Perform semantic-only search
+     */
+    async semanticSearch(query, chunks) {
+        if (!this.embeddingProvider) {
+            return [];
+        }
+        // Get query embedding
+        const queryEmbedding = await this.embeddingProvider.embed(query);
+        // Score all chunks
+        const scored = [];
+        for (const chunk of chunks) {
+            const chunkEmbedding = this.chunkEmbeddings.get(chunk.id) || chunk.embedding;
+            if (!chunkEmbedding) {
+                continue;
+            }
+            const score = cosineSimilarity(queryEmbedding, chunkEmbedding);
+            scored.push({ chunk, score });
+        }
+        // Sort by score and take top candidates
+        scored.sort((a, b) => b.score - a.score);
+        const topCandidates = scored.slice(0, this.config.candidateCount);
+        // Convert to SearchResult format
+        return topCandidates.map(({ chunk, score }) => ({
+            chunk: chunk,
+            score,
+            scoreBreakdown: {
+                semantic: score,
+                keyword: 0,
+                metadataBoost: 0,
+            },
+        }));
+    }
+    /**
+     * Calculate Reciprocal Rank Fusion score
+     *
+     * RRF formula: score = sum(weight / (k + rank)) for each result source
+     */
+    calculateRRFScore(result) {
+        const k = this.config.rrfConstant;
+        let score = 0;
+        if (result.keywordRank !== undefined) {
+            score += this.config.keywordWeight / (k + result.keywordRank);
+        }
+        if (result.semanticRank !== undefined) {
+            score += this.config.semanticWeight / (k + result.semanticRank);
+        }
+        return score;
+    }
+    /**
+     * Get current configuration
+     */
+    getConfig() {
+        return { ...this.config };
+    }
+    /**
+     * Update configuration
+     */
+    updateConfig(config) {
+        this.config = { ...this.config, ...config };
+    }
+    /**
+     * Check if semantic search is available
+     */
+    isSemanticAvailable() {
+        return this.embeddingProvider !== null && this.isInitialized;
+    }
+    /**
+     * Get statistics about indexed chunks
+     */
+    getStats() {
+        return {
+            indexedChunks: this.chunkEmbeddings.size,
+            embeddingDimensions: this.embeddingProvider?.getDimensions() ?? null,
+        };
+    }
+    /**
+     * Clear the embedding index
+     */
+    clearIndex() {
+        this.chunkEmbeddings.clear();
+        this.isInitialized = false;
+    }
+}
+// ============================================================================
+// FACTORY FUNCTION
+// ============================================================================
+/**
+ * Create a hybrid retrieval engine with configuration
+ */
+export function createHybridRetrievalEngine(config, embeddingProvider) {
+    return new HybridRetrievalEngine(config, embeddingProvider);
+}
+export default HybridRetrievalEngine;
+//# sourceMappingURL=hybrid-retrieval.js.map

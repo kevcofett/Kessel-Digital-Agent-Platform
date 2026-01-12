@@ -1,0 +1,37 @@
+{
+  "name": "consulting-agent",
+  "displayName": "Consulting Agent",
+  "version": "12.0.0",
+  "platformVersion": "5.5.0",
+  "description": "Strategic consulting AI agent providing framework-based analysis, industry benchmarks, and deliverable generation",
+  "lastUpdated": "2026-01-11",
+  "components": {
+    "kb": {
+      "count": 36,
+      "format": "6-rule-compliant"
+    },
+    "tables": {
+      "count": 9
+    },
+    "flows": {
+      "count": 8,
+      "idRange": "flow_50-flow_57"
+    },
+    "functions": {
+      "count": 3,
+      "runtime": "azure-functions"
+    }
+  },
+  "extensions": {
+    "mastercard": {
+      "status": "active",
+      "instructionsFile": "CA_RAG_OPTIMIZED_INSTRUCTIONS.txt"
+    }
+  },
+  "migration": {
+    "source": "Consulting_Agent/kb",
+    "sourceVersion": "V12",
+    "migratedDate": "2026-01-11",
+    "migratedBy": "Claude Opus 4.5"
+  }
+}

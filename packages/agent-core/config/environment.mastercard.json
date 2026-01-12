@@ -1,56 +1,55 @@
 {
-  "type": "corporate",
+  "type": "microsoft",
   "name": "mastercard",
-  "description": "Corporate Mastercard environment using Azure OpenAI and Dataverse",
+  "description": "Mastercard production environment with Microsoft stack",
 
-  "llm": {
-    "type": "azure-openai",
-    "apiKey": "$AZURE_OPENAI_API_KEY",
+  "stack": {
+    "default": "microsoft",
+    "allowClaude": true,
+    "allowMicrosoft": true
+  },
+
+  "copilotStudio": {
+    "environmentUrl": "$COPILOT_STUDIO_ENV_URL",
+    "botId": "$COPILOT_STUDIO_BOT_ID",
+    "tenantId": "$AZURE_TENANT_ID"
+  },
+
+  "azureOpenAI": {
     "endpoint": "$AZURE_OPENAI_ENDPOINT",
     "deploymentName": "$AZURE_OPENAI_DEPLOYMENT",
-    "defaultParams": {
-      "temperature": 0.7,
-      "maxTokens": 4096
-    }
+    "apiVersion": "2024-02-01",
+    "embeddingDeployment": "text-embedding-ada-002"
   },
 
-  "embedding": {
-    "type": "azure-openai",
-    "apiKey": "$AZURE_OPENAI_API_KEY",
-    "endpoint": "$AZURE_OPENAI_ENDPOINT",
-    "deploymentName": "$AZURE_OPENAI_EMBEDDING_DEPLOYMENT",
-    "dimensions": 1536
-  },
-
-  "storage": {
-    "type": "dataverse",
+  "dataverse": {
     "environmentUrl": "$DATAVERSE_ENVIRONMENT_URL",
-    "tenantId": "$DATAVERSE_TENANT_ID",
-    "clientId": "$DATAVERSE_CLIENT_ID",
-    "clientSecret": "$DATAVERSE_CLIENT_SECRET",
-    "tableName": "cr_kbdocuments"
+    "tenantId": "$AZURE_TENANT_ID",
+    "clientId": "$AZURE_CLIENT_ID",
+    "clientSecret": "$AZURE_CLIENT_SECRET"
   },
 
-  "kbImpactStorage": {
-    "type": "dataverse",
-    "dataverse": {
-      "environmentUrl": "$DATAVERSE_ENVIRONMENT_URL",
-      "tenantId": "$DATAVERSE_TENANT_ID",
-      "clientId": "$DATAVERSE_CLIENT_ID",
-      "clientSecret": "$DATAVERSE_CLIENT_SECRET",
-      "tables": {
-        "usageRecords": "cr_kbusagerecords",
-        "documentImpacts": "cr_kbdocumentimpacts",
-        "updateProposals": "cr_kbupdateproposals"
-      }
-    }
+  "sharePoint": {
+    "siteUrl": "$SHAREPOINT_SITE_URL",
+    "libraryName": "AgentKnowledgeBase",
+    "tenantId": "$AZURE_TENANT_ID",
+    "clientId": "$AZURE_CLIENT_ID",
+    "clientSecret": "$AZURE_CLIENT_SECRET"
   },
 
   "features": {
-    "enableHybridSearch": true,
-    "enableKBImpactTracking": true,
-    "enableAutoUpdateProposals": false,
-    "enableCaching": true,
-    "enableDebugLogging": false
+    "useCopilotStudioOrchestration": true,
+    "useAzureOpenAIDirectly": true,
+    "useClaudeAPI": false,
+    "useDataverseStorage": true,
+    "useLocalStorage": false,
+    "useSharePointKB": true,
+    "useAzureAISearch": true,
+    "useLocalKB": false,
+    "usePowerAutomateFlows": true,
+    "useDataverseImpactTracking": true,
+    "useLocalImpactTracking": false,
+    "enableDebugLogging": false,
+    "enablePerformanceMetrics": true
   }
 }

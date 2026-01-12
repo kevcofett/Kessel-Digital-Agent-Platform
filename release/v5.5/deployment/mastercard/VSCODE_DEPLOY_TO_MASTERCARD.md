@@ -133,7 +133,7 @@ pac solution export `
     -Verbose
 
 # Verify MPA upload
-$mpaCount = (Get-PnPListItem -List "AgentKnowledgeBase" -FolderServerRelativeUrl "/sites/.../AgentKnowledgeBase/MPA").Count
+$mpaCount = (Get-PnPListItem -List "Shared Documents" -FolderServerRelativeUrl "/sites/CAEConsultingProduct/Shared Documents/MPA").Count
 Write-Host "MPA files uploaded: $mpaCount (expected: 32)"
 
 # Deploy CA KB files (35 files)
@@ -144,7 +144,7 @@ Write-Host "MPA files uploaded: $mpaCount (expected: 32)"
     -Verbose
 
 # Verify CA upload
-$caCount = (Get-PnPListItem -List "AgentKnowledgeBase" -FolderServerRelativeUrl "/sites/.../AgentKnowledgeBase/CA").Count
+$caCount = (Get-PnPListItem -List "Shared Documents" -FolderServerRelativeUrl "/sites/CAEConsultingProduct/Shared Documents/CA").Count
 Write-Host "CA files uploaded: $caCount (expected: 35)"
 ```
 

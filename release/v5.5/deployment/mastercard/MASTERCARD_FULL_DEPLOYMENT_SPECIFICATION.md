@@ -53,11 +53,14 @@ DATAVERSE_ENVIRONMENT_URL=https://org12345.crm.dynamics.com
 DATAVERSE_SOLUTION_NAME=MediaPlanningAgent55
 
 # SharePoint
-SHAREPOINT_SITE_URL=https://mastercard.sharepoint.com/sites/AIAgents
-SHAREPOINT_KB_LIBRARY=AgentKnowledgeBase
+SHAREPOINT_SITE_URL=https://mastercard.sharepoint.com/sites/CAEConsultingProduct
+SHAREPOINT_KB_LIBRARY=Shared Documents
 
 # Power Automate
-POWER_AUTOMATE_ENVIRONMENT_ID=Default-abc123
+POWER_AUTOMATE_ENVIRONMENT_ID=Default-f06fa858-824b-4a85-aacv-f372cfdc282e
+
+# Power Apps
+POWERAPPS_ENVIRONMENT_ID=ea9d500a-9299-e7b2-8754-53ebea0cb818
 
 # Azure Functions
 AZURE_FUNCTION_APP_NAME=mpa-functions-prod

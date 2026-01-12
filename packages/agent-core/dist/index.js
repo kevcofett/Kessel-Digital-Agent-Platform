@@ -44,4 +44,8 @@ BaseScorer, FunctionalScorer, createScorer, LLMJudgeScorer, createLLMJudge,
 StepTracker, 
 // Baseline tracking
 BaselineTracker, } from './evaluation/index.js';
+// =============================================================================
+// Configuration - Environment-aware provider configuration
+// =============================================================================
+export * from './config/index.js';
 //# sourceMappingURL=index.js.map

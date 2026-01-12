@@ -1,0 +1,40 @@
+{
+  "type": "personal",
+  "name": "aragorn-ai",
+  "description": "Personal development environment using Claude and OpenAI",
+
+  "llm": {
+    "type": "claude",
+    "apiKey": "$ANTHROPIC_API_KEY",
+    "model": "claude-sonnet-4-20250514",
+    "defaultParams": {
+      "temperature": 0.7,
+      "maxTokens": 4096
+    }
+  },
+
+  "embedding": {
+    "type": "openai",
+    "apiKey": "$OPENAI_API_KEY",
+    "model": "text-embedding-3-small",
+    "dimensions": 1536
+  },
+
+  "storage": {
+    "type": "local-fs",
+    "basePath": "./.agent-data"
+  },
+
+  "kbImpactStorage": {
+    "type": "local-fs",
+    "basePath": "./.kb-impact"
+  },
+
+  "features": {
+    "enableHybridSearch": true,
+    "enableKBImpactTracking": true,
+    "enableAutoUpdateProposals": true,
+    "enableCaching": true,
+    "enableDebugLogging": true
+  }
+}

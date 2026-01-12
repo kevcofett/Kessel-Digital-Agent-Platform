@@ -187,3 +187,8 @@ export {
   BaselineTracker,
   type BaselineTrackerConfig,
 } from './evaluation/index.js';
+
+// =============================================================================
+// Configuration - Environment-aware provider configuration
+// =============================================================================
+export * from './config/index.js';

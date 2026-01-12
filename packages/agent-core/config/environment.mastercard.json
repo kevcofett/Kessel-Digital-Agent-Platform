@@ -1,0 +1,56 @@
+{
+  "type": "corporate",
+  "name": "mastercard",
+  "description": "Corporate Mastercard environment using Azure OpenAI and Dataverse",
+
+  "llm": {
+    "type": "azure-openai",
+    "apiKey": "$AZURE_OPENAI_API_KEY",
+    "endpoint": "$AZURE_OPENAI_ENDPOINT",
+    "deploymentName": "$AZURE_OPENAI_DEPLOYMENT",
+    "defaultParams": {
+      "temperature": 0.7,
+      "maxTokens": 4096
+    }
+  },
+
+  "embedding": {
+    "type": "azure-openai",
+    "apiKey": "$AZURE_OPENAI_API_KEY",
+    "endpoint": "$AZURE_OPENAI_ENDPOINT",
+    "deploymentName": "$AZURE_OPENAI_EMBEDDING_DEPLOYMENT",
+    "dimensions": 1536
+  },
+
+  "storage": {
+    "type": "dataverse",
+    "environmentUrl": "$DATAVERSE_ENVIRONMENT_URL",
+    "tenantId": "$DATAVERSE_TENANT_ID",
+    "clientId": "$DATAVERSE_CLIENT_ID",
+    "clientSecret": "$DATAVERSE_CLIENT_SECRET",
+    "tableName": "cr_kbdocuments"
+  },
+
+  "kbImpactStorage": {
+    "type": "dataverse",
+    "dataverse": {
+      "environmentUrl": "$DATAVERSE_ENVIRONMENT_URL",
+      "tenantId": "$DATAVERSE_TENANT_ID",
+      "clientId": "$DATAVERSE_CLIENT_ID",
+      "clientSecret": "$DATAVERSE_CLIENT_SECRET",
+      "tables": {
+        "usageRecords": "cr_kbusagerecords",
+        "documentImpacts": "cr_kbdocumentimpacts",
+        "updateProposals": "cr_kbupdateproposals"
+      }
+    }
+  },
+
+  "features": {
+    "enableHybridSearch": true,
+    "enableKBImpactTracking": true,
+    "enableAutoUpdateProposals": false,
+    "enableCaching": true,
+    "enableDebugLogging": false
+  }
+}

@@ -8,7 +8,7 @@ Open Power Automate: https://make.powerautomate.com (Aragorn AI environment)
 
 **❌ BAD → ✅ GOOD:**
 - `mpa_benchmarks` → `mpa_benchmark`
-- `mpa_is_active` → `mpa_isactive`  
+- `mpa_isactive` → `mpa_isactive`  
 - `mpa_vertical` (in filter) → `mpa_verticalcode`
 - `org5c737821.crm.dynamics.com` → `aragornai.crm.dynamics.com`
 - `localhost:7071` → `func-aragorn-mpa.azurewebsites.net`

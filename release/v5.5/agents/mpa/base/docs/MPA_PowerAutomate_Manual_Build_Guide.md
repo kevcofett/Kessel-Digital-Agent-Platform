@@ -324,7 +324,7 @@ This guide provides step-by-step instructions for manually building all 11 MPA P
 3. **+ New step** â†’ **Initialize variable**
    - Name: `filter_query`
    - Type: String
-   - Value: `mpa_is_active eq true`
+   - Value: `mpa_isactive eq true`
 
 4. **+ New step** â†’ **Condition** (check if vertical is provided)
    - Condition: Dynamic content â†’ **vertical** is not equal to `null`
@@ -380,7 +380,7 @@ This guide provides step-by-step instructions for manually building all 11 MPA P
 3. **+ New step** â†’ **Initialize variable**
    - Name: `filter_query`
    - Type: String
-   - Value: `mpa_is_active eq true`
+   - Value: `mpa_isactive eq true`
 
 4. **+ New step** â†’ **Condition** (check if category is provided)
    - Condition: Dynamic content â†’ **category** is not equal to `null`

@@ -199,7 +199,7 @@ from ..shared.odata_sanitization import sanitize_odata_string, join_filters
 filters = [
     f"mpa_vertical eq '{sanitize_odata_string(vertical)}'",
     f"mpa_channel eq '{sanitize_odata_string(channel)}'",
-    "mpa_is_active eq true"
+    "mpa_isactive eq true"
 ]
 filter_query = join_filters(filters)  # Uses " and " by default
 ```

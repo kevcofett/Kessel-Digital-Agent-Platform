@@ -36,7 +36,7 @@ class ChannelService:
             safe_channel_name = sanitize_odata_string(channel_name)
             results = self.client.query_records(
                 table_name=self.TABLE_NAME,
-                filter_query=f"mpa_channel_name eq '{safe_channel_name}' and mpa_is_active eq true",
+                filter_query=f"mpa_newcolumn eq '{safe_channel_name}' and mpa_isactive eq true",
                 top=1
             )
 
@@ -63,7 +63,7 @@ class ChannelService:
             safe_channel_code = sanitize_odata_string(channel_code)
             results = self.client.query_records(
                 table_name=self.TABLE_NAME,
-                filter_query=f"mpa_channel_code eq '{safe_channel_code}' and mpa_is_active eq true",
+                filter_query=f"mpa_channelcode eq '{safe_channel_code}' and mpa_isactive eq true",
                 top=1
             )
 
@@ -86,7 +86,7 @@ class ChannelService:
         if cached is not None:
             return cached
 
-        filters = ["mpa_is_active eq true"]
+        filters = ["mpa_isactive eq true"]
         if category:
             filters.append(f"mpa_category eq '{sanitize_odata_string(category)}'")
 
@@ -96,7 +96,7 @@ class ChannelService:
             results = self.client.query_records(
                 table_name=self.TABLE_NAME,
                 filter_query=filter_query,
-                order_by="mpa_sort_order,mpa_channel_name"
+                order_by="mpa_sort_order,mpa_newcolumn"
             )
 
             channels = [self._transform_channel(r) for r in results]
@@ -222,15 +222,15 @@ class ChannelService:
         """Transform Dataverse record to channel format."""
         return {
             "id": record.get("mpa_channelregistryid"),
-            "name": record.get("mpa_channel_name"),
-            "code": record.get("mpa_channel_code"),
+            "name": record.get("mpa_newcolumn"),
+            "code": record.get("mpa_channelcode"),
             "category": record.get("mpa_category"),
             "description": record.get("mpa_description"),
             "capabilities": self._parse_json(record.get("mpa_capabilities", "{}")),
             "targeting_options": self._parse_json(record.get("mpa_targeting_options", "[]")),
             "ad_formats": self._parse_json(record.get("mpa_ad_formats", "[]")),
             "buying_models": self._parse_json(record.get("mpa_buying_models", "[]")),
-            "min_budget": record.get("mpa_min_budget", 0),
+            "min_budget": record.get("mpa_minbudget", 0),
             "objective_fit": self._parse_json(record.get("mpa_objective_fit", "{}")),
             "funnel_position": record.get("mpa_funnel_position"),
             "primary_kpis": self._parse_json(record.get("mpa_primary_kpis", "[]")),

@@ -214,10 +214,10 @@ class FlowValidator:
         flow_str = json.dumps(flow)
         
         # Common column errors
-        if "mpa_is_active" in flow_str:
-            issues.append("CRITICAL: Found 'mpa_is_active' (should be 'mpa_isactive')")
-        if "mpa_channel_name" in flow_str:
-            issues.append("CRITICAL: Found 'mpa_channel_name' (should be 'mpa_newcolumn')")
+        if "mpa_isactive" in flow_str:
+            issues.append("CRITICAL: Found 'mpa_isactive' (should be 'mpa_isactive')")
+        if "mpa_newcolumn" in flow_str:
+            issues.append("CRITICAL: Found 'mpa_newcolumn' (should be 'mpa_newcolumn')")
         if '"mpa_vertical"' in flow_str and "mpa_verticalcode" not in flow_str:
             issues.append("CRITICAL: Found 'mpa_vertical' filter (should be 'mpa_verticalcode')")
             

@@ -13,7 +13,7 @@ Validate all deployed Power Automate flows against the MPA v5.5 codebase to ensu
 
 The user has built 11 Power Automate flows manually in the Aragorn AI environment.
 These flows need to be validated against the authoritative specifications to catch:
-- Column name mismatches (mpa_is_active vs mpa_isactive)
+- Column name mismatches (mpa_isactive vs mpa_isactive)
 - Table name errors (plural vs singular)
 - Deprecated column references
 - Azure Function URL mismatches
@@ -100,8 +100,8 @@ TABLE_CONFIG = {
 ```
 
 **Common errors to flag:**
-- ❌ mpa_is_active → Should be: mpa_isactive
-- ❌ mpa_channel_name → Should be: mpa_newcolumn
+- ❌ mpa_isactive → Should be: mpa_isactive
+- ❌ mpa_newcolumn → Should be: mpa_newcolumn
 - ❌ mpa_vertical → Should be: mpa_verticalcode
 - ❌ mpa_benchmarktype → Does not exist (correct: mpa_channelcode)
 
@@ -191,7 +191,7 @@ Expected outputs:
 ### MPA_SearchBenchmarks
 Status: ✅ PASS / ❌ FAIL
 Issues:
-- [CRITICAL] Line 45: Column name "mpa_is_active" should be "mpa_isactive"
+- [CRITICAL] Line 45: Column name "mpa_isactive" should be "mpa_isactive"
 - [WARNING] Line 78: Missing error handling for Dataverse query
 
 ### MPA_SearchChannels
@@ -293,7 +293,7 @@ Print summary to console.
 **Fix:** Should be `"tableName": "mpa_benchmark"`
 
 ### Issue 2: Underscore vs CamelCase in Columns
-**Pattern:** `"mpa_is_active"`
+**Pattern:** `"mpa_isactive"`
 **Fix:** Should be `"mpa_isactive"`
 
 ### Issue 3: Wrong Column Names

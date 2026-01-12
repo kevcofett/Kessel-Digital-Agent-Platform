@@ -49,3 +49,44 @@ export {
   type TokenResponse,
   type TokenManagerConfig,
 } from './token-manager.js';
+
+// ============================================================================
+// EMBEDDING PROVIDERS
+// ============================================================================
+
+// Embedding types
+export {
+  type EmbeddingVector,
+  type EmbeddingResult,
+  type BatchEmbeddingResult,
+  type OpenAIEmbeddingConfig,
+  type AzureOpenAIEmbeddingConfig,
+  type EmbeddingProviderConfig,
+  type SemanticEmbeddingProvider,
+  type EmbeddingProviderMetadata,
+  cosineSimilarity,
+  euclideanDistance,
+  dotProduct,
+} from './embedding-types.js';
+
+// OpenAI Embedding Provider
+export {
+  OpenAIEmbeddingProvider,
+  createOpenAIEmbeddingProvider,
+} from './openai-embedding.js';
+
+// Azure OpenAI Embedding Provider
+export {
+  AzureOpenAIEmbeddingProvider,
+  createAzureOpenAIEmbeddingProvider,
+} from './azure-openai-embedding.js';
+
+// Embedding Factory
+export {
+  type EmbeddingEnvironment,
+  detectEmbeddingEnvironment,
+  createEmbeddingProvider,
+  createEmbeddingProviderFromEnvironment,
+  createBestAvailableEmbeddingProvider,
+  TFIDFEmbeddingProviderAdapter,
+} from './embedding-factory.js';

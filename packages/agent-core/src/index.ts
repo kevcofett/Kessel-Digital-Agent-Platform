@@ -61,6 +61,28 @@ export {
   createAzureOpenAITokenManager,
   type TokenResponse,
   type TokenManagerConfig,
+  // Semantic Embedding Providers
+  type EmbeddingVector,
+  type EmbeddingResult,
+  type BatchEmbeddingResult,
+  type OpenAIEmbeddingConfig,
+  type AzureOpenAIEmbeddingConfig,
+  type EmbeddingProviderConfig,
+  type SemanticEmbeddingProvider,
+  type EmbeddingProviderMetadata,
+  cosineSimilarity,
+  euclideanDistance,
+  dotProduct,
+  OpenAIEmbeddingProvider,
+  createOpenAIEmbeddingProvider,
+  AzureOpenAIEmbeddingProvider,
+  createAzureOpenAIEmbeddingProvider,
+  type EmbeddingEnvironment,
+  detectEmbeddingEnvironment,
+  createEmbeddingProvider,
+  createEmbeddingProviderFromEnvironment,
+  createBestAvailableEmbeddingProvider,
+  TFIDFEmbeddingProviderAdapter,
 } from './providers/index.js';
 
 // =============================================================================
@@ -94,6 +116,13 @@ export {
   DocumentProcessor,
   RetrievalEngine,
   type RetrievalEngineOptions,
+  // Hybrid Retrieval
+  HybridRetrievalEngine,
+  createHybridRetrievalEngine,
+  type HybridRetrievalConfig,
+  type HybridSearchResult,
+  type ChunkWithEmbedding,
+  DEFAULT_HYBRID_CONFIG,
 } from './rag/index.js';
 
 // =============================================================================

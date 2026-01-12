@@ -22,3 +22,16 @@ export { EmbeddingService } from './embedding-service.js';
 export { VectorStore } from './vector-store.js';
 export { DocumentProcessor } from './document-processor.js';
 export { RetrievalEngine, type RetrievalEngineOptions } from './retrieval-engine.js';
+
+// ============================================================================
+// HYBRID RETRIEVAL
+// ============================================================================
+
+export {
+  HybridRetrievalEngine,
+  createHybridRetrievalEngine,
+  type HybridRetrievalConfig,
+  type HybridSearchResult,
+  type ChunkWithEmbedding,
+  DEFAULT_HYBRID_CONFIG,
+} from './hybrid-retrieval.js';

@@ -99,7 +99,7 @@ try {
         $clientId = $env:SP_CLIENT_ID
         $clientSecret = $env:SP_CLIENT_SECRET
         $tenantId = $env:TENANT_ID
-        
+
         if ($clientId -and $clientSecret) {
             Connect-PnPOnline -Url $siteUrl -ClientId $clientId -ClientSecret $clientSecret -Tenant $tenantId
         } else {
@@ -107,8 +107,13 @@ try {
             Connect-PnPOnline -Url $siteUrl -Interactive
         }
     } else {
-        # Interactive login for personal
-        Connect-PnPOnline -Url $siteUrl -Interactive
+        # Interactive login for personal with registered app
+        $pnpClientId = $env:PNP_CLIENT_ID
+        if ($pnpClientId) {
+            Connect-PnPOnline -Url $siteUrl -Interactive -ClientId $pnpClientId
+        } else {
+            Connect-PnPOnline -Url $siteUrl -Interactive
+        }
     }
     
     Write-Host "Connected successfully"

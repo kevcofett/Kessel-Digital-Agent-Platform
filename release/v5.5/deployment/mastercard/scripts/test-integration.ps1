@@ -78,7 +78,12 @@ Write-Host "-----------------------------------------"
 $spConnected = $false
 try {
     Import-Module PnP.PowerShell -ErrorAction Stop
-    Connect-PnPOnline -Url $env:SHAREPOINT_SITE -Interactive -ErrorAction Stop
+    $pnpClientId = $env:PNP_CLIENT_ID
+    if ($pnpClientId) {
+        Connect-PnPOnline -Url $env:SHAREPOINT_SITE -Interactive -ClientId $pnpClientId -ErrorAction Stop
+    } else {
+        Connect-PnPOnline -Url $env:SHAREPOINT_SITE -Interactive -ErrorAction Stop
+    }
     $spConnected = $true
 } catch {
     Write-Host "  ✗ SharePoint connection failed" -ForegroundColor Red

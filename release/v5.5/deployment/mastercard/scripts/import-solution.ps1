@@ -159,8 +159,8 @@ $envVarDefaults = @{
         kd_AzureFunctionUrl = ""
     }
     mastercard = @{
-        kd_SharePointSiteUrl = "https://mastercard.sharepoint.com/sites/AgentKnowledgeBase"
-        kd_SharePointLibrary = "AgentKnowledgeBase"
+        kd_SharePointSiteUrl = "https://mastercard.sharepoint.com/sites/CAEConsultingProduct"
+        kd_SharePointLibrary = "Shared Documents"
         kd_DataverseUrl = "https://mastercard.crm.dynamics.com"
         kd_AzureFunctionUrl = ""
     }

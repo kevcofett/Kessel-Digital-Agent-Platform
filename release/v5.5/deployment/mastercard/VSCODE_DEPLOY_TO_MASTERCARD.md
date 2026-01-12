@@ -7,6 +7,23 @@
 
 ---
 
+## KEY URLS - MASTERCARD ENVIRONMENT
+
+| Service | URL |
+|---------|-----|
+| SharePoint Site | https://mastercard.sharepoint.com/sites/CAEConsultingProduct |
+| SharePoint Library | Shared Documents |
+| SharePoint All Items | https://mastercard.sharepoint.com/sites/CAEConsultingProduct/Shared%20Documents/Forms/AllItems.aspx |
+| Power Apps | https://make.powerapps.com/environments/ea9d500a-9299-e7b2-8754-53ebea0cb818/home |
+| Power Automate | https://make.powerautomate.com/environments/Default-f06fa858-824b-4a85-aacv-f372cfdc282e/home |
+| Copilot Studio | https://copilotstudio.microsoft.com (select Mastercard environment) |
+
+### Environment IDs
+- Power Apps Environment ID: `ea9d500a-9299-e7b2-8754-53ebea0cb818`
+- Power Automate Environment ID: `Default-f06fa858-824b-4a85-aacv-f372cfdc282e`
+
+---
+
 ## IMPORTANT NOTES
 
 ### Security Considerations
@@ -58,7 +75,7 @@ $env:ENVIRONMENT = "mastercard"
 $env:TENANT_ID = (az keyvault secret show --vault-name "MC-Agent-KeyVault" --name "tenant-id" --query value -o tsv)
 $env:DATAVERSE_URL = (az keyvault secret show --vault-name "MC-Agent-KeyVault" --name "dataverse-url" --query value -o tsv)
 $env:SHAREPOINT_SITE = (az keyvault secret show --vault-name "MC-Agent-KeyVault" --name "sharepoint-site" --query value -o tsv)
-$env:SHAREPOINT_LIBRARY = "AgentKnowledgeBase"
+$env:SHAREPOINT_LIBRARY = "Shared Documents"
 $env:AZURE_SUBSCRIPTION = (az keyvault secret show --vault-name "MC-Agent-KeyVault" --name "azure-subscription" --query value -o tsv)
 $env:AZURE_RESOURCE_GROUP = (az keyvault secret show --vault-name "MC-Agent-KeyVault" --name "azure-rg" --query value -o tsv)
 ```

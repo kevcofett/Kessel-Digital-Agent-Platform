@@ -209,8 +209,8 @@ kd_DataverseUrl = https://[personal-org].crm.dynamics.com
 
 **For Mastercard Environment:**
 ```
-kd_SharePointSiteUrl = https://[mc-tenant].sharepoint.com/sites/AgentKnowledgeBase
-kd_SharePointLibrary = AgentKnowledgeBase
+kd_SharePointSiteUrl = https://mastercard.sharepoint.com/sites/CAEConsultingProduct
+kd_SharePointLibrary = Shared Documents
 kd_DataverseUrl = https://[mc-org].crm.dynamics.com
 ```
 

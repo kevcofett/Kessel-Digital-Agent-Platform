@@ -49,29 +49,24 @@
 ## OPTION A: SOLUTION IMPORT DEPLOYMENT (RECOMMENDED)
 
 ### Prerequisites
-1. Solution exported from dev environment: `KesselAgentPlatform_5_5_0_0.zip`
-2. Power Platform CLI installed
+1. Solution file ready: `MediaPlanningAgentv52_updated.zip` (in `release/v5.5/solutions/`)
+2. Power Platform CLI installed (`pac` command available)
 3. Authenticated to Mastercard environment
 
-### Step A.1: Export Solution from Dev (if not already done)
+### Solution Files Overview
 
-```powershell
-# In your PERSONAL/DEV environment
-cd /path/to/Kessel-Digital-Agent-Platform/release/v5.5/deployment/mastercard/scripts
+| File | Description | Use For |
+|------|-------------|---------|
+| `MediaPlanningAgentv52_updated.zip` | MPA flows with plural entity names | **RECOMMENDED** |
+| `AragornAI_1.0.1.0.zip` | Full platform including Copilot agent | Full deployment |
+| `ConsultingAgentBase.zip` | CA tables only | CA tables setup |
 
-# Authenticate to dev environment
-pac auth create --environment "https://[your-dev-org].crm.dynamics.com"
+### Step A.1: Verify Solution is Ready (Already Done)
 
-# Export solution
-./export-solution.ps1 -Version "5.5.0.0" -ExportManaged
-
-# Commit to repo
-git add ../../../solutions/
-git commit -m "Export solution v5.5.0.0 for Mastercard deployment"
-git push origin deploy/mastercard
-```
-
-**Detailed guide:** [SOLUTION_EXPORT_STEP_BY_STEP.md](../SOLUTION_EXPORT_STEP_BY_STEP.md)
+The solution has been exported and updated with plural entity names:
+- Location: `release/v5.5/solutions/MediaPlanningAgentv52_updated.zip`
+- Contains: 13 MPA Power Automate flows with correct Dataverse entity names
+- Status: ✅ Ready for import
 
 ### Step A.2: Deploy SharePoint KB Files First
 
@@ -107,21 +102,39 @@ Connect-PnPOnline -Url "https://mastercard.sharepoint.com/sites/CAEConsultingPro
 
 ### Step A.3: Import Solution to Mastercard
 
+#### Option 1: Using PAC CLI (Recommended)
+
 ```powershell
+# Navigate to solutions directory
+cd /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/solutions
+
 # Authenticate to Mastercard environment
 pac auth create --environment "https://[mastercard-org].crm.dynamics.com"
 
-# Import solution (unmanaged for initial testing)
-./import-solution.ps1 `
-    -SolutionPath "../../solutions/KesselAgentPlatform_5_5_0_0.zip" `
-    -Environment "mastercard"
+# Import MPA solution (unmanaged - allows testing and modifications)
+pac solution import --path "MediaPlanningAgentv52_updated.zip" --async
 
-# OR for production (managed - locked from changes)
-./import-solution.ps1 `
-    -SolutionPath "../../solutions/KesselAgentPlatform_5_5_0_0_managed.zip" `
-    -Environment "mastercard" `
-    -Managed
+# Check import status
+pac solution list
 ```
+
+#### Option 2: Using Power Platform Admin Center (GUI)
+
+1. Open <https://make.powerapps.com>
+2. Select Mastercard environment from environment picker
+3. Go to **Solutions** → **Import solution**
+4. Click **Browse** and select: `release/v5.5/solutions/MediaPlanningAgentv52_updated.zip`
+5. Click **Next** → Review components → **Import**
+6. Wait for import to complete (may take 5-10 minutes)
+
+#### Solution Files Reference
+
+| File | Contains | Use For |
+|------|----------|---------|
+| `MediaPlanningAgentv52_updated.zip` | 13 MPA flows with plural entity names | **MPA Deployment (RECOMMENDED)** |
+| `AragornAI_1.0.1.0.zip` | Full platform including Copilot agent | Complete fresh deployment |
+| `ConsultingAgentv1.zip` | CA flows and components | CA deployment |
+| `ConsultingAgentBase.zip` | CA Dataverse tables only | CA tables setup |
 
 **Detailed guide:** [SOLUTION_EXPORT_IMPORT_WORKFLOW.md](../SOLUTION_EXPORT_IMPORT_WORKFLOW.md)
 

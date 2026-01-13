@@ -145,7 +145,7 @@ TABLE_CONFIG = {
         "csv_file": "mpa_vertical_seed.csv",
         "column_mappings": {
             "mpa_verticalcode": "mpa_verticalcode",
-            "mpa_newcolumn": "mpa_name",
+            "mpa_newcolumn": "mpa_newcolumn",
             "mpa_description": "mpa_description",
             "mpa_isactive": "mpa_isactive"
         },
@@ -159,7 +159,7 @@ TABLE_CONFIG = {
         "csv_file": "mpa_channel_seed.csv",
         "column_mappings": {
             "mpa_channelcode": "mpa_channelcode",
-            "mpa_newcolumn": "mpa_name",
+            "mpa_newcolumn": "mpa_newcolumn",
             "mpa_category": "mpa_category",
             "mpa_minbudget": "mpa_minbudget",
             "mpa_cpmlow": "mpa_cpmlow",
@@ -168,7 +168,7 @@ TABLE_CONFIG = {
             "mpa_cpchigh": "mpa_cpchigh",
             "mpa_funnelstage": "mpa_funnelstage",
             "mpa_platforms": "mpa_platforms",
-            "mpa_confidencelevel": "mpa_confidencelevel",
+            "mpa_confidencelevel": "mpa_confidence_level",
             "mpa_notes": "mpa_notes",
             "mpa_isactive": "mpa_isactive"
         },
@@ -187,13 +187,13 @@ TABLE_CONFIG = {
         "csv_file": "mpa_kpi_seed.csv",
         "column_mappings": {
             "mpa_kpicode": "mpa_kpicode",
-            "mpa_newcolumn": "mpa_name",
+            "mpa_newcolumn": "mpa_newcolumn",
             "mpa_category": "mpa_category",
             "mpa_formula": "mpa_formula",
             "mpa_unit": "mpa_unit",
             "mpa_format": "mpa_format",
             "mpa_direction": "mpa_direction",
-            "mpa_confidence_level": "mpa_confidencelevel",
+            "mpa_confidencelevel": "mpa_confidence_level",
             "mpa_notes": "mpa_notes",
             "mpa_isactive": "mpa_isactive"
         },
@@ -206,10 +206,10 @@ TABLE_CONFIG = {
         "primary_key": ["mpa_verticalcode", "mpa_channelcode", "mpa_kpicode"],  # Composite
         "csv_file": "mpa_benchmark_seed.csv",
         "column_mappings": {
-            "mpa_verticalcode": "_lookup_vertical",
-            "mpa_channelcode": "_lookup_channel",
-            "mpa_kpicode": "_lookup_kpi",
-            "mpa_metricname": "mpa_name",
+            "mpa_verticalcode": "mpa_verticalcode",
+            "mpa_channelcode": "mpa_channelcode",
+            "mpa_kpicode": "mpa_kpicode",
+            "mpa_metricname": "mpa_metricname",
             "mpa_metriclow": "mpa_metriclow",
             "mpa_metricmedian": "mpa_metricmedian",
             "mpa_metrichigh": "mpa_metrichigh",
@@ -217,32 +217,13 @@ TABLE_CONFIG = {
             "mpa_datasource": "mpa_datasource",
             "mpa_dataperiod": "mpa_dataperiod",
             "mpa_confidencelevel": "mpa_confidencelevel",
-            "mpa_metricunit": "mpa_metricunit",
-            "mpa_isactive": "mpa_isactive"
+            "mpa_metricunit": "mpa_metricunit"
         },
         "transforms": {
-            "mpa_isactive": "boolean",
             "mpa_metriclow": "float",
             "mpa_metricmedian": "float",
             "mpa_metrichigh": "float",
             "mpa_metricbest": "float"
-        },
-        "lookups": {
-            "_lookup_vertical": {
-                "target_entity": "mpa_verticals",
-                "source_field": "mpa_verticalcode",
-                "bind_field": "mpa_vertical"
-            },
-            "_lookup_channel": {
-                "target_entity": "mpa_channels",
-                "source_field": "mpa_channelcode",
-                "bind_field": "mpa_channel"
-            },
-            "_lookup_kpi": {
-                "target_entity": "mpa_kpis",
-                "source_field": "mpa_kpicode",
-                "bind_field": "mpa_kpi"
-            }
         }
     }
 }

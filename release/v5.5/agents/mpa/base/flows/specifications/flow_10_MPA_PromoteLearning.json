@@ -37,7 +37,7 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "GetItem", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
-            "parameters": {"entityName": "mpa_planlearning", "recordId": "@triggerBody()?['learning_id']"}
+            "parameters": {"entityName": "mpa_planlearnings", "recordId": "@triggerBody()?['learning_id']"}
           },
           "runAfter": {}
         },
@@ -71,7 +71,7 @@
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
             "parameters": {
-              "entityName": "eap_learning",
+              "entityName": "eap_learnings",
               "item": {
                 "eap_learning_title": "@outputs('Get_MPA_Learning')?['body/mpa_learning_title']",
                 "eap_content": "@outputs('Get_MPA_Learning')?['body/mpa_description']",
@@ -97,7 +97,7 @@
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "UpdateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
             "parameters": {
-              "entityName": "mpa_planlearning",
+              "entityName": "mpa_planlearnings",
               "recordId": "@triggerBody()?['learning_id']",
               "item": {
                 "mpa_is_promoted": true,
@@ -136,7 +136,7 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
-            "parameters": {"entityName": "mpa_errorlog", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_PromoteLearning", "mpa_severity": 100000002, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()"}}
+            "parameters": {"entityName": "mpa_errorlogs", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_PromoteLearning", "mpa_severity": 100000002, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()"}}
           },
           "runAfter": {"Set_varErrorMessage": ["Succeeded"]}
         },

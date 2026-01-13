@@ -67,7 +67,7 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "entityName": "mpa_plandata",
+              "entityName": "mpa_plandatas",
               "$filter": "mpa_plan_id eq '@{triggerBody()?['plan_id']}' and mpa_section_type eq '@{triggerBody()?['section_type']}'",
               "$top": 1
             }
@@ -96,7 +96,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
-                  "entityName": "mpa_plandata",
+                  "entityName": "mpa_plandatas",
                   "recordId": "@first(outputs('Check_Existing_Section')?['body/value'])?['mpa_plandataid']",
                   "item": {
                     "mpa_section_data": "@triggerBody()?['section_data']",
@@ -127,7 +127,7 @@
                     "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                   },
                   "parameters": {
-                    "entityName": "mpa_plandata",
+                    "entityName": "mpa_plandatas",
                     "item": {
                       "mpa_plan_id": "@triggerBody()?['plan_id']",
                       "mpa_section_type": "@triggerBody()?['section_type']",
@@ -167,7 +167,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
-                  "entityName": "mpa_mediaplan",
+                  "entityName": "mpa_mediaplans",
                   "recordId": "@triggerBody()?['plan_id']",
                   "item": {
                     "mpa_current_step": "@triggerBody()?['step_number']",
@@ -235,7 +235,7 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "entityName": "mpa_errorlog",
+              "entityName": "mpa_errorlogs",
               "item": {
                 "mpa_error_type": "FlowError",
                 "mpa_error_message": "@variables('varErrorMessage')",

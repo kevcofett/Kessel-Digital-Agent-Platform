@@ -44,7 +44,7 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "GetItem", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
-            "parameters": {"entityName": "mpa_mediaplan", "recordId": "@triggerBody()?['plan_id']"}
+            "parameters": {"entityName": "mpa_mediaplans", "recordId": "@triggerBody()?['plan_id']"}
           },
           "runAfter": {}
         },
@@ -52,7 +52,7 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "ListRecords", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
-            "parameters": {"entityName": "mpa_plandata", "$filter": "mpa_plan_id eq '@{triggerBody()?['plan_id']}'"}
+            "parameters": {"entityName": "mpa_plandatas", "$filter": "mpa_plan_id eq '@{triggerBody()?['plan_id']}'"}
           },
           "runAfter": {"Get_Plan_Details": ["Succeeded"]}
         },
@@ -104,7 +104,7 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
-            "parameters": {"entityName": "mpa_errorlog", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_GenerateDocument", "mpa_severity": 100000002, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()", "mpa_plan_id": "@triggerBody()?['plan_id']"}}
+            "parameters": {"entityName": "mpa_errorlogs", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_GenerateDocument", "mpa_severity": 100000002, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()", "mpa_plan_id": "@triggerBody()?['plan_id']"}}
           },
           "runAfter": {"Set_varErrorMessage": ["Succeeded"]}
         },

@@ -101,7 +101,7 @@
           "description": "Retrieve the existing plan record",
           "inputs": {
             "operation": "GetRecord",
-            "entityName": "mpa_mediaplan",
+            "entityName": "mpa_mediaplans",
             "itemId": "@body('Parse_Session_Metadata')?['plan_id']",
             "select": "mpa_mediaplanid,mpa_name,mpa_status,mpa_current_step,mpa_client_id,mpa_campaign_type,mpa_total_budget,mpa_start_date,mpa_end_date"
           }
@@ -111,7 +111,7 @@
           "description": "Retrieve completed sections for the plan",
           "inputs": {
             "operation": "ListRecords",
-            "entityName": "mpa_plandata",
+            "entityName": "mpa_plandatas",
             "filter": "mpa_plan_id eq '@{body('Parse_Session_Metadata')?['plan_id']}'",
             "select": "mpa_section_name,mpa_section_status,mpa_section_data",
             "orderBy": "mpa_section_order asc"
@@ -236,7 +236,7 @@
       },
       "inputs": {
         "operation": "CreateRecord",
-        "entityName": "eap_audit",
+        "entityName": "eap_audits",
         "item": {
           "eap_user_id": "@{triggerBody()?['user_id']}",
           "eap_session_id": "@{triggerBody()?['session_id']}",

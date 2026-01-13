@@ -238,7 +238,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
-                  "entityName": "eap_session",
+                  "entityName": "eap_sessions",
                   "recordId": "@{triggerBody()?['existing_session_id']}"
                 }
               }
@@ -252,7 +252,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
-                  "entityName": "eap_session",
+                  "entityName": "eap_sessions",
                   "recordId": "@{triggerBody()?['existing_session_id']}",
                   "item/modifiedon": "@{utcNow()}"
                 }
@@ -285,7 +285,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
-                  "entityName": "eap_session",
+                  "entityName": "eap_sessions",
                   "item/eap_agentcode": "@{triggerBody()?['agent_code']}",
                   "item/eap_userid@odata.bind": "eap_users(@{variables('varUserId')})",
                   "item/eap_channel": "@{triggerBody()?['channel']}",
@@ -321,7 +321,7 @@
                 "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
               },
               "parameters": {
-                "entityName": "eap_session",
+                "entityName": "eap_sessions",
                 "item/eap_agentcode": "@{triggerBody()?['agent_code']}",
                 "item/eap_userid@odata.bind": "eap_users(@{variables('varUserId')})",
                 "item/eap_channel": "@{triggerBody()?['channel']}",

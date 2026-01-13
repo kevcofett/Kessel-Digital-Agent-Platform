@@ -53,7 +53,7 @@
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
             "parameters": {
-              "entityName": "mpa_postmortemreport",
+              "entityName": "mpa_postmortemreports",
               "item": {
                 "mpa_plan_id": "@triggerBody()?['plan_id']",
                 "mpa_report_title": "@triggerBody()?['report_title']",
@@ -83,7 +83,7 @@
                   "inputs": {
                     "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
                     "parameters": {
-                      "entityName": "mpa_postmortemfinding",
+                      "entityName": "mpa_postmortemfindings",
                       "item": {
                         "mpa_report_id": "@variables('varReportId')",
                         "mpa_category": "@items('For_Each_Finding')?['category']",
@@ -134,7 +134,7 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
-            "parameters": {"entityName": "mpa_errorlog", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_CreatePostMortem", "mpa_severity": 100000002, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()", "mpa_plan_id": "@triggerBody()?['plan_id']"}}
+            "parameters": {"entityName": "mpa_errorlogs", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_CreatePostMortem", "mpa_severity": 100000002, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()", "mpa_plan_id": "@triggerBody()?['plan_id']"}}
           },
           "runAfter": {"Set_varErrorMessage": ["Succeeded"]}
         },

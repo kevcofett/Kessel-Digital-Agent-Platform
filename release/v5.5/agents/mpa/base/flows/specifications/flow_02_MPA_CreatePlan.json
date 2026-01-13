@@ -156,7 +156,7 @@
               "entityName": "eap_session",
               "recordId": "@triggerBody()?['session_id']",
               "item": {
-                "eap_session_data": "@json(concat('{\"plan_id\":\"', outputs('Create_MediaPlan_Record')?['body/mpa_mediaplanid'], '\",\"plan_code\":\"', variables('varPlanCode'), '\"}'))"
+                "eap_sessiondata": "@json(concat('{\"plan_id\":\"', outputs('Create_MediaPlan_Record')?['body/mpa_mediaplanid'], '\",\"plan_code\":\"', variables('varPlanCode'), '\"}'))"
               }
             }
           },

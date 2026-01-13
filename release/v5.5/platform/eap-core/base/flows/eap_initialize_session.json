@@ -238,7 +238,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
-                  "entityName": "eap_sessions",
+                  "entityName": "eap_session",
                   "recordId": "@{triggerBody()?['existing_session_id']}"
                 }
               }
@@ -252,9 +252,9 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
-                  "entityName": "eap_sessions",
+                  "entityName": "eap_session",
                   "recordId": "@{triggerBody()?['existing_session_id']}",
-                  "item/eap_lastactivity": "@{utcNow()}"
+                  "item/modifiedon": "@{utcNow()}"
                 }
               },
               "runAfter": {
@@ -285,14 +285,14 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
-                  "entityName": "eap_sessions",
+                  "entityName": "eap_session",
                   "item/eap_agentcode": "@{triggerBody()?['agent_code']}",
                   "item/eap_userid@odata.bind": "eap_users(@{variables('varUserId')})",
                   "item/eap_channel": "@{triggerBody()?['channel']}",
                   "item/eap_sessiontype": "AUDIT",
                   "item/eap_status": "Active",
-                  "item/eap_starttime": "@{utcNow()}",
-                  "item/eap_lastactivity": "@{utcNow()}",
+                  "item/eap_startedat": "@{utcNow()}",
+                  "item/modifiedon": "@{utcNow()}",
                   "item/eap_correlationid": "@{variables('varCorrelationId')}"
                 }
               }
@@ -321,14 +321,14 @@
                 "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
               },
               "parameters": {
-                "entityName": "eap_sessions",
+                "entityName": "eap_session",
                 "item/eap_agentcode": "@{triggerBody()?['agent_code']}",
                 "item/eap_userid@odata.bind": "eap_users(@{variables('varUserId')})",
                 "item/eap_channel": "@{triggerBody()?['channel']}",
                 "item/eap_sessiontype": "NEW",
                 "item/eap_status": "Active",
-                "item/eap_starttime": "@{utcNow()}",
-                "item/eap_lastactivity": "@{utcNow()}",
+                "item/eap_startedat": "@{utcNow()}",
+                "item/modifiedon": "@{utcNow()}",
                 "item/eap_correlationid": "@{variables('varCorrelationId')}"
               }
             }

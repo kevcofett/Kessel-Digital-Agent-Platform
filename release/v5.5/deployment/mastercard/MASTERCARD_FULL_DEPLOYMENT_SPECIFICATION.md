@@ -57,10 +57,14 @@ SHAREPOINT_SITE_URL=https://mastercard.sharepoint.com/sites/CAEConsultingProduct
 SHAREPOINT_KB_LIBRARY=Shared Documents
 
 # Power Automate
-POWER_AUTOMATE_ENVIRONMENT_ID=Default-f06fa858-824b-4a85-aacv-f372cfdc282e
+POWER_AUTOMATE_ENVIRONMENT_ID=ea9d500a-9299-e7b2-8754-53ebea0cb818
 
 # Power Apps
 POWERAPPS_ENVIRONMENT_ID=ea9d500a-9299-e7b2-8754-53ebea0cb818
+
+# Dataverse
+DATAVERSE_URL=https://orgcc6eaaec.crm.dynamics.com
+DATAVERSE_ORGANIZATION_ID=74145e53-ba5e-f011-8ee3-000d3a3b2c23
 
 # Azure Functions
 AZURE_FUNCTION_APP_NAME=mpa-functions-prod

@@ -16,7 +16,7 @@
 | SharePoint Library | Shared Documents |
 | SharePoint All Items | https://mastercard.sharepoint.com/sites/CAEConsultingProduct/Shared%20Documents/Forms/AllItems.aspx |
 | Power Apps | https://make.powerapps.com/environments/ea9d500a-9299-e7b2-8754-53ebea0cb818/home |
-| Power Automate | https://make.powerautomate.com/environments/Default-f06fa858-824b-4a85-aacv-f372cfdc282e/home |
+| Power Automate | <https://make.powerautomate.com/environments/ea9d500a-9299-e7b2-8754-53ebea0cb818/home> |
 | Copilot Studio | https://copilotstudio.microsoft.com (select Mastercard environment) |
 
 ### Agent KB Folder URLs
@@ -28,7 +28,9 @@
 
 ### Environment IDs
 - Power Apps Environment ID: `ea9d500a-9299-e7b2-8754-53ebea0cb818`
-- Power Automate Environment ID: `Default-f06fa858-824b-4a85-aacv-f372cfdc282e`
+- Power Automate Environment ID: `ea9d500a-9299-e7b2-8754-53ebea0cb818`
+- Dataverse URL: `orgcc6eaaec.crm.dynamics.com`
+- Organization ID: `74145e53-ba5e-f011-8ee3-000d3a3b2c23`
 
 ---
 
@@ -109,7 +111,7 @@ Connect-PnPOnline -Url "https://mastercard.sharepoint.com/sites/CAEConsultingPro
 cd /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/solutions
 
 # Authenticate to Mastercard environment
-pac auth create --environment "https://[mastercard-org].crm.dynamics.com"
+pac auth create --environment "https://orgcc6eaaec.crm.dynamics.com"
 
 # Import MPA solution (unmanaged - allows testing and modifications)
 pac solution import --path "MediaPlanningAgentv52_updated.zip" --async
@@ -150,7 +152,7 @@ After import, set Mastercard-specific values:
 |----------|------------------|
 | kd_SharePointSiteUrl | https://mastercard.sharepoint.com/sites/CAEConsultingProduct |
 | kd_SharePointLibrary | Shared Documents |
-| kd_DataverseUrl | https://[mastercard-org].crm.dynamics.com |
+| kd_DataverseUrl | `https://orgcc6eaaec.crm.dynamics.com` |
 | kd_AzureFunctionUrl | (if applicable) |
 
 ### Step A.5: Configure Connection References
@@ -164,7 +166,7 @@ After import, set Mastercard-specific values:
 
 ### Step A.6: Enable Power Automate Flows
 
-1. Open Power Automate: https://make.powerautomate.com/environments/Default-f06fa858-824b-4a85-aacv-f372cfdc282e/home
+1. Open Power Automate: <https://make.powerautomate.com/environments/ea9d500a-9299-e7b2-8754-53ebea0cb818/home>
 2. Find imported flows (search "MPA_" or "CA_")
 3. For each flow:
    - Open flow

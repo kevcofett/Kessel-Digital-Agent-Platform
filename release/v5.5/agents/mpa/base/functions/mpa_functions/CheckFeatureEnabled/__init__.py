@@ -170,7 +170,7 @@ def check_feature_flag(
 
     try:
         flags = client.get_records(
-            table_name="eap_featureflag",
+            table_name="eap_featureflags",
             select="eap_featureflagid,eap_flagcode,eap_flagname,eap_description,eap_isenabled,eap_category,eap_agentcode,eap_defaultvalue,eap_fallbackmessage",
             filter_query=filter_query,
             top=1
@@ -280,7 +280,7 @@ def list_feature_flags(
 
         try:
             flags = client.get_records(
-                table_name="eap_featureflag",
+                table_name="eap_featureflags",
                 select="eap_featureflagid,eap_flagcode,eap_flagname,eap_description,eap_isenabled,eap_category,eap_agentcode,eap_defaultvalue,eap_fallbackmessage",
                 order_by="eap_flagcode"
             )

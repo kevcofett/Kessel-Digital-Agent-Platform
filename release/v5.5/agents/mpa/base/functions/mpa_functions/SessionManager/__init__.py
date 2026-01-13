@@ -15,11 +15,12 @@ from typing import Dict, Any, Optional
 from ..shared.dataverse_client import DataverseClient
 from ..shared.validators import validate_session_request
 from ..shared.odata_sanitization import sanitize_odata_guid
+from ..shared.table_config import TABLES
 
 logger = logging.getLogger(__name__)
 
-# Session table in Dataverse
-SESSION_TABLE = "eap_session"
+# Session table in Dataverse (Entity Set Name - plural form)
+SESSION_TABLE = TABLES["session"]  # "eap_sessions"
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:

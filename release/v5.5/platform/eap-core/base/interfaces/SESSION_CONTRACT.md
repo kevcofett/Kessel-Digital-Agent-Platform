@@ -54,8 +54,9 @@ Agents SHOULD update session on significant state changes.
 - Error occurs
 
 **Update Fields:**
-- eap_lastactivity (always)
-- eap_context (if changed)
+
+- modifiedon (always - auto-updated)
+- eap_sessiondata (if context changed)
 - eap_status (if changed)
 
 ### 3. Session Completion
@@ -63,9 +64,10 @@ Agents SHOULD update session on significant state changes.
 Agents MUST mark session complete when workflow finishes.
 
 **Set Fields:**
-- eap_status = 2 (Completed)
-- eap_completedon = Current timestamp
-- eap_context = Final state JSON
+
+- eap_status = 200000002 (Completed)
+- eap_endedat = Current timestamp
+- eap_sessiondata = Final state JSON
 
 ### 4. Session Abandonment
 

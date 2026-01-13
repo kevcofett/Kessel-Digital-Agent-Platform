@@ -314,7 +314,7 @@ def get_cached_session(
         safe_session_id = sanitize_odata_guid(session_id)
         sessions = dataverse_client.get_records(
             table_name="eap_session",
-            select="eap_sessionid,eap_clientid,eap_userid,eap_agenttype,eap_status,eap_context,createdon,modifiedon",
+            select="eap_sessionid,eap_clientid,eap_userid,eap_agentcode,eap_status,eap_sessiondata,createdon,modifiedon",
             filter_query=f"eap_sessionid eq '{safe_session_id}'",
             top=1
         )

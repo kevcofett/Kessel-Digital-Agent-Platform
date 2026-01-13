@@ -65,13 +65,12 @@
             "parameters": {
               "entityName": "eap_session",
               "item": {
-                "eap_session_id": "@variables('varSessionId')",
-                "eap_user_id": "@triggerBody()?['user_id']",
-                "eap_pathway": "@variables('varPathwayCode')",
-                "eap_agent_type": "@variables('varAgentType')",
-                "eap_status": 100000000,
-                "eap_started_at": "@utcNow()",
-                "eap_context_json": "@if(empty(triggerBody()?['initial_context']), null, string(triggerBody()?['initial_context']))"
+                "eap_sessioncode": "@concat('CA-', formatDateTime(utcNow(), 'yyyyMMddHHmmss'), '-', substring(guid(), 0, 4))",
+                "eap_userid": "@triggerBody()?['user_id']",
+                "eap_agentcode": "CA",
+                "eap_status": 200000000,
+                "eap_startedat": "@utcNow()",
+                "eap_sessiondata": "@if(empty(triggerBody()?['initial_context']), null, string(triggerBody()?['initial_context']))"
               }
             }
           },

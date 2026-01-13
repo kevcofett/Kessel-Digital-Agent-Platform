@@ -85,13 +85,13 @@
             "parameters": {
               "entityName": "eap_session",
               "item": {
-                "eap_session_code": "@variables('varSessionCode')",
-                "eap_agent_type": "MPA_AGENT",
-                "eap_user_id": "@triggerBody()?['user_id']",
-                "eap_client_id": "@triggerBody()?['client_id']",
-                "eap_status": 100000000,
-                "eap_started_at": "@utcNow()",
-                "eap_session_data": "@json(concat('{\"pathway\":\"', triggerBody()?['pathway'], '\",\"campaign_name\":\"', coalesce(triggerBody()?['campaign_name'], ''), '\"}'))"
+                "eap_sessioncode": "@variables('varSessionCode')",
+                "eap_agentcode": "MPA",
+                "eap_userid": "@triggerBody()?['user_id']",
+                "eap_clientid": "@triggerBody()?['client_id']",
+                "eap_status": 200000000,
+                "eap_startedat": "@utcNow()",
+                "eap_sessiondata": "@json(concat('{\"pathway\":\"', triggerBody()?['pathway'], '\",\"campaign_name\":\"', coalesce(triggerBody()?['campaign_name'], ''), '\"}'))"
               }
             }
           },
@@ -198,6 +198,6 @@
     }
   },
   "environmentVariables": {
-    "DataverseEnvironmentUrl": "https://org5c737821.crm.dynamics.com"
+    "DataverseEnvironmentUrl": "https://aragornai.crm.dynamics.com"
   }
 }

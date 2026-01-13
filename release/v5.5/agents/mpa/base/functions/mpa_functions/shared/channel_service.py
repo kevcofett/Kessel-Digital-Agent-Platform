@@ -18,7 +18,7 @@ CACHE_TTL_MINUTES = 120
 class ChannelService:
     """Service for retrieving channel data from Dataverse."""
 
-    TABLE_NAME = "new_advertisingchannel"
+    TABLE_NAME = "mpa_channel"
 
     def __init__(self, dataverse_client: Optional[DataverseClient] = None):
         self.client = dataverse_client or DataverseClient()

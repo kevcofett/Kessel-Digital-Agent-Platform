@@ -19,7 +19,7 @@ from ..shared.odata_sanitization import sanitize_odata_guid
 logger = logging.getLogger(__name__)
 
 # Session table in Dataverse
-SESSION_TABLE = "new_session"
+SESSION_TABLE = "eap_session"
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -103,21 +103,24 @@ def create_session(client: DataverseClient, req_body: Dict[str, Any]) -> func.Ht
     user_id = req_body.get("user_id")
     client_id = req_body.get("client_id")
     plan_id = req_body.get("plan_id")
+    agent_code = req_body.get("agent_code", "MPA")  # Default to MPA agent
     initial_context = req_body.get("context", {})
 
     session_id = str(uuid.uuid4())
     now = datetime.utcnow().isoformat()
 
+    # Generate session code (shorter identifier for display)
+    session_code = f"SES-{session_id[:8].upper()}"
+
     session_data = {
-        "eap_session_id": session_id,
-        "eap_user_id": user_id,
-        "eap_client_id": client_id,
-        "eap_plan_id": plan_id,
-        "eap_context": json.dumps(initial_context),
-        "eap_status": "active",
-        "eap_created_at": now,
-        "eap_updated_at": now,
-        "eap_started_at": now
+        "eap_sessioncode": session_code,
+        "eap_agentcode": agent_code,  # Required field
+        "eap_userid": user_id,
+        "eap_clientid": client_id,
+        "eap_planid": plan_id,
+        "eap_sessiondata": json.dumps(initial_context),
+        "eap_status": 200000000,  # Active status (Dataverse Picklist value)
+        "eap_startedat": now
     }
 
     try:
@@ -153,14 +156,15 @@ def create_session(client: DataverseClient, req_body: Dict[str, Any]) -> func.Ht
 
 
 def get_session(client: DataverseClient, req_body: Dict[str, Any]) -> func.HttpResponse:
-    """Get session by ID."""
+    """Get session by ID or session code."""
     session_id = req_body.get("session_id")
 
     try:
         safe_session_id = sanitize_odata_guid(session_id)
+        # Try to find by session code first, then by GUID
         results = client.query_records(
             table_name=SESSION_TABLE,
-            filter_query=f"eap_session_id eq '{safe_session_id}'",
+            filter_query=f"eap_sessioncode eq '{safe_session_id}' or eap_sessionid eq {safe_session_id}",
             top=1
         )
 
@@ -178,7 +182,7 @@ def get_session(client: DataverseClient, req_body: Dict[str, Any]) -> func.HttpR
         session = results[0]
         context = {}
         try:
-            context = json.loads(session.get("eap_context", "{}"))
+            context = json.loads(session.get("eap_sessiondata", "{}"))
         except json.JSONDecodeError:
             pass
 
@@ -186,14 +190,17 @@ def get_session(client: DataverseClient, req_body: Dict[str, Any]) -> func.HttpR
             json.dumps({
                 "status": "success",
                 "session": {
-                    "session_id": session.get("eap_session_id"),
-                    "user_id": session.get("eap_user_id"),
-                    "client_id": session.get("eap_client_id"),
-                    "plan_id": session.get("eap_plan_id"),
+                    "session_id": session.get("eap_sessionid"),
+                    "session_code": session.get("eap_sessioncode"),
+                    "user_id": session.get("eap_userid"),
+                    "client_id": session.get("eap_clientid"),
+                    "plan_id": session.get("eap_planid"),
                     "context": context,
                     "status": session.get("eap_status"),
-                    "created_at": session.get("eap_created_at"),
-                    "updated_at": session.get("eap_updated_at")
+                    "started_at": session.get("eap_startedat"),
+                    "ended_at": session.get("eap_endedat"),
+                    "created_at": session.get("createdon"),
+                    "updated_at": session.get("modifiedon")
                 }
             }),
             status_code=200,
@@ -219,11 +226,11 @@ def update_session(client: DataverseClient, req_body: Dict[str, Any]) -> func.Ht
     plan_id = req_body.get("plan_id")
 
     try:
-        # Get existing session
+        # Get existing session by code or GUID
         safe_session_id = sanitize_odata_guid(session_id)
         results = client.query_records(
             table_name=SESSION_TABLE,
-            filter_query=f"eap_session_id eq '{safe_session_id}'",
+            filter_query=f"eap_sessioncode eq '{safe_session_id}' or eap_sessionid eq {safe_session_id}",
             top=1
         )
 
@@ -239,25 +246,23 @@ def update_session(client: DataverseClient, req_body: Dict[str, Any]) -> func.Ht
             )
 
         session = results[0]
-        record_id = session.get("eap_sessionid")  # Dataverse internal ID
+        record_id = session.get("eap_sessionid")  # Dataverse record GUID
 
         # Merge context
         existing_context = {}
         try:
-            existing_context = json.loads(session.get("eap_context", "{}"))
+            existing_context = json.loads(session.get("eap_sessiondata", "{}"))
         except json.JSONDecodeError:
             pass
 
         merged_context = {**existing_context, **context_updates}
-        now = datetime.utcnow().isoformat()
 
         update_data = {
-            "eap_context": json.dumps(merged_context),
-            "eap_updated_at": now
+            "eap_sessiondata": json.dumps(merged_context)
         }
 
         if plan_id:
-            update_data["eap_plan_id"] = plan_id
+            update_data["eap_planid"] = plan_id
 
         client.update_record(SESSION_TABLE, record_id, update_data)
 
@@ -265,10 +270,10 @@ def update_session(client: DataverseClient, req_body: Dict[str, Any]) -> func.Ht
             json.dumps({
                 "status": "success",
                 "session": {
-                    "session_id": session_id,
+                    "session_id": record_id,
+                    "session_code": session.get("eap_sessioncode"),
                     "context": merged_context,
-                    "plan_id": plan_id or session.get("eap_plan_id"),
-                    "updated_at": now
+                    "plan_id": plan_id or session.get("eap_planid")
                 }
             }),
             status_code=200,
@@ -292,11 +297,11 @@ def end_session(client: DataverseClient, req_body: Dict[str, Any]) -> func.HttpR
     session_id = req_body.get("session_id")
 
     try:
-        # Get existing session
+        # Get existing session by code or GUID
         safe_session_id = sanitize_odata_guid(session_id)
         results = client.query_records(
             table_name=SESSION_TABLE,
-            filter_query=f"eap_session_id eq '{safe_session_id}'",
+            filter_query=f"eap_sessioncode eq '{safe_session_id}' or eap_sessionid eq {safe_session_id}",
             top=1
         )
 
@@ -316,9 +321,8 @@ def end_session(client: DataverseClient, req_body: Dict[str, Any]) -> func.HttpR
         now = datetime.utcnow().isoformat()
 
         update_data = {
-            "eap_status": "ended",
-            "eap_ended_at": now,
-            "eap_updated_at": now
+            "eap_status": 200000002,  # Completed status (Dataverse Picklist value)
+            "eap_endedat": now
         }
 
         client.update_record(SESSION_TABLE, record_id, update_data)

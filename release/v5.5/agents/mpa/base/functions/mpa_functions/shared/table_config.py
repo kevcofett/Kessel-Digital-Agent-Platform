@@ -3,46 +3,47 @@ Dataverse Table Names Configuration
 Aragorn AI Deployment
 
 Maps logical table names to actual Dataverse schema names.
-Dataverse used default publisher prefix "new_" during CSV import.
+Tables use eap_ prefix for platform-wide tables and mpa_ prefix for MPA-specific tables.
 
 Usage:
     from shared.table_config import TABLES
-    
+
     # In your code:
-    table_name = TABLES["benchmark"]  # Returns "new_advertisingbenchmark"
+    table_name = TABLES["benchmark"]  # Returns "mpa_benchmark"
 """
 
 # Actual Dataverse schema names (as created in Aragorn AI environment)
 TABLES = {
     # EAP Core Tables
-    "client": "new_client",
-    "user": "new_useraccount",
-    "agent": "new_agent",
-    "session": "new_session",
-    
+    "client": "eap_client",
+    "user": "eap_user",
+    "agent": "eap_agent",
+    "session": "eap_session",
+    "featureflag": "eap_featureflag",
+
     # MPA Domain Tables
-    "vertical": "new_businessvertical",
-    "channel": "new_advertisingchannel",
-    "kpi": "new_keyperformanceindicator",
-    "featureflag": "new_featureflag",
-    "benchmark": "new_advertisingbenchmark",
-    "mediaplan": "new_mediaplan",
-    "plandata": "new_marketingdatarecord",
+    "vertical": "mpa_vertical",
+    "channel": "mpa_channel",
+    "kpi": "mpa_kpi",
+    "benchmark": "mpa_benchmark",
+    "mediaplan": "mpa_mediaplan",
+    "plandata": "mpa_plandata",
 }
 
 # Legacy name mappings (for backward compatibility during transition)
+# These map old "new_" prefixed names to the correct schema names
 LEGACY_TO_NEW = {
-    "mpa_benchmark": TABLES["benchmark"],
-    "mpa_channel": TABLES["channel"],
-    "mpa_kpi": TABLES["kpi"],
-    "mpa_vertical": TABLES["vertical"],
-    "mpa_featureflag": TABLES["featureflag"],
-    "mpa_mediaplan": TABLES["mediaplan"],
-    "mpa_plandata": TABLES["plandata"],
-    "eap_session": TABLES["session"],
-    "eap_client": TABLES["client"],
-    "eap_user": TABLES["user"],
-    "eap_agent": TABLES["agent"],
+    "new_advertisingbenchmark": TABLES["benchmark"],
+    "new_advertisingchannel": TABLES["channel"],
+    "new_keyperformanceindicator": TABLES["kpi"],
+    "new_businessvertical": TABLES["vertical"],
+    "new_featureflag": TABLES["featureflag"],
+    "new_mediaplan": TABLES["mediaplan"],
+    "new_marketingdatarecord": TABLES["plandata"],
+    "new_session": TABLES["session"],
+    "new_client": TABLES["client"],
+    "new_useraccount": TABLES["user"],
+    "new_agent": TABLES["agent"],
 }
 
 def get_table_name(logical_name: str) -> str:
@@ -54,7 +55,7 @@ def get_table_name(logical_name: str) -> str:
         logical_name: Either short name ("benchmark") or legacy ("mpa_benchmark")
     
     Returns:
-        Actual Dataverse schema name (e.g., "new_advertisingbenchmark")
+        Actual Dataverse schema name (e.g., "mpa_benchmark")
     """
     # Try short name first
     if logical_name in TABLES:

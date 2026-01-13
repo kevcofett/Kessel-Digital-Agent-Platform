@@ -18,7 +18,7 @@ CACHE_TTL_MINUTES = 120  # KPI definitions change less frequently
 class KPIService:
     """Service for retrieving and calculating KPIs from Dataverse definitions."""
 
-    TABLE_NAME = "new_keyperformanceindicator"
+    TABLE_NAME = "mpa_kpi"
 
     def __init__(self, dataverse_client: Optional[DataverseClient] = None):
         self.client = dataverse_client or DataverseClient()

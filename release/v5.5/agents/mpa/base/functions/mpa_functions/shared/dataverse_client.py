@@ -19,7 +19,7 @@ class DataverseClient:
     def __init__(self):
         self.environment_url = os.environ.get(
             "DATAVERSE_URL",
-            "https://org5c737821.crm.dynamics.com"
+            "https://aragornai.crm.dynamics.com"
         )
         self.api_version = "v9.2"
         self._token = None

@@ -19,7 +19,7 @@ class BenchmarkService:
     """Service for retrieving benchmark data from Dataverse."""
 
     # Table name in Dataverse
-    TABLE_NAME = "new_advertisingbenchmark"
+    TABLE_NAME = "mpa_benchmark"
 
     def __init__(self, dataverse_client: Optional[DataverseClient] = None):
         self.client = dataverse_client or DataverseClient()

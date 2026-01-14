@@ -1,0 +1,1287 @@
+{
+  "testSuite": {
+    "name": "MPA Comprehensive Evaluation Suite",
+    "version": "5.9.0",
+    "description": "Full behavioral testing for Media Planning Agent including complex multi-turn scenarios, non-linear navigation, data changes, RAG validation, and self-referential learning",
+    "targetScores": {
+      "minimum": 0.95,
+      "description": "All scorers must achieve 95% or higher for production readiness"
+    }
+  },
+  "scorerDefinitions": {
+    "response_length": {
+      "description": "Response under 75 words",
+      "weight": 0.1,
+      "passing": 1.0
+    },
+    "single_question": {
+      "description": "Only one question per response",
+      "weight": 0.1,
+      "passing": 1.0
+    },
+    "acronym_definition": {
+      "description": "All acronyms defined on first use",
+      "weight": 0.1,
+      "passing": 1.0
+    },
+    "source_citation": {
+      "description": "All data claims have source attribution",
+      "weight": 0.15,
+      "passing": 1.0
+    },
+    "step_boundary": {
+      "description": "No premature channel/timing/creative discussion",
+      "weight": 0.1,
+      "passing": 1.0
+    },
+    "idk_protocol": {
+      "description": "Models with assumption when user uncertain",
+      "weight": 0.1,
+      "passing": 0.8
+    },
+    "adaptive_sophistication": {
+      "description": "Language matches user sophistication level",
+      "weight": 0.05,
+      "passing": 0.8
+    },
+    "tone": {
+      "description": "Warm, supportive, colleague-like",
+      "weight": 0.05,
+      "passing": 0.8
+    },
+    "proactive_intelligence": {
+      "description": "Calculates and researches when data available",
+      "weight": 0.15,
+      "passing": 1.0
+    },
+    "progress_over_perfection": {
+      "description": "Makes progress with assumptions vs blocking",
+      "weight": 0.05,
+      "passing": 0.8
+    },
+    "feasibility_framing": {
+      "description": "Aggressive targets flagged with benchmarks",
+      "weight": 0.1,
+      "passing": 1.0
+    },
+    "step_completion": {
+      "description": "Knows when step is complete and advances",
+      "weight": 0.1,
+      "passing": 0.8
+    },
+    "rag_retrieval": {
+      "description": "Successfully retrieves relevant KB content",
+      "weight": 0.1,
+      "passing": 0.8
+    },
+    "self_referential_learning": {
+      "description": "References earlier conversation context accurately",
+      "weight": 0.1,
+      "passing": 0.8
+    }
+  },
+  "testScenarios": [
+    {
+      "id": "FULL-001",
+      "name": "Complete Linear Flow - B2B SaaS",
+      "description": "Full 10-step journey for B2B SaaS lead generation campaign",
+      "category": "End-to-End Linear",
+      "expectedTurns": 25,
+      "scorersToTest": ["all"],
+      "turns": [
+        {
+          "turn": 1,
+          "user": "Hi, I need help creating a media plan.",
+          "expectedBehaviors": ["warm_greeting", "names_10_areas", "single_question", "under_75_words"],
+          "scorers": ["response_length", "single_question", "tone"]
+        },
+        {
+          "turn": 2,
+          "user": "We want to generate qualified leads for our B2B software product.",
+          "expectedBehaviors": ["acknowledges_objective", "asks_about_kpi_definition", "single_question"],
+          "scorers": ["single_question", "step_completion"]
+        },
+        {
+          "turn": 3,
+          "user": "A qualified lead is someone who books a demo with our sales team.",
+          "expectedBehaviors": ["confirms_kpi", "asks_volume_target", "single_question"],
+          "scorers": ["single_question", "step_completion"]
+        },
+        {
+          "turn": 4,
+          "user": "We want 500 demo bookings this quarter. Our budget is $150,000.",
+          "expectedBehaviors": ["calculates_300_cpl", "searches_benchmarks", "cites_source", "assesses_feasibility"],
+          "scorers": ["proactive_intelligence", "source_citation", "feasibility_framing"]
+        },
+        {
+          "turn": 5,
+          "user": "Is that a realistic target?",
+          "expectedBehaviors": ["provides_benchmark_range", "cites_source", "frames_as_typical_or_aggressive"],
+          "scorers": ["source_citation", "feasibility_framing"]
+        },
+        {
+          "turn": 6,
+          "user": "What's the typical lifetime value for customers in this space?",
+          "expectedBehaviors": ["searches_or_estimates", "cites_source", "asks_about_their_ltv"],
+          "scorers": ["source_citation", "proactive_intelligence"]
+        },
+        {
+          "turn": 7,
+          "user": "Our average contract is $50,000 annually with 80% gross margin.",
+          "expectedBehaviors": ["calculates_unit_economics", "validates_cac_ceiling", "signals_step_2_complete"],
+          "scorers": ["proactive_intelligence", "step_completion"]
+        },
+        {
+          "turn": 8,
+          "user": "Who should we be targeting?",
+          "expectedBehaviors": ["transitions_to_step_3", "asks_about_ideal_customer"],
+          "scorers": ["step_boundary", "single_question"]
+        },
+        {
+          "turn": 9,
+          "user": "IT directors and CIOs at mid-market companies, 500-5000 employees, in financial services and healthcare.",
+          "expectedBehaviors": ["acknowledges_audience", "calculates_audience_size", "cites_source"],
+          "scorers": ["proactive_intelligence", "source_citation"]
+        },
+        {
+          "turn": 10,
+          "user": "Where should we focus geographically?",
+          "expectedBehaviors": ["transitions_to_step_4", "asks_about_priority_markets"],
+          "scorers": ["step_boundary", "single_question"]
+        },
+        {
+          "turn": 11,
+          "user": "US only, focused on major metros - NYC, SF, Chicago, Boston, LA.",
+          "expectedBehaviors": ["acknowledges_geography", "notes_concentration", "signals_step_4_complete"],
+          "scorers": ["step_completion"]
+        },
+        {
+          "turn": 12,
+          "user": "We already said our budget is $150K. What else do you need?",
+          "expectedBehaviors": ["references_earlier_budget", "asks_about_timing_or_allocation"],
+          "scorers": ["self_referential_learning", "single_question"]
+        },
+        {
+          "turn": 13,
+          "user": "The campaign runs Q2, April through June.",
+          "expectedBehaviors": ["acknowledges_timing", "calculates_monthly_spend", "signals_step_5_progress"],
+          "scorers": ["proactive_intelligence", "step_completion"]
+        },
+        {
+          "turn": 14,
+          "user": "What makes our product unique is that we reduce compliance costs by 40% guaranteed.",
+          "expectedBehaviors": ["acknowledges_value_prop", "notes_strong_differentiator", "signals_step_6_complete"],
+          "scorers": ["step_completion"]
+        },
+        {
+          "turn": 15,
+          "user": "Now what channels should we use?",
+          "expectedBehaviors": ["now_appropriate_for_channels", "recommends_channels_for_b2b", "cites_rationale"],
+          "scorers": ["step_boundary", "proactive_intelligence"]
+        },
+        {
+          "turn": 16,
+          "user": "Why LinkedIn over other options?",
+          "expectedBehaviors": ["explains_linkedin_fit", "cites_b2b_benchmarks", "mentions_alternatives"],
+          "scorers": ["source_citation", "tone"]
+        },
+        {
+          "turn": 17,
+          "user": "What about Google?",
+          "expectedBehaviors": ["addresses_google_fit", "provides_benchmark", "recommends_allocation"],
+          "scorers": ["source_citation", "proactive_intelligence"]
+        },
+        {
+          "turn": 18,
+          "user": "How should we split the budget across channels?",
+          "expectedBehaviors": ["proposes_allocation", "shows_math", "explains_rationale"],
+          "scorers": ["proactive_intelligence", "source_citation"]
+        },
+        {
+          "turn": 19,
+          "user": "How do we measure success?",
+          "expectedBehaviors": ["transitions_to_step_8", "recommends_metrics", "warns_about_roas_if_mentioned"],
+          "scorers": ["step_boundary", "source_citation"]
+        },
+        {
+          "turn": 20,
+          "user": "Should we use ROAS as our primary metric?",
+          "expectedBehaviors": ["cautions_about_roas", "explains_limitations", "recommends_alternatives"],
+          "scorers": ["proactive_intelligence", "tone"]
+        },
+        {
+          "turn": 21,
+          "user": "What should we test?",
+          "expectedBehaviors": ["transitions_to_step_9", "proposes_test_framework", "prioritizes_tests"],
+          "scorers": ["step_boundary", "proactive_intelligence"]
+        },
+        {
+          "turn": 22,
+          "user": "What are the biggest risks?",
+          "expectedBehaviors": ["transitions_to_step_10", "identifies_risks", "proposes_mitigations"],
+          "scorers": ["step_boundary", "proactive_intelligence"]
+        },
+        {
+          "turn": 23,
+          "user": "Can you summarize the complete plan?",
+          "expectedBehaviors": ["provides_summary", "references_all_10_areas", "highlights_key_decisions"],
+          "scorers": ["self_referential_learning", "step_completion"]
+        },
+        {
+          "turn": 24,
+          "user": "Actually, our budget just got cut to $100K. What changes?",
+          "expectedBehaviors": ["recalculates_economics", "adjusts_recommendations", "notes_tradeoffs"],
+          "scorers": ["proactive_intelligence", "self_referential_learning"]
+        },
+        {
+          "turn": 25,
+          "user": "Give me the final updated plan.",
+          "expectedBehaviors": ["provides_updated_summary", "reflects_budget_change", "maintains_consistency"],
+          "scorers": ["self_referential_learning", "proactive_intelligence"]
+        }
+      ]
+    },
+    {
+      "id": "FULL-002",
+      "name": "Complete Linear Flow - DTC E-commerce",
+      "description": "Full 10-step journey for DTC e-commerce customer acquisition",
+      "category": "End-to-End Linear",
+      "expectedTurns": 24,
+      "scorersToTest": ["all"],
+      "turns": [
+        {
+          "turn": 1,
+          "user": "I need a media plan for our direct-to-consumer skincare brand.",
+          "expectedBehaviors": ["warm_greeting", "acknowledges_dtc_context", "names_10_areas", "single_question"],
+          "scorers": ["response_length", "single_question", "tone"]
+        },
+        {
+          "turn": 2,
+          "user": "We want to acquire new customers profitably.",
+          "expectedBehaviors": ["asks_kpi_clarification", "single_question"],
+          "scorers": ["single_question", "step_completion"]
+        },
+        {
+          "turn": 3,
+          "user": "A new customer is someone who makes their first purchase.",
+          "expectedBehaviors": ["confirms_kpi", "asks_volume_or_budget"],
+          "scorers": ["single_question"]
+        },
+        {
+          "turn": 4,
+          "user": "We have $500,000 for the year and want 10,000 new customers.",
+          "expectedBehaviors": ["calculates_50_cac", "searches_benchmarks", "assesses_feasibility"],
+          "scorers": ["proactive_intelligence", "source_citation", "feasibility_framing"]
+        },
+        {
+          "turn": 5,
+          "user": "Our average order value is $85 and we have 40% gross margin.",
+          "expectedBehaviors": ["calculates_gross_profit", "validates_cac_ceiling", "signals_economics_complete"],
+          "scorers": ["proactive_intelligence", "step_completion"]
+        },
+        {
+          "turn": 6,
+          "user": "Our target customer is women 25-45 interested in clean beauty and sustainability.",
+          "expectedBehaviors": ["acknowledges_audience", "asks_about_behaviors_or_size"],
+          "scorers": ["single_question", "step_completion"]
+        },
+        {
+          "turn": 7,
+          "user": "They shop at Sephora and Whole Foods, follow beauty influencers, and care about ingredients.",
+          "expectedBehaviors": ["calculates_audience_size", "cites_source", "notes_targeting_options"],
+          "scorers": ["proactive_intelligence", "source_citation"]
+        },
+        {
+          "turn": 8,
+          "user": "We sell nationwide in the US.",
+          "expectedBehaviors": ["acknowledges_geography", "asks_about_concentration"],
+          "scorers": ["single_question"]
+        },
+        {
+          "turn": 9,
+          "user": "No concentration - we want national coverage.",
+          "expectedBehaviors": ["notes_national_approach", "signals_geography_complete"],
+          "scorers": ["step_completion"]
+        },
+        {
+          "turn": 10,
+          "user": "Budget is spread evenly across the year with a bump for Q4 holiday.",
+          "expectedBehaviors": ["acknowledges_timing", "asks_about_q4_allocation"],
+          "scorers": ["single_question"]
+        },
+        {
+          "turn": 11,
+          "user": "60% in Q4, 40% spread across Q1-Q3.",
+          "expectedBehaviors": ["calculates_quarterly_budgets", "notes_holiday_strategy"],
+          "scorers": ["proactive_intelligence"]
+        },
+        {
+          "turn": 12,
+          "user": "Our differentiator is we're the only brand with USDA organic certification and plastic-free packaging.",
+          "expectedBehaviors": ["acknowledges_value_prop", "notes_messaging_angles"],
+          "scorers": ["step_completion"]
+        },
+        {
+          "turn": 13,
+          "user": "What channels work best for DTC beauty?",
+          "expectedBehaviors": ["recommends_channels", "cites_dtc_benchmarks", "explains_rationale"],
+          "scorers": ["proactive_intelligence", "source_citation"]
+        },
+        {
+          "turn": 14,
+          "user": "How should we allocate budget across channels?",
+          "expectedBehaviors": ["proposes_allocation", "shows_math", "explains_rationale"],
+          "scorers": ["proactive_intelligence", "source_citation"]
+        },
+        {
+          "turn": 15,
+          "user": "What CPMs should we expect?",
+          "expectedBehaviors": ["provides_cpm_ranges", "cites_source", "notes_variation_factors"],
+          "scorers": ["source_citation", "acronym_definition"]
+        },
+        {
+          "turn": 16,
+          "user": "How do we know if it's working?",
+          "expectedBehaviors": ["recommends_metrics", "explains_attribution", "warns_about_platform_inflation"],
+          "scorers": ["proactive_intelligence", "source_citation"]
+        },
+        {
+          "turn": 17,
+          "user": "What's incrementality testing?",
+          "expectedBehaviors": ["explains_concept_simply", "provides_example", "recommends_approach"],
+          "scorers": ["tone", "adaptive_sophistication"]
+        },
+        {
+          "turn": 18,
+          "user": "What should we test first?",
+          "expectedBehaviors": ["prioritizes_tests", "explains_rationale", "proposes_timeline"],
+          "scorers": ["proactive_intelligence"]
+        },
+        {
+          "turn": 19,
+          "user": "What are the biggest risks to this plan?",
+          "expectedBehaviors": ["identifies_risks", "proposes_mitigations", "prioritizes"],
+          "scorers": ["proactive_intelligence"]
+        },
+        {
+          "turn": 20,
+          "user": "Summarize the plan.",
+          "expectedBehaviors": ["provides_summary", "covers_all_areas", "highlights_decisions"],
+          "scorers": ["self_referential_learning", "step_completion"]
+        },
+        {
+          "turn": 21,
+          "user": "Wait, I forgot to mention we also sell on Amazon. Does that change anything?",
+          "expectedBehaviors": ["asks_about_amazon_allocation", "notes_channel_implications"],
+          "scorers": ["proactive_intelligence", "single_question"]
+        },
+        {
+          "turn": 22,
+          "user": "About 40% of our sales are on Amazon.",
+          "expectedBehaviors": ["recalculates_strategy", "adds_amazon_advertising", "adjusts_allocation"],
+          "scorers": ["proactive_intelligence", "self_referential_learning"]
+        },
+        {
+          "turn": 23,
+          "user": "How does that change the budget allocation?",
+          "expectedBehaviors": ["provides_revised_allocation", "shows_math", "explains_changes"],
+          "scorers": ["proactive_intelligence", "self_referential_learning"]
+        },
+        {
+          "turn": 24,
+          "user": "Final summary with Amazon included.",
+          "expectedBehaviors": ["provides_updated_summary", "includes_amazon", "maintains_consistency"],
+          "scorers": ["self_referential_learning"]
+        }
+      ]
+    },
+    {
+      "id": "NONLIN-001",
+      "name": "Non-Linear Navigation - Jump Ahead",
+      "description": "User jumps to channels before completing outcomes",
+      "category": "Non-Linear Navigation",
+      "expectedTurns": 15,
+      "scorersToTest": ["step_boundary", "self_referential_learning", "proactive_intelligence"],
+      "turns": [
+        {
+          "turn": 1,
+          "user": "Hi, I need a media plan for a mobile game launch.",
+          "expectedBehaviors": ["warm_greeting", "names_10_areas", "asks_about_outcome"],
+          "scorers": ["response_length", "single_question"]
+        },
+        {
+          "turn": 2,
+          "user": "Should we use TikTok or Instagram for this?",
+          "expectedBehaviors": ["redirects_to_outcomes", "explains_why_order_matters", "does_not_recommend_channels"],
+          "scorers": ["step_boundary"]
+        },
+        {
+          "turn": 3,
+          "user": "I really want to know about channels first.",
+          "expectedBehaviors": ["acknowledges_preference", "explains_limitations_without_context", "offers_to_note_for_later"],
+          "scorers": ["tone", "step_boundary"]
+        },
+        {
+          "turn": 4,
+          "user": "Fine. We want 100,000 app installs.",
+          "expectedBehaviors": ["acknowledges_objective", "asks_about_budget_or_kpi_definition"],
+          "scorers": ["single_question"]
+        },
+        {
+          "turn": 5,
+          "user": "Budget is $200,000.",
+          "expectedBehaviors": ["calculates_2_cpi", "searches_mobile_game_benchmarks", "assesses_feasibility"],
+          "scorers": ["proactive_intelligence", "source_citation", "feasibility_framing"]
+        },
+        {
+          "turn": 6,
+          "user": "OK now can we talk about channels?",
+          "expectedBehaviors": ["notes_steps_skipped", "provides_channel_recommendations", "cites_mobile_benchmarks"],
+          "scorers": ["self_referential_learning", "proactive_intelligence"]
+        },
+        {
+          "turn": 7,
+          "user": "Go back - who should we target?",
+          "expectedBehaviors": ["transitions_to_audience", "asks_about_target_player"],
+          "scorers": ["self_referential_learning", "single_question"]
+        },
+        {
+          "turn": 8,
+          "user": "Casual gamers, 18-35, who play puzzle and word games.",
+          "expectedBehaviors": ["acknowledges_audience", "calculates_size", "notes_how_this_affects_channels"],
+          "scorers": ["proactive_intelligence", "self_referential_learning"]
+        },
+        {
+          "turn": 9,
+          "user": "Does that change your channel recommendations?",
+          "expectedBehaviors": ["revisits_channels_with_audience_context", "adjusts_if_needed", "explains_rationale"],
+          "scorers": ["self_referential_learning", "proactive_intelligence"]
+        },
+        {
+          "turn": 10,
+          "user": "What about measurement?",
+          "expectedBehaviors": ["transitions_to_measurement", "recommends_metrics_for_mobile"],
+          "scorers": ["step_boundary"]
+        },
+        {
+          "turn": 11,
+          "user": "We skipped geography and budget allocation.",
+          "expectedBehaviors": ["acknowledges_gaps", "offers_to_cover_now", "tracks_completion_status"],
+          "scorers": ["self_referential_learning"]
+        },
+        {
+          "turn": 12,
+          "user": "US only, even split across months.",
+          "expectedBehaviors": ["fills_in_geography_and_budget", "updates_plan_status"],
+          "scorers": ["step_completion"]
+        },
+        {
+          "turn": 13,
+          "user": "What's still missing?",
+          "expectedBehaviors": ["identifies_gaps", "prioritizes_remaining_items"],
+          "scorers": ["self_referential_learning"]
+        },
+        {
+          "turn": 14,
+          "user": "Fill in reasonable defaults for the rest.",
+          "expectedBehaviors": ["proposes_defaults_with_sources", "asks_for_confirmation"],
+          "scorers": ["proactive_intelligence", "idk_protocol"]
+        },
+        {
+          "turn": 15,
+          "user": "Summarize everything including what you assumed.",
+          "expectedBehaviors": ["provides_complete_summary", "clearly_marks_assumptions", "distinguishes_user_input"],
+          "scorers": ["self_referential_learning", "source_citation"]
+        }
+      ]
+    },
+    {
+      "id": "NONLIN-002",
+      "name": "Non-Linear Navigation - Skip Steps",
+      "description": "User explicitly skips multiple steps",
+      "category": "Non-Linear Navigation",
+      "expectedTurns": 12,
+      "scorersToTest": ["step_boundary", "idk_protocol", "self_referential_learning"],
+      "turns": [
+        {
+          "turn": 1,
+          "user": "Media plan for a fitness app. Skip the intro, I know the process.",
+          "expectedBehaviors": ["respects_request", "asks_first_substantive_question"],
+          "scorers": ["adaptive_sophistication", "single_question"]
+        },
+        {
+          "turn": 2,
+          "user": "Objective: 50K paid subscribers. Budget: $1M. Skip audience and geography, I'll handle those.",
+          "expectedBehaviors": ["calculates_20_cps", "searches_benchmarks", "notes_skipped_steps"],
+          "scorers": ["proactive_intelligence", "source_citation"]
+        },
+        {
+          "turn": 3,
+          "user": "Jump to channels.",
+          "expectedBehaviors": ["provides_channel_recs_with_caveats", "notes_missing_audience_context"],
+          "scorers": ["step_boundary", "self_referential_learning"]
+        },
+        {
+          "turn": 4,
+          "user": "Recommend allocation percentages.",
+          "expectedBehaviors": ["provides_allocation", "explains_rationale", "notes_assumptions"],
+          "scorers": ["proactive_intelligence", "source_citation"]
+        },
+        {
+          "turn": 5,
+          "user": "Actually, target audience is women 25-40 interested in yoga and mindfulness.",
+          "expectedBehaviors": ["updates_context", "revises_recommendations_if_needed", "notes_how_audience_affects_plan"],
+          "scorers": ["self_referential_learning", "proactive_intelligence"]
+        },
+        {
+          "turn": 6,
+          "user": "Does that change the allocation?",
+          "expectedBehaviors": ["analyzes_impact", "revises_or_confirms", "explains_reasoning"],
+          "scorers": ["self_referential_learning", "proactive_intelligence"]
+        },
+        {
+          "turn": 7,
+          "user": "Skip measurement and testing. Go to risks.",
+          "expectedBehaviors": ["transitions_to_risks", "identifies_risks", "notes_skipped_steps"],
+          "scorers": ["step_boundary", "self_referential_learning"]
+        },
+        {
+          "turn": 8,
+          "user": "What are we missing that's critical?",
+          "expectedBehaviors": ["identifies_critical_gaps", "prioritizes_by_importance"],
+          "scorers": ["self_referential_learning"]
+        },
+        {
+          "turn": 9,
+          "user": "LTV is $300 with 70% margin.",
+          "expectedBehaviors": ["updates_economics", "recalculates_cac_ceiling", "validates_efficiency"],
+          "scorers": ["proactive_intelligence", "self_referential_learning"]
+        },
+        {
+          "turn": 10,
+          "user": "Summarize what we have and what's still TBD.",
+          "expectedBehaviors": ["provides_summary", "clearly_separates_confirmed_vs_tbd"],
+          "scorers": ["self_referential_learning"]
+        },
+        {
+          "turn": 11,
+          "user": "Fill in measurement with reasonable defaults.",
+          "expectedBehaviors": ["proposes_measurement_framework", "cites_sources", "marks_as_assumed"],
+          "scorers": ["idk_protocol", "source_citation"]
+        },
+        {
+          "turn": 12,
+          "user": "Final complete plan.",
+          "expectedBehaviors": ["provides_complete_plan", "distinguishes_confirmed_vs_assumed"],
+          "scorers": ["self_referential_learning", "step_completion"]
+        }
+      ]
+    },
+    {
+      "id": "CHANGE-001",
+      "name": "Mid-Process Data Changes - Budget Cut",
+      "description": "User changes budget significantly mid-planning",
+      "category": "Data Changes",
+      "expectedTurns": 14,
+      "scorersToTest": ["self_referential_learning", "proactive_intelligence"],
+      "turns": [
+        {
+          "turn": 1,
+          "user": "Media plan for launching a new CRM product.",
+          "expectedBehaviors": ["warm_greeting", "names_10_areas", "asks_about_outcome"],
+          "scorers": ["response_length", "single_question"]
+        },
+        {
+          "turn": 2,
+          "user": "Goal is 1,000 enterprise sales demos. Budget is $2 million.",
+          "expectedBehaviors": ["calculates_2000_cpl", "searches_b2b_benchmarks", "assesses_feasibility"],
+          "scorers": ["proactive_intelligence", "source_citation"]
+        },
+        {
+          "turn": 3,
+          "user": "Target: IT decision makers at Fortune 1000 companies.",
+          "expectedBehaviors": ["acknowledges_audience", "calculates_size", "notes_targeting_approach"],
+          "scorers": ["proactive_intelligence"]
+        },
+        {
+          "turn": 4,
+          "user": "Focus on US, major business hubs.",
+          "expectedBehaviors": ["acknowledges_geography", "signals_progress"],
+          "scorers": ["step_completion"]
+        },
+        {
+          "turn": 5,
+          "user": "Even monthly spend over 12 months.",
+          "expectedBehaviors": ["acknowledges_timing", "calculates_monthly"],
+          "scorers": ["proactive_intelligence"]
+        },
+        {
+          "turn": 6,
+          "user": "What channels do you recommend?",
+          "expectedBehaviors": ["recommends_channels", "shows_allocation", "explains_rationale"],
+          "scorers": ["proactive_intelligence", "source_citation"]
+        },
+        {
+          "turn": 7,
+          "user": "Bad news - budget just got cut to $500K. Everything else stays the same.",
+          "expectedBehaviors": ["acknowledges_change", "recalculates_economics", "reassesses_feasibility"],
+          "scorers": ["self_referential_learning", "proactive_intelligence", "feasibility_framing"]
+        },
+        {
+          "turn": 8,
+          "user": "Is the original goal still achievable?",
+          "expectedBehaviors": ["provides_honest_assessment", "shows_math", "proposes_alternatives"],
+          "scorers": ["proactive_intelligence", "feasibility_framing"]
+        },
+        {
+          "turn": 9,
+          "user": "What if we reduced the target to 300 demos?",
+          "expectedBehaviors": ["recalculates_with_new_target", "assesses_feasibility", "compares_to_original"],
+          "scorers": ["proactive_intelligence", "self_referential_learning"]
+        },
+        {
+          "turn": 10,
+          "user": "How does this change the channel mix?",
+          "expectedBehaviors": ["revises_channel_allocation", "explains_changes", "shows_math"],
+          "scorers": ["proactive_intelligence", "self_referential_learning"]
+        },
+        {
+          "turn": 11,
+          "user": "What trade-offs am I making?",
+          "expectedBehaviors": ["articulates_tradeoffs", "references_original_plan", "quantifies_impact"],
+          "scorers": ["self_referential_learning", "proactive_intelligence"]
+        },
+        {
+          "turn": 12,
+          "user": "Can we be more efficient if we narrow the audience?",
+          "expectedBehaviors": ["analyzes_audience_efficiency", "proposes_narrowing", "shows_impact"],
+          "scorers": ["proactive_intelligence"]
+        },
+        {
+          "turn": 13,
+          "user": "Go with healthcare IT only.",
+          "expectedBehaviors": ["updates_audience", "recalculates_sizing", "adjusts_plan"],
+          "scorers": ["self_referential_learning", "proactive_intelligence"]
+        },
+        {
+          "turn": 14,
+          "user": "Final plan with all the changes.",
+          "expectedBehaviors": ["provides_updated_summary", "tracks_all_changes", "consistent_numbers"],
+          "scorers": ["self_referential_learning"]
+        }
+      ]
+    },
+    {
+      "id": "CHANGE-002",
+      "name": "Mid-Process Data Changes - Objective Pivot",
+      "description": "User changes primary objective mid-planning",
+      "category": "Data Changes",
+      "expectedTurns": 12,
+      "scorersToTest": ["self_referential_learning", "proactive_intelligence", "step_completion"],
+      "turns": [
+        {
+          "turn": 1,
+          "user": "Media plan for our meal kit delivery service.",
+          "expectedBehaviors": ["warm_greeting", "names_10_areas", "asks_about_outcome"],
+          "scorers": ["response_length", "single_question"]
+        },
+        {
+          "turn": 2,
+          "user": "Objective is brand awareness. We want 50 million impressions.",
+          "expectedBehaviors": ["acknowledges_awareness_objective", "asks_about_budget_or_audience"],
+          "scorers": ["single_question"]
+        },
+        {
+          "turn": 3,
+          "user": "Budget is $300K, target is health-conscious millennials.",
+          "expectedBehaviors": ["calculates_cpm", "searches_benchmarks", "assesses_feasibility"],
+          "scorers": ["proactive_intelligence", "source_citation"]
+        },
+        {
+          "turn": 4,
+          "user": "What channels work best for awareness?",
+          "expectedBehaviors": ["recommends_awareness_channels", "explains_rationale", "shows_reach_estimates"],
+          "scorers": ["proactive_intelligence", "source_citation"]
+        },
+        {
+          "turn": 5,
+          "user": "Actually, leadership just changed priorities. We need to pivot to customer acquisition instead.",
+          "expectedBehaviors": ["acknowledges_pivot", "asks_about_new_kpi", "notes_plan_will_change"],
+          "scorers": ["self_referential_learning", "single_question"]
+        },
+        {
+          "turn": 6,
+          "user": "New goal: 5,000 first-time orders. Same budget.",
+          "expectedBehaviors": ["calculates_new_cac", "searches_meal_kit_benchmarks", "assesses_feasibility"],
+          "scorers": ["proactive_intelligence", "source_citation", "feasibility_framing"]
+        },
+        {
+          "turn": 7,
+          "user": "How does the channel mix change?",
+          "expectedBehaviors": ["revises_channels_for_acquisition", "contrasts_with_awareness_plan", "explains_differences"],
+          "scorers": ["self_referential_learning", "proactive_intelligence"]
+        },
+        {
+          "turn": 8,
+          "user": "What about the audience - does that need to change?",
+          "expectedBehaviors": ["analyzes_audience_fit", "recommends_refinements", "notes_conversion_focus"],
+          "scorers": ["proactive_intelligence"]
+        },
+        {
+          "turn": 9,
+          "user": "Measurement must have changed too.",
+          "expectedBehaviors": ["revises_measurement", "contrasts_awareness_vs_acquisition_metrics"],
+          "scorers": ["self_referential_learning", "proactive_intelligence"]
+        },
+        {
+          "turn": 10,
+          "user": "What were the biggest changes from the pivot?",
+          "expectedBehaviors": ["summarizes_key_differences", "quantifies_changes", "explains_why"],
+          "scorers": ["self_referential_learning"]
+        },
+        {
+          "turn": 11,
+          "user": "Are there any elements that stayed the same?",
+          "expectedBehaviors": ["identifies_commonalities", "explains_why_some_elements_persist"],
+          "scorers": ["self_referential_learning"]
+        },
+        {
+          "turn": 12,
+          "user": "Final acquisition-focused plan.",
+          "expectedBehaviors": ["provides_complete_plan", "reflects_pivot", "no_awareness_remnants"],
+          "scorers": ["self_referential_learning", "step_completion"]
+        }
+      ]
+    },
+    {
+      "id": "RAG-001",
+      "name": "RAG Performance - Benchmark Retrieval",
+      "description": "Tests retrieval of benchmark data from knowledge base",
+      "category": "RAG Validation",
+      "expectedTurns": 10,
+      "scorersToTest": ["rag_retrieval", "source_citation"],
+      "turns": [
+        {
+          "turn": 1,
+          "user": "What's a typical CPM for LinkedIn advertising?",
+          "expectedBehaviors": ["provides_cpm_range", "cites_kb_or_web", "notes_variation_factors"],
+          "scorers": ["source_citation", "rag_retrieval"]
+        },
+        {
+          "turn": 2,
+          "user": "How does that compare to Facebook?",
+          "expectedBehaviors": ["provides_facebook_cpm", "compares_platforms", "cites_source"],
+          "scorers": ["source_citation", "rag_retrieval"]
+        },
+        {
+          "turn": 3,
+          "user": "What about conversion rates for B2B lead gen?",
+          "expectedBehaviors": ["provides_conversion_ranges", "cites_source", "notes_funnel_stage"],
+          "scorers": ["source_citation", "rag_retrieval"]
+        },
+        {
+          "turn": 4,
+          "user": "What's typical CAC for fintech apps?",
+          "expectedBehaviors": ["provides_cac_range", "cites_source", "notes_app_type_variation"],
+          "scorers": ["source_citation", "rag_retrieval"]
+        },
+        {
+          "turn": 5,
+          "user": "How about e-commerce DTC brands?",
+          "expectedBehaviors": ["provides_dtc_cac_range", "cites_source", "compares_to_fintech"],
+          "scorers": ["source_citation", "rag_retrieval"]
+        },
+        {
+          "turn": 6,
+          "user": "What's a good ROAS benchmark for fashion?",
+          "expectedBehaviors": ["provides_roas_range", "cautions_about_roas_limitations", "cites_source"],
+          "scorers": ["source_citation", "rag_retrieval"]
+        },
+        {
+          "turn": 7,
+          "user": "What channels work best for B2B SaaS?",
+          "expectedBehaviors": ["recommends_channels", "provides_benchmark_data", "cites_source"],
+          "scorers": ["source_citation", "rag_retrieval"]
+        },
+        {
+          "turn": 8,
+          "user": "What about mobile gaming user acquisition?",
+          "expectedBehaviors": ["provides_mobile_ua_benchmarks", "recommends_channels", "cites_source"],
+          "scorers": ["source_citation", "rag_retrieval"]
+        },
+        {
+          "turn": 9,
+          "user": "How much should I budget for testing?",
+          "expectedBehaviors": ["provides_testing_budget_guidance", "cites_best_practices", "explains_rationale"],
+          "scorers": ["source_citation", "rag_retrieval"]
+        },
+        {
+          "turn": 10,
+          "user": "What's the typical attribution window for different channels?",
+          "expectedBehaviors": ["provides_attribution_guidance", "notes_channel_variation", "cites_source"],
+          "scorers": ["source_citation", "rag_retrieval"]
+        }
+      ]
+    },
+    {
+      "id": "RAG-002",
+      "name": "RAG Performance - Web Search Validation",
+      "description": "Tests mandatory web search for efficiency validation",
+      "category": "RAG Validation",
+      "expectedTurns": 8,
+      "scorersToTest": ["rag_retrieval", "proactive_intelligence", "source_citation"],
+      "turns": [
+        {
+          "turn": 1,
+          "user": "We have $100K to acquire 2,000 customers for our crypto trading app.",
+          "expectedBehaviors": ["calculates_50_cac", "searches_web_for_crypto_benchmarks", "cites_search_results"],
+          "scorers": ["proactive_intelligence", "source_citation"]
+        },
+        {
+          "turn": 2,
+          "user": "How does that compare to traditional fintech?",
+          "expectedBehaviors": ["compares_crypto_vs_fintech", "cites_sources_for_both", "notes_differences"],
+          "scorers": ["source_citation", "rag_retrieval"]
+        },
+        {
+          "turn": 3,
+          "user": "What's the latest on iOS privacy changes affecting this?",
+          "expectedBehaviors": ["searches_for_current_info", "provides_recent_context", "cites_search"],
+          "scorers": ["source_citation", "proactive_intelligence"]
+        },
+        {
+          "turn": 4,
+          "user": "We're targeting Gen Z crypto investors specifically.",
+          "expectedBehaviors": ["searches_gen_z_crypto_data", "provides_audience_insights", "cites_source"],
+          "scorers": ["source_citation", "rag_retrieval"]
+        },
+        {
+          "turn": 5,
+          "user": "What channels are they most responsive to?",
+          "expectedBehaviors": ["recommends_channels_for_gen_z", "cites_research", "notes_platform_relevance"],
+          "scorers": ["source_citation", "rag_retrieval"]
+        },
+        {
+          "turn": 6,
+          "user": "What's TikTok CPM running these days for fintech?",
+          "expectedBehaviors": ["searches_current_tiktok_cpms", "provides_range", "cites_source"],
+          "scorers": ["source_citation", "proactive_intelligence"]
+        },
+        {
+          "turn": 7,
+          "user": "Any regulatory considerations I should know about?",
+          "expectedBehaviors": ["notes_crypto_ad_restrictions", "cites_platform_policies", "recommends_approach"],
+          "scorers": ["source_citation", "rag_retrieval"]
+        },
+        {
+          "turn": 8,
+          "user": "Summarize with all your sourced data.",
+          "expectedBehaviors": ["provides_summary", "includes_all_sources", "distinguishes_kb_vs_web"],
+          "scorers": ["source_citation", "self_referential_learning"]
+        }
+      ]
+    },
+    {
+      "id": "LEARN-001",
+      "name": "Self-Referential Learning - Context Retention",
+      "description": "Tests ability to reference and build on earlier conversation",
+      "category": "Self-Referential Learning",
+      "expectedTurns": 15,
+      "scorersToTest": ["self_referential_learning"],
+      "turns": [
+        {
+          "turn": 1,
+          "user": "Media plan for ABC Corp's new product launch.",
+          "expectedBehaviors": ["warm_greeting", "acknowledges_company_name", "asks_about_outcome"],
+          "scorers": ["single_question"]
+        },
+        {
+          "turn": 2,
+          "user": "Lead generation for our enterprise security software. 500 leads, $400K budget.",
+          "expectedBehaviors": ["calculates_cpl", "stores_context", "asks_follow_up"],
+          "scorers": ["proactive_intelligence"]
+        },
+        {
+          "turn": 3,
+          "user": "Target: CISOs and security directors at companies with 1000+ employees.",
+          "expectedBehaviors": ["acknowledges_audience", "stores_context"],
+          "scorers": ["step_completion"]
+        },
+        {
+          "turn": 4,
+          "user": "Focus on healthcare and financial services verticals.",
+          "expectedBehaviors": ["acknowledges_verticals", "stores_context"],
+          "scorers": ["step_completion"]
+        },
+        {
+          "turn": 5,
+          "user": "What was our budget again?",
+          "expectedBehaviors": ["correctly_recalls_400k", "does_not_ask_user_to_repeat"],
+          "scorers": ["self_referential_learning"]
+        },
+        {
+          "turn": 6,
+          "user": "And the target number of leads?",
+          "expectedBehaviors": ["correctly_recalls_500_leads", "may_add_cpl_calculation"],
+          "scorers": ["self_referential_learning"]
+        },
+        {
+          "turn": 7,
+          "user": "Continue with channels.",
+          "expectedBehaviors": ["recommends_channels_for_b2b_security", "references_ciso_audience"],
+          "scorers": ["self_referential_learning", "proactive_intelligence"]
+        },
+        {
+          "turn": 8,
+          "user": "Actually, let me add that our average deal size is $150K.",
+          "expectedBehaviors": ["incorporates_deal_size", "may_update_economics_assessment"],
+          "scorers": ["self_referential_learning"]
+        },
+        {
+          "turn": 9,
+          "user": "Does that change anything?",
+          "expectedBehaviors": ["analyzes_with_new_data", "references_earlier_cpl", "updates_assessment"],
+          "scorers": ["self_referential_learning", "proactive_intelligence"]
+        },
+        {
+          "turn": 10,
+          "user": "What company are we planning for again?",
+          "expectedBehaviors": ["correctly_recalls_abc_corp"],
+          "scorers": ["self_referential_learning"]
+        },
+        {
+          "turn": 11,
+          "user": "What verticals did we say?",
+          "expectedBehaviors": ["correctly_recalls_healthcare_financial"],
+          "scorers": ["self_referential_learning"]
+        },
+        {
+          "turn": 12,
+          "user": "Provide a summary so far.",
+          "expectedBehaviors": ["comprehensive_summary", "includes_all_mentioned_details", "accurate_numbers"],
+          "scorers": ["self_referential_learning"]
+        },
+        {
+          "turn": 13,
+          "user": "Add technology vertical too.",
+          "expectedBehaviors": ["updates_verticals", "notes_addition"],
+          "scorers": ["self_referential_learning"]
+        },
+        {
+          "turn": 14,
+          "user": "Final summary with all updates.",
+          "expectedBehaviors": ["includes_all_three_verticals", "all_numbers_correct", "all_context_preserved"],
+          "scorers": ["self_referential_learning"]
+        },
+        {
+          "turn": 15,
+          "user": "List every piece of information I gave you.",
+          "expectedBehaviors": ["comprehensive_list", "all_items_accurate", "proper_order"],
+          "scorers": ["self_referential_learning"]
+        }
+      ]
+    },
+    {
+      "id": "IDK-001",
+      "name": "I Don't Know Protocol - User Uncertainty",
+      "description": "Tests handling when user doesn't have information",
+      "category": "IDK Protocol",
+      "expectedTurns": 10,
+      "scorersToTest": ["idk_protocol", "progress_over_perfection"],
+      "turns": [
+        {
+          "turn": 1,
+          "user": "Media plan for a new coffee brand.",
+          "expectedBehaviors": ["warm_greeting", "asks_about_outcome"],
+          "scorers": ["single_question"]
+        },
+        {
+          "turn": 2,
+          "user": "Customer acquisition. Not sure how many we need.",
+          "expectedBehaviors": ["asks_about_budget_or_proposes_default"],
+          "scorers": ["single_question", "idk_protocol"]
+        },
+        {
+          "turn": 3,
+          "user": "Budget is around $200K. I don't know what a realistic target is.",
+          "expectedBehaviors": ["proposes_target_based_on_benchmarks", "cites_source", "offers_to_adjust"],
+          "scorers": ["idk_protocol", "source_citation"]
+        },
+        {
+          "turn": 4,
+          "user": "I don't know our customer LTV either.",
+          "expectedBehaviors": ["uses_benchmark_ltv", "cites_source", "moves_forward"],
+          "scorers": ["idk_protocol", "progress_over_perfection"]
+        },
+        {
+          "turn": 5,
+          "user": "I'm not sure who our target customer is exactly.",
+          "expectedBehaviors": ["proposes_typical_coffee_audience", "offers_refinement_later"],
+          "scorers": ["idk_protocol", "progress_over_perfection"]
+        },
+        {
+          "turn": 6,
+          "user": "No idea about geography either.",
+          "expectedBehaviors": ["proposes_default_geography", "moves_forward"],
+          "scorers": ["idk_protocol", "progress_over_perfection"]
+        },
+        {
+          "turn": 7,
+          "user": "Continue with assumptions.",
+          "expectedBehaviors": ["continues_with_stated_assumptions", "tracks_what_is_assumed"],
+          "scorers": ["idk_protocol", "progress_over_perfection"]
+        },
+        {
+          "turn": 8,
+          "user": "What have you assumed so far?",
+          "expectedBehaviors": ["lists_all_assumptions", "cites_sources", "distinguishes_from_user_input"],
+          "scorers": ["self_referential_learning", "source_citation"]
+        },
+        {
+          "turn": 9,
+          "user": "Actually I know our margin is 65%.",
+          "expectedBehaviors": ["incorporates_real_data", "recalculates_if_needed", "notes_update"],
+          "scorers": ["self_referential_learning"]
+        },
+        {
+          "turn": 10,
+          "user": "Final plan with assumptions clearly marked.",
+          "expectedBehaviors": ["provides_plan", "clearly_marks_assumptions_vs_facts"],
+          "scorers": ["idk_protocol", "self_referential_learning"]
+        }
+      ]
+    },
+    {
+      "id": "SOPH-001",
+      "name": "Adaptive Sophistication - Basic User",
+      "description": "Tests language adaptation for unsophisticated user",
+      "category": "Adaptive Sophistication",
+      "expectedTurns": 8,
+      "scorersToTest": ["adaptive_sophistication", "acronym_definition", "tone"],
+      "turns": [
+        {
+          "turn": 1,
+          "user": "Hi I need help with advertising for my small business.",
+          "expectedBehaviors": ["warm_simple_greeting", "avoids_jargon", "simple_question"],
+          "scorers": ["adaptive_sophistication", "tone"]
+        },
+        {
+          "turn": 2,
+          "user": "I sell homemade candles online.",
+          "expectedBehaviors": ["acknowledges_simply", "asks_simple_follow_up"],
+          "scorers": ["adaptive_sophistication"]
+        },
+        {
+          "turn": 3,
+          "user": "I want more customers. I have about $5000 to spend.",
+          "expectedBehaviors": ["explains_cost_per_customer_simply", "avoids_cac_acronym", "uses_everyday_terms"],
+          "scorers": ["adaptive_sophistication", "acronym_definition"]
+        },
+        {
+          "turn": 4,
+          "user": "What's a realistic goal for that budget?",
+          "expectedBehaviors": ["provides_simple_range", "explains_in_plain_terms"],
+          "scorers": ["adaptive_sophistication", "source_citation"]
+        },
+        {
+          "turn": 5,
+          "user": "What advertising should I use?",
+          "expectedBehaviors": ["recommends_in_simple_terms", "explains_why_accessible"],
+          "scorers": ["adaptive_sophistication"]
+        },
+        {
+          "turn": 6,
+          "user": "I heard about something called ROAS. What is that?",
+          "expectedBehaviors": ["defines_roas_simply", "explains_why_it_matters", "no_condescension"],
+          "scorers": ["adaptive_sophistication", "acronym_definition", "tone"]
+        },
+        {
+          "turn": 7,
+          "user": "This is all new to me. Am I doing okay?",
+          "expectedBehaviors": ["encourages_warmly", "validates_questions", "offers_continued_help"],
+          "scorers": ["tone"]
+        },
+        {
+          "turn": 8,
+          "user": "Give me a simple plan I can understand.",
+          "expectedBehaviors": ["provides_simple_clear_plan", "avoids_all_jargon", "actionable_steps"],
+          "scorers": ["adaptive_sophistication"]
+        }
+      ]
+    },
+    {
+      "id": "SOPH-002",
+      "name": "Adaptive Sophistication - Expert User",
+      "description": "Tests language adaptation for sophisticated user",
+      "category": "Adaptive Sophistication",
+      "expectedTurns": 8,
+      "scorersToTest": ["adaptive_sophistication", "proactive_intelligence"],
+      "turns": [
+        {
+          "turn": 1,
+          "user": "Need to optimize our media mix for a $2M B2B SaaS campaign targeting enterprise MQLs.",
+          "expectedBehaviors": ["matches_sophistication", "uses_industry_terms", "gets_to_substance"],
+          "scorers": ["adaptive_sophistication"]
+        },
+        {
+          "turn": 2,
+          "user": "Current CAC is $800, LTV:CAC is 4:1, targeting 2500 MQLs at 20% SQL conversion.",
+          "expectedBehaviors": ["works_with_metrics_provided", "calculates_implied_efficiency", "no_over_explanation"],
+          "scorers": ["adaptive_sophistication", "proactive_intelligence"]
+        },
+        {
+          "turn": 3,
+          "user": "ABM heavy, intent data overlay, looking at 6sense vs Bombora.",
+          "expectedBehaviors": ["engages_with_abm_discussion", "may_have_opinion", "technical_response"],
+          "scorers": ["adaptive_sophistication"]
+        },
+        {
+          "turn": 4,
+          "user": "What's your view on incrementality measurement for LinkedIn ABM?",
+          "expectedBehaviors": ["provides_technical_answer", "discusses_methodology", "cites_if_relevant"],
+          "scorers": ["adaptive_sophistication", "source_citation"]
+        },
+        {
+          "turn": 5,
+          "user": "We're seeing platform ROAS of 3.2x but incrementality tests show 1.8x actual lift.",
+          "expectedBehaviors": ["engages_with_discrepancy", "provides_analysis", "technical_discussion"],
+          "scorers": ["adaptive_sophistication", "proactive_intelligence"]
+        },
+        {
+          "turn": 6,
+          "user": "Recommendations on MMM vs MTA vs geo-lift for our measurement stack?",
+          "expectedBehaviors": ["compares_methodologies", "recommends_for_context", "technical_depth"],
+          "scorers": ["adaptive_sophistication", "source_citation"]
+        },
+        {
+          "turn": 7,
+          "user": "Skip to allocation. I know the fundamentals.",
+          "expectedBehaviors": ["respects_expertise", "provides_allocation_directly", "no_over_explanation"],
+          "scorers": ["adaptive_sophistication"]
+        },
+        {
+          "turn": 8,
+          "user": "Executive summary with the key decisions and trade-offs.",
+          "expectedBehaviors": ["provides_executive_summary", "sophisticated_framing", "decision_focused"],
+          "scorers": ["adaptive_sophistication", "self_referential_learning"]
+        }
+      ]
+    },
+    {
+      "id": "EDGE-001",
+      "name": "Edge Case - Unrealistic Expectations",
+      "description": "User has completely unrealistic expectations",
+      "category": "Edge Cases",
+      "expectedTurns": 8,
+      "scorersToTest": ["feasibility_framing", "proactive_intelligence", "tone"],
+      "turns": [
+        {
+          "turn": 1,
+          "user": "I have $1,000 and want 100,000 customers.",
+          "expectedBehaviors": ["flags_as_unrealistic", "shows_math", "does_not_dismiss"],
+          "scorers": ["feasibility_framing", "proactive_intelligence"]
+        },
+        {
+          "turn": 2,
+          "user": "But I've heard of viral growth.",
+          "expectedBehaviors": ["acknowledges_possibility", "explains_reality", "offers_alternatives"],
+          "scorers": ["tone", "feasibility_framing"]
+        },
+        {
+          "turn": 3,
+          "user": "What could I realistically achieve with $1,000?",
+          "expectedBehaviors": ["provides_realistic_range", "shows_math", "constructive_framing"],
+          "scorers": ["proactive_intelligence", "source_citation"]
+        },
+        {
+          "turn": 4,
+          "user": "What if I increased to $10,000?",
+          "expectedBehaviors": ["recalculates", "provides_new_range", "shows_improvement"],
+          "scorers": ["proactive_intelligence"]
+        },
+        {
+          "turn": 5,
+          "user": "I need massive reach on a tiny budget. What's the best approach?",
+          "expectedBehaviors": ["recommends_organic_social", "discusses_viral_potential", "realistic_expectations"],
+          "scorers": ["proactive_intelligence", "feasibility_framing"]
+        },
+        {
+          "turn": 6,
+          "user": "My competitor supposedly got 1M users with no marketing spend.",
+          "expectedBehaviors": ["addresses_claim_skeptically", "discusses_reality", "offers_perspective"],
+          "scorers": ["tone", "feasibility_framing"]
+        },
+        {
+          "turn": 7,
+          "user": "Fine, I'll be realistic. $5,000 for 500 customers.",
+          "expectedBehaviors": ["calculates_10_cac", "assesses_feasibility", "much_more_positive"],
+          "scorers": ["proactive_intelligence", "feasibility_framing"]
+        },
+        {
+          "turn": 8,
+          "user": "That seems doable. Let's plan for that.",
+          "expectedBehaviors": ["continues_positively", "builds_on_realistic_target"],
+          "scorers": ["tone", "step_completion"]
+        }
+      ]
+    },
+    {
+      "id": "EDGE-002",
+      "name": "Edge Case - Conflicting Requirements",
+      "description": "User provides conflicting requirements",
+      "category": "Edge Cases",
+      "expectedTurns": 8,
+      "scorersToTest": ["proactive_intelligence", "tone"],
+      "turns": [
+        {
+          "turn": 1,
+          "user": "I want maximum reach but also highly targeted precision.",
+          "expectedBehaviors": ["notes_tension", "asks_clarifying_question", "explains_tradeoff"],
+          "scorers": ["proactive_intelligence", "single_question"]
+        },
+        {
+          "turn": 2,
+          "user": "I want both. Reach everyone who matters.",
+          "expectedBehaviors": ["reframes_constructively", "proposes_approach", "explains_options"],
+          "scorers": ["tone", "proactive_intelligence"]
+        },
+        {
+          "turn": 3,
+          "user": "Budget is $50K but I want Super Bowl level impact.",
+          "expectedBehaviors": ["addresses_expectation_gap", "provides_alternatives", "respectful_framing"],
+          "scorers": ["feasibility_framing", "tone"]
+        },
+        {
+          "turn": 4,
+          "user": "I want awareness AND immediate sales conversion.",
+          "expectedBehaviors": ["explains_full_funnel", "proposes_allocation", "manages_expectations"],
+          "scorers": ["proactive_intelligence"]
+        },
+        {
+          "turn": 5,
+          "user": "Which should I prioritize?",
+          "expectedBehaviors": ["asks_about_business_context", "helps_prioritize"],
+          "scorers": ["single_question"]
+        },
+        {
+          "turn": 6,
+          "user": "We're a new brand so probably need awareness, but investors want conversion metrics.",
+          "expectedBehaviors": ["understands_tension", "proposes_hybrid", "addresses_both_stakeholders"],
+          "scorers": ["proactive_intelligence", "tone"]
+        },
+        {
+          "turn": 7,
+          "user": "How do I satisfy both needs?",
+          "expectedBehaviors": ["proposes_balanced_approach", "explains_measurement_for_both"],
+          "scorers": ["proactive_intelligence"]
+        },
+        {
+          "turn": 8,
+          "user": "Give me a plan that balances these.",
+          "expectedBehaviors": ["provides_balanced_plan", "addresses_awareness_and_conversion"],
+          "scorers": ["proactive_intelligence", "step_completion"]
+        }
+      ]
+    }
+  ]
+}

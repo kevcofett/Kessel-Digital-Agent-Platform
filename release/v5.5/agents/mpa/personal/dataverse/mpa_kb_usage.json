@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "metadata": {
+    "tableName": "mpa_kb_usage",
+    "version": "1.0.0",
+    "created": "2026-01-12",
+    "purpose": "Track KB file usage and effectiveness"
+  },
+  "table": {
+    "schemaName": "mpa_kb_usage",
+    "displayName": "KB Usage Tracking",
+    "pluralName": "KB Usage Tracking",
+    "description": "Tracks which KB files are referenced and their correlation with feedback",
+    "primaryColumn": "mpa_kb_usage_id",
+    "ownership": "Organization",
+    "tableType": "Standard"
+  },
+  "fields": [
+    {
+      "schemaName": "mpa_kb_usage_id",
+      "displayName": "KB Usage ID",
+      "dataType": "Uniqueidentifier",
+      "isPrimaryKey": true,
+      "isRequired": true
+    },
+    {
+      "schemaName": "mpa_kb_file_name",
+      "displayName": "KB File Name",
+      "dataType": "SingleLineOfText",
+      "maxLength": 200,
+      "isRequired": true,
+      "description": "Name of the KB file that was used"
+    },
+    {
+      "schemaName": "mpa_session_id",
+      "displayName": "Session ID",
+      "dataType": "Lookup",
+      "relatedTable": "eap_session",
+      "description": "Link to session where file was used"
+    },
+    {
+      "schemaName": "mpa_query_text",
+      "displayName": "Query Text",
+      "dataType": "MultilineText",
+      "maxLength": 2000,
+      "description": "The query that triggered KB retrieval"
+    },
+    {
+      "schemaName": "mpa_relevance_score",
+      "displayName": "Relevance Score",
+      "dataType": "Decimal",
+      "precision": 4,
+      "minValue": 0,
+      "maxValue": 1,
+      "description": "Semantic similarity score (0-1)"
+    },
+    {
+      "schemaName": "mpa_feedback_received",
+      "displayName": "Feedback Received",
+      "dataType": "Choice",
+      "options": [
+        {"value": 100000000, "label": "None"},
+        {"value": 100000001, "label": "Positive"},
+        {"value": 100000002, "label": "Negative"}
+      ],
+      "description": "Feedback on response that used this KB file"
+    },
+    {
+      "schemaName": "mpa_agent_type",
+      "displayName": "Agent Type",
+      "dataType": "Choice",
+      "options": [
+        {"value": 100000000, "label": "MPA"},
+        {"value": 100000001, "label": "CA"},
+        {"value": 100000002, "label": "EAP"}
+      ]
+    },
+    {
+      "schemaName": "mpa_used_at",
+      "displayName": "Used At",
+      "dataType": "DateTime",
+      "isRequired": true,
+      "description": "Timestamp when KB file was retrieved"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_kb_usage_file",
+      "fields": ["mpa_kb_file_name"],
+      "isUnique": false
+    },
+    {
+      "name": "idx_kb_usage_feedback",
+      "fields": ["mpa_feedback_received", "mpa_agent_type"],
+      "isUnique": false
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "metadata": {
+    "tableName": "mpa_success_patterns",
+    "version": "1.0.0",
+    "created": "2026-01-12",
+    "purpose": "Store high-scoring response patterns for few-shot learning"
+  },
+  "table": {
+    "schemaName": "mpa_success_patterns",
+    "displayName": "Success Patterns",
+    "pluralName": "Success Patterns",
+    "description": "High-scoring response patterns used for few-shot prompt injection",
+    "primaryColumn": "mpa_pattern_id",
+    "ownership": "Organization",
+    "tableType": "Standard"
+  },
+  "fields": [
+    {
+      "schemaName": "mpa_pattern_id",
+      "displayName": "Pattern ID",
+      "dataType": "Uniqueidentifier",
+      "isPrimaryKey": true,
+      "isRequired": true
+    },
+    {
+      "schemaName": "mpa_scenario",
+      "displayName": "Scenario",
+      "dataType": "SingleLineOfText",
+      "maxLength": 200,
+      "isRequired": true,
+      "description": "Category of the successful interaction (e.g., benchmark_query, channel_recommendation)"
+    },
+    {
+      "schemaName": "mpa_user_message",
+      "displayName": "User Message",
+      "dataType": "MultilineText",
+      "maxLength": 4000,
+      "isRequired": true,
+      "description": "The user query that led to high-scoring response"
+    },
+    {
+      "schemaName": "mpa_agent_response",
+      "displayName": "Agent Response",
+      "dataType": "MultilineText",
+      "maxLength": 50000,
+      "isRequired": true,
+      "description": "The high-scoring agent response"
+    },
+    {
+      "schemaName": "mpa_composite_score",
+      "displayName": "Composite Score",
+      "dataType": "Decimal",
+      "precision": 4,
+      "minValue": 0,
+      "maxValue": 1,
+      "isRequired": true,
+      "description": "Overall quality score (must be >= 0.95 to store)"
+    },
+    {
+      "schemaName": "mpa_scores_json",
+      "displayName": "Scores JSON",
+      "dataType": "MultilineText",
+      "maxLength": 4000,
+      "format": "JSON",
+      "description": "Individual scorer results as JSON"
+    },
+    {
+      "schemaName": "mpa_agent_type",
+      "displayName": "Agent Type",
+      "dataType": "Choice",
+      "options": [
+        {"value": 100000000, "label": "MPA"},
+        {"value": 100000001, "label": "CA"},
+        {"value": 100000002, "label": "EAP"}
+      ]
+    },
+    {
+      "schemaName": "mpa_created_at",
+      "displayName": "Created At",
+      "dataType": "DateTime",
+      "isRequired": true
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_patterns_scenario_score",
+      "fields": ["mpa_scenario", "mpa_composite_score"],
+      "isUnique": false
+    }
+  ]
+}

@@ -848,36 +848,49 @@ export const MPA_STEPS: StepDefinition[] = [
 // =============================================================================
 
 /**
- * Scorer weight configuration (SCORER_SPECIFICATION_v2)
+ * Scorer weight configuration (SCORER_SPECIFICATION_v3)
  *
- * 14 optimized scorers in 3 tiers:
- * - Tier 1: Core Quality (65%)
- * - Tier 2: Structural Compliance (20%)
- * - Tier 3: Advanced Quality (15%)
+ * Rebalanced for Strategic Quality vs Format Compliance:
+ * - Strategic Quality (60%): Validates correctness and feasibility
+ * - Format Compliance (40%): Validates structure and language patterns
  *
  * Total: 100%
  */
 export const SCORER_WEIGHTS: Record<string, number> = {
-  // Tier 1: Core Quality (65%)
-  "proactive-calculation": 0.15, // Shows math when data available, compares to benchmark
-  "teaching-behavior": 0.12, // Teaches strategic reasoning vs interrogates
-  "feasibility-framing": 0.10, // Frames target feasibility with evidence + path forward
-  "source-citation": 0.10, // 5-source citation format
-  "recalculation-on-change": 0.08, // Recalculates when data changes
-  "risk-opportunity-flagging": 0.05, // Proactively flags risks/opportunities
-  "adaptive-sophistication": 0.05, // Language matches user level
+  // ==========================================================================
+  // STRATEGIC QUALITY (60%) - Validates correctness and feasibility
+  // ==========================================================================
 
-  // Tier 2: Structural Compliance (20%)
+  // Validation Layer Scorers (25%) - NEW
+  "math-accuracy": 0.10, // Validates arithmetic is correct in tables and calculations
+  "feasibility-validation": 0.10, // Validates CAC achievability given audience/budget
+  "benchmark-sourcing": 0.05, // Verifies KB citations reference actual data
+
+  // Core Quality Scorers (35%)
+  "proactive-calculation": 0.10, // Shows math when data available, compares to benchmark
+  "teaching-behavior": 0.08, // Teaches strategic reasoning vs interrogates
+  "feasibility-framing": 0.06, // Frames target feasibility with evidence + path forward
+  "source-citation": 0.05, // 5-source citation format
+  "recalculation-on-change": 0.04, // Recalculates when data changes
+  "risk-opportunity-flagging": 0.02, // Proactively flags risks/opportunities
+
+  // ==========================================================================
+  // FORMAT COMPLIANCE (40%) - Validates structure and language patterns
+  // ==========================================================================
+
+  // Structural Compliance (25%)
   "step-boundary": 0.06, // No channel recommendations in Steps 1-2
   "single-question": 0.05, // One question per response, max
   "idk-protocol": 0.04, // Handle "I don't know" properly
   "response-length": 0.03, // Under 75 words when possible
-  "acronym-definition": 0.02, // Define acronyms on first use
-
-  // Tier 3: Advanced Quality (15%)
-  "audience-sizing-completeness": 0.06, // Table with 7 components
-  "cross-step-synthesis": 0.05, // References earlier step insights
+  "acronym-definition": 0.03, // Define acronyms on first use
   "response-formatting": 0.04, // Visual hierarchy, calculations on own line
+
+  // Advanced Format (15%)
+  "audience-sizing": 0.05, // Table with proper columns and TOTAL row
+  "audience-sizing-completeness": 0.04, // Table with 7 components
+  "cross-step-synthesis": 0.03, // References earlier step insights
+  "adaptive-sophistication": 0.03, // Language matches user level
 };
 
 /**

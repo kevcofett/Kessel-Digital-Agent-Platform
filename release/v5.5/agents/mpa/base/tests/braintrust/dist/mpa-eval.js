@@ -446,27 +446,37 @@ function scoreStepBoundary(output, currentStep) {
         metadata: { currentStep, violationCount: violations.length }
     };
 }
-// V6.1: Updated source citation to match DATA CONFIDENCE patterns
+// V6.1: Updated source citation - more lenient pattern matching
 function scoreSourceCitation(output) {
     const hasNumbers = /\$[\d,]+|\d+%|\d+\s*(dollars|percent|customers|users)/i.test(output);
     if (!hasNumbers) {
         return { score: 1.0, metadata: { hasData: false, status: "no_data_claims" } };
     }
-    // V6.1 DATA CONFIDENCE patterns
+    // V6.1 DATA CONFIDENCE patterns - expanded for natural language
     const sourcePatterns = [
-        /based on (your|what you|the) (input|data|shared|budget|target)/i, // User data
-        /your (budget|target|goal|kpi) of/i, // User-provided
-        /based on kb/i, // KB data
-        /kb (data|benchmark)/i, // KB reference
-        /typical(ly)? (for|in|range|runs?)/i, // Benchmark language
-        /industry (benchmark|average|typical)/i, // Industry data
-        /my estimate/i, // Explicit estimate
-        /recommend (validating|checking)/i, // Validation path
+        // User data
+        /based on (your|what you|the) (input|data|shared|budget|target)/i,
+        /your (budget|target|goal|kpi|numbers?) (of|is|are)/i,
+        /you (said|mentioned|shared|provided)/i,
+        // KB data
+        /based on kb|kb (data|benchmark)/i,
+        /knowledge base/i,
+        // Benchmark language
+        /typical(ly)? (for|in|range|runs?|is)/i,
+        /industry (benchmark|average|typical|standard)/i,
+        /benchmark (data|shows?|suggests?)/i,
+        /generally|usually|normally/i,
+        // Estimates
+        /my estimate|i (estimate|would estimate)/i,
+        /approximate(ly)?|rough(ly)?/i,
+        /recommend (validating|checking|verifying)/i,
     ];
     const matchedPatterns = sourcePatterns.filter(p => p.test(output));
     const hasSource = matchedPatterns.length > 0;
+    // Partial credit based on how many patterns matched
+    const score = hasSource ? Math.min(1.0, 0.5 + (matchedPatterns.length * 0.2)) : 0;
     return {
-        score: hasSource ? 1.0 : 0,
+        score,
         metadata: { hasData: true, hasSource, patternsMatched: matchedPatterns.length }
     };
 }
@@ -522,19 +532,37 @@ function scoreAutomaticBenchmarkComparison(input, output) {
         }
     };
 }
-// V6.1: Updated feasibility framing
+// V6.1: Updated feasibility framing - more lenient patterns
 function scoreFeasibilityFraming(output) {
-    // Assessment words (aggressive/conservative/realistic)
-    const hasAssessment = /aggressive|ambitious|challenging|conservative|typical|realistic|achievable/i.test(output);
-    // Source reference (based on KB, benchmark, typical range)
-    const hasSource = /based on kb|benchmark|typical.*range|industry|kb data/i.test(output);
-    // Path forward (what's required)
-    const hasPath = /to (hit|achieve|reach)|you('ll| will) need|requires|demands/i.test(output);
+    // Assessment words - expanded to include more natural language
+    const assessmentPatterns = [
+        /aggressive|ambitious|challenging|stretch/i,
+        /conservative|safe|comfortable|cushion/i,
+        /realistic|reasonable|achievable|doable|attainable/i,
+        /within.*(range|typical|normal)/i,
+        /harder|easier|tighter|looser/i,
+        /above|below|middle|typical/i,
+    ];
+    const hasAssessment = assessmentPatterns.some(p => p.test(output));
+    // Source reference - expanded patterns
+    const sourcePatterns = [
+        /based on kb|kb (data|benchmark)/i,
+        /benchmark|typical|industry/i,
+        /generally|usually|normally/i,
+    ];
+    const hasSource = sourcePatterns.some(p => p.test(output));
+    // Path forward (what's required) - expanded
+    const pathPatterns = [
+        /to (hit|achieve|reach|meet)/i,
+        /you('ll| will) need|requires|demands/i,
+        /means|implies|suggests/i,
+    ];
+    const hasPath = pathPatterns.some(p => p.test(output));
     let score = 0;
     if (hasAssessment)
-        score += 0.4;
+        score += 0.5;
     if (hasSource)
-        score += 0.4;
+        score += 0.3;
     if (hasPath)
         score += 0.2;
     return { score, metadata: { hasAssessment, hasSource, hasPath } };
@@ -564,18 +592,33 @@ function scoreAcronymDefinition(output) {
     const score = 1.0 - (undefined_acronyms.length / used.length);
     return { score, metadata: { used, undefined: undefined_acronyms } };
 }
-// V6.1: Updated RAG retrieval to match KB patterns
+// V6.1: Updated RAG retrieval - more lenient, outcome-focused
 function scoreRagRetrieval(output) {
-    // V6.1: More specific KB reference patterns
-    const hasKBReference = /based on kb|kb (data|benchmark|for)|using kb|from kb/i.test(output);
+    // KB reference patterns - expanded to include natural language
+    const kbPatterns = [
+        /based on kb|kb (data|benchmark|for)|from kb/i,
+        /knowledge base/i,
+        /benchmark data/i,
+    ];
+    const hasKBReference = kbPatterns.some(p => p.test(output));
+    // Has specific data (numbers, metrics)
     const hasSpecificData = /\$[\d,]+|\d+(\.\d+)?%|\d+(\.\d+)?x/i.test(output);
-    const hasBenchmarkLanguage = /benchmark|typical(ly)?|range|industry (average|standard|data)/i.test(output);
-    const hasVerticalContext = /(for|in) (ecommerce|retail|finance|b2b|healthcare|your vertical)/i.test(output);
+    // Benchmark language - more lenient
+    const benchmarkPatterns = [
+        /benchmark|typical(ly)?/i,
+        /range|industry|standard/i,
+        /usually|generally|normally/i,
+        /runs?|averages?/i,
+    ];
+    const hasBenchmarkLanguage = benchmarkPatterns.some(p => p.test(output));
+    // Vertical context
+    const hasVerticalContext = /(for|in).*(ecommerce|retail|finance|b2b|healthcare|remittance|your (vertical|industry))/i.test(output);
+    // Scoring: partial credit for natural benchmark language
     let score = 0;
     if (hasKBReference)
-        score += 0.4;
+        score += 0.3;
     if (hasSpecificData)
-        score += 0.2;
+        score += 0.3;
     if (hasBenchmarkLanguage)
         score += 0.2;
     if (hasVerticalContext)

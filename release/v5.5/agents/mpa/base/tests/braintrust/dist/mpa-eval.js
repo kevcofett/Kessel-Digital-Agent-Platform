@@ -353,6 +353,103 @@ const testCases = [
         },
         metadata: { currentStep: 4, hasEnoughDataToModel: true, vertical: "FINANCE" },
     },
+    // =============================================================================
+    // PHASE 4: EXPANDED TEST CASES - EDGE CASES & VERTICALS
+    // =============================================================================
+    {
+        name: "Very Aggressive Target",
+        input: {
+            message: "We have $100K and need 10,000 new customers for our mobile game.",
+            context: "Gaming vertical, aggressive target",
+        },
+        expected: {
+            behaviors: [
+                "Calculates implied CAC ($10)",
+                "Labels as VERY AGGRESSIVE or similar",
+                "Notes difficulty of target",
+                "Suggests what would be realistic",
+            ],
+        },
+        metadata: { currentStep: 1, hasEnoughDataToModel: true, vertical: "GAMING" },
+    },
+    {
+        name: "Conservative Target",
+        input: {
+            message: "Budget is $500K for 1,000 new enterprise clients.",
+            context: "B2B SaaS, enterprise",
+        },
+        expected: {
+            behaviors: [
+                "Calculates implied CAC ($500)",
+                "Labels as CONSERVATIVE or comfortable",
+                "Notes headroom for testing",
+            ],
+        },
+        metadata: { currentStep: 1, hasEnoughDataToModel: true, vertical: "B2B_PROFESSIONAL" },
+    },
+    {
+        name: "Sophisticated User - Unit Economics",
+        input: {
+            message: "We are targeting a 3.5x ROAS with $45 CPM, 2% CTR, and 8% conversion. LTV is $280.",
+            context: "Sophisticated user with detailed metrics",
+        },
+        expected: {
+            behaviors: [
+                "Matches technical language level",
+                "Uses acronyms freely without defining",
+                "Validates their math",
+                "Does not oversimplify",
+            ],
+        },
+        metadata: { currentStep: 2, hasEnoughDataToModel: true, userSophistication: "expert" },
+    },
+    {
+        name: "Basic User - Simple Request",
+        input: {
+            message: "We want more customers. We have about $50,000 to spend.",
+            context: "Basic user, simple language",
+        },
+        expected: {
+            behaviors: [
+                "Uses simple everyday language",
+                "Defines any acronyms used",
+                "Asks clarifying questions simply",
+                "Does not overwhelm with jargon",
+            ],
+        },
+        metadata: { currentStep: 1, hasEnoughDataToModel: false, userSophistication: "basic" },
+    },
+    {
+        name: "Media/Entertainment Vertical",
+        input: {
+            message: "We are launching a streaming service and need 50,000 subscribers. Budget is $2M.",
+            context: "Media/entertainment subscription service",
+        },
+        expected: {
+            behaviors: [
+                "Calculates implied CPA ($40)",
+                "References media/entertainment benchmarks",
+                "Notes subscription business considerations",
+            ],
+        },
+        metadata: { currentStep: 1, hasEnoughDataToModel: true, vertical: "MEDIA" },
+    },
+    {
+        name: "Step 3 - Multi-Platform Audience",
+        input: {
+            message: "We need to reach small business owners who are actively looking for accounting software.",
+            context: "B2B SaaS, Step 3 audience definition",
+        },
+        expected: {
+            behaviors: [
+                "References LinkedIn targeting options",
+                "References Google in-market audiences",
+                "Discusses intent signals",
+                "Platform-specific recommendations",
+            ],
+        },
+        metadata: { currentStep: 3, hasEnoughDataToModel: true, vertical: "B2B_PROFESSIONAL" },
+    },
 ];
 // =============================================================================
 // TASK FUNCTION

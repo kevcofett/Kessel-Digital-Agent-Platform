@@ -1,0 +1,33 @@
+{
+  "schemaName": "eap_feedback",
+  "displayName": "Feedback",
+  "pluralName": "Feedback",
+  "description": "User feedback on outputs and sessions",
+  "tier": 2,
+  "category": "Quality",
+  "primaryKey": "feedback_id",
+  "primaryNameColumn": "feedback_id",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "feedback_id", "displayName": "Feedback ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "User providing feedback" },
+    { "schemaName": "session_id", "displayName": "Session", "dataType": "Lookup", "lookupTable": "eap_session", "required": false, "description": "Related session" },
+    { "schemaName": "output_id", "displayName": "Output", "dataType": "Lookup", "lookupTable": "eap_outputs", "required": false, "description": "Related output" },
+    { "schemaName": "exchange_id", "displayName": "Exchange", "dataType": "Lookup", "lookupTable": "eap_exchanges", "required": false, "description": "Related exchange" },
+    { "schemaName": "feedback_type", "displayName": "Feedback Type", "dataType": "Choice", "required": true, "options": ["ThumbsUp", "ThumbsDown", "Rating", "Comment", "Issue", "Enhancement"], "description": "Type of feedback" },
+    { "schemaName": "rating", "displayName": "Rating", "dataType": "WholeNumber", "required": false, "description": "Numeric rating (1-5)" },
+    { "schemaName": "category", "displayName": "Category", "dataType": "Choice", "required": false, "options": ["Accuracy", "Relevance", "Completeness", "Speed", "Format", "Other"], "description": "Feedback category" },
+    { "schemaName": "comment", "displayName": "Comment", "dataType": "MultilineText", "required": false, "description": "User comments" },
+    { "schemaName": "is_actionable", "displayName": "Is Actionable", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Requires action" },
+    { "schemaName": "action_taken", "displayName": "Action Taken", "dataType": "MultilineText", "required": false, "description": "Action taken on feedback" },
+    { "schemaName": "action_date", "displayName": "Action Date", "dataType": "DateTime", "required": false, "description": "When action taken" },
+    { "schemaName": "action_by", "displayName": "Action By", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "Who took action" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" }
+  ],
+  "indexes": [
+    { "name": "idx_user", "columns": ["user_id"], "unique": false },
+    { "name": "idx_session", "columns": ["session_id"], "unique": false },
+    { "name": "idx_output", "columns": ["output_id"], "unique": false },
+    { "name": "idx_type", "columns": ["feedback_type"], "unique": false }
+  ]
+}

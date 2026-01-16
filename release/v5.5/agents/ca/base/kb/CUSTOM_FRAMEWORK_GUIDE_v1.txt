@@ -1,0 +1,125 @@
+CUSTOM FRAMEWORK GUIDE
+
+Version: 1.0
+Effective Date: 2025-01-01
+
+===
+
+OVERVIEW
+
+Clients can define custom frameworks that extend the standard 32-framework library.
+Custom frameworks are stored as KB files following a standard structure.
+Agent will recognize and apply custom frameworks like standard frameworks.
+
+===
+
+CUSTOM FRAMEWORK STRUCTURE
+
+Required Sections:
+
+FRAMEWORK NAME
+[Unique name for the framework]
+
+CATEGORY
+[Strategic, Competitive, Customer, Operations, Innovation, or Custom]
+
+DESCRIPTION
+[2-3 sentence description of what the framework analyzes]
+
+BEST FOR
+[Bullet list of use cases where this framework excels]
+
+DIMENSIONS
+[List of dimensions/components to analyze, with descriptions]
+
+METHODOLOGY
+[Step-by-step instructions for applying the framework]
+
+OUTPUT FORMAT
+[Expected deliverable structure: sections, tables, visualizations]
+
+EXAMPLE APPLICATION
+[Brief example showing framework applied to a sample case]
+
+---
+
+Optional Sections:
+
+TYPICAL DEPTH
+[Recommended word counts for Quick/Standard/Comprehensive]
+
+RELATED FRAMEWORKS
+[Standard frameworks that complement this one]
+
+DATA REQUIREMENTS
+[What data/inputs are needed to apply this framework]
+
+===
+
+FILE NAMING CONVENTION
+
+Custom_Framework_[Name]_v[Version].txt
+
+Examples:
+- Custom_Framework_BrandEquityScorecard_v1.txt
+- Custom_Framework_ChannelProfitability_v1.txt
+- Custom_Framework_VendorRiskAssessment_v1.txt
+
+===
+
+ADDING CUSTOM FRAMEWORKS
+
+Option 1: SharePoint Upload
+- Create framework file following structure above
+- Save as Custom_Framework_[Name]_v1.txt
+- Upload to Consulting_Agent KB folder in SharePoint
+- Wait for KB re-index (daily)
+- Test by asking agent to use the framework
+
+Option 2: Request via Agent
+- Tell agent: 'I want to create a custom framework for [purpose]'
+- Agent will guide through required sections
+- Agent will format and request admin upload
+
+===
+
+USING CUSTOM FRAMEWORKS
+
+Agent automatically checks for custom frameworks when:
+- User mentions a framework name not in standard library
+- User describes analysis that matches custom framework best-for
+- User explicitly requests: 'Use our [Framework Name] framework'
+
+Recognition patterns:
+- 'Use our brand equity scorecard' = searches for Custom_Framework_BrandEquityScorecard
+- 'Apply the channel profitability analysis' = searches for Custom_Framework_ChannelProfitability
+
+If custom framework found:
+- Agent applies using documented methodology
+- Output follows framework's specified format
+- Citations note 'Custom Framework: [Name]'
+
+If custom framework not found:
+- Agent asks: 'I do not see a custom framework called [Name]. Would you like me to:
+  - Use a similar standard framework ([suggestions])
+  - Help you create this as a new custom framework
+  - Proceed with a general analysis approach'
+
+===
+
+VALIDATION RULES
+
+Custom frameworks must have:
+- Unique name (no duplicates with standard or other custom)
+- All required sections completed
+- At least 3 dimensions defined
+- Clear methodology steps
+
+Custom frameworks cannot:
+- Override standard framework definitions
+- Use reserved framework names (SWOT, Porter's, etc.)
+- Exceed 10,000 characters (for KB indexing)
+
+===
+
+END OF CUSTOM FRAMEWORK GUIDE

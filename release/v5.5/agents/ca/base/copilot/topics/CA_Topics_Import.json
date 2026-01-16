@@ -1,0 +1,556 @@
+{
+  "schemaVersion": "1.0",
+  "topics": [
+    {
+      "name": "Greeting",
+      "displayName": "Greeting",
+      "description": "Welcome users and introduce CA capabilities",
+      "triggerQueries": [
+        "hello",
+        "hi",
+        "hey",
+        "start",
+        "help",
+        "what can you do",
+        "good morning",
+        "good afternoon"
+      ],
+      "nodes": [
+        {
+          "id": "message1",
+          "type": "message",
+          "message": "Hello! I'm the Consulting Agent - your AI-powered strategic consulting assistant.\n\nI can help you with:\n- Strategic analysis using 32+ consulting frameworks\n- Industry benchmarking and competitive analysis\n- Market research and opportunity identification\n- Business case development\n- Comprehensive consulting reports\n\nI offer three depth levels:\n- Quick Analysis (5-10 min read)\n- Standard Analysis (15-25 min read)\n- Comprehensive Analysis (30-45 min read)\n\nWhat would you like to work on today?"
+        }
+      ]
+    },
+    {
+      "name": "StartAnalysis",
+      "displayName": "Start Analysis",
+      "description": "Initialize a new consulting analysis session",
+      "triggerQueries": [
+        "start analysis",
+        "analyze",
+        "begin analysis",
+        "new analysis",
+        "help me analyze",
+        "strategic analysis",
+        "start consulting",
+        "begin consulting"
+      ],
+      "nodes": [
+        {
+          "id": "question1",
+          "type": "question",
+          "questionType": "choice",
+          "questionText": "What type of analysis would you like to conduct?",
+          "choices": [
+            "Strategic Planning - Overall business strategy",
+            "Competitive Analysis - Market positioning",
+            "Market Entry - New market opportunities",
+            "Operational Improvement - Process optimization",
+            "Digital Transformation - Technology strategy",
+            "Other - I'll describe my needs"
+          ],
+          "variable": "Global.AnalysisType"
+        },
+        {
+          "id": "condition1",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "flowAvailable",
+              "expression": "System.FlowsEnabled == true",
+              "thenNodeId": "callFlow"
+            }
+          ],
+          "elseNodeId": "noFlowMessage"
+        },
+        {
+          "id": "callFlow",
+          "type": "action",
+          "actionType": "flow",
+          "flowName": "CA_InitializeSession",
+          "inputs": {
+            "analysisType": "Global.AnalysisType"
+          },
+          "outputs": {
+            "sessionId": "Global.SessionID"
+          }
+        },
+        {
+          "id": "noFlowMessage",
+          "type": "setVariable",
+          "variable": "Global.SessionID",
+          "value": "standalone-session"
+        },
+        {
+          "id": "message2",
+          "type": "message",
+          "message": "Great! I'll help you with {Global.AnalysisType}.\n\nTo provide the most valuable analysis, please tell me:\n\n1. What company or situation are we analyzing?\n2. What specific question are you trying to answer?\n3. What industry or market context is relevant?\n\nThe more detail you provide, the more targeted my recommendations will be."
+        }
+      ]
+    },
+    {
+      "name": "SelectFramework",
+      "displayName": "Select Framework",
+      "description": "Help users select and understand consulting frameworks",
+      "triggerQueries": [
+        "framework",
+        "frameworks",
+        "SWOT",
+        "Porter",
+        "BCG",
+        "McKinsey",
+        "which framework",
+        "recommend framework",
+        "five forces",
+        "value chain",
+        "PESTLE",
+        "competitive analysis framework"
+      ],
+      "nodes": [
+        {
+          "id": "generativeAnswer1",
+          "type": "generativeAnswers",
+          "dataSource": "SharePoint",
+          "searchQuery": "framework {Activity.Text}",
+          "requireCitation": true,
+          "maxChunks": 5,
+          "minConfidence": 0.65
+        },
+        {
+          "id": "condition1",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "hasResult",
+              "expression": "GenerativeAnswer.HasResult == true",
+              "thenNodeId": "showResult"
+            }
+          ],
+          "elseNodeId": "frameworkOverview"
+        },
+        {
+          "id": "showResult",
+          "type": "message",
+          "message": "{GenerativeAnswer.Response}"
+        },
+        {
+          "id": "frameworkOverview",
+          "type": "message",
+          "message": "I have access to 32+ consulting frameworks. Here are the most commonly used:\n\n**Strategy Frameworks**\n- SWOT Analysis - Strengths, Weaknesses, Opportunities, Threats\n- Porter's Five Forces - Industry competitive analysis\n- BCG Matrix - Portfolio management\n- McKinsey 7S - Organizational alignment\n\n**Market Frameworks**\n- PESTLE - Macro-environmental analysis\n- TAM/SAM/SOM - Market sizing\n- Value Chain Analysis - Competitive advantage\n\n**Operational Frameworks**\n- Lean Six Sigma - Process improvement\n- RACI - Responsibility assignment\n- OKRs - Goal setting\n\nWhich type of analysis are you conducting? I'll recommend the best framework for your situation."
+        },
+        {
+          "id": "question1",
+          "type": "question",
+          "questionType": "choice",
+          "questionText": "Would you like me to apply a specific framework to your situation?",
+          "choices": [
+            "Yes - Apply the recommended framework",
+            "Tell me more about framework options",
+            "I already know which framework I want"
+          ],
+          "variable": "Topic.FrameworkChoice"
+        },
+        {
+          "id": "condition2",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "applyFramework",
+              "expression": "Topic.FrameworkChoice == 'Yes - Apply the recommended framework'",
+              "thenNodeId": "selectDepth"
+            }
+          ],
+          "elseNodeId": "moreOptions"
+        },
+        {
+          "id": "selectDepth",
+          "type": "question",
+          "questionType": "choice",
+          "questionText": "What depth of analysis do you need?",
+          "choices": [
+            "Quick (5-10 min) - Key insights only",
+            "Standard (15-25 min) - Detailed analysis",
+            "Comprehensive (30-45 min) - Full strategic report"
+          ],
+          "variable": "Global.AnalysisDepth"
+        },
+        {
+          "id": "moreOptions",
+          "type": "message",
+          "message": "No problem! Just tell me what framework you'd like to use, or describe your business situation and I'll suggest the best approach."
+        }
+      ]
+    },
+    {
+      "name": "ApplyFramework",
+      "displayName": "Apply Framework",
+      "description": "Execute framework analysis on user's situation",
+      "triggerQueries": [
+        "apply framework",
+        "run analysis",
+        "execute analysis",
+        "do the analysis",
+        "analyze my situation",
+        "apply SWOT",
+        "apply Porter",
+        "use this framework"
+      ],
+      "nodes": [
+        {
+          "id": "condition1",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "hasContext",
+              "expression": "Global.AnalysisType != null",
+              "thenNodeId": "checkDepth"
+            }
+          ],
+          "elseNodeId": "needContext"
+        },
+        {
+          "id": "needContext",
+          "type": "message",
+          "message": "I need a bit more context before running the analysis. Please tell me:\n\n1. What company or situation are we analyzing?\n2. What industry is this in?\n3. What specific question are you trying to answer?"
+        },
+        {
+          "id": "checkDepth",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "hasDepth",
+              "expression": "Global.AnalysisDepth != null",
+              "thenNodeId": "checkFlow"
+            }
+          ],
+          "elseNodeId": "askDepth"
+        },
+        {
+          "id": "askDepth",
+          "type": "question",
+          "questionType": "choice",
+          "questionText": "What depth of analysis do you need?",
+          "choices": [
+            "Quick (5-10 min) - Key insights only",
+            "Standard (15-25 min) - Detailed analysis",
+            "Comprehensive (30-45 min) - Full strategic report"
+          ],
+          "variable": "Global.AnalysisDepth"
+        },
+        {
+          "id": "checkFlow",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "flowAvailable",
+              "expression": "System.FlowsEnabled == true",
+              "thenNodeId": "callApplyFlow"
+            }
+          ],
+          "elseNodeId": "runInline"
+        },
+        {
+          "id": "callApplyFlow",
+          "type": "action",
+          "actionType": "flow",
+          "flowName": "CA_ApplyFramework",
+          "inputs": {
+            "sessionId": "Global.SessionID",
+            "analysisType": "Global.AnalysisType",
+            "framework": "Global.SelectedFramework",
+            "depth": "Global.AnalysisDepth"
+          },
+          "outputs": {
+            "analysisResult": "Topic.AnalysisResult"
+          }
+        },
+        {
+          "id": "runInline",
+          "type": "generativeAnswers",
+          "dataSource": "SharePoint",
+          "searchQuery": "{Global.SelectedFramework} framework application methodology",
+          "requireCitation": true,
+          "maxChunks": 5
+        },
+        {
+          "id": "completeMessage",
+          "type": "message",
+          "message": "Analysis complete! Would you like me to:\n\n1. Generate a downloadable report\n2. Dive deeper into a specific finding\n3. Apply a different framework to compare perspectives\n4. Discuss implications and next steps"
+        }
+      ]
+    },
+    {
+      "name": "GenerateReport",
+      "displayName": "Generate Report",
+      "description": "Create downloadable consulting report",
+      "triggerQueries": [
+        "generate report",
+        "create report",
+        "download report",
+        "export analysis",
+        "give me a document",
+        "create document",
+        "save analysis",
+        "download"
+      ],
+      "nodes": [
+        {
+          "id": "condition1",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "hasAnalysis",
+              "expression": "Global.AnalysisType != null",
+              "thenNodeId": "checkFlow"
+            }
+          ],
+          "elseNodeId": "noDataMessage"
+        },
+        {
+          "id": "noDataMessage",
+          "type": "message",
+          "message": "I don't have enough information to generate a report yet. Let's start by conducting an analysis.\n\nWhat type of strategic analysis would you like to conduct?"
+        },
+        {
+          "id": "checkFlow",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "flowAvailable",
+              "expression": "System.FlowsEnabled == true",
+              "thenNodeId": "callGenerateFlow"
+            }
+          ],
+          "elseNodeId": "textOutput"
+        },
+        {
+          "id": "callGenerateFlow",
+          "type": "action",
+          "actionType": "flow",
+          "flowName": "CA_GenerateDocument",
+          "inputs": {
+            "sessionId": "Global.SessionID",
+            "analysisType": "Global.AnalysisType",
+            "depth": "Global.AnalysisDepth"
+          },
+          "outputs": {
+            "documentUrl": "Topic.DocumentUrl"
+          }
+        },
+        {
+          "id": "flowSuccess",
+          "type": "message",
+          "message": "I've generated your consulting report.\n\n📄 **Download your report:** {Topic.DocumentUrl}\n\nThe report includes:\n- Executive Summary\n- Situation Analysis\n- Framework Application\n- Key Findings\n- Strategic Recommendations\n- Implementation Roadmap\n\nWould you like me to explain any section in more detail?"
+        },
+        {
+          "id": "textOutput",
+          "type": "message",
+          "message": "I'll provide your analysis in text format. You can copy this to your preferred document format.\n\nGenerating analysis based on:\n- Analysis Type: {Global.AnalysisType}\n- Framework: {Global.SelectedFramework}\n- Depth: {Global.AnalysisDepth}\n\nPlease give me a moment to compile the findings..."
+        }
+      ]
+    },
+    {
+      "name": "BenchmarkQuery",
+      "displayName": "Benchmark Query",
+      "description": "Query industry benchmarks and KPIs",
+      "triggerQueries": [
+        "benchmark",
+        "benchmarks",
+        "industry average",
+        "KPI",
+        "metrics",
+        "what's typical",
+        "industry standard",
+        "best practice",
+        "performance metrics"
+      ],
+      "nodes": [
+        {
+          "id": "generativeAnswer1",
+          "type": "generativeAnswers",
+          "dataSource": "SharePoint",
+          "searchQuery": "benchmark {Activity.Text}",
+          "requireCitation": true,
+          "maxChunks": 5,
+          "minConfidence": 0.65
+        },
+        {
+          "id": "condition1",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "hasResult",
+              "expression": "GenerativeAnswer.HasResult == true",
+              "thenNodeId": "showResult"
+            }
+          ],
+          "elseNodeId": "fallbackBenchmarks"
+        },
+        {
+          "id": "showResult",
+          "type": "message",
+          "message": "{GenerativeAnswer.Response}"
+        },
+        {
+          "id": "fallbackBenchmarks",
+          "type": "message",
+          "message": "I can help you find relevant industry benchmarks. To provide the most accurate data, please tell me:\n\n1. Which industry or sector?\n2. What specific metrics are you looking for?\n3. What geography or market?\n\nCommon benchmarks I can help with:\n- Financial metrics (margins, growth rates, ROI)\n- Operational KPIs (efficiency, utilization)\n- Customer metrics (NPS, retention, LTV)\n- Market metrics (share, penetration, growth)"
+        }
+      ]
+    },
+    {
+      "name": "ProvideFeedback",
+      "displayName": "Provide Feedback",
+      "description": "Capture user feedback on the consulting experience",
+      "triggerQueries": [
+        "feedback",
+        "rate",
+        "helpful",
+        "not helpful",
+        "this was good",
+        "this was bad",
+        "great job",
+        "needs improvement",
+        "thanks",
+        "thank you"
+      ],
+      "nodes": [
+        {
+          "id": "question1",
+          "type": "question",
+          "questionType": "choice",
+          "questionText": "How helpful was this consulting session?",
+          "choices": [
+            "Very helpful - valuable strategic insights",
+            "Somewhat helpful - useful but incomplete",
+            "Not helpful - didn't meet my needs",
+            "I have specific feedback to share"
+          ],
+          "variable": "Topic.FeedbackRating"
+        },
+        {
+          "id": "condition1",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "specificFeedback",
+              "expression": "Topic.FeedbackRating == 'I have specific feedback to share'",
+              "thenNodeId": "askDetails"
+            }
+          ],
+          "elseNodeId": "checkFlow"
+        },
+        {
+          "id": "askDetails",
+          "type": "question",
+          "questionType": "text",
+          "questionText": "What specific feedback would you like to share? This helps me improve my analysis quality.",
+          "variable": "Topic.FeedbackDetails"
+        },
+        {
+          "id": "checkFlow",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "flowAvailable",
+              "expression": "System.FlowsEnabled == true",
+              "thenNodeId": "callFeedbackFlow"
+            }
+          ],
+          "elseNodeId": "thankYou"
+        },
+        {
+          "id": "callFeedbackFlow",
+          "type": "action",
+          "actionType": "flow",
+          "flowName": "CA_CaptureFeedback",
+          "inputs": {
+            "sessionId": "Global.SessionID",
+            "rating": "Topic.FeedbackRating",
+            "details": "Topic.FeedbackDetails"
+          }
+        },
+        {
+          "id": "thankYou",
+          "type": "message",
+          "message": "Thank you for your feedback! It helps me improve my analysis quality.\n\nIs there anything else I can help you with today?"
+        }
+      ]
+    },
+    {
+      "name": "Fallback",
+      "displayName": "Fallback",
+      "description": "Handle unmatched queries with generative answers",
+      "triggerQueries": [],
+      "isSystemFallback": true,
+      "nodes": [
+        {
+          "id": "generativeAnswer1",
+          "type": "generativeAnswers",
+          "dataSource": "SharePoint",
+          "searchQuery": "{Activity.Text}",
+          "requireCitation": true,
+          "maxChunks": 5,
+          "minConfidence": 0.65,
+          "moderationLevel": "standard"
+        },
+        {
+          "id": "condition1",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "hasResult",
+              "expression": "GenerativeAnswer.HasResult == true",
+              "thenNodeId": "showResult"
+            }
+          ],
+          "elseNodeId": "fallbackMessage"
+        },
+        {
+          "id": "showResult",
+          "type": "message",
+          "message": "{GenerativeAnswer.Response}"
+        },
+        {
+          "id": "fallbackMessage",
+          "type": "message",
+          "message": "I'm not sure I understood that. I can help you with:\n\n- **Strategic Analysis** - Using 32+ consulting frameworks\n- **Framework Selection** - SWOT, Porter's, BCG, McKinsey 7S, etc.\n- **Industry Benchmarks** - KPIs and performance metrics\n- **Reports** - Generate comprehensive consulting documents\n\nWhat would you like to explore?"
+        }
+      ]
+    }
+  ],
+  "globalVariables": [
+    {
+      "name": "Global.SessionID",
+      "type": "string",
+      "description": "Current consulting session identifier"
+    },
+    {
+      "name": "Global.AnalysisType",
+      "type": "string",
+      "description": "Type of analysis (Strategic/Competitive/Market Entry/etc.)"
+    },
+    {
+      "name": "Global.SelectedFramework",
+      "type": "string",
+      "description": "Selected consulting framework"
+    },
+    {
+      "name": "Global.AnalysisDepth",
+      "type": "string",
+      "description": "Depth level (Quick/Standard/Comprehensive)"
+    },
+    {
+      "name": "Global.Industry",
+      "type": "string",
+      "description": "Industry vertical for context"
+    },
+    {
+      "name": "Global.AnalysisComplete",
+      "type": "boolean",
+      "description": "Whether analysis has been completed"
+    }
+  ]
+}

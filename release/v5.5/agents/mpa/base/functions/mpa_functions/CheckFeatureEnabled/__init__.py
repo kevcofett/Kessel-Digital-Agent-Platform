@@ -165,13 +165,13 @@ def check_feature_flag(
     logger.debug(f"Cache miss for feature flag: {flag_name}")
     client = DataverseClient()
 
-    # Build filter for the specific flag
-    filter_query = f"mpa_name eq '{flag_name}'"
+    # Build filter for the specific flag (using eap_flagcode)
+    filter_query = f"eap_flagcode eq '{flag_name}'"
 
     try:
         flags = client.get_records(
-            table_name="new_featureflag",
-            select="mpa_featureflagid,mpa_name,mpa_description,mpa_isenabled,mpa_rolloutpercentage,mpa_allowedusers,mpa_allowedclients,mpa_startdate,mpa_enddate",
+            table_name="eap_featureflags",
+            select="eap_featureflagid,eap_flagcode,eap_flagname,eap_description,eap_isenabled,eap_category,eap_agentcode,eap_defaultvalue,eap_fallbackmessage",
             filter_query=filter_query,
             top=1
         )
@@ -193,8 +193,8 @@ def check_feature_flag(
                 "enabled": enabled,
                 "reason": reason,
                 "exists": True,
-                "description": flag.get("mpa_description", ""),
-                "rollout_percentage": flag.get("mpa_rolloutpercentage", 100),
+                "description": flag.get("eap_description", ""),
+                "fallback_message": flag.get("eap_fallbackmessage", ""),
                 "timestamp": datetime.utcnow().isoformat(),
                 "from_cache": False
             }
@@ -223,6 +223,12 @@ def _evaluate_flag(
     """
     Evaluate if a flag should be enabled for the given context.
 
+    The eap_featureflag schema uses:
+    - eap_isenabled: Master switch for the flag
+    - eap_defaultvalue: Default value when not explicitly set
+    - eap_agentcode: Agent-specific flag (MPA, CA, or empty for platform-wide)
+    - eap_category: Category of the flag (Platform, Agent, Integration, Security, UI)
+
     Args:
         flag: Flag record from Dataverse
         context: User/client context
@@ -230,73 +236,26 @@ def _evaluate_flag(
     Returns:
         Tuple of (enabled, reason)
     """
-    # Check master switch
-    if not flag.get("mpa_isenabled", False):
-        return False, "Flag is disabled globally"
+    # Check master switch - eap_isenabled is the primary control
+    is_enabled = flag.get("eap_isenabled", False)
 
-    # Check date range
-    now = datetime.utcnow()
+    # Handle string "true"/"false" values from Dataverse
+    if isinstance(is_enabled, str):
+        is_enabled = is_enabled.lower() == "true"
 
-    start_date = flag.get("mpa_startdate")
-    if start_date:
-        if isinstance(start_date, str):
-            start_date = datetime.fromisoformat(start_date.replace("Z", "+00:00"))
-        if now < start_date.replace(tzinfo=None):
-            return False, "Flag not yet active (before start date)"
+    if not is_enabled:
+        fallback_msg = flag.get("eap_fallbackmessage", "")
+        reason = fallback_msg if fallback_msg else "Flag is disabled"
+        return False, reason
 
-    end_date = flag.get("mpa_enddate")
-    if end_date:
-        if isinstance(end_date, str):
-            end_date = datetime.fromisoformat(end_date.replace("Z", "+00:00"))
-        if now > end_date.replace(tzinfo=None):
-            return False, "Flag expired (after end date)"
+    # Check agent-specific flags
+    agent_code = flag.get("eap_agentcode", "")
+    if agent_code:
+        # If this is an agent-specific flag, it's enabled for that agent
+        return True, f"Enabled for agent: {agent_code}"
 
-    # Check user allowlist
-    allowed_users = flag.get("mpa_allowedusers", "")
-    if allowed_users:
-        user_id = context.get("user_id")
-        if user_id:
-            allowed_list = [u.strip() for u in allowed_users.split(",")]
-            if user_id in allowed_list:
-                return True, "User in allowlist"
-            else:
-                # If allowlist exists and user not in it, check rollout
-                pass
-        else:
-            # No user ID provided, check other criteria
-            pass
-
-    # Check client allowlist
-    allowed_clients = flag.get("mpa_allowedclients", "")
-    if allowed_clients:
-        client_id = context.get("client_id")
-        if client_id:
-            allowed_list = [c.strip() for c in allowed_clients.split(",")]
-            if client_id in allowed_list:
-                return True, "Client in allowlist"
-
-    # Check rollout percentage
-    rollout = flag.get("mpa_rolloutpercentage", 100)
-    if rollout >= 100:
-        return True, "Full rollout (100%)"
-    elif rollout <= 0:
-        return False, "Rollout at 0%"
-    else:
-        # Use consistent hashing based on user_id or client_id
-        hash_key = context.get("user_id") or context.get("client_id") or ""
-        if hash_key:
-            hash_value = hash(hash_key) % 100
-            if hash_value < rollout:
-                return True, f"Included in {rollout}% rollout"
-            else:
-                return False, f"Excluded from {rollout}% rollout"
-        else:
-            # No context for rollout, use random (but this won't be consistent)
-            import random
-            if random.randint(0, 99) < rollout:
-                return True, f"Random selection in {rollout}% rollout"
-            else:
-                return False, f"Random exclusion from {rollout}% rollout"
+    # Platform-wide flag is enabled
+    return True, "Flag is enabled"
 
 
 def list_feature_flags(
@@ -321,9 +280,9 @@ def list_feature_flags(
 
         try:
             flags = client.get_records(
-                table_name="new_featureflag",
-                select="mpa_featureflagid,mpa_name,mpa_description,mpa_isenabled,mpa_rolloutpercentage,mpa_allowedusers,mpa_allowedclients,mpa_startdate,mpa_enddate",
-                order_by="mpa_name"
+                table_name="eap_featureflags",
+                select="eap_featureflagid,eap_flagcode,eap_flagname,eap_description,eap_isenabled,eap_category,eap_agentcode,eap_defaultvalue,eap_fallbackmessage",
+                order_by="eap_flagcode"
             )
             cache.set(cache_key, flags, ttl_minutes=FEATURE_FLAG_TTL_MINUTES)
         except Exception as e:
@@ -342,11 +301,14 @@ def list_feature_flags(
     for flag in flags:
         enabled, reason = _evaluate_flag(flag, context)
         evaluated_flags.append({
-            "flag_name": flag.get("mpa_name", ""),
+            "flag_code": flag.get("eap_flagcode", ""),
+            "flag_name": flag.get("eap_flagname", ""),
             "enabled": enabled,
             "reason": reason,
-            "description": flag.get("mpa_description", ""),
-            "rollout_percentage": flag.get("mpa_rolloutpercentage", 100),
+            "description": flag.get("eap_description", ""),
+            "category": flag.get("eap_category", ""),
+            "agent_code": flag.get("eap_agentcode", ""),
+            "fallback_message": flag.get("eap_fallbackmessage", ""),
         })
 
     return {

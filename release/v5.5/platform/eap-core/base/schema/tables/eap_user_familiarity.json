@@ -1,0 +1,30 @@
+{
+  "schemaName": "eap_user_familiarity",
+  "displayName": "User Familiarity",
+  "pluralName": "User Familiarity",
+  "description": "Track user familiarity with topics and tools for personalization",
+  "tier": 3,
+  "featureGate": "USER_FAMILIARITY",
+  "category": "Personalization",
+  "primaryKey": "familiarity_id",
+  "primaryNameColumn": "topic_name",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "familiarity_id", "displayName": "Familiarity ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Associated user" },
+    { "schemaName": "topic_type", "displayName": "Topic Type", "dataType": "Choice", "required": true, "options": ["Framework", "Industry", "Tool", "Concept", "Process", "Technology"], "description": "Type of topic" },
+    { "schemaName": "topic_name", "displayName": "Topic Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Name of topic" },
+    { "schemaName": "topic_id", "displayName": "Topic ID", "dataType": "UniqueIdentifier", "required": false, "description": "Reference to topic entity if applicable" },
+    { "schemaName": "familiarity_level", "displayName": "Familiarity Level", "dataType": "Choice", "required": true, "options": ["Novice", "Beginner", "Intermediate", "Advanced", "Expert"], "description": "Level of familiarity" },
+    { "schemaName": "interaction_count", "displayName": "Interaction Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Times user interacted with topic" },
+    { "schemaName": "last_interaction_date", "displayName": "Last Interaction", "dataType": "DateTime", "required": false, "description": "Last topic interaction" },
+    { "schemaName": "self_reported", "displayName": "Self Reported", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "User stated familiarity" },
+    { "schemaName": "inferred_confidence", "displayName": "Inferred Confidence", "dataType": "Decimal", "precision": 5, "scale": 2, "required": false, "description": "Confidence in inferred level" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_user_topic", "columns": ["user_id", "topic_type", "topic_name"], "unique": true },
+    { "name": "idx_topic_type", "columns": ["topic_type"], "unique": false }
+  ]
+}

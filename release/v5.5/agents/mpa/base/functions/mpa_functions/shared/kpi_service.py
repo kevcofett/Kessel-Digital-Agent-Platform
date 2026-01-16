@@ -18,7 +18,7 @@ CACHE_TTL_MINUTES = 120  # KPI definitions change less frequently
 class KPIService:
     """Service for retrieving and calculating KPIs from Dataverse definitions."""
 
-    TABLE_NAME = "new_keyperformanceindicator"
+    TABLE_NAME = "mpa_kpi"
 
     def __init__(self, dataverse_client: Optional[DataverseClient] = None):
         self.client = dataverse_client or DataverseClient()
@@ -44,7 +44,7 @@ class KPIService:
             safe_kpi_code = sanitize_odata_string(kpi_code)
             results = self.client.query_records(
                 table_name=self.TABLE_NAME,
-                filter_query=f"mpa_kpi_code eq '{safe_kpi_code}' and mpa_is_active eq true",
+                filter_query=f"mpa_kpicode eq '{safe_kpi_code}' and mpa_isactive eq true",
                 top=1
             )
 
@@ -68,7 +68,7 @@ class KPIService:
         if cached is not None:
             return cached
 
-        filters = ["mpa_is_active eq true"]
+        filters = ["mpa_isactive eq true"]
         if category:
             filters.append(f"mpa_category eq '{sanitize_odata_string(category)}'")
 
@@ -78,7 +78,7 @@ class KPIService:
             results = self.client.query_records(
                 table_name=self.TABLE_NAME,
                 filter_query=filter_query,
-                order_by="mpa_sort_order,mpa_kpi_name"
+                order_by="mpa_sort_order,mpa_newcolumn"
             )
 
             kpis = [self._transform_kpi(r) for r in results]
@@ -214,8 +214,8 @@ class KPIService:
         """Transform Dataverse record to KPI definition format."""
         return {
             "id": record.get("mpa_kpidefinitionid"),
-            "code": record.get("mpa_kpi_code"),
-            "name": record.get("mpa_kpi_name"),
+            "code": record.get("mpa_kpicode"),
+            "name": record.get("mpa_newcolumn"),
             "category": record.get("mpa_category"),
             "formula": record.get("mpa_formula"),
             "formula_inputs": self._parse_json_field(record.get("mpa_formula_inputs", "[]")),

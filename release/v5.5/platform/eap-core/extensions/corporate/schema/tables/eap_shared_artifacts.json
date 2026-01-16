@@ -1,0 +1,30 @@
+{
+  "schemaName": "eap_shared_artifacts",
+  "displayName": "Shared Artifact",
+  "pluralName": "Shared Artifacts",
+  "description": "Artifacts shared in collaboration spaces",
+  "tier": 3,
+  "featureGate": "COLLABORATION",
+  "category": "Collaboration",
+  "primaryKey": "artifact_id",
+  "primaryNameColumn": "artifact_name",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "artifact_id", "displayName": "Artifact ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "space_id", "displayName": "Space", "dataType": "Lookup", "lookupTable": "eap_collaboration_spaces", "required": true, "description": "Associated space" },
+    { "schemaName": "artifact_name", "displayName": "Artifact Name", "dataType": "Text", "maxLength": 500, "required": true, "description": "Display name" },
+    { "schemaName": "artifact_type", "displayName": "Artifact Type", "dataType": "Choice", "required": true, "options": ["Document", "Analysis", "Recommendation", "Framework", "Template", "Link"], "description": "Type of artifact" },
+    { "schemaName": "source_entity_type", "displayName": "Source Entity Type", "dataType": "Text", "maxLength": 100, "required": false, "description": "Original entity type" },
+    { "schemaName": "source_entity_id", "displayName": "Source Entity ID", "dataType": "UniqueIdentifier", "required": false, "description": "Original entity ID" },
+    { "schemaName": "content_url", "displayName": "Content URL", "dataType": "Text", "maxLength": 1000, "required": false, "description": "URL to content" },
+    { "schemaName": "description", "displayName": "Description", "dataType": "MultilineText", "required": false, "description": "Artifact description" },
+    { "schemaName": "shared_by_user_id", "displayName": "Shared By", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Who shared" },
+    { "schemaName": "view_count", "displayName": "View Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Times viewed" },
+    { "schemaName": "is_pinned", "displayName": "Is Pinned", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Pinned to top" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" }
+  ],
+  "indexes": [
+    { "name": "idx_space", "columns": ["space_id"], "unique": false },
+    { "name": "idx_source", "columns": ["source_entity_type", "source_entity_id"], "unique": false }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schemaName": "eap_incident_logs",
+  "displayName": "Incident Log",
+  "pluralName": "Incident Logs",
+  "description": "System incident and error tracking",
+  "tier": 2,
+  "featureGate": null,
+  "category": "Operations",
+  "primaryKey": "incident_id",
+  "primaryNameColumn": "incident_title",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "incident_id", "displayName": "Incident ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "incident_number", "displayName": "Incident Number", "dataType": "Text", "maxLength": 20, "required": true, "unique": true, "description": "Unique incident number" },
+    { "schemaName": "incident_title", "displayName": "Incident Title", "dataType": "Text", "maxLength": 500, "required": true, "description": "Brief description" },
+    { "schemaName": "incident_type", "displayName": "Incident Type", "dataType": "Choice", "required": true, "options": ["Error", "Warning", "SecurityEvent", "Performance", "DataIssue", "Integration", "Other"], "description": "Type of incident" },
+    { "schemaName": "severity", "displayName": "Severity", "dataType": "Choice", "required": true, "options": ["Critical", "High", "Medium", "Low", "Info"], "description": "Incident severity" },
+    { "schemaName": "status", "displayName": "Status", "dataType": "Choice", "required": true, "defaultValue": "Open", "options": ["Open", "Investigating", "Resolved", "Closed", "Duplicate"], "description": "Current status" },
+    { "schemaName": "agent_id", "displayName": "Agent", "dataType": "Lookup", "lookupTable": "eap_agent", "required": false, "description": "Affected agent" },
+    { "schemaName": "session_id", "displayName": "Session", "dataType": "Lookup", "lookupTable": "eap_session", "required": false, "description": "Related session" },
+    { "schemaName": "user_id", "displayName": "Affected User", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "Affected user" },
+    { "schemaName": "error_code", "displayName": "Error Code", "dataType": "Text", "maxLength": 50, "required": false, "description": "System error code" },
+    { "schemaName": "error_message", "displayName": "Error Message", "dataType": "MultilineText", "required": false, "description": "Full error message" },
+    { "schemaName": "stack_trace", "displayName": "Stack Trace", "dataType": "MultilineText", "required": false, "description": "Technical stack trace" },
+    { "schemaName": "context_json", "displayName": "Context", "dataType": "MultilineText", "required": false, "description": "Additional context JSON" },
+    { "schemaName": "resolution_notes", "displayName": "Resolution Notes", "dataType": "MultilineText", "required": false, "description": "How resolved" },
+    { "schemaName": "occurred_date", "displayName": "Occurred Date", "dataType": "DateTime", "required": true, "description": "When occurred" },
+    { "schemaName": "resolved_date", "displayName": "Resolved Date", "dataType": "DateTime", "required": false, "description": "When resolved" },
+    { "schemaName": "resolved_by_user_id", "displayName": "Resolved By", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "Who resolved" }
+  ],
+  "indexes": [
+    { "name": "idx_incident_number", "columns": ["incident_number"], "unique": true },
+    { "name": "idx_severity_status", "columns": ["severity", "status"], "unique": false },
+    { "name": "idx_occurred", "columns": ["occurred_date"], "unique": false }
+  ]
+}

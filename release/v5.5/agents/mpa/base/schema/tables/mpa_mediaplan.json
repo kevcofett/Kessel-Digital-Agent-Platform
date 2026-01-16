@@ -1,0 +1,184 @@
+{
+  "schemaName": "mpa_mediaplan",
+  "displayName": "Media Plan",
+  "pluralName": "Media Plans",
+  "description": "Core media planning entity that tracks campaign plans from creation through execution",
+  "tier": 1,
+  "featureGate": null,
+  "category": "MediaPlanning",
+  "primaryKey": "mpa_mediaplanid",
+  "primaryNameColumn": "mpa_planname",
+  "ownershipType": "UserOwned",
+  "publisherPrefix": "mpa",
+  "columns": [
+    {
+      "schemaName": "mpa_mediaplanid",
+      "displayName": "Media Plan",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Unique identifier for entity instances"
+    },
+    {
+      "schemaName": "mpa_planname",
+      "displayName": "Plan Name",
+      "dataType": "Text",
+      "maxLength": 850,
+      "required": true,
+      "description": "Primary name field for the media plan"
+    },
+    {
+      "schemaName": "mpa_plancode",
+      "displayName": "Plan Code",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Unique code identifier for the plan"
+    },
+    {
+      "schemaName": "mpa_clientid",
+      "displayName": "Client ID",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Reference to the client for this plan"
+    },
+    {
+      "schemaName": "mpa_activeversionid",
+      "displayName": "Active Version ID",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Reference to the currently active plan version"
+    },
+    {
+      "schemaName": "mpa_currentstep",
+      "displayName": "Current Step",
+      "dataType": "Integer",
+      "minValue": 0,
+      "maxValue": 10,
+      "required": true,
+      "description": "Current step in the planning workflow (0-10)"
+    },
+    {
+      "schemaName": "mpa_status",
+      "displayName": "Plan Status",
+      "dataType": "Picklist",
+      "required": true,
+      "options": ["Draft", "In Progress", "Pending Approval", "Approved", "Active", "Completed", "Archived"],
+      "description": "Current status of the media plan"
+    },
+    {
+      "schemaName": "mpa_totalbudget",
+      "displayName": "Total Budget",
+      "dataType": "Money",
+      "precision": 2,
+      "required": false,
+      "description": "Total budget allocated for the media plan"
+    },
+    {
+      "schemaName": "mpa_startdate",
+      "displayName": "Start Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Campaign start date"
+    },
+    {
+      "schemaName": "mpa_enddate",
+      "displayName": "End Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Campaign end date"
+    },
+    {
+      "schemaName": "mpa_createdat",
+      "displayName": "Created At",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the plan was created"
+    },
+    {
+      "schemaName": "mpa_createdby",
+      "displayName": "Created By",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "User who created the plan"
+    },
+    {
+      "schemaName": "mpa_updatedat",
+      "displayName": "Updated At",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the plan was last updated"
+    },
+    {
+      "schemaName": "statecode",
+      "displayName": "Status",
+      "dataType": "State",
+      "required": true,
+      "options": ["Active", "Inactive"],
+      "description": "Status of the Media Plan"
+    },
+    {
+      "schemaName": "statuscode",
+      "displayName": "Status Reason",
+      "dataType": "Status",
+      "required": false,
+      "options": ["Active", "Inactive"],
+      "description": "Reason for the status of the Media Plan"
+    },
+    {
+      "schemaName": "ownerid",
+      "displayName": "Owner",
+      "dataType": "Owner",
+      "required": true,
+      "description": "Owner Id"
+    },
+    {
+      "schemaName": "createdon",
+      "displayName": "Created On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was created"
+    },
+    {
+      "schemaName": "modifiedon",
+      "displayName": "Modified On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_mediaplan_plancode",
+      "columns": ["mpa_plancode"],
+      "unique": true
+    },
+    {
+      "name": "idx_mediaplan_client",
+      "columns": ["mpa_clientid"],
+      "unique": false
+    },
+    {
+      "name": "idx_mediaplan_status",
+      "columns": ["mpa_status"],
+      "unique": false
+    }
+  ],
+  "relationships": [
+    {
+      "name": "mpa_mediaplan_planversions",
+      "relatedTable": "mpa_planversion",
+      "type": "OneToMany",
+      "lookupColumn": "mpa_mediaplan"
+    },
+    {
+      "name": "mpa_mediaplan_plandata",
+      "relatedTable": "mpa_plandata",
+      "type": "OneToMany",
+      "lookupColumn": "mpa_mediaplan"
+    }
+  ],
+  "seedDataNote": "Media plans created dynamically through agent workflow"
+}

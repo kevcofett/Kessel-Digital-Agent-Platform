@@ -1,0 +1,136 @@
+{
+  "schemaName": "eap_business_units",
+  "displayName": "Business Units",
+  "pluralName": "Business Units",
+  "description": "Business units within divisions",
+  "tier": 1,
+  "category": "Org",
+  "primaryKey": "business_unit_id",
+  "primaryNameColumn": "bu_name",
+  "ownershipType": "OrganizationOwned",
+  "notes": "Created with 'Default' value at Tier 1, populated with real data when ORG_HIERARCHY enabled",
+  "columns": [
+    {
+      "schemaName": "business_unit_id",
+      "displayName": "Business Unit ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "bu_code",
+      "displayName": "BU Code",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": true,
+      "unique": true,
+      "description": "Unique BU code"
+    },
+    {
+      "schemaName": "bu_name",
+      "displayName": "BU Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Business unit name"
+    },
+    {
+      "schemaName": "division_id",
+      "displayName": "Division",
+      "dataType": "Lookup",
+      "lookupTable": "eap_divisions",
+      "required": true,
+      "description": "Parent division"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Description"
+    },
+    {
+      "schemaName": "bu_head_user_id",
+      "displayName": "BU Head",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": false,
+      "description": "BU head"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "sort_order",
+      "displayName": "Sort Order",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Display order"
+    },
+    {
+      "schemaName": "config_json",
+      "displayName": "Config JSON",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "BU-specific config"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    },
+    {
+      "schemaName": "modified_by",
+      "displayName": "Modified By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Modifier"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_bu_code",
+      "columns": ["bu_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_division_id",
+      "columns": ["division_id"],
+      "unique": false
+    },
+    {
+      "name": "idx_is_active",
+      "columns": ["is_active"],
+      "unique": false
+    }
+  ],
+  "seedData": [
+    { "bu_code": "DEFAULT_BU", "bu_name": "Default Business Unit", "division_code": "DEFAULT", "is_active": true, "sort_order": 1, "description": "Default BU for Level 0/1 deployment" },
+    { "bu_code": "ACS", "bu_name": "Consulting", "division_code": "DEFAULT", "is_active": true, "sort_order": 2, "description": "Advisory and Consulting Services" },
+    { "bu_code": "BMI", "bu_name": "Media", "division_code": "DEFAULT", "is_active": true, "sort_order": 3, "description": "Brand, Media & Intelligence" },
+    { "bu_code": "DATA_AI", "bu_name": "Data & AI", "division_code": "DEFAULT", "is_active": true, "sort_order": 4, "description": "Data & Artificial Intelligence" }
+  ]
+}

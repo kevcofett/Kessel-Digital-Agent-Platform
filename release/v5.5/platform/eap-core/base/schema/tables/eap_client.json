@@ -1,64 +1,246 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "EAP Client Table",
-  "description": "Client/organization context for agent interactions",
-  "tableName": "eap_client",
-  "tableLogicalName": "eap_client",
-  "primaryKey": "eap_clientid",
-  "primaryNameColumn": "eap_clientname",
+  "schemaName": "eap_client",
+  "displayName": "Clients",
+  "pluralName": "Clients",
+  "description": "Client organizations being served by the platform",
+  "tier": 1,
+  "category": "Core",
+  "primaryKey": "client_id",
+  "primaryNameColumn": "client_name",
+  "ownershipType": "OrganizationOwned",
   "columns": [
     {
-      "logicalName": "eap_clientid",
+      "schemaName": "client_id",
       "displayName": "Client ID",
-      "type": "Uniqueidentifier",
-      "required": true
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
     },
     {
-      "logicalName": "eap_clientcode",
+      "schemaName": "client_code",
       "displayName": "Client Code",
-      "type": "String",
+      "dataType": "Text",
       "maxLength": 50,
       "required": true,
-      "description": "Short identifier for client"
+      "unique": true,
+      "description": "Unique client code"
     },
     {
-      "logicalName": "eap_clientname",
+      "schemaName": "client_name",
       "displayName": "Client Name",
-      "type": "String",
+      "dataType": "Text",
       "maxLength": 200,
-      "required": true
+      "required": true,
+      "description": "Client display name"
     },
     {
-      "logicalName": "eap_industry",
-      "displayName": "Industry",
-      "type": "String",
-      "maxLength": 100,
-      "required": false
-    },
-    {
-      "logicalName": "eap_vertical",
-      "displayName": "Vertical",
-      "type": "String",
-      "maxLength": 100,
-      "required": false
-    },
-    {
-      "logicalName": "eap_status",
-      "displayName": "Status",
-      "type": "Choice",
-      "options": [
-        { "value": 1, "label": "Active" },
-        { "value": 2, "label": "Inactive" }
-      ],
-      "defaultValue": 1,
-      "required": true
-    },
-    {
-      "logicalName": "eap_metadata",
-      "displayName": "Metadata JSON",
-      "type": "Memo",
+      "schemaName": "client_legal_name",
+      "displayName": "Legal Name",
+      "dataType": "Text",
+      "maxLength": 500,
       "required": false,
-      "description": "Client-specific configuration and metadata"
+      "description": "Legal entity name"
+    },
+    {
+      "schemaName": "industry",
+      "displayName": "Industry",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Primary industry"
+    },
+    {
+      "schemaName": "industry_secondary",
+      "displayName": "Secondary Industry",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Secondary industry"
+    },
+    {
+      "schemaName": "is_strategic",
+      "displayName": "Is Strategic",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Strategic client flag"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "client_tier",
+      "displayName": "Client Tier",
+      "dataType": "Choice",
+      "required": false,
+      "options": ["Tier1", "Tier2", "Tier3"],
+      "description": "Client tier classification"
+    },
+    {
+      "schemaName": "data_classification",
+      "displayName": "Data Classification",
+      "dataType": "Choice",
+      "required": false,
+      "options": ["Public", "Internal", "Confidential", "Restricted"],
+      "description": "Data sensitivity classification"
+    },
+    {
+      "schemaName": "has_pii",
+      "displayName": "Has PII",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Contains personally identifiable information"
+    },
+    {
+      "schemaName": "has_phi",
+      "displayName": "Has PHI",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Contains protected health information"
+    },
+    {
+      "schemaName": "has_pci",
+      "displayName": "Has PCI",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Contains payment card information"
+    },
+    {
+      "schemaName": "primary_region_id",
+      "displayName": "Primary Region",
+      "dataType": "Lookup",
+      "lookupTable": "eap_regions",
+      "required": false,
+      "description": "Primary geographic region"
+    },
+    {
+      "schemaName": "primary_country_id",
+      "displayName": "Primary Country",
+      "dataType": "Lookup",
+      "lookupTable": "eap_countries",
+      "required": false,
+      "description": "Primary country"
+    },
+    {
+      "schemaName": "headquarters_location",
+      "displayName": "HQ Location",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": false,
+      "description": "Headquarters location"
+    },
+    {
+      "schemaName": "website_url",
+      "displayName": "Website URL",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Client website"
+    },
+    {
+      "schemaName": "logo_url",
+      "displayName": "Logo URL",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Logo URL"
+    },
+    {
+      "schemaName": "brand_profile_id",
+      "displayName": "Brand Profile",
+      "dataType": "Lookup",
+      "lookupTable": "eap_brand_profiles",
+      "required": false,
+      "description": "Brand profile for client-specific styling"
+    },
+    {
+      "schemaName": "salesforce_account_id",
+      "displayName": "Salesforce Account ID",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": false,
+      "description": "Salesforce Account ID"
+    },
+    {
+      "schemaName": "last_salesforce_sync_date",
+      "displayName": "Last Salesforce Sync",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Last sync from Salesforce"
+    },
+    {
+      "schemaName": "preferences_json",
+      "displayName": "Client Preferences",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Client-specific preferences in JSON"
+    },
+    {
+      "schemaName": "notes",
+      "displayName": "Notes",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Internal notes"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    },
+    {
+      "schemaName": "modified_by",
+      "displayName": "Modified By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Modifier"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_client_code",
+      "columns": ["client_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_client_name",
+      "columns": ["client_name"],
+      "unique": false
+    },
+    {
+      "name": "idx_is_active",
+      "columns": ["is_active"],
+      "unique": false
+    },
+    {
+      "name": "idx_salesforce_account_id",
+      "columns": ["salesforce_account_id"],
+      "unique": false
     }
   ]
 }

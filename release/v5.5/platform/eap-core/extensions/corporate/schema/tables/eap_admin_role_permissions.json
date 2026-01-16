@@ -1,0 +1,74 @@
+{
+  "schemaName": "eap_admin_role_permissions",
+  "displayName": "Admin Role Permissions",
+  "pluralName": "Admin Role Permissions",
+  "description": "Junction table mapping permissions to admin roles",
+  "tier": 1,
+  "category": "Admin",
+  "primaryKey": "role_permission_id",
+  "primaryNameColumn": "role_permission_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    {
+      "schemaName": "role_permission_id",
+      "displayName": "Role Permission ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "admin_role_id",
+      "displayName": "Admin Role",
+      "dataType": "Lookup",
+      "lookupTable": "eap_admin_roles",
+      "required": true,
+      "description": "Admin role"
+    },
+    {
+      "schemaName": "permission_id",
+      "displayName": "Permission",
+      "dataType": "Lookup",
+      "lookupTable": "eap_admin_permissions",
+      "required": true,
+      "description": "Permission"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_role_permission",
+      "columns": ["admin_role_id", "permission_id"],
+      "unique": true
+    }
+  ],
+  "seedDataNote": "Populated by deployment script based on role definitions - PLATFORM_ADMIN gets all permissions, other roles get subset"
+}

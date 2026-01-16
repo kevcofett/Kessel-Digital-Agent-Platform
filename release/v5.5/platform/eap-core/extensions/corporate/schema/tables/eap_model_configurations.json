@@ -1,0 +1,35 @@
+{
+  "schemaName": "eap_model_configurations",
+  "displayName": "Model Configuration",
+  "pluralName": "Model Configurations",
+  "description": "AI model configurations and settings",
+  "tier": 3,
+  "featureGate": "MODEL_CONFIG",
+  "category": "Configuration",
+  "primaryKey": "config_id",
+  "primaryNameColumn": "config_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "config_id", "displayName": "Config ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "config_code", "displayName": "Config Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique code" },
+    { "schemaName": "config_name", "displayName": "Config Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Display name" },
+    { "schemaName": "model_provider", "displayName": "Model Provider", "dataType": "Choice", "required": true, "options": ["OpenAI", "Azure", "Anthropic", "Google", "Custom"], "description": "AI provider" },
+    { "schemaName": "model_name", "displayName": "Model Name", "dataType": "Text", "maxLength": 100, "required": true, "description": "Model identifier" },
+    { "schemaName": "model_version", "displayName": "Model Version", "dataType": "Text", "maxLength": 50, "required": false, "description": "Model version" },
+    { "schemaName": "temperature", "displayName": "Temperature", "dataType": "Decimal", "precision": 4, "scale": 2, "required": true, "defaultValue": 0.7, "description": "Response randomness" },
+    { "schemaName": "max_tokens", "displayName": "Max Tokens", "dataType": "WholeNumber", "required": true, "defaultValue": 4000, "description": "Max response tokens" },
+    { "schemaName": "top_p", "displayName": "Top P", "dataType": "Decimal", "precision": 4, "scale": 2, "required": false, "description": "Nucleus sampling" },
+    { "schemaName": "frequency_penalty", "displayName": "Frequency Penalty", "dataType": "Decimal", "precision": 4, "scale": 2, "required": false, "description": "Repetition penalty" },
+    { "schemaName": "presence_penalty", "displayName": "Presence Penalty", "dataType": "Decimal", "precision": 4, "scale": 2, "required": false, "description": "Topic penalty" },
+    { "schemaName": "system_prompt", "displayName": "System Prompt", "dataType": "MultilineText", "required": false, "description": "Base system prompt" },
+    { "schemaName": "agent_id", "displayName": "Agent", "dataType": "Lookup", "lookupTable": "eap_agent", "required": false, "description": "Agent-specific config" },
+    { "schemaName": "is_default", "displayName": "Is Default", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Default config" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_config_code", "columns": ["config_code"], "unique": true },
+    { "name": "idx_agent", "columns": ["agent_id"], "unique": false }
+  ]
+}

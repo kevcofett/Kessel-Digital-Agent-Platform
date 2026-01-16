@@ -1,0 +1,32 @@
+{
+  "schemaName": "eap_collaboration_spaces",
+  "displayName": "Collaboration Space",
+  "pluralName": "Collaboration Spaces",
+  "description": "Shared collaboration spaces for teams",
+  "tier": 3,
+  "featureGate": "COLLABORATION",
+  "category": "Collaboration",
+  "primaryKey": "space_id",
+  "primaryNameColumn": "space_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "space_id", "displayName": "Space ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "space_code", "displayName": "Space Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique code" },
+    { "schemaName": "space_name", "displayName": "Space Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Display name" },
+    { "schemaName": "space_type", "displayName": "Space Type", "dataType": "Choice", "required": true, "options": ["Project", "Team", "Client", "Topic", "Temporary"], "description": "Type of space" },
+    { "schemaName": "description", "displayName": "Description", "dataType": "MultilineText", "required": false, "description": "Space description" },
+    { "schemaName": "owner_user_id", "displayName": "Owner", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Space owner" },
+    { "schemaName": "client_id", "displayName": "Client", "dataType": "Lookup", "lookupTable": "eap_client", "required": false, "description": "Associated client" },
+    { "schemaName": "visibility", "displayName": "Visibility", "dataType": "Choice", "required": true, "defaultValue": "Private", "options": ["Private", "Members", "Organization", "Public"], "description": "Who can see" },
+    { "schemaName": "allow_external", "displayName": "Allow External", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "External access" },
+    { "schemaName": "member_count", "displayName": "Member Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Number of members" },
+    { "schemaName": "is_archived", "displayName": "Is Archived", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Archived status" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_space_code", "columns": ["space_code"], "unique": true },
+    { "name": "idx_owner", "columns": ["owner_user_id"], "unique": false }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "flowId": "flow_50",
+  "name": "consulting_initialize_session",
+  "displayName": "CA Initialize Session",
+  "description": "Initialize CA session context, extends EAP session with consulting-specific data",
+  "version": "1.0.0",
+  "status": "specification",
+  "trigger": {
+    "type": "automated",
+    "dependencies": ["flow_01"]
+  },
+  "inputs": {
+    "sessionId": {
+      "type": "string",
+      "required": true,
+      "source": "eap_session.sessionid"
+    },
+    "userId": {
+      "type": "string",
+      "required": true,
+      "source": "eap_user.userid"
+    },
+    "engagementContext": {
+      "type": "object",
+      "required": false,
+      "properties": {
+        "clientId": "string",
+        "projectId": "string",
+        "engagementId": "string"
+      }
+    }
+  },
+  "outputs": {
+    "consultingSessionId": {
+      "type": "string",
+      "destination": "ca_consulting_sessions.consulting_session_id"
+    },
+    "success": {
+      "type": "boolean"
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "action": "create_record",
+      "table": "ca_consulting_sessions",
+      "fields": {
+        "session_id": "@{triggerBody()?['sessionId']}",
+        "consulting_session_id": "@{guid()}",
+        "user_id": "@{triggerBody()?['userId']}",
+        "created_at": "@{utcNow()}"
+      }
+    }
+  ],
+  "notes": "This flow specification defines the Power Automate flow to be deployed in the target environment."
+}

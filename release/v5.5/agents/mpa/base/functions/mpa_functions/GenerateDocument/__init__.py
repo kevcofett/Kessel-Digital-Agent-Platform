@@ -127,7 +127,7 @@ def get_plan_data(client: DataverseClient, plan_id: str) -> Dict[str, Any]:
     """Retrieve plan data from Dataverse."""
     try:
         results = client.query_records(
-            table_name="new_mediaplan",
+            table_name="mpa_mediaplans",
             filter_query=f"mpa_mediaplanid eq '{plan_id}'",
             top=1
         )
@@ -137,7 +137,7 @@ def get_plan_data(client: DataverseClient, plan_id: str) -> Dict[str, Any]:
 
             # Get related plan data
             plan_data_results = client.query_records(
-                table_name="new_marketingdatarecord",
+                table_name="mpa_plandatas",
                 filter_query=f"_mpa_mediaplan_value eq '{plan_id}'"
             )
 

@@ -1,0 +1,157 @@
+# Media Plan Output: Volume Target Increase
+
+This document contains the key outputs from the media planning conversation.
+
+## Step 1: Outcomes
+
+Turn 1:
+Hi! I'm excited to build a media plan with you. We'll cover ten areas: Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, and Risks. Each step builds on the last.
+
+Let me start by understanding your business outcome. You mentioned acquiring 5,000 new customers - is customer acquisition your primary objective, or are you also focused on revenue targets or brand awareness alongside acquisition?
+
+Turn 2:
+Perfect. Customer acquisition is your primary objective, and you're targeting 5,000 new customers with your $400K budget.
+
+Let me run the efficiency math: $400K ÷ 5,000 = $80 per customer acquisition cost. With your $320 LTV, that's a 4:1 LTV to CAC ratio, which is strong for sustainable growth.
+
+For home goods e-commerce, typical acquisition costs run $60-100 per customer based on category and channels. Your $80 target sits right in the sweet spot - aggressive enough to drive growth but realistic for the market.
+
+Now for Step 2 - Economics. You mentioned $320 LTV, but what's your gross margin on an average order? This helps us understand how much profit cushion you have for acquisition spend.
+
+────────────────────────────────────────
+
+## Step 2: Economics
+
+Turn 3:
+Excellent. With 42% margin and $320 LTV, you have about $134 in gross profit per customer. Your $80 target acquisition cost leaves $54 in profit contribution - that's healthy unit economics that supports sustainable growth.
+
+Let me validate the efficiency target: At $80 CAC vs your $134 gross profit, you're investing 60% of first-order value in acquisition. For home goods with strong repeat rates, this is conservative and smart positioning.
+
+Your economics are solid. The $80 per customer target is achievable in home goods, especially with your product range of $150-500 where you can optimize for higher-value first purchases.
+
+Ready for Step 3 - Audience? Who is your ideal customer? Think about demographics, shopping behaviors, or any patterns you've noticed in your best repeat customers.
+
+────────────────────────────────────────
+
+## Step 3: Audience
+
+Turn 4:
+Great profile. Design-conscious homeowners 30-55 with disposable income is a strong foundation. That's roughly 35-40 million people in the US, giving us good scale to work with.
+
+A few audience refinement questions to sharpen our targeting:
+
+Do you see differences between customers who buy furniture pieces ($300-500 range) versus décor items ($150-300)? Understanding this helps us decide whether to target one segment more heavily or create separate audience strategies.
+
+Turn 5:
+Perfect insight. You have two distinct segments with different behaviors:
+
+**Furniture buyers**: Older professionals, investment mindset, higher AOV but lower frequency
+**Décor buyers**: Younger, trend-focused, lower AOV but higher repeat rate
+
+This suggests different acquisition strategies. Furniture buyers need more consideration time and trust-building, while décor buyers respond to trend-driven, impulse messaging.
+
+For your 5,000 customer target, what split makes sense between these segments? This affects our channel strategy and messaging approach. Are you looking to weight toward one segment, or target them equally?
+
+────────────────────────────────────────
+
+## Step 4: Geography
+
+Turn 6:
+Excellent split. 60/40 décor-to-furniture aligns perfectly with your growth strategy:
+
+**Target breakdown:**
+- 3,000 décor customers (easier acquisition, repeat potential)
+- 2,000 furniture customers (higher consideration, investment purchases)
+
+This means we can allocate more budget to volume-driving décor acquisition while running more targeted, nurture-focused campaigns for furniture buyers.
+
+Ready for Step 4 - Geography? Are you targeting nationally, or do you have specific regions or markets that perform better for home goods? Any geographic patterns in your current customer base?
+
+────────────────────────────────────────
+
+## Step 5: Budget
+
+Turn 7:
+Smart geographic focus. Urban/suburban areas in Northeast and West Coast are premium markets for design-conscious consumers, but national expansion opens up significant growth opportunity.
+
+For your 5,000 customers, this suggests a tiered approach:
+- **Core markets** (Northeast/West Coast urban): Higher concentration, proven performance
+- **Expansion markets** (National): Broader reach, audience testing
+
+With décor buyers being more impulse-driven and furniture buyers needing more consideration, geography becomes important for budget allocation.
+
+What percentage of your current customer base comes from those core Northeast/West Coast markets versus the rest of the country? This helps us decide how to weight our geographic budget split.
+
+Turn 8:
+Let me update our projections. $400K ÷ 8,000 = $50 per customer. That's 37.5% more efficient than our $80 baseline.
+
+At $50 vs benchmark $60-100 for home goods, you're targeting 17-50% below typical market rates. This is aggressive and will require very tight execution.
+
+**The math challenge:** Your 42% margin gives $134 gross profit per customer. At $50 CAC, you'd still have $84 profit contribution - the unit economics work. But hitting $50 efficiency consistently is the challenge.
+
+**What it takes:** Ultra-precise audience targeting, strong creative performance, and likely heavier weighting toward your easier-to-convert décor segment (maybe 70/30 instead of 60/40).
+
+You have two options: optimize aggressively for $50 efficiency, or increase budget to ~$560K to maintain the $70-80 range that's more realistic. Which direction does leadership prefer - aggressive efficiency targets or budget increase?
+
+Turn 9:
+Perfect. Aggressive efficiency requires surgical precision. At $50 CAC, you need everything optimized.
+
+Let me update the customer split for maximum efficiency:
+- **4,800 décor customers** (easier conversion, impulse-driven)
+- **3,200 furniture customers** (higher consideration but necessary for AOV)
+
+The 60/40 split becomes 60/40 but weighted toward your highest-converting segments within each category.
+
+**Key efficiency drivers at $50:**
+- Hyper-targeted audiences (lookalikes of best customers, not broad interests)
+- Creative that drives immediate action for décor, trust-building for furniture
+- Geographic focus on your proven Northeast/West Coast markets initially
+- Platform selection based on cost efficiency, not just reach
+
+Before we dive into channels in Step 7, let's nail your budget allocation. Of the $400K, what percentage can you dedicate to pure acquisition versus supporting activities like creative development and testing? This affects how much actually goes toward that $50 efficiency target.
+
+────────────────────────────────────────
+
+## Step 7: Channels
+
+Turn 10:
+You're absolutely right - I made an error. Let me correct that immediately.
+
+**Confirmed target: 8,000 customers total**
+- 4,800 décor customers (60%)
+- 3,200 furniture customers (40%)
+
+$400K ÷ 8,000 = $50 per customer acquisition cost.
+
+This is the aggressive efficiency target we need to hit. The 60/40 split toward décor buyers makes sense for hitting that $50 CAC since they convert more easily.
+
+Now for budget allocation: Of your $400K, what percentage can you dedicate to pure media spend versus creative development, testing, and other supporting costs? At $50 efficiency, we need maximum dollars going directly to acquisition.
+
+Turn 11:
+Perfect. With $340-360K in direct media spend targeting 8,000 customers, you need every dollar optimized for conversion.
+
+At 85% allocation: $340K ÷ 8,000 = $42.50 effective CAC from media spend
+At 90% allocation: $360K ÷ 8,000 = $45 effective CAC from media spend
+
+Both scenarios require exceptional efficiency - you're targeting 30-40% below typical home goods benchmarks. This confirms you need channels with proven low-cost conversion, not experimental or awareness-focused platforms.
+
+Your budget allocation is smart for aggressive targets - maximum dollars to acquisition, minimal overhead.
+
+Ready for Step 6 - Value Proposition? With such tight efficiency targets, your messaging needs to drive immediate action. What's your strongest value proposition that converts décor buyers quickly? Price, selection, quality, or something else that makes customers buy now rather than shop around?
+
+Turn 12:
+Excellent value prop - "designer look for less" is proven to drive immediate action. That aspirational positioning hits perfectly for your 30-45 urban professionals who want Instagram-worthy spaces without luxury pricing.
+
+For efficiency at $42-45 CAC, this messaging needs to create urgency. "Get the $300 look for $150" speaks directly to value-conscious design lovers and justifies immediate purchase over comparison shopping.
+
+Your décor buyers will respond well to trend-driven creative showing styled rooms with price callouts. Furniture buyers need more trust signals but the same value positioning.
+
+We've completed Steps 1-6. Your foundation is solid:
+- 8,000 customers at $42-45 effective CAC (aggressive but focused)
+- 60/40 décor/furniture split for conversion optimization  
+- "Designer look for less" value prop driving immediate action
+- 85-90% budget to direct acquisition
+
+Ready for Step 7 - Channels? Given your tight efficiency targets and mention of Meta/Pinterest, let's identify which platforms can actually deliver $42-45 CAC for home goods.
+
+────────────────────────────────────────

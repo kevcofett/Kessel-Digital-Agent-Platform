@@ -1,0 +1,88 @@
+{
+  "type": "personal",
+  "name": "aragorn-ai",
+  "description": "Personal development environment using Claude and OpenAI",
+
+  "llm": {
+    "type": "claude",
+    "apiKey": "$ANTHROPIC_API_KEY",
+    "model": "claude-sonnet-4-20250514",
+    "defaultParams": {
+      "temperature": 0.7,
+      "maxTokens": 4096
+    }
+  },
+
+  "embedding": {
+    "type": "openai",
+    "apiKey": "$OPENAI_API_KEY",
+    "model": "text-embedding-3-small",
+    "dimensions": 1536
+  },
+
+  "storage": {
+    "type": "local-fs",
+    "basePath": "./.agent-data"
+  },
+
+  "kbImpactStorage": {
+    "type": "local-fs",
+    "basePath": "./.kb-impact"
+  },
+
+  "rag": {
+    "enabled": true,
+    "embeddingProvider": "openai",
+    "embeddingModel": "text-embedding-3-small",
+    "vectorStore": "local",
+    "vectorStorePath": "./kb-index",
+    "topK": 5,
+    "minScore": 0.7,
+    "chunkSize": 400,
+    "chunkOverlap": 50
+  },
+
+  "learning": {
+    "selfCritique": {
+      "enabled": true,
+      "model": "claude-3-5-haiku-20241022",
+      "criteria": [
+        "source-citation",
+        "acronym-definition",
+        "response-length",
+        "single-question"
+      ],
+      "minScoreThreshold": 0.85
+    },
+    "successPatterns": {
+      "enabled": true,
+      "storageBackend": "json",
+      "storagePath": "./learning-outputs/patterns",
+      "minCompositeScore": 0.95,
+      "maxPatternsPerScenario": 10
+    },
+    "kbEnhancement": {
+      "enabled": true,
+      "outputDirectory": "./learning-outputs/kb-suggestions",
+      "minGapThreshold": 0.92,
+      "suggestionsPerFile": 5
+    }
+  },
+
+  "kbPaths": {
+    "mpa": "~/Documents/MPA-Personal-KB/mpa",
+    "ca": "~/Documents/MPA-Personal-KB/ca",
+    "eap": "~/Documents/MPA-Personal-KB/eap"
+  },
+
+  "features": {
+    "enableHybridSearch": true,
+    "enableKBImpactTracking": true,
+    "enableAutoUpdateProposals": true,
+    "enableCaching": true,
+    "enableDebugLogging": true,
+    "enableSelfCritique": true,
+    "enableSuccessPatterns": true,
+    "enableKBEnhancement": true
+  }
+}

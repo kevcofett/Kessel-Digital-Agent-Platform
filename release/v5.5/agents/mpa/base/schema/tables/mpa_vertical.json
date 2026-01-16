@@ -1,0 +1,106 @@
+{
+  "schemaName": "mpa_vertical",
+  "displayName": "Vertical",
+  "pluralName": "Verticals",
+  "description": "Industry vertical definitions for media planning segmentation",
+  "tier": 1,
+  "featureGate": null,
+  "category": "MediaPlanning",
+  "primaryKey": "mpa_verticalid",
+  "primaryNameColumn": "mpa_newcolumn",
+  "ownershipType": "UserOwned",
+  "publisherPrefix": "mpa",
+  "columns": [
+    {
+      "schemaName": "mpa_verticalid",
+      "displayName": "Vertical",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Unique identifier for entity instances"
+    },
+    {
+      "schemaName": "mpa_newcolumn",
+      "displayName": "Vertical Name",
+      "dataType": "Text",
+      "maxLength": 850,
+      "required": true,
+      "description": "Primary name field for the vertical"
+    },
+    {
+      "schemaName": "mpa_verticalcode",
+      "displayName": "Vertical Code",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "unique": true,
+      "description": "Unique code identifying the industry vertical"
+    },
+    {
+      "schemaName": "mpa_description",
+      "displayName": "Description",
+      "dataType": "MultilineText",
+      "maxLength": 2000,
+      "required": false,
+      "description": "Detailed description of the industry vertical"
+    },
+    {
+      "schemaName": "mpa_isactive",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "options": ["Yes", "No"],
+      "description": "Indicates if the vertical is currently active"
+    },
+    {
+      "schemaName": "statecode",
+      "displayName": "Status",
+      "dataType": "State",
+      "required": true,
+      "options": ["Active", "Inactive"],
+      "description": "Status of the Vertical"
+    },
+    {
+      "schemaName": "statuscode",
+      "displayName": "Status Reason",
+      "dataType": "Status",
+      "required": false,
+      "options": ["Active", "Inactive"],
+      "description": "Reason for the status of the Vertical"
+    },
+    {
+      "schemaName": "ownerid",
+      "displayName": "Owner",
+      "dataType": "Owner",
+      "required": true,
+      "description": "Owner Id"
+    },
+    {
+      "schemaName": "createdon",
+      "displayName": "Created On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was created"
+    },
+    {
+      "schemaName": "modifiedon",
+      "displayName": "Modified On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_vertical_code",
+      "columns": ["mpa_verticalcode"],
+      "unique": true
+    },
+    {
+      "name": "idx_vertical_active",
+      "columns": ["mpa_isactive"],
+      "unique": false
+    }
+  ],
+  "seedDataNote": "Industry vertical definitions populated from media planning knowledge base"
+}

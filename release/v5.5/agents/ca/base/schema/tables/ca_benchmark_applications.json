@@ -1,0 +1,30 @@
+{
+  "schemaName": "ca_benchmark_applications",
+  "displayName": "Benchmark Application",
+  "pluralName": "Benchmark Applications",
+  "description": "Log of benchmark usage in sessions",
+  "tier": 2,
+  "featureGate": null,
+  "category": "Consulting",
+  "primaryKey": "application_id",
+  "primaryNameColumn": "application_id",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "application_id", "displayName": "Application ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "session_id", "displayName": "Session", "dataType": "Lookup", "lookupTable": "eap_session", "required": true, "description": "Source session" },
+    { "schemaName": "benchmark_id", "displayName": "Benchmark", "dataType": "Lookup", "lookupTable": "ca_benchmarks", "required": true, "description": "Benchmark used" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "User" },
+    { "schemaName": "client_id", "displayName": "Client", "dataType": "Lookup", "lookupTable": "eap_client", "required": false, "description": "Client context" },
+    { "schemaName": "comparison_value", "displayName": "Comparison Value", "dataType": "Decimal", "precision": 18, "scale": 4, "required": false, "description": "Value compared" },
+    { "schemaName": "percentile_result", "displayName": "Percentile Result", "dataType": "Text", "maxLength": 50, "required": false, "description": "Resulting percentile" },
+    { "schemaName": "comparison_notes", "displayName": "Comparison Notes", "dataType": "MultilineText", "required": false, "description": "Notes on comparison" },
+    { "schemaName": "analysis_id", "displayName": "Analysis", "dataType": "Lookup", "lookupTable": "ca_analyses", "required": false, "description": "Associated analysis" },
+    { "schemaName": "was_helpful", "displayName": "Was Helpful", "dataType": "Boolean", "required": false, "description": "User feedback" },
+    { "schemaName": "application_date", "displayName": "Application Date", "dataType": "DateTime", "required": true, "description": "When applied" }
+  ],
+  "indexes": [
+    { "name": "idx_session", "columns": ["session_id"], "unique": false },
+    { "name": "idx_benchmark", "columns": ["benchmark_id"], "unique": false },
+    { "name": "idx_user", "columns": ["user_id"], "unique": false }
+  ]
+}

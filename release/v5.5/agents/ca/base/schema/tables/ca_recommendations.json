@@ -1,0 +1,37 @@
+{
+  "schemaName": "ca_recommendations",
+  "displayName": "Recommendation",
+  "pluralName": "Recommendations",
+  "description": "Strategic recommendations from consulting sessions",
+  "tier": 2,
+  "featureGate": null,
+  "category": "Consulting",
+  "primaryKey": "recommendation_id",
+  "primaryNameColumn": "recommendation_title",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "recommendation_id", "displayName": "Recommendation ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "session_id", "displayName": "Session", "dataType": "Lookup", "lookupTable": "eap_session", "required": true, "description": "Source session" },
+    { "schemaName": "analysis_id", "displayName": "Analysis", "dataType": "Lookup", "lookupTable": "ca_analyses", "required": false, "description": "Source analysis" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Creator" },
+    { "schemaName": "client_id", "displayName": "Client", "dataType": "Lookup", "lookupTable": "eap_client", "required": false, "description": "Associated client" },
+    { "schemaName": "recommendation_title", "displayName": "Recommendation Title", "dataType": "Text", "maxLength": 500, "required": true, "description": "Recommendation title" },
+    { "schemaName": "recommendation_type", "displayName": "Recommendation Type", "dataType": "Choice", "required": true, "options": ["Strategic", "Tactical", "Operational", "Quick Win", "Long Term"], "description": "Type" },
+    { "schemaName": "priority", "displayName": "Priority", "dataType": "Choice", "required": true, "defaultValue": "Medium", "options": ["Critical", "High", "Medium", "Low"], "description": "Priority level" },
+    { "schemaName": "recommendation_content", "displayName": "Recommendation Content", "dataType": "MultilineText", "required": true, "description": "Full recommendation" },
+    { "schemaName": "rationale", "displayName": "Rationale", "dataType": "MultilineText", "required": false, "description": "Why recommended" },
+    { "schemaName": "expected_impact", "displayName": "Expected Impact", "dataType": "MultilineText", "required": false, "description": "Expected outcomes" },
+    { "schemaName": "implementation_steps_json", "displayName": "Implementation Steps", "dataType": "MultilineText", "required": false, "description": "Steps JSON" },
+    { "schemaName": "risks_json", "displayName": "Risks", "dataType": "MultilineText", "required": false, "description": "Risks JSON" },
+    { "schemaName": "dependencies_json", "displayName": "Dependencies", "dataType": "MultilineText", "required": false, "description": "Dependencies JSON" },
+    { "schemaName": "confidence_level", "displayName": "Confidence Level", "dataType": "Choice", "required": true, "defaultValue": "Medium", "options": ["High", "Medium", "Medium-Low", "Low"], "description": "Confidence" },
+    { "schemaName": "status", "displayName": "Status", "dataType": "Choice", "required": true, "defaultValue": "Draft", "options": ["Draft", "Proposed", "Accepted", "Rejected", "Implemented"], "description": "Status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_session", "columns": ["session_id"], "unique": false },
+    { "name": "idx_analysis", "columns": ["analysis_id"], "unique": false },
+    { "name": "idx_client", "columns": ["client_id"], "unique": false }
+  ]
+}

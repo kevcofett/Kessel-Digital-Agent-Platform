@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{542d14b7-45f9-4d39-aa6e-bf99b48a42aa}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="new_mpaname" select="1" icon="1" preview="1">
+        <row name="result" id="new_mpatestcaseid">
+          <cell name="new_mpaname" width="300" />
+          <cell name="createdon" width="125" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="new_mpatestcase">
+          <attribute name="new_mpatestcaseid" />
+          <attribute name="new_mpaname" />
+          <attribute name="createdon" />
+          <order attribute="new_mpaname" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="1" />
+          </filter>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Inactive MPA Test Cases" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{f67641dd-243d-41f0-b85c-ae1f6ff42e06}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="mpa_metricname" select="1" icon="1" preview="1">
+        <row name="result" id="mpa_benchmarkid">
+          <cell name="mpa_metricname" width="300" />
+          <cell name="mpa_verticalcode" width="150" />
+          <cell name="mpa_channelcode" width="150" />
+          <cell name="mpa_kpicode" width="150" />
+          <cell name="mpa_metriclow" width="150" />
+          <cell name="mpa_metricmedian" width="150" />
+          <cell name="mpa_metrichigh" width="150" />
+          <cell name="mpa_metricbest" width="150" />
+          <cell name="mpa_metricunit" width="150" />
+          <cell name="mpa_datasource" width="150" />
+          <cell name="mpa_dataperiod" width="150" />
+          <cell name="mpa_confidencelevel" width="150" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="mpa_benchmark">
+          <attribute name="mpa_benchmarkid" />
+          <attribute name="mpa_metricname" />
+          <attribute name="createdon" />
+          <order attribute="mpa_metricname" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="mpa_verticalcode" />
+          <attribute name="mpa_channelcode" />
+          <attribute name="mpa_kpicode" />
+          <attribute name="mpa_metriclow" />
+          <attribute name="mpa_metricmedian" />
+          <attribute name="mpa_metrichigh" />
+          <attribute name="mpa_metricbest" />
+          <attribute name="mpa_metricunit" />
+          <attribute name="mpa_datasource" />
+          <attribute name="mpa_dataperiod" />
+          <attribute name="mpa_confidencelevel" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Active Benchmarks" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

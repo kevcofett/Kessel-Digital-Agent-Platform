@@ -1,0 +1,187 @@
+{
+  "schemaName": "ca_consulting_sessions",
+  "displayName": "Consulting Sessions",
+  "pluralName": "Consulting Sessions",
+  "description": "Extended session data for Consulting Agent with client context",
+  "tier": 1,
+  "category": "Consulting",
+  "primaryKey": "consulting_session_id",
+  "primaryNameColumn": "session_title",
+  "ownershipType": "OrganizationOwned",
+  "publisherPrefix": "ca",
+  "columns": [
+    {
+      "schemaName": "consulting_session_id",
+      "displayName": "Consulting Session ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "session_id",
+      "displayName": "Session",
+      "dataType": "Lookup",
+      "lookupTable": "eap_session",
+      "required": true,
+      "description": "Parent platform session"
+    },
+    {
+      "schemaName": "session_title",
+      "displayName": "Session Title",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": false,
+      "description": "Session title"
+    },
+    {
+      "schemaName": "client_id",
+      "displayName": "Client",
+      "dataType": "Lookup",
+      "lookupTable": "eap_client",
+      "required": false,
+      "description": "Client context"
+    },
+    {
+      "schemaName": "project_id",
+      "displayName": "Project",
+      "dataType": "Lookup",
+      "lookupTable": "eap_projects",
+      "required": false,
+      "description": "Project context"
+    },
+    {
+      "schemaName": "engagement_type",
+      "displayName": "Engagement Type",
+      "dataType": "Choice",
+      "required": false,
+      "options": ["Strategy", "Operations", "Technology", "Analytics", "Transformation", "Other"],
+      "description": "Type of consulting engagement"
+    },
+    {
+      "schemaName": "industry_focus",
+      "displayName": "Industry Focus",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Industry focus"
+    },
+    {
+      "schemaName": "problem_statement",
+      "displayName": "Problem Statement",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Problem being addressed"
+    },
+    {
+      "schemaName": "objectives_json",
+      "displayName": "Objectives",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Session objectives JSON"
+    },
+    {
+      "schemaName": "constraints_json",
+      "displayName": "Constraints",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Constraints JSON"
+    },
+    {
+      "schemaName": "stakeholders_json",
+      "displayName": "Stakeholders",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Key stakeholders JSON"
+    },
+    {
+      "schemaName": "frameworks_used_json",
+      "displayName": "Frameworks Used",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Frameworks applied JSON"
+    },
+    {
+      "schemaName": "analyses_count",
+      "displayName": "Analyses Count",
+      "dataType": "WholeNumber",
+      "required": true,
+      "defaultValue": 0,
+      "description": "Number of analyses"
+    },
+    {
+      "schemaName": "recommendations_count",
+      "displayName": "Recommendations Count",
+      "dataType": "WholeNumber",
+      "required": true,
+      "defaultValue": 0,
+      "description": "Number of recommendations"
+    },
+    {
+      "schemaName": "deliverables_count",
+      "displayName": "Deliverables Count",
+      "dataType": "WholeNumber",
+      "required": true,
+      "defaultValue": 0,
+      "description": "Number of deliverables"
+    },
+    {
+      "schemaName": "key_insights_json",
+      "displayName": "Key Insights",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Key insights JSON"
+    },
+    {
+      "schemaName": "next_steps_json",
+      "displayName": "Next Steps",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Next steps JSON"
+    },
+    {
+      "schemaName": "session_rating",
+      "displayName": "Session Rating",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "User rating 1-5"
+    },
+    {
+      "schemaName": "session_feedback",
+      "displayName": "Session Feedback",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "User feedback"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_session_id",
+      "columns": ["session_id"],
+      "unique": true
+    },
+    {
+      "name": "idx_client_id",
+      "columns": ["client_id"],
+      "unique": false
+    },
+    {
+      "name": "idx_project_id",
+      "columns": ["project_id"],
+      "unique": false
+    }
+  ]
+}

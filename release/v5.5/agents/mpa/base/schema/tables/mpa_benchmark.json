@@ -1,0 +1,178 @@
+{
+  "schemaName": "mpa_benchmark",
+  "displayName": "Benchmark",
+  "pluralName": "Benchmarks",
+  "description": "Media planning benchmark data for industry performance comparisons",
+  "tier": 2,
+  "featureGate": null,
+  "category": "MediaPlanning",
+  "primaryKey": "mpa_benchmarkid",
+  "primaryNameColumn": "mpa_metricname",
+  "ownershipType": "UserOwned",
+  "publisherPrefix": "mpa",
+  "columns": [
+    {
+      "schemaName": "mpa_benchmarkid",
+      "displayName": "Benchmark",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Unique identifier for entity instances"
+    },
+    {
+      "schemaName": "mpa_metricname",
+      "displayName": "Metric Name",
+      "dataType": "Text",
+      "maxLength": 850,
+      "required": true,
+      "description": "Primary name field for the benchmark metric"
+    },
+    {
+      "schemaName": "mpa_channelcode",
+      "displayName": "Channel Code",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Code identifying the media channel"
+    },
+    {
+      "schemaName": "mpa_kpicode",
+      "displayName": "KPI Code",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Code identifying the key performance indicator"
+    },
+    {
+      "schemaName": "mpa_verticalcode",
+      "displayName": "Vertical Code",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Code identifying the industry vertical"
+    },
+    {
+      "schemaName": "mpa_confidencelevel",
+      "displayName": "Confidence Level",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Confidence level of the benchmark data"
+    },
+    {
+      "schemaName": "mpa_dataperiod",
+      "displayName": "Data Period",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Time period the benchmark data covers"
+    },
+    {
+      "schemaName": "mpa_datasource",
+      "displayName": "Data Source",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Source of the benchmark data"
+    },
+    {
+      "schemaName": "mpa_metricbest",
+      "displayName": "Metric Best",
+      "dataType": "Decimal",
+      "precision": 2,
+      "required": false,
+      "description": "Best value for the metric"
+    },
+    {
+      "schemaName": "mpa_metrichigh",
+      "displayName": "Metric High",
+      "dataType": "Decimal",
+      "precision": 2,
+      "required": true,
+      "description": "High value for the metric range"
+    },
+    {
+      "schemaName": "mpa_metriclow",
+      "displayName": "Metric Low",
+      "dataType": "Decimal",
+      "precision": 2,
+      "required": true,
+      "description": "Low value for the metric range"
+    },
+    {
+      "schemaName": "mpa_metricmedian",
+      "displayName": "Metric Median",
+      "dataType": "Decimal",
+      "precision": 2,
+      "required": true,
+      "description": "Median value for the metric"
+    },
+    {
+      "schemaName": "mpa_metricunit",
+      "displayName": "Metric Unit",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Unit of measurement for the metric"
+    },
+    {
+      "schemaName": "statecode",
+      "displayName": "Status",
+      "dataType": "State",
+      "required": true,
+      "options": ["Active", "Inactive"],
+      "description": "Status of the Benchmark"
+    },
+    {
+      "schemaName": "statuscode",
+      "displayName": "Status Reason",
+      "dataType": "Status",
+      "required": false,
+      "options": ["Active", "Inactive"],
+      "description": "Reason for the status of the Benchmark"
+    },
+    {
+      "schemaName": "ownerid",
+      "displayName": "Owner",
+      "dataType": "Owner",
+      "required": true,
+      "description": "Owner Id"
+    },
+    {
+      "schemaName": "createdon",
+      "displayName": "Created On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was created"
+    },
+    {
+      "schemaName": "modifiedon",
+      "displayName": "Modified On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_benchmark_channel",
+      "columns": ["mpa_channelcode"],
+      "unique": false
+    },
+    {
+      "name": "idx_benchmark_kpi",
+      "columns": ["mpa_kpicode"],
+      "unique": false
+    },
+    {
+      "name": "idx_benchmark_vertical",
+      "columns": ["mpa_verticalcode"],
+      "unique": false
+    },
+    {
+      "name": "idx_benchmark_composite",
+      "columns": ["mpa_channelcode", "mpa_kpicode", "mpa_verticalcode"],
+      "unique": false
+    }
+  ],
+  "seedDataNote": "Industry benchmarks populated from media planning knowledge base"
+}

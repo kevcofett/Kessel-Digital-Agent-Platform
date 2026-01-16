@@ -1,0 +1,424 @@
+{
+  "schemaVersion": "1.0",
+  "topics": [
+    {
+      "name": "Greeting",
+      "displayName": "Greeting",
+      "description": "Welcome users and introduce MPA capabilities",
+      "triggerQueries": [
+        "hello",
+        "hi",
+        "hey",
+        "start",
+        "help",
+        "what can you do",
+        "good morning",
+        "good afternoon"
+      ],
+      "nodes": [
+        {
+          "id": "message1",
+          "type": "message",
+          "message": "Hello! I'm the Media Planning Agent - your AI-powered media planning assistant.\n\nI can help you with:\n- Creating comprehensive media plans\n- Finding industry benchmarks (CPM, CTR, conversion rates)\n- Recommending channel mix based on your objectives\n- Budget allocation guidance\n- Performance validation\n\nWhat would you like to work on today?"
+        }
+      ]
+    },
+    {
+      "name": "StartPlanning",
+      "displayName": "Start Planning",
+      "description": "Initialize a new media planning session",
+      "triggerQueries": [
+        "start planning",
+        "new plan",
+        "create plan",
+        "begin planning",
+        "start a media plan",
+        "help me plan",
+        "new media plan",
+        "create a campaign"
+      ],
+      "nodes": [
+        {
+          "id": "question1",
+          "type": "question",
+          "questionType": "choice",
+          "questionText": "What is your primary campaign objective?",
+          "choices": [
+            "Brand Awareness - Maximize reach and impressions",
+            "Consideration - Drive engagement and website visits",
+            "Conversion - Generate leads or sales",
+            "Retention - Re-engage existing customers",
+            "I'm not sure - Help me decide"
+          ],
+          "variable": "Global.Objective"
+        },
+        {
+          "id": "setStep",
+          "type": "setVariable",
+          "variable": "Global.CurrentStep",
+          "value": "1"
+        },
+        {
+          "id": "condition1",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "flowAvailable",
+              "expression": "System.FlowsEnabled == true",
+              "thenNodeId": "callFlow"
+            }
+          ],
+          "elseNodeId": "noFlowMessage"
+        },
+        {
+          "id": "callFlow",
+          "type": "action",
+          "actionType": "flow",
+          "flowName": "MPA_InitializeSession",
+          "inputs": {
+            "objective": "Global.Objective"
+          },
+          "outputs": {
+            "sessionId": "Global.SessionID"
+          }
+        },
+        {
+          "id": "noFlowMessage",
+          "type": "setVariable",
+          "variable": "Global.SessionID",
+          "value": "standalone-session"
+        },
+        {
+          "id": "message2",
+          "type": "message",
+          "message": "Great! I'll help you create a media plan focused on {Global.Objective}.\n\nStep 1 of 10: Define Objectives ✓\n\nNow let's move to Step 2: Who is your target audience?\n\nPlease describe:\n- Demographics (age, gender, location)\n- Interests or behaviors\n- Any existing customer data you have"
+        }
+      ]
+    },
+    {
+      "name": "SearchBenchmarks",
+      "displayName": "Search Benchmarks",
+      "description": "Query industry benchmark data",
+      "triggerQueries": [
+        "benchmark",
+        "benchmarks",
+        "what's a typical CPM",
+        "average CPM",
+        "industry average",
+        "what should I expect",
+        "typical performance",
+        "CTR benchmark",
+        "conversion rate benchmark",
+        "cost per click"
+      ],
+      "nodes": [
+        {
+          "id": "generativeAnswer1",
+          "type": "generativeAnswers",
+          "dataSource": "SharePoint",
+          "searchQuery": "{Activity.Text}",
+          "requireCitation": true,
+          "maxChunks": 5,
+          "minConfidence": 0.65
+        },
+        {
+          "id": "condition1",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "hasResult",
+              "expression": "GenerativeAnswer.HasResult == true",
+              "thenNodeId": "showResult"
+            }
+          ],
+          "elseNodeId": "fallbackBenchmarks"
+        },
+        {
+          "id": "showResult",
+          "type": "message",
+          "message": "{GenerativeAnswer.Response}"
+        },
+        {
+          "id": "fallbackBenchmarks",
+          "type": "message",
+          "message": "Based on general industry data:\n\n**Display Advertising**\n- CPM: $2-12 depending on targeting\n- CTR: 0.05%-0.20%\n\n**CTV/Streaming**\n- CPM: $15-45 depending on inventory\n- Completion Rate: 85%-95%\n\n**Paid Social**\n- CPM: $6-25 depending on platform\n- CTR: 0.50%-2.00%\n\n**Paid Search**\n- CPC: $0.50-$5.00 depending on competition\n- CTR: 2%-6%\n\nWould you like me to search for more specific benchmarks for your industry?"
+        }
+      ]
+    },
+    {
+      "name": "SearchChannels",
+      "displayName": "Search Channels",
+      "description": "Get channel-specific information and recommendations",
+      "triggerQueries": [
+        "channel",
+        "channels",
+        "display advertising",
+        "CTV",
+        "connected TV",
+        "paid social",
+        "social media advertising",
+        "paid search",
+        "SEM",
+        "programmatic",
+        "which channels",
+        "recommend channels"
+      ],
+      "nodes": [
+        {
+          "id": "generativeAnswer1",
+          "type": "generativeAnswers",
+          "dataSource": "SharePoint",
+          "searchQuery": "channel {Activity.Text}",
+          "requireCitation": true,
+          "maxChunks": 5,
+          "minConfidence": 0.65
+        },
+        {
+          "id": "condition1",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "hasResult",
+              "expression": "GenerativeAnswer.HasResult == true",
+              "thenNodeId": "showResult"
+            }
+          ],
+          "elseNodeId": "channelOverview"
+        },
+        {
+          "id": "showResult",
+          "type": "message",
+          "message": "{GenerativeAnswer.Response}"
+        },
+        {
+          "id": "channelOverview",
+          "type": "message",
+          "message": "Here's an overview of major advertising channels:\n\n**Display/Programmatic**\nBest for: Awareness, retargeting\nStrengths: Scale, targeting options, cost-efficient reach\n\n**CTV/OTT**\nBest for: Awareness, consideration\nStrengths: Premium environment, high completion rates, growing audience\n\n**Paid Social**\nBest for: Awareness, consideration, conversion\nStrengths: Precise targeting, engagement, full-funnel capability\n\n**Paid Search**\nBest for: Conversion, consideration\nStrengths: High intent, measurable, immediate results\n\n**Retail Media**\nBest for: Conversion, consideration\nStrengths: Close to purchase, first-party data, closed-loop measurement\n\nWhich channel would you like to explore in more detail?"
+        }
+      ]
+    },
+    {
+      "name": "GenerateDocument",
+      "displayName": "Generate Document",
+      "description": "Create downloadable media plan document",
+      "triggerQueries": [
+        "generate document",
+        "create document",
+        "download plan",
+        "export plan",
+        "give me a document",
+        "create my plan",
+        "generate plan",
+        "save plan",
+        "download"
+      ],
+      "nodes": [
+        {
+          "id": "condition1",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "hasObjective",
+              "expression": "Global.Objective != null",
+              "thenNodeId": "checkFlow"
+            }
+          ],
+          "elseNodeId": "noDataMessage"
+        },
+        {
+          "id": "noDataMessage",
+          "type": "message",
+          "message": "I don't have enough information to generate a plan yet. Let's start by defining your campaign objective.\n\nWhat is your primary goal: Awareness, Consideration, Conversion, or Retention?"
+        },
+        {
+          "id": "checkFlow",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "flowAvailable",
+              "expression": "System.FlowsEnabled == true",
+              "thenNodeId": "callGenerateFlow"
+            }
+          ],
+          "elseNodeId": "textOutput"
+        },
+        {
+          "id": "callGenerateFlow",
+          "type": "action",
+          "actionType": "flow",
+          "flowName": "MPA_GenerateDocument",
+          "inputs": {
+            "sessionId": "Global.SessionID",
+            "objective": "Global.Objective",
+            "budget": "Global.Budget",
+            "channels": "Global.Channels"
+          },
+          "outputs": {
+            "documentUrl": "Topic.DocumentUrl"
+          }
+        },
+        {
+          "id": "flowSuccess",
+          "type": "message",
+          "message": "I've generated your media plan document.\n\n📄 **Download your plan:** {Topic.DocumentUrl}\n\nThe document includes:\n- Executive summary\n- Campaign objectives and KPIs\n- Channel recommendations with budget allocation\n- Targeting strategy\n- Flight dates and pacing\n- Measurement framework\n\nWould you like me to explain any section in more detail?"
+        },
+        {
+          "id": "textOutput",
+          "type": "message",
+          "message": "Here's your media plan summary. You can copy this to your preferred document format:\n\n---\n**MEDIA PLAN SUMMARY**\n\n**Objective:** {Global.Objective}\n**Budget:** {Global.Budget}\n\n**Recommended Channels:**\n{Global.Channels}\n\n**Key Metrics to Track:**\n- Primary: Based on {Global.Objective}\n- Secondary: Reach, Frequency, Engagement\n\n**Next Steps:**\n1. Finalize budget allocation\n2. Set up campaign tracking\n3. Launch and monitor\n---\n\nWould you like me to expand on any section?"
+        }
+      ]
+    },
+    {
+      "name": "ProvideFeedback",
+      "displayName": "Provide Feedback",
+      "description": "Capture user feedback on the planning experience",
+      "triggerQueries": [
+        "feedback",
+        "rate",
+        "helpful",
+        "not helpful",
+        "this was good",
+        "this was bad",
+        "great job",
+        "needs improvement",
+        "thanks",
+        "thank you"
+      ],
+      "nodes": [
+        {
+          "id": "question1",
+          "type": "question",
+          "questionType": "choice",
+          "questionText": "How helpful was this planning session?",
+          "choices": [
+            "Very helpful - exactly what I needed",
+            "Somewhat helpful - got partial answers",
+            "Not helpful - didn't meet my needs",
+            "I have specific feedback to share"
+          ],
+          "variable": "Topic.FeedbackRating"
+        },
+        {
+          "id": "condition1",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "specificFeedback",
+              "expression": "Topic.FeedbackRating == 'I have specific feedback to share'",
+              "thenNodeId": "askDetails"
+            }
+          ],
+          "elseNodeId": "checkFlow"
+        },
+        {
+          "id": "askDetails",
+          "type": "question",
+          "questionType": "text",
+          "questionText": "What specific feedback would you like to share? This helps me improve.",
+          "variable": "Topic.FeedbackDetails"
+        },
+        {
+          "id": "checkFlow",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "flowAvailable",
+              "expression": "System.FlowsEnabled == true",
+              "thenNodeId": "callFeedbackFlow"
+            }
+          ],
+          "elseNodeId": "thankYou"
+        },
+        {
+          "id": "callFeedbackFlow",
+          "type": "action",
+          "actionType": "flow",
+          "flowName": "MPA_CaptureFeedback",
+          "inputs": {
+            "sessionId": "Global.SessionID",
+            "rating": "Topic.FeedbackRating",
+            "details": "Topic.FeedbackDetails"
+          }
+        },
+        {
+          "id": "thankYou",
+          "type": "message",
+          "message": "Thank you for your feedback! It helps me improve.\n\nIs there anything else I can help you with today?"
+        }
+      ]
+    },
+    {
+      "name": "Fallback",
+      "displayName": "Fallback",
+      "description": "Handle unmatched queries with generative answers",
+      "triggerQueries": [],
+      "isSystemFallback": true,
+      "nodes": [
+        {
+          "id": "generativeAnswer1",
+          "type": "generativeAnswers",
+          "dataSource": "SharePoint",
+          "searchQuery": "{Activity.Text}",
+          "requireCitation": true,
+          "maxChunks": 5,
+          "minConfidence": 0.65
+        },
+        {
+          "id": "condition1",
+          "type": "condition",
+          "conditions": [
+            {
+              "id": "hasResult",
+              "expression": "GenerativeAnswer.HasResult == true",
+              "thenNodeId": "showResult"
+            }
+          ],
+          "elseNodeId": "fallbackMessage"
+        },
+        {
+          "id": "showResult",
+          "type": "message",
+          "message": "{GenerativeAnswer.Response}"
+        },
+        {
+          "id": "fallbackMessage",
+          "type": "message",
+          "message": "I'm not sure I understood that. I can help you with:\n\n- **Media Planning** - Start a new plan, define objectives\n- **Benchmarks** - CPM, CTR, conversion rates by channel\n- **Channel Info** - Display, CTV, Social, Search recommendations\n- **Documents** - Generate your media plan\n\nWhat would you like to explore?"
+        }
+      ]
+    }
+  ],
+  "globalVariables": [
+    {
+      "name": "Global.SessionID",
+      "type": "string",
+      "description": "Current planning session identifier"
+    },
+    {
+      "name": "Global.Objective",
+      "type": "string",
+      "description": "Campaign objective (Awareness/Consideration/Conversion/Retention)"
+    },
+    {
+      "name": "Global.Budget",
+      "type": "string",
+      "description": "Campaign budget"
+    },
+    {
+      "name": "Global.Channels",
+      "type": "string",
+      "description": "Selected channels"
+    },
+    {
+      "name": "Global.CurrentStep",
+      "type": "string",
+      "description": "Current step in 10-step framework (1-10)"
+    },
+    {
+      "name": "Global.Vertical",
+      "type": "string",
+      "description": "Industry vertical"
+    }
+  ]
+}

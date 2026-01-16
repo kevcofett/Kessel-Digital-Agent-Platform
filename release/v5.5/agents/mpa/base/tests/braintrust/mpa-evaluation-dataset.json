@@ -1,0 +1,224 @@
+{
+  "name": "MPA v5.7 Evaluation Dataset",
+  "description": "Test cases for evaluating MPA Copilot against v5.7 instruction set",
+  "test_cases": [
+    {
+      "id": "uniteller_step1_initial",
+      "name": "Step 1 - Initial Brief (Uniteller)",
+      "input": "help me create a media plan for Uniteller. They have $250,000 to acquire new customers for their newly launched Uline payment card. They are targeting immigrant populations in the US who will regularly send money across borders to family and friends.",
+      "metadata": {
+        "currentStep": 1,
+        "userSophistication": "basic",
+        "collectedData": {
+          "budget": 250000,
+          "objective": "customer_acquisition",
+          "vertical": "fintech_remittance"
+        }
+      },
+      "expected_behaviors": [
+        "warm_greeting",
+        "name_ten_areas",
+        "ask_about_kpi_or_volume",
+        "use_simple_language",
+        "under_75_words"
+      ]
+    },
+    {
+      "id": "uniteller_step1_volume",
+      "name": "Step 1 - Volume Target",
+      "input": "we want 5000 new customers",
+      "metadata": {
+        "currentStep": 1,
+        "userSophistication": "basic",
+        "collectedData": {
+          "budget": 250000,
+          "objective": "customer_acquisition",
+          "vertical": "fintech_remittance",
+          "volume_target": 5000
+        }
+      },
+      "expected_behaviors": [
+        "calculate_implied_cac",
+        "cite_benchmark_source",
+        "note_if_aggressive",
+        "single_question",
+        "under_75_words"
+      ]
+    },
+    {
+      "id": "uniteller_step1_kpi_confirm",
+      "name": "Step 1 - KPI Confirmation",
+      "input": "we need both, 5,000 customers at $50 CAC",
+      "metadata": {
+        "currentStep": 1,
+        "userSophistication": "basic",
+        "collectedData": {
+          "budget": 250000,
+          "objective": "customer_acquisition",
+          "vertical": "fintech_remittance",
+          "volume_target": 5000,
+          "cac_target": 50
+        },
+        "hasEnoughDataToModel": true
+      },
+      "expected_behaviors": [
+        "acknowledge_step1_complete",
+        "note_aggressive_target_with_source",
+        "transition_to_step2",
+        "start_modeling"
+      ]
+    },
+    {
+      "id": "uniteller_step2_idk_ltv",
+      "name": "Step 2 - I Don't Know (LTV/Profit)",
+      "input": "I don't know",
+      "context": "Agent asked about first-year gross profit or LTV",
+      "metadata": {
+        "currentStep": 2,
+        "userSophistication": "basic",
+        "previousQuestion": "What is the expected first-year gross profit per customer?"
+      },
+      "expected_behaviors": [
+        "model_with_assumption",
+        "cite_source_for_assumption",
+        "offer_refinement_later",
+        "move_on_to_next_question",
+        "do_not_keep_pushing",
+        "use_simple_language"
+      ],
+      "anti_patterns": [
+        "ask_same_question_again",
+        "use_complex_terminology",
+        "block_progress"
+      ]
+    },
+    {
+      "id": "uniteller_step2_revenue_model",
+      "name": "Step 2 - Revenue Model Question",
+      "input": "both",
+      "context": "Agent asked if primary revenue is from fees/FX or interchange",
+      "metadata": {
+        "currentStep": 2,
+        "userSophistication": "basic",
+        "collectedData": {
+          "revenue_model": "fees_and_interchange"
+        }
+      },
+      "expected_behaviors": [
+        "acknowledge_answer",
+        "use_simple_revenue_concept",
+        "single_question",
+        "avoid_complex_margin_terminology"
+      ]
+    },
+    {
+      "id": "uniteller_step2_remittance_volume",
+      "name": "Step 2 - Remittance Volume Target",
+      "input": "what i really want is $2100 in total remittance in the first 90 days per new customer",
+      "metadata": {
+        "currentStep": 2,
+        "userSophistication": "moderate",
+        "collectedData": {
+          "remittance_target": 2100,
+          "timeframe_days": 90
+        },
+        "hasEnoughDataToModel": true
+      },
+      "expected_behaviors": [
+        "calculate_revenue_from_volume",
+        "assess_cac_feasibility",
+        "cite_benchmark_source",
+        "use_simple_percentage_language"
+      ]
+    },
+    {
+      "id": "uniteller_step2_idk_take_rate",
+      "name": "Step 2 - I Don't Know (Net Take Rate)",
+      "input": "i don't know",
+      "context": "Agent asked about net take rate",
+      "metadata": {
+        "currentStep": 2,
+        "userSophistication": "basic",
+        "previousQuestion": "What is Uniteller's net take rate?"
+      },
+      "expected_behaviors": [
+        "model_with_industry_benchmark",
+        "cite_source",
+        "state_assumption_clearly",
+        "offer_refinement_option",
+        "move_forward_to_feasibility",
+        "complete_step2"
+      ],
+      "anti_patterns": [
+        "ask_another_economics_question",
+        "use_jargon",
+        "block_progress"
+      ],
+      "ideal_response": "Got it. Based on KB benchmarks, digital remittance services average around 4% revenue on transfers. With $2,100 at 4%, that's about $84 revenue per customer—enough to cover your $50 CAC with payback in the first 90 days. You can refine this anytime. Let's lock Step 2 and move to defining your target audience."
+    },
+    {
+      "id": "sophisticated_user_step1",
+      "name": "Step 1 - Sophisticated User Brief",
+      "input": "Building a DTC campaign for a fintech client, $500K budget, targeting CAC of $75 with 36-month LTV of $450. Primary KPI is cost per funded account, secondary is D30 activation rate. Need to hit 6,500 new funded accounts.",
+      "metadata": {
+        "currentStep": 1,
+        "userSophistication": "high",
+        "collectedData": {
+          "budget": 500000,
+          "cac_target": 75,
+          "ltv": 450,
+          "primary_kpi": "cost_per_funded_account",
+          "secondary_kpi": "d30_activation",
+          "volume_target": 6500
+        },
+        "hasEnoughDataToModel": true
+      },
+      "expected_behaviors": [
+        "match_sophisticated_language",
+        "acknowledge_ltv_cac_ratio",
+        "validate_math",
+        "skip_basic_definitions",
+        "move_quickly"
+      ]
+    },
+    {
+      "id": "step_boundary_violation_test",
+      "name": "Step 1 - Channel Question (Should Redirect)",
+      "input": "What channels should we use?",
+      "metadata": {
+        "currentStep": 1,
+        "userSophistication": "basic",
+        "step1Complete": false
+      },
+      "expected_behaviors": [
+        "acknowledge_channel_question",
+        "explain_step_order",
+        "redirect_to_outcomes_first",
+        "not_discuss_specific_channels"
+      ]
+    },
+    {
+      "id": "aggressive_target_framing",
+      "name": "Step 1 - Very Aggressive Target",
+      "input": "$100K budget, 10,000 customers, B2B SaaS",
+      "metadata": {
+        "currentStep": 1,
+        "userSophistication": "basic",
+        "collectedData": {
+          "budget": 100000,
+          "volume_target": 10000,
+          "vertical": "b2b_saas"
+        },
+        "impliedCAC": 10
+      },
+      "expected_behaviors": [
+        "calculate_implied_efficiency",
+        "call_out_aggressive_directly",
+        "cite_benchmark_with_source",
+        "explain_what_it_takes",
+        "not_discourage",
+        "illuminate_path"
+      ]
+    }
+  ]
+}

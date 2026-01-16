@@ -9,13 +9,13 @@
       "format": "uuid",
       "description": "Primary key (auto-generated GUID)"
     },
-    "mpa_kpi_code": {
+    "mpa_kpicode": {
       "type": "string",
       "maxLength": 100,
       "pattern": "^[a-z][a-z0-9_]*$",
       "description": "Unique identifier for the KPI (lowercase, underscores allowed)"
     },
-    "mpa_display_name": {
+    "mpa_newcolumn": {
       "type": "string",
       "maxLength": 200,
       "description": "Human-readable display name"
@@ -87,7 +87,7 @@
       "default": 100,
       "description": "Display order in lists (lower = higher priority)"
     },
-    "mpa_is_active": {
+    "mpa_isactive": {
       "type": "boolean",
       "default": true,
       "description": "Whether this KPI is active and discoverable"
@@ -119,8 +119,8 @@
     }
   },
   "required": [
-    "mpa_kpi_code",
-    "mpa_display_name",
+    "mpa_kpicode",
+    "mpa_newcolumn",
     "mpa_category",
     "mpa_formula",
     "mpa_unit",
@@ -131,16 +131,16 @@
   "indexes": [
     {
       "name": "idx_kpi_code_client",
-      "columns": ["mpa_kpi_code", "mpa_client_id"],
+      "columns": ["mpa_kpicode", "mpa_client_id"],
       "unique": true
     },
     {
       "name": "idx_client_active",
-      "columns": ["mpa_client_id", "mpa_is_active"]
+      "columns": ["mpa_client_id", "mpa_isactive"]
     },
     {
       "name": "idx_category",
-      "columns": ["mpa_category", "mpa_is_active"]
+      "columns": ["mpa_category", "mpa_isactive"]
     }
   ],
   "relationships": [

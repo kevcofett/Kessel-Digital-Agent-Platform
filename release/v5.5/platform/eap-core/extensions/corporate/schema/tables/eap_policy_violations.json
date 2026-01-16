@@ -1,0 +1,34 @@
+{
+  "schemaName": "eap_policy_violations",
+  "displayName": "Policy Violation",
+  "pluralName": "Policy Violations",
+  "description": "Logged governance policy violations",
+  "tier": 3,
+  "featureGate": "GOVERNANCE",
+  "category": "Governance",
+  "primaryKey": "violation_id",
+  "primaryNameColumn": "violation_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "violation_id", "displayName": "Violation ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "policy_id", "displayName": "Policy", "dataType": "Lookup", "lookupTable": "eap_governance_policies", "required": true, "description": "Violated policy" },
+    { "schemaName": "session_id", "displayName": "Session", "dataType": "Lookup", "lookupTable": "eap_session", "required": false, "description": "Session where occurred" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "User involved" },
+    { "schemaName": "agent_id", "displayName": "Agent", "dataType": "Lookup", "lookupTable": "eap_agent", "required": false, "description": "Agent involved" },
+    { "schemaName": "violation_type", "displayName": "Violation Type", "dataType": "Choice", "required": true, "options": ["Blocked", "Warned", "Logged", "Flagged"], "description": "How handled" },
+    { "schemaName": "severity", "displayName": "Severity", "dataType": "Choice", "required": true, "options": ["Critical", "High", "Medium", "Low"], "description": "Violation severity" },
+    { "schemaName": "description", "displayName": "Description", "dataType": "MultilineText", "required": true, "description": "Violation details" },
+    { "schemaName": "triggering_content", "displayName": "Triggering Content", "dataType": "MultilineText", "required": false, "description": "Content that triggered" },
+    { "schemaName": "action_taken", "displayName": "Action Taken", "dataType": "Text", "maxLength": 500, "required": false, "description": "Action taken" },
+    { "schemaName": "is_reviewed", "displayName": "Is Reviewed", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Reviewed by admin" },
+    { "schemaName": "reviewed_by_user_id", "displayName": "Reviewed By", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "Who reviewed" },
+    { "schemaName": "review_notes", "displayName": "Review Notes", "dataType": "MultilineText", "required": false, "description": "Review notes" },
+    { "schemaName": "occurred_date", "displayName": "Occurred Date", "dataType": "DateTime", "required": true, "description": "When occurred" },
+    { "schemaName": "reviewed_date", "displayName": "Reviewed Date", "dataType": "DateTime", "required": false, "description": "When reviewed" }
+  ],
+  "indexes": [
+    { "name": "idx_policy", "columns": ["policy_id"], "unique": false },
+    { "name": "idx_severity", "columns": ["severity", "is_reviewed"], "unique": false },
+    { "name": "idx_occurred", "columns": ["occurred_date"], "unique": false }
+  ]
+}

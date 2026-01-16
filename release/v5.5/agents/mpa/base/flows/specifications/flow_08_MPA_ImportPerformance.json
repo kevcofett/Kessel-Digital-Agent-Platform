@@ -54,7 +54,7 @@
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
             "parameters": {
-              "entityName": "mpa_dataimportlog",
+              "entityName": "mpa_dataimportlogs",
               "item": {
                 "mpa_plan_id": "@triggerBody()?['plan_id']",
                 "mpa_import_source": "@coalesce(triggerBody()?['import_source'], 'manual')",
@@ -80,7 +80,7 @@
               "inputs": {
                 "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
                 "parameters": {
-                  "entityName": "mpa_campaignperformance",
+                  "entityName": "mpa_campaignperformances",
                   "item": {
                     "mpa_plan_id": "@triggerBody()?['plan_id']",
                     "mpa_channel": "@items('For_Each_Performance_Record')?['channel']",
@@ -110,7 +110,7 @@
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "UpdateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
             "parameters": {
-              "entityName": "mpa_dataimportlog",
+              "entityName": "mpa_dataimportlogs",
               "recordId": "@variables('varImportLogId')",
               "item": {"mpa_status": 100000001, "mpa_completed_at": "@utcNow()", "mpa_records_imported": "@variables('varRecordsImported')"}
             }
@@ -145,7 +145,7 @@
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "UpdateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
             "parameters": {
-              "entityName": "mpa_dataimportlog",
+              "entityName": "mpa_dataimportlogs",
               "recordId": "@variables('varImportLogId')",
               "item": {"mpa_status": 100000002, "mpa_error_message": "@variables('varErrorMessage')", "mpa_completed_at": "@utcNow()"}
             }
@@ -156,7 +156,7 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
-            "parameters": {"entityName": "mpa_errorlog", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_ImportPerformance", "mpa_severity": 100000002, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()", "mpa_plan_id": "@triggerBody()?['plan_id']"}}
+            "parameters": {"entityName": "mpa_errorlogs", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_ImportPerformance", "mpa_severity": 100000002, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()", "mpa_plan_id": "@triggerBody()?['plan_id']"}}
           },
           "runAfter": {"Update_Import_Log_Failed": ["Succeeded"]}
         },

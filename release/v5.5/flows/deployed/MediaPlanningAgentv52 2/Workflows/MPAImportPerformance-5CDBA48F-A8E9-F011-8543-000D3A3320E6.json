@@ -1,0 +1,171 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "1ffc43dc-1828-4cde-8072-f7c1b678ff24"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "plan_id": {
+                  "type": "string",
+                  "description": "GUID of the media plan"
+                },
+                "version_id": {
+                  "type": "string",
+                  "description": "GUID of the plan version"
+                },
+                "performance_data": {
+                  "type": "object",
+                  "description": "Performance metrics object"
+                },
+                "source": {
+                  "type": "string",
+                  "description": "Data source (DV360, Meta, Google, Manual)"
+                },
+                "user_id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "plan_id",
+                "version_id",
+                "performance_data"
+              ]
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "GetPlan": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "5fe9f6c5-5f45-4713-916c-30e76254f167"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_mediaplans",
+              "recordId": "@triggerBody()['plan_id']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "CreatePerformanceRecord": {
+          "runAfter": {
+            "GetPlan": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1575a5cd-9131-48d2-a954-bfc702ac9570"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_plandatas",
+              "item/mpa_datatitle": "@concat('Performance Import - ', utcNow())",
+              "item/mpa_MediaPlan@odata.bind": "@triggerBody()['plan_id']",
+              "item/mpa_PlanVersion@odata.bind": "@triggerBody()['version_id']",
+              "item/mpa_sectionstatus": 100000002,
+              "item/mpa_sectiontype": 100000010,
+              "item/mpa_stepnumber": 10,
+              "item/mpa_createdat": "@utcNow()",
+              "item/mpa_datasource": "@triggerBody()?['source']",
+              "item/mpa_sectiondata": "@string(triggerBody()?['performance_data'])"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "UpdatePlanStatus": {
+          "runAfter": {
+            "CreatePerformanceRecord": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cc8c5684-463c-440b-bfc5-1ce0a63d8e12"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "UpdateOnlyRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_mediaplans",
+              "recordId": "@triggerBody()['plan_id']",
+              "item/mpa_status": 100000004,
+              "item/mpa_updatedat": "@utcNow()"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "SuccessResponse": {
+          "runAfter": {
+            "UpdatePlanStatus": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "dac55c43-6ae8-4302-a5da-2ce7cd330889"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "Success",
+              "plan_id": "@{triggerBody()?['plan_id']}",
+              "performance_record_id": "@{outputs('CreatePerformanceRecord')?['body/mpa_plandataid']}",
+              "source": "@{coalesce(triggerBody()?['source'], 'Manual')}",
+              "message": "Performance data imported successfully"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -9,16 +9,16 @@
       "format": "uuid",
       "description": "Primary key (auto-generated GUID)"
     },
-    "mpa_channel_code": {
+    "mpa_channelcode": {
       "type": "string",
       "maxLength": 50,
       "pattern": "^[a-z][a-z0-9_]*$",
       "description": "Unique identifier for the channel (lowercase, underscores allowed)"
     },
-    "mpa_channel_name": {
+    "mpa_newcolumn": {
       "type": "string",
       "maxLength": 200,
-      "description": "Human-readable display name"
+      "description": "Human-readable display name (primary name column)"
     },
     "mpa_category": {
       "type": "string",
@@ -30,17 +30,17 @@
       "maxLength": 2000,
       "description": "Clear explanation of what this channel is and how it works"
     },
-    "mpa_cpm_low": {
+    "mpa_cpmlow": {
       "type": "number",
       "minimum": 0,
       "description": "Lower bound of typical CPM range"
     },
-    "mpa_cpm_high": {
+    "mpa_cpmhigh": {
       "type": "number",
       "minimum": 0,
       "description": "Upper bound of typical CPM range"
     },
-    "mpa_cpm_median": {
+    "mpa_cpmmedian": {
       "type": "number",
       "minimum": 0,
       "description": "Median CPM for projections"
@@ -57,12 +57,12 @@
       "maximum": 100,
       "description": "Expected conversion rate as percentage"
     },
-    "mpa_min_budget": {
+    "mpa_minbudget": {
       "type": "number",
       "minimum": 0,
       "description": "Minimum recommended budget in dollars"
     },
-    "mpa_max_budget": {
+    "mpa_maxbudget": {
       "type": "number",
       "minimum": 0,
       "description": "Maximum recommended budget in dollars"
@@ -123,7 +123,7 @@
       "default": 100,
       "description": "Display order in lists (lower = higher priority)"
     },
-    "mpa_is_active": {
+    "mpa_isactive": {
       "type": "boolean",
       "default": true,
       "description": "Whether this channel is active and discoverable"
@@ -155,8 +155,8 @@
     }
   },
   "required": [
-    "mpa_channel_code",
-    "mpa_channel_name",
+    "mpa_channelcode",
+    "mpa_newcolumn",
     "mpa_category",
     "mpa_description",
     "mpa_client_id"
@@ -165,20 +165,20 @@
   "indexes": [
     {
       "name": "idx_channel_code_client",
-      "columns": ["mpa_channel_code", "mpa_client_id"],
+      "columns": ["mpa_channelcode", "mpa_client_id"],
       "unique": true
     },
     {
       "name": "idx_client_active",
-      "columns": ["mpa_client_id", "mpa_is_active"]
+      "columns": ["mpa_client_id", "mpa_isactive"]
     },
     {
       "name": "idx_category",
-      "columns": ["mpa_category", "mpa_is_active"]
+      "columns": ["mpa_category", "mpa_isactive"]
     },
     {
       "name": "idx_funnel_position",
-      "columns": ["mpa_funnel_position", "mpa_is_active"]
+      "columns": ["mpa_funnel_position", "mpa_isactive"]
     }
   ],
   "relationships": [

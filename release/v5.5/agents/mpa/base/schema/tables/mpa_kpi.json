@@ -1,0 +1,151 @@
+{
+  "schemaName": "mpa_kpi",
+  "displayName": "KPI",
+  "pluralName": "KPIs",
+  "description": "Key Performance Indicator definitions for media planning metrics",
+  "tier": 1,
+  "featureGate": null,
+  "category": "MediaPlanning",
+  "primaryKey": "mpa_kpiid",
+  "primaryNameColumn": "mpa_newcolumn",
+  "ownershipType": "UserOwned",
+  "publisherPrefix": "mpa",
+  "columns": [
+    {
+      "schemaName": "mpa_kpiid",
+      "displayName": "KPI",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Unique identifier for entity instances"
+    },
+    {
+      "schemaName": "mpa_newcolumn",
+      "displayName": "KPI Name",
+      "dataType": "Text",
+      "maxLength": 850,
+      "required": true,
+      "description": "Primary name field for the KPI"
+    },
+    {
+      "schemaName": "mpa_kpicode",
+      "displayName": "KPI Code",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": true,
+      "unique": true,
+      "description": "Unique code identifying the KPI"
+    },
+    {
+      "schemaName": "mpa_category",
+      "displayName": "Category",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "KPI category classification"
+    },
+    {
+      "schemaName": "mpa_direction",
+      "displayName": "Direction",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": false,
+      "description": "Indicates if higher or lower values are better"
+    },
+    {
+      "schemaName": "mpa_format",
+      "displayName": "Format",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": false,
+      "description": "Display format for the KPI value"
+    },
+    {
+      "schemaName": "mpa_formula",
+      "displayName": "Formula",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Calculation formula for the KPI"
+    },
+    {
+      "schemaName": "mpa_unit",
+      "displayName": "Unit",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": true,
+      "description": "Unit of measurement for the KPI"
+    },
+    {
+      "schemaName": "mpa_isactive",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "options": ["Yes", "No"],
+      "description": "Indicates if the KPI is currently active"
+    },
+    {
+      "schemaName": "mpa_notes",
+      "displayName": "Notes",
+      "dataType": "Text",
+      "maxLength": 4000,
+      "required": false,
+      "description": "Additional notes about the KPI"
+    },
+    {
+      "schemaName": "statecode",
+      "displayName": "Status",
+      "dataType": "State",
+      "required": true,
+      "options": ["Active", "Inactive"],
+      "description": "Status of the KPI"
+    },
+    {
+      "schemaName": "statuscode",
+      "displayName": "Status Reason",
+      "dataType": "Status",
+      "required": false,
+      "options": ["Active", "Inactive"],
+      "description": "Reason for the status of the KPI"
+    },
+    {
+      "schemaName": "ownerid",
+      "displayName": "Owner",
+      "dataType": "Owner",
+      "required": true,
+      "description": "Owner Id"
+    },
+    {
+      "schemaName": "createdon",
+      "displayName": "Created On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was created"
+    },
+    {
+      "schemaName": "modifiedon",
+      "displayName": "Modified On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_kpi_code",
+      "columns": ["mpa_kpicode"],
+      "unique": true
+    },
+    {
+      "name": "idx_kpi_category",
+      "columns": ["mpa_category"],
+      "unique": false
+    },
+    {
+      "name": "idx_kpi_active",
+      "columns": ["mpa_isactive"],
+      "unique": false
+    }
+  ],
+  "seedDataNote": "KPI definitions populated from media planning knowledge base"
+}

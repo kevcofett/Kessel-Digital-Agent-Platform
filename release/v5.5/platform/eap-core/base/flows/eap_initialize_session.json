@@ -254,7 +254,7 @@
                 "parameters": {
                   "entityName": "eap_sessions",
                   "recordId": "@{triggerBody()?['existing_session_id']}",
-                  "item/eap_lastactivity": "@{utcNow()}"
+                  "item/modifiedon": "@{utcNow()}"
                 }
               },
               "runAfter": {
@@ -291,8 +291,8 @@
                   "item/eap_channel": "@{triggerBody()?['channel']}",
                   "item/eap_sessiontype": "AUDIT",
                   "item/eap_status": "Active",
-                  "item/eap_starttime": "@{utcNow()}",
-                  "item/eap_lastactivity": "@{utcNow()}",
+                  "item/eap_startedat": "@{utcNow()}",
+                  "item/modifiedon": "@{utcNow()}",
                   "item/eap_correlationid": "@{variables('varCorrelationId')}"
                 }
               }
@@ -327,8 +327,8 @@
                 "item/eap_channel": "@{triggerBody()?['channel']}",
                 "item/eap_sessiontype": "NEW",
                 "item/eap_status": "Active",
-                "item/eap_starttime": "@{utcNow()}",
-                "item/eap_lastactivity": "@{utcNow()}",
+                "item/eap_startedat": "@{utcNow()}",
+                "item/modifiedon": "@{utcNow()}",
                 "item/eap_correlationid": "@{variables('varCorrelationId')}"
               }
             }

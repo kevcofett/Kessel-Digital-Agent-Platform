@@ -1,0 +1,167 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/Power-Platform-Schema/main/schemas/dataverse/entity.json",
+  "name": "eap_deadletterqueue",
+  "displayName": "Dead Letter Queue",
+  "displayCollectionName": "Dead Letter Queue Entries",
+  "description": "Stores failed operations for retry with exponential backoff",
+  "ownershipType": "OrganizationOwned",
+  "isActivity": false,
+  "primaryNameAttribute": "eap_correlation_id",
+  "columns": [
+    {
+      "name": "eap_dlqid",
+      "displayName": "DLQ ID",
+      "type": "Uniqueidentifier",
+      "description": "Primary key for the dead letter queue entry",
+      "isPrimaryKey": true
+    },
+    {
+      "name": "eap_operation_type",
+      "displayName": "Operation Type",
+      "type": "Picklist",
+      "description": "Type of operation that failed",
+      "isRequired": true,
+      "options": [
+        { "value": 100000000, "label": "Dataverse Create" },
+        { "value": 100000001, "label": "Dataverse Update" },
+        { "value": 100000002, "label": "Dataverse Delete" },
+        { "value": 100000003, "label": "External API Call" },
+        { "value": 100000004, "label": "Document Generation" },
+        { "value": 100000005, "label": "Webhook Delivery" }
+      ]
+    },
+    {
+      "name": "eap_target_table",
+      "displayName": "Target Table",
+      "type": "String",
+      "maxLength": 100,
+      "description": "Target table or endpoint for the operation"
+    },
+    {
+      "name": "eap_payload",
+      "displayName": "Payload",
+      "type": "Memo",
+      "maxLength": 1048576,
+      "description": "JSON payload of the failed operation"
+    },
+    {
+      "name": "eap_error_message",
+      "displayName": "Error Message",
+      "type": "Memo",
+      "maxLength": 4000,
+      "description": "Error message from the failure"
+    },
+    {
+      "name": "eap_error_code",
+      "displayName": "Error Code",
+      "type": "String",
+      "maxLength": 50,
+      "description": "Error code if available"
+    },
+    {
+      "name": "eap_retry_count",
+      "displayName": "Retry Count",
+      "type": "Integer",
+      "minValue": 0,
+      "maxValue": 100,
+      "defaultValue": 0,
+      "description": "Number of retry attempts made"
+    },
+    {
+      "name": "eap_max_retries",
+      "displayName": "Max Retries",
+      "type": "Integer",
+      "minValue": 0,
+      "maxValue": 100,
+      "defaultValue": 3,
+      "description": "Maximum number of retries allowed"
+    },
+    {
+      "name": "eap_status",
+      "displayName": "Status",
+      "type": "Picklist",
+      "description": "Current status of the DLQ entry",
+      "isRequired": true,
+      "options": [
+        { "value": 100000000, "label": "Pending" },
+        { "value": 100000001, "label": "Retrying" },
+        { "value": 100000002, "label": "Succeeded" },
+        { "value": 100000003, "label": "Failed" },
+        { "value": 100000004, "label": "Expired" }
+      ]
+    },
+    {
+      "name": "eap_created_at",
+      "displayName": "Created At",
+      "type": "DateTime",
+      "format": "DateAndTime",
+      "description": "When the entry was created"
+    },
+    {
+      "name": "eap_last_retry_at",
+      "displayName": "Last Retry At",
+      "type": "DateTime",
+      "format": "DateAndTime",
+      "description": "When the last retry was attempted"
+    },
+    {
+      "name": "eap_next_retry_at",
+      "displayName": "Next Retry At",
+      "type": "DateTime",
+      "format": "DateAndTime",
+      "description": "When the next retry is scheduled"
+    },
+    {
+      "name": "eap_correlation_id",
+      "displayName": "Correlation ID",
+      "type": "String",
+      "maxLength": 50,
+      "description": "Correlation ID for request tracing"
+    },
+    {
+      "name": "eap_agent_id",
+      "displayName": "Agent ID",
+      "type": "String",
+      "maxLength": 50,
+      "description": "Agent that initiated the operation"
+    },
+    {
+      "name": "eap_user_id",
+      "displayName": "User ID",
+      "type": "String",
+      "maxLength": 100,
+      "description": "User ID if applicable"
+    },
+    {
+      "name": "eap_tenant_id",
+      "displayName": "Tenant ID",
+      "type": "String",
+      "maxLength": 100,
+      "description": "Tenant ID if multi-tenant"
+    },
+    {
+      "name": "eap_is_active",
+      "displayName": "Is Active",
+      "type": "Boolean",
+      "defaultValue": true,
+      "description": "Whether the record is active"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_eap_dlq_status_next_retry",
+      "columns": ["eap_status", "eap_next_retry_at"],
+      "description": "Index for finding pending entries ready for retry"
+    },
+    {
+      "name": "idx_eap_dlq_correlation",
+      "columns": ["eap_correlation_id"],
+      "description": "Index for finding entries by correlation ID"
+    },
+    {
+      "name": "idx_eap_dlq_agent",
+      "columns": ["eap_agent_id", "eap_status"],
+      "description": "Index for finding entries by agent"
+    }
+  ]
+}

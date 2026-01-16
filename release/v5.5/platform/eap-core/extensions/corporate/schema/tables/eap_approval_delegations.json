@@ -1,0 +1,31 @@
+{
+  "schemaName": "eap_approval_delegations",
+  "displayName": "Approval Delegations",
+  "pluralName": "Approval Delegations",
+  "description": "Approval delegation configurations",
+  "tier": 3,
+  "featureGate": "ADVANCED_APPROVAL",
+  "category": "Approval",
+  "primaryKey": "delegation_id",
+  "primaryNameColumn": "delegation_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "delegation_id", "displayName": "Delegation ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "delegator_user_id", "displayName": "Delegator", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Who is delegating" },
+    { "schemaName": "delegate_user_id", "displayName": "Delegate", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Who receives delegation" },
+    { "schemaName": "delegation_type", "displayName": "Delegation Type", "dataType": "Choice", "required": true, "options": ["Full", "Specific", "OOO"], "description": "Type of delegation" },
+    { "schemaName": "scope_type", "displayName": "Scope Type", "dataType": "Choice", "required": false, "options": ["All", "Client", "OutputType", "Rule"], "description": "Delegation scope" },
+    { "schemaName": "scope_entity_id", "displayName": "Scope Entity ID", "dataType": "UniqueIdentifier", "required": false, "description": "Specific scope entity" },
+    { "schemaName": "start_date", "displayName": "Start Date", "dataType": "DateTime", "required": true, "description": "Delegation start" },
+    { "schemaName": "end_date", "displayName": "End Date", "dataType": "DateTime", "required": false, "description": "Delegation end" },
+    { "schemaName": "reason", "displayName": "Reason", "dataType": "Text", "maxLength": 500, "required": false, "description": "Delegation reason" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": true, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_delegator", "columns": ["delegator_user_id"], "unique": false },
+    { "name": "idx_delegate", "columns": ["delegate_user_id"], "unique": false },
+    { "name": "idx_active_dates", "columns": ["is_active", "start_date", "end_date"], "unique": false }
+  ]
+}

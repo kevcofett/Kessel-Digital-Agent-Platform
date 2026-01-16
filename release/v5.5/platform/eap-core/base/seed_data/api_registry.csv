@@ -1,0 +1,13 @@
+api_id,api_name,api_type,agent_scope,config_key_ref,fallback_api_id,priority,description
+api_llm_primary,Primary LLM,llm,shared,api_azure_openai,,1,Primary language model
+api_llm_fallback,Fallback LLM,llm,shared,api_openai,,2,Fallback if Azure unavailable
+api_llm_anthropic,Anthropic LLM,llm,shared,api_anthropic,,3,Alternative LLM provider
+api_search_primary,Primary Search,search,shared,api_bing,,1,Web search
+api_search_fallback,Fallback Search,search,shared,api_serper,,2,Fallback search
+api_crawl,URL Crawler,crawl,shared,api_firecrawl,,1,Web page retrieval
+api_doc_intel,Document Intelligence,document,shared,api_azure_doc_intel,,1,PDF/document processing
+api_semantic_search,Semantic Search,search,shared,api_azure_ai_search,,1,Vector/semantic search
+api_media_nielsen,Nielsen Media,media,mpa,api_nielsen,,1,Nielsen media data (MPA only)
+api_media_comscore,ComScore Media,media,mpa,api_comscore,,2,ComScore data (MPA only)
+api_benchmark_statista,Statista Benchmarks,consulting,ca,api_statista,,1,Industry benchmarks (CA only)
+api_benchmark_ibis,IBISWorld,consulting,ca,api_ibisworld,,2,Industry reports (CA only)

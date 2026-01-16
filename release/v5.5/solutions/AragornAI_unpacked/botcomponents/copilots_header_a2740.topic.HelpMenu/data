@@ -1,0 +1,40 @@
+kind: AdaptiveDialog
+modelDescription: |-
+  what can you do
+  show me your menu
+  menu
+  options
+  what are your options
+  what are the options I have to use you
+  commands
+  how does this work
+  what are you capable of
+  Show me your user guide
+  I don't understand how to use this
+  I don't understand how to use you
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent: {}
+  actions:
+    - kind: SendActivity
+      id: sendActivity_qGdx47
+      activity: |-
+        I can help you with:
+        📋 **Planning**
+        • "Start a new media plan" - Begin fresh
+        • "Continue planning" - Pick up where you left off
+        • "Go to step 3" - Jump to a specific step
+        🔍 **Research**
+        • "Search channels" - Find media channels
+        • "Search benchmarks" - Find performance benchmarks
+        ✅ \*\*Validation\*\*
+        • "Validate plan" - Check completion status
+        • "Generate document" - Export your plan
+        📊 **Analysis**
+        • "Import performance" - Add campaign results
+        • "Create post-mortem" - Analyze completed campaigns
+        What would you like to do?
+
+inputType: {}
+outputType: {}

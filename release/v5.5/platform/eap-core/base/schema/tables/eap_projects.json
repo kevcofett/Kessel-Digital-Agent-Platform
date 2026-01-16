@@ -1,0 +1,232 @@
+{
+  "schemaName": "eap_projects",
+  "displayName": "Projects",
+  "pluralName": "Projects",
+  "description": "Specific workstream within an engagement or client",
+  "tier": 1,
+  "category": "Core",
+  "primaryKey": "project_id",
+  "primaryNameColumn": "project_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    {
+      "schemaName": "project_id",
+      "displayName": "Project ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "project_code",
+      "displayName": "Project Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique project code"
+    },
+    {
+      "schemaName": "project_name",
+      "displayName": "Project Name",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": true,
+      "description": "Project name"
+    },
+    {
+      "schemaName": "client_id",
+      "displayName": "Client",
+      "dataType": "Lookup",
+      "lookupTable": "eap_client",
+      "required": true,
+      "description": "Parent client"
+    },
+    {
+      "schemaName": "engagement_id",
+      "displayName": "Engagement",
+      "dataType": "Lookup",
+      "lookupTable": "eap_engagements",
+      "required": false,
+      "description": "Parent engagement (if ENGAGEMENTS feature enabled)"
+    },
+    {
+      "schemaName": "project_type",
+      "displayName": "Project Type",
+      "dataType": "Choice",
+      "required": false,
+      "options": ["Strategy", "Analysis", "Implementation", "Research", "Other"],
+      "description": "Type of project"
+    },
+    {
+      "schemaName": "status",
+      "displayName": "Status",
+      "dataType": "Choice",
+      "required": true,
+      "defaultValue": "Draft",
+      "options": ["Draft", "Active", "OnHold", "Completed", "Cancelled"],
+      "description": "Project status"
+    },
+    {
+      "schemaName": "priority",
+      "displayName": "Priority",
+      "dataType": "Choice",
+      "required": false,
+      "options": ["Low", "Medium", "High", "Critical"],
+      "description": "Project priority"
+    },
+    {
+      "schemaName": "start_date",
+      "displayName": "Start Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Project start date"
+    },
+    {
+      "schemaName": "target_end_date",
+      "displayName": "Target End Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Target completion date"
+    },
+    {
+      "schemaName": "actual_end_date",
+      "displayName": "Actual End Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Actual completion date"
+    },
+    {
+      "schemaName": "project_owner_user_id",
+      "displayName": "Project Owner",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": false,
+      "description": "Project owner"
+    },
+    {
+      "schemaName": "project_lead_user_id",
+      "displayName": "Project Lead",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": false,
+      "description": "Project lead"
+    },
+    {
+      "schemaName": "product_unit_id",
+      "displayName": "Product Unit",
+      "dataType": "Lookup",
+      "lookupTable": "eap_product_units",
+      "required": false,
+      "description": "Product unit"
+    },
+    {
+      "schemaName": "business_unit_id",
+      "displayName": "Business Unit",
+      "dataType": "Lookup",
+      "lookupTable": "eap_business_units",
+      "required": false,
+      "description": "Business unit"
+    },
+    {
+      "schemaName": "division_id",
+      "displayName": "Division",
+      "dataType": "Lookup",
+      "lookupTable": "eap_divisions",
+      "required": false,
+      "description": "Division"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Project description"
+    },
+    {
+      "schemaName": "objectives_json",
+      "displayName": "Objectives",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "JSON array of project objectives"
+    },
+    {
+      "schemaName": "deliverables_json",
+      "displayName": "Deliverables",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "JSON array of expected deliverables"
+    },
+    {
+      "schemaName": "context_summary",
+      "displayName": "Context Summary",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Accumulated project context"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    },
+    {
+      "schemaName": "modified_by",
+      "displayName": "Modified By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Modifier"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_project_code",
+      "columns": ["project_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_client_id",
+      "columns": ["client_id"],
+      "unique": false
+    },
+    {
+      "name": "idx_engagement_id",
+      "columns": ["engagement_id"],
+      "unique": false
+    },
+    {
+      "name": "idx_status",
+      "columns": ["status"],
+      "unique": false
+    },
+    {
+      "name": "idx_project_owner",
+      "columns": ["project_owner_user_id"],
+      "unique": false
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "schemaName": "eap_approval_requests",
+  "displayName": "Approval Requests",
+  "pluralName": "Approval Requests",
+  "description": "Active approval requests",
+  "tier": 3,
+  "featureGate": "BASIC_APPROVAL",
+  "category": "Approval",
+  "primaryKey": "request_id",
+  "primaryNameColumn": "request_code",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "request_id", "displayName": "Request ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "request_code", "displayName": "Request Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique request code" },
+    { "schemaName": "output_id", "displayName": "Output", "dataType": "Lookup", "lookupTable": "eap_outputs", "required": true, "description": "Output being approved" },
+    { "schemaName": "triggered_rule_id", "displayName": "Triggered Rule", "dataType": "Lookup", "lookupTable": "eap_approval_rules", "required": true, "description": "Rule that triggered" },
+    { "schemaName": "requester_user_id", "displayName": "Requester", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Who submitted" },
+    { "schemaName": "request_date", "displayName": "Request Date", "dataType": "DateTime", "required": true, "description": "When submitted" },
+    { "schemaName": "status", "displayName": "Status", "dataType": "Choice", "required": true, "defaultValue": "Pending", "options": ["Pending", "Approved", "Rejected", "ChangesRequested", "Expired", "Cancelled"], "description": "Request status" },
+    { "schemaName": "current_step", "displayName": "Current Step", "dataType": "WholeNumber", "required": false, "description": "Current step in chain" },
+    { "schemaName": "total_steps", "displayName": "Total Steps", "dataType": "WholeNumber", "required": false, "description": "Total steps in chain" },
+    { "schemaName": "pending_approvers_json", "displayName": "Pending Approvers", "dataType": "MultilineText", "required": false, "description": "Pending approver IDs JSON" },
+    { "schemaName": "completed_approvers_json", "displayName": "Completed Approvers", "dataType": "MultilineText", "required": false, "description": "Completed approver IDs JSON" },
+    { "schemaName": "urgency", "displayName": "Urgency", "dataType": "Choice", "required": true, "defaultValue": "Normal", "options": ["Low", "Normal", "High", "Urgent"], "description": "Request urgency" },
+    { "schemaName": "due_date", "displayName": "Due Date", "dataType": "DateTime", "required": false, "description": "Expected completion" },
+    { "schemaName": "requester_notes", "displayName": "Requester Notes", "dataType": "MultilineText", "required": false, "description": "Notes from requester" },
+    { "schemaName": "escalated", "displayName": "Escalated", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Has been escalated" },
+    { "schemaName": "escalated_date", "displayName": "Escalated Date", "dataType": "DateTime", "required": false, "description": "When escalated" },
+    { "schemaName": "escalated_to_json", "displayName": "Escalated To", "dataType": "MultilineText", "required": false, "description": "Escalation targets JSON" },
+    { "schemaName": "resolution_date", "displayName": "Resolution Date", "dataType": "DateTime", "required": false, "description": "When resolved" },
+    { "schemaName": "resolved_by", "displayName": "Resolved By", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "Who resolved" },
+    { "schemaName": "resolution_notes", "displayName": "Resolution Notes", "dataType": "MultilineText", "required": false, "description": "Resolution notes" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": true, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_request_code", "columns": ["request_code"], "unique": true },
+    { "name": "idx_output", "columns": ["output_id"], "unique": false },
+    { "name": "idx_status", "columns": ["status"], "unique": false },
+    { "name": "idx_requester", "columns": ["requester_user_id"], "unique": false }
+  ]
+}

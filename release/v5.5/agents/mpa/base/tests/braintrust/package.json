@@ -1,0 +1,33 @@
+{
+  "name": "@kessel-digital/mpa-braintrust",
+  "version": "5.5.0",
+  "description": "Media Planning Agent Braintrust Evaluation Suite",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "rebuild": "npm run clean && npm run build",
+    "eval": "npx braintrust eval mpa-eval.ts",
+    "eval:multi": "npx braintrust eval mpa-multi-turn-eval.ts",
+    "test": "npm run build && npm run eval"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.15",
+    "@anthropic-ai/sdk": "^0.71.2",
+    "@kessel-digital/agent-core": "file:../../../../../../../packages/agent-core",
+    "ai": "^6.0.39",
+    "autoevals": "^0.0.80",
+    "braintrust": "^0.0.160",
+    "natural": "^8.1.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

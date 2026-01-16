@@ -1,0 +1,31 @@
+{
+  "schemaName": "eap_brand_profiles",
+  "displayName": "Brand Profile",
+  "pluralName": "Brand Profiles",
+  "description": "Brand voice and style configurations",
+  "tier": 3,
+  "featureGate": "BRAND_PROFILES",
+  "category": "Configuration",
+  "primaryKey": "brand_id",
+  "primaryNameColumn": "brand_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "brand_id", "displayName": "Brand ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "brand_code", "displayName": "Brand Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique brand code" },
+    { "schemaName": "brand_name", "displayName": "Brand Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Brand display name" },
+    { "schemaName": "client_id", "displayName": "Client", "dataType": "Lookup", "lookupTable": "eap_client", "required": false, "description": "Associated client (null for internal)" },
+    { "schemaName": "voice_tone", "displayName": "Voice Tone", "dataType": "Choice", "required": true, "defaultValue": "Professional", "options": ["Professional", "Friendly", "Technical", "Casual", "Formal", "Custom"], "description": "Brand voice tone" },
+    { "schemaName": "voice_description", "displayName": "Voice Description", "dataType": "MultilineText", "required": false, "description": "Detailed voice guidelines" },
+    { "schemaName": "terminology_json", "displayName": "Terminology", "dataType": "MultilineText", "required": false, "description": "Brand-specific terminology JSON" },
+    { "schemaName": "prohibited_terms_json", "displayName": "Prohibited Terms", "dataType": "MultilineText", "required": false, "description": "Terms to avoid JSON" },
+    { "schemaName": "example_phrases_json", "displayName": "Example Phrases", "dataType": "MultilineText", "required": false, "description": "Example brand phrases JSON" },
+    { "schemaName": "is_default", "displayName": "Is Default", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Default brand profile" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_brand_code", "columns": ["brand_code"], "unique": true },
+    { "name": "idx_client", "columns": ["client_id"], "unique": false }
+  ]
+}

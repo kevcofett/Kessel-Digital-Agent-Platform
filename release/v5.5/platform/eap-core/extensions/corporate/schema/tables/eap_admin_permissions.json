@@ -1,0 +1,119 @@
+{
+  "schemaName": "eap_admin_permissions",
+  "displayName": "Admin Permissions",
+  "pluralName": "Admin Permissions",
+  "description": "Individual admin permissions that can be assigned to roles",
+  "tier": 1,
+  "category": "Admin",
+  "primaryKey": "permission_id",
+  "primaryNameColumn": "permission_name",
+  "ownershipType": "OrganizationOwned",
+  "isReferenceData": true,
+  "columns": [
+    {
+      "schemaName": "permission_id",
+      "displayName": "Permission ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "permission_code",
+      "displayName": "Permission Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique permission code"
+    },
+    {
+      "schemaName": "permission_name",
+      "displayName": "Permission Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Permission name"
+    },
+    {
+      "schemaName": "permission_category",
+      "displayName": "Permission Category",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Agent", "User", "Content", "Config", "Governance", "Approval", "Audit"],
+      "description": "Permission category"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Description"
+    },
+    {
+      "schemaName": "is_sensitive",
+      "displayName": "Is Sensitive",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Sensitive permission (extra audit)"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "sort_order",
+      "displayName": "Sort Order",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Display order"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_permission_code",
+      "columns": ["permission_code"],
+      "unique": true
+    }
+  ],
+  "seedData": [
+    { "permission_code": "AGENT_VIEW", "permission_name": "View Agents", "permission_category": "Agent", "is_sensitive": false },
+    { "permission_code": "AGENT_CREATE", "permission_name": "Create Agents", "permission_category": "Agent", "is_sensitive": true },
+    { "permission_code": "AGENT_CONFIGURE", "permission_name": "Configure Agents", "permission_category": "Agent", "is_sensitive": true },
+    { "permission_code": "AGENT_DELETE", "permission_name": "Delete Agents", "permission_category": "Agent", "is_sensitive": true },
+    { "permission_code": "USER_VIEW", "permission_name": "View Users", "permission_category": "User", "is_sensitive": false },
+    { "permission_code": "USER_MANAGE", "permission_name": "Manage Users", "permission_category": "User", "is_sensitive": true },
+    { "permission_code": "USER_ADMIN_GRANT", "permission_name": "Grant Admin Access", "permission_category": "User", "is_sensitive": true },
+    { "permission_code": "CONTENT_VIEW_ALL", "permission_name": "View All Content", "permission_category": "Content", "is_sensitive": false },
+    { "permission_code": "CONTENT_MANAGE_KB", "permission_name": "Manage Knowledge Base", "permission_category": "Content", "is_sensitive": true },
+    { "permission_code": "CONTENT_MANAGE_TEMPLATES", "permission_name": "Manage Templates", "permission_category": "Content", "is_sensitive": true },
+    { "permission_code": "CONFIG_REGISTRIES", "permission_name": "Configure Registries", "permission_category": "Config", "is_sensitive": true },
+    { "permission_code": "CONFIG_FEATURES", "permission_name": "Configure Features", "permission_category": "Config", "is_sensitive": true },
+    { "permission_code": "CONFIG_INTEGRATIONS", "permission_name": "Configure Integrations", "permission_category": "Config", "is_sensitive": true },
+    { "permission_code": "GOVERNANCE_VIEW_ALL", "permission_name": "View All Governance", "permission_category": "Governance", "is_sensitive": false },
+    { "permission_code": "GOVERNANCE_MANAGE", "permission_name": "Manage Governance", "permission_category": "Governance", "is_sensitive": true },
+    { "permission_code": "APPROVAL_VIEW_ALL", "permission_name": "View All Approvals", "permission_category": "Approval", "is_sensitive": false },
+    { "permission_code": "APPROVAL_OVERRIDE", "permission_name": "Override Approvals", "permission_category": "Approval", "is_sensitive": true },
+    { "permission_code": "AUDIT_VIEW", "permission_name": "View Audit Logs", "permission_category": "Audit", "is_sensitive": false },
+    { "permission_code": "AUDIT_EXPORT", "permission_name": "Export Audit Logs", "permission_category": "Audit", "is_sensitive": true }
+  ]
+}

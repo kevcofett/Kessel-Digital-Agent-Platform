@@ -1,0 +1,209 @@
+{
+  "schemaName": "eap_frameworks",
+  "displayName": "Frameworks",
+  "pluralName": "Frameworks",
+  "description": "Consulting and analysis frameworks for structured thinking",
+  "tier": 1,
+  "category": "Content",
+  "primaryKey": "framework_id",
+  "primaryNameColumn": "framework_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    {
+      "schemaName": "framework_id",
+      "displayName": "Framework ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "framework_code",
+      "displayName": "Framework Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique framework code"
+    },
+    {
+      "schemaName": "framework_name",
+      "displayName": "Framework Name",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": true,
+      "description": "Framework name"
+    },
+    {
+      "schemaName": "framework_category",
+      "displayName": "Framework Category",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Strategic", "Operational", "Analytical", "Financial", "Technical"],
+      "description": "Framework category"
+    },
+    {
+      "schemaName": "framework_type",
+      "displayName": "Framework Type",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Analysis", "Planning", "Assessment", "Decision", "Other"],
+      "description": "Framework type"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Description"
+    },
+    {
+      "schemaName": "when_to_use",
+      "displayName": "When To Use",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Usage guidance"
+    },
+    {
+      "schemaName": "key_questions_json",
+      "displayName": "Key Questions",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Key questions JSON"
+    },
+    {
+      "schemaName": "components_json",
+      "displayName": "Components",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Framework components JSON"
+    },
+    {
+      "schemaName": "steps_json",
+      "displayName": "Steps",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Framework steps JSON"
+    },
+    {
+      "schemaName": "example_applications",
+      "displayName": "Example Applications",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Example applications"
+    },
+    {
+      "schemaName": "related_framework_ids_json",
+      "displayName": "Related Frameworks",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Related frameworks JSON"
+    },
+    {
+      "schemaName": "source_reference",
+      "displayName": "Source Reference",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Original source"
+    },
+    {
+      "schemaName": "agent_ids_json",
+      "displayName": "Agent IDs",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Applicable agents JSON"
+    },
+    {
+      "schemaName": "kb_file_id",
+      "displayName": "KB File",
+      "dataType": "Lookup",
+      "lookupTable": "eap_kb_registry",
+      "required": false,
+      "description": "Associated KB file"
+    },
+    {
+      "schemaName": "usage_count",
+      "displayName": "Usage Count",
+      "dataType": "WholeNumber",
+      "required": true,
+      "defaultValue": 0,
+      "description": "Usage count"
+    },
+    {
+      "schemaName": "average_rating",
+      "displayName": "Average Rating",
+      "dataType": "Decimal",
+      "required": false,
+      "description": "Average rating"
+    },
+    {
+      "schemaName": "is_platform_standard",
+      "displayName": "Is Platform Standard",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Platform standard"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    },
+    {
+      "schemaName": "modified_by",
+      "displayName": "Modified By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Modifier"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_framework_code",
+      "columns": ["framework_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_framework_category",
+      "columns": ["framework_category"],
+      "unique": false
+    },
+    {
+      "name": "idx_framework_type",
+      "columns": ["framework_type"],
+      "unique": false
+    },
+    {
+      "name": "idx_is_active",
+      "columns": ["is_active"],
+      "unique": false
+    }
+  ],
+  "seedDataNote": "32 frameworks populated from V11 migration"
+}

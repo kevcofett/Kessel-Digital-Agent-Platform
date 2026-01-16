@@ -1,0 +1,32 @@
+{
+  "schemaName": "eap_webhook_logs",
+  "displayName": "Webhook Log",
+  "pluralName": "Webhook Logs",
+  "description": "Log of webhook invocations",
+  "tier": 3,
+  "featureGate": "WEBHOOKS",
+  "category": "Integration",
+  "primaryKey": "log_id",
+  "primaryNameColumn": "log_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "log_id", "displayName": "Log ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "webhook_id", "displayName": "Webhook", "dataType": "Lookup", "lookupTable": "eap_webhooks", "required": true, "description": "Associated webhook" },
+    { "schemaName": "event_type", "displayName": "Event Type", "dataType": "Text", "maxLength": 100, "required": true, "description": "Event that triggered" },
+    { "schemaName": "event_data_json", "displayName": "Event Data", "dataType": "MultilineText", "required": false, "description": "Event payload JSON" },
+    { "schemaName": "request_url", "displayName": "Request URL", "dataType": "Text", "maxLength": 1000, "required": true, "description": "Called URL" },
+    { "schemaName": "request_headers_json", "displayName": "Request Headers", "dataType": "MultilineText", "required": false, "description": "Sent headers JSON" },
+    { "schemaName": "response_status", "displayName": "Response Status", "dataType": "WholeNumber", "required": false, "description": "HTTP status code" },
+    { "schemaName": "response_body", "displayName": "Response Body", "dataType": "MultilineText", "required": false, "description": "Response received" },
+    { "schemaName": "duration_ms", "displayName": "Duration MS", "dataType": "WholeNumber", "required": false, "description": "Request duration" },
+    { "schemaName": "attempt_number", "displayName": "Attempt Number", "dataType": "WholeNumber", "required": true, "defaultValue": 1, "description": "Attempt count" },
+    { "schemaName": "success", "displayName": "Success", "dataType": "Boolean", "required": true, "description": "Was successful" },
+    { "schemaName": "error_message", "displayName": "Error Message", "dataType": "MultilineText", "required": false, "description": "Error if failed" },
+    { "schemaName": "triggered_date", "displayName": "Triggered Date", "dataType": "DateTime", "required": true, "description": "When triggered" }
+  ],
+  "indexes": [
+    { "name": "idx_webhook", "columns": ["webhook_id"], "unique": false },
+    { "name": "idx_triggered", "columns": ["triggered_date"], "unique": false },
+    { "name": "idx_success", "columns": ["success"], "unique": false }
+  ]
+}

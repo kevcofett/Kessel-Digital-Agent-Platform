@@ -1,0 +1,121 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "flowName": "EAP_InitializeSession",
+    "flowNumber": "01",
+    "displayName": "EAP - Initialize Session",
+    "description": "Initialize a new Enterprise AI Platform orchestrator session",
+    "version": "1.0.0",
+    "author": "Phase 10 Implementation",
+    "createdDate": "2026-01-12",
+    "tables": ["eap_session"],
+    "azureFunctions": []
+  },
+  "trigger": {
+    "type": "Request",
+    "kind": "Http",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "user_id": {"type": "string", "description": "User identifier from Entra ID"},
+        "pathway": {"type": "string", "enum": ["EXPRESS", "GUIDED", "STANDARD"], "description": "Session pathway type"},
+        "target_agent": {"type": "string", "enum": ["MPA", "CA"], "description": "Target agent for routing"},
+        "initial_context": {"type": "object", "description": "Optional initial context data"}
+      },
+      "required": ["user_id"]
+    }
+  },
+  "variables": [
+    {"name": "varSessionId", "type": "String", "value": ""},
+    {"name": "varPathwayCode", "type": "Integer", "value": 100000001},
+    {"name": "varAgentType", "type": "Integer", "value": 100000002}
+  ],
+  "actions": {
+    "Scope_Try": {
+      "type": "Scope",
+      "actions": {
+        "Generate_Session_ID": {
+          "type": "Compose",
+          "inputs": "@{guid()}",
+          "runAfter": {}
+        },
+        "Set_Session_ID": {
+          "type": "SetVariable",
+          "inputs": {"name": "varSessionId", "value": "@outputs('Generate_Session_ID')"},
+          "runAfter": {"Generate_Session_ID": ["Succeeded"]}
+        },
+        "Switch_Pathway": {
+          "type": "Switch",
+          "expression": "@coalesce(triggerBody()?['pathway'], 'GUIDED')",
+          "cases": {
+            "EXPRESS": {"case": "EXPRESS", "actions": {"Set_Express": {"type": "SetVariable", "inputs": {"name": "varPathwayCode", "value": 100000000}}}},
+            "GUIDED": {"case": "GUIDED", "actions": {"Set_Guided": {"type": "SetVariable", "inputs": {"name": "varPathwayCode", "value": 100000001}}}},
+            "STANDARD": {"case": "STANDARD", "actions": {"Set_Standard": {"type": "SetVariable", "inputs": {"name": "varPathwayCode", "value": 100000002}}}}
+          },
+          "default": {"actions": {}},
+          "runAfter": {"Set_Session_ID": ["Succeeded"]}
+        },
+        "Create_Session_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "eap_sessions",
+              "item": {
+                "eap_sessioncode": "@concat('EAP-', formatDateTime(utcNow(), 'yyyyMMddHHmmss'), '-', substring(guid(), 0, 4))",
+                "eap_userid": "@triggerBody()?['user_id']",
+                "eap_agentcode": "EAP",
+                "eap_status": 200000000,
+                "eap_startedat": "@utcNow()",
+                "eap_sessiondata": "@if(empty(triggerBody()?['initial_context']), json(concat('{\"target_agent\":\"', coalesce(triggerBody()?['target_agent'], ''), '\"}')), string(triggerBody()?['initial_context']))"
+              }
+            }
+          },
+          "runAfter": {"Switch_Pathway": ["Succeeded"]}
+        },
+        "Response_Success": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {"Content-Type": "application/json"},
+            "body": {
+              "status": "Success",
+              "session_id": "@variables('varSessionId')",
+              "pathway": "@triggerBody()?['pathway']",
+              "agent_type": "EAP",
+              "target_agent": "@triggerBody()?['target_agent']",
+              "started_at": "@utcNow()"
+            }
+          },
+          "runAfter": {"Create_Session_Record": ["Succeeded"]}
+        }
+      }
+    },
+    "Scope_Catch": {
+      "type": "Scope",
+      "runAfter": {"Scope_Try": ["Failed", "TimedOut"]},
+      "actions": {
+        "Response_Error": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 500,
+            "headers": {"Content-Type": "application/json"},
+            "body": {"status": "Error", "message": "Failed to initialize EAP session"}
+          }
+        }
+      }
+    }
+  },
+  "connectionReferences": {
+    "shared_commondataserviceforapps": {
+      "connectionName": "shared_commondataserviceforapps",
+      "source": "Embedded",
+      "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+      "tier": "Standard"
+    }
+  }
+}

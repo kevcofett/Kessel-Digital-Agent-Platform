@@ -1,0 +1,93 @@
+DATA SOURCE HIERARCHY FOR CONSULTING AGENT
+
+Version: 1.0
+Effective Date: 2025-01-01
+
+===
+
+OVERVIEW
+
+The Consulting Agent must attempt to obtain research data from sources in priority order.
+Every data point, statistic, benchmark, or fact used in analysis must include a citation.
+
+===
+
+PRIORITY 1 - KNOWLEDGE BASE
+
+Description: FRAMEWORK_Library_Master_v1, INDUSTRY_Expertise_Guide_v1, REGISTRY_Benchmarks files, REFERENCE files
+Confidence Level: VERIFIED
+When to use: Always search KB first for methodology, benchmarks, industry data
+Citation format: Source: [Document Name], Kessel Digital Knowledge Base
+Example: Source: REGISTRY_Benchmarks_Media_KPIs_v1, Kessel Digital Knowledge Base
+
+---
+
+PRIORITY 2 - LIVE WEB SEARCH
+
+Description: Current industry data, market reports, competitive intelligence
+Confidence Level: RESEARCHED
+When to use: KB lacks current data or specific competitive information
+
+Acceptable sources:
+Industry publications (Gartner, Forrester, McKinsey, BCG, Deloitte, Accenture)
+Company official sources (press releases, investor reports, SEC filings)
+Trade publications (relevant industry journals)
+Government data (census, regulatory filings)
+
+Citation format: Source: [Publication], [URL], accessed [YYYY-MM-DD]
+Example: Source: Gartner Magic Quadrant for CDPs 2024, https://gartner.com/doc/123, accessed 2025-01-15
+
+---
+
+WEB SEARCH PROTECTION
+
+NEVER include in search queries:
+Client company names
+Client employee names
+Confidential project details
+Internal budget figures
+Proprietary strategy information
+
+---
+
+PRIORITY 3 - USER-PROVIDED DATA
+
+Description: Client-specific information shared in conversation
+Confidence Level: CLIENT-PROVIDED
+When to use: Client shares proprietary data, internal metrics, strategic context
+Citation format: Source: Client-provided data, [description]
+Example: Source: Client-provided data, Q3 2024 customer survey results
+
+---
+
+PRIORITY 4 - ANALYST ESTIMATION
+
+Description: Professional judgment based on patterns and experience
+Confidence Level: ESTIMATED
+When to use: No authoritative source available, reasonable inference possible
+Citation format: Source: Analyst estimate based on [rationale]
+Example: Source: Analyst estimate based on industry average growth rates
+
+Agent must explicitly note when using estimates vs verified data.
+
+===
+
+CITATION REQUIREMENTS
+
+Every significant claim must include citation.
+Tables and comparisons must cite data sources.
+Recommendations based on data must reference source.
+If source conflicts exist, present both with citations.
+
+===
+
+SOURCE HIERARCHY SUMMARY
+
+Priority 1 VERIFIED: Knowledge Base (FRAMEWORK, INDUSTRY, REGISTRY, REFERENCE files)
+Priority 2 RESEARCHED: Live Web Search (industry publications, official sources)
+Priority 3 CLIENT-PROVIDED: User-shared data (internal metrics, proprietary information)
+Priority 4 ESTIMATED: Analyst judgment (when no authoritative source available)
+
+===
+
+END OF DATA SOURCE HIERARCHY

@@ -1,0 +1,26 @@
+{
+  "schemaName": "eap_environment_variables",
+  "displayName": "Environment Variable",
+  "pluralName": "Environment Variables",
+  "description": "Environment-specific configuration variables",
+  "tier": 3,
+  "featureGate": "ENV_VARIABLES",
+  "category": "Configuration",
+  "primaryKey": "variable_id",
+  "primaryNameColumn": "variable_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "variable_id", "displayName": "Variable ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "variable_key", "displayName": "Variable Key", "dataType": "Text", "maxLength": 100, "required": true, "description": "Variable key" },
+    { "schemaName": "variable_name", "displayName": "Variable Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Display name" },
+    { "schemaName": "environment", "displayName": "Environment", "dataType": "Choice", "required": true, "options": ["Development", "Staging", "Production", "All"], "description": "Target environment" },
+    { "schemaName": "variable_value", "displayName": "Value", "dataType": "MultilineText", "required": false, "description": "Variable value" },
+    { "schemaName": "is_secret", "displayName": "Is Secret", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Sensitive value" },
+    { "schemaName": "description", "displayName": "Description", "dataType": "MultilineText", "required": false, "description": "Variable description" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_key_env", "columns": ["variable_key", "environment"], "unique": true }
+  ]
+}

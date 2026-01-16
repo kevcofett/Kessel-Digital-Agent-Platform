@@ -93,10 +93,10 @@ def get_cached_benchmarks(
         filter_str = " and ".join(filters) if filters else None
 
         benchmarks = dataverse_client.get_records(
-            table_name="new_advertisingbenchmark",
-            select="mpa_benchmarkid,mpa_name,mpa_vertical,mpa_channel,mpa_kpi,mpa_minvalue,mpa_maxvalue,mpa_defaultvalue,mpa_source,mpa_lastupdated",
+            table_name="mpa_benchmarks",
+            select="mpa_benchmarkid,mpa_name,mpa_verticalcode,mpa_channelcode,mpa_kpicode,mpa_minvalue,mpa_maxvalue,mpa_defaultvalue,mpa_source,mpa_lastupdated",
             filter_query=filter_str,
-            order_by="mpa_vertical,mpa_channel"
+            order_by="mpa_verticalcode,mpa_channelcode"
         )
 
         # Cache the result
@@ -150,10 +150,10 @@ def get_cached_channels(
         filter_query = f"mpa_channelid eq '{sanitize_odata_guid(channel_id)}'" if channel_id else None
 
         channels = dataverse_client.get_records(
-            table_name="new_advertisingchannel",
-            select="mpa_channelid,mpa_name,mpa_category,mpa_description,mpa_defaultcpm,mpa_defaultcpc,mpa_isactive",
+            table_name="mpa_channels",
+            select="mpa_channelid,mpa_channelcode,mpa_channelname,mpa_category,mpa_description,mpa_defaultcpm,mpa_defaultcpc,mpa_isactive",
             filter_query=filter_query,
-            order_by="mpa_category,mpa_name"
+            order_by="mpa_category,mpa_channelname"
         )
 
         # Cache the result
@@ -207,10 +207,10 @@ def get_cached_kpis(
         filter_query = f"mpa_kpiid eq '{sanitize_odata_guid(kpi_id)}'" if kpi_id else None
 
         kpis = dataverse_client.get_records(
-            table_name="new_keyperformanceindicator",
-            select="mpa_kpiid,mpa_name,mpa_abbreviation,mpa_description,mpa_formula,mpa_unit,mpa_category,mpa_iscore",
+            table_name="mpa_kpis",
+            select="mpa_kpiid,mpa_kpicode,mpa_kpiname,mpa_abbreviation,mpa_description,mpa_formula,mpa_unit,mpa_category,mpa_iscore",
             filter_query=filter_query,
-            order_by="mpa_category,mpa_name"
+            order_by="mpa_category,mpa_kpiname"
         )
 
         # Cache the result
@@ -264,10 +264,10 @@ def get_cached_verticals(
         filter_query = f"mpa_verticalid eq '{sanitize_odata_guid(vertical_id)}'" if vertical_id else None
 
         verticals = dataverse_client.get_records(
-            table_name="new_businessvertical",
-            select="mpa_verticalid,mpa_name,mpa_description,mpa_parentvertical,mpa_isactive",
+            table_name="mpa_verticals",
+            select="mpa_verticalid,mpa_verticalcode,mpa_verticalname,mpa_description,mpa_parentvertical,mpa_isactive",
             filter_query=filter_query,
-            order_by="mpa_name"
+            order_by="mpa_verticalname"
         )
 
         # Cache the result
@@ -313,8 +313,8 @@ def get_cached_session(
     try:
         safe_session_id = sanitize_odata_guid(session_id)
         sessions = dataverse_client.get_records(
-            table_name="new_session",
-            select="eap_sessionid,eap_clientid,eap_userid,eap_agenttype,eap_status,eap_context,createdon,modifiedon",
+            table_name="eap_sessions",
+            select="eap_sessionid,eap_clientid,eap_userid,eap_agentcode,eap_status,eap_sessiondata,createdon,modifiedon",
             filter_query=f"eap_sessionid eq '{safe_session_id}'",
             top=1
         )

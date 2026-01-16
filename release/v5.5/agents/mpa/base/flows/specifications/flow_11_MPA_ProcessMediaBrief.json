@@ -55,10 +55,10 @@
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "UpdateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
             "parameters": {
-              "entityName": "eap_session",
+              "entityName": "eap_sessions",
               "recordId": "@triggerBody()?['session_id']",
               "item": {
-                "eap_session_data": "@string(outputs('Extract_Brief_Data'))"
+                "eap_sessiondata": "@string(outputs('Extract_Brief_Data'))"
               }
             }
           },
@@ -93,7 +93,7 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
-            "parameters": {"entityName": "mpa_errorlog", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_ProcessMediaBrief", "mpa_severity": 100000002, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()", "mpa_session_id": "@triggerBody()?['session_id']"}}
+            "parameters": {"entityName": "mpa_errorlogs", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_ProcessMediaBrief", "mpa_severity": 100000002, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()", "mpa_session_id": "@triggerBody()?['session_id']"}}
           },
           "runAfter": {"Set_varErrorMessage": ["Succeeded"]}
         },

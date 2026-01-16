@@ -1,0 +1,31 @@
+{
+  "schemaName": "eap_system_settings",
+  "displayName": "System Setting",
+  "pluralName": "System Settings",
+  "description": "Platform-wide system settings",
+  "tier": 1,
+  "featureGate": null,
+  "category": "Configuration",
+  "primaryKey": "setting_id",
+  "primaryNameColumn": "setting_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "setting_id", "displayName": "Setting ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "setting_key", "displayName": "Setting Key", "dataType": "Text", "maxLength": 100, "required": true, "unique": true, "description": "Unique setting key" },
+    { "schemaName": "setting_name", "displayName": "Setting Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Display name" },
+    { "schemaName": "setting_category", "displayName": "Category", "dataType": "Choice", "required": true, "options": ["General", "Security", "Performance", "Integration", "UI", "Email", "AI"], "description": "Setting category" },
+    { "schemaName": "setting_value", "displayName": "Value", "dataType": "MultilineText", "required": false, "description": "Setting value" },
+    { "schemaName": "value_type", "displayName": "Value Type", "dataType": "Choice", "required": true, "defaultValue": "String", "options": ["String", "Number", "Boolean", "JSON", "Secret"], "description": "Data type" },
+    { "schemaName": "default_value", "displayName": "Default Value", "dataType": "MultilineText", "required": false, "description": "Default if not set" },
+    { "schemaName": "description", "displayName": "Description", "dataType": "MultilineText", "required": false, "description": "Setting description" },
+    { "schemaName": "is_encrypted", "displayName": "Is Encrypted", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Value is encrypted" },
+    { "schemaName": "requires_restart", "displayName": "Requires Restart", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Needs restart to apply" },
+    { "schemaName": "is_readonly", "displayName": "Is Readonly", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Cannot be changed via UI" },
+    { "schemaName": "modified_by_user_id", "displayName": "Modified By", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "Last modified by" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_setting_key", "columns": ["setting_key"], "unique": true },
+    { "name": "idx_category", "columns": ["setting_category"], "unique": false }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "branch": "deploy/mastercard",
+  "environment": "production",
+  "organization": "mastercard",
+
+  "defaults": {
+    "stack": "microsoft",
+    "allowStackSwitch": true
+  },
+
+  "agents": {
+    "mpa": {
+      "enabled": true,
+      "instructionsFile": "agents/mpa/mastercard/instructions/MPA_Copilot_Instructions_PRODUCTION.txt",
+      "kbFolder": "MPA",
+      "flows": ["session-init", "kb-retrieve", "generate-response", "track-impact"]
+    },
+    "ca": {
+      "enabled": true,
+      "instructionsFile": "agents/ca/mastercard/instructions/CA_Copilot_Instructions_PRODUCTION.txt",
+      "kbFolder": "CA",
+      "flows": ["session-init", "kb-retrieve", "generate-response"]
+    },
+    "eap": {
+      "enabled": true,
+      "instructionsFile": "agents/eap/mastercard/instructions/EAP_Copilot_Instructions_PRODUCTION.txt",
+      "kbFolder": "EAP",
+      "flows": ["session-init", "kb-retrieve"]
+    }
+  },
+
+  "dataverse": {
+    "solutionName": "KesselDigitalAgentPlatform",
+    "solutionVersion": "5.5.0.0",
+    "tables": [
+      "cr_agentsessions",
+      "cr_kbdocuments",
+      "cr_kbusagerecords",
+      "cr_kbdocumentimpacts",
+      "cr_kbupdateproposals",
+      "cr_verticals",
+      "cr_kpis",
+      "cr_channels",
+      "cr_benchmarks"
+    ]
+  },
+
+  "sharepoint": {
+    "siteUrl": "https://mastercard.sharepoint.com/sites/CAEConsultingProduct",
+    "libraryName": "Shared Documents",
+    "folders": {
+      "MPA": "https://mastercard.sharepoint.com/:f:/s/CAEConsultingProduct/lgCZ7qTFJCgASKcb204jJRn0AfB5alCc74AMyE2etdchqA4?e=urKrHq",
+      "CA": "https://mastercard.sharepoint.com/:f:/s/CAEConsultingProduct/IgDzc0ufDknYTpTghwRGqCXGAUvoLc-7BLhVv8c7TrZEPAI?e=JrfOGP",
+      "EAP": "https://mastercard.sharepoint.com/:f:/s/CAEConsultingProduct/lgAMlDUM-pK9Rqol_B77NT8JAWaSvFONRHLabpRleGIwxko?e=24fqOR"
+    }
+  },
+
+  "powerPlatform": {
+    "powerAppsEnvironmentId": "ea9d500a-9299-e7b2-8754-53ebea0cb818",
+    "powerAutomateEnvironmentId": "ea9d500a-9299-e7b2-8754-53ebea0cb818",
+    "powerAppsUrl": "https://make.powerapps.com/environments/ea9d500a-9299-e7b2-8754-53ebea0cb818/home",
+    "powerAutomateUrl": "https://make.powerautomate.com/environments/ea9d500a-9299-e7b2-8754-53ebea0cb818/home",
+    "dataverseUrl": "https://orgcc6eaaec.crm.dynamics.com",
+    "organizationId": "74145e53-ba5e-f011-8ee3-000d3a3b2c23"
+  }
+}

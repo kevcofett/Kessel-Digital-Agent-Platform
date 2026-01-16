@@ -1,0 +1,55 @@
+{
+  "type": "microsoft",
+  "name": "mastercard",
+  "description": "Mastercard production environment with Microsoft stack",
+
+  "stack": {
+    "default": "microsoft",
+    "allowClaude": true,
+    "allowMicrosoft": true
+  },
+
+  "copilotStudio": {
+    "environmentUrl": "$COPILOT_STUDIO_ENV_URL",
+    "botId": "$COPILOT_STUDIO_BOT_ID",
+    "tenantId": "$AZURE_TENANT_ID"
+  },
+
+  "azureOpenAI": {
+    "endpoint": "$AZURE_OPENAI_ENDPOINT",
+    "deploymentName": "$AZURE_OPENAI_DEPLOYMENT",
+    "apiVersion": "2024-02-01",
+    "embeddingDeployment": "text-embedding-ada-002"
+  },
+
+  "dataverse": {
+    "environmentUrl": "$DATAVERSE_ENVIRONMENT_URL",
+    "tenantId": "$AZURE_TENANT_ID",
+    "clientId": "$AZURE_CLIENT_ID",
+    "clientSecret": "$AZURE_CLIENT_SECRET"
+  },
+
+  "sharePoint": {
+    "siteUrl": "$SHAREPOINT_SITE_URL",
+    "libraryName": "AgentKnowledgeBase",
+    "tenantId": "$AZURE_TENANT_ID",
+    "clientId": "$AZURE_CLIENT_ID",
+    "clientSecret": "$AZURE_CLIENT_SECRET"
+  },
+
+  "features": {
+    "useCopilotStudioOrchestration": true,
+    "useAzureOpenAIDirectly": true,
+    "useClaudeAPI": false,
+    "useDataverseStorage": true,
+    "useLocalStorage": false,
+    "useSharePointKB": true,
+    "useAzureAISearch": true,
+    "useLocalKB": false,
+    "usePowerAutomateFlows": true,
+    "useDataverseImpactTracking": true,
+    "useLocalImpactTracking": false,
+    "enableDebugLogging": false,
+    "enablePerformanceMetrics": true
+  }
+}

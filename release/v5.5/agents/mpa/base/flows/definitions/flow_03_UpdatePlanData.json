@@ -42,7 +42,7 @@
       "description": "Check if section data already exists",
       "inputs": {
         "operation": "ListRecords",
-        "entityName": "mpa_plandata",
+        "entityName": "mpa_plandatas",
         "filter": "_mpa_mediaplan_value eq '@{triggerBody()?['planId']}' and mpa_section_name eq '@{triggerBody()?['sectionName']}'"
       }
     },
@@ -63,7 +63,7 @@
             "type": "Dataverse",
             "inputs": {
               "operation": "UpdateRecord",
-              "entityName": "mpa_plandata",
+              "entityName": "mpa_plandatas",
               "recordId": "@{first(outputs('Get_Existing_PlanData')?['body/value'])?['mpa_plandataid']}",
               "item": {
                 "mpa_content": "@{json(string(triggerBody()?['sectionData']))}",
@@ -78,7 +78,7 @@
             "type": "Dataverse",
             "inputs": {
               "operation": "CreateRecord",
-              "entityName": "mpa_plandata",
+              "entityName": "mpa_plandatas",
               "item": {
                 "mpa_section_name": "@{triggerBody()?['sectionName']}",
                 "mpa_content": "@{json(string(triggerBody()?['sectionData']))}",
@@ -97,7 +97,7 @@
       "description": "Update the plan's last modified timestamp",
       "inputs": {
         "operation": "UpdateRecord",
-        "entityName": "mpa_mediaplan",
+        "entityName": "mpa_mediaplans",
         "recordId": "@{triggerBody()?['planId']}",
         "item": {
           "mpa_last_updated_at": "@{utcNow()}"

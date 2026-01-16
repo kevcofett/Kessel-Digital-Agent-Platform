@@ -1,0 +1,195 @@
+{
+  "schemaName": "eap_mc_employee_assignment",
+  "displayName": "Employee Assignment",
+  "pluralName": "Employee Assignments",
+  "description": "Maps employees to organizational hierarchy for row-level security",
+  "primaryColumn": "user_email",
+  "ownershipType": "OrganizationOwned",
+  "tableType": "Standard",
+  "columns": [
+    {
+      "schemaName": "assignment_id",
+      "displayName": "Assignment ID",
+      "type": "Text",
+      "format": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Unique identifier for the assignment"
+    },
+    {
+      "schemaName": "user_id",
+      "displayName": "User",
+      "type": "Lookup",
+      "target": "eap_user",
+      "required": true,
+      "description": "Reference to EAP user record"
+    },
+    {
+      "schemaName": "user_email",
+      "displayName": "User Email",
+      "type": "Text",
+      "format": "Email",
+      "maxLength": 200,
+      "required": true,
+      "description": "User email address for quick lookup"
+    },
+    {
+      "schemaName": "pod_id",
+      "displayName": "Pod",
+      "type": "Lookup",
+      "target": "eap_mc_pod",
+      "required": false,
+      "description": "Assigned pod - most granular level"
+    },
+    {
+      "schemaName": "team_id",
+      "displayName": "Team",
+      "type": "Lookup",
+      "target": "eap_mc_team",
+      "required": false,
+      "description": "Assigned team - derived from pod or direct"
+    },
+    {
+      "schemaName": "department_id",
+      "displayName": "Department",
+      "type": "Lookup",
+      "target": "eap_mc_department",
+      "required": false,
+      "description": "Assigned department - derived from team or direct"
+    },
+    {
+      "schemaName": "businessunit_id",
+      "displayName": "Business Unit",
+      "type": "Lookup",
+      "target": "eap_mc_businessunit",
+      "required": false,
+      "description": "Assigned business unit - derived from department or direct"
+    },
+    {
+      "schemaName": "role",
+      "displayName": "Role",
+      "type": "Choice",
+      "options": [
+        {"value": "MEMBER", "label": "Member"},
+        {"value": "LEAD", "label": "Lead"},
+        {"value": "MANAGER", "label": "Manager"},
+        {"value": "DIRECTOR", "label": "Director"},
+        {"value": "VP", "label": "VP"},
+        {"value": "ADMIN", "label": "Admin"}
+      ],
+      "default": "MEMBER",
+      "required": false,
+      "description": "User role in the organization"
+    },
+    {
+      "schemaName": "access_scope",
+      "displayName": "Access Scope",
+      "type": "Choice",
+      "options": [
+        {"value": "SELF", "label": "Self Only"},
+        {"value": "POD", "label": "Pod"},
+        {"value": "TEAM", "label": "Team"},
+        {"value": "DEPARTMENT", "label": "Department"},
+        {"value": "BUSINESS_UNIT", "label": "Business Unit"},
+        {"value": "GLOBAL", "label": "Global"}
+      ],
+      "default": "SELF",
+      "required": false,
+      "description": "Data access scope for row-level security"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "type": "Boolean",
+      "default": true,
+      "required": false,
+      "description": "Whether this assignment is active"
+    },
+    {
+      "schemaName": "effective_date",
+      "displayName": "Effective Date",
+      "type": "DateTime",
+      "format": "DateAndTime",
+      "required": false,
+      "description": "When this assignment became effective"
+    },
+    {
+      "schemaName": "end_date",
+      "displayName": "End Date",
+      "type": "DateTime",
+      "format": "DateAndTime",
+      "required": false,
+      "description": "When this assignment ended - null if current"
+    },
+    {
+      "schemaName": "created_at",
+      "displayName": "Created At",
+      "type": "DateTime",
+      "format": "DateAndTime",
+      "required": false,
+      "description": "Record creation timestamp"
+    },
+    {
+      "schemaName": "modified_at",
+      "displayName": "Modified At",
+      "type": "DateTime",
+      "format": "DateAndTime",
+      "required": false,
+      "description": "Record last modification timestamp"
+    }
+  ],
+  "relationships": [
+    {
+      "name": "user_assignments",
+      "type": "ManyToOne",
+      "relatedTable": "eap_user",
+      "relatedColumn": "user_id",
+      "cascadeDelete": "Cascade"
+    },
+    {
+      "name": "pod_assignments",
+      "type": "ManyToOne",
+      "relatedTable": "eap_mc_pod",
+      "relatedColumn": "pod_id",
+      "cascadeDelete": "RemoveLink"
+    },
+    {
+      "name": "team_assignments",
+      "type": "ManyToOne",
+      "relatedTable": "eap_mc_team",
+      "relatedColumn": "team_id",
+      "cascadeDelete": "RemoveLink"
+    },
+    {
+      "name": "department_assignments",
+      "type": "ManyToOne",
+      "relatedTable": "eap_mc_department",
+      "relatedColumn": "department_id",
+      "cascadeDelete": "RemoveLink"
+    },
+    {
+      "name": "businessunit_assignments",
+      "type": "ManyToOne",
+      "relatedTable": "eap_mc_businessunit",
+      "relatedColumn": "businessunit_id",
+      "cascadeDelete": "RemoveLink"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_assignment_user_email",
+      "columns": ["user_email"],
+      "unique": false
+    },
+    {
+      "name": "idx_assignment_user_active",
+      "columns": ["user_id", "is_active"],
+      "unique": false
+    },
+    {
+      "name": "idx_assignment_scope",
+      "columns": ["access_scope"],
+      "unique": false
+    }
+  ]
+}

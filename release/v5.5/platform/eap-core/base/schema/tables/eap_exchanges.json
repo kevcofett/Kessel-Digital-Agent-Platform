@@ -1,0 +1,176 @@
+{
+  "schemaName": "eap_exchanges",
+  "displayName": "Exchanges",
+  "pluralName": "Exchanges",
+  "description": "Single user message and agent response pairs within a session",
+  "tier": 2,
+  "category": "Core",
+  "primaryKey": "exchange_id",
+  "primaryNameColumn": "exchange_id",
+  "ownershipType": "OrganizationOwned",
+  "notes": "High volume table. Consider archival strategy after 90 days.",
+  "columns": [
+    {
+      "schemaName": "exchange_id",
+      "displayName": "Exchange ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "session_id",
+      "displayName": "Session",
+      "dataType": "Lookup",
+      "lookupTable": "eap_session",
+      "required": true,
+      "description": "Parent session"
+    },
+    {
+      "schemaName": "exchange_number",
+      "displayName": "Exchange Number",
+      "dataType": "WholeNumber",
+      "required": true,
+      "description": "Sequence within session"
+    },
+    {
+      "schemaName": "exchange_type",
+      "displayName": "Exchange Type",
+      "dataType": "Choice",
+      "required": false,
+      "options": ["Question", "Task", "Clarification", "Feedback", "System"],
+      "description": "Type of exchange"
+    },
+    {
+      "schemaName": "user_message",
+      "displayName": "User Message",
+      "dataType": "MultilineText",
+      "required": true,
+      "description": "User input text"
+    },
+    {
+      "schemaName": "user_message_tokens",
+      "displayName": "User Message Tokens",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Token count for user message"
+    },
+    {
+      "schemaName": "agent_response",
+      "displayName": "Agent Response",
+      "dataType": "MultilineText",
+      "required": true,
+      "description": "Agent response text"
+    },
+    {
+      "schemaName": "agent_response_tokens",
+      "displayName": "Agent Response Tokens",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Token count for agent response"
+    },
+    {
+      "schemaName": "confidence_level",
+      "displayName": "Confidence Level",
+      "dataType": "Choice",
+      "required": false,
+      "options": ["High", "Medium", "MediumLow", "Low"],
+      "description": "Agent confidence level"
+    },
+    {
+      "schemaName": "proactive_suggestions_json",
+      "displayName": "Proactive Suggestions",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "JSON array of proactive suggestions made"
+    },
+    {
+      "schemaName": "frameworks_used_json",
+      "displayName": "Frameworks Used",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "JSON array of frameworks applied"
+    },
+    {
+      "schemaName": "kb_files_used_json",
+      "displayName": "KB Files Used",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "JSON array of KB files referenced"
+    },
+    {
+      "schemaName": "web_search_used",
+      "displayName": "Web Search Used",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Web search was performed"
+    },
+    {
+      "schemaName": "tools_used_json",
+      "displayName": "Tools Used",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "JSON array of tools/actions invoked"
+    },
+    {
+      "schemaName": "output_ids_json",
+      "displayName": "Output IDs",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "JSON array of outputs generated"
+    },
+    {
+      "schemaName": "response_time_ms",
+      "displayName": "Response Time (ms)",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Response time in milliseconds"
+    },
+    {
+      "schemaName": "error_occurred",
+      "displayName": "Error Occurred",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Error flag"
+    },
+    {
+      "schemaName": "error_details",
+      "displayName": "Error Details",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Error information if applicable"
+    },
+    {
+      "schemaName": "timestamp",
+      "displayName": "Timestamp",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Exchange timestamp"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_session_exchange",
+      "columns": ["session_id", "exchange_number"],
+      "unique": true
+    },
+    {
+      "name": "idx_session_timestamp",
+      "columns": ["session_id", "timestamp"],
+      "unique": false
+    },
+    {
+      "name": "idx_confidence_level",
+      "columns": ["confidence_level"],
+      "unique": false
+    }
+  ]
+}

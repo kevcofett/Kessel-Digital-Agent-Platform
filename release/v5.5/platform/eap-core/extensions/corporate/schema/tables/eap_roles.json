@@ -1,0 +1,142 @@
+{
+  "schemaName": "eap_roles",
+  "displayName": "Roles",
+  "pluralName": "Roles",
+  "description": "User functional roles within the organization (distinct from admin roles and role levels)",
+  "tier": 1,
+  "category": "Roles",
+  "primaryKey": "role_id",
+  "primaryNameColumn": "role_name",
+  "ownershipType": "OrganizationOwned",
+  "isReferenceData": true,
+  "columns": [
+    {
+      "schemaName": "role_id",
+      "displayName": "Role ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "role_code",
+      "displayName": "Role Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique role identifier"
+    },
+    {
+      "schemaName": "role_name",
+      "displayName": "Role Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Display name of the role"
+    },
+    {
+      "schemaName": "role_description",
+      "displayName": "Description",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Role description"
+    },
+    {
+      "schemaName": "role_category",
+      "displayName": "Role Category",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Consulting", "Operations", "Technical", "Administrative", "Executive"],
+      "description": "Category of the role"
+    },
+    {
+      "schemaName": "typical_level_min",
+      "displayName": "Typical Level Min",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Minimum typical role level (1-9)"
+    },
+    {
+      "schemaName": "typical_level_max",
+      "displayName": "Typical Level Max",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Maximum typical role level (1-9)"
+    },
+    {
+      "schemaName": "default_permissions_json",
+      "displayName": "Default Permissions",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Default permissions JSON"
+    },
+    {
+      "schemaName": "is_billable",
+      "displayName": "Is Billable",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Billable role flag"
+    },
+    {
+      "schemaName": "is_client_facing",
+      "displayName": "Is Client Facing",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Client-facing role flag"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "sort_order",
+      "displayName": "Sort Order",
+      "dataType": "WholeNumber",
+      "required": true,
+      "description": "Display order"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_role_code",
+      "columns": ["role_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_role_category",
+      "columns": ["role_category"],
+      "unique": false
+    }
+  ],
+  "seedData": [
+    { "role_code": "CONSULTANT", "role_name": "Consultant", "role_category": "Consulting", "typical_level_min": 5, "typical_level_max": 7, "is_billable": true, "is_client_facing": true, "sort_order": 1 },
+    { "role_code": "SENIOR_CONSULTANT", "role_name": "Senior Consultant", "role_category": "Consulting", "typical_level_min": 4, "typical_level_max": 6, "is_billable": true, "is_client_facing": true, "sort_order": 2 },
+    { "role_code": "MANAGER", "role_name": "Manager", "role_category": "Consulting", "typical_level_min": 4, "typical_level_max": 5, "is_billable": true, "is_client_facing": true, "sort_order": 3 },
+    { "role_code": "PRINCIPAL", "role_name": "Principal", "role_category": "Consulting", "typical_level_min": 3, "typical_level_max": 4, "is_billable": true, "is_client_facing": true, "sort_order": 4 },
+    { "role_code": "PARTNER", "role_name": "Partner", "role_category": "Executive", "typical_level_min": 1, "typical_level_max": 3, "is_billable": true, "is_client_facing": true, "sort_order": 5 },
+    { "role_code": "ANALYST", "role_name": "Analyst", "role_category": "Consulting", "typical_level_min": 6, "typical_level_max": 8, "is_billable": true, "is_client_facing": false, "sort_order": 6 },
+    { "role_code": "ASSOCIATE", "role_name": "Associate", "role_category": "Consulting", "typical_level_min": 7, "typical_level_max": 9, "is_billable": true, "is_client_facing": false, "sort_order": 7 },
+    { "role_code": "OPERATIONS", "role_name": "Operations", "role_category": "Operations", "typical_level_min": 5, "typical_level_max": 7, "is_billable": false, "is_client_facing": false, "sort_order": 8 },
+    { "role_code": "ADMIN", "role_name": "Administrator", "role_category": "Administrative", "typical_level_min": 6, "typical_level_max": 8, "is_billable": false, "is_client_facing": false, "sort_order": 9 }
+  ]
+}

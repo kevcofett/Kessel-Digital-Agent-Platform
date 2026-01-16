@@ -1,0 +1,27 @@
+{
+  "schemaName": "eap_favorites",
+  "displayName": "Favorite",
+  "pluralName": "Favorites",
+  "description": "User favorited items",
+  "tier": 2,
+  "featureGate": null,
+  "category": "Personalization",
+  "primaryKey": "favorite_id",
+  "primaryNameColumn": "favorite_id",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "favorite_id", "displayName": "Favorite ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Owner user" },
+    { "schemaName": "entity_type", "displayName": "Entity Type", "dataType": "Text", "maxLength": 100, "required": true, "description": "Type of favorited item" },
+    { "schemaName": "entity_id", "displayName": "Entity ID", "dataType": "UniqueIdentifier", "required": true, "description": "ID of favorited item" },
+    { "schemaName": "display_name", "displayName": "Display Name", "dataType": "Text", "maxLength": 500, "required": true, "description": "Cached display name" },
+    { "schemaName": "notes", "displayName": "Notes", "dataType": "MultilineText", "required": false, "description": "User notes" },
+    { "schemaName": "folder", "displayName": "Folder", "dataType": "Text", "maxLength": 100, "required": false, "description": "Organization folder" },
+    { "schemaName": "sort_order", "displayName": "Sort Order", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Display order" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" }
+  ],
+  "indexes": [
+    { "name": "idx_user_entity", "columns": ["user_id", "entity_type", "entity_id"], "unique": true },
+    { "name": "idx_user_folder", "columns": ["user_id", "folder"], "unique": false }
+  ]
+}

@@ -1,0 +1,898 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Entities>
+    <!-- ca_framework - Consulting Frameworks -->
+    <Entity Name="ca_framework">
+      <LocalizedNames>
+        <LocalizedName description="Framework" languagecode="1033" />
+      </LocalizedNames>
+      <LocalizedCollectionNames>
+        <LocalizedCollectionName description="Frameworks" languagecode="1033" />
+      </LocalizedCollectionNames>
+      <Descriptions>
+        <Description description="Library of consulting frameworks and methodologies" languagecode="1033" />
+      </Descriptions>
+      <EntityInfo>
+        <entity Name="ca_framework">
+          <LocalizedNames>
+            <LocalizedName description="Framework" languagecode="1033" />
+          </LocalizedNames>
+          <LocalizedCollectionNames>
+            <LocalizedCollectionName description="Frameworks" languagecode="1033" />
+          </LocalizedCollectionNames>
+          <Descriptions>
+            <Description description="Library of consulting frameworks and methodologies" languagecode="1033" />
+          </Descriptions>
+          <attributes>
+            <attribute PhysicalName="ca_frameworkid">
+              <Type>primarykey</Type>
+              <Name>ca_frameworkid</Name>
+              <LogicalName>ca_frameworkid</LogicalName>
+              <RequiredLevel>systemrequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>0</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <IsSecured>0</IsSecured>
+              <IsLogical>0</IsLogical>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <displaynames>
+                <displayname description="Framework" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unique identifier for the framework" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="ca_frameworkcode">
+              <Type>nvarchar</Type>
+              <Name>ca_frameworkcode</Name>
+              <LogicalName>ca_frameworkcode</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <Length>50</Length>
+              <DisplayMask>ValidForAdvancedFind|RequiredForForm|RequiredForGrid|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <IsSecured>0</IsSecured>
+              <IsLogical>0</IsLogical>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>1</IsSortableEnabled>
+              <displaynames>
+                <displayname description="Framework Code" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unique framework identifier code" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="ca_newcolumn">
+              <Type>nvarchar</Type>
+              <Name>ca_newcolumn</Name>
+              <LogicalName>ca_newcolumn</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <Length>100</Length>
+              <DisplayMask>ValidForAdvancedFind|RequiredForForm|RequiredForGrid|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <IsSecured>0</IsSecured>
+              <IsLogical>0</IsLogical>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>1</IsSortableEnabled>
+              <IsPrimaryName>1</IsPrimaryName>
+              <displaynames>
+                <displayname description="Framework Name" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Display name for the framework" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="ca_frameworkcategory">
+              <Type>picklist</Type>
+              <Name>ca_frameworkcategory</Name>
+              <LogicalName>ca_frameworkcategory</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="Framework Category" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Category of framework" languagecode="1033" />
+              </Descriptions>
+              <optionset Name="ca_frameworkcategory">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <displaynames>
+                  <displayname description="Framework Category" languagecode="1033" />
+                </displaynames>
+                <Descriptions>
+                  <Description description="" languagecode="1033" />
+                </Descriptions>
+                <options>
+                  <option value="100000000"><labels><label description="Strategic" languagecode="1033" /></labels></option>
+                  <option value="100000001"><labels><label description="Competitive" languagecode="1033" /></labels></option>
+                  <option value="100000002"><labels><label description="Customer" languagecode="1033" /></labels></option>
+                  <option value="100000003"><labels><label description="Innovation" languagecode="1033" /></labels></option>
+                  <option value="100000004"><labels><label description="Operations" languagecode="1033" /></labels></option>
+                  <option value="100000005"><labels><label description="Financial" languagecode="1033" /></labels></option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="ca_description">
+              <Type>ntext</Type>
+              <Name>ca_description</Name>
+              <LogicalName>ca_description</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="Description" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Framework description and purpose" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="ca_methodology">
+              <Type>ntext</Type>
+              <Name>ca_methodology</Name>
+              <LogicalName>ca_methodology</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="Methodology" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="How to apply the framework" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="ca_usagecount">
+              <Type>int</Type>
+              <Name>ca_usagecount</Name>
+              <LogicalName>ca_usagecount</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <MinValue>-2147483648</MinValue>
+              <MaxValue>2147483647</MaxValue>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="Usage Count" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Number of times framework has been applied" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="ca_isactive">
+              <Type>bit</Type>
+              <Name>ca_isactive</Name>
+              <LogicalName>ca_isactive</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="Is Active" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Active status" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+          </attributes>
+          <EntitySetName>ca_frameworks</EntitySetName>
+          <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
+          <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+          <IsRequiredOffline>0</IsRequiredOffline>
+          <IsInteractionCentricEnabled>0</IsInteractionCentricEnabled>
+          <IsOneNoteIntegrationEnabled>0</IsOneNoteIntegrationEnabled>
+          <IsKnowledgeManagementEnabled>0</IsKnowledgeManagementEnabled>
+          <IsSLAEnabled>0</IsSLAEnabled>
+          <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+          <IsActivity>0</IsActivity>
+          <IsActivityParty>0</IsActivityParty>
+          <OwnershipTypeMask>OrganizationOwned</OwnershipTypeMask>
+          <PrimaryNameAttribute>ca_newcolumn</PrimaryNameAttribute>
+          <PrimaryIdAttribute>ca_frameworkid</PrimaryIdAttribute>
+        </entity>
+      </EntityInfo>
+    </Entity>
+
+    <!-- ca_framework_usage - Framework Usage Log -->
+    <Entity Name="ca_framework_usage">
+      <LocalizedNames>
+        <LocalizedName description="Framework Usage" languagecode="1033" />
+      </LocalizedNames>
+      <LocalizedCollectionNames>
+        <LocalizedCollectionName description="Framework Usages" languagecode="1033" />
+      </LocalizedCollectionNames>
+      <Descriptions>
+        <Description description="Log of framework usage in sessions" languagecode="1033" />
+      </Descriptions>
+      <EntityInfo>
+        <entity Name="ca_framework_usage">
+          <LocalizedNames>
+            <LocalizedName description="Framework Usage" languagecode="1033" />
+          </LocalizedNames>
+          <LocalizedCollectionNames>
+            <LocalizedCollectionName description="Framework Usages" languagecode="1033" />
+          </LocalizedCollectionNames>
+          <Descriptions>
+            <Description description="Log of framework usage in sessions" languagecode="1033" />
+          </Descriptions>
+          <attributes>
+            <attribute PhysicalName="ca_framework_usageid">
+              <Type>primarykey</Type>
+              <Name>ca_framework_usageid</Name>
+              <LogicalName>ca_framework_usageid</LogicalName>
+              <RequiredLevel>systemrequired</RequiredLevel>
+              <displaynames>
+                <displayname description="Framework Usage" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_newcolumn">
+              <Type>nvarchar</Type>
+              <Name>ca_newcolumn</Name>
+              <LogicalName>ca_newcolumn</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <Length>200</Length>
+              <IsPrimaryName>1</IsPrimaryName>
+              <displaynames>
+                <displayname description="Name" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_contextsummary">
+              <Type>ntext</Type>
+              <Name>ca_contextsummary</Name>
+              <LogicalName>ca_contextsummary</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <displaynames>
+                <displayname description="Context Summary" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_applicationdepth">
+              <Type>picklist</Type>
+              <Name>ca_applicationdepth</Name>
+              <LogicalName>ca_applicationdepth</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Application Depth" languagecode="1033" />
+              </displaynames>
+              <optionset Name="ca_applicationdepth">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <options>
+                  <option value="100000000"><labels><label description="Quick" languagecode="1033" /></labels></option>
+                  <option value="100000001"><labels><label description="Standard" languagecode="1033" /></labels></option>
+                  <option value="100000002"><labels><label description="Comprehensive" languagecode="1033" /></labels></option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="ca_washelpful">
+              <Type>bit</Type>
+              <Name>ca_washelpful</Name>
+              <LogicalName>ca_washelpful</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <displaynames>
+                <displayname description="Was Helpful" languagecode="1033" />
+              </displaynames>
+            </attribute>
+          </attributes>
+          <EntitySetName>ca_framework_usages</EntitySetName>
+          <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+          <PrimaryNameAttribute>ca_newcolumn</PrimaryNameAttribute>
+          <PrimaryIdAttribute>ca_framework_usageid</PrimaryIdAttribute>
+        </entity>
+      </EntityInfo>
+    </Entity>
+
+    <!-- ca_analysis - Analyses -->
+    <Entity Name="ca_analysis">
+      <LocalizedNames>
+        <LocalizedName description="Analysis" languagecode="1033" />
+      </LocalizedNames>
+      <LocalizedCollectionNames>
+        <LocalizedCollectionName description="Analyses" languagecode="1033" />
+      </LocalizedCollectionNames>
+      <Descriptions>
+        <Description description="Consulting analyses and assessments" languagecode="1033" />
+      </Descriptions>
+      <EntityInfo>
+        <entity Name="ca_analysis">
+          <LocalizedNames>
+            <LocalizedName description="Analysis" languagecode="1033" />
+          </LocalizedNames>
+          <LocalizedCollectionNames>
+            <LocalizedCollectionName description="Analyses" languagecode="1033" />
+          </LocalizedCollectionNames>
+          <Descriptions>
+            <Description description="Consulting analyses and assessments" languagecode="1033" />
+          </Descriptions>
+          <attributes>
+            <attribute PhysicalName="ca_analysisid">
+              <Type>primarykey</Type>
+              <Name>ca_analysisid</Name>
+              <LogicalName>ca_analysisid</LogicalName>
+              <RequiredLevel>systemrequired</RequiredLevel>
+              <displaynames>
+                <displayname description="Analysis" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_newcolumn">
+              <Type>nvarchar</Type>
+              <Name>ca_newcolumn</Name>
+              <LogicalName>ca_newcolumn</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <Length>500</Length>
+              <IsPrimaryName>1</IsPrimaryName>
+              <displaynames>
+                <displayname description="Analysis Title" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_analysistype">
+              <Type>picklist</Type>
+              <Name>ca_analysistype</Name>
+              <LogicalName>ca_analysistype</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Analysis Type" languagecode="1033" />
+              </displaynames>
+              <optionset Name="ca_analysistype">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <options>
+                  <option value="100000000"><labels><label description="Strategic" languagecode="1033" /></labels></option>
+                  <option value="100000001"><labels><label description="Competitive" languagecode="1033" /></labels></option>
+                  <option value="100000002"><labels><label description="Financial" languagecode="1033" /></labels></option>
+                  <option value="100000003"><labels><label description="Operational" languagecode="1033" /></labels></option>
+                  <option value="100000004"><labels><label description="Market" languagecode="1033" /></labels></option>
+                  <option value="100000005"><labels><label description="Custom" languagecode="1033" /></labels></option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="ca_analysiscontent">
+              <Type>ntext</Type>
+              <Name>ca_analysiscontent</Name>
+              <LogicalName>ca_analysiscontent</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Analysis Content" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_confidencelevel">
+              <Type>picklist</Type>
+              <Name>ca_confidencelevel</Name>
+              <LogicalName>ca_confidencelevel</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Confidence Level" languagecode="1033" />
+              </displaynames>
+              <optionset Name="ca_confidencelevel">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <options>
+                  <option value="100000000"><labels><label description="High" languagecode="1033" /></labels></option>
+                  <option value="100000001"><labels><label description="Medium" languagecode="1033" /></labels></option>
+                  <option value="100000002"><labels><label description="Medium-Low" languagecode="1033" /></labels></option>
+                  <option value="100000003"><labels><label description="Low" languagecode="1033" /></labels></option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="ca_status">
+              <Type>picklist</Type>
+              <Name>ca_status</Name>
+              <LogicalName>ca_status</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Status" languagecode="1033" />
+              </displaynames>
+              <optionset Name="ca_analysisstatus">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <options>
+                  <option value="100000000"><labels><label description="Draft" languagecode="1033" /></labels></option>
+                  <option value="100000001"><labels><label description="InReview" languagecode="1033" /></labels></option>
+                  <option value="100000002"><labels><label description="Approved" languagecode="1033" /></labels></option>
+                  <option value="100000003"><labels><label description="Archived" languagecode="1033" /></labels></option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="ca_version">
+              <Type>int</Type>
+              <Name>ca_version</Name>
+              <LogicalName>ca_version</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Version" languagecode="1033" />
+              </displaynames>
+            </attribute>
+          </attributes>
+          <EntitySetName>ca_analyses</EntitySetName>
+          <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+          <PrimaryNameAttribute>ca_newcolumn</PrimaryNameAttribute>
+          <PrimaryIdAttribute>ca_analysisid</PrimaryIdAttribute>
+        </entity>
+      </EntityInfo>
+    </Entity>
+
+    <!-- ca_recommendation - Recommendations -->
+    <Entity Name="ca_recommendation">
+      <LocalizedNames>
+        <LocalizedName description="Recommendation" languagecode="1033" />
+      </LocalizedNames>
+      <LocalizedCollectionNames>
+        <LocalizedCollectionName description="Recommendations" languagecode="1033" />
+      </LocalizedCollectionNames>
+      <Descriptions>
+        <Description description="Strategic recommendations from consulting sessions" languagecode="1033" />
+      </Descriptions>
+      <EntityInfo>
+        <entity Name="ca_recommendation">
+          <LocalizedNames>
+            <LocalizedName description="Recommendation" languagecode="1033" />
+          </LocalizedNames>
+          <LocalizedCollectionNames>
+            <LocalizedCollectionName description="Recommendations" languagecode="1033" />
+          </LocalizedCollectionNames>
+          <Descriptions>
+            <Description description="Strategic recommendations from consulting sessions" languagecode="1033" />
+          </Descriptions>
+          <attributes>
+            <attribute PhysicalName="ca_recommendationid">
+              <Type>primarykey</Type>
+              <Name>ca_recommendationid</Name>
+              <LogicalName>ca_recommendationid</LogicalName>
+              <RequiredLevel>systemrequired</RequiredLevel>
+              <displaynames>
+                <displayname description="Recommendation" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_newcolumn">
+              <Type>nvarchar</Type>
+              <Name>ca_newcolumn</Name>
+              <LogicalName>ca_newcolumn</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <Length>500</Length>
+              <IsPrimaryName>1</IsPrimaryName>
+              <displaynames>
+                <displayname description="Recommendation Title" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_recommendationtype">
+              <Type>picklist</Type>
+              <Name>ca_recommendationtype</Name>
+              <LogicalName>ca_recommendationtype</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Recommendation Type" languagecode="1033" />
+              </displaynames>
+              <optionset Name="ca_recommendationtype">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <options>
+                  <option value="100000000"><labels><label description="Strategic" languagecode="1033" /></labels></option>
+                  <option value="100000001"><labels><label description="Tactical" languagecode="1033" /></labels></option>
+                  <option value="100000002"><labels><label description="Operational" languagecode="1033" /></labels></option>
+                  <option value="100000003"><labels><label description="Quick Win" languagecode="1033" /></labels></option>
+                  <option value="100000004"><labels><label description="Long Term" languagecode="1033" /></labels></option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="ca_priority">
+              <Type>picklist</Type>
+              <Name>ca_priority</Name>
+              <LogicalName>ca_priority</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Priority" languagecode="1033" />
+              </displaynames>
+              <optionset Name="ca_priority">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <options>
+                  <option value="100000000"><labels><label description="Critical" languagecode="1033" /></labels></option>
+                  <option value="100000001"><labels><label description="High" languagecode="1033" /></labels></option>
+                  <option value="100000002"><labels><label description="Medium" languagecode="1033" /></labels></option>
+                  <option value="100000003"><labels><label description="Low" languagecode="1033" /></labels></option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="ca_recommendationcontent">
+              <Type>ntext</Type>
+              <Name>ca_recommendationcontent</Name>
+              <LogicalName>ca_recommendationcontent</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Recommendation Content" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_rationale">
+              <Type>ntext</Type>
+              <Name>ca_rationale</Name>
+              <LogicalName>ca_rationale</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <displaynames>
+                <displayname description="Rationale" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_status">
+              <Type>picklist</Type>
+              <Name>ca_status</Name>
+              <LogicalName>ca_status</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Status" languagecode="1033" />
+              </displaynames>
+              <optionset Name="ca_recommendationstatus">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <options>
+                  <option value="100000000"><labels><label description="Draft" languagecode="1033" /></labels></option>
+                  <option value="100000001"><labels><label description="Proposed" languagecode="1033" /></labels></option>
+                  <option value="100000002"><labels><label description="Accepted" languagecode="1033" /></labels></option>
+                  <option value="100000003"><labels><label description="Rejected" languagecode="1033" /></labels></option>
+                  <option value="100000004"><labels><label description="Implemented" languagecode="1033" /></labels></option>
+                </options>
+              </optionset>
+            </attribute>
+          </attributes>
+          <EntitySetName>ca_recommendations</EntitySetName>
+          <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+          <PrimaryNameAttribute>ca_newcolumn</PrimaryNameAttribute>
+          <PrimaryIdAttribute>ca_recommendationid</PrimaryIdAttribute>
+        </entity>
+      </EntityInfo>
+    </Entity>
+
+    <!-- ca_benchmarks - Benchmarks -->
+    <Entity Name="ca_benchmarks">
+      <LocalizedNames>
+        <LocalizedName description="Benchmark" languagecode="1033" />
+      </LocalizedNames>
+      <LocalizedCollectionNames>
+        <LocalizedCollectionName description="Benchmarks" languagecode="1033" />
+      </LocalizedCollectionNames>
+      <Descriptions>
+        <Description description="Consulting benchmark data for industry comparisons" languagecode="1033" />
+      </Descriptions>
+      <EntityInfo>
+        <entity Name="ca_benchmarks">
+          <LocalizedNames>
+            <LocalizedName description="Benchmark" languagecode="1033" />
+          </LocalizedNames>
+          <LocalizedCollectionNames>
+            <LocalizedCollectionName description="Benchmarks" languagecode="1033" />
+          </LocalizedCollectionNames>
+          <Descriptions>
+            <Description description="Consulting benchmark data for industry comparisons" languagecode="1033" />
+          </Descriptions>
+          <attributes>
+            <attribute PhysicalName="ca_benchmarksid">
+              <Type>primarykey</Type>
+              <Name>ca_benchmarksid</Name>
+              <LogicalName>ca_benchmarksid</LogicalName>
+              <RequiredLevel>systemrequired</RequiredLevel>
+              <displaynames>
+                <displayname description="Benchmark" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_benchmarkcode">
+              <Type>nvarchar</Type>
+              <Name>ca_benchmarkcode</Name>
+              <LogicalName>ca_benchmarkcode</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <Length>50</Length>
+              <displaynames>
+                <displayname description="Benchmark Code" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_newcolumn">
+              <Type>nvarchar</Type>
+              <Name>ca_newcolumn</Name>
+              <LogicalName>ca_newcolumn</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <Length>200</Length>
+              <IsPrimaryName>1</IsPrimaryName>
+              <displaynames>
+                <displayname description="Benchmark Name" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_benchmarkcategory">
+              <Type>picklist</Type>
+              <Name>ca_benchmarkcategory</Name>
+              <LogicalName>ca_benchmarkcategory</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Benchmark Category" languagecode="1033" />
+              </displaynames>
+              <optionset Name="ca_benchmarkcategory">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <options>
+                  <option value="100000000"><labels><label description="Industry" languagecode="1033" /></labels></option>
+                  <option value="100000001"><labels><label description="Operational" languagecode="1033" /></labels></option>
+                  <option value="100000002"><labels><label description="Financial" languagecode="1033" /></labels></option>
+                  <option value="100000003"><labels><label description="Performance" languagecode="1033" /></labels></option>
+                  <option value="100000004"><labels><label description="Quality" languagecode="1033" /></labels></option>
+                  <option value="100000005"><labels><label description="Custom" languagecode="1033" /></labels></option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="ca_metricname">
+              <Type>nvarchar</Type>
+              <Name>ca_metricname</Name>
+              <LogicalName>ca_metricname</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <Length>100</Length>
+              <displaynames>
+                <displayname description="Metric Name" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_isactive">
+              <Type>bit</Type>
+              <Name>ca_isactive</Name>
+              <LogicalName>ca_isactive</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Is Active" languagecode="1033" />
+              </displaynames>
+            </attribute>
+          </attributes>
+          <EntitySetName>ca_benchmarkses</EntitySetName>
+          <OwnershipTypeMask>OrganizationOwned</OwnershipTypeMask>
+          <PrimaryNameAttribute>ca_newcolumn</PrimaryNameAttribute>
+          <PrimaryIdAttribute>ca_benchmarksid</PrimaryIdAttribute>
+        </entity>
+      </EntityInfo>
+    </Entity>
+
+    <!-- ca_deliverable - Deliverables -->
+    <Entity Name="ca_deliverable">
+      <LocalizedNames>
+        <LocalizedName description="Deliverable" languagecode="1033" />
+      </LocalizedNames>
+      <LocalizedCollectionNames>
+        <LocalizedCollectionName description="Deliverables" languagecode="1033" />
+      </LocalizedCollectionNames>
+      <Descriptions>
+        <Description description="Generated consulting deliverables" languagecode="1033" />
+      </Descriptions>
+      <EntityInfo>
+        <entity Name="ca_deliverable">
+          <LocalizedNames>
+            <LocalizedName description="Deliverable" languagecode="1033" />
+          </LocalizedNames>
+          <LocalizedCollectionNames>
+            <LocalizedCollectionName description="Deliverables" languagecode="1033" />
+          </LocalizedCollectionNames>
+          <Descriptions>
+            <Description description="Generated consulting deliverables" languagecode="1033" />
+          </Descriptions>
+          <attributes>
+            <attribute PhysicalName="ca_deliverableid">
+              <Type>primarykey</Type>
+              <Name>ca_deliverableid</Name>
+              <LogicalName>ca_deliverableid</LogicalName>
+              <RequiredLevel>systemrequired</RequiredLevel>
+              <displaynames>
+                <displayname description="Deliverable" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_newcolumn">
+              <Type>nvarchar</Type>
+              <Name>ca_newcolumn</Name>
+              <LogicalName>ca_newcolumn</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <Length>500</Length>
+              <IsPrimaryName>1</IsPrimaryName>
+              <displaynames>
+                <displayname description="Deliverable Name" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_deliverabletype">
+              <Type>picklist</Type>
+              <Name>ca_deliverabletype</Name>
+              <LogicalName>ca_deliverabletype</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Deliverable Type" languagecode="1033" />
+              </displaynames>
+              <optionset Name="ca_deliverabletype">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <options>
+                  <option value="100000000"><labels><label description="Presentation" languagecode="1033" /></labels></option>
+                  <option value="100000001"><labels><label description="Report" languagecode="1033" /></labels></option>
+                  <option value="100000002"><labels><label description="ExecutiveSummary" languagecode="1033" /></labels></option>
+                  <option value="100000003"><labels><label description="Memo" languagecode="1033" /></labels></option>
+                  <option value="100000004"><labels><label description="Email" languagecode="1033" /></labels></option>
+                  <option value="100000005"><labels><label description="Proposal" languagecode="1033" /></labels></option>
+                  <option value="100000006"><labels><label description="Custom" languagecode="1033" /></labels></option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="ca_content">
+              <Type>ntext</Type>
+              <Name>ca_content</Name>
+              <LogicalName>ca_content</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Content" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_format">
+              <Type>picklist</Type>
+              <Name>ca_format</Name>
+              <LogicalName>ca_format</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Format" languagecode="1033" />
+              </displaynames>
+              <optionset Name="ca_format">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <options>
+                  <option value="100000000"><labels><label description="Markdown" languagecode="1033" /></labels></option>
+                  <option value="100000001"><labels><label description="HTML" languagecode="1033" /></labels></option>
+                  <option value="100000002"><labels><label description="PlainText" languagecode="1033" /></labels></option>
+                  <option value="100000003"><labels><label description="JSON" languagecode="1033" /></labels></option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="ca_status">
+              <Type>picklist</Type>
+              <Name>ca_status</Name>
+              <LogicalName>ca_status</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Status" languagecode="1033" />
+              </displaynames>
+              <optionset Name="ca_deliverablestatus">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <options>
+                  <option value="100000000"><labels><label description="Draft" languagecode="1033" /></labels></option>
+                  <option value="100000001"><labels><label description="InReview" languagecode="1033" /></labels></option>
+                  <option value="100000002"><labels><label description="Final" languagecode="1033" /></labels></option>
+                  <option value="100000003"><labels><label description="Delivered" languagecode="1033" /></labels></option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="ca_version">
+              <Type>int</Type>
+              <Name>ca_version</Name>
+              <LogicalName>ca_version</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Version" languagecode="1033" />
+              </displaynames>
+            </attribute>
+          </attributes>
+          <EntitySetName>ca_deliverables</EntitySetName>
+          <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+          <PrimaryNameAttribute>ca_newcolumn</PrimaryNameAttribute>
+          <PrimaryIdAttribute>ca_deliverableid</PrimaryIdAttribute>
+        </entity>
+      </EntityInfo>
+    </Entity>
+
+    <!-- ca_learning - Learning Resources -->
+    <Entity Name="ca_learning">
+      <LocalizedNames>
+        <LocalizedName description="Learning" languagecode="1033" />
+      </LocalizedNames>
+      <LocalizedCollectionNames>
+        <LocalizedCollectionName description="Learnings" languagecode="1033" />
+      </LocalizedCollectionNames>
+      <Descriptions>
+        <Description description="Learning resources from consulting sessions" languagecode="1033" />
+      </Descriptions>
+      <EntityInfo>
+        <entity Name="ca_learning">
+          <LocalizedNames>
+            <LocalizedName description="Learning" languagecode="1033" />
+          </LocalizedNames>
+          <LocalizedCollectionNames>
+            <LocalizedCollectionName description="Learnings" languagecode="1033" />
+          </LocalizedCollectionNames>
+          <Descriptions>
+            <Description description="Learning resources from consulting sessions" languagecode="1033" />
+          </Descriptions>
+          <attributes>
+            <attribute PhysicalName="ca_learningid">
+              <Type>primarykey</Type>
+              <Name>ca_learningid</Name>
+              <LogicalName>ca_learningid</LogicalName>
+              <RequiredLevel>systemrequired</RequiredLevel>
+              <displaynames>
+                <displayname description="Learning" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_newcolumn">
+              <Type>nvarchar</Type>
+              <Name>ca_newcolumn</Name>
+              <LogicalName>ca_newcolumn</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <Length>500</Length>
+              <IsPrimaryName>1</IsPrimaryName>
+              <displaynames>
+                <displayname description="Title" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_insighttype">
+              <Type>picklist</Type>
+              <Name>ca_insighttype</Name>
+              <LogicalName>ca_insighttype</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Insight Type" languagecode="1033" />
+              </displaynames>
+              <optionset Name="ca_insighttype">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <options>
+                  <option value="100000000"><labels><label description="framework_adaptation" languagecode="1033" /></labels></option>
+                  <option value="100000001"><labels><label description="benchmark_update" languagecode="1033" /></labels></option>
+                  <option value="100000002"><labels><label description="methodology_improvement" languagecode="1033" /></labels></option>
+                  <option value="100000003"><labels><label description="client_learning" languagecode="1033" /></labels></option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="ca_content">
+              <Type>ntext</Type>
+              <Name>ca_content</Name>
+              <LogicalName>ca_content</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Content" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="ca_status">
+              <Type>picklist</Type>
+              <Name>ca_status</Name>
+              <LogicalName>ca_status</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <displaynames>
+                <displayname description="Status" languagecode="1033" />
+              </displaynames>
+              <optionset Name="ca_learningstatus">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <options>
+                  <option value="100000000"><labels><label description="pending_review" languagecode="1033" /></labels></option>
+                  <option value="100000001"><labels><label description="approved" languagecode="1033" /></labels></option>
+                  <option value="100000002"><labels><label description="rejected" languagecode="1033" /></labels></option>
+                  <option value="100000003"><labels><label description="promoted" languagecode="1033" /></labels></option>
+                </options>
+              </optionset>
+            </attribute>
+          </attributes>
+          <EntitySetName>ca_learnings</EntitySetName>
+          <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+          <PrimaryNameAttribute>ca_newcolumn</PrimaryNameAttribute>
+          <PrimaryIdAttribute>ca_learningid</PrimaryIdAttribute>
+        </entity>
+      </EntityInfo>
+    </Entity>
+  </Entities>
+</ImportExportXml>

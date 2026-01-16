@@ -1,0 +1,277 @@
+{
+  "scenario": {
+    "id": "aggressive-kpi-narrow-targeting",
+    "name": "Aggressive KPI - Must Narrow to Achieve",
+    "persona": "aggressive-kpi-growth"
+  },
+  "result": {
+    "compositeScore": 0.7593899999999999,
+    "passed": true,
+    "totalTurns": 10,
+    "stepsCompleted": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "turnsPerStep": {
+      "1": 1,
+      "2": 2,
+      "3": 2,
+      "4": 1,
+      "5": 2,
+      "6": 1,
+      "7": 1
+    },
+    "failures": {
+      "warnings": [],
+      "major": [
+        {
+          "id": "context-loss",
+          "description": "Agent asks about information already provided",
+          "type": "context_loss",
+          "severity": "major",
+          "scorePenalty": 0.15,
+          "terminateOnDetect": false
+        }
+      ],
+      "critical": []
+    },
+    "primeDirective": {
+      "planQualityScore": 0.7859999999999999,
+      "dataCompleteness": 1,
+      "feasibilityAssessment": 0.9199999999999999,
+      "riskIdentification": 0.9199999999999999,
+      "mentorshipScore": 0.915,
+      "explanationClarity": 1,
+      "calculationTransparency": 0.7,
+      "userGrowth": 0.9800000000000001,
+      "turnsPerDirectiveAchievement": 11.757789535567312,
+      "tokensPerInsight": 23437.666666666668,
+      "stepsPerDecisionPoint": 1.4285714285714286,
+      "combinedEfficiency": 0.8505
+    }
+  },
+  "turnScoreAggregates": {
+    "response-length": {
+      "min": 0.8,
+      "max": 1,
+      "mean": 0.82,
+      "median": 0.8,
+      "scores": [
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        1,
+        0.8,
+        0.8,
+        0.8
+      ]
+    },
+    "single-question": {
+      "min": 0.4,
+      "max": 1,
+      "mean": 0.82,
+      "median": 0.8,
+      "scores": [
+        0.8,
+        1,
+        1,
+        0.8,
+        0.8,
+        0.4,
+        0.8,
+        0.8,
+        0.8,
+        1
+      ]
+    },
+    "step-boundary": {
+      "min": 0,
+      "max": 1,
+      "mean": 0.9,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "source-citation": {
+      "min": 0.3,
+      "max": 1,
+      "mean": 0.76,
+      "median": 0.8,
+      "scores": [
+        0.8,
+        1,
+        0.8,
+        1,
+        0.8,
+        1,
+        0.3,
+        0.8,
+        0.3,
+        0.8
+      ]
+    },
+    "acronym-definition": {
+      "min": 0,
+      "max": 1,
+      "mean": 0.2,
+      "median": 0,
+      "scores": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "idk-protocol": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "calculation-presence": {
+      "min": 0.5,
+      "max": 1,
+      "mean": 0.7,
+      "median": 0.5,
+      "scores": [
+        1,
+        1,
+        1,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        1
+      ]
+    },
+    "adaptive-sophistication": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "proactive-intelligence": {
+      "min": 0.8,
+      "max": 1,
+      "mean": 0.9800000000000001,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        0.8,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "progress-over-perfection": {
+      "min": 0.8,
+      "max": 1,
+      "mean": 0.9800000000000001,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        0.8,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "risk-opportunity-flagging": {
+      "min": 0.8,
+      "max": 1,
+      "mean": 0.9199999999999999,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        0.8,
+        0.8,
+        1,
+        0.8,
+        0.8
+      ]
+    }
+  },
+  "conversationScores": {
+    "step-completion-rate": 1,
+    "conversation-efficiency": 1,
+    "context-retention": 1,
+    "greeting-uniqueness": 1,
+    "loop-detection": 1,
+    "failure-penalty": 0.85,
+    "step-transition-quality": 0.5,
+    "overall-coherence": 0.5
+  },
+  "executionMetadata": {
+    "startTime": 1768098425156,
+    "endTime": 1768098589615,
+    "totalDurationMs": 164459,
+    "averageLatencyMs": 15917.1,
+    "totalTokensUsed": 70313,
+    "modelUsed": "claude-sonnet-4-20250514",
+    "promptVersion": "v5_7_5"
+  }
+}

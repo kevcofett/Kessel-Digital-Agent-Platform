@@ -1,0 +1,361 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "e8c1799e-2a43-4857-b276-0a04355c3929"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "plan_id": {
+                  "type": "string",
+                  "description": "GUID of the media plan"
+                },
+                "version_id": {
+                  "type": "string",
+                  "description": "GUID of the plan version"
+                },
+                "step_number": {
+                  "type": "integer",
+                  "description": "Step number (1-10)"
+                },
+                "section_data": {
+                  "type": "object",
+                  "description": "JSON data for the section"
+                },
+                "section_status": {
+                  "type": "string",
+                  "description": "Status: NotStarted, InProgress, Complete, Skipped"
+                },
+                "user_id": {
+                  "type": "string",
+                  "description": "GUID of the user making the update"
+                }
+              },
+              "required": [
+                "plan_id",
+                "version_id",
+                "step_number",
+                "section_data"
+              ]
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "InitializestatusValue": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "98ea4d1c-260d-43db-b642-5b430f7c91ec"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "status_value",
+                "type": "integer",
+                "value": "@if(equals(triggerBody()?['section_status'], 'Complete'), 100000002, if(equals(triggerBody()?['section_status'], 'Skipped'), 100000003, 100000001))"
+              }
+            ]
+          }
+        },
+        "FindExistingSection": {
+          "runAfter": {
+            "InitializestatusValue": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6c92ce2d-7827-4b69-8ffc-57a8d813ed0a"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_plandata",
+              "$filter": "_mpa_mediaplanid_value eq '@{triggerBody()?['plan_id']}' and _mpa_planversionid_value eq '@{triggerBody()?['version_id']}' and mpa_stepnumber eq @{triggerBody()?['step_number']}",
+              "$top": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "CheckSelectionExists": {
+          "actions": {
+            "UpdateSection": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "2c0b9299-d80d-4785-990b-36232af14666"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateOnlyRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "mpa_plandata",
+                  "recordId": "@first(outputs('FindExistingSection')?['body/value'])?['mpa_plandataid']",
+                  "item/mpa_sectionstatus": "@variables('status_value')",
+                  "item/mpa_createdby": "@triggerBody()?['user_id']",
+                  "item/mpa_sectiondata": "@string(triggerBody()?['section_data'])",
+                  "item/mpa_updatedat": "@utcNow()"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "FindExistingSection": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "CreateNewSection": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "d8d6ebfc-470f-40f3-adca-63f07ad142d3"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps",
+                    "operationId": "CreateRecord",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "mpa_plandata",
+                    "item/mpa_datatitle": "Step @{triggerBody()?['step_number']} Data",
+                    "item/mpa_MediaPlan@odata.bind": "@triggerBody()?['plan_id']",
+                    "item/mpa_PlanVersion@odata.bind": "@triggerBody()?['version_id']",
+                    "item/mpa_sectionstatus": "@variables('status_value')",
+                    "item/mpa_sectiontype": "@add(99999999, triggerBody()?['step_number'])",
+                    "item/mpa_stepnumber": "@triggerBody()?['step_number']",
+                    "item/mpa_createdat": "@utcNow()",
+                    "item/mpa_sectiondata": "@string(triggerBody()?['section_data'])"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              }
+            }
+          },
+          "expression": {
+            "greater": [
+              "@length(outputs('FindExistingSection')?['body/value'])",
+              0
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f0080a47-9ee5-4244-bb91-11d7fc77bd78"
+          },
+          "type": "If"
+        },
+        "CheckUpdateCurrentStep": {
+          "actions": {
+            "GetCurrentPlan": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "954648fe-d38f-4588-8c80-3b0e947b43e5"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "mpa_mediaplan",
+                  "recordId": "@triggerBody()?['plan_id']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "CheckSelectionExists": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "CreateANewSection": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "e51d0319-907a-4cdd-8849-8b0d63ee8cb1"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps",
+                    "operationId": "CreateRecord",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "mpa_plandata",
+                    "item/mpa_datatitle": "Step @{triggerBody()?['step_number']} Data",
+                    "item/mpa_MediaPlan@odata.bind": "@triggerBody()?['plan_id']",
+                    "item/mpa_PlanVersion@odata.bind": "@triggerBody()?['version_id']",
+                    "item/mpa_sectionstatus": "@variables('status_value')",
+                    "item/mpa_sectiontype": "@add(99999999, triggerBody()?['step_number'])",
+                    "item/mpa_stepnumber": "@triggerBody()?['step_number']",
+                    "item/mpa_createdat": "@utcNow()",
+                    "item/mpa_sectiondata": "@string(triggerBody()?['section_data'])"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@variables('status_value')",
+              100000002
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8bc6b823-469e-4948-8d0c-e916508102e8"
+          },
+          "type": "If"
+        },
+        "CheckUpdateOnCurrentStep": {
+          "actions": {
+            "GetTheCurrentPlan": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "bfe89174-8a50-4b64-a66b-ada484b89c08"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "mpa_mediaplan",
+                  "recordId": "@triggerBody()?['plan_id']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "ShouldAdvanceStep": {
+              "actions": {
+                "AdvancePlanStep": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "89657e9c-d86f-47bb-a60a-64a4cdc64ad4"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "UpdateOnlyRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "mpa_mediaplan",
+                      "recordId": "@triggerBody()?['plan_id']",
+                      "item/mpa_currentstep": "@add(triggerBody()?['step_number'], 1)",
+                      "item/mpa_updatedat": "@utcNow()"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "GetTheCurrentPlan": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "greaterOrEquals": [
+                  "@triggerBody()?['step_number']",
+                  "@outputs('GetCurrentPlan')?['body/mpa_currentstep']"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "946aab72-3756-412e-a6b3-b71c075fb459"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "CheckUpdateCurrentStep": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "equals": [
+              "@variables('status_value')",
+              100000002
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b185f1bf-899b-4da3-983a-d32e27bd6f64"
+          },
+          "type": "If"
+        },
+        "SuccessResponse": {
+          "runAfter": {
+            "CheckUpdateOnCurrentStep": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2710c7d2-c8ff-486e-8477-7c673e88a539"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "Success",
+              "plan_id": "@{triggerBody()?['plan_id']}",
+              "version_id": "@{triggerBody()?['version_id']}",
+              "step_number": "@triggerBody()?['step_number']",
+              "section_status": "@{if(equals(variables('status_value'), 100000002), 'Complete', if(equals(variables('status_value'), 100000003), 'Skipped', 'InProgress'))}",
+              "message": "Section saved successfully"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

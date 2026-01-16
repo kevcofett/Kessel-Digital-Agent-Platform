@@ -1,0 +1,314 @@
+DOCUMENT: MPA_Geography_DMA_Planning_v5_5.txt
+CATEGORY: Planning Framework
+TOPICS: geography, DMA, market planning, local targeting, regional strategy
+
+GEOGRAPHY AND DMA PLANNING FRAMEWORK v5.5
+
+VERSION 5.5
+DATE January 2026
+STATUS Production Ready
+DOCUMENT TYPE Knowledge Base - Step 4 Geography Planning
+
+OVERVIEW
+
+This document defines the requirements for Geography planning in Step 4 of the media plan development process. Geography planning establishes WHERE the campaign will run and provides the foundation for budget allocation and outcome projections by market.
+
+CORE PRINCIPLE
+
+Geography is not just a targeting input - it is an analytical framework. Every geography decision must be justified with population data, target audience sizing, and projected outcomes. The agent must always present geography selections in structured table format with rollup calculations.
+
+GEOGRAPHY HIERARCHY LEVELS
+
+The agent supports four levels of geographic granularity based on campaign sophistication and targeting requirements.
+
+LEVEL 1 COUNTRY
+- Simplest level for national campaigns
+- Single row plus total
+- Used when no geographic variation in strategy
+
+LEVEL 2 DMA
+- Designated Market Area level
+- Standard for most campaigns
+- 210 DMAs in United States
+- Rolls up to Country total
+
+LEVEL 3 DMA PLUS CORRIDOR
+- DMA level with corridor subdivisions
+- Corridors are named geographic clusters within DMAs
+- Example Los Angeles DMA might have corridors for Downtown, Westside, Valley, South Bay
+- Each corridor rolls up to its parent DMA
+- DMAs roll up to Country total
+
+LEVEL 4 ZIP CODES
+- Most granular level
+- ZIP codes roll up to parent DMA
+- DMAs roll up to Country total
+- Used for hyperlocal campaigns or when first-party data enables ZIP-level precision
+
+MANDATORY TABLE STRUCTURE
+
+The agent MUST present geography selections in table format. The table structure varies based on granularity level but always includes these core columns.
+
+PHASE 1 COLUMNS - GEOGRAPHY DEFINITION
+Present these columns when Step 4 Geography is being defined, before channel and budget allocation.
+
+- Geography Name - The DMA name, corridor name, or ZIP code
+- Parent Geography - The parent level for rollup (DMA for ZIPs, Country for DMAs)
+- Total Population - Total population in that geography area
+- Target Audience Size - Population after demographic, behavioral, and contextual signal filters
+- Target Audience Percent - Target audience as percentage of total population
+
+PHASE 2 COLUMNS - POST BUDGET AND CHANNEL ALLOCATION
+Add these columns once Step 5 Budget and Step 7 Channels are complete.
+
+- Planned Media Spend - Total planned spend for that geography
+- Spend Per Target - Planned spend divided by target audience size
+- Projected Impressions - Expected impressions for that geography
+- Projected Clicks - Expected clicks for that geography
+- Projected Conversions - Expected conversions for that geography
+- Projected CAC or CPA - Cost per acquisition for that geography
+
+ROLLUP AND SUBTOTAL REQUIREMENTS
+
+MANDATORY ROLLUP RULES
+
+For ZIP-level tables:
+- Subtotal row after each DMA grouping showing sum of ZIPs in that DMA
+- Grand total row at bottom showing national totals
+
+For DMA-level tables:
+- Grand total row at bottom showing national totals
+
+For DMA plus Corridor tables:
+- Subtotal row after each DMA grouping showing sum of corridors in that DMA
+- Grand total row at bottom showing national totals
+
+CALCULATION RULES FOR SUBTOTALS AND TOTALS
+
+These columns use SUM aggregation:
+- Total Population
+- Target Audience Size
+- Planned Media Spend
+- Projected Impressions
+- Projected Clicks
+- Projected Conversions
+
+These columns use WEIGHTED AVERAGE aggregation:
+- Target Audience Percent - weighted by total population
+- Spend Per Target - weighted by target audience size
+- Projected CAC or CPA - weighted by projected conversions
+
+EXAMPLE TABLE STRUCTURES
+
+EXAMPLE 1 - DMA LEVEL PHASE 1
+
+DMA Breakdown with Population and Target Audience:
+- New York NY: Total population 20,100,000, Target audience 1,206,000 (6.0% of population)
+- Los Angeles CA: Total population 13,200,000, Target audience 924,000 (7.0% of population)
+- Chicago IL: Total population 9,500,000, Target audience 570,000 (6.0% of population)
+- Houston TX: Total population 7,200,000, Target audience 504,000 (7.0% of population)
+- Phoenix AZ: Total population 4,900,000, Target audience 343,000 (7.0% of population)
+- TOTAL: Total population 54,900,000, Target audience 3,547,000 (6.5% of population)
+
+Note the TOTAL Target Percent of 6.5 percent is the weighted average, not simple average of the percentages.
+
+EXAMPLE 2 - DMA LEVEL PHASE 2 WITH BUDGET AND OUTCOMES
+
+DMA Breakdown with Budget, Spend Efficiency, and Projected Outcomes:
+- New York NY: Population 20,100,000, Target audience 1,206,000 (6.0%), Spend $85,000 at $0.070 per target, projecting 850 conversions at $100.00 CAC
+- Los Angeles CA: Population 13,200,000, Target audience 924,000 (7.0%), Spend $65,000 at $0.070 per target, projecting 650 conversions at $100.00 CAC
+- Chicago IL: Population 9,500,000, Target audience 570,000 (6.0%), Spend $45,000 at $0.079 per target, projecting 400 conversions at $112.50 CAC
+- Houston TX: Population 7,200,000, Target audience 504,000 (7.0%), Spend $35,000 at $0.069 per target, projecting 350 conversions at $100.00 CAC
+- Phoenix AZ: Population 4,900,000, Target audience 343,000 (7.0%), Spend $20,000 at $0.058 per target, projecting 175 conversions at $114.29 CAC
+- TOTAL: Population 54,900,000, Target audience 3,547,000 (6.5%), Spend $250,000 at $0.070 per target, projecting 2,425 conversions at $103.09 CAC
+
+Note TOTAL Projected CAC of $103.09 is weighted average by conversions, not simple average.
+
+EXAMPLE 3 - DMA PLUS CORRIDOR BREAKDOWN
+
+Los Angeles CA DMA by Corridor:
+- Downtown: Population 2,500,000, Target audience 200,000 (8.0%), Spend $20,000, Projected conversions 200
+- Westside: Population 1,800,000, Target audience 162,000 (9.0%), Spend $18,000, Projected conversions 180
+- Valley: Population 3,200,000, Target audience 224,000 (7.0%), Spend $15,000, Projected conversions 150
+- South Bay: Population 2,100,000, Target audience 147,000 (7.0%), Spend $12,000, Projected conversions 120
+- LA SUBTOTAL: Population 9,600,000, Target audience 733,000 (7.6%), Spend $65,000, Projected conversions 650
+
+San Diego CA DMA by Corridor:
+- Central: Population 1,400,000, Target audience 98,000 (7.0%), Spend $8,000, Projected conversions 80
+- North County: Population 900,000, Target audience 72,000 (8.0%), Spend $7,000, Projected conversions 70
+- SD SUBTOTAL: Population 2,300,000, Target audience 170,000 (7.4%), Spend $15,000, Projected conversions 150
+
+GRAND TOTAL: Population 11,900,000, Target audience 903,000 (7.6%), Spend $80,000, Projected conversions 800
+
+EXAMPLE 4 - ZIP CODE BREAKDOWN WITH DMA ROLLUPS
+
+Chicago IL DMA by ZIP Code:
+- ZIP 60601: Population 28,000, Target audience 2,240 (8.0%), Spend $1,500
+- ZIP 60602: Population 12,000, Target audience 960 (8.0%), Spend $800
+- ZIP 60603: Population 8,500, Target audience 595 (7.0%), Spend $500
+- ZIP 60604: Population 15,000, Target audience 1,050 (7.0%), Spend $700
+- CHICAGO SUBTOTAL: Population 63,500, Target audience 4,845 (7.6%), Spend $3,500
+
+Milwaukee WI DMA by ZIP Code:
+- ZIP 53201: Population 22,000, Target audience 1,540 (7.0%), Spend $900
+- ZIP 53202: Population 18,000, Target audience 1,260 (7.0%), Spend $750
+- ZIP 53203: Population 14,000, Target audience 980 (7.0%), Spend $600
+- MILWAUKEE SUBTOTAL: Population 54,000, Target audience 3,780 (7.0%), Spend $2,250
+
+GRAND TOTAL: Population 117,500, Target audience 8,625 (7.3%), Spend $5,750
+
+TARGET AUDIENCE SIZING METHODOLOGY
+
+The target audience size must account for all targeting signals applied to the campaign.
+
+SIGNAL CATEGORIES
+
+Demographic Signals
+- Age range
+- Gender
+- Household income
+- Education level
+- Homeownership status
+- Presence of children
+
+Behavioral Signals
+- In-market purchase intent
+- Content consumption patterns
+- Past purchase history
+- Site visitation behavior
+- App usage patterns
+- Search behavior
+
+Contextual Signals
+- Daypart targeting
+- Device targeting
+- Content category alignment
+- Weather-based triggers
+- Location-based triggers
+
+AUDIENCE SIZING CALCULATION
+
+Start with total population for the geography.
+Apply each signal as a filter to reduce the addressable population.
+The resulting number is the target audience size.
+
+Example calculation:
+- Los Angeles DMA total population 13,200,000
+- Age 25 to 54 reduces to 5,280,000 (40 percent of population)
+- HHI over 75K reduces to 2,640,000 (50 percent of age-qualified)
+- In-market for financial services reduces to 924,000 (35 percent of income-qualified)
+- Target audience is 924,000 which is 7.0 percent of total population
+
+The agent should explain the audience sizing logic when presenting the geography table.
+
+DATA SOURCES FOR POPULATION AND AUDIENCE SIZING
+
+POPULATION DATA SOURCES
+- US Census Bureau American Community Survey
+- Nielsen DMA definitions and population estimates
+- Platform-specific reach estimates from Meta, Google, TTD
+
+AUDIENCE SIZING DATA SOURCES
+- Platform planning tools (Meta Ads Manager, Google Keyword Planner)
+- Third-party data providers (Experian, Acxiom, LiveRamp)
+- First-party data from client CRM or CDP
+- KB benchmark data for typical audience penetration by vertical
+
+When presenting the table, cite the data source used for population and audience estimates.
+
+MANDATORY AUDIENCE SIZING REQUIREMENT
+
+The agent MUST NOT proceed from Step 4 to Step 5 (Budget) until audience is SIZED per
+geography. This is a hard gate. No exceptions unless user explicitly overrides.
+
+WRONG BEHAVIOR - INCOMPLETE:
+"Great, you want to focus on Los Angeles, Houston, and Chicago DMAs. Let's move to
+budget allocation."
+
+RIGHT BEHAVIOR - COMPLETE:
+"Based on your targeting signals, here is your audience sizing by DMA:
+
+DMA Breakdown:
+- Los Angeles: Total population 13,200,000, Target audience 924,000 (7.0%)
+- Houston: Total population 7,200,000, Target audience 504,000 (7.0%)
+- Chicago: Total population 9,500,000, Target audience 570,000 (6.0%)
+- TOTAL: Total population 29,900,000, Target audience 1,998,000 (6.7%)
+
+Your total addressable audience is 2.0M across these three DMAs. At your $400K budget
+and 5,000 customer target, you are projecting $80 CAC with 0.25% conversion rate from
+target audience. This is achievable with standard targeting. Shall we proceed to budget
+allocation?"
+
+WHY THIS MATTERS:
+- Budget allocation without audience sizing is arbitrary
+- Cannot calculate budget-per-target-customer without sizing
+- Cannot assess targeting precision without knowing audience penetration
+- Plans without sizing fail in-market due to misallocated spend
+
+SIZING DATA SOURCES:
+- Platform tools (Meta Ads Manager, Google Keyword Planner) for reach estimates
+- Census ACS data for demographic filters
+- KB benchmarks for vertical-typical penetration rates
+- State assumption clearly if using estimates
+
+AGENT BEHAVIOR REQUIREMENTS
+
+WHEN ENTERING STEP 4 GEOGRAPHY
+
+1. Ask about geographic scope - national, regional, or local
+2. Ask about granularity needed - DMA, corridor, or ZIP level
+3. Present initial geography table with Phase 1 columns INCLUDING AUDIENCE SIZE
+4. Get user confirmation or refinement of geography selections
+5. DO NOT proceed to Step 5 until audience is SIZED per geography
+
+WHEN STEP 5 BUDGET IS COMPLETE
+
+1. Update geography table with planned spend allocation by geography
+2. Calculate spend per target for each geography
+3. Highlight any geographies with significantly higher or lower spend per target
+
+WHEN STEP 7 CHANNELS IS COMPLETE
+
+1. Update geography table with projected outcomes by geography
+2. Calculate projected CAC or CPA for each geography
+3. Highlight any geographies with projected efficiency significantly different from average
+4. Provide recommendation if budget reallocation between geographies would improve overall efficiency
+
+TABLE PRESENTATION RULES
+
+Always use consistent column headers across all geography tables in the session.
+Always include subtotal rows at every major hierarchy break.
+Always include grand total row at the bottom.
+Use weighted averages for percentage and efficiency metrics in subtotal and total rows.
+Use sum aggregation for absolute count metrics in subtotal and total rows.
+Round population and audience numbers to nearest thousand for DMA level.
+Round population and audience numbers to nearest hundred for ZIP level.
+Round spend to nearest dollar.
+Round percentages to one decimal place.
+Round CAC and CPA to two decimal places.
+
+INTEGRATION WITH OTHER STEPS
+
+Geography table informs and is informed by other steps.
+
+Step 3 Audience - Target audience definition determines the filters applied to size the target audience in each geography.
+
+Step 5 Budget - Budget allocation by geography must sum to total campaign budget. Geography table shows how budget is distributed.
+
+Step 7 Channels - Channel mix may vary by geography. Some channels have limited inventory in certain DMAs. The projected outcomes in geography table must align with channel projections.
+
+Step 8 Measurement - Some measurement approaches work better in specific geographies. Geo-holdout testing requires clean geography definition.
+
+ERROR CONDITIONS
+
+The agent must flag these error conditions.
+
+Total budget in geography table does not equal campaign budget - Flag mismatch and reconcile.
+
+Projected conversions by geography do not sum to total projected conversions - Recalculate and align.
+
+Target audience size exceeds total population for any geography - Data error, investigate source.
+
+Any geography has zero planned spend but is included in table - Either allocate spend or remove from table.
+
+Spend per target varies more than 50 percent across geographies - Highlight and ask user if intentional.

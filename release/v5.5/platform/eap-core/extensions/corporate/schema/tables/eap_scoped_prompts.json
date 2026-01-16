@@ -1,0 +1,31 @@
+{
+  "schemaName": "eap_scoped_prompts",
+  "displayName": "Scoped Prompt",
+  "pluralName": "Scoped Prompts",
+  "description": "Prompt templates scoped to specific contexts",
+  "tier": 3,
+  "featureGate": "SCOPED_CONTEXT",
+  "category": "Configuration",
+  "primaryKey": "prompt_id",
+  "primaryNameColumn": "prompt_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "prompt_id", "displayName": "Prompt ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "prompt_code", "displayName": "Prompt Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique prompt code" },
+    { "schemaName": "prompt_name", "displayName": "Prompt Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Prompt display name" },
+    { "schemaName": "prompt_category", "displayName": "Category", "dataType": "Choice", "required": true, "options": ["System", "User", "Assistant", "Context", "Template"], "description": "Prompt category" },
+    { "schemaName": "prompt_text", "displayName": "Prompt Text", "dataType": "MultilineText", "required": true, "description": "Full prompt text" },
+    { "schemaName": "scope_type", "displayName": "Scope Type", "dataType": "Choice", "required": true, "options": ["Global", "Client", "Industry", "Agent", "UseCase"], "description": "Scope type" },
+    { "schemaName": "scope_entity_id", "displayName": "Scope Entity ID", "dataType": "UniqueIdentifier", "required": false, "description": "Specific entity for scope" },
+    { "schemaName": "agent_id", "displayName": "Agent", "dataType": "Lookup", "lookupTable": "eap_agent", "required": false, "description": "Agent-specific prompt" },
+    { "schemaName": "placeholder_schema_json", "displayName": "Placeholders", "dataType": "MultilineText", "required": false, "description": "Available placeholders JSON" },
+    { "schemaName": "version", "displayName": "Version", "dataType": "WholeNumber", "required": true, "defaultValue": 1, "description": "Prompt version" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_prompt_code", "columns": ["prompt_code"], "unique": true },
+    { "name": "idx_scope", "columns": ["scope_type", "scope_entity_id"], "unique": false }
+  ]
+}

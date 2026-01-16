@@ -1,80 +1,226 @@
 {
-  "table_name": "eap_user",
-  "display_name": "EAP User",
-  "description": "User identity and profile for all agents",
-  "schema_name": "eap_user",
-  "primary_column": "eap_userprincipalname",
+  "schemaName": "eap_user",
+  "displayName": "Users",
+  "pluralName": "Users",
+  "description": "Authenticated platform users with role and permission information",
+  "tier": 1,
+  "category": "Core",
+  "primaryKey": "user_id",
+  "primaryNameColumn": "display_name",
+  "ownershipType": "OrganizationOwned",
   "columns": [
     {
-      "name": "eap_userprincipalname",
-      "display_name": "User Principal Name",
-      "type": "Text",
-      "max_length": 200,
+      "schemaName": "user_id",
+      "displayName": "User ID",
+      "dataType": "UniqueIdentifier",
       "required": true,
-      "description": "Microsoft SSO UPN (email)"
+      "description": "Primary key"
     },
     {
-      "name": "eap_displayname",
-      "display_name": "Display Name",
-      "type": "Text",
-      "max_length": 200,
-      "required": true
+      "schemaName": "user_principal_name",
+      "displayName": "User Principal Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "unique": true,
+      "description": "Email/UPN from Entra ID"
     },
     {
-      "name": "eap_email",
-      "display_name": "Email",
-      "type": "Text",
-      "max_length": 200,
-      "required": true
-    },
-    {
-      "name": "eap_department",
-      "display_name": "Department",
-      "type": "Text",
-      "max_length": 100,
-      "required": false
-    },
-    {
-      "name": "eap_jobtitle",
-      "display_name": "Job Title",
-      "type": "Text",
-      "max_length": 100,
-      "required": false
-    },
-    {
-      "name": "eap_preferences",
-      "display_name": "User Preferences",
-      "type": "Text",
-      "max_length": 1048576,
+      "schemaName": "employee_id",
+      "displayName": "Employee ID",
+      "dataType": "Text",
+      "maxLength": 20,
       "required": false,
-      "description": "JSON blob for user preferences"
+      "unique": true,
+      "description": "Employee ID (unique if provided)"
     },
     {
-      "name": "eap_status",
-      "display_name": "Status",
-      "type": "Choice",
-      "options": ["active", "inactive", "suspended"],
-      "default": "active",
-      "required": true
+      "schemaName": "display_name",
+      "displayName": "Display Name",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": true,
+      "description": "Full display name"
     },
     {
-      "name": "eap_firstseen",
-      "display_name": "First Seen",
-      "type": "DateTime",
-      "required": true
+      "schemaName": "first_name",
+      "displayName": "First Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "First name"
     },
     {
-      "name": "eap_lastseen",
-      "display_name": "Last Seen",
-      "type": "DateTime",
-      "required": true
+      "schemaName": "last_name",
+      "displayName": "Last Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Last name"
+    },
+    {
+      "schemaName": "email",
+      "displayName": "Email",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": true,
+      "description": "Email address"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "is_platform_admin",
+      "displayName": "Is Platform Admin",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Super admin flag"
+    },
+    {
+      "schemaName": "deactivated_date",
+      "displayName": "Deactivated Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "When user was deactivated"
+    },
+    {
+      "schemaName": "deactivated_by",
+      "displayName": "Deactivated By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": false,
+      "description": "Who deactivated"
+    },
+    {
+      "schemaName": "geographic_scope",
+      "displayName": "Geographic Scope",
+      "dataType": "Choice",
+      "required": true,
+      "defaultValue": "Global",
+      "options": ["Global", "Region", "Country"],
+      "description": "Geographic access scope"
+    },
+    {
+      "schemaName": "geographic_scope_ids_json",
+      "displayName": "Geographic Scope IDs",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "JSON array of region/country IDs"
+    },
+    {
+      "schemaName": "entra_object_id",
+      "displayName": "Entra Object ID",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": false,
+      "description": "Azure AD object ID"
+    },
+    {
+      "schemaName": "last_entra_sync_date",
+      "displayName": "Last Entra Sync Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Last sync from Entra"
+    },
+    {
+      "schemaName": "entra_attributes_json",
+      "displayName": "Entra Attributes",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Cached Entra attributes"
+    },
+    {
+      "schemaName": "preferences_id",
+      "displayName": "Preferences",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user_preferences",
+      "required": false,
+      "description": "User preferences"
+    },
+    {
+      "schemaName": "provisioned_by",
+      "displayName": "Provisioned By",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["SYSTEM_SEED", "AUTO_PROVISION", "MANUAL", "BULK_IMPORT"],
+      "description": "How user was provisioned"
+    },
+    {
+      "schemaName": "provisioned_date",
+      "displayName": "Provisioned Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "When provisioned"
+    },
+    {
+      "schemaName": "role_assignment_pending",
+      "displayName": "Role Assignment Pending",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Needs role assignment"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    },
+    {
+      "schemaName": "modified_by",
+      "displayName": "Modified By",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Modifier"
     }
   ],
   "indexes": [
     {
-      "name": "idx_user_upn",
-      "columns": ["eap_userprincipalname"],
+      "name": "idx_user_principal_name",
+      "columns": ["user_principal_name"],
       "unique": true
+    },
+    {
+      "name": "idx_employee_id",
+      "columns": ["employee_id"],
+      "unique": true
+    },
+    {
+      "name": "idx_entra_object_id",
+      "columns": ["entra_object_id"],
+      "unique": false
+    },
+    {
+      "name": "idx_is_active",
+      "columns": ["is_active"],
+      "unique": false
     }
-  ]
+  ],
+  "security": {
+    "readAccess": "OwnRecord",
+    "writeAccess": "Admin"
+  }
 }

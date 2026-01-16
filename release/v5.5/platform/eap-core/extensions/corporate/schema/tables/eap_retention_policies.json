@@ -1,0 +1,32 @@
+{
+  "schemaName": "eap_retention_policies",
+  "displayName": "Retention Policy",
+  "pluralName": "Retention Policies",
+  "description": "Data retention policies",
+  "tier": 3,
+  "featureGate": "DATA_GOVERNANCE",
+  "category": "Governance",
+  "primaryKey": "retention_id",
+  "primaryNameColumn": "policy_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "retention_id", "displayName": "Retention ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "policy_code", "displayName": "Policy Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique code" },
+    { "schemaName": "policy_name", "displayName": "Policy Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Display name" },
+    { "schemaName": "entity_type", "displayName": "Entity Type", "dataType": "Text", "maxLength": 100, "required": true, "description": "Type of entity" },
+    { "schemaName": "retention_days", "displayName": "Retention Days", "dataType": "WholeNumber", "required": true, "description": "Days to retain" },
+    { "schemaName": "archive_before_delete", "displayName": "Archive First", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Archive before delete" },
+    { "schemaName": "archive_location", "displayName": "Archive Location", "dataType": "Text", "maxLength": 500, "required": false, "description": "Where to archive" },
+    { "schemaName": "delete_method", "displayName": "Delete Method", "dataType": "Choice", "required": true, "defaultValue": "SoftDelete", "options": ["SoftDelete", "HardDelete", "Anonymize"], "description": "How to delete" },
+    { "schemaName": "applies_to_classification_id", "displayName": "Applies To Classification", "dataType": "Lookup", "lookupTable": "eap_data_classifications", "required": false, "description": "Specific classification" },
+    { "schemaName": "last_execution_date", "displayName": "Last Execution", "dataType": "DateTime", "required": false, "description": "Last policy run" },
+    { "schemaName": "records_processed", "displayName": "Records Processed", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Total processed" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_policy_code", "columns": ["policy_code"], "unique": true },
+    { "name": "idx_entity_type", "columns": ["entity_type"], "unique": false }
+  ]
+}

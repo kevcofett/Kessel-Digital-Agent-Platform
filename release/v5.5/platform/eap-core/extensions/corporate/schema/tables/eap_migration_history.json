@@ -1,0 +1,30 @@
+{
+  "schemaName": "eap_migration_history",
+  "displayName": "Migration History",
+  "pluralName": "Migration History",
+  "description": "Database migration tracking",
+  "tier": 1,
+  "featureGate": null,
+  "category": "System",
+  "primaryKey": "migration_id",
+  "primaryNameColumn": "migration_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "migration_id", "displayName": "Migration ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "migration_name", "displayName": "Migration Name", "dataType": "Text", "maxLength": 200, "required": true, "unique": true, "description": "Migration identifier" },
+    { "schemaName": "version", "displayName": "Version", "dataType": "Text", "maxLength": 50, "required": true, "description": "Version number" },
+    { "schemaName": "description", "displayName": "Description", "dataType": "MultilineText", "required": false, "description": "What changed" },
+    { "schemaName": "migration_type", "displayName": "Migration Type", "dataType": "Choice", "required": true, "options": ["Schema", "Data", "Seed", "Rollback"], "description": "Type of migration" },
+    { "schemaName": "status", "displayName": "Status", "dataType": "Choice", "required": true, "defaultValue": "Pending", "options": ["Pending", "Running", "Completed", "Failed", "RolledBack"], "description": "Migration status" },
+    { "schemaName": "started_date", "displayName": "Started Date", "dataType": "DateTime", "required": false, "description": "When started" },
+    { "schemaName": "completed_date", "displayName": "Completed Date", "dataType": "DateTime", "required": false, "description": "When completed" },
+    { "schemaName": "duration_ms", "displayName": "Duration MS", "dataType": "WholeNumber", "required": false, "description": "Duration in ms" },
+    { "schemaName": "error_message", "displayName": "Error Message", "dataType": "MultilineText", "required": false, "description": "Error if failed" },
+    { "schemaName": "executed_by", "displayName": "Executed By", "dataType": "Text", "maxLength": 200, "required": false, "description": "Who/what ran it" },
+    { "schemaName": "checksum", "displayName": "Checksum", "dataType": "Text", "maxLength": 64, "required": false, "description": "Script checksum" }
+  ],
+  "indexes": [
+    { "name": "idx_migration_name", "columns": ["migration_name"], "unique": true },
+    { "name": "idx_version", "columns": ["version"], "unique": false }
+  ]
+}

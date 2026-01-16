@@ -1,0 +1,28 @@
+{
+  "schemaName": "eap_conversation_threads",
+  "displayName": "Conversation Thread",
+  "pluralName": "Conversation Threads",
+  "description": "Threaded conversation organization",
+  "tier": 2,
+  "featureGate": null,
+  "category": "Sessions",
+  "primaryKey": "thread_id",
+  "primaryNameColumn": "thread_title",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "thread_id", "displayName": "Thread ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "session_id", "displayName": "Session", "dataType": "Lookup", "lookupTable": "eap_session", "required": true, "description": "Parent session" },
+    { "schemaName": "thread_title", "displayName": "Thread Title", "dataType": "Text", "maxLength": 500, "required": true, "description": "Thread title" },
+    { "schemaName": "parent_thread_id", "displayName": "Parent Thread", "dataType": "Lookup", "lookupTable": "eap_conversation_threads", "required": false, "description": "Parent for nesting" },
+    { "schemaName": "thread_type", "displayName": "Thread Type", "dataType": "Choice", "required": true, "defaultValue": "Main", "options": ["Main", "Tangent", "DeepDive", "Followup"], "description": "Thread type" },
+    { "schemaName": "message_count", "displayName": "Message Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Messages in thread" },
+    { "schemaName": "summary", "displayName": "Summary", "dataType": "MultilineText", "required": false, "description": "Thread summary" },
+    { "schemaName": "is_resolved", "displayName": "Is Resolved", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Thread resolved" },
+    { "schemaName": "started_date", "displayName": "Started Date", "dataType": "DateTime", "required": true, "description": "When started" },
+    { "schemaName": "last_message_date", "displayName": "Last Message", "dataType": "DateTime", "required": false, "description": "Last message time" }
+  ],
+  "indexes": [
+    { "name": "idx_session", "columns": ["session_id"], "unique": false },
+    { "name": "idx_parent", "columns": ["parent_thread_id"], "unique": false }
+  ]
+}

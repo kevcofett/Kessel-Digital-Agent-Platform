@@ -1,0 +1,24 @@
+{
+  "schemaName": "eap_message_reactions",
+  "displayName": "Message Reaction",
+  "pluralName": "Message Reactions",
+  "description": "User reactions to messages",
+  "tier": 3,
+  "featureGate": "REACTIONS",
+  "category": "Feedback",
+  "primaryKey": "reaction_id",
+  "primaryNameColumn": "reaction_id",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "reaction_id", "displayName": "Reaction ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "output_id", "displayName": "Output", "dataType": "Lookup", "lookupTable": "eap_outputs", "required": true, "description": "Message/output" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Reacting user" },
+    { "schemaName": "reaction_type", "displayName": "Reaction Type", "dataType": "Choice", "required": true, "options": ["ThumbsUp", "ThumbsDown", "Heart", "Star", "Flag", "Question"], "description": "Reaction type" },
+    { "schemaName": "notes", "displayName": "Notes", "dataType": "MultilineText", "required": false, "description": "Optional notes" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "When reacted" }
+  ],
+  "indexes": [
+    { "name": "idx_output_user", "columns": ["output_id", "user_id", "reaction_type"], "unique": true },
+    { "name": "idx_output", "columns": ["output_id"], "unique": false }
+  ]
+}

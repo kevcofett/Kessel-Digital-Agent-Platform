@@ -1,0 +1,106 @@
+{
+  "schemaName": "eap_permission_scopes",
+  "displayName": "Permission Scopes",
+  "pluralName": "Permission Scopes",
+  "description": "Permission scope hierarchy for admin access control",
+  "tier": 1,
+  "category": "Admin",
+  "primaryKey": "scope_id",
+  "primaryNameColumn": "scope_name",
+  "ownershipType": "OrganizationOwned",
+  "isReferenceData": true,
+  "columns": [
+    {
+      "schemaName": "scope_id",
+      "displayName": "Scope ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "scope_code",
+      "displayName": "Scope Code",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": true,
+      "unique": true,
+      "description": "Unique scope code"
+    },
+    {
+      "schemaName": "scope_name",
+      "displayName": "Scope Name",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Scope name"
+    },
+    {
+      "schemaName": "scope_level",
+      "displayName": "Scope Level",
+      "dataType": "WholeNumber",
+      "required": true,
+      "description": "Hierarchy level (1 = highest)"
+    },
+    {
+      "schemaName": "parent_scope_id",
+      "displayName": "Parent Scope",
+      "dataType": "Lookup",
+      "lookupTable": "eap_permission_scopes",
+      "required": false,
+      "description": "Parent scope in hierarchy"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Description"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "sort_order",
+      "displayName": "Sort Order",
+      "dataType": "WholeNumber",
+      "required": true,
+      "description": "Display order"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_scope_code",
+      "columns": ["scope_code"],
+      "unique": true
+    }
+  ],
+  "seedData": [
+    { "scope_code": "PLATFORM", "scope_name": "Platform", "scope_level": 1, "parent_scope_code": null, "sort_order": 1, "description": "Full platform access" },
+    { "scope_code": "TENANT", "scope_name": "Tenant", "scope_level": 2, "parent_scope_code": "PLATFORM", "sort_order": 2, "description": "Tenant-level access" },
+    { "scope_code": "DIVISION", "scope_name": "Division", "scope_level": 2, "parent_scope_code": "PLATFORM", "sort_order": 3, "description": "Division-level access" },
+    { "scope_code": "BU", "scope_name": "Business Unit", "scope_level": 3, "parent_scope_code": "DIVISION", "sort_order": 4, "description": "Business unit access" },
+    { "scope_code": "PRODUCT", "scope_name": "Product Unit", "scope_level": 4, "parent_scope_code": "BU", "sort_order": 5, "description": "Product unit access" },
+    { "scope_code": "AGENT", "scope_name": "Agent", "scope_level": 5, "parent_scope_code": "PRODUCT", "sort_order": 6, "description": "Agent-specific access" },
+    { "scope_code": "CLIENT", "scope_name": "Client", "scope_level": 5, "parent_scope_code": "PRODUCT", "sort_order": 7, "description": "Client-specific access" }
+  ]
+}

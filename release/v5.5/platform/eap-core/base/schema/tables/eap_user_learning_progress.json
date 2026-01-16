@@ -1,0 +1,28 @@
+{
+  "schemaName": "eap_user_learning_progress",
+  "displayName": "User Learning Progress",
+  "pluralName": "User Learning Progress",
+  "description": "Track user progress through learning resources",
+  "tier": 3,
+  "featureGate": "LEARNING",
+  "category": "Training",
+  "primaryKey": "progress_id",
+  "primaryNameColumn": "progress_id",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "progress_id", "displayName": "Progress ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "User" },
+    { "schemaName": "resource_id", "displayName": "Resource", "dataType": "Lookup", "lookupTable": "eap_learning_resources", "required": true, "description": "Learning resource" },
+    { "schemaName": "status", "displayName": "Status", "dataType": "Choice", "required": true, "defaultValue": "NotStarted", "options": ["NotStarted", "InProgress", "Completed", "Skipped"], "description": "Progress status" },
+    { "schemaName": "progress_percent", "displayName": "Progress Percent", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Completion %" },
+    { "schemaName": "score", "displayName": "Score", "dataType": "WholeNumber", "required": false, "description": "Quiz score if applicable" },
+    { "schemaName": "time_spent_minutes", "displayName": "Time Spent", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Minutes spent" },
+    { "schemaName": "started_date", "displayName": "Started Date", "dataType": "DateTime", "required": false, "description": "When started" },
+    { "schemaName": "completed_date", "displayName": "Completed Date", "dataType": "DateTime", "required": false, "description": "When completed" },
+    { "schemaName": "last_access_date", "displayName": "Last Access", "dataType": "DateTime", "required": false, "description": "Last accessed" }
+  ],
+  "indexes": [
+    { "name": "idx_user_resource", "columns": ["user_id", "resource_id"], "unique": true },
+    { "name": "idx_user_status", "columns": ["user_id", "status"], "unique": false }
+  ]
+}

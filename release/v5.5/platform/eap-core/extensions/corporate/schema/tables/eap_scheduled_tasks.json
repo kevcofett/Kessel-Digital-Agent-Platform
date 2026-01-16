@@ -1,0 +1,33 @@
+{
+  "schemaName": "eap_scheduled_tasks",
+  "displayName": "Scheduled Task",
+  "pluralName": "Scheduled Tasks",
+  "description": "Scheduled background tasks and jobs",
+  "tier": 3,
+  "featureGate": "SCHEDULED_TASKS",
+  "category": "Operations",
+  "primaryKey": "task_id",
+  "primaryNameColumn": "task_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "task_id", "displayName": "Task ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "task_code", "displayName": "Task Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique code" },
+    { "schemaName": "task_name", "displayName": "Task Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Display name" },
+    { "schemaName": "task_type", "displayName": "Task Type", "dataType": "Choice", "required": true, "options": ["Sync", "Cleanup", "Report", "Notification", "Maintenance", "Custom"], "description": "Type of task" },
+    { "schemaName": "schedule_cron", "displayName": "Schedule Cron", "dataType": "Text", "maxLength": 100, "required": true, "description": "Cron expression" },
+    { "schemaName": "task_config_json", "displayName": "Task Config", "dataType": "MultilineText", "required": false, "description": "Configuration JSON" },
+    { "schemaName": "last_run_date", "displayName": "Last Run", "dataType": "DateTime", "required": false, "description": "Last execution" },
+    { "schemaName": "last_run_status", "displayName": "Last Run Status", "dataType": "Choice", "required": false, "options": ["Success", "Failed", "Partial", "Skipped"], "description": "Last run result" },
+    { "schemaName": "last_run_duration_ms", "displayName": "Last Run Duration", "dataType": "WholeNumber", "required": false, "description": "Duration in ms" },
+    { "schemaName": "next_run_date", "displayName": "Next Run", "dataType": "DateTime", "required": false, "description": "Next scheduled run" },
+    { "schemaName": "run_count", "displayName": "Run Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Total runs" },
+    { "schemaName": "failure_count", "displayName": "Failure Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Total failures" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_task_code", "columns": ["task_code"], "unique": true },
+    { "name": "idx_next_run", "columns": ["next_run_date", "is_active"], "unique": false }
+  ]
+}

@@ -38,7 +38,7 @@
       "description": "Retrieve all plan data sections",
       "inputs": {
         "operation": "ListRecords",
-        "entityName": "mpa_plandata",
+        "entityName": "mpa_plandatas",
         "filter": "_mpa_mediaplan_value eq '@{triggerBody()?['planId']}'"
       }
     },
@@ -49,7 +49,7 @@
       "description": "Get main plan record",
       "inputs": {
         "operation": "GetRecord",
-        "entityName": "mpa_mediaplan",
+        "entityName": "mpa_mediaplans",
         "recordId": "@{triggerBody()?['planId']}"
       },
       "runAfter": ["Get_Plan_Data"]
@@ -121,7 +121,7 @@
             "type": "Dataverse",
             "inputs": {
               "operation": "UpdateRecord",
-              "entityName": "mpa_mediaplan",
+              "entityName": "mpa_mediaplans",
               "recordId": "@{triggerBody()?['planId']}",
               "item": {
                 "mpa_current_gate": "@{body('Parse_Validation_Result')?['gateValidation']?['nextGate']}",

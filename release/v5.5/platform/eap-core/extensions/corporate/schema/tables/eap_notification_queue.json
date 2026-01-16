@@ -1,0 +1,36 @@
+{
+  "schemaName": "eap_notification_queue",
+  "displayName": "Notification Queue",
+  "pluralName": "Notification Queue",
+  "description": "Pending and sent notifications",
+  "tier": 2,
+  "category": "Notifications",
+  "primaryKey": "notification_id",
+  "primaryNameColumn": "subject",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "notification_id", "displayName": "Notification ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "recipient_user_id", "displayName": "Recipient", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Notification recipient" },
+    { "schemaName": "notification_type", "displayName": "Notification Type", "dataType": "Choice", "required": true, "options": ["Email", "Teams", "InApp", "Push"], "description": "Delivery channel" },
+    { "schemaName": "category", "displayName": "Category", "dataType": "Choice", "required": true, "options": ["Approval", "Mention", "Update", "Reminder", "System", "Alert"], "description": "Notification category" },
+    { "schemaName": "priority", "displayName": "Priority", "dataType": "Choice", "required": true, "defaultValue": "Normal", "options": ["Low", "Normal", "High", "Urgent"], "description": "Priority level" },
+    { "schemaName": "subject", "displayName": "Subject", "dataType": "Text", "maxLength": 200, "required": true, "description": "Notification subject" },
+    { "schemaName": "body", "displayName": "Body", "dataType": "MultilineText", "required": true, "description": "Notification body" },
+    { "schemaName": "body_html", "displayName": "Body HTML", "dataType": "MultilineText", "required": false, "description": "HTML version of body" },
+    { "schemaName": "action_url", "displayName": "Action URL", "dataType": "Text", "maxLength": 500, "required": false, "description": "Link for action" },
+    { "schemaName": "related_entity_type", "displayName": "Related Entity Type", "dataType": "Text", "maxLength": 100, "required": false, "description": "Related entity type" },
+    { "schemaName": "related_entity_id", "displayName": "Related Entity ID", "dataType": "UniqueIdentifier", "required": false, "description": "Related entity ID" },
+    { "schemaName": "status", "displayName": "Status", "dataType": "Choice", "required": true, "defaultValue": "Pending", "options": ["Pending", "Sent", "Failed", "Cancelled"], "description": "Delivery status" },
+    { "schemaName": "scheduled_date", "displayName": "Scheduled Date", "dataType": "DateTime", "required": true, "description": "When to send" },
+    { "schemaName": "sent_date", "displayName": "Sent Date", "dataType": "DateTime", "required": false, "description": "When sent" },
+    { "schemaName": "retry_count", "displayName": "Retry Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Delivery attempts" },
+    { "schemaName": "error_message", "displayName": "Error Message", "dataType": "Text", "maxLength": 1000, "required": false, "description": "Error if failed" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": true, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_recipient", "columns": ["recipient_user_id"], "unique": false },
+    { "name": "idx_status", "columns": ["status"], "unique": false },
+    { "name": "idx_scheduled", "columns": ["scheduled_date", "status"], "unique": false }
+  ]
+}

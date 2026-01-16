@@ -1,0 +1,30 @@
+{
+  "schemaName": "eap_entity_classifications",
+  "displayName": "Entity Classification",
+  "pluralName": "Entity Classifications",
+  "description": "Classification assignments to entities",
+  "tier": 3,
+  "featureGate": "DATA_GOVERNANCE",
+  "category": "Governance",
+  "primaryKey": "assignment_id",
+  "primaryNameColumn": "assignment_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "assignment_id", "displayName": "Assignment ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "classification_id", "displayName": "Classification", "dataType": "Lookup", "lookupTable": "eap_data_classifications", "required": true, "description": "Assigned classification" },
+    { "schemaName": "entity_type", "displayName": "Entity Type", "dataType": "Text", "maxLength": 100, "required": true, "description": "Type of entity" },
+    { "schemaName": "entity_id", "displayName": "Entity ID", "dataType": "UniqueIdentifier", "required": true, "description": "ID of entity" },
+    { "schemaName": "assigned_by_user_id", "displayName": "Assigned By", "dataType": "Lookup", "lookupTable": "eap_user", "required": false, "description": "Who assigned" },
+    { "schemaName": "assignment_method", "displayName": "Assignment Method", "dataType": "Choice", "required": true, "options": ["Manual", "Automated", "Inherited", "Default"], "description": "How assigned" },
+    { "schemaName": "confidence_score", "displayName": "Confidence Score", "dataType": "Decimal", "precision": 5, "scale": 2, "required": false, "description": "Confidence if automated" },
+    { "schemaName": "justification", "displayName": "Justification", "dataType": "MultilineText", "required": false, "description": "Why classified" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "effective_date", "displayName": "Effective Date", "dataType": "DateTime", "required": true, "description": "When effective" },
+    { "schemaName": "expiry_date", "displayName": "Expiry Date", "dataType": "DateTime", "required": false, "description": "When expires" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" }
+  ],
+  "indexes": [
+    { "name": "idx_entity", "columns": ["entity_type", "entity_id"], "unique": false },
+    { "name": "idx_classification", "columns": ["classification_id"], "unique": false }
+  ]
+}

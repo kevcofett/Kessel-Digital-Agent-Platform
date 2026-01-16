@@ -1,0 +1,26 @@
+{
+  "schemaName": "eap_recent_items",
+  "displayName": "Recent Item",
+  "pluralName": "Recent Items",
+  "description": "User recently accessed items",
+  "tier": 2,
+  "featureGate": null,
+  "category": "Personalization",
+  "primaryKey": "recent_id",
+  "primaryNameColumn": "recent_id",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "recent_id", "displayName": "Recent ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "User" },
+    { "schemaName": "entity_type", "displayName": "Entity Type", "dataType": "Text", "maxLength": 100, "required": true, "description": "Type of item" },
+    { "schemaName": "entity_id", "displayName": "Entity ID", "dataType": "UniqueIdentifier", "required": true, "description": "ID of item" },
+    { "schemaName": "display_name", "displayName": "Display Name", "dataType": "Text", "maxLength": 500, "required": true, "description": "Cached name" },
+    { "schemaName": "agent_id", "displayName": "Agent", "dataType": "Lookup", "lookupTable": "eap_agent", "required": false, "description": "Agent context" },
+    { "schemaName": "access_count", "displayName": "Access Count", "dataType": "WholeNumber", "required": true, "defaultValue": 1, "description": "Times accessed" },
+    { "schemaName": "last_access_date", "displayName": "Last Access", "dataType": "DateTime", "required": true, "description": "Last accessed" }
+  ],
+  "indexes": [
+    { "name": "idx_user_entity", "columns": ["user_id", "entity_type", "entity_id"], "unique": true },
+    { "name": "idx_user_recent", "columns": ["user_id", "last_access_date"], "unique": false }
+  ]
+}

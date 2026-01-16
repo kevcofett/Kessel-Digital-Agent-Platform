@@ -1,6 +1,9 @@
 """
 Dataverse client for Azure Functions.
 All data access goes through this client.
+
+IMPORTANT: This client uses Entity Set Names (plural form) for all API calls.
+Table names are automatically converted using the table_config module.
 """
 
 import os
@@ -9,6 +12,8 @@ import logging
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
 from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+
+from .table_config import get_table_name
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +24,7 @@ class DataverseClient:
     def __init__(self):
         self.environment_url = os.environ.get(
             "DATAVERSE_URL",
-            "https://org5c737821.crm.dynamics.com"
+            "https://aragornai.crm.dynamics.com"
         )
         self.api_version = "v9.2"
         self._token = None
@@ -61,15 +66,18 @@ class DataverseClient:
         }
 
     def _get_api_url(self, table_name: str) -> str:
-        """Construct API URL for a table."""
-        # Handle pluralization for Dataverse table names
-        if table_name.endswith('s'):
-            plural_name = f"{table_name}es"
-        elif table_name.endswith('y'):
-            plural_name = f"{table_name[:-1]}ies"
-        else:
-            plural_name = f"{table_name}s"
-        return f"{self.environment_url}/api/data/{self.api_version}/{plural_name}"
+        """
+        Construct API URL for a table.
+
+        Args:
+            table_name: Table name in any format (singular, plural, short name, legacy)
+
+        Returns:
+            Full API URL using the Entity Set Name (plural form)
+        """
+        # Use get_table_name to convert any format to Entity Set Name (plural)
+        entity_set_name = get_table_name(table_name)
+        return f"{self.environment_url}/api/data/{self.api_version}/{entity_set_name}"
 
     def create_record(self, table_name: str, data: Dict[str, Any]) -> Dict[str, Any]:
         """Create a new record in Dataverse."""
@@ -178,3 +186,39 @@ class DataverseClient:
             params = {}  # Clear params for next page (included in nextLink)
 
         return all_records
+
+    def get_records(
+        self,
+        table_name: str,
+        select: Optional[str] = None,
+        filter_query: Optional[str] = None,
+        order_by: Optional[str] = None,
+        top: Optional[int] = None,
+        expand: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        Get records from a table with optional filtering.
+
+        Convenience method that wraps query_records with a different parameter order
+        commonly used in cached_data_access.
+
+        Args:
+            table_name: Table name (any format - will be converted to Entity Set Name)
+            select: Comma-separated column names to select
+            filter_query: OData filter expression
+            order_by: OData order by expression
+            top: Maximum records to return
+            expand: OData expand expression
+
+        Returns:
+            List of records
+        """
+        select_list = select.split(",") if select else None
+        return self.query_records(
+            table_name=table_name,
+            filter_query=filter_query,
+            select=select_list,
+            order_by=order_by,
+            top=top,
+            expand=expand
+        )

@@ -1,0 +1,34 @@
+{
+  "name": "kessel-digital-agent-platform",
+  "version": "5.5.0",
+  "description": "Kessel Digital Agent Platform - Multi-environment AI agent infrastructure",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces",
+    "deploy:mastercard": "cd release/v5.5/deployment/mastercard/scripts && pwsh deploy-all.ps1",
+    "deploy:mastercard:validate": "cd release/v5.5/deployment/mastercard/scripts && pwsh validate-environment.ps1",
+    "deploy:mastercard:dataverse": "cd release/v5.5/deployment/mastercard/scripts && pwsh deploy-dataverse.ps1",
+    "deploy:mastercard:sharepoint": "cd release/v5.5/deployment/mastercard/scripts && pwsh deploy-sharepoint.ps1",
+    "deploy:mastercard:dry-run": "cd release/v5.5/deployment/mastercard/scripts && pwsh deploy-all.ps1 -DryRun",
+    "validate:instructions": "cd release/v5.5/deployment/mastercard/scripts && bash validate-instructions.sh"
+  },
+  "keywords": [
+    "ai-agent",
+    "claude",
+    "azure-openai",
+    "copilot-studio",
+    "media-planning",
+    "consulting",
+    "enterprise-ai"
+  ],
+  "author": "Kessel Digital",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "schemaName": "eap_approval_statuses",
+  "displayName": "Approval Statuses",
+  "pluralName": "Approval Statuses",
+  "description": "Approval status definitions for workflow management",
+  "tier": 1,
+  "category": "Approval",
+  "primaryKey": "status_id",
+  "primaryNameColumn": "status_name",
+  "ownershipType": "OrganizationOwned",
+  "isReferenceData": true,
+  "columns": [
+    {
+      "schemaName": "status_id",
+      "displayName": "Status ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "status_code",
+      "displayName": "Status Code",
+      "dataType": "Text",
+      "maxLength": 30,
+      "required": true,
+      "unique": true,
+      "description": "Unique status code"
+    },
+    {
+      "schemaName": "status_name",
+      "displayName": "Status Name",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Status name"
+    },
+    {
+      "schemaName": "status_type",
+      "displayName": "Status Type",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Initial", "Pending", "Terminal"],
+      "description": "Status type in workflow"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": false,
+      "description": "Description"
+    },
+    {
+      "schemaName": "allows_edit",
+      "displayName": "Allows Edit",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Allow editing in this status"
+    },
+    {
+      "schemaName": "allows_delivery",
+      "displayName": "Allows Delivery",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Allow delivery in this status"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "sort_order",
+      "displayName": "Sort Order",
+      "dataType": "WholeNumber",
+      "required": true,
+      "description": "Display order"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_status_code",
+      "columns": ["status_code"],
+      "unique": true
+    }
+  ],
+  "seedData": [
+    { "status_code": "IN_PROGRESS", "status_name": "In Progress", "status_type": "Initial", "allows_edit": true, "allows_delivery": false, "sort_order": 1 },
+    { "status_code": "AWAITING_REVIEW", "status_name": "Awaiting Review", "status_type": "Pending", "allows_edit": false, "allows_delivery": false, "sort_order": 2 },
+    { "status_code": "APPROVED_INTERNAL", "status_name": "Approved (Internal)", "status_type": "Terminal", "allows_edit": false, "allows_delivery": true, "sort_order": 3 },
+    { "status_code": "APPROVED_CLIENT", "status_name": "Approved (Client)", "status_type": "Terminal", "allows_edit": false, "allows_delivery": true, "sort_order": 4 },
+    { "status_code": "NOT_APPROVED", "status_name": "Not Approved", "status_type": "Terminal", "allows_edit": false, "allows_delivery": false, "sort_order": 5 },
+    { "status_code": "CHANGES_REQUESTED", "status_name": "Changes Requested", "status_type": "Pending", "allows_edit": true, "allows_delivery": false, "sort_order": 6 }
+  ]
+}

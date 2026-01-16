@@ -1,0 +1,350 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "undefined",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "f2d78deb-086d-4e17-8304-387ffed0ce06"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "run_id": "test-001",
+              "tests": [
+                {
+                  "test_id": "A1",
+                  "name": "Test Name",
+                  "category": "Category",
+                  "prompt": "Test prompt",
+                  "priority": "P1"
+                }
+              ]
+            },
+            "triggerAuthenticationType": "All"
+          }
+        }
+      },
+      "actions": {
+        "Get_API_Key": {
+          "runAfter": {
+            "Response": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "588b2240-b88a-4f69-83f0-a0b5c5f932c4"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "new_mpa_testconfigs",
+              "$filter": "mpa_configkey eq 'API_KEY'",
+              "$top": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "ExpectedApiIKey": {
+          "runAfter": {
+            "Get_API_Key": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e8c20252-893c-48f7-a15f-6ef82b1cf55b"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ExpectedApiKey",
+                "type": "string",
+                "value": "@first(outputs('Get_API_Key')?['body/value'])?['mpa_configvalue']"
+              }
+            ]
+          }
+        },
+        "ProvidedApiKey": {
+          "runAfter": {
+            "ExpectedApiIKey": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7905c8f-4552-4780-bd42-e194572e1edd"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ProvidedApiKey",
+                "type": "string",
+                "value": "@triggerOutputs()?['headers']?['X-API-Key']"
+              }
+            ]
+          }
+        },
+        "Condition": {
+          "actions": {
+            "Apply_to_each": {
+              "foreach": "@triggerBody()?['tests']",
+              "actions": {
+                "Create_Test_Case": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "2a3cc7dd-e6f4-460a-886b-0c033203bb81"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "CreateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "new_mpatestcases",
+                      "item/new_mpaname": "@items('Apply_to_each')",
+                      "item/new_mpa_prompt": "@items('Apply_to_each')?['prompt']",
+                      "item/new_mpa_runid": "@variables('RunId')",
+                      "item/new_mpa_status": 100000000,
+                      "item/new_mpatestcaseid": "@items('Apply_to_each')?['test_id']",
+                      "item/new_mpa_category": "@items('Apply_to_each')",
+                      "item/new_mpa_priority": "@items('Apply_to_each')?['priority']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "TstCount": {
+                  "runAfter": {
+                    "Create_Test_Case": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "fa8a0f76-8b70-4c25-9235-16f72d734c69"
+                  },
+                  "type": "IncrementVariable",
+                  "inputs": {
+                    "name": "TestCount",
+                    "value": 1
+                  }
+                }
+              },
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "37600362-61c9-4002-a302-1c98932ea637"
+              },
+              "type": "Foreach"
+            },
+            "Response_1": {
+              "runAfter": {
+                "Apply_to_each": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "5417fa9f-6fe2-4c85-beb4-e59bf15096ae"
+              },
+              "type": "Response",
+              "kind": "Http",
+              "inputs": {
+                "statusCode": 200,
+                "headers": {
+                  "Content-Type": "applicaton/json"
+                },
+                "body": "@concat('{\"success\": true, \"run_id\": \"', variables('RunId'), '\", \"tests_queued\": ', variables('TestCount'), '}')"
+              }
+            }
+          },
+          "runAfter": {
+            "TestCount": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Response_401_Unauthrorized": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "4c9aa35c-5db4-44a8-b49b-c435dbf5c9f7"
+                },
+                "type": "Response",
+                "kind": "Http",
+                "inputs": {
+                  "statusCode": 401,
+                  "headers": {
+                    "Content-Type": "application/json"
+                  },
+                  "body": {
+                    "success": false,
+                    "error": "Invalid or missing API key"
+                  }
+                }
+              },
+              "Terminate": {
+                "runAfter": {
+                  "Response_401_Unauthrorized": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "48db538e-b961-4f88-83ea-9d70b66a3951"
+                },
+                "type": "Terminate",
+                "inputs": {
+                  "runStatus": "Succeeded"
+                }
+              }
+            }
+          },
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@variables('ProvidedApiKey')",
+                  "@variables('ExpectedApiKey')"
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d9db5cc6-61f1-41b9-a333-b1bc998a0655"
+          },
+          "type": "If"
+        },
+        "RunId": {
+          "runAfter": {
+            "ProvidedApiKey": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1bffc8ea-f27f-4891-bc23-557508a50825"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RunId",
+                "type": "string",
+                "value": "@triggerBody()?['run_id']"
+              }
+            ]
+          }
+        },
+        "TestCount": {
+          "runAfter": {
+            "RunId": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cc913b6c-3eca-4930-a6ce-ede729c92080"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "TestCount",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "Parse_JSON": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "73313b54-368b-4843-b9c2-0c883f90d21f"
+          },
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@triggerBody()",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "run_id": {
+                  "type": "string"
+                },
+                "tests": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "test_id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "category": {
+                        "type": "string"
+                      },
+                      "prompt": {
+                        "type": "string"
+                      },
+                      "priority": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Response": {
+          "runAfter": {
+            "Parse_JSON": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "940de603-dffe-461f-80d1-4f6b5a068ec4"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "success": true,
+              "run_id": "@{body('Parse_JSON')?['run_id']}",
+              "message": "Tests submitted successfully"
+            }
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

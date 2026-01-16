@@ -1,0 +1,161 @@
+{
+  "schemaName": "eap_activity_types",
+  "displayName": "Activity Types",
+  "pluralName": "Activity Types",
+  "description": "Activity type definitions for proactive detection and scoring",
+  "tier": 1,
+  "category": "Proactive",
+  "primaryKey": "activity_type_id",
+  "primaryNameColumn": "activity_name",
+  "ownershipType": "OrganizationOwned",
+  "isReferenceData": true,
+  "columns": [
+    {
+      "schemaName": "activity_type_id",
+      "displayName": "Activity Type ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "activity_code",
+      "displayName": "Activity Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique activity code"
+    },
+    {
+      "schemaName": "activity_name",
+      "displayName": "Activity Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Activity name"
+    },
+    {
+      "schemaName": "activity_category",
+      "displayName": "Activity Category",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Question", "Task", "Research", "Creation", "Review", "Other"],
+      "description": "Activity category"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Description"
+    },
+    {
+      "schemaName": "keywords_json",
+      "displayName": "Keywords",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Detection keywords JSON"
+    },
+    {
+      "schemaName": "intent_patterns_json",
+      "displayName": "Intent Patterns",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Intent patterns JSON"
+    },
+    {
+      "schemaName": "complexity_level",
+      "displayName": "Complexity Level",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Low", "Medium", "High"],
+      "description": "Task complexity"
+    },
+    {
+      "schemaName": "base_proactive_level",
+      "displayName": "Base Proactive Level",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Light", "Medium", "Heavy"],
+      "description": "Base proactive engagement level"
+    },
+    {
+      "schemaName": "proactive_score",
+      "displayName": "Proactive Score",
+      "dataType": "WholeNumber",
+      "required": true,
+      "description": "Base score (1-5)"
+    },
+    {
+      "schemaName": "example_messages_json",
+      "displayName": "Example Messages",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Example trigger messages JSON"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "sort_order",
+      "displayName": "Sort Order",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Display order"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_activity_code",
+      "columns": ["activity_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_complexity_level",
+      "columns": ["complexity_level"],
+      "unique": false
+    }
+  ],
+  "seedData": [
+    { "activity_code": "QUICK_QUESTION", "activity_name": "Quick Question", "activity_category": "Question", "complexity_level": "Low", "base_proactive_level": "Light", "proactive_score": 1 },
+    { "activity_code": "LOOKUP", "activity_name": "Lookup", "activity_category": "Question", "complexity_level": "Low", "base_proactive_level": "Light", "proactive_score": 1 },
+    { "activity_code": "VALIDATION", "activity_name": "Validation", "activity_category": "Review", "complexity_level": "Low", "base_proactive_level": "Light", "proactive_score": 1 },
+    { "activity_code": "CONTENT_CREATION", "activity_name": "Content Creation", "activity_category": "Creation", "complexity_level": "Medium", "base_proactive_level": "Medium", "proactive_score": 3 },
+    { "activity_code": "SUMMARIZATION", "activity_name": "Summarization", "activity_category": "Task", "complexity_level": "Medium", "base_proactive_level": "Medium", "proactive_score": 3 },
+    { "activity_code": "FRAMEWORK_APPLICATION", "activity_name": "Framework Application", "activity_category": "Task", "complexity_level": "Medium", "base_proactive_level": "Medium", "proactive_score": 3 },
+    { "activity_code": "BRAINSTORMING", "activity_name": "Brainstorming", "activity_category": "Creation", "complexity_level": "Medium", "base_proactive_level": "Medium", "proactive_score": 3 },
+    { "activity_code": "RESEARCH", "activity_name": "Research", "activity_category": "Research", "complexity_level": "High", "base_proactive_level": "Heavy", "proactive_score": 5 },
+    { "activity_code": "STRATEGIC_ANALYSIS", "activity_name": "Strategic Analysis", "activity_category": "Research", "complexity_level": "High", "base_proactive_level": "Heavy", "proactive_score": 5 },
+    { "activity_code": "COMPETITIVE_ASSESSMENT", "activity_name": "Competitive Assessment", "activity_category": "Research", "complexity_level": "High", "base_proactive_level": "Heavy", "proactive_score": 5 },
+    { "activity_code": "MULTI_FACTOR_EVAL", "activity_name": "Multi-factor Evaluation", "activity_category": "Research", "complexity_level": "High", "base_proactive_level": "Heavy", "proactive_score": 5 },
+    { "activity_code": "NOVEL_PROBLEM", "activity_name": "Novel Problem Solving", "activity_category": "Research", "complexity_level": "High", "base_proactive_level": "Heavy", "proactive_score": 5 }
+  ]
+}

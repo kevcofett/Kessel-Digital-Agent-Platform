@@ -88,7 +88,7 @@
       "description": "Get main plan details",
       "inputs": {
         "operation": "GetRecord",
-        "entityName": "mpa_mediaplan",
+        "entityName": "mpa_mediaplans",
         "recordId": "@variables('planId')"
       },
       "runAfter": ["Determine_Plan_Id"]
@@ -100,7 +100,7 @@
       "description": "Get all plan data sections",
       "inputs": {
         "operation": "ListRecords",
-        "entityName": "mpa_plandata",
+        "entityName": "mpa_plandatas",
         "filter": "_mpa_mediaplan_value eq '@{variables('planId')}'"
       },
       "runAfter": ["Get_Plan_Record"]

@@ -1,0 +1,24 @@
+{
+  "schemaName": "eap_entity_tags",
+  "displayName": "Entity Tags",
+  "pluralName": "Entity Tags",
+  "description": "Tag associations for entities",
+  "tier": 3,
+  "featureGate": "TAGS",
+  "category": "Tags",
+  "primaryKey": "entity_tag_id",
+  "primaryNameColumn": "entity_tag_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "entity_tag_id", "displayName": "Entity Tag ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "entity_type", "displayName": "Entity Type", "dataType": "Choice", "required": true, "options": ["User", "Client", "Engagement", "Project", "Session", "Output", "KBFile"], "description": "Entity type" },
+    { "schemaName": "entity_id", "displayName": "Entity ID", "dataType": "UniqueIdentifier", "required": true, "description": "Entity ID" },
+    { "schemaName": "tag_id", "displayName": "Tag", "dataType": "Lookup", "lookupTable": "eap_tags", "required": true, "description": "Tag" },
+    { "schemaName": "tagged_by", "displayName": "Tagged By", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Who tagged" },
+    { "schemaName": "tagged_date", "displayName": "Tagged Date", "dataType": "DateTime", "required": true, "description": "When tagged" }
+  ],
+  "indexes": [
+    { "name": "idx_entity", "columns": ["entity_type", "entity_id"], "unique": false },
+    { "name": "idx_tag", "columns": ["tag_id"], "unique": false }
+  ]
+}

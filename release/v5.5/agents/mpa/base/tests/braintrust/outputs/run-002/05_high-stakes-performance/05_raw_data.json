@@ -1,0 +1,386 @@
+{
+  "scenario": {
+    "id": "high-stakes-performance",
+    "name": "High-Stakes Performance Campaign",
+    "persona": "high-stakes-fintech-vp"
+  },
+  "result": {
+    "compositeScore": 0.34842666666666655,
+    "passed": false,
+    "totalTurns": 15,
+    "stepsCompleted": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "turnsPerStep": {
+      "1": 2,
+      "2": 5,
+      "3": 3,
+      "4": 3,
+      "5": 2
+    },
+    "failures": {
+      "warnings": [
+        {
+          "id": "premature-channel-discussion",
+          "description": "Agent discusses specific channels before Step 7",
+          "type": "step_boundary_violation",
+          "severity": "warning",
+          "scorePenalty": 0.05,
+          "terminateOnDetect": false
+        },
+        {
+          "id": "premature-channel-discussion",
+          "description": "Agent discusses specific channels before Step 7",
+          "type": "step_boundary_violation",
+          "severity": "warning",
+          "scorePenalty": 0.05,
+          "terminateOnDetect": false
+        },
+        {
+          "id": "premature-channel-discussion",
+          "description": "Agent discusses specific channels before Step 7",
+          "type": "step_boundary_violation",
+          "severity": "warning",
+          "scorePenalty": 0.05,
+          "terminateOnDetect": false
+        },
+        {
+          "id": "premature-channel-discussion",
+          "description": "Agent discusses specific channels before Step 7",
+          "type": "step_boundary_violation",
+          "severity": "warning",
+          "scorePenalty": 0.05,
+          "terminateOnDetect": false
+        },
+        {
+          "id": "premature-channel-discussion",
+          "description": "Agent discusses specific channels before Step 7",
+          "type": "step_boundary_violation",
+          "severity": "warning",
+          "scorePenalty": 0.05,
+          "terminateOnDetect": false
+        },
+        {
+          "id": "multiple-questions",
+          "description": "Agent asks more than 2 questions in a single response",
+          "type": "excessive_questions",
+          "severity": "warning",
+          "scorePenalty": 0.05,
+          "terminateOnDetect": false
+        }
+      ],
+      "major": [
+        {
+          "id": "step-boundary-violation",
+          "description": "Agent discusses channels or tactics in Steps 1-2",
+          "type": "step_boundary_violation",
+          "detectionPattern": "facebook ads|google ads|tiktok|instagram|linkedin ads|programmatic|channel mix|media mix|display ads|video ads|ctv|connected tv",
+          "severity": "major",
+          "scorePenalty": 0.15,
+          "terminateOnDetect": false
+        },
+        {
+          "id": "interrogation-without-teaching",
+          "description": "Agent asks 3+ questions in a row without explaining importance",
+          "type": "excessive_questions",
+          "severity": "major",
+          "scorePenalty": 0.1,
+          "terminateOnDetect": false
+        }
+      ],
+      "critical": []
+    },
+    "primeDirective": {
+      "planQualityScore": 0.8573333333333333,
+      "dataCompleteness": 1,
+      "feasibilityAssessment": 0.7733333333333332,
+      "riskIdentification": 0.7733333333333332,
+      "mentorshipScore": 0.9166666666666666,
+      "explanationClarity": 1,
+      "calculationTransparency": 0.6666666666666666,
+      "userGrowth": 1,
+      "turnsPerDirectiveAchievement": 16.910935738444195,
+      "tokensPerInsight": 57034,
+      "stepsPerDecisionPoint": 3,
+      "combinedEfficiency": 0.7687333333333333
+    }
+  },
+  "turnScoreAggregates": {
+    "response-length": {
+      "min": 0.8,
+      "max": 1,
+      "mean": 0.84,
+      "median": 0.8,
+      "scores": [
+        1,
+        1,
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        1,
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        0.8
+      ]
+    },
+    "single-question": {
+      "min": 0.4,
+      "max": 1,
+      "mean": 0.8666666666666667,
+      "median": 0.8,
+      "scores": [
+        0.8,
+        1,
+        1,
+        0.8,
+        0.8,
+        0.8,
+        0.4,
+        0.8,
+        0.8,
+        1,
+        1,
+        0.8,
+        1,
+        1,
+        1
+      ]
+    },
+    "step-boundary": {
+      "min": 0,
+      "max": 1,
+      "mean": 0.8,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "source-citation": {
+      "min": 0.3,
+      "max": 1,
+      "mean": 0.5133333333333333,
+      "median": 0.3,
+      "scores": [
+        0.8,
+        1,
+        0.8,
+        0.8,
+        0.8,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.8,
+        0.3,
+        0.3
+      ]
+    },
+    "acronym-definition": {
+      "min": 0,
+      "max": 1,
+      "mean": 0.4666666666666667,
+      "median": 0,
+      "scores": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "idk-protocol": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "calculation-presence": {
+      "min": 0.5,
+      "max": 1,
+      "mean": 0.6666666666666666,
+      "median": 0.5,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "adaptive-sophistication": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "proactive-intelligence": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "progress-over-perfection": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "risk-opportunity-flagging": {
+      "min": 0.5,
+      "max": 1,
+      "mean": 0.7733333333333332,
+      "median": 0.8,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        0.5,
+        0.8,
+        0.5,
+        0.5,
+        0.8,
+        0.5
+      ]
+    }
+  },
+  "conversationScores": {
+    "step-completion-rate": 1,
+    "conversation-efficiency": 1,
+    "context-retention": 1,
+    "greeting-uniqueness": 1,
+    "loop-detection": 1,
+    "failure-penalty": 0.3999999999999999,
+    "step-transition-quality": 0.5,
+    "overall-coherence": 1
+  },
+  "executionMetadata": {
+    "startTime": 1768088266028,
+    "endTime": 1768088516852,
+    "totalDurationMs": 250824,
+    "averageLatencyMs": 16361.6,
+    "totalTokensUsed": 114068,
+    "modelUsed": "claude-sonnet-4-20250514",
+    "promptVersion": "v5_7_5"
+  }
+}

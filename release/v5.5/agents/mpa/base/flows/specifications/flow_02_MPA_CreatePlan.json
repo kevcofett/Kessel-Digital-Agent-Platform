@@ -100,7 +100,7 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "entityName": "mpa_mediaplan",
+              "entityName": "mpa_mediaplans",
               "item": {
                 "mpa_plan_code": "@variables('varPlanCode')",
                 "mpa_campaign_name": "@triggerBody()?['campaign_name']",
@@ -130,7 +130,7 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "entityName": "mpa_planversion",
+              "entityName": "mpa_planversions",
               "item": {
                 "mpa_version_number": 1,
                 "mpa_plan_id": "@outputs('Create_MediaPlan_Record')?['body/mpa_mediaplanid']",
@@ -153,10 +153,10 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "entityName": "eap_session",
+              "entityName": "eap_sessions",
               "recordId": "@triggerBody()?['session_id']",
               "item": {
-                "eap_session_data": "@json(concat('{\"plan_id\":\"', outputs('Create_MediaPlan_Record')?['body/mpa_mediaplanid'], '\",\"plan_code\":\"', variables('varPlanCode'), '\"}'))"
+                "eap_sessiondata": "@json(concat('{\"plan_id\":\"', outputs('Create_MediaPlan_Record')?['body/mpa_mediaplanid'], '\",\"plan_code\":\"', variables('varPlanCode'), '\"}'))"
               }
             }
           },
@@ -219,7 +219,7 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "entityName": "mpa_errorlog",
+              "entityName": "mpa_errorlogs",
               "item": {
                 "mpa_error_type": "FlowError",
                 "mpa_error_message": "@variables('varErrorMessage')",

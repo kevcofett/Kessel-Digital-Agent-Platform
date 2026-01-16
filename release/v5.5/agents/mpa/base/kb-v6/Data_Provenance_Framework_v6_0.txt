@@ -1,0 +1,222 @@
+DOCUMENT: Data_Provenance_Framework_v6_0.txt
+VERSION: 6.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+META_DOCUMENT_TYPE: methodology_framework
+META_PRIMARY_TOPICS: data_provenance, source_citation, trust_hierarchy, data_quality
+META_WORKFLOW_STEPS: ALL
+META_INTENTS: GENERAL, MEASUREMENT_GUIDANCE
+META_VERTICALS: ALL
+META_LAST_UPDATED: 2026-01-16
+
+================================================================================
+SECTION 1: PURPOSE AND OVERVIEW
+================================================================================
+
+META_SECTION_ID: provenance_purpose
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: purpose, overview
+META_INTENT: GENERAL
+META_CONFIDENCE: HIGH
+
+1.1 PURPOSE
+
+This framework defines data source categories, trust hierarchy, and conflict resolution rules. The agent operates with data from multiple sources and must transparently attribute all values.
+
+1.2 CORE PRINCIPLE
+
+All data has a source. The agent MUST track and communicate where each piece of information originates. When sources conflict, the trust hierarchy determines which value to use.
+
+================================================================================
+SECTION 2: DATA PROVENANCE CATEGORIES
+================================================================================
+
+META_SECTION_ID: provenance_categories
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: category_1, category_2, category_3, category_4, source_types
+META_INTENT: GENERAL
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+2.1 CATEGORY 1: USER PROVIDED
+
+Trust Level: HIGHEST (for current session)
+
+Characteristics:
+- Information provided by user during current session
+- Overrides all other sources for current session
+- Stored in session context, not propagated to other users
+- Client-specific targets, actual performance data, constraints
+
+Examples:
+- "Our CAC target is $65"
+- "We are seeing $22 CPMs on Meta"
+- "Total budget is $500K"
+- Historical data from uploaded files
+
+Agent Behavior:
+- Accept immediately, use instead of other sources
+- Note when user data differs significantly from benchmarks
+- Remind user these are session-specific
+
+2.2 CATEGORY 2: INTERNAL KNOWLEDGE BASE
+
+Trust Level: HIGH
+
+Characteristics:
+- SharePoint-hosted KB documents and Dataverse tables
+- Pre-validated benchmarks, updated quarterly
+- Version-controlled and auditable
+- Available to all users
+
+Examples:
+- mpa_benchmark (Dataverse) - Performance benchmarks
+- mpa_kpi (Dataverse) - KPI definitions
+- mpa_channel (Dataverse) - Channel characteristics
+- Expert Lens documents - Diagnostic guidance
+
+Agent Behavior:
+- Use as default when user provides no override
+- Cite as source when presenting benchmarks
+- Cross-reference with web research when available
+
+2.3 CATEGORY 3: WEB RESEARCH
+
+Trust Level: MEDIUM-HIGH
+
+Characteristics:
+- Real-time search during session
+- Current but requires validation
+- May conflict with KB (note discrepancy)
+
+Examples:
+- Census population data
+- Current platform feature updates
+- Recent industry reports
+- Taxonomy code lookups
+
+Agent Behavior:
+- Use when KB is insufficient or outdated
+- Cross-validate with multiple sources when possible
+- Note recency and source in citation
+- Flag when contradicting KB data
+
+2.4 CATEGORY 4: AGENT REASONING
+
+Trust Level: MEDIUM
+
+Characteristics:
+- Calculations and inferences by agent
+- Based on Category 1-3 inputs
+- Transparent methodology required
+
+Examples:
+- Interpolated benchmarks for uncovered verticals
+- Projected outcomes from calculations
+- Synthesized recommendations
+
+Agent Behavior:
+- Show calculation methodology
+- State assumptions explicitly
+- Acknowledge lower confidence for derived values
+
+================================================================================
+SECTION 3: TRUST HIERARCHY AND CONFLICT RESOLUTION
+================================================================================
+
+META_SECTION_ID: trust_hierarchy
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: trust_hierarchy, conflict_resolution, priority
+META_INTENT: GENERAL
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+3.1 TRUST PRIORITY ORDER
+
+1. User Provided (Category 1) - Always highest for current session
+2. Internal KB (Category 2) - Default baseline
+3. Web Research (Category 3) - Supplements and validates
+4. Agent Reasoning (Category 4) - When no other source available
+
+3.2 CONFLICT RESOLUTION RULES
+
+User vs KB:
+- User wins for current session
+- Note if user data contradicts benchmarks significantly
+- Do not challenge unless discrepancy is extreme
+
+KB vs Web:
+- KB wins for benchmarks unless KB explicitly outdated
+- Web wins for current-state information (census, features)
+- Note discrepancy for user awareness
+
+Multiple Web Sources:
+- Prefer authoritative sources (census.gov, platform docs)
+- Average when multiple credible sources differ slightly
+- Flag significant disagreement
+
+3.3 CITATION REQUIREMENTS
+
+Always include source attribution:
+- Category 1: "Based on your provided data..."
+- Category 2: "According to MPA benchmarks..."
+- Category 3: "Per [source name]..."
+- Category 4: "Calculated from..."
+
+================================================================================
+SECTION 4: SESSION ISOLATION
+================================================================================
+
+META_SECTION_ID: session_isolation
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: session_isolation, customization_scope
+META_INTENT: GENERAL
+META_CONFIDENCE: HIGH
+
+4.1 ISOLATION PRINCIPLE
+
+User-provided data affects ONLY the current session. Session customizations:
+- Do not modify global KB
+- Do not persist across sessions
+- Do not affect other users
+- Reset when new session begins
+
+4.2 WHAT CARRIES FORWARD
+
+Only system-validated changes via admin:
+- KB document updates
+- Dataverse table updates
+- Registry file changes
+
+================================================================================
+SECTION 5: CROSS-REFERENCES
+================================================================================
+
+META_SECTION_ID: provenance_references
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: cross_references
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+5.1 RELATED DOCUMENTS
+
+- REF: Confidence_Level_Framework_v6_0.txt - Confidence scoring by source
+- REF: Analytics_Engine_v6_0.txt - Calculation methodology
+- REF: mpa_benchmark (Dataverse) - Primary benchmark source
+
+================================================================================
+VERSION HISTORY
+================================================================================
+
+Version 6.0 - January 2026
+- Added META_ prefixed tags for retrieval optimization
+- Condensed from 602 lines to ~200 lines
+- Focus on core hierarchy and rules
+
+Version 5.5 - January 2026 - Original comprehensive version
+
+================================================================================
+END OF DOCUMENT
+================================================================================

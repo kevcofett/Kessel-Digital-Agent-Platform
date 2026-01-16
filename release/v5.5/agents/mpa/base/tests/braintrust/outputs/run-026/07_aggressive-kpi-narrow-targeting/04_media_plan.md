@@ -1,0 +1,165 @@
+# Media Plan Output: Aggressive KPI - Must Narrow to Achieve
+
+This document contains the key outputs from the media planning conversation.
+
+## Step 1: Outcomes
+
+Turn 1:
+Hi! I'm excited to build a media plan with you. We'll cover ten areas: Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, and Risks. Each step builds on the last.
+
+Let me validate your numbers first. $750K ÷ 5,000 customers = $150 CAC exactly. With $2,400 LTV, that's a 16x ratio - excellent unit economics that gives us room to work.
+
+However, $150 CAC is aggressive for B2B SaaS. Industry benchmarks typically run $200-400 for this segment based on KB data. You're targeting 25-50% better efficiency than typical.
+
+To hit $150 CAC, we'll need precise targeting and high-performing channels. Your SMB logistics audience is well-defined, which helps.
+
+What specific business outcome is most critical - is this about hitting a revenue milestone, proving a growth rate for investors, or expanding market share in logistics?
+
+────────────────────────────────────────
+
+## Step 3: Audience
+
+Turn 2:
+Perfect. So your primary objective is proving scalable customer acquisition to Series A investors, with 5,000 new customers as the volume target that validates your growth model.
+
+For your KPI - the number that proves success to investors - what matters most? Is it the $150 CAC target specifically, or would demonstrating predictable acquisition at any reasonable efficiency work? 
+
+Investors often care more about consistency and predictability than hitting an exact number. If you could prove $175 CAC with high confidence versus $150 with high risk, which would better serve your funding goals?
+
+Turn 3:
+Excellent. That's strategically smart - investors value predictable systems over aggressive one-offs.
+
+Let me update our projections. At $175 CAC: $750K ÷ $175 = 4,286 customers. That's 714 customers short of your 5,000 target.
+
+You have three paths to bridge this gap:
+1. Increase budget to ~$875K for 5,000 customers at $175
+2. Accept 4,286 customers at $175 CAC with current budget  
+3. Target blended CAC of ~$165 (still more realistic than $150)
+
+Given that investor confidence in your systematic approach is the real goal, would demonstrating 4,286 high-quality customers at predictable $175 CAC be sufficient? Or do you need the full 5,000 volume to validate your TAM assumptions?
+
+Turn 4:
+Perfect. At $875K budget targeting 5,000 customers = $175 CAC. With your $2,400 LTV, that's still a strong 13.7x ratio that investors will love.
+
+Your unit economics are solid: $875K investment generates $12M in LTV (5,000 × $2,400). That's compelling growth efficiency.
+
+Now for Step 2 - let's validate this $175 CAC is achievable. For B2B SaaS in logistics tech, what's your current customer value breakdown? Specifically, what's your average contract value and gross margin percentage? 
+
+This helps me assess whether $175 CAC leaves enough contribution margin for sustainable growth at scale.
+
+────────────────────────────────────────
+
+## Step 4: Geography
+
+Turn 6:
+Got it. Operations Directors, Logistics Managers, and Supply Chain VPs are your primary decision-makers and influencers.
+
+Beyond job titles, what behavioral signals indicate these prospects are ready to move away from spreadsheets? For example, are they actively researching logistics software, attending industry events, downloading content about TMS modernization, or showing other intent signals?
+
+Understanding their buying journey helps us target prospects at the right moment rather than just demographics.
+
+Turn 7:
+Perfect. Those intent signals give us strong targeting precision: TMS comparison content, logistics efficiency webinars, G2/Capterra research behavior, and LinkedIn engagement around automation and digital transformation.
+
+This behavioral targeting will be crucial for hitting your $175 CAC efficiently.
+
+Now for geography - Step 4. Are you targeting specific regions where SMB logistics companies are concentrated, or planning national coverage? 
+
+Logistics hubs like major metro areas often have higher concentrations of your target companies, which could improve efficiency.
+
+────────────────────────────────────────
+
+## Step 5: Budget
+
+Turn 5:
+Excellent economics. At $4,200 gross margin and $175 CAC, you're investing just 4.2% of gross margin dollars in acquisition - that's very healthy for B2B SaaS.
+
+Your payback period is roughly 1.25 months ($175 ÷ ($500 × 70%)), which is outstanding. Most B2B SaaS targets 12-18 months, so you have significant efficiency advantages.
+
+This validates that $175 CAC is not only achievable but leaves substantial room for scaling. Your contribution margin after CAC is $4,025 per customer - plenty for operations, customer success, and profit.
+
+Ready to move to Step 3? Let's define your target audience more precisely. You mentioned SMB logistics managers at 50-500 employee companies with $5M-$50M revenue using spreadsheets or legacy TMS. 
+
+What job titles specifically make the buying decisions for logistics software at these companies?
+
+Turn 8:
+Smart approach. Tier 1 logistics hubs give you higher prospect density and more efficient targeting.
+
+Those markets - Chicago, Atlanta, Dallas, LA, SF, NYC metro - represent roughly 35-40% of US SMB logistics companies based on industry concentration data. Focusing there should improve your CAC efficiency versus national spread.
+
+Ready for Step 5 - Budget allocation. With $875K total budget, how do you want to split between customer acquisition versus other activities like brand building or retention marketing?
+
+For B2B SaaS proving growth models to investors, most allocate 80-90% to direct acquisition, but curious about your strategic priorities.
+
+Turn 9:
+Perfect. $790K for acquisition at $175 CAC gives you 4,514 customers from direct acquisition spend, plus you'll need the remaining 486 customers from your $85K brand/retention budget - which works if that drives some spillover acquisition.
+
+This 90/10 split is exactly what Series A investors want to see - disciplined, performance-focused allocation.
+
+For Step 6 - Value Proposition. Given your audience's pain with spreadsheets and legacy TMS systems, what's your core message that resonates most? Is it cost savings, time efficiency, operational visibility, or something else?
+
+Understanding your strongest value prop helps optimize creative and landing page performance for that $175 CAC target.
+
+────────────────────────────────────────
+
+## Step 6: Value Proposition
+
+Turn 10:
+Excellent. "Turning days into minutes" is compelling for time-strapped operations teams. That operational efficiency angle - reclaiming 15-20 hours weekly - gives clear, quantifiable value that justifies switching costs.
+
+Now for Step 7 - Channels. With $790K acquisition budget, precise B2B targeting needs, and $175 CAC targets, we need channels that excel at reaching logistics decision-makers with intent signals.
+
+Based on your audience and efficiency requirements, I'm thinking LinkedIn Ads for job title targeting, Google Ads for TMS comparison searches, and potentially programmatic display for retargeting G2/Capterra visitors.
+
+What channels have you tested before, and which performed best for reaching Operations Directors and Logistics Managers?
+
+────────────────────────────────────────
+
+## Step 7: Channels
+
+Turn 11:
+Perfect. LinkedIn's strength with logistics job titles makes sense - that's where your decision-makers are most reachable.
+
+Let me model a channel mix based on your performance data:
+
+**Proposed allocation of $790K acquisition budget:**
+- LinkedIn Ads: 60% ($474K) - Your proven performer for job title targeting
+- Google Search: 25% ($198K) - Captures high-intent TMS searches despite higher CPCs
+- Programmatic Display: 15% ($118K) - Retargeting G2/Capterra visitors and lookalikes
+
+At these allocations:
+- LinkedIn needs to deliver ~3,000 customers at ~$158 CAC
+- Google needs ~1,250 customers at ~$158 CAC  
+- Display needs ~750 customers at ~$157 CAC
+
+Does this mix align with your channel performance experience? Should we adjust LinkedIn higher given its proven success, or test other channels?
+
+Turn 12:
+Excellent point. Testing budget shows investors you're optimizing systematically, not just running static campaigns.
+
+**Revised allocation:**
+- LinkedIn: 55% ($435K) - Still your core performer
+- Google Search: 25% ($198K) - High-intent capture
+- Programmatic Display: 15% ($118K) - Retargeting
+- Testing Reserve: 5% ($39K) - New channels/audiences
+
+This gives you $39K to test channels like Reddit (logistics communities), industry publications, or new LinkedIn audience segments.
+
+For Step 8 - Measurement. To prove systematic acquisition to investors, what attribution model and reporting cadence works best? Weekly performance reviews to show consistent progress, or different frequency?
+
+Also, how do you currently track the customer journey from first touch to closed deal?
+
+────────────────────────────────────────
+
+## Step 8: Measurement
+
+Turn 13:
+Perfect. Weekly reviews with MQL → SQL → Closed progression gives investors confidence in your systematic approach.
+
+For Step 9 - Testing. With your $39K testing budget and need to prove scalability, what's your testing priority? 
+
+Should we focus on new audience segments within logistics (like warehouse managers or freight coordinators), new channels (industry publications, Reddit logistics communities), or creative variations that emphasize different pain points?
+
+Testing that proves you can expand beyond your core approach strengthens the TAM validation story for investors.
+
+────────────────────────────────────────

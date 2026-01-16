@@ -1,0 +1,78 @@
+{
+  "flowId": "flow_54",
+  "name": "consulting_create_recommendation",
+  "displayName": "CA Create Recommendation",
+  "description": "Create ca_recommendations record",
+  "version": "1.0.0",
+  "status": "specification",
+  "trigger": {
+    "type": "http_request",
+    "method": "POST"
+  },
+  "dependencies": ["flow_53"],
+  "inputs": {
+    "consultingSessionId": {
+      "type": "string",
+      "required": true
+    },
+    "analysisId": {
+      "type": "string",
+      "required": false
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "content": {
+      "type": "string",
+      "required": true
+    },
+    "priority": {
+      "type": "string",
+      "allowedValues": ["HIGH", "MEDIUM", "LOW"]
+    },
+    "confidenceLevel": {
+      "type": "string",
+      "allowedValues": ["HIGH", "MEDIUM", "MEDIUM-LOW", "LOW"]
+    }
+  },
+  "outputs": {
+    "recommendationId": {
+      "type": "string"
+    },
+    "outputId": {
+      "type": "string"
+    },
+    "success": {
+      "type": "boolean"
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "action": "create_record",
+      "table": "eap_outputs",
+      "fields": {
+        "output_id": "@{guid()}",
+        "output_type": "recommendation",
+        "title": "@{triggerBody()?['title']}",
+        "content": "@{triggerBody()?['content']}",
+        "created_at": "@{utcNow()}"
+      }
+    },
+    {
+      "order": 2,
+      "action": "create_record",
+      "table": "ca_recommendations",
+      "fields": {
+        "recommendation_id": "@{guid()}",
+        "output_id": "@{outputs('create_output')?['output_id']}",
+        "consulting_session_id": "@{triggerBody()?['consultingSessionId']}",
+        "analysis_id": "@{triggerBody()?['analysisId']}",
+        "priority": "@{triggerBody()?['priority']}",
+        "confidence_level": "@{triggerBody()?['confidenceLevel']}"
+      }
+    }
+  ],
+  "notes": "This flow specification defines the Power Automate flow to be deployed in the target environment."
+}

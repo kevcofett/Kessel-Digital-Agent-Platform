@@ -1,0 +1,31 @@
+{
+  "schemaName": "eap_content_sources",
+  "displayName": "Content Source",
+  "pluralName": "Content Sources",
+  "description": "External content sources for knowledge integration",
+  "tier": 3,
+  "featureGate": "CONTENT_SOURCES",
+  "category": "Integration",
+  "primaryKey": "source_id",
+  "primaryNameColumn": "source_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "source_id", "displayName": "Source ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "source_code", "displayName": "Source Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique source code" },
+    { "schemaName": "source_name", "displayName": "Source Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Source display name" },
+    { "schemaName": "source_type", "displayName": "Source Type", "dataType": "Choice", "required": true, "options": ["SharePoint", "Confluence", "Database", "API", "FileShare", "WebCrawl"], "description": "Type of content source" },
+    { "schemaName": "connection_string", "displayName": "Connection String", "dataType": "Text", "maxLength": 500, "required": false, "description": "Connection details" },
+    { "schemaName": "authentication_type", "displayName": "Auth Type", "dataType": "Choice", "required": true, "options": ["None", "APIKey", "OAuth", "ServiceAccount", "Certificate"], "description": "Authentication method" },
+    { "schemaName": "sync_frequency", "displayName": "Sync Frequency", "dataType": "Choice", "required": true, "defaultValue": "Daily", "options": ["Realtime", "Hourly", "Daily", "Weekly", "Manual"], "description": "How often to sync" },
+    { "schemaName": "last_sync_date", "displayName": "Last Sync", "dataType": "DateTime", "required": false, "description": "Last successful sync" },
+    { "schemaName": "sync_status", "displayName": "Sync Status", "dataType": "Choice", "required": true, "defaultValue": "Pending", "options": ["Pending", "Running", "Completed", "Failed"], "description": "Current sync status" },
+    { "schemaName": "content_count", "displayName": "Content Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Number of items synced" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_source_code", "columns": ["source_code"], "unique": true },
+    { "name": "idx_source_type", "columns": ["source_type"], "unique": false }
+  ]
+}

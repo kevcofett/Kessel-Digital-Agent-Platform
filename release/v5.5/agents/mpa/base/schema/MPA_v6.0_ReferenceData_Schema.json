@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MPA v6.0 - Reference Data Schema",
+  "description": "Schema for new reference data tables supporting offline/fallback operation and enhanced targeting capabilities",
+  "version": "6.0.0",
+  "created": "2026-01-16",
+  "baseVersion": "5.2.0",
+  "purpose": "Enable offline operation for air-gapped environments with geographic, taxonomy, behavioral, and contextual reference data",
+  "solution": {
+    "uniqueName": "MediaPlanningAgent60",
+    "displayName": "Media Planning Agent v6.0",
+    "version": "6.0.0.0",
+    "description": "AI-powered media planning assistant with comprehensive reference data for offline operation",
+    "dependencies": [
+      {
+        "solution": "MediaPlanningAgent52",
+        "minVersion": "5.2.0.0",
+        "required": true
+      },
+      {
+        "solution": "EnterpriseAIPlatform",
+        "minVersion": "1.1.0.0",
+        "required": true
+      }
+    ]
+  },
+  "newTables": {
+    "description": "5 new reference data tables added in v6.0",
+    "summary": {
+      "totalTables": 5,
+      "totalColumns": 85,
+      "totalIndexes": 23,
+      "estimatedRecords": 2500
+    },
+    "tables": [
+      {
+        "schemaName": "mpa_geography",
+        "displayName": "Geography",
+        "description": "Geographic regions with demographic data for media planning targeting",
+        "schemaFile": "tables/mpa_geography.json",
+        "category": "ReferenceData",
+        "columns": 32,
+        "indexes": 5,
+        "seedFiles": 10,
+        "estimatedRecords": 500,
+        "recordBreakdown": {
+          "US_DMAs": 100,
+          "Canada_CMAs": 35,
+          "UK_Regions": 27,
+          "Mexico_Metros": 30,
+          "Australia_GCCSAs": 16,
+          "Germany_Laender": 16,
+          "France_Regions": 18,
+          "Chile_Regiones": 16,
+          "Spain_Comunidades": 19,
+          "Brazil_Estados": 27
+        }
+      },
+      {
+        "schemaName": "mpa_iab_taxonomy",
+        "displayName": "IAB Taxonomy",
+        "description": "IAB Content Taxonomy 3.0 codes for contextual targeting",
+        "schemaFile": "tables/mpa_iab_taxonomy.json",
+        "category": "ReferenceData",
+        "columns": 14,
+        "indexes": 4,
+        "seedFiles": 1,
+        "estimatedRecords": 700,
+        "recordBreakdown": {
+          "Tier1_Categories": 23,
+          "Tier2_Subcategories": 350,
+          "Tier3_Detailed": 327
+        }
+      },
+      {
+        "schemaName": "mpa_platform_taxonomy",
+        "displayName": "Platform Taxonomy",
+        "description": "Platform-specific audience taxonomy segments",
+        "schemaFile": "tables/mpa_platform_taxonomy.json",
+        "category": "ReferenceData",
+        "columns": 16,
+        "indexes": 5,
+        "seedFiles": 3,
+        "estimatedRecords": 1200,
+        "recordBreakdown": {
+          "Google_Affinity": 150,
+          "Google_InMarket": 250,
+          "Meta_Interests": 300,
+          "Meta_Behaviors": 200,
+          "LinkedIn_JobFunctions": 26,
+          "LinkedIn_Industries": 148,
+          "LinkedIn_Seniority": 8,
+          "LinkedIn_Skills": 118
+        }
+      },
+      {
+        "schemaName": "mpa_behavioral_attribute",
+        "displayName": "Behavioral Attribute",
+        "description": "Behavioral targeting signals for audience segmentation",
+        "schemaFile": "tables/mpa_behavioral_attribute.json",
+        "category": "ReferenceData",
+        "columns": 15,
+        "indexes": 4,
+        "seedFiles": 1,
+        "estimatedRecords": 200,
+        "recordBreakdown": {
+          "Purchase_Behavior": 30,
+          "Browsing_Behavior": 25,
+          "Search_Behavior": 20,
+          "Content_Consumption": 25,
+          "Device_Behavior": 20,
+          "Temporal_Behavior": 25,
+          "Social_Behavior": 25,
+          "Transaction_Signals": 30
+        }
+      },
+      {
+        "schemaName": "mpa_contextual_attribute",
+        "displayName": "Contextual Attribute",
+        "description": "Contextual targeting signals for content environment",
+        "schemaFile": "tables/mpa_contextual_attribute.json",
+        "category": "ReferenceData",
+        "columns": 14,
+        "indexes": 5,
+        "seedFiles": 1,
+        "estimatedRecords": 150,
+        "recordBreakdown": {
+          "Content_Categories": 50,
+          "Content_Format": 20,
+          "Content_Sentiment": 15,
+          "Page_Environment": 25,
+          "Brand_Safety": 20,
+          "Seasonal_Events": 20
+        }
+      }
+    ]
+  },
+  "seedDataLocation": {
+    "basePath": "release/v5.5/agents/mpa/base/seed-data-v6/",
+    "files": [
+      {
+        "file": "mpa_geography_us_seed.csv",
+        "table": "mpa_geography",
+        "records": 100,
+        "status": "POPULATED",
+        "source": "Nielsen DMA Rankings 2024-25, Census ACS"
+      },
+      {
+        "file": "mpa_geography_ca_seed.csv",
+        "table": "mpa_geography",
+        "records": 35,
+        "status": "HEADERS_ONLY",
+        "source": "Statistics Canada Census 2021"
+      },
+      {
+        "file": "mpa_geography_uk_seed.csv",
+        "table": "mpa_geography",
+        "records": 27,
+        "status": "HEADERS_ONLY",
+        "source": "ONS Census 2021, Ofcom"
+      },
+      {
+        "file": "mpa_geography_mx_seed.csv",
+        "table": "mpa_geography",
+        "records": 30,
+        "status": "HEADERS_ONLY",
+        "source": "INEGI Censo 2020"
+      },
+      {
+        "file": "mpa_geography_au_seed.csv",
+        "table": "mpa_geography",
+        "records": 16,
+        "status": "HEADERS_ONLY",
+        "source": "ABS Census 2021"
+      },
+      {
+        "file": "mpa_geography_de_seed.csv",
+        "table": "mpa_geography",
+        "records": 16,
+        "status": "HEADERS_ONLY",
+        "source": "Destatis 2023"
+      },
+      {
+        "file": "mpa_geography_fr_seed.csv",
+        "table": "mpa_geography",
+        "records": 18,
+        "status": "HEADERS_ONLY",
+        "source": "INSEE 2023"
+      },
+      {
+        "file": "mpa_geography_cl_seed.csv",
+        "table": "mpa_geography",
+        "records": 16,
+        "status": "HEADERS_ONLY",
+        "source": "INE Chile Censo 2017"
+      },
+      {
+        "file": "mpa_geography_es_seed.csv",
+        "table": "mpa_geography",
+        "records": 19,
+        "status": "HEADERS_ONLY",
+        "source": "INE Spain 2023"
+      },
+      {
+        "file": "mpa_geography_br_seed.csv",
+        "table": "mpa_geography",
+        "records": 27,
+        "status": "HEADERS_ONLY",
+        "source": "IBGE Censo 2022"
+      },
+      {
+        "file": "mpa_iab_taxonomy_seed.csv",
+        "table": "mpa_iab_taxonomy",
+        "records": 700,
+        "status": "HEADERS_ONLY",
+        "source": "IAB Tech Lab Content Taxonomy 3.0"
+      },
+      {
+        "file": "mpa_taxonomy_google_seed.csv",
+        "table": "mpa_platform_taxonomy",
+        "records": 400,
+        "status": "HEADERS_ONLY",
+        "source": "Google Ads Help Center"
+      },
+      {
+        "file": "mpa_taxonomy_meta_seed.csv",
+        "table": "mpa_platform_taxonomy",
+        "records": 500,
+        "status": "HEADERS_ONLY",
+        "source": "Meta Business Help Center"
+      },
+      {
+        "file": "mpa_taxonomy_linkedin_seed.csv",
+        "table": "mpa_platform_taxonomy",
+        "records": 300,
+        "status": "HEADERS_ONLY",
+        "source": "LinkedIn Marketing Solutions Help"
+      },
+      {
+        "file": "mpa_behavioral_attributes_seed.csv",
+        "table": "mpa_behavioral_attribute",
+        "records": 200,
+        "status": "HEADERS_ONLY",
+        "source": "Platform documentation, industry standards"
+      },
+      {
+        "file": "mpa_contextual_attributes_seed.csv",
+        "table": "mpa_contextual_attribute",
+        "records": 150,
+        "status": "HEADERS_ONLY",
+        "source": "IAB, platform documentation"
+      }
+    ]
+  },
+  "importConfiguration": {
+    "description": "Configuration for seed_data_import.py to support new tables",
+    "newTableConfigs": {
+      "geography": {
+        "entity_set": "mpa_geographies",
+        "primary_key": "mpa_geoid",
+        "csv_pattern": "mpa_geography_*_seed.csv",
+        "column_mappings": "See individual CSV headers",
+        "dependencies": []
+      },
+      "iab_taxonomy": {
+        "entity_set": "mpa_iab_taxonomies",
+        "primary_key": "mpa_iabid",
+        "csv_file": "mpa_iab_taxonomy_seed.csv",
+        "column_mappings": "See CSV headers",
+        "dependencies": []
+      },
+      "platform_taxonomy": {
+        "entity_set": "mpa_platform_taxonomies",
+        "primary_key": "mpa_segmentid",
+        "csv_pattern": "mpa_taxonomy_*_seed.csv",
+        "column_mappings": "See individual CSV headers",
+        "dependencies": []
+      },
+      "behavioral_attribute": {
+        "entity_set": "mpa_behavioral_attributes",
+        "primary_key": "mpa_behaviorid",
+        "csv_file": "mpa_behavioral_attributes_seed.csv",
+        "column_mappings": "See CSV headers",
+        "dependencies": []
+      },
+      "contextual_attribute": {
+        "entity_set": "mpa_contextual_attributes",
+        "primary_key": "mpa_contextid",
+        "csv_file": "mpa_contextual_attributes_seed.csv",
+        "column_mappings": "See CSV headers",
+        "dependencies": ["iab_taxonomy"]
+      }
+    }
+  },
+  "deploymentNotes": {
+    "prerequisites": [
+      "MPA v5.2 solution must be installed",
+      "EAP v1.1.0+ must be installed",
+      "Dataverse admin privileges required"
+    ],
+    "deploymentOrder": [
+      "1. Create mpa_geography table",
+      "2. Create mpa_iab_taxonomy table",
+      "3. Create mpa_platform_taxonomy table",
+      "4. Create mpa_behavioral_attribute table",
+      "5. Create mpa_contextual_attribute table",
+      "6. Import seed data in same order"
+    ],
+    "estimatedDeploymentTime": "30-45 minutes for table creation, 5-10 minutes for seed data import"
+  }
+}

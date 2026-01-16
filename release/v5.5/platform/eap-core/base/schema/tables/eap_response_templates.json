@@ -1,0 +1,30 @@
+{
+  "schemaName": "eap_response_templates",
+  "displayName": "Response Template",
+  "pluralName": "Response Templates",
+  "description": "Pre-built response templates for common queries",
+  "tier": 3,
+  "featureGate": "RESPONSE_LIBRARY",
+  "category": "Configuration",
+  "primaryKey": "response_id",
+  "primaryNameColumn": "response_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "response_id", "displayName": "Response ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "response_code", "displayName": "Response Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique code" },
+    { "schemaName": "response_name", "displayName": "Response Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Display name" },
+    { "schemaName": "trigger_phrases_json", "displayName": "Trigger Phrases", "dataType": "MultilineText", "required": false, "description": "Phrases that trigger JSON" },
+    { "schemaName": "response_text", "displayName": "Response Text", "dataType": "MultilineText", "required": true, "description": "Response template" },
+    { "schemaName": "response_category", "displayName": "Category", "dataType": "Choice", "required": true, "options": ["Greeting", "Help", "Error", "Clarification", "Closing", "Custom"], "description": "Response category" },
+    { "schemaName": "variables_json", "displayName": "Variables", "dataType": "MultilineText", "required": false, "description": "Variables JSON" },
+    { "schemaName": "agent_id", "displayName": "Agent", "dataType": "Lookup", "lookupTable": "eap_agent", "required": false, "description": "Agent-specific response" },
+    { "schemaName": "use_count", "displayName": "Use Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Times used" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_response_code", "columns": ["response_code"], "unique": true },
+    { "name": "idx_category", "columns": ["response_category"], "unique": false }
+  ]
+}

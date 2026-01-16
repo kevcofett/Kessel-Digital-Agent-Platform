@@ -71,7 +71,7 @@
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "ListRecords", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
             "parameters": {
-              "entityName": "mpa_channel",
+              "entityName": "mpa_channels",
               "$filter": "@variables('varFilter')",
               "$top": "@coalesce(triggerBody()?['limit'], 20)",
               "$orderby": "mpa_newcolumn"
@@ -104,7 +104,7 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {"connectionName": "shared_commondataserviceforapps", "operationId": "CreateRecord", "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},
-            "parameters": {"entityName": "mpa_errorlog", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_SearchChannels", "mpa_severity": 100000001, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()"}}
+            "parameters": {"entityName": "mpa_errorlogs", "item": {"mpa_error_type": "FlowError", "mpa_error_message": "@variables('varErrorMessage')", "mpa_source_flow": "MPA_SearchChannels", "mpa_severity": 100000001, "mpa_is_resolved": false, "mpa_occurred_at": "@utcNow()"}}
           },
           "runAfter": {"Set_varErrorMessage": ["Succeeded"]}
         },

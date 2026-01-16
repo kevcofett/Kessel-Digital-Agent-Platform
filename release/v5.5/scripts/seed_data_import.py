@@ -173,10 +173,10 @@ def import_benchmark_table(
     verbose: bool = False
 ) -> BatchResult:
     """
-    Import benchmark table with lookup resolution.
+    Import benchmark table with composite key.
 
-    Benchmarks reference vertical, channel, and KPI tables via lookups.
-    Uses @odata.bind syntax for setting lookup fields.
+    Benchmarks use String fields for vertical, channel, and KPI codes
+    (not Lookup fields), so we pass the code values directly.
 
     Args:
         client: Dataverse client
@@ -193,75 +193,34 @@ def import_benchmark_table(
 
     print(f"\nLoaded {len(rows)} benchmark records from {config['csv_file']}")
 
-    # Build lookup caches
-    print("Building lookup caches...")
-
-    vertical_cache = client.build_lookup_cache("mpa_verticals", "mpa_verticalcode")
-    print(f"  Verticals: {len(vertical_cache)} records cached")
-
-    channel_cache = client.build_lookup_cache("mpa_channels", "mpa_channelcode")
-    print(f"  Channels: {len(channel_cache)} records cached")
-
-    kpi_cache = client.build_lookup_cache("mpa_kpis", "mpa_kpicode")
-    print(f"  KPIs: {len(kpi_cache)} records cached")
-
     if dry_run:
         print("[DRY RUN] Validating data...")
 
     tracker = ProgressTracker(len(rows), "benchmark")
 
-    # Transform records with lookup resolution
+    # Transform records - benchmark uses String fields, not Lookups
     records = []
-    lookup_errors = []
 
     for row in rows:
-        # Basic field transforms
+        # Basic field transforms using column mappings from config
         record = transform_record(
             row,
             config["column_mappings"],
             config.get("transforms", {})
         )
 
-        # Resolve lookups using @odata.bind syntax
-        vertical_code = row.get("mpa_verticalcode")
-        channel_code = row.get("mpa_channelcode")
-        kpi_code = row.get("mpa_kpicode")
-
-        vertical_id = vertical_cache.get(vertical_code)
-        channel_id = channel_cache.get(channel_code)
-        kpi_id = kpi_cache.get(kpi_code)
-
-        # Check for missing lookups
-        if not vertical_id:
-            lookup_errors.append(f"Vertical not found: {vertical_code}")
-            continue
-        if not channel_id:
-            lookup_errors.append(f"Channel not found: {channel_code}")
-            continue
-        if not kpi_id:
-            lookup_errors.append(f"KPI not found: {kpi_code}")
-            continue
-
-        # Add lookup bindings using @odata.bind syntax
-        record["mpa_vertical@odata.bind"] = f"/mpa_verticals({vertical_id})"
-        record["mpa_channel@odata.bind"] = f"/mpa_channels({channel_id})"
-        record["mpa_kpi@odata.bind"] = f"/mpa_kpis({kpi_id})"
-
-        # Create composite key for matching
+        # Create composite key for tracking (not stored in Dataverse)
+        vertical_code = row.get("mpa_verticalcode", "")
+        channel_code = row.get("mpa_channelcode", "")
+        kpi_code = row.get("mpa_kpicode", "")
         record["_composite_key"] = f"{vertical_code}|{channel_code}|{kpi_code}"
 
         records.append(record)
 
         if verbose and dry_run:
-            print(f"  {vertical_code}/{channel_code}/{kpi_code}: lookup resolved")
+            print(f"  {vertical_code}/{channel_code}/{kpi_code}: transformed")
 
-    if lookup_errors:
-        print(f"\nWarning: {len(lookup_errors)} records skipped due to lookup errors")
-        if verbose:
-            for error in lookup_errors[:10]:
-                print(f"  {error}")
-
-    print(f"\nImporting {len(records)} valid records...")
+    print(f"\nImporting {len(records)} records...")
 
     # For benchmarks, we need a different upsert strategy since there's no single primary key
     # We'll use create (POST) for each record since benchmarks are typically loaded fresh

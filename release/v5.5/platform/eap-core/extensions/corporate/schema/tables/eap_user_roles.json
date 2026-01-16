@@ -1,0 +1,32 @@
+{
+  "schemaName": "eap_user_roles",
+  "displayName": "User Roles",
+  "pluralName": "User Roles",
+  "description": "Role assignments for users including title, level, and scope",
+  "tier": 2,
+  "category": "Roles",
+  "primaryKey": "user_role_id",
+  "primaryNameColumn": "user_role_id",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "user_role_id", "displayName": "User Role ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "User" },
+    { "schemaName": "role_title_id", "displayName": "Role Title", "dataType": "Lookup", "lookupTable": "eap_role_titles", "required": true, "description": "Role title" },
+    { "schemaName": "is_primary", "displayName": "Is Primary", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Primary role flag" },
+    { "schemaName": "scope_type", "displayName": "Scope Type", "dataType": "Choice", "required": true, "defaultValue": "Platform", "options": ["Platform", "Division", "BusinessUnit", "ProductUnit", "Client", "Project"], "description": "Scope of role" },
+    { "schemaName": "scope_entity_id", "displayName": "Scope Entity ID", "dataType": "UniqueIdentifier", "required": false, "description": "Specific scope entity" },
+    { "schemaName": "effective_date", "displayName": "Effective Date", "dataType": "DateTime", "required": true, "description": "Start date" },
+    { "schemaName": "end_date", "displayName": "End Date", "dataType": "DateTime", "required": false, "description": "End date" },
+    { "schemaName": "assigned_by", "displayName": "Assigned By", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Who assigned" },
+    { "schemaName": "assigned_date", "displayName": "Assigned Date", "dataType": "DateTime", "required": true, "description": "When assigned" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": true, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_user_id", "columns": ["user_id"], "unique": false },
+    { "name": "idx_user_primary", "columns": ["user_id", "is_primary"], "unique": false },
+    { "name": "idx_role_title", "columns": ["role_title_id"], "unique": false },
+    { "name": "idx_is_active", "columns": ["is_active"], "unique": false }
+  ]
+}

@@ -1,79 +1,286 @@
 {
-  "table_name": "eap_session",
-  "display_name": "EAP Session",
-  "description": "Shared session management across all agents",
-  "schema_name": "eap_session",
-  "primary_column": "eap_sessioncode",
+  "schemaName": "eap_session",
+  "displayName": "Sessions",
+  "pluralName": "Sessions",
+  "description": "Agent conversation instances tracking user interactions",
+  "tier": 1,
+  "category": "Core",
+  "primaryKey": "session_id",
+  "primaryNameColumn": "session_code",
+  "ownershipType": "OrganizationOwned",
   "columns": [
     {
-      "name": "eap_sessioncode",
-      "display_name": "Session Code",
-      "type": "Text",
-      "max_length": 50,
+      "schemaName": "session_id",
+      "displayName": "Session ID",
+      "dataType": "UniqueIdentifier",
       "required": true,
-      "description": "Unique session identifier"
+      "description": "Primary key"
     },
     {
-      "name": "eap_userid",
-      "display_name": "User ID",
-      "type": "Lookup",
-      "target_table": "eap_user",
+      "schemaName": "session_code",
+      "displayName": "Session Code",
+      "dataType": "Text",
+      "maxLength": 50,
       "required": true,
-      "description": "Reference to EAP user"
+      "unique": true,
+      "description": "Unique session code"
     },
     {
-      "name": "eap_clientid",
-      "display_name": "Client ID",
-      "type": "Lookup",
-      "target_table": "eap_client",
+      "schemaName": "user_id",
+      "displayName": "User",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Session user"
+    },
+    {
+      "schemaName": "agent_id",
+      "displayName": "Agent",
+      "dataType": "Lookup",
+      "lookupTable": "eap_agent",
+      "required": true,
+      "description": "Agent used for session"
+    },
+    {
+      "schemaName": "client_id",
+      "displayName": "Client",
+      "dataType": "Lookup",
+      "lookupTable": "eap_client",
       "required": false,
-      "description": "Reference to client context"
+      "description": "Client context (denormalized)"
     },
     {
-      "name": "eap_agentcode",
-      "display_name": "Agent Code",
-      "type": "Text",
-      "max_length": 20,
-      "required": true,
-      "description": "Which agent owns this session (MPA, CA, etc.)"
-    },
-    {
-      "name": "eap_status",
-      "display_name": "Status",
-      "type": "Choice",
-      "options": ["active", "completed", "abandoned", "error"],
-      "default": "active",
-      "required": true
-    },
-    {
-      "name": "eap_startedat",
-      "display_name": "Started At",
-      "type": "DateTime",
-      "required": true
-    },
-    {
-      "name": "eap_completedat",
-      "display_name": "Completed At",
-      "type": "DateTime",
-      "required": false
-    },
-    {
-      "name": "eap_sessiondata",
-      "display_name": "Session Data",
-      "type": "Text",
-      "max_length": 1048576,
+      "schemaName": "engagement_id",
+      "displayName": "Engagement",
+      "dataType": "Lookup",
+      "lookupTable": "eap_engagements",
       "required": false,
-      "description": "JSON blob for agent-specific session state"
+      "description": "Engagement context"
+    },
+    {
+      "schemaName": "project_id",
+      "displayName": "Project",
+      "dataType": "Lookup",
+      "lookupTable": "eap_projects",
+      "required": false,
+      "description": "Project context"
+    },
+    {
+      "schemaName": "product_unit_id",
+      "displayName": "Product Unit",
+      "dataType": "Lookup",
+      "lookupTable": "eap_product_units",
+      "required": false,
+      "description": "Product unit (denormalized)"
+    },
+    {
+      "schemaName": "business_unit_id",
+      "displayName": "Business Unit",
+      "dataType": "Lookup",
+      "lookupTable": "eap_business_units",
+      "required": false,
+      "description": "Business unit (denormalized)"
+    },
+    {
+      "schemaName": "division_id",
+      "displayName": "Division",
+      "dataType": "Lookup",
+      "lookupTable": "eap_divisions",
+      "required": false,
+      "description": "Division (denormalized)"
+    },
+    {
+      "schemaName": "session_type",
+      "displayName": "Session Type",
+      "dataType": "Choice",
+      "required": false,
+      "options": ["Standard", "Research", "Creation", "Review", "Handoff"],
+      "description": "Type of session"
+    },
+    {
+      "schemaName": "status",
+      "displayName": "Status",
+      "dataType": "Choice",
+      "required": true,
+      "defaultValue": "Active",
+      "options": ["Active", "Completed", "Abandoned", "HandedOff"],
+      "description": "Session status"
+    },
+    {
+      "schemaName": "started_date",
+      "displayName": "Started Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Session start time"
+    },
+    {
+      "schemaName": "ended_date",
+      "displayName": "Ended Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Session end time"
+    },
+    {
+      "schemaName": "last_activity_date",
+      "displayName": "Last Activity",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last activity timestamp"
+    },
+    {
+      "schemaName": "proactive_level",
+      "displayName": "Proactive Level",
+      "dataType": "Choice",
+      "required": true,
+      "defaultValue": "Light",
+      "options": ["Light", "Medium", "Heavy"],
+      "description": "Proactive engagement level"
+    },
+    {
+      "schemaName": "proactive_level_calculated",
+      "displayName": "Proactive Level Calculated",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Was level auto-calculated"
+    },
+    {
+      "schemaName": "exchange_count",
+      "displayName": "Exchange Count",
+      "dataType": "WholeNumber",
+      "required": true,
+      "defaultValue": 0,
+      "description": "Number of exchanges"
+    },
+    {
+      "schemaName": "output_count",
+      "displayName": "Output Count",
+      "dataType": "WholeNumber",
+      "required": true,
+      "defaultValue": 0,
+      "description": "Number of outputs generated"
+    },
+    {
+      "schemaName": "total_tokens_input",
+      "displayName": "Total Input Tokens",
+      "dataType": "WholeNumber",
+      "required": true,
+      "defaultValue": 0,
+      "description": "Input tokens used"
+    },
+    {
+      "schemaName": "total_tokens_output",
+      "displayName": "Total Output Tokens",
+      "dataType": "WholeNumber",
+      "required": true,
+      "defaultValue": 0,
+      "description": "Output tokens used"
+    },
+    {
+      "schemaName": "context_json",
+      "displayName": "Context JSON",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Session context and state"
+    },
+    {
+      "schemaName": "session_summary",
+      "displayName": "Session Summary",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Auto-generated session summary"
+    },
+    {
+      "schemaName": "handoff_session_id",
+      "displayName": "Handoff Session",
+      "dataType": "Lookup",
+      "lookupTable": "eap_session",
+      "required": false,
+      "description": "Previous session if handed off"
+    },
+    {
+      "schemaName": "handoff_notes",
+      "displayName": "Handoff Notes",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Handoff context notes"
+    },
+    {
+      "schemaName": "is_indexed",
+      "displayName": "Is Indexed",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Indexed in AI Search"
+    },
+    {
+      "schemaName": "indexed_date",
+      "displayName": "Indexed Date",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "When indexed"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    },
+    {
+      "schemaName": "modified_by",
+      "displayName": "Modified By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Modifier"
     }
   ],
   "indexes": [
     {
-      "name": "idx_session_user",
-      "columns": ["eap_userid", "eap_status"]
+      "name": "idx_session_code",
+      "columns": ["session_code"],
+      "unique": true
     },
     {
-      "name": "idx_session_agent",
-      "columns": ["eap_agentcode", "eap_status"]
+      "name": "idx_user_status",
+      "columns": ["user_id", "status"],
+      "unique": false
+    },
+    {
+      "name": "idx_client_started",
+      "columns": ["client_id", "started_date"],
+      "unique": false
+    },
+    {
+      "name": "idx_agent_started",
+      "columns": ["agent_id", "started_date"],
+      "unique": false
+    },
+    {
+      "name": "idx_last_activity",
+      "columns": ["last_activity_date"],
+      "unique": false
+    },
+    {
+      "name": "idx_is_indexed",
+      "columns": ["is_indexed"],
+      "unique": false
     }
   ]
 }

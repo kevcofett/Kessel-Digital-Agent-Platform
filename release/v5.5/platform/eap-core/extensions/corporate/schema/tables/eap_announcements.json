@@ -1,0 +1,32 @@
+{
+  "schemaName": "eap_announcements",
+  "displayName": "Announcement",
+  "pluralName": "Announcements",
+  "description": "System-wide announcements",
+  "tier": 3,
+  "featureGate": "ANNOUNCEMENTS",
+  "category": "Communication",
+  "primaryKey": "announcement_id",
+  "primaryNameColumn": "announcement_title",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "announcement_id", "displayName": "Announcement ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "announcement_title", "displayName": "Title", "dataType": "Text", "maxLength": 200, "required": true, "description": "Announcement title" },
+    { "schemaName": "announcement_body", "displayName": "Body", "dataType": "MultilineText", "required": true, "description": "Full announcement" },
+    { "schemaName": "announcement_type", "displayName": "Type", "dataType": "Choice", "required": true, "defaultValue": "Info", "options": ["Info", "Update", "Maintenance", "Alert", "Celebration"], "description": "Type" },
+    { "schemaName": "priority", "displayName": "Priority", "dataType": "Choice", "required": true, "defaultValue": "Normal", "options": ["Critical", "High", "Normal", "Low"], "description": "Priority level" },
+    { "schemaName": "target_audience", "displayName": "Target Audience", "dataType": "Choice", "required": true, "defaultValue": "All", "options": ["All", "Admins", "Specific"], "description": "Who sees it" },
+    { "schemaName": "target_users_json", "displayName": "Target Users", "dataType": "MultilineText", "required": false, "description": "Specific user IDs JSON" },
+    { "schemaName": "action_url", "displayName": "Action URL", "dataType": "Text", "maxLength": 1000, "required": false, "description": "Learn more link" },
+    { "schemaName": "is_dismissible", "displayName": "Is Dismissible", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Can dismiss" },
+    { "schemaName": "start_date", "displayName": "Start Date", "dataType": "DateTime", "required": true, "description": "When visible" },
+    { "schemaName": "end_date", "displayName": "End Date", "dataType": "DateTime", "required": false, "description": "When expires" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "created_by_user_id", "displayName": "Created By", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Creator" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" }
+  ],
+  "indexes": [
+    { "name": "idx_active_dates", "columns": ["is_active", "start_date", "end_date"], "unique": false },
+    { "name": "idx_priority", "columns": ["priority"], "unique": false }
+  ]
+}

@@ -1,0 +1,288 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "afc2e1f7-2c35-4e8a-9b3c-1d5f6a4b2e7d"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "learning_id": {
+                  "type": "string",
+                  "description": "MPA Plan Learning ID to promote"
+                },
+                "scope": {
+                  "type": "string",
+                  "description": "Scope for the promoted learning (Client, Organization, Global)"
+                }
+              },
+              "required": [
+                "learning_id"
+              ]
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "InitializeSuccess": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "b5e3d7f1-4c2a-4e8b-9f6c-3a7d8b2e1c4f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varSuccess",
+                "type": "boolean",
+                "value": true
+              }
+            ]
+          }
+        },
+        "InitializeErrorMessage": {
+          "runAfter": {
+            "InitializeSuccess": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c6f4e8a2-5d3b-4f9c-a0e7-4b8c9d3e2f5a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varErrorMessage",
+                "type": "string",
+                "value": ""
+              }
+            ]
+          }
+        },
+        "InitializeEapLearningId": {
+          "runAfter": {
+            "InitializeErrorMessage": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d7a5f9b3-6e4c-4a0d-b1f8-5c9d0e4f3a6b"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varEapLearningId",
+                "type": "string",
+                "value": ""
+              }
+            ]
+          }
+        },
+        "GetMPALearning": {
+          "runAfter": {
+            "InitializeEapLearningId": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e8b6a0c4-7f5d-4b1e-c2a9-6d0e1f5a4b7c"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_planlearnings",
+              "recordId": "@triggerBody()?['learning_id']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "CheckAlreadyPromoted": {
+          "runAfter": {
+            "GetMPALearning": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f9c7b1d5-8a6e-4c2f-d3ba-7e1f2a6b5c8d"
+          },
+          "type": "Condition",
+          "expression": {
+            "equals": [
+              "@outputs('GetMPALearning')?['body/mpa_ispromoted']",
+              true
+            ]
+          },
+          "actions": {
+            "ResponseAlreadyPromoted": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "a0d8c2e6-9b7f-4d3a-e4cb-8f2a3b7c6d9e"
+              },
+              "type": "Response",
+              "kind": "Http",
+              "inputs": {
+                "statusCode": 400,
+                "body": {
+                  "status": "Error",
+                  "message": "Learning has already been promoted",
+                  "learning_id": "@{triggerBody()?['learning_id']}",
+                  "eap_learning_id": "@{outputs('GetMPALearning')?['body/mpa_eaplearningid']}"
+                }
+              }
+            },
+            "TerminateAlreadyPromoted": {
+              "runAfter": {
+                "ResponseAlreadyPromoted": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b1e9d3f7-0c8a-4e4b-f5dc-9a3b4c8d7e0f"
+              },
+              "type": "Terminate",
+              "inputs": {
+                "runStatus": "Succeeded"
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          }
+        },
+        "CreateEAPLearning": {
+          "runAfter": {
+            "CheckAlreadyPromoted": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c2fa4a8e-1d9b-4f5c-a6ed-0b4c5d9e8f1a"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "eap_learnings",
+              "item/eap_learningtitle": "@outputs('GetMPALearning')?['body/mpa_learningtitle']",
+              "item/eap_content": "@outputs('GetMPALearning')?['body/mpa_description']",
+              "item/eap_category": "@outputs('GetMPALearning')?['body/mpa_category']",
+              "item/eap_sourceagent": "MPA",
+              "item/eap_sourceentitytype": "PlanLearning",
+              "item/eap_sourceentityid": "@triggerBody()?['learning_id']",
+              "item/eap_scope": "@coalesce(triggerBody()?['scope'], 'Organization')",
+              "item/eap_isactive": true,
+              "item/eap_createdat": "@utcNow()"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "SetEapLearningId": {
+          "runAfter": {
+            "CreateEAPLearning": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d3ab5b9f-2e0c-4a6d-b7fe-1c5d6e0f9a2b"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "varEapLearningId",
+            "value": "@{outputs('CreateEAPLearning')?['body/eap_learningid']}"
+          }
+        },
+        "UpdateMPALearningPromoted": {
+          "runAfter": {
+            "SetEapLearningId": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e4bc6c0a-3f1d-4b7e-c8af-2d6e7f1a0b3c"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "UpdateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_planlearnings",
+              "recordId": "@triggerBody()?['learning_id']",
+              "item/mpa_ispromoted": true,
+              "item/mpa_eaplearningid": "@variables('varEapLearningId')",
+              "item/mpa_promotedat": "@utcNow()"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "SuccessResponse": {
+          "runAfter": {
+            "UpdateMPALearningPromoted": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f5cd7d1b-4a2e-4c8f-d9ba-3e7f8a2b1c4d"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "Success",
+              "message": "Learning promoted to EAP shared learnings",
+              "mpa_learning_id": "@{triggerBody()?['learning_id']}",
+              "eap_learning_id": "@{variables('varEapLearningId')}",
+              "scope": "@{coalesce(triggerBody()?['scope'], 'Organization')}",
+              "promoted_at": "@{utcNow()}"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

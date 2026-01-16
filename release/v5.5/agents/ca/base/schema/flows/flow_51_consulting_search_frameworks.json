@@ -1,0 +1,61 @@
+{
+  "flowId": "flow_51",
+  "name": "consulting_search_frameworks",
+  "displayName": "CA Search Frameworks",
+  "description": "Query ca_frameworks table for framework definitions",
+  "version": "1.0.0",
+  "status": "specification",
+  "trigger": {
+    "type": "http_request",
+    "method": "POST"
+  },
+  "inputs": {
+    "category": {
+      "type": "string",
+      "required": false,
+      "allowedValues": ["Strategic", "Competitive", "Customer", "Operations", "Innovation", "Financial"]
+    },
+    "searchTerm": {
+      "type": "string",
+      "required": false
+    },
+    "limit": {
+      "type": "integer",
+      "default": 10
+    }
+  },
+  "outputs": {
+    "frameworks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "frameworkId": "string",
+          "name": "string",
+          "category": "string",
+          "description": "string",
+          "methodology": "string",
+          "useCases": "array",
+          "outputs": "array",
+          "timeEstimates": "object"
+        }
+      }
+    },
+    "totalCount": {
+      "type": "integer"
+    }
+  },
+  "actions": [
+    {
+      "order": 1,
+      "action": "list_records",
+      "table": "ca_frameworks",
+      "filter": {
+        "category": "@{triggerBody()?['category']}",
+        "searchName": "@{triggerBody()?['searchTerm']}"
+      },
+      "top": "@{triggerBody()?['limit']}"
+    }
+  ],
+  "notes": "This flow specification defines the Power Automate flow to be deployed in the target environment."
+}

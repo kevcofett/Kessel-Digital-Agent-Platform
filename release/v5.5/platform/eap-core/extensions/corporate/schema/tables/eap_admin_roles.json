@@ -1,0 +1,117 @@
+{
+  "schemaName": "eap_admin_roles",
+  "displayName": "Admin Roles",
+  "pluralName": "Admin Roles",
+  "description": "Admin role definitions with associated scope levels",
+  "tier": 1,
+  "category": "Admin",
+  "primaryKey": "admin_role_id",
+  "primaryNameColumn": "role_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    {
+      "schemaName": "admin_role_id",
+      "displayName": "Admin Role ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "role_code",
+      "displayName": "Role Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique role code"
+    },
+    {
+      "schemaName": "role_name",
+      "displayName": "Role Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Role name"
+    },
+    {
+      "schemaName": "role_scope_id",
+      "displayName": "Role Scope",
+      "dataType": "Lookup",
+      "lookupTable": "eap_permission_scopes",
+      "required": true,
+      "description": "Scope level for this role"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Description"
+    },
+    {
+      "schemaName": "is_system",
+      "displayName": "Is System",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "System role (cannot delete)"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "sort_order",
+      "displayName": "Sort Order",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Display order"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_role_code",
+      "columns": ["role_code"],
+      "unique": true
+    }
+  ],
+  "seedData": [
+    { "role_code": "PLATFORM_ADMIN", "role_name": "Platform Administrator", "scope_code": "PLATFORM", "is_system": true, "description": "Full platform administration" },
+    { "role_code": "TENANT_ADMIN", "role_name": "Tenant Administrator", "scope_code": "TENANT", "is_system": true, "description": "Tenant-level administration" },
+    { "role_code": "DIVISION_ADMIN", "role_name": "Division Administrator", "scope_code": "DIVISION", "is_system": true, "description": "Division-level administration" },
+    { "role_code": "BU_ADMIN", "role_name": "Business Unit Administrator", "scope_code": "BU", "is_system": true, "description": "BU-level administration" },
+    { "role_code": "PRODUCT_ADMIN", "role_name": "Product Administrator", "scope_code": "PRODUCT", "is_system": true, "description": "Product-level administration" },
+    { "role_code": "AGENT_ADMIN", "role_name": "Agent Administrator", "scope_code": "AGENT", "is_system": true, "description": "Agent-specific administration" },
+    { "role_code": "CONTENT_ADMIN", "role_name": "Content Administrator", "scope_code": "PLATFORM", "is_system": true, "description": "Platform-wide content management" },
+    { "role_code": "USER_ADMIN", "role_name": "User Administrator", "scope_code": "PLATFORM", "is_system": true, "description": "Platform-wide user management" },
+    { "role_code": "READONLY_ADMIN", "role_name": "Read-Only Administrator", "scope_code": "PLATFORM", "is_system": true, "description": "Read-only access to all admin features" },
+    { "role_code": "GOVERNANCE_ADMIN", "role_name": "Governance Administrator", "scope_code": "PLATFORM", "is_system": true, "description": "Governance and compliance management" }
+  ]
+}

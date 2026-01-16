@@ -1,0 +1,87 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {"defaultValue": {}, "type": "Object"},
+        "$authentication": {"defaultValue": {}, "type": "SecureObject"}
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user_id": {"type": "string", "description": "User ID"},
+                "client_id": {"type": "string", "description": "Client ID"},
+                "engagement_type": {"type": "string", "description": "Type of consulting engagement"}
+              },
+              "required": ["user_id"]
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "InitializeSessionCode": {
+          "runAfter": {},
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [{"name": "session_code", "type": "string", "value": "@{concat('CA-SES-', formatDateTime(utcNow(), 'yyyyMMddHHmmss'))}"}]
+          }
+        },
+        "CreateSession": {
+          "runAfter": {"InitializeSessionCode": ["Succeeded"]},
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "eap_sessions",
+              "item/eap_agentcode": "CONSULTING_AGENT",
+              "item/eap_sessioncode": "@variables('session_code')",
+              "item/eap_status": 200000000,
+              "item/eap_clientid": "@triggerBody()?['client_id']",
+              "item/eap_startedat": "@utcNow()",
+              "item/eap_userid": "@triggerBody()?['user_id']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "SuccessResponse": {
+          "runAfter": {"CreateSession": ["Succeeded"]},
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "Success",
+              "session_id": "@{outputs('CreateSession')?['body/eap_sessionid']}",
+              "session_code": "@{variables('session_code')}",
+              "agent_type": "CONSULTING_AGENT"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

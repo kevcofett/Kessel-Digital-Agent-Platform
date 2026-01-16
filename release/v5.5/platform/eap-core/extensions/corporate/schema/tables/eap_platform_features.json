@@ -1,0 +1,159 @@
+{
+  "schemaName": "eap_platform_features",
+  "displayName": "Platform Features",
+  "pluralName": "Platform Features",
+  "description": "Platform feature flags and configuration",
+  "tier": 1,
+  "category": "Platform",
+  "primaryKey": "feature_id",
+  "primaryNameColumn": "feature_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    {
+      "schemaName": "feature_id",
+      "displayName": "Feature ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "feature_code",
+      "displayName": "Feature Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique feature code"
+    },
+    {
+      "schemaName": "feature_name",
+      "displayName": "Feature Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Feature name"
+    },
+    {
+      "schemaName": "feature_category",
+      "displayName": "Feature Category",
+      "dataType": "Choice",
+      "required": true,
+      "options": ["Core", "Governance", "Integration", "Advanced", "Experimental"],
+      "description": "Feature category"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Description"
+    },
+    {
+      "schemaName": "is_enabled",
+      "displayName": "Is Enabled",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Feature enabled"
+    },
+    {
+      "schemaName": "default_enabled",
+      "displayName": "Default Enabled",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Enabled by default"
+    },
+    {
+      "schemaName": "requires_license",
+      "displayName": "Requires License",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Requires special license"
+    },
+    {
+      "schemaName": "dependent_features_json",
+      "displayName": "Dependent Features",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Required features JSON"
+    },
+    {
+      "schemaName": "config_schema_json",
+      "displayName": "Config Schema",
+      "dataType": "MultilineText",
+      "required": false,
+      "description": "Configuration schema JSON"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "sort_order",
+      "displayName": "Sort Order",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Display order"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_feature_code",
+      "columns": ["feature_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_feature_category",
+      "columns": ["feature_category"],
+      "unique": false
+    },
+    {
+      "name": "idx_is_enabled",
+      "columns": ["is_enabled"],
+      "unique": false
+    }
+  ],
+  "seedData": [
+    { "feature_code": "CORE_SESSION", "feature_name": "Core Sessions", "feature_category": "Core", "is_enabled": true, "default_enabled": true },
+    { "feature_code": "CORE_KB", "feature_name": "Knowledge Base", "feature_category": "Core", "is_enabled": true, "default_enabled": true },
+    { "feature_code": "CORE_OUTPUT", "feature_name": "Output Generation", "feature_category": "Core", "is_enabled": true, "default_enabled": true },
+    { "feature_code": "CORE_PROACTIVE", "feature_name": "Proactive Engagement", "feature_category": "Core", "is_enabled": true, "default_enabled": true },
+    { "feature_code": "ENGAGEMENTS", "feature_name": "Engagements", "feature_category": "Advanced", "is_enabled": false, "default_enabled": false },
+    { "feature_code": "ORG_HIERARCHY", "feature_name": "Org Hierarchy", "feature_category": "Advanced", "is_enabled": false, "default_enabled": false },
+    { "feature_code": "GEO_HIERARCHY", "feature_name": "Geo Hierarchy", "feature_category": "Advanced", "is_enabled": false, "default_enabled": false },
+    { "feature_code": "BASIC_APPROVAL", "feature_name": "Basic Approvals", "feature_category": "Governance", "is_enabled": false, "default_enabled": false },
+    { "feature_code": "ADVANCED_APPROVAL", "feature_name": "Advanced Approvals", "feature_category": "Governance", "is_enabled": false, "default_enabled": false },
+    { "feature_code": "COMPOSABLE_GOVERNANCE", "feature_name": "Composable Governance", "feature_category": "Governance", "is_enabled": false, "default_enabled": false },
+    { "feature_code": "MULTI_AGENT", "feature_name": "Multi-Agent", "feature_category": "Advanced", "is_enabled": false, "default_enabled": false },
+    { "feature_code": "MULTI_TENANT", "feature_name": "Multi-Tenant", "feature_category": "Advanced", "is_enabled": false, "default_enabled": false },
+    { "feature_code": "USAGE_BUDGETS", "feature_name": "Usage Budgets", "feature_category": "Governance", "is_enabled": false, "default_enabled": false },
+    { "feature_code": "SALESFORCE_INTEGRATION", "feature_name": "Salesforce Integration", "feature_category": "Integration", "is_enabled": false, "default_enabled": false },
+    { "feature_code": "CONFLUENCE_INTEGRATION", "feature_name": "Confluence Integration", "feature_category": "Integration", "is_enabled": false, "default_enabled": false },
+    { "feature_code": "PRACTICES_DOMAINS", "feature_name": "Practices & Domains", "feature_category": "Advanced", "is_enabled": false, "default_enabled": false },
+    { "feature_code": "DATA_CLASSIFICATION", "feature_name": "Data Classification", "feature_category": "Governance", "is_enabled": false, "default_enabled": false },
+    { "feature_code": "GOVERNANCE_FRAMEWORKS", "feature_name": "Governance Frameworks", "feature_category": "Governance", "is_enabled": false, "default_enabled": false },
+    { "feature_code": "SCOPED_CONFIGS", "feature_name": "Scoped Configurations", "feature_category": "Advanced", "is_enabled": false, "default_enabled": false },
+    { "feature_code": "CUSTOM_TEMPLATES", "feature_name": "Custom Templates", "feature_category": "Advanced", "is_enabled": false, "default_enabled": false }
+  ]
+}

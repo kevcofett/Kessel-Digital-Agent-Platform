@@ -1,0 +1,162 @@
+{
+  "testSetName": "MPA Core Behaviors",
+  "description": "Behavioral tests for Media Planning Agent v5.3+ validating response quality, source transparency, and step discipline",
+  "agentName": "Media Planning Agent",
+  "version": "5.3",
+  "testCases": [
+    {
+      "id": "MPA-001",
+      "name": "Opening Warmth",
+      "category": "Tone",
+      "testType": "Generative Answers",
+      "utterance": "Help me create a media plan for a new product launch.",
+      "expectedBehavior": "Agent should provide warm confident opening that names 10 focus areas (Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, Risks) and asks a single Step 1 question about objectives. Should NOT feel like a syllabus or list multiple questions.",
+      "passCriteria": "Warm tone, mentions focus areas, asks ONE question only"
+    },
+    {
+      "id": "MPA-002",
+      "name": "CAC Calculation",
+      "category": "Analytics",
+      "testType": "Generative Answers",
+      "utterance": "We have $100,000 budget and want to acquire 2,000 customers.",
+      "expectedBehavior": "Agent should calculate $50 CAC, compare to benchmarks, cite source (KB/web/estimate), and characterize as aggressive/typical/conservative. Should NOT just ask another question without doing the math.",
+      "passCriteria": "Calculates $50 CAC, cites source, provides feasibility assessment"
+    },
+    {
+      "id": "MPA-003",
+      "name": "Source Transparency",
+      "category": "Citations",
+      "testType": "Generative Answers",
+      "utterance": "What CPM should I expect for LinkedIn advertising?",
+      "expectedBehavior": "Agent should cite source: either 'I searched our knowledge base and found...' or 'Based on web search...' or 'I don't have a citable benchmark, but my estimate is...'. Should NOT present numbers without attribution.",
+      "passCriteria": "Explicitly states source of benchmark data"
+    },
+    {
+      "id": "MPA-004",
+      "name": "No Redundant Questions",
+      "category": "Efficiency",
+      "testType": "Generative Answers",
+      "utterance": "Our goal is to increase brand awareness among millennials aged 25-34 in urban areas.",
+      "expectedBehavior": "Agent should acknowledge the rich detail provided and ask ONE follow-up about a gap (budget, timeline, geography specifics). Should NOT ask multiple questions or repeat back what was just said.",
+      "passCriteria": "Acknowledges input, asks single focused follow-up"
+    },
+    {
+      "id": "MPA-005",
+      "name": "Step Boundary",
+      "category": "Workflow",
+      "testType": "Generative Answers",
+      "utterance": "Should we use TikTok or Instagram for our campaign?",
+      "expectedBehavior": "Agent should acknowledge channel interest but redirect to Step 1 objectives first: 'Channel selection comes in Step 7. First, let's establish your business objectives so we can evaluate channels against your goals.' Should NOT dive into channel comparison.",
+      "passCriteria": "Redirects to Step 1, explains why channels come later"
+    },
+    {
+      "id": "MPA-006",
+      "name": "Aggressive Target Framing",
+      "category": "Analytics",
+      "testType": "Generative Answers",
+      "utterance": "We want to achieve 10x ROAS on our first campaign with a $50K budget.",
+      "expectedBehavior": "Agent should acknowledge the ambition, note that 10x ROAS is aggressive (typical is 2-4x), and frame a path: 'That's an ambitious target. Typical ROAS ranges 2-4x. To pursue 10x, we'll need very precise targeting and likely a proven offer. What's your product category?' Should NOT dismiss or just validate without context.",
+      "passCriteria": "Frames as aggressive, provides typical range, offers path forward"
+    },
+    {
+      "id": "MPA-007",
+      "name": "Response Conciseness",
+      "category": "Efficiency",
+      "testType": "Generative Answers",
+      "utterance": "Yes, our primary goal is lead generation.",
+      "expectedBehavior": "Agent should give brief acknowledgment (1-2 sentences max) and move forward with next question or insight. Should NOT repeat back what user said in elaborate detail or give a lengthy explanation of lead generation.",
+      "passCriteria": "Response under 3 sentences, moves conversation forward"
+    },
+    {
+      "id": "MPA-008",
+      "name": "Acronym Definition",
+      "category": "Clarity",
+      "testType": "Generative Answers",
+      "utterance": "What's a good CAC for SaaS companies?",
+      "expectedBehavior": "Agent should define acronyms on first use: 'Customer Acquisition Cost (CAC) for Software-as-a-Service (SaaS) companies typically ranges...' Should NOT assume user knows all acronyms even if they used one.",
+      "passCriteria": "Defines CAC and SaaS on first use"
+    },
+    {
+      "id": "MPA-009",
+      "name": "Proactive Analysis",
+      "category": "Analytics",
+      "testType": "Generative Answers",
+      "utterance": "We have $500K annual budget, targeting 100K website visitors, in the B2B software space.",
+      "expectedBehavior": "Agent should immediately calculate: '$500K / 100K = $5 cost per visitor' and assess feasibility against B2B benchmarks. Should NOT just ask another clarifying question when math is possible.",
+      "passCriteria": "Calculates $5 CPV, compares to B2B benchmarks"
+    },
+    {
+      "id": "MPA-010",
+      "name": "No Creative Discussion",
+      "category": "Workflow",
+      "testType": "Generative Answers",
+      "utterance": "What kind of creative messaging should we use?",
+      "expectedBehavior": "Agent should redirect: 'Creative strategy is important but comes after we establish objectives, audience, and channels. Let's first understand your business goals.' Should NOT discuss creative messaging in Step 1.",
+      "passCriteria": "Redirects to objectives, does not discuss creative"
+    }
+  ],
+  "multiTurnTests": [
+    {
+      "id": "MPA-MT-001",
+      "name": "Full Step 1 Flow",
+      "category": "End-to-End",
+      "description": "Tests complete Step 1 conversation from greeting to validation",
+      "turns": [
+        {
+          "order": 1,
+          "utterance": "Hi, I need help with media planning.",
+          "expectedBehavior": "Warm greeting, introduces 10-step process, asks about objectives"
+        },
+        {
+          "order": 2,
+          "utterance": "We want to generate 500 qualified leads for our new B2B software product.",
+          "expectedBehavior": "Acknowledges lead gen goal, may ask about budget or timeline"
+        },
+        {
+          "order": 3,
+          "utterance": "Our budget is $200,000 for Q1.",
+          "expectedBehavior": "Calculates $400 cost per lead, assesses against B2B benchmarks, cites source"
+        },
+        {
+          "order": 4,
+          "utterance": "Is that a good target?",
+          "expectedBehavior": "Provides context on B2B CPL ranges, characterizes $400 as typical/aggressive/conservative"
+        }
+      ]
+    }
+  ],
+  "scoringRubric": {
+    "dimensions": [
+      {
+        "name": "Source Transparency",
+        "weight": 25,
+        "criteria": "Agent cites KB, web, or labels estimates clearly"
+      },
+      {
+        "name": "Response Efficiency",
+        "weight": 20,
+        "criteria": "Responses are concise, no redundant repetition"
+      },
+      {
+        "name": "Analytical Proactivity",
+        "weight": 25,
+        "criteria": "Agent calculates when data allows, doesn't just ask more questions"
+      },
+      {
+        "name": "Step Discipline",
+        "weight": 20,
+        "criteria": "Agent maintains workflow boundaries appropriately"
+      },
+      {
+        "name": "Tone Quality",
+        "weight": 10,
+        "criteria": "Warm, professional, not robotic or overly formal"
+      }
+    ],
+    "scale": {
+      "0": "Does not meet criteria",
+      "1": "Partially meets criteria",
+      "2": "Fully meets criteria"
+    }
+  }
+}

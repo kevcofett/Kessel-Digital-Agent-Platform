@@ -1,0 +1,29 @@
+{
+  "schemaName": "eap_report_executions",
+  "displayName": "Report Execution",
+  "pluralName": "Report Executions",
+  "description": "Log of report generations",
+  "tier": 3,
+  "featureGate": "REPORTING",
+  "category": "Analytics",
+  "primaryKey": "execution_id",
+  "primaryNameColumn": "execution_id",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "execution_id", "displayName": "Execution ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "report_id", "displayName": "Report", "dataType": "Lookup", "lookupTable": "eap_report_definitions", "required": true, "description": "Report definition" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Requesting user" },
+    { "schemaName": "parameters_json", "displayName": "Parameters", "dataType": "MultilineText", "required": false, "description": "Run parameters JSON" },
+    { "schemaName": "execution_date", "displayName": "Execution Date", "dataType": "DateTime", "required": true, "description": "When executed" },
+    { "schemaName": "status", "displayName": "Status", "dataType": "Choice", "required": true, "defaultValue": "Running", "options": ["Running", "Completed", "Failed", "Cancelled"], "description": "Status" },
+    { "schemaName": "duration_ms", "displayName": "Duration MS", "dataType": "WholeNumber", "required": false, "description": "Duration in ms" },
+    { "schemaName": "row_count", "displayName": "Row Count", "dataType": "WholeNumber", "required": false, "description": "Result rows" },
+    { "schemaName": "output_url", "displayName": "Output URL", "dataType": "Text", "maxLength": 1000, "required": false, "description": "URL to output" },
+    { "schemaName": "error_message", "displayName": "Error Message", "dataType": "MultilineText", "required": false, "description": "Error if failed" }
+  ],
+  "indexes": [
+    { "name": "idx_report", "columns": ["report_id"], "unique": false },
+    { "name": "idx_user", "columns": ["user_id"], "unique": false },
+    { "name": "idx_date", "columns": ["execution_date"], "unique": false }
+  ]
+}

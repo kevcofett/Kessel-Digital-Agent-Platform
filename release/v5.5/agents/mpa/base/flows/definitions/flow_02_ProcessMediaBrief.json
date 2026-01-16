@@ -56,7 +56,7 @@
           "description": "Check for existing plan with same idempotency key",
           "inputs": {
             "operation": "ListRecords",
-            "entityName": "mpa_mediaplan",
+            "entityName": "mpa_mediaplans",
             "filter": "mpa_idempotency_key eq '@{triggerBody()?['idempotencyKey']}'",
             "top": 1
           }
@@ -108,7 +108,7 @@
                 "description": "Create a new media plan in Dataverse with idempotency key",
                 "inputs": {
                   "operation": "CreateRecord",
-                  "entityName": "mpa_mediaplan",
+                  "entityName": "mpa_mediaplans",
                   "item": {
                     "mpa_name": "@{triggerBody()?['campaignName']}",
                     "mpa_client_name": "@{triggerBody()?['clientName']}",
@@ -128,7 +128,7 @@
                 "description": "Log plan creation to EAP shared audit table",
                 "inputs": {
                   "operation": "CreateRecord",
-                  "entityName": "eap_audit",
+                  "entityName": "eap_audits",
                   "item": {
                     "eap_user_id": "@{triggerBody()?['sessionId']}",
                     "eap_session_id": "@{triggerBody()?['sessionId']}",
@@ -212,7 +212,7 @@
               "description": "Compensating delete - remove orphaned MediaPlan record",
               "inputs": {
                 "operation": "DeleteRecord",
-                "entityName": "mpa_mediaplan",
+                "entityName": "mpa_mediaplans",
                 "itemId": "@outputs('Create_MediaPlan_Record')?['body/mpa_mediaplanid']"
               }
             }

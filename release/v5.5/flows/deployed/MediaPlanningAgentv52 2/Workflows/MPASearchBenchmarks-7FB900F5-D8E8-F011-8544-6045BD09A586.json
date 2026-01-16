@@ -1,0 +1,154 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "3de85869-2c19-4d7e-bf54-eb13a82ca8ac"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "vertical_id": {
+                  "type": "string",
+                  "description": "GUID of vertical to filter by"
+                },
+                "vertical_code": {
+                  "type": "string",
+                  "description": "Vertical code (e.g., RETAIL, CPG, FINSERV)"
+                },
+                "channel_id": {
+                  "type": "string",
+                  "description": "GUID of channel to filter by"
+                },
+                "channel_code": {
+                  "type": "string",
+                  "description": "Channel code (e.g., PROG_DISPLAY, CTV)"
+                },
+                "metric_name": {
+                  "type": "string",
+                  "description": "Specific metric to retrieve (e.g., CPM, CTR, CPA)"
+                },
+                "limit": {
+                  "type": "integer",
+                  "description": "Maximum results (default: 100)"
+                }
+              }
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "InitializeFilterQuery": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "7f408f8a-644b-44d8-8c51-ae8907447dbe"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "filter_query",
+                "type": "string",
+                "value": "mpa_isactive eq true"
+              }
+            ]
+          }
+        },
+        "BuildFilter": {
+          "runAfter": {
+            "InitializeFilterQuery": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2462139f-81aa-48bd-9b1b-a9500d7af907"
+          },
+          "type": "Compose",
+          "inputs": "@if(not(empty(triggerBody()?['vertical_id'])), concat(variables('filter_query'), ' and _mpa_verticalid_value eq ', triggerBody()?['vertical_id']), if(not(empty(triggerBody()?['vertical_code'])), concat(variables('filter_query'), ' and mpa_verticalcode eq ''', triggerBody()?['vertical_code'], ''''), variables('filter_query')))"
+        },
+        "GetBenchmarks": {
+          "runAfter": {
+            "BuildFilter": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "77887434-81e2-41cd-9ab4-a55230196357"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_benchmarks",
+              "$select": "mpa_benchmarkid,mpa_metricname,mpa_metricvalue,mpa_metricunit,mpa_confidencelevel,mpa_sourceattribution,mpa_effectivedate,mpa_isactive",
+              "$filter": "mpa_isactive eq true",
+              "$top": "@coalesce(triggerBody()?['limit'], 100)",
+              "$expand": "mpa_verticalid($select=mpa_verticalname,mpa_verticalcode),mpa_channelid($select=mpa_channelname,mpa_channelcod"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "SuccessResponse": {
+          "runAfter": {
+            "GetBenchmarks": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9e3407ff-c083-47c5-8a4f-32ec12ba93eb"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "Success",
+              "count": "@length(outputs('GetBenchmarks')?['body/value'])",
+              "benchmarks": "@outputs('GetBenchmarks')?['body/value']",
+              "query": {
+                "vertical_id": "@{triggerBody()?['vertical_id']}",
+                "vertical_code": "@{triggerBody()?['vertical_code']}",
+                "channel_id": "@{triggerBody()?['channel_id']}",
+                "channel_code": "@{triggerBody()?['channel_code']}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

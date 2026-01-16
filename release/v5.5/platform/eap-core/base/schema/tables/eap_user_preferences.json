@@ -1,0 +1,25 @@
+{
+  "schemaName": "eap_user_preferences",
+  "displayName": "User Preferences",
+  "pluralName": "User Preferences",
+  "description": "User preference values",
+  "tier": 2,
+  "category": "Personalization",
+  "primaryKey": "user_preference_id",
+  "primaryNameColumn": "user_preference_id",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "user_preference_id", "displayName": "User Preference ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "User" },
+    { "schemaName": "preference_code", "displayName": "Preference Code", "dataType": "Text", "maxLength": 50, "required": true, "description": "Preference code reference" },
+    { "schemaName": "preference_value", "displayName": "Preference Value", "dataType": "Text", "maxLength": 500, "required": true, "description": "Preference value" },
+    { "schemaName": "value_type", "displayName": "Value Type", "dataType": "Choice", "required": true, "options": ["String", "Number", "Boolean", "JSON"], "description": "Value data type" },
+    { "schemaName": "source", "displayName": "Source", "dataType": "Choice", "required": true, "defaultValue": "UserSet", "options": ["Default", "UserSet", "AdminSet", "Inferred"], "description": "How value was set" },
+    { "schemaName": "last_modified_date", "displayName": "Last Modified", "dataType": "DateTime", "required": true, "description": "When last changed" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" }
+  ],
+  "indexes": [
+    { "name": "idx_user_preference", "columns": ["user_id", "preference_code"], "unique": true },
+    { "name": "idx_user", "columns": ["user_id"], "unique": false }
+  ]
+}

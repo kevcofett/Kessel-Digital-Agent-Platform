@@ -56,7 +56,7 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "entityName": "mpa_mediaplan",
+              "entityName": "mpa_mediaplans",
               "recordId": "@triggerBody()?['plan_id']"
             }
           },
@@ -71,7 +71,7 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "entityName": "mpa_plandata",
+              "entityName": "mpa_plandatas",
               "$filter": "mpa_plan_id eq '@{triggerBody()?['plan_id']}'"
             }
           },
@@ -167,7 +167,7 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "entityName": "mpa_errorlog",
+              "entityName": "mpa_errorlogs",
               "item": {
                 "mpa_error_type": "FlowError",
                 "mpa_error_message": "@variables('varErrorMessage')",

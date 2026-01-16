@@ -1,0 +1,30 @@
+{
+  "schemaName": "eap_agent_features",
+  "displayName": "Agent Features",
+  "pluralName": "Agent Features",
+  "description": "Feature definitions for agents",
+  "tier": 3,
+  "featureGate": "MULTI_AGENT",
+  "category": "MultiAgent",
+  "primaryKey": "feature_id",
+  "primaryNameColumn": "feature_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "feature_id", "displayName": "Feature ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "feature_code", "displayName": "Feature Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique feature code" },
+    { "schemaName": "feature_name", "displayName": "Feature Name", "dataType": "Text", "maxLength": 100, "required": true, "description": "Feature display name" },
+    { "schemaName": "feature_category", "displayName": "Feature Category", "dataType": "Choice", "required": true, "options": ["Core", "Proactive", "Integration", "Output", "Advanced"], "description": "Feature category" },
+    { "schemaName": "description", "displayName": "Description", "dataType": "Text", "maxLength": 500, "required": false, "description": "Feature description" },
+    { "schemaName": "is_premium", "displayName": "Is Premium", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Premium feature flag" },
+    { "schemaName": "requires_integration", "displayName": "Requires Integration", "dataType": "Text", "maxLength": 100, "required": false, "description": "Required integration" },
+    { "schemaName": "default_enabled", "displayName": "Default Enabled", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Enabled by default" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "sort_order", "displayName": "Sort Order", "dataType": "WholeNumber", "required": false, "description": "Display order" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": true, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_feature_code", "columns": ["feature_code"], "unique": true },
+    { "name": "idx_category", "columns": ["feature_category"], "unique": false }
+  ]
+}

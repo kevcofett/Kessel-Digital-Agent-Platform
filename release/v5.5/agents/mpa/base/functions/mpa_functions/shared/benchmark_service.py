@@ -19,7 +19,7 @@ class BenchmarkService:
     """Service for retrieving benchmark data from Dataverse."""
 
     # Table name in Dataverse
-    TABLE_NAME = "new_advertisingbenchmark"
+    TABLE_NAME = "mpa_benchmark"
 
     def __init__(self, dataverse_client: Optional[DataverseClient] = None):
         self.client = dataverse_client or DataverseClient()
@@ -54,7 +54,7 @@ class BenchmarkService:
         filters = [
             f"mpa_vertical eq '{sanitize_odata_string(vertical)}'",
             f"mpa_metric_type eq '{sanitize_odata_string(metric_type)}'",
-            "mpa_is_active eq true"
+            "mpa_isactive eq true"
         ]
 
         if channel:
@@ -126,7 +126,7 @@ class BenchmarkService:
         filters = [
             f"mpa_channel eq '{sanitize_odata_string(channel)}'",
             f"mpa_vertical eq '{sanitize_odata_string(vertical)}'",
-            "mpa_is_active eq true"
+            "mpa_isactive eq true"
         ]
 
         filter_query = join_filters(filters)
@@ -179,7 +179,7 @@ class BenchmarkService:
 
         filters = [
             f"mpa_vertical eq '{sanitize_odata_string(vertical)}'",
-            "mpa_is_active eq true",
+            "mpa_isactive eq true",
             "mpa_channel eq null"  # Aggregate records have no channel
         ]
 
@@ -226,7 +226,7 @@ class BenchmarkService:
         if metric_type:
             filters.append(f"mpa_metric_type eq '{sanitize_odata_string(metric_type)}'")
         if not include_inactive:
-            filters.append("mpa_is_active eq true")
+            filters.append("mpa_isactive eq true")
 
         filter_query = join_filters(filters) if filters else None
 
@@ -254,7 +254,7 @@ class BenchmarkService:
         try:
             results = self.client.query_records(
                 table_name=self.TABLE_NAME,
-                filter_query="mpa_is_active eq true",
+                filter_query="mpa_isactive eq true",
                 select=["mpa_vertical"]
             )
 

@@ -1,0 +1,107 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "flowName": "MPA_TrackKBUsage",
+    "flowNumber": "13",
+    "displayName": "MPA - Track KB Usage",
+    "description": "Track which KB files are retrieved during response generation (before feedback)",
+    "version": "1.0.0",
+    "author": "Phase 10 Implementation",
+    "createdDate": "2026-01-12",
+    "tables": ["mpa_kb_usage"],
+    "azureFunctions": []
+  },
+  "trigger": {
+    "type": "Request",
+    "kind": "Http",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "session_id": {"type": "string"},
+        "kb_files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "file_name": {"type": "string"},
+              "relevance_score": {"type": "number"}
+            },
+            "required": ["file_name"]
+          }
+        },
+        "query_text": {"type": "string"},
+        "agent_type": {"type": "string", "enum": ["MPA", "CA", "EAP"]}
+      },
+      "required": ["kb_files", "agent_type"]
+    }
+  },
+  "variables": [
+    {"name": "varAgentTypeCode", "type": "Integer", "value": 100000000},
+    {"name": "varFilesTracked", "type": "Integer", "value": 0}
+  ],
+  "actions": {
+    "Switch_Agent_Type": {
+      "type": "Switch",
+      "expression": "@triggerBody()?['agent_type']",
+      "cases": {
+        "MPA": {"case": "MPA", "actions": {"Set_MPA": {"type": "SetVariable", "inputs": {"name": "varAgentTypeCode", "value": 100000000}}}},
+        "CA": {"case": "CA", "actions": {"Set_CA": {"type": "SetVariable", "inputs": {"name": "varAgentTypeCode", "value": 100000001}}}},
+        "EAP": {"case": "EAP", "actions": {"Set_EAP": {"type": "SetVariable", "inputs": {"name": "varAgentTypeCode", "value": 100000002}}}}
+      },
+      "default": {"actions": {}},
+      "runAfter": {}
+    },
+    "For_Each_KB_File": {
+      "type": "Foreach",
+      "foreach": "@triggerBody()?['kb_files']",
+      "actions": {
+        "Create_Usage_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_kb_usages",
+              "item": {
+                "mpa_kb_file_name": "@items('For_Each_KB_File')?['file_name']",
+                "mpa_session_id": "@triggerBody()?['session_id']",
+                "mpa_query_text": "@triggerBody()?['query_text']",
+                "mpa_relevance_score": "@coalesce(items('For_Each_KB_File')?['relevance_score'], 0)",
+                "mpa_feedback_received": 100000000,
+                "mpa_agent_type": "@variables('varAgentTypeCode')",
+                "mpa_used_at": "@utcNow()"
+              }
+            }
+          }
+        },
+        "Increment_Counter": {
+          "type": "IncrementVariable",
+          "inputs": {"name": "varFilesTracked", "value": 1},
+          "runAfter": {"Create_Usage_Record": ["Succeeded"]}
+        }
+      },
+      "runtimeConfiguration": {"concurrency": {"repetitions": 10}},
+      "runAfter": {"Switch_Agent_Type": ["Succeeded"]}
+    },
+    "Response_Success": {
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "headers": {"Content-Type": "application/json"},
+        "body": {"status": "Success", "files_tracked": "@variables('varFilesTracked')"}
+      },
+      "runAfter": {"For_Each_KB_File": ["Succeeded"]}
+    }
+  },
+  "connectionReferences": {
+    "shared_commondataserviceforapps": {
+      "connectionName": "shared_commondataserviceforapps",
+      "source": "Embedded",
+      "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+      "tier": "Standard"
+    }
+  }
+}

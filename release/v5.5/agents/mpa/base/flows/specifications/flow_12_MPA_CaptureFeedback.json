@@ -1,0 +1,174 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "metadata": {
+    "flowName": "MPA_CaptureFeedback",
+    "flowNumber": "12",
+    "displayName": "MPA - Capture User Feedback",
+    "description": "Capture and store user feedback for self-learning. Shared across MPA, CA, EAP agents.",
+    "version": "1.0.0",
+    "author": "Phase 10 Implementation",
+    "createdDate": "2026-01-12",
+    "tables": ["mpa_feedback", "mpa_kb_usage"],
+    "azureFunctions": []
+  },
+  "trigger": {
+    "type": "Request",
+    "kind": "Http",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "session_id": {"type": "string", "description": "Session ID from eap_session"},
+        "message_id": {"type": "string", "description": "Optional message identifier"},
+        "feedback_type": {"type": "string", "enum": ["POSITIVE", "NEGATIVE", "NEUTRAL", "CORRECTION"]},
+        "feedback_text": {"type": "string", "description": "Optional explanation"},
+        "kb_files_used": {"type": "array", "items": {"type": "string"}, "description": "KB files referenced"},
+        "agent_response": {"type": "string", "description": "The response being rated"},
+        "user_query": {"type": "string", "description": "Original user message"},
+        "agent_type": {"type": "string", "enum": ["MPA", "CA", "EAP"]}
+      },
+      "required": ["session_id", "feedback_type", "agent_type"]
+    }
+  },
+  "variables": [
+    {"name": "varFeedbackTypeCode", "type": "Integer", "value": 100000000},
+    {"name": "varAgentTypeCode", "type": "Integer", "value": 100000000},
+    {"name": "varSuccess", "type": "Boolean", "value": true},
+    {"name": "varErrorMessage", "type": "String", "value": ""}
+  ],
+  "actions": {
+    "Scope_Try": {
+      "type": "Scope",
+      "actions": {
+        "Switch_Feedback_Type": {
+          "type": "Switch",
+          "expression": "@triggerBody()?['feedback_type']",
+          "cases": {
+            "POSITIVE": {"case": "POSITIVE", "actions": {"Set_Feedback_Positive": {"type": "SetVariable", "inputs": {"name": "varFeedbackTypeCode", "value": 100000000}}}},
+            "NEGATIVE": {"case": "NEGATIVE", "actions": {"Set_Feedback_Negative": {"type": "SetVariable", "inputs": {"name": "varFeedbackTypeCode", "value": 100000001}}}},
+            "NEUTRAL": {"case": "NEUTRAL", "actions": {"Set_Feedback_Neutral": {"type": "SetVariable", "inputs": {"name": "varFeedbackTypeCode", "value": 100000002}}}},
+            "CORRECTION": {"case": "CORRECTION", "actions": {"Set_Feedback_Correction": {"type": "SetVariable", "inputs": {"name": "varFeedbackTypeCode", "value": 100000003}}}}
+          },
+          "default": {"actions": {}},
+          "runAfter": {}
+        },
+        "Switch_Agent_Type": {
+          "type": "Switch",
+          "expression": "@triggerBody()?['agent_type']",
+          "cases": {
+            "MPA": {"case": "MPA", "actions": {"Set_Agent_MPA": {"type": "SetVariable", "inputs": {"name": "varAgentTypeCode", "value": 100000000}}}},
+            "CA": {"case": "CA", "actions": {"Set_Agent_CA": {"type": "SetVariable", "inputs": {"name": "varAgentTypeCode", "value": 100000001}}}},
+            "EAP": {"case": "EAP", "actions": {"Set_Agent_EAP": {"type": "SetVariable", "inputs": {"name": "varAgentTypeCode", "value": 100000002}}}}
+          },
+          "default": {"actions": {}},
+          "runAfter": {"Switch_Feedback_Type": ["Succeeded"]}
+        },
+        "Create_Feedback_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_feedbacks",
+              "item": {
+                "mpa_session_id": "@triggerBody()?['session_id']",
+                "mpa_message_id": "@triggerBody()?['message_id']",
+                "mpa_feedback_type": "@variables('varFeedbackTypeCode')",
+                "mpa_feedback_text": "@triggerBody()?['feedback_text']",
+                "mpa_user_query": "@triggerBody()?['user_query']",
+                "mpa_agent_response": "@triggerBody()?['agent_response']",
+                "mpa_kb_files_used": "@if(empty(triggerBody()?['kb_files_used']), null, string(triggerBody()?['kb_files_used']))",
+                "mpa_agent_type": "@variables('varAgentTypeCode')",
+                "mpa_created_at": "@utcNow()"
+              }
+            }
+          },
+          "runAfter": {"Switch_Agent_Type": ["Succeeded"]}
+        },
+        "Condition_Has_KB_Files": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {"not": {"equals": ["@triggerBody()?['kb_files_used']", null]}},
+              {"greater": ["@length(coalesce(triggerBody()?['kb_files_used'], json('[]')))", 0]}
+            ]
+          },
+          "actions": {
+            "For_Each_KB_File": {
+              "type": "Foreach",
+              "foreach": "@triggerBody()?['kb_files_used']",
+              "actions": {
+                "Create_KB_Usage_Record": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "CreateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "mpa_kb_usages",
+                      "item": {
+                        "mpa_kb_file_name": "@items('For_Each_KB_File')",
+                        "mpa_session_id": "@triggerBody()?['session_id']",
+                        "mpa_query_text": "@triggerBody()?['user_query']",
+                        "mpa_feedback_received": "@if(equals(variables('varFeedbackTypeCode'), 100000000), 100000001, if(equals(variables('varFeedbackTypeCode'), 100000001), 100000002, 100000000))",
+                        "mpa_agent_type": "@variables('varAgentTypeCode')",
+                        "mpa_used_at": "@utcNow()"
+                      }
+                    }
+                  }
+                }
+              },
+              "runtimeConfiguration": {"concurrency": {"repetitions": 5}}
+            }
+          },
+          "else": {"actions": {}},
+          "runAfter": {"Create_Feedback_Record": ["Succeeded"]}
+        },
+        "Response_Success": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {"Content-Type": "application/json"},
+            "body": {
+              "status": "Success",
+              "feedback_id": "@outputs('Create_Feedback_Record')?['body/mpa_feedbackid']",
+              "kb_files_tracked": "@length(coalesce(triggerBody()?['kb_files_used'], json('[]')))"
+            }
+          },
+          "runAfter": {"Condition_Has_KB_Files": ["Succeeded", "Skipped"]}
+        }
+      }
+    },
+    "Scope_Catch": {
+      "type": "Scope",
+      "runAfter": {"Scope_Try": ["Failed", "TimedOut"]},
+      "actions": {
+        "Set_Error": {
+          "type": "SetVariable",
+          "inputs": {"name": "varErrorMessage", "value": "@{result('Scope_Try')}"}
+        },
+        "Response_Error": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 500,
+            "headers": {"Content-Type": "application/json"},
+            "body": {"status": "Error", "message": "Failed to capture feedback", "details": "@variables('varErrorMessage')"}
+          },
+          "runAfter": {"Set_Error": ["Succeeded"]}
+        }
+      }
+    }
+  },
+  "connectionReferences": {
+    "shared_commondataserviceforapps": {
+      "connectionName": "shared_commondataserviceforapps",
+      "source": "Embedded",
+      "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+      "tier": "Standard"
+    }
+  }
+}

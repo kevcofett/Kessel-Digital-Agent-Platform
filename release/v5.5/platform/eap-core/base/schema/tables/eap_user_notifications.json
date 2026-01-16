@@ -1,0 +1,32 @@
+{
+  "schemaName": "eap_user_notifications",
+  "displayName": "User Notification",
+  "pluralName": "User Notifications",
+  "description": "Notifications delivered to users",
+  "tier": 2,
+  "featureGate": null,
+  "category": "Communication",
+  "primaryKey": "notification_id",
+  "primaryNameColumn": "notification_title",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "notification_id", "displayName": "Notification ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Target user" },
+    { "schemaName": "notification_type", "displayName": "Notification Type", "dataType": "Choice", "required": true, "options": ["Info", "Success", "Warning", "Error", "Action", "Mention"], "description": "Type" },
+    { "schemaName": "notification_title", "displayName": "Title", "dataType": "Text", "maxLength": 200, "required": true, "description": "Notification title" },
+    { "schemaName": "notification_body", "displayName": "Body", "dataType": "MultilineText", "required": false, "description": "Full message" },
+    { "schemaName": "source_entity_type", "displayName": "Source Type", "dataType": "Text", "maxLength": 100, "required": false, "description": "Source entity type" },
+    { "schemaName": "source_entity_id", "displayName": "Source ID", "dataType": "UniqueIdentifier", "required": false, "description": "Source entity ID" },
+    { "schemaName": "action_url", "displayName": "Action URL", "dataType": "Text", "maxLength": 1000, "required": false, "description": "Action link" },
+    { "schemaName": "action_label", "displayName": "Action Label", "dataType": "Text", "maxLength": 50, "required": false, "description": "Action button text" },
+    { "schemaName": "is_read", "displayName": "Is Read", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Has been read" },
+    { "schemaName": "read_date", "displayName": "Read Date", "dataType": "DateTime", "required": false, "description": "When read" },
+    { "schemaName": "is_dismissed", "displayName": "Is Dismissed", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Has been dismissed" },
+    { "schemaName": "expires_date", "displayName": "Expires Date", "dataType": "DateTime", "required": false, "description": "Expiration" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" }
+  ],
+  "indexes": [
+    { "name": "idx_user_unread", "columns": ["user_id", "is_read", "is_dismissed"], "unique": false },
+    { "name": "idx_created", "columns": ["created_date"], "unique": false }
+  ]
+}

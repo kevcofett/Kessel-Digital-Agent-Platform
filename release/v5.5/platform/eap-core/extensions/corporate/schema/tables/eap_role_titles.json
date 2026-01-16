@@ -1,0 +1,144 @@
+{
+  "schemaName": "eap_role_titles",
+  "displayName": "Role Titles",
+  "pluralName": "Role Titles",
+  "description": "Role titles by business unit, mapped to role levels",
+  "tier": 1,
+  "category": "Roles",
+  "primaryKey": "role_title_id",
+  "primaryNameColumn": "title_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    {
+      "schemaName": "role_title_id",
+      "displayName": "Role Title ID",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Primary key"
+    },
+    {
+      "schemaName": "title_code",
+      "displayName": "Title Code",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique title code"
+    },
+    {
+      "schemaName": "title_name",
+      "displayName": "Title Name",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Title display name"
+    },
+    {
+      "schemaName": "role_level_id",
+      "displayName": "Role Level",
+      "dataType": "Lookup",
+      "lookupTable": "eap_role_levels",
+      "required": true,
+      "description": "Associated level"
+    },
+    {
+      "schemaName": "business_unit_id",
+      "displayName": "Business Unit",
+      "dataType": "Lookup",
+      "lookupTable": "eap_business_units",
+      "required": false,
+      "description": "BU-specific (null = platform-wide)"
+    },
+    {
+      "schemaName": "division_id",
+      "displayName": "Division",
+      "dataType": "Lookup",
+      "lookupTable": "eap_divisions",
+      "required": false,
+      "description": "Division-specific"
+    },
+    {
+      "schemaName": "title_family",
+      "displayName": "Title Family",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": false,
+      "description": "Title family (Consulting, Technical, etc.)"
+    },
+    {
+      "schemaName": "is_platform_default",
+      "displayName": "Is Platform Default",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Platform default title"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Active status"
+    },
+    {
+      "schemaName": "sort_order",
+      "displayName": "Sort Order",
+      "dataType": "WholeNumber",
+      "required": false,
+      "description": "Display order"
+    },
+    {
+      "schemaName": "created_date",
+      "displayName": "Created Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Record created"
+    },
+    {
+      "schemaName": "created_by",
+      "displayName": "Created By",
+      "dataType": "Lookup",
+      "lookupTable": "eap_user",
+      "required": true,
+      "description": "Creator"
+    },
+    {
+      "schemaName": "modified_date",
+      "displayName": "Modified Date",
+      "dataType": "DateTime",
+      "required": true,
+      "description": "Last modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_title_code",
+      "columns": ["title_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_role_level_id",
+      "columns": ["role_level_id"],
+      "unique": false
+    },
+    {
+      "name": "idx_business_unit_id",
+      "columns": ["business_unit_id"],
+      "unique": false
+    }
+  ],
+  "seedData": [
+    { "title_code": "ANALYST", "title_name": "Analyst", "level_code": "L7", "title_family": "Consulting", "is_platform_default": true },
+    { "title_code": "SR_ANALYST", "title_name": "Senior Analyst", "level_code": "L6", "title_family": "Consulting", "is_platform_default": true },
+    { "title_code": "ASSOC_CONSULTANT", "title_name": "Associate Consultant", "level_code": "L6", "title_family": "Consulting", "is_platform_default": true },
+    { "title_code": "CONSULTANT", "title_name": "Consultant", "level_code": "L5", "title_family": "Consulting", "is_platform_default": true },
+    { "title_code": "MGG_CONSULTANT", "title_name": "Managing Consultant", "level_code": "L5", "title_family": "Consulting", "is_platform_default": true },
+    { "title_code": "PRINCIPAL", "title_name": "Principal", "level_code": "L4", "title_family": "Consulting", "is_platform_default": true },
+    { "title_code": "SR_PRINCIPAL", "title_name": "Senior Principal", "level_code": "L4", "title_family": "Consulting", "is_platform_default": true },
+    { "title_code": "VP", "title_name": "Vice President", "level_code": "L3", "title_family": "Executive", "is_platform_default": true },
+    { "title_code": "SVP", "title_name": "Senior Vice President", "level_code": "L2", "title_family": "Executive", "is_platform_default": true },
+    { "title_code": "EVP", "title_name": "Executive Vice President", "level_code": "L2", "title_family": "Executive", "is_platform_default": true },
+    { "title_code": "C_SUITE", "title_name": "C-Suite", "level_code": "L1", "title_family": "Executive", "is_platform_default": true }
+  ]
+}

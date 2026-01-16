@@ -1,0 +1,33 @@
+{
+  "schemaName": "eap_scoped_context_rules",
+  "displayName": "Scoped Context Rule",
+  "pluralName": "Scoped Context Rules",
+  "description": "Rules for applying scoped context based on conditions",
+  "tier": 3,
+  "featureGate": "SCOPED_CONTEXT",
+  "category": "Configuration",
+  "primaryKey": "rule_id",
+  "primaryNameColumn": "rule_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "rule_id", "displayName": "Rule ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "rule_code", "displayName": "Rule Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique rule code" },
+    { "schemaName": "rule_name", "displayName": "Rule Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Rule display name" },
+    { "schemaName": "scope_type", "displayName": "Scope Type", "dataType": "Choice", "required": true, "options": ["Client", "Industry", "Region", "Agent", "User", "Role"], "description": "Type of scope" },
+    { "schemaName": "scope_entity_id", "displayName": "Scope Entity ID", "dataType": "UniqueIdentifier", "required": false, "description": "Specific entity (null for all)" },
+    { "schemaName": "condition_json", "displayName": "Condition", "dataType": "MultilineText", "required": false, "description": "Additional conditions JSON" },
+    { "schemaName": "context_additions_json", "displayName": "Context Additions", "dataType": "MultilineText", "required": true, "description": "Context to add JSON" },
+    { "schemaName": "context_exclusions_json", "displayName": "Context Exclusions", "dataType": "MultilineText", "required": false, "description": "Context to exclude JSON" },
+    { "schemaName": "priority", "displayName": "Priority", "dataType": "WholeNumber", "required": true, "defaultValue": 100, "description": "Rule priority (lower first)" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "effective_start", "displayName": "Effective Start", "dataType": "DateTime", "required": false, "description": "When rule starts" },
+    { "schemaName": "effective_end", "displayName": "Effective End", "dataType": "DateTime", "required": false, "description": "When rule ends" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_rule_code", "columns": ["rule_code"], "unique": true },
+    { "name": "idx_scope", "columns": ["scope_type", "scope_entity_id"], "unique": false },
+    { "name": "idx_priority", "columns": ["priority"], "unique": false }
+  ]
+}

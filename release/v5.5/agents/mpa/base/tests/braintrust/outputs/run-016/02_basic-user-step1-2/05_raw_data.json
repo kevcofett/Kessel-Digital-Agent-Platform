@@ -1,0 +1,213 @@
+{
+  "scenario": {
+    "id": "basic-user-step1-2",
+    "name": "Basic User - Steps 1-2 Completion",
+    "persona": "basic-shoe-retailer"
+  },
+  "result": {
+    "compositeScore": 0.9169399999999999,
+    "passed": true,
+    "totalTurns": 5,
+    "stepsCompleted": [
+      1,
+      2
+    ],
+    "turnsPerStep": {
+      "1": 2,
+      "2": 3
+    },
+    "failures": {
+      "warnings": [
+        {
+          "id": "overwhelming-questions",
+          "description": "Agent asks about LTV, margin, ROAS to basic user",
+          "type": "custom_pattern",
+          "detectionPattern": "what is your LTV|lifetime value|profit margin|ROAS target",
+          "severity": "warning",
+          "scorePenalty": 0.05,
+          "terminateOnDetect": false
+        }
+      ],
+      "major": [],
+      "critical": []
+    },
+    "primeDirective": {
+      "planQualityScore": 0.9760000000000001,
+      "dataCompleteness": 1,
+      "feasibilityAssessment": 1,
+      "riskIdentification": 1,
+      "mentorshipScore": 0.9349999999999999,
+      "explanationClarity": 0.8800000000000001,
+      "calculationTransparency": 1,
+      "userGrowth": 0.95,
+      "turnsPerDirectiveAchievement": 5.2328623757195185,
+      "tokensPerInsight": 14216.5,
+      "stepsPerDecisionPoint": 2.5,
+      "combinedEfficiency": 0.9733
+    }
+  },
+  "turnScoreAggregates": {
+    "response-length": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "single-question": {
+      "min": 0.8,
+      "max": 1,
+      "mean": 0.8800000000000001,
+      "median": 0.8,
+      "scores": [
+        0.8,
+        0.8,
+        1,
+        0.8,
+        1
+      ]
+    },
+    "step-boundary": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "source-citation": {
+      "min": 0.8,
+      "max": 1,
+      "mean": 0.8800000000000001,
+      "median": 0.8,
+      "scores": [
+        1,
+        1,
+        0.8,
+        0.8,
+        0.8
+      ]
+    },
+    "acronym-definition": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "idk-protocol": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "calculation-presence": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "adaptive-sophistication": {
+      "min": 0.6,
+      "max": 1,
+      "mean": 0.8800000000000001,
+      "median": 1,
+      "scores": [
+        0.6,
+        1,
+        1,
+        1,
+        0.8
+      ]
+    },
+    "proactive-intelligence": {
+      "min": 0.5,
+      "max": 1,
+      "mean": 0.9,
+      "median": 1,
+      "scores": [
+        1,
+        0.5,
+        1,
+        1,
+        1
+      ]
+    },
+    "progress-over-perfection": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "risk-opportunity-flagging": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  },
+  "conversationScores": {
+    "step-completion-rate": 1,
+    "conversation-efficiency": 1,
+    "context-retention": 1,
+    "greeting-uniqueness": 1,
+    "loop-detection": 1,
+    "failure-penalty": 0.95,
+    "step-transition-quality": 1,
+    "overall-coherence": 1
+  },
+  "executionMetadata": {
+    "startTime": 1768145076341,
+    "endTime": 1768145123463,
+    "totalDurationMs": 47122,
+    "averageLatencyMs": 8627.2,
+    "totalTokensUsed": 28433,
+    "modelUsed": "claude-sonnet-4-20250514",
+    "promptVersion": "v5_7_5"
+  }
+}

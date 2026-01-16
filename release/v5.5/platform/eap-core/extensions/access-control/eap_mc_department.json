@@ -1,0 +1,109 @@
+{
+  "schemaName": "eap_mc_department",
+  "displayName": "Department",
+  "pluralName": "Departments",
+  "description": "Department within a business unit for row-level security hierarchy",
+  "primaryColumn": "name",
+  "ownershipType": "OrganizationOwned",
+  "tableType": "Standard",
+  "columns": [
+    {
+      "schemaName": "department_id",
+      "displayName": "Department ID",
+      "type": "Text",
+      "format": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Unique identifier for the department"
+    },
+    {
+      "schemaName": "businessunit_id",
+      "displayName": "Business Unit",
+      "type": "Lookup",
+      "target": "eap_mc_businessunit",
+      "required": true,
+      "description": "Parent business unit"
+    },
+    {
+      "schemaName": "name",
+      "displayName": "Name",
+      "type": "Text",
+      "format": "Text",
+      "maxLength": 200,
+      "required": true,
+      "description": "Department display name"
+    },
+    {
+      "schemaName": "code",
+      "displayName": "Code",
+      "type": "Text",
+      "format": "Text",
+      "maxLength": 20,
+      "required": true,
+      "description": "Short code for the department"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "type": "Text",
+      "format": "TextArea",
+      "maxLength": 2000,
+      "required": false,
+      "description": "Department description"
+    },
+    {
+      "schemaName": "leader_email",
+      "displayName": "Leader Email",
+      "type": "Text",
+      "format": "Email",
+      "maxLength": 200,
+      "required": false,
+      "description": "Email of department leader"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "type": "Boolean",
+      "default": true,
+      "required": false,
+      "description": "Whether this department is active"
+    },
+    {
+      "schemaName": "created_at",
+      "displayName": "Created At",
+      "type": "DateTime",
+      "format": "DateAndTime",
+      "required": false,
+      "description": "Record creation timestamp"
+    },
+    {
+      "schemaName": "modified_at",
+      "displayName": "Modified At",
+      "type": "DateTime",
+      "format": "DateAndTime",
+      "required": false,
+      "description": "Record last modification timestamp"
+    }
+  ],
+  "relationships": [
+    {
+      "name": "businessunit_departments",
+      "type": "ManyToOne",
+      "relatedTable": "eap_mc_businessunit",
+      "relatedColumn": "businessunit_id",
+      "cascadeDelete": "RemoveLink"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_department_code",
+      "columns": ["code"],
+      "unique": true
+    },
+    {
+      "name": "idx_department_businessunit",
+      "columns": ["businessunit_id"],
+      "unique": false
+    }
+  ]
+}

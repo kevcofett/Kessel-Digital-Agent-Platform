@@ -1,0 +1,35 @@
+{
+  "schemaName": "ca_deliverables",
+  "displayName": "Deliverable",
+  "pluralName": "Deliverables",
+  "description": "Generated consulting deliverables",
+  "tier": 2,
+  "featureGate": null,
+  "category": "Consulting",
+  "primaryKey": "deliverable_id",
+  "primaryNameColumn": "deliverable_name",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "deliverable_id", "displayName": "Deliverable ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "session_id", "displayName": "Session", "dataType": "Lookup", "lookupTable": "eap_session", "required": true, "description": "Source session" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Creator" },
+    { "schemaName": "client_id", "displayName": "Client", "dataType": "Lookup", "lookupTable": "eap_client", "required": false, "description": "Associated client" },
+    { "schemaName": "deliverable_name", "displayName": "Deliverable Name", "dataType": "Text", "maxLength": 500, "required": true, "description": "Display name" },
+    { "schemaName": "deliverable_type", "displayName": "Deliverable Type", "dataType": "Choice", "required": true, "options": ["Presentation", "Report", "ExecutiveSummary", "Memo", "Email", "Proposal", "Custom"], "description": "Type" },
+    { "schemaName": "output_type_id", "displayName": "Output Type", "dataType": "Lookup", "lookupTable": "eap_output_types", "required": false, "description": "Standard output type" },
+    { "schemaName": "content", "displayName": "Content", "dataType": "MultilineText", "required": true, "description": "Full content" },
+    { "schemaName": "format", "displayName": "Format", "dataType": "Choice", "required": true, "defaultValue": "Markdown", "options": ["Markdown", "HTML", "PlainText", "JSON"], "description": "Content format" },
+    { "schemaName": "source_analyses_json", "displayName": "Source Analyses", "dataType": "MultilineText", "required": false, "description": "Source analysis IDs JSON" },
+    { "schemaName": "source_recommendations_json", "displayName": "Source Recommendations", "dataType": "MultilineText", "required": false, "description": "Source rec IDs JSON" },
+    { "schemaName": "word_count", "displayName": "Word Count", "dataType": "WholeNumber", "required": false, "description": "Word count" },
+    { "schemaName": "status", "displayName": "Status", "dataType": "Choice", "required": true, "defaultValue": "Draft", "options": ["Draft", "InReview", "Final", "Delivered"], "description": "Status" },
+    { "schemaName": "version", "displayName": "Version", "dataType": "WholeNumber", "required": true, "defaultValue": 1, "description": "Version number" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_session", "columns": ["session_id"], "unique": false },
+    { "name": "idx_client", "columns": ["client_id"], "unique": false },
+    { "name": "idx_type", "columns": ["deliverable_type"], "unique": false }
+  ]
+}

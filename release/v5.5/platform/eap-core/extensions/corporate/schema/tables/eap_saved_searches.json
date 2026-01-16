@@ -1,0 +1,31 @@
+{
+  "schemaName": "eap_saved_searches",
+  "displayName": "Saved Search",
+  "pluralName": "Saved Searches",
+  "description": "User saved search queries",
+  "tier": 2,
+  "featureGate": null,
+  "category": "Personalization",
+  "primaryKey": "search_id",
+  "primaryNameColumn": "search_name",
+  "ownershipType": "UserOwned",
+  "columns": [
+    { "schemaName": "search_id", "displayName": "Search ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "user_id", "displayName": "User", "dataType": "Lookup", "lookupTable": "eap_user", "required": true, "description": "Owner user" },
+    { "schemaName": "search_name", "displayName": "Search Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Display name" },
+    { "schemaName": "search_type", "displayName": "Search Type", "dataType": "Choice", "required": true, "options": ["Knowledge", "Session", "Client", "Output", "Custom"], "description": "Type of search" },
+    { "schemaName": "query_text", "displayName": "Query Text", "dataType": "Text", "maxLength": 1000, "required": false, "description": "Search text" },
+    { "schemaName": "filters_json", "displayName": "Filters", "dataType": "MultilineText", "required": false, "description": "Search filters JSON" },
+    { "schemaName": "sort_config_json", "displayName": "Sort Config", "dataType": "MultilineText", "required": false, "description": "Sort config JSON" },
+    { "schemaName": "agent_id", "displayName": "Agent", "dataType": "Lookup", "lookupTable": "eap_agent", "required": false, "description": "Agent scope" },
+    { "schemaName": "use_count", "displayName": "Use Count", "dataType": "WholeNumber", "required": true, "defaultValue": 0, "description": "Times used" },
+    { "schemaName": "last_used_date", "displayName": "Last Used", "dataType": "DateTime", "required": false, "description": "Last used" },
+    { "schemaName": "is_pinned", "displayName": "Is Pinned", "dataType": "Boolean", "required": true, "defaultValue": false, "description": "Pinned to top" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_user", "columns": ["user_id"], "unique": false },
+    { "name": "idx_type", "columns": ["search_type"], "unique": false }
+  ]
+}

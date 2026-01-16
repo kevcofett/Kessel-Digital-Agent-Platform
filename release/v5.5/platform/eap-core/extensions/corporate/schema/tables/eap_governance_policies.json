@@ -1,0 +1,33 @@
+{
+  "schemaName": "eap_governance_policies",
+  "displayName": "Governance Policy",
+  "pluralName": "Governance Policies",
+  "description": "AI governance policies and controls",
+  "tier": 3,
+  "featureGate": "GOVERNANCE",
+  "category": "Governance",
+  "primaryKey": "policy_id",
+  "primaryNameColumn": "policy_name",
+  "ownershipType": "OrganizationOwned",
+  "columns": [
+    { "schemaName": "policy_id", "displayName": "Policy ID", "dataType": "UniqueIdentifier", "required": true, "description": "Primary key" },
+    { "schemaName": "policy_code", "displayName": "Policy Code", "dataType": "Text", "maxLength": 50, "required": true, "unique": true, "description": "Unique policy code" },
+    { "schemaName": "policy_name", "displayName": "Policy Name", "dataType": "Text", "maxLength": 200, "required": true, "description": "Policy display name" },
+    { "schemaName": "policy_type", "displayName": "Policy Type", "dataType": "Choice", "required": true, "options": ["DataHandling", "ContentGeneration", "AccessControl", "Usage", "Compliance", "Ethics"], "description": "Type of policy" },
+    { "schemaName": "policy_description", "displayName": "Description", "dataType": "MultilineText", "required": true, "description": "Full policy description" },
+    { "schemaName": "enforcement_level", "displayName": "Enforcement", "dataType": "Choice", "required": true, "defaultValue": "Warn", "options": ["Block", "Warn", "Log", "Advise"], "description": "Enforcement level" },
+    { "schemaName": "rules_json", "displayName": "Rules", "dataType": "MultilineText", "required": true, "description": "Policy rules JSON" },
+    { "schemaName": "applies_to_agents_json", "displayName": "Applies To Agents", "dataType": "MultilineText", "required": false, "description": "Agent IDs or 'all'" },
+    { "schemaName": "applies_to_roles_json", "displayName": "Applies To Roles", "dataType": "MultilineText", "required": false, "description": "Role IDs or 'all'" },
+    { "schemaName": "exceptions_json", "displayName": "Exceptions", "dataType": "MultilineText", "required": false, "description": "Policy exceptions JSON" },
+    { "schemaName": "is_active", "displayName": "Is Active", "dataType": "Boolean", "required": true, "defaultValue": true, "description": "Active status" },
+    { "schemaName": "effective_date", "displayName": "Effective Date", "dataType": "DateTime", "required": true, "description": "When policy takes effect" },
+    { "schemaName": "review_date", "displayName": "Review Date", "dataType": "DateTime", "required": false, "description": "Next review date" },
+    { "schemaName": "created_date", "displayName": "Created Date", "dataType": "DateTime", "required": true, "description": "Record created" },
+    { "schemaName": "modified_date", "displayName": "Modified Date", "dataType": "DateTime", "required": false, "description": "Last modified" }
+  ],
+  "indexes": [
+    { "name": "idx_policy_code", "columns": ["policy_code"], "unique": true },
+    { "name": "idx_policy_type", "columns": ["policy_type"], "unique": false }
+  ]
+}

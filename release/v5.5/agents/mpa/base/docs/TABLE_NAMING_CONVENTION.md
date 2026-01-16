@@ -16,11 +16,13 @@ This document defines the naming conventions for all Dataverse tables used by th
 ### Singular vs Plural
 
 - **Schema Name (Logical):** Singular - `mpa_mediaplan`, `eap_session`
-- **Entity Set Name (API):** Plural - `mpa_mediaplan`, `eap_session`
+- **Entity Set Name (API/Power Automate):** Plural - `mpa_mediaplans`, `eap_sessions`
 
-**Important:** When making Dataverse API calls:
-- Use **plural** form in `entityName` for list/query operations
-- Use **singular** form in references and relationships
+**Important:** When making Dataverse API calls or configuring Power Automate flows:
+
+- Use **plural** form in `entityName` parameter (e.g., `eap_sessions`, `mpa_mediaplans`)
+- The Entity Set Name is what Power Automate uses for all Dataverse operations
+- Relationships and column names remain singular (e.g., `mpa_session_id`, `_eap_clientid_value`)
 
 ## Complete Table Reference
 
@@ -30,10 +32,10 @@ MPA reads from but does not own these tables. Changes require EAP coordination.
 
 | Logical Name | Entity Set Name | Purpose | MPA Access |
 |--------------|-----------------|---------|------------|
-| eap_client | eap_client | Client organizations | Read |
-| eap_session | eap_session | User sessions (all agents share) | Read/Write |
-| eap_learning | eap_learning | Promoted learnings from all agents | Write (promote) |
-| eap_user | eap_user | User accounts | Read |
+| eap_client | eap_clients | Client organizations | Read |
+| eap_session | eap_sessions | User sessions (all agents share) | Read/Write |
+| eap_learning | eap_learnings | Promoted learnings from all agents | Write (promote) |
+| eap_user | eap_users | User accounts | Read |
 | eap_project | eap_projects | Client projects | Read |
 | eap_document | eap_documents | Generated documents | Read/Write |
 | eap_audit_log | eap_audit_logs | Audit trail | Write |
@@ -44,25 +46,25 @@ Core media planning functionality owned by MPA.
 
 | Logical Name | Entity Set Name | Purpose | Category |
 |--------------|-----------------|---------|----------|
-| mpa_mediaplan | mpa_mediaplan | Media plan records | Planning |
-| mpa_planversion | mpa_planversion | Plan version history | Planning |
-| mpa_plandata | mpa_plandata | Section data per step | Planning |
-| mpa_benchmark | mpa_benchmark | Industry benchmarks | Reference |
-| mpa_channel | mpa_channel | Channel definitions | Reference |
+| mpa_mediaplan | mpa_mediaplans | Media plan records | Planning |
+| mpa_planversion | mpa_planversions | Plan version history | Planning |
+| mpa_plandata | mpa_plandatas | Section data per step | Planning |
+| mpa_benchmark | mpa_benchmarks | Industry benchmarks | Reference |
+| mpa_channel | mpa_channels | Channel definitions | Reference |
 | mpa_audience | mpa_audiences | Target audience segments | Planning |
 | mpa_planchannel | mpa_planchannels | Plan-channel associations | Planning |
 | mpa_channelallocation | mpa_channelallocations | Budget allocation per channel | Planning |
-| mpa_adpartner | mpa_adpartner | Advertising partner registry | Reference |
-| mpa_planpartner | mpa_planpartner | Plan-partner associations | Planning |
-| mpa_campaignperformance | mpa_campaignperformance | Performance data | Analysis |
-| mpa_dataimportlog | mpa_dataimportlog | Data import tracking | Operations |
-| mpa_postmortemreport | mpa_postmortemreport | Post-campaign analysis | Analysis |
-| mpa_planlearning | mpa_planlearning | Plan-specific learnings | Learning |
+| mpa_adpartner | mpa_adpartners | Advertising partner registry | Reference |
+| mpa_planpartner | mpa_planpartners | Plan-partner associations | Planning |
+| mpa_campaignperformance | mpa_campaignperformances | Performance data | Analysis |
+| mpa_dataimportlog | mpa_dataimportlogs | Data import tracking | Operations |
+| mpa_postmortemreport | mpa_postmortemreports | Post-campaign analysis | Analysis |
+| mpa_planlearning | mpa_planlearnings | Plan-specific learnings | Learning |
 | mpa_formtemplate | mpa_formtemplates | Form templates for input | Reference |
-| mpa_user | mpa_useres | MPA user extensions | Core |
-| mpa_organizations | mpa_organizationses | Organization records | Core |
-| mpa_kpi | mpa_kpi | KPI definitions | Reference |
-| mpa_vertical | mpa_vertical | Industry verticals | Reference |
+| mpa_user | mpa_users | MPA user extensions | Core |
+| mpa_organization | mpa_organizations | Organization records | Core |
+| mpa_kpi | mpa_kpis | KPI definitions | Reference |
+| mpa_vertical | mpa_verticals | Industry verticals | Reference |
 
 ### MPA Additional Tables (8 Tables)
 
@@ -83,47 +85,50 @@ Extended functionality tables.
 
 ### Python (deploy_mpa_flows.py)
 
-The `CONFIG["tables"]` mapping provides logical-to-logical translation. When building flow definitions, append 's' for entity set names:
+The `CONFIG["tables"]` mapping provides logical-to-entity-set translation. Always use plural entity set names:
 
 ```python
-# In CONFIG
+# In CONFIG - map logical names to entity set names (plural)
 CONFIG = {
     "tables": {
-        "eap_client": "eap_client",
-        "mpa_mediaplan": "mpa_mediaplan",
+        "eap_client": "eap_clients",
+        "eap_session": "eap_sessions",
+        "mpa_mediaplan": "mpa_mediaplans",
+        "mpa_benchmark": "mpa_benchmarks",
         ...
     }
 }
 
-# In flow definition - use plural for entityName
-def get_entity_set_name(logical_name: str) -> str:
-    """Convert logical name to entity set name (add 's')."""
-    return f"{logical_name}s"
-
-# Example usage
-entity_name = get_entity_set_name(CONFIG["tables"]["mpa_mediaplan"])
-# Returns: "mpa_mediaplan"
+# Example usage in flow definition
+entity_name = CONFIG["tables"]["mpa_mediaplan"]
+# Returns: "mpa_mediaplans"
 ```
 
 ### Power Automate Flows
 
-In flow definitions, always use the plural entity set name:
+In flow definitions, always use the **plural** entity set name:
 
 ```json
 {
     "type": "OpenApiConnection",
     "inputs": {
         "parameters": {
-            "entityName": "mpa_mediaplan"
+            "entityName": "mpa_mediaplans"
         }
     }
 }
 ```
 
+**Correct examples:**
+
+- `"entityName": "eap_sessions"` (not `eap_session`)
+- `"entityName": "mpa_mediaplans"` (not `mpa_mediaplan`)
+- `"entityName": "mpa_benchmarks"` (not `mpa_benchmark`)
+
 ### Dataverse Direct Queries
 
 ```
-/api/data/v9.2/mpa_mediaplan?$filter=mpa_status eq 100000001
+/api/data/v9.2/mpa_mediaplans?$filter=mpa_status eq 100000001
 ```
 
 ## Validation
@@ -151,9 +156,10 @@ Before deployment, verify table names match actual Dataverse schema:
 
 ## Change Log
 
-| Date | Change | Author |
-|------|--------|--------|
-| 2025-12-30 | Initial documentation | MPA v5.2 Remediation |
+| Date       | Change                                                          | Author                   |
+|------------|----------------------------------------------------------------|--------------------------|
+| 2025-12-30 | Initial documentation                                           | MPA v5.2 Remediation     |
+| 2026-01-12 | Updated all entity names to use plural form (Entity Set Names)  | Phase 10 Implementation  |
 
 ## References
 

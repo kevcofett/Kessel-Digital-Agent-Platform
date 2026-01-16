@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{153f4a87-0f81-4245-ad46-0833cb158d32}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="mpa_newcolumn" select="1" icon="1" preview="1">
+        <row name="result" id="mpa_channelid">
+          <cell name="mpa_newcolumn" width="300" />
+          <cell name="createdon" width="125" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="mpa_channel">
+          <attribute name="mpa_channelid" />
+          <attribute name="mpa_newcolumn" />
+          <attribute name="createdon" />
+          <order attribute="mpa_newcolumn" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="1" />
+          </filter>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Inactive Channels" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

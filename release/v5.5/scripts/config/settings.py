@@ -50,20 +50,34 @@ class Settings:
     Loads and provides typed access to environment configuration.
 
     Default location: release/v5.5/platform/config/environment.json
+
+    Environment selection:
+        - Pass env_name="mastercard" to use environment.mastercard.json
+        - Pass env_name="personal" or None to use environment.json (default)
+        - Or pass explicit env_file_path to use any config file
     """
 
-    def __init__(self, env_file_path: Optional[Path] = None):
+    def __init__(self, env_file_path: Optional[Path] = None, env_name: Optional[str] = None):
         """
         Initialize settings from environment.json.
 
         Args:
-            env_file_path: Optional path to environment.json.
-                          Defaults to ../platform/config/environment.json relative to scripts/
+            env_file_path: Optional explicit path to environment config file.
+            env_name: Optional environment name (e.g., "mastercard", "personal").
+                      If provided, loads environment.{env_name}.json.
+                      Ignored if env_file_path is provided.
         """
         if env_file_path is None:
             # Default path relative to scripts directory
             scripts_dir = Path(__file__).parent.parent
-            env_file_path = scripts_dir.parent / "platform" / "config" / "environment.json"
+            config_dir = scripts_dir.parent / "platform" / "config"
+
+            if env_name and env_name.lower() not in ("personal", "default"):
+                # Load environment-specific config
+                env_file_path = config_dir / f"environment.{env_name.lower()}.json"
+            else:
+                # Default to personal environment
+                env_file_path = config_dir / "environment.json"
 
         if not env_file_path.exists():
             raise FileNotFoundError(f"Environment config not found: {env_file_path}")
@@ -72,6 +86,7 @@ class Settings:
             self._config = json.load(f)
 
         self._env_file_path = env_file_path
+        self._env_name = env_name or "personal"
 
     @property
     def dataverse(self) -> DataverseConfig:

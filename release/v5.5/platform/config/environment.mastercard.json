@@ -1,0 +1,130 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mastercard Environment Configuration",
+  "description": "Environment configuration for Mastercard MPA deployment",
+  "version": "5.5",
+  "lastUpdated": "January 2026",
+
+  "organization": {
+    "code": "Mastercard",
+    "name": "Mastercard",
+    "description": "Mastercard deployment environment"
+  },
+
+  "tenant": {
+    "tenantId": "f06fa858-824b-4a85-aacb-f372cfdc282e",
+    "tenantName": "mastercard.onmicrosoft.com",
+    "description": "Mastercard Azure AD tenant"
+  },
+
+  "dataverse": {
+    "environmentUrl": "https://orgcc6eaaec.crm.dynamics.com",
+    "environmentId": "TO_BE_CONFIGURED",
+    "organizationId": "TO_BE_CONFIGURED",
+    "apiUrl": "https://orgcc6eaaec.api.crm.dynamics.com/api/data/v9.2",
+    "solutionName": "MediaPlanningAgent",
+    "publisherPrefix": "mpa",
+    "description": "Mastercard Dataverse environment"
+  },
+
+  "sharepoint": {
+    "siteUrl": "TO_BE_CONFIGURED",
+    "kbLibraries": {
+      "mpa": "MediaPlanningKB"
+    },
+    "description": "SharePoint site for knowledge base files"
+  },
+
+  "copilotStudio": {
+    "environmentUrl": "TO_BE_CONFIGURED",
+    "powerPlatformApiUrl": "TO_BE_CONFIGURED",
+    "agents": {
+      "mpa": {
+        "agentId": "TO_BE_CONFIGURED",
+        "agentName": "Media Planning Agent"
+      }
+    },
+    "description": "Copilot Studio configuration"
+  },
+
+  "azureFunctions": {
+    "appName": "TO_BE_CONFIGURED",
+    "resourceGroup": "TO_BE_CONFIGURED",
+    "subscriptionId": "TO_BE_CONFIGURED",
+    "storageAccount": "TO_BE_CONFIGURED",
+    "baseUrl": "TO_BE_CONFIGURED",
+    "endpoints": {
+      "health": "/api/health",
+      "allocation": "/api/allocation",
+      "gap": "/api/gap",
+      "spo": "/api/spo",
+      "features": "/api/features/{flag_name}",
+      "document": "/api/document",
+      "media_plan_document": "/api/generate-media-plan-document",
+      "projections": "/api/projections",
+      "benchmarks_search": "/api/benchmarks/search",
+      "session": "/api/session",
+      "validate_gate": "/api/validate-gate"
+    },
+    "functionKey": "TO_BE_CONFIGURED",
+    "deployedFunctions": [],
+    "description": "Azure Functions for calculations and document generation"
+  },
+
+  "authentication": {
+    "clientId": "026e703a-dd3-446b-bbf8-8362ca49e6f7",
+    "authority": "https://login.microsoftonline.com/f06fa858-824b-4a85-aacb-f372cfdc282e",
+    "scopes": [
+      "https://orgcc6eaaec.crm.dynamics.com/.default"
+    ],
+    "description": "Azure AD app registration for API access - uses device code flow if no clientId"
+  },
+
+  "channels": {
+    "primary": "teams",
+    "options": ["teams", "web"],
+    "teamsAppId": "TO_BE_CONFIGURED",
+    "description": "Teams deployment for Mastercard"
+  },
+
+  "monitoring": {
+    "applicationInsights": "TO_BE_CONFIGURED",
+    "appInsightsConnectionString": "TO_BE_CONFIGURED",
+    "logLevel": "Information",
+    "enableDetailedErrors": false,
+    "description": "Application Insights for monitoring and diagnostics"
+  },
+
+  "featureDefaults": {
+    "description": "Enterprise environment with security features enabled",
+    "profile": "enterprise",
+    "overrides": {
+      "mpa_enable_web_search": false,
+      "mpa_enable_external_api": true,
+      "mpa_enable_document_generation": true,
+      "mpa_enable_benchmark_lookup": true,
+      "mpa_enable_budget_optimization": true,
+      "mpa_enable_channel_recommendations": true,
+      "mpa_enable_projections": true,
+      "mpa_enable_gap_analysis": true,
+      "sec_enable_audit_logging": true,
+      "sec_enable_row_level_security": true,
+      "ui_show_debug_info": false,
+      "ui_show_advanced_options": false
+    }
+  },
+
+  "deploymentStatus": {
+    "lastUpdated": "2026-01-16",
+    "phases": {
+      "phase_0_environment": "COMPLETE",
+      "phase_1_azure": "IN_PROGRESS",
+      "phase_2_dataverse": "IN_PROGRESS",
+      "phase_3_sharepoint": "PENDING",
+      "phase_4_flows": "PENDING",
+      "phase_5_mpa_agent": "IN_PROGRESS",
+      "phase_6_monitoring": "PENDING",
+      "phase_7_validation": "PENDING"
+    }
+  }
+}

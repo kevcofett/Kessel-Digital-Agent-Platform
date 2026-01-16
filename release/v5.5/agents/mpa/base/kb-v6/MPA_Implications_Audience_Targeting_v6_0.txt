@@ -1,0 +1,190 @@
+DOCUMENT: MPA_Implications_Audience_Targeting_v6_0.txt
+VERSION: 6.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+META_DOCUMENT_TYPE: implications_mapping
+META_PRIMARY_TOPICS: audience_targeting, targeting_tradeoffs, reach_precision, audience_expansion
+META_WORKFLOW_STEPS: 2,3,4
+META_INTENTS: AUDIENCE_TARGETING
+META_VERTICALS: ALL
+META_LAST_UPDATED: 2026-01-16
+
+================================================================================
+SECTION 1: PURPOSE AND SCOPE
+================================================================================
+
+META_SECTION_ID: audience_targeting_implications_purpose
+META_WORKFLOW_STEPS: 2,3
+META_TOPICS: purpose, scope
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+1.1 PURPOSE
+
+This document provides implication mapping for audience targeting decisions. The agent MUST consult this document when users define audience strategies, targeting parameters, or segmentation approaches.
+
+1.2 SCOPE
+
+This document covers implication chains for:
+- Audience size decisions
+- Targeting precision trade-offs
+- First-party versus third-party data strategies
+- Lookalike and expansion strategies
+- Audience exclusion decisions
+
+================================================================================
+SECTION 2: AUDIENCE SIZE IMPLICATIONS
+================================================================================
+
+META_SECTION_ID: audience_size_implications
+META_WORKFLOW_STEPS: 2,3
+META_TOPICS: audience_size, narrow_targeting, broad_targeting
+META_INTENT: AUDIENCE_TARGETING
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+2.1 NARROW AUDIENCE (UNDER 500K)
+
+- Week 1-2: Rapid audience saturation possible
+- Week 3-4: Frequency escalates quickly within small pool
+- Week 5-8: Creative fatigue accelerates
+- Month 2-3: Audience exhaustion limits scale
+- Long-term: Efficiency may decline as addressable market depletes
+
+2.2 MEDIUM AUDIENCE (500K TO 5M)
+
+- Week 1-2: Balanced reach and frequency build
+- Week 3-4: Optimization identifies high-value segments
+- Week 5-8: Sustainable pacing without rapid exhaustion
+- Month 2-3: Room for audience expansion based on learnings
+- Long-term: Sufficient scale for ongoing optimization
+
+2.3 BROAD AUDIENCE (OVER 5M)
+
+- Week 1-2: Slow frequency build across large pool
+- Week 3-4: Algorithm optimization surfaces high performers
+- Week 5-8: Waste inherent in broad targeting
+- Month 2-3: Strong learnings for future refinement
+- Long-term: Maximum reach but efficiency trade-offs
+
+2.4 DIAGNOSTIC QUESTIONS
+
+- What is the estimated addressable market
+- What frequency level is appropriate for consideration window
+- Is scale or precision the higher priority
+- What expansion strategy exists if primary audience saturates
+
+================================================================================
+SECTION 3: TARGETING PRECISION TRADE-OFFS
+================================================================================
+
+META_SECTION_ID: precision_tradeoffs
+META_WORKFLOW_STEPS: 2,3,4
+META_TOPICS: precision, relevance, reach, targeting_layers
+META_INTENT: AUDIENCE_TARGETING
+META_CONFIDENCE: HIGH
+
+3.1 HIGH-PRECISION TARGETING
+
+- Higher relevance to reached users
+- Lower reach within budget
+- Higher CPMs due to limited inventory
+- Faster audience exhaustion
+- Lower waste but potentially missing adjacent opportunities
+
+3.2 LOW-PRECISION TARGETING
+
+- Lower relevance to many reached users
+- Higher reach within budget
+- Lower CPMs due to abundant inventory
+- Slower audience exhaustion
+- Higher waste but captures adjacent opportunities
+
+3.3 LAYERED TARGETING
+
+- Each layer reduces addressable audience
+- Combined layers create very narrow pools
+- Inventory availability decreases with each layer
+- CPMs increase with targeting complexity
+- Risk of over-engineering audience
+
+================================================================================
+SECTION 4: DATA STRATEGY IMPLICATIONS
+================================================================================
+
+META_SECTION_ID: data_strategy_implications
+META_WORKFLOW_STEPS: 2,3
+META_TOPICS: first_party_data, third_party_data, lookalikes
+META_INTENT: AUDIENCE_TARGETING
+META_CONFIDENCE: HIGH
+
+4.1 FIRST-PARTY DATA EMPHASIS
+
+Advantages:
+- Highest accuracy and relevance
+- Differentiated from competitors
+- Privacy-compliant by design
+- Enables personalization
+
+Limitations:
+- Scale constrained by customer base
+- Requires infrastructure investment
+- May miss prospecting opportunities
+
+4.2 THIRD-PARTY DATA EMPHASIS
+
+Advantages:
+- Immediate scale availability
+- No infrastructure required
+- Good for prospecting
+
+Limitations:
+- Declining accuracy due to privacy changes
+- Available to competitors
+- Regulatory compliance complexity
+- Less differentiated
+
+4.3 LOOKALIKE STRATEGY
+
+High-Value Seed Lookalikes:
+- Top 10-20% customers by LTV
+- Typically 40-60% better CAC than prospecting
+- Limited scale
+
+Broad Seed Lookalikes:
+- All customers or converters
+- Better scale than high-value seeds
+- Good balance of efficiency and reach
+
+================================================================================
+SECTION 5: CROSS-REFERENCES
+================================================================================
+
+META_SECTION_ID: audience_implications_references
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: cross_references
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+5.1 RELATED DOCUMENTS
+
+- REF: MPA_Expert_Lens_Audience_Strategy_v6_0.txt - Audience strategy guidance
+- REF: FIRST_PARTY_DATA_STRATEGY_v6_0.txt - Data strategy details
+- REF: MPA_Audience_Taxonomy_Structure_v6_0.txt - Platform taxonomy codes
+
+================================================================================
+VERSION HISTORY
+================================================================================
+
+Version 6.0 - January 2026
+- Added META_ prefixed tags for retrieval optimization
+- Restructured into decision-focused sections
+- Condensed from 447 lines to ~200 lines
+
+Version 5.5 - January 2026 - Original production version
+
+================================================================================
+END OF DOCUMENT
+================================================================================

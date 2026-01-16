@@ -608,3 +608,820 @@ export default {
   buildBenchmarkSelect,
   formatBenchmarkResponse,
 };
+
+// ============================================================================
+// MPA v6.0 REFERENCE DATA SCHEMAS
+// ============================================================================
+
+/**
+ * Geographic/Census Data Schema
+ * Supports multi-region deployment (US, CA, UK, MX, AU, DE, FR, CL, ES, BR, IT, JP)
+ */
+export const GEOGRAPHY_SCHEMA = {
+  tableName: 'mpa_geography',
+  displayName: 'MPA Geography Reference',
+  description: 'Census and demographic data by geographic unit (DMA, CMA, ITV Region, etc.)',
+
+  columns: [
+    // Primary Key
+    {
+      logicalName: 'mpa_geo_id',
+      displayName: 'Geography ID',
+      type: 'String',
+      maxLength: 50,
+      required: true,
+      description: 'Unique identifier (e.g., US_DMA_501, CA_CMA_535)',
+    },
+    // Geographic Classification
+    {
+      logicalName: 'mpa_country',
+      displayName: 'Country Code',
+      type: 'String',
+      maxLength: 2,
+      required: true,
+      description: 'ISO 3166-1 alpha-2 country code (US, CA, UK, MX, etc.)',
+    },
+    {
+      logicalName: 'mpa_geo_type',
+      displayName: 'Geography Type',
+      type: 'OptionSet',
+      options: ['DMA', 'CMA', 'ITVR', 'NUTS1', 'ZM', 'GCCSA', 'LAND', 'REG', 'UF', 'CCAA', 'PREF'],
+      required: true,
+      description: 'Type of geographic unit',
+    },
+    {
+      logicalName: 'mpa_geo_code',
+      displayName: 'Geography Code',
+      type: 'String',
+      maxLength: 20,
+      required: true,
+      description: 'Official code (Nielsen DMA code, StatCan CMA code, etc.)',
+    },
+    {
+      logicalName: 'mpa_geo_name',
+      displayName: 'Geography Name',
+      type: 'String',
+      maxLength: 200,
+      required: true,
+      description: 'Official name (e.g., New York, Toronto, London)',
+    },
+    {
+      logicalName: 'mpa_geo_rank',
+      displayName: 'Rank',
+      type: 'WholeNumber',
+      required: false,
+      description: 'Rank by population within country',
+    },
+    // Population Data
+    {
+      logicalName: 'mpa_total_population',
+      displayName: 'Total Population',
+      type: 'WholeNumber',
+      required: true,
+      description: 'Total population',
+    },
+    {
+      logicalName: 'mpa_total_households',
+      displayName: 'Total Households',
+      type: 'WholeNumber',
+      required: false,
+      description: 'Total households',
+    },
+    // Age Demographics
+    {
+      logicalName: 'mpa_median_age',
+      displayName: 'Median Age',
+      type: 'Decimal',
+      precision: 5,
+      scale: 1,
+      required: false,
+      description: 'Median age of population',
+    },
+    {
+      logicalName: 'mpa_pct_male',
+      displayName: 'Percent Male',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent male population',
+    },
+    {
+      logicalName: 'mpa_pct_female',
+      displayName: 'Percent Female',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent female population',
+    },
+    {
+      logicalName: 'mpa_pct_age_0_17',
+      displayName: 'Percent Age 0-17',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent under 18',
+    },
+    {
+      logicalName: 'mpa_pct_age_18_34',
+      displayName: 'Percent Age 18-34',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent 18-34',
+    },
+    {
+      logicalName: 'mpa_pct_age_25_54',
+      displayName: 'Percent Age 25-54',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent 25-54 (prime working age)',
+    },
+    {
+      logicalName: 'mpa_pct_age_55_plus',
+      displayName: 'Percent Age 55+',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent 55 and older',
+    },
+    // Income Demographics
+    {
+      logicalName: 'mpa_median_hhi',
+      displayName: 'Median Household Income',
+      type: 'WholeNumber',
+      required: false,
+      description: 'Median household income in local currency',
+    },
+    {
+      logicalName: 'mpa_pct_hhi_under_50k',
+      displayName: 'Percent HHI Under 50K',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent households under $50K (or equivalent)',
+    },
+    {
+      logicalName: 'mpa_pct_hhi_50k_100k',
+      displayName: 'Percent HHI 50-100K',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent households $50-100K',
+    },
+    {
+      logicalName: 'mpa_pct_hhi_over_100k',
+      displayName: 'Percent HHI Over 100K',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent households over $100K',
+    },
+    {
+      logicalName: 'mpa_pct_hhi_over_150k',
+      displayName: 'Percent HHI Over 150K',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent households over $150K (affluent)',
+    },
+    // Education Demographics
+    {
+      logicalName: 'mpa_pct_college_degree',
+      displayName: 'Percent College Degree',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent with bachelors degree or higher',
+    },
+    {
+      logicalName: 'mpa_pct_graduate_degree',
+      displayName: 'Percent Graduate Degree',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent with masters/doctorate',
+    },
+    // Ethnicity Demographics (US-specific, optional elsewhere)
+    {
+      logicalName: 'mpa_pct_hispanic',
+      displayName: 'Percent Hispanic/Latino',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent Hispanic or Latino origin',
+    },
+    {
+      logicalName: 'mpa_pct_white_nonhisp',
+      displayName: 'Percent White Non-Hispanic',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent White alone, not Hispanic',
+    },
+    {
+      logicalName: 'mpa_pct_black',
+      displayName: 'Percent Black',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent Black or African American',
+    },
+    {
+      logicalName: 'mpa_pct_asian',
+      displayName: 'Percent Asian',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent Asian',
+    },
+    {
+      logicalName: 'mpa_pct_other',
+      displayName: 'Percent Other',
+      type: 'Decimal',
+      precision: 5,
+      scale: 2,
+      required: false,
+      description: 'Percent other races/multiracial',
+    },
+    // State/Province Information
+    {
+      logicalName: 'mpa_state_primary',
+      displayName: 'Primary State/Province',
+      type: 'String',
+      maxLength: 50,
+      required: false,
+      description: 'Primary state/province code',
+    },
+    {
+      logicalName: 'mpa_states_included',
+      displayName: 'States/Provinces Included',
+      type: 'String',
+      maxLength: 200,
+      required: false,
+      description: 'All states/provinces in this geography',
+    },
+    // Source Metadata
+    {
+      logicalName: 'mpa_data_source',
+      displayName: 'Data Source',
+      type: 'String',
+      maxLength: 200,
+      required: true,
+      description: 'Census/statistical source (e.g., US Census ACS 2019-2023)',
+    },
+    {
+      logicalName: 'mpa_data_year',
+      displayName: 'Data Year',
+      type: 'WholeNumber',
+      required: true,
+      description: 'Year of data',
+    },
+  ],
+
+  alternateKeys: [
+    {
+      name: 'mpa_geography_composite_key',
+      columns: ['mpa_country', 'mpa_geo_type', 'mpa_geo_code'],
+    },
+  ],
+};
+
+/**
+ * IAB Content Taxonomy Schema
+ * IAB Tech Lab Content Taxonomy 3.0
+ */
+export const IAB_TAXONOMY_SCHEMA = {
+  tableName: 'mpa_iab_taxonomy',
+  displayName: 'MPA IAB Taxonomy',
+  description: 'IAB Content Taxonomy 3.0 codes for contextual targeting',
+
+  columns: [
+    {
+      logicalName: 'mpa_iab_id',
+      displayName: 'IAB ID',
+      type: 'String',
+      maxLength: 50,
+      required: true,
+      description: 'Unique identifier',
+    },
+    {
+      logicalName: 'mpa_iab_code',
+      displayName: 'IAB Code',
+      type: 'String',
+      maxLength: 20,
+      required: true,
+      description: 'IAB code (e.g., IAB13-7)',
+    },
+    {
+      logicalName: 'mpa_iab_tier',
+      displayName: 'Tier Level',
+      type: 'WholeNumber',
+      required: true,
+      description: 'Tier level (1, 2, or 3)',
+    },
+    {
+      logicalName: 'mpa_iab_parent_code',
+      displayName: 'Parent Code',
+      type: 'String',
+      maxLength: 20,
+      required: false,
+      description: 'Parent IAB code (null for Tier 1)',
+    },
+    {
+      logicalName: 'mpa_iab_name',
+      displayName: 'Category Name',
+      type: 'String',
+      maxLength: 200,
+      required: true,
+      description: 'Category name',
+    },
+    {
+      logicalName: 'mpa_iab_description',
+      displayName: 'Description',
+      type: 'String',
+      maxLength: 500,
+      required: false,
+      description: 'Category description',
+    },
+    {
+      logicalName: 'mpa_vertical_relevance',
+      displayName: 'Vertical Relevance',
+      type: 'String',
+      maxLength: 200,
+      required: false,
+      description: 'Relevant MPA verticals (comma-separated)',
+    },
+    {
+      logicalName: 'mpa_contextual_signal_strength',
+      displayName: 'Signal Strength',
+      type: 'OptionSet',
+      options: ['HIGH', 'MEDIUM', 'LOW'],
+      required: false,
+      description: 'Contextual signal strength for targeting',
+    },
+  ],
+
+  alternateKeys: [
+    {
+      name: 'mpa_iab_code_key',
+      columns: ['mpa_iab_code'],
+    },
+  ],
+};
+
+/**
+ * Platform Audience Taxonomy Schema
+ * Google Affinity/In-Market, Meta Interests/Behaviors, LinkedIn
+ */
+export const PLATFORM_TAXONOMY_SCHEMA = {
+  tableName: 'mpa_platform_taxonomy',
+  displayName: 'MPA Platform Taxonomy',
+  description: 'Platform-specific audience segments (Google, Meta, LinkedIn, TikTok)',
+
+  columns: [
+    {
+      logicalName: 'mpa_segment_id',
+      displayName: 'Segment ID',
+      type: 'String',
+      maxLength: 100,
+      required: true,
+      description: 'Unique identifier',
+    },
+    {
+      logicalName: 'mpa_platform',
+      displayName: 'Platform',
+      type: 'OptionSet',
+      options: ['GOOGLE', 'META', 'LINKEDIN', 'TIKTOK', 'PINTEREST', 'SNAPCHAT', 'TWITTER'],
+      required: true,
+      description: 'Advertising platform',
+    },
+    {
+      logicalName: 'mpa_taxonomy_type',
+      displayName: 'Taxonomy Type',
+      type: 'OptionSet',
+      options: ['AFFINITY', 'IN_MARKET', 'INTEREST', 'BEHAVIOR', 'DEMOGRAPHIC', 'LIFE_EVENT', 'CUSTOM_INTENT', 'JOB_FUNCTION', 'SENIORITY', 'INDUSTRY', 'COMPANY_SIZE', 'SKILL'],
+      required: true,
+      description: 'Type of audience segment',
+    },
+    {
+      logicalName: 'mpa_segment_path',
+      displayName: 'Segment Path',
+      type: 'String',
+      maxLength: 500,
+      required: true,
+      description: 'Full path (e.g., /Affinity/Banking & Finance/Avid Investors)',
+    },
+    {
+      logicalName: 'mpa_segment_name',
+      displayName: 'Segment Name',
+      type: 'String',
+      maxLength: 200,
+      required: true,
+      description: 'Display name',
+    },
+    {
+      logicalName: 'mpa_parent_path',
+      displayName: 'Parent Path',
+      type: 'String',
+      maxLength: 500,
+      required: false,
+      description: 'Parent segment path',
+    },
+    {
+      logicalName: 'mpa_tier',
+      displayName: 'Hierarchy Tier',
+      type: 'WholeNumber',
+      required: false,
+      description: 'Depth in hierarchy (1=root)',
+    },
+    {
+      logicalName: 'mpa_vertical_relevance',
+      displayName: 'Vertical Relevance',
+      type: 'String',
+      maxLength: 200,
+      required: false,
+      description: 'Relevant MPA verticals (comma-separated)',
+    },
+    {
+      logicalName: 'mpa_reach_tier',
+      displayName: 'Reach Tier',
+      type: 'OptionSet',
+      options: ['BROAD', 'MEDIUM', 'NARROW', 'VERY_NARROW'],
+      required: false,
+      description: 'Estimated audience reach tier',
+    },
+    {
+      logicalName: 'mpa_last_verified',
+      displayName: 'Last Verified',
+      type: 'DateTime',
+      required: false,
+      description: 'Date segment was last verified active',
+    },
+  ],
+
+  alternateKeys: [
+    {
+      name: 'mpa_platform_segment_key',
+      columns: ['mpa_platform', 'mpa_taxonomy_type', 'mpa_segment_path'],
+    },
+  ],
+};
+
+/**
+ * Behavioral Attributes Schema
+ * Cross-platform behavioral signals
+ */
+export const BEHAVIORAL_ATTRIBUTES_SCHEMA = {
+  tableName: 'mpa_behavioral_attributes',
+  displayName: 'MPA Behavioral Attributes',
+  description: 'Behavioral targeting signals across platforms',
+
+  columns: [
+    {
+      logicalName: 'mpa_behavior_id',
+      displayName: 'Behavior ID',
+      type: 'String',
+      maxLength: 50,
+      required: true,
+      description: 'Unique identifier',
+    },
+    {
+      logicalName: 'mpa_behavior_category',
+      displayName: 'Category',
+      type: 'OptionSet',
+      options: ['PURCHASE', 'BROWSING', 'SEARCH', 'CONTENT', 'DEVICE', 'TEMPORAL', 'SOCIAL', 'TRANSACTION', 'ENGAGEMENT', 'LIFECYCLE'],
+      required: true,
+      description: 'Behavior category',
+    },
+    {
+      logicalName: 'mpa_behavior_name',
+      displayName: 'Behavior Name',
+      type: 'String',
+      maxLength: 200,
+      required: true,
+      description: 'Behavior name',
+    },
+    {
+      logicalName: 'mpa_behavior_description',
+      displayName: 'Description',
+      type: 'String',
+      maxLength: 500,
+      required: false,
+      description: 'Detailed description',
+    },
+    {
+      logicalName: 'mpa_signal_type',
+      displayName: 'Signal Type',
+      type: 'OptionSet',
+      options: ['FIRST_PARTY', 'SECOND_PARTY', 'THIRD_PARTY', 'PLATFORM_NATIVE', 'MODELED'],
+      required: true,
+      description: 'Data source type',
+    },
+    {
+      logicalName: 'mpa_platforms_available',
+      displayName: 'Platforms Available',
+      type: 'String',
+      maxLength: 200,
+      required: false,
+      description: 'Platforms where signal is available (comma-separated)',
+    },
+    {
+      logicalName: 'mpa_vertical_relevance',
+      displayName: 'Vertical Relevance',
+      type: 'String',
+      maxLength: 200,
+      required: false,
+      description: 'Relevant MPA verticals (comma-separated)',
+    },
+    {
+      logicalName: 'mpa_intent_level',
+      displayName: 'Intent Level',
+      type: 'OptionSet',
+      options: ['HIGH', 'MEDIUM', 'LOW', 'AWARENESS_ONLY'],
+      required: false,
+      description: 'Purchase/conversion intent level',
+    },
+    {
+      logicalName: 'mpa_recency_windows',
+      displayName: 'Recency Windows',
+      type: 'String',
+      maxLength: 100,
+      required: false,
+      description: 'Available recency windows (e.g., 7d,14d,30d,60d,90d)',
+    },
+    {
+      logicalName: 'mpa_data_freshness',
+      displayName: 'Data Freshness',
+      type: 'OptionSet',
+      options: ['REAL_TIME', 'DAILY', 'WEEKLY', 'MONTHLY', 'QUARTERLY'],
+      required: false,
+      description: 'How frequently signal is updated',
+    },
+  ],
+
+  alternateKeys: [
+    {
+      name: 'mpa_behavior_key',
+      columns: ['mpa_behavior_category', 'mpa_behavior_name'],
+    },
+  ],
+};
+
+/**
+ * Contextual Attributes Schema
+ * Content and environment-based targeting signals
+ */
+export const CONTEXTUAL_ATTRIBUTES_SCHEMA = {
+  tableName: 'mpa_contextual_attributes',
+  displayName: 'MPA Contextual Attributes',
+  description: 'Contextual targeting signals (content, environment, brand safety)',
+
+  columns: [
+    {
+      logicalName: 'mpa_context_id',
+      displayName: 'Context ID',
+      type: 'String',
+      maxLength: 50,
+      required: true,
+      description: 'Unique identifier',
+    },
+    {
+      logicalName: 'mpa_context_category',
+      displayName: 'Category',
+      type: 'OptionSet',
+      options: ['CONTENT_CATEGORY', 'CONTENT_FORMAT', 'CONTENT_SENTIMENT', 'PAGE_ENVIRONMENT', 'BRAND_SAFETY', 'SEASONAL_EVENT', 'WEATHER', 'LOCATION_CONTEXT'],
+      required: true,
+      description: 'Context category',
+    },
+    {
+      logicalName: 'mpa_context_name',
+      displayName: 'Context Name',
+      type: 'String',
+      maxLength: 200,
+      required: true,
+      description: 'Context name',
+    },
+    {
+      logicalName: 'mpa_context_description',
+      displayName: 'Description',
+      type: 'String',
+      maxLength: 500,
+      required: false,
+      description: 'Detailed description',
+    },
+    {
+      logicalName: 'mpa_iab_mapping',
+      displayName: 'IAB Mapping',
+      type: 'String',
+      maxLength: 100,
+      required: false,
+      description: 'Mapped IAB code(s)',
+    },
+    {
+      logicalName: 'mpa_signal_type',
+      displayName: 'Signal Type',
+      type: 'OptionSet',
+      options: ['KEYWORD', 'SEMANTIC', 'URL_CATEGORY', 'PAGE_CONTENT', 'ENVIRONMENT', 'REAL_TIME'],
+      required: true,
+      description: 'How signal is detected',
+    },
+    {
+      logicalName: 'mpa_brand_safety_tier',
+      displayName: 'Brand Safety Tier',
+      type: 'OptionSet',
+      options: ['TIER_1_SAFE', 'TIER_2_STANDARD', 'TIER_3_SENSITIVE', 'TIER_4_AVOID'],
+      required: false,
+      description: 'Brand safety classification',
+    },
+    {
+      logicalName: 'mpa_vertical_relevance',
+      displayName: 'Vertical Relevance',
+      type: 'String',
+      maxLength: 200,
+      required: false,
+      description: 'Relevant MPA verticals (comma-separated)',
+    },
+    {
+      logicalName: 'mpa_platforms_available',
+      displayName: 'Platforms Available',
+      type: 'String',
+      maxLength: 200,
+      required: false,
+      description: 'Platforms where context is available',
+    },
+  ],
+
+  alternateKeys: [
+    {
+      name: 'mpa_context_key',
+      columns: ['mpa_context_category', 'mpa_context_name'],
+    },
+  ],
+};
+
+// ============================================================================
+// QUERY BUILDERS FOR REFERENCE DATA
+// ============================================================================
+
+/**
+ * Build OData filter for geography query
+ */
+export function buildGeographyFilter(
+  country: string,
+  geoType?: string,
+  minPopulation?: number,
+  maxRank?: number
+): string {
+  const filters: string[] = [];
+
+  filters.push(`mpa_country eq '${country.toUpperCase()}'`);
+
+  if (geoType) {
+    filters.push(`mpa_geo_type eq '${geoType.toUpperCase()}'`);
+  }
+
+  if (minPopulation) {
+    filters.push(`mpa_total_population ge ${minPopulation}`);
+  }
+
+  if (maxRank) {
+    filters.push(`mpa_geo_rank le ${maxRank}`);
+  }
+
+  return filters.join(' and ');
+}
+
+/**
+ * Build OData filter for IAB taxonomy query
+ */
+export function buildIABFilter(
+  tier?: number,
+  parentCode?: string,
+  vertical?: string
+): string {
+  const filters: string[] = [];
+
+  if (tier) {
+    filters.push(`mpa_iab_tier eq ${tier}`);
+  }
+
+  if (parentCode) {
+    filters.push(`mpa_iab_parent_code eq '${parentCode}'`);
+  }
+
+  if (vertical) {
+    filters.push(`contains(mpa_vertical_relevance, '${vertical.toUpperCase()}')`);
+  }
+
+  return filters.join(' and ');
+}
+
+/**
+ * Build OData filter for platform taxonomy query
+ */
+export function buildPlatformTaxonomyFilter(
+  platform: string,
+  taxonomyType?: string,
+  vertical?: string
+): string {
+  const filters: string[] = [];
+
+  filters.push(`mpa_platform eq '${platform.toUpperCase()}'`);
+
+  if (taxonomyType) {
+    filters.push(`mpa_taxonomy_type eq '${taxonomyType.toUpperCase()}'`);
+  }
+
+  if (vertical) {
+    filters.push(`contains(mpa_vertical_relevance, '${vertical.toUpperCase()}')`);
+  }
+
+  return filters.join(' and ');
+}
+
+/**
+ * Build OData filter for behavioral attributes query
+ */
+export function buildBehavioralFilter(
+  category?: string,
+  intentLevel?: string,
+  platform?: string
+): string {
+  const filters: string[] = [];
+
+  if (category) {
+    filters.push(`mpa_behavior_category eq '${category.toUpperCase()}'`);
+  }
+
+  if (intentLevel) {
+    filters.push(`mpa_intent_level eq '${intentLevel.toUpperCase()}'`);
+  }
+
+  if (platform) {
+    filters.push(`contains(mpa_platforms_available, '${platform.toUpperCase()}')`);
+  }
+
+  return filters.join(' and ');
+}
+
+/**
+ * Build OData filter for contextual attributes query
+ */
+export function buildContextualFilter(
+  category?: string,
+  brandSafetyTier?: string,
+  iabCode?: string
+): string {
+  const filters: string[] = [];
+
+  if (category) {
+    filters.push(`mpa_context_category eq '${category.toUpperCase()}'`);
+  }
+
+  if (brandSafetyTier) {
+    filters.push(`mpa_brand_safety_tier eq '${brandSafetyTier.toUpperCase()}'`);
+  }
+
+  if (iabCode) {
+    filters.push(`contains(mpa_iab_mapping, '${iabCode}')`);
+  }
+
+  return filters.join(' and ');
+}
+
+// ============================================================================
+// EXPORTS FOR REFERENCE DATA
+// ============================================================================
+
+export const REFERENCE_DATA_SCHEMAS = {
+  GEOGRAPHY_SCHEMA,
+  IAB_TAXONOMY_SCHEMA,
+  PLATFORM_TAXONOMY_SCHEMA,
+  BEHAVIORAL_ATTRIBUTES_SCHEMA,
+  CONTEXTUAL_ATTRIBUTES_SCHEMA,
+};
+
+export const REFERENCE_DATA_QUERIES = {
+  buildGeographyFilter,
+  buildIABFilter,
+  buildPlatformTaxonomyFilter,
+  buildBehavioralFilter,
+  buildContextualFilter,
+};

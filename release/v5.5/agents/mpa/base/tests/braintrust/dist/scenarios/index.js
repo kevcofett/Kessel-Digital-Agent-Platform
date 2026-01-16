@@ -14,6 +14,8 @@ import { brandBuildingLimitedDataScenario, brandBuildingLimitedDataPersona, bran
 import { precisionTargetingComplexScenario, precisionTargetingPersona, precisionTargetingComplexContext, } from "./precision-targeting-complex.js";
 import { massNationalSimplicityScenario, massNationalPersona, massNationalSimplicityContext, } from "./mass-national-simplicity.js";
 import { aggressiveKpiNarrowTargetingScenario, aggressiveKpiPersona, aggressiveKpiNarrowTargetingContext, } from "./aggressive-kpi-narrow-targeting.js";
+// Import V6.1 Test Scenarios
+import { V61_TEST_SCENARIOS, } from "./v61-test-scenarios.js";
 // Import Multi-Audience Scenarios
 import { multiAudienceUnifiedPlanScenario, multiAudienceUnifiedPersona, multiAudienceUnifiedPlanContext, } from "./multi-audience-unified-plan.js";
 import { multiAudienceChannelAllocationScenario, multiAudienceChannelPersona, multiAudienceChannelAllocationContext, } from "./multi-audience-channel-allocation.js";
@@ -73,6 +75,8 @@ export const ALL_SCENARIOS = [
     outcomeKPIChangeScenario,
     audienceAdditionChangeScenario,
     audienceRemovalChangeScenario,
+    // V6.1 Capability scenarios
+    ...V61_TEST_SCENARIOS,
 ];
 /**
  * Reforecasting Scenarios

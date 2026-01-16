@@ -21,6 +21,7 @@ export { scoreRecalculationOnChange, type RecalculationContext } from "./recalcu
 export { scoreAudienceSizingCompleteness, type AudienceSizingResult, type TableAnalysis } from "./audience-sizing-completeness.js";
 export { scoreCrossStepSynthesis, type CrossStepSynthesisContext } from "./cross-step-synthesis.js";
 export { scoreBenchmarkVerticalCoverage, scoreWebSearchTrigger, scoreKbRoutingValidation, scoreConfidenceLevelAttribution, normalizeVertical, isVerticalSupported, detectIntent, SUPPORTED_VERTICALS, SUPPORTED_CHANNELS, type SupportedVertical, } from "./v6-scorers.js";
+export { scoreAutomaticBenchmarkComparison, scoreDataConfidence, scorePlatformTaxonomyUsage, scoreGeographyCensusUsage, scoreBehavioralContextualUsage, v61Scorers, } from "./v61-scorers.js";
 export { loadBenchmarks, getBenchmark, getBenchmarksByVertical, getBenchmarksByChannel, formatBenchmarkRange, validateBenchmarkClaim, getBenchmarkSummary, clearBenchmarkCache, type Benchmark, } from "./benchmark-loader.js";
 export { scoreResponseLength, scoreSingleQuestion, scoreStepBoundary, scoreSourceCitation, scoreAcronymDefinition, scoreIdkProtocol, scoreAdaptiveSophistication, scoreRiskOpportunityFlagging, scoreResponseFormatting, scoreTurn, } from "./turn-scorers.js";
 export { calculateFailurePenalty, scoreStepTransitionQuality, scoreOverallCoherence, scoreConversation, } from "./conversation-scorers.js";
@@ -117,7 +118,7 @@ export declare function evaluateSuccess(compositeScore: number, completedSteps: 
     critical: FailureCondition[];
 }, criteria: {
     minimumOverallScore: number;
-    requiredStepsComplete: number[];
+    requiredStepsComplete?: number[];
     noCriticalFailures: boolean;
 }): {
     passed: boolean;

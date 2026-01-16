@@ -1,0 +1,151 @@
+{
+  "schemaName": "mpa_iab_taxonomy",
+  "displayName": "IAB Taxonomy",
+  "pluralName": "IAB Taxonomies",
+  "description": "IAB Content Taxonomy 3.0 codes for contextual targeting and content classification",
+  "tier": 1,
+  "featureGate": null,
+  "category": "ReferenceData",
+  "primaryKey": "mpa_iabtaxonomyid",
+  "primaryNameColumn": "mpa_iabname",
+  "ownershipType": "OrganizationOwned",
+  "publisherPrefix": "mpa",
+  "columns": [
+    {
+      "schemaName": "mpa_iabtaxonomyid",
+      "displayName": "IAB Taxonomy",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Unique identifier for entity instances"
+    },
+    {
+      "schemaName": "mpa_iabid",
+      "displayName": "IAB ID",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique IAB taxonomy identifier (e.g., IAB1, IAB1-1, IAB1-1-1)"
+    },
+    {
+      "schemaName": "mpa_iabcode",
+      "displayName": "IAB Code",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": true,
+      "description": "IAB numeric code (e.g., 1, 1-1, 1-1-1)"
+    },
+    {
+      "schemaName": "mpa_iabname",
+      "displayName": "IAB Name",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": true,
+      "description": "Name of the IAB category (e.g., Arts & Entertainment)"
+    },
+    {
+      "schemaName": "mpa_iabtier",
+      "displayName": "IAB Tier",
+      "dataType": "Integer",
+      "required": true,
+      "description": "Tier level in taxonomy hierarchy (1, 2, or 3)"
+    },
+    {
+      "schemaName": "mpa_iabparentcode",
+      "displayName": "IAB Parent Code",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": false,
+      "description": "Parent category code (null for Tier 1)"
+    },
+    {
+      "schemaName": "mpa_iabdescription",
+      "displayName": "IAB Description",
+      "dataType": "MultilineText",
+      "maxLength": 1000,
+      "required": false,
+      "description": "Detailed description of the IAB category"
+    },
+    {
+      "schemaName": "mpa_verticalrelevance",
+      "displayName": "Vertical Relevance",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Comma-separated list of relevant verticals (RETAIL, AUTOMOTIVE, etc.)"
+    },
+    {
+      "schemaName": "mpa_contextualsignalstrength",
+      "displayName": "Contextual Signal Strength",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": false,
+      "description": "Signal strength for contextual targeting (HIGH, MEDIUM, LOW)"
+    },
+    {
+      "schemaName": "mpa_isactive",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "options": ["Yes", "No"],
+      "description": "Indicates if the IAB category is currently active"
+    },
+    {
+      "schemaName": "statecode",
+      "displayName": "Status",
+      "dataType": "State",
+      "required": true,
+      "options": ["Active", "Inactive"],
+      "description": "Status of the IAB Taxonomy"
+    },
+    {
+      "schemaName": "statuscode",
+      "displayName": "Status Reason",
+      "dataType": "Status",
+      "required": false,
+      "options": ["Active", "Inactive"],
+      "description": "Reason for the status of the IAB Taxonomy"
+    },
+    {
+      "schemaName": "createdon",
+      "displayName": "Created On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was created"
+    },
+    {
+      "schemaName": "modifiedon",
+      "displayName": "Modified On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_iab_id",
+      "columns": ["mpa_iabid"],
+      "unique": true
+    },
+    {
+      "name": "idx_iab_code",
+      "columns": ["mpa_iabcode"],
+      "unique": false
+    },
+    {
+      "name": "idx_iab_tier",
+      "columns": ["mpa_iabtier"],
+      "unique": false
+    },
+    {
+      "name": "idx_iab_parent",
+      "columns": ["mpa_iabparentcode"],
+      "unique": false
+    }
+  ],
+  "seedDataFiles": [
+    "mpa_iab_taxonomy_seed.csv"
+  ],
+  "seedDataNote": "IAB Content Taxonomy 3.0 with all Tier 1-3 categories (~700 codes)"
+}

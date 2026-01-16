@@ -1,0 +1,157 @@
+{
+  "schemaName": "mpa_contextual_attribute",
+  "displayName": "Contextual Attribute",
+  "pluralName": "Contextual Attributes",
+  "description": "Contextual targeting signals for content environment and placement targeting",
+  "tier": 1,
+  "featureGate": null,
+  "category": "ReferenceData",
+  "primaryKey": "mpa_contextualattributeid",
+  "primaryNameColumn": "mpa_contextname",
+  "ownershipType": "OrganizationOwned",
+  "publisherPrefix": "mpa",
+  "columns": [
+    {
+      "schemaName": "mpa_contextualattributeid",
+      "displayName": "Contextual Attribute",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Unique identifier for entity instances"
+    },
+    {
+      "schemaName": "mpa_contextid",
+      "displayName": "Context ID",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique context identifier (e.g., CTX-CONTENT-001)"
+    },
+    {
+      "schemaName": "mpa_contextcategory",
+      "displayName": "Context Category",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Category of context (CONTENT, FORMAT, SENTIMENT, PAGE_ENVIRONMENT, BRAND_SAFETY, SEASONAL)"
+    },
+    {
+      "schemaName": "mpa_contextname",
+      "displayName": "Context Name",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": true,
+      "description": "Display name of the contextual attribute"
+    },
+    {
+      "schemaName": "mpa_contextdescription",
+      "displayName": "Context Description",
+      "dataType": "MultilineText",
+      "maxLength": 1000,
+      "required": false,
+      "description": "Detailed description of the contextual signal"
+    },
+    {
+      "schemaName": "mpa_iabmapping",
+      "displayName": "IAB Mapping",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": false,
+      "description": "Mapped IAB taxonomy code(s)"
+    },
+    {
+      "schemaName": "mpa_signaltype",
+      "displayName": "Signal Type",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Type of signal (CONTENT_CATEGORY, PAGE_CONTEXT, SENTIMENT, ENVIRONMENT)"
+    },
+    {
+      "schemaName": "mpa_brandsafetytier",
+      "displayName": "Brand Safety Tier",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": false,
+      "description": "Brand safety tier (TIER_1_SAFE, TIER_2_STANDARD, TIER_3_SENSITIVE, TIER_4_AVOID)"
+    },
+    {
+      "schemaName": "mpa_verticalrelevance",
+      "displayName": "Vertical Relevance",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Comma-separated list of relevant verticals"
+    },
+    {
+      "schemaName": "mpa_isactive",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "options": ["Yes", "No"],
+      "description": "Indicates if the contextual attribute is currently active"
+    },
+    {
+      "schemaName": "statecode",
+      "displayName": "Status",
+      "dataType": "State",
+      "required": true,
+      "options": ["Active", "Inactive"],
+      "description": "Status of the Contextual Attribute"
+    },
+    {
+      "schemaName": "statuscode",
+      "displayName": "Status Reason",
+      "dataType": "Status",
+      "required": false,
+      "options": ["Active", "Inactive"],
+      "description": "Reason for the status of the Contextual Attribute"
+    },
+    {
+      "schemaName": "createdon",
+      "displayName": "Created On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was created"
+    },
+    {
+      "schemaName": "modifiedon",
+      "displayName": "Modified On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_context_id",
+      "columns": ["mpa_contextid"],
+      "unique": true
+    },
+    {
+      "name": "idx_context_category",
+      "columns": ["mpa_contextcategory"],
+      "unique": false
+    },
+    {
+      "name": "idx_context_signaltype",
+      "columns": ["mpa_signaltype"],
+      "unique": false
+    },
+    {
+      "name": "idx_context_brandsafety",
+      "columns": ["mpa_brandsafetytier"],
+      "unique": false
+    },
+    {
+      "name": "idx_context_iabmapping",
+      "columns": ["mpa_iabmapping"],
+      "unique": false
+    }
+  ],
+  "seedDataFiles": [
+    "mpa_contextual_attributes_seed.csv"
+  ],
+  "seedDataNote": "Contextual targeting signals across content, format, sentiment, page environment, brand safety, and seasonal categories (~150 signals)"
+}

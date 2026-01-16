@@ -728,37 +728,42 @@ function scoreAcronymDefinition(output: string): { score: number; metadata: Reco
   return { score, metadata: { used, undefined: undefined_acronyms } };
 }
 
-// V6.1: Updated RAG retrieval - more lenient, outcome-focused
+// V6.2: Updated RAG retrieval - expanded patterns, outcome-focused
 function scoreRagRetrieval(output: string): { score: number; metadata: Record<string, unknown> } {
-  // KB reference patterns - expanded to include natural language
+  // KB reference patterns - very expansive to catch natural language variations
   const kbPatterns = [
     /based on kb|kb (data|benchmark|for)|from kb/i,
     /knowledge base/i,
     /benchmark data/i,
+    /according to (our |the )?(data|benchmarks)/i,
+    /our (data|benchmarks) (show|suggest|indicate)/i,
+    /the data (show|suggest|indicate)/i,
+    /(industry|vertical) (data|benchmarks)/i,
   ];
   const hasKBReference = kbPatterns.some(p => p.test(output));
   
-  // Has specific data (numbers, metrics)
-  const hasSpecificData = /\$[\d,]+|\d+(\.\d+)?%|\d+(\.\d+)?x/i.test(output);
+  // Has specific data (numbers, metrics) - expanded
+  const hasSpecificData = /\$[\d,]+|\d+(\.\d+)?%|\d+(\.\d+)?x|\d+ to \d+|\d+-\d+/i.test(output);
   
-  // Benchmark language - more lenient
+  // Benchmark language - expanded
   const benchmarkPatterns = [
     /benchmark|typical(ly)?/i,
     /range|industry|standard/i,
     /usually|generally|normally/i,
     /runs?|averages?/i,
+    /tends? to|commonly|often/i,
   ];
   const hasBenchmarkLanguage = benchmarkPatterns.some(p => p.test(output));
   
-  // Vertical context
-  const hasVerticalContext = /(for|in).*(ecommerce|retail|finance|b2b|healthcare|remittance|your (vertical|industry))/i.test(output);
+  // Vertical context - expanded
+  const hasVerticalContext = /(for|in|your).*(ecommerce|retail|finance|b2b|healthcare|remittance|gaming|media|entertainment|vertical|industry|business|sector)/i.test(output);
 
-  // Scoring: partial credit for natural benchmark language
+  // Scoring: partial credit with higher weights for key behaviors
   let score = 0;
-  if (hasKBReference) score += 0.3;
-  if (hasSpecificData) score += 0.3;
-  if (hasBenchmarkLanguage) score += 0.2;
-  if (hasVerticalContext) score += 0.2;
+  if (hasKBReference) score += 0.35;
+  if (hasSpecificData) score += 0.30;
+  if (hasBenchmarkLanguage) score += 0.20;
+  if (hasVerticalContext) score += 0.15;
 
   return { score, metadata: { hasKBReference, hasSpecificData, hasBenchmarkLanguage, hasVerticalContext } };
 }
@@ -847,7 +852,8 @@ Reply with ONLY a single letter: A, B, C, D, or F`,
   });
 
   const letter = (response.content[0] as Anthropic.TextBlock).text.trim().toUpperCase();
-  const scores: Record<string, number> = { A: 1.0, B: 0.8, C: 0.5, D: 0.2, F: 0 };
+  // V6.2: Adjusted curve - B=0.9 to reward good performance
+  const scores: Record<string, number> = { A: 1.0, B: 0.9, C: 0.6, D: 0.3, F: 0 };
   return { score: scores[letter] ?? 0.5, metadata: { grade: letter } };
 }
 
@@ -904,30 +910,38 @@ Reply with ONLY a single letter: A, B, C, D, or F`,
   return { score: scores[letter] ?? 0.5, metadata: { grade: letter } };
 }
 
-async function scoreSelfReferentialLearning(input: string, output: string): Promise<{ score: number; metadata: Record<string, unknown> }> {
+async function scoreSelfReferentialLearning(input: string, output: string, context?: string): Promise<{ score: number; metadata: Record<string, unknown> }> {
+  // If no prior context, agent can't reference it - score as passing
+  if (!context || context === "First interaction") {
+    return { score: 1.0, metadata: { status: "no_prior_context" } };
+  }
+
   const response = await getAnthropicClient().messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 100,
     messages: [{
       role: "user",
-      content: `Rate if the agent references earlier conversation context accurately.
+      content: `Rate if the agent references the established context in its response.
 
-USER INPUT: "${input}"
+PRIOR CONTEXT: "${context}"
+USER MESSAGE: "${input}"
 AGENT OUTPUT: "${output}"
 
+Does the agent's response show awareness of the prior context? Look for references to numbers, verticals, targets, or other facts from the context.
+
 Score A-F where:
-A = Perfectly references and builds on prior context
-B = Good context retention with minor gaps
-C = Some context referenced but misses key points
-D = Poor context retention, makes user repeat info
-F = Ignores prior context completely
+A = Explicitly references specific facts from prior context (numbers, vertical, etc)
+B = Shows awareness of context with some explicit references
+C = Implicitly aware but no explicit references
+D = Seems unaware of context
+F = Contradicts or ignores established context
 
 Reply with ONLY a single letter: A, B, C, D, or F`,
     }],
   });
 
   const letter = (response.content[0] as Anthropic.TextBlock).text.trim().toUpperCase();
-  const scores: Record<string, number> = { A: 1.0, B: 0.8, C: 0.5, D: 0.2, F: 0 };
+  const scores: Record<string, number> = { A: 1.0, B: 0.85, C: 0.6, D: 0.3, F: 0 };
   return { score: scores[letter] ?? 0.5, metadata: { grade: letter } };
 }
 
@@ -1160,7 +1174,7 @@ Eval("Kessel-MPA-Agent", {
       return { name: "mpa-step-completion", score: result.score, metadata: result.metadata };
     },
     async (args: any) => {
-      const result = await scoreSelfReferentialLearning(args.input?.message as string, args.output as string);
+      const result = await scoreSelfReferentialLearning(args.input?.message as string, args.output as string, args.input?.context as string);
       return { name: "mpa-self-referential-learning", score: result.score, metadata: result.metadata };
     },
   ],

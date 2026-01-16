@@ -528,12 +528,11 @@ export interface StepDefinition {
  */
 export declare const MPA_STEPS: StepDefinition[];
 /**
- * Scorer weight configuration (SCORER_SPECIFICATION_v2)
+ * Scorer weight configuration (SCORER_SPECIFICATION_v3)
  *
- * 14 optimized scorers in 3 tiers:
- * - Tier 1: Core Quality (65%)
- * - Tier 2: Structural Compliance (20%)
- * - Tier 3: Advanced Quality (15%)
+ * Rebalanced for Strategic Quality vs Format Compliance:
+ * - Strategic Quality (60%): Validates correctness and feasibility
+ * - Format Compliance (40%): Validates structure and language patterns
  *
  * Total: 100%
  */

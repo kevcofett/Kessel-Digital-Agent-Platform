@@ -73,6 +73,7 @@ const __dirname = path.dirname(__filename);
  */
 export interface EnhancedDocumentChunk extends DocumentChunk {
   kbMetadata?: KBSectionMetadata;
+  documentMetadata?: KBDocumentMetadata;  // KB v6.0: Document-level metadata including chunkPriority
   contentType: string;
   semanticBoundary: boolean;
 }
@@ -173,8 +174,8 @@ export class DocumentProcessor {
     const content = await fs.readFile(filepath, 'utf-8');
     const filename = path.basename(filepath);
 
-    // Use new metadata parser
-    const docMetadata = this.metadataParser.parseDocument(content, filename);
+    // Use new metadata parser - include filepath for v6.0 metadata
+    const docMetadata = this.metadataParser.parseDocument(content, filename, filepath);
 
     const chunks: EnhancedDocumentChunk[] = [];
     let chunkIndex = 0;
@@ -195,6 +196,8 @@ export class DocumentProcessor {
         );
 
         for (const chunk of sectionChunks) {
+          // KB v6.0: Attach document-level metadata for priority boosting
+          chunk.documentMetadata = docMetadata;
           chunks.push(chunk);
           chunkIndex++;
         }
@@ -217,6 +220,8 @@ export class DocumentProcessor {
         for (const chunk of sectionChunks) {
           // Set section title from legacy parsing
           chunk.sectionTitle = section.title;
+          // KB v6.0: Attach document-level metadata for priority boosting
+          chunk.documentMetadata = docMetadata;
           chunks.push(chunk);
           chunkIndex++;
         }

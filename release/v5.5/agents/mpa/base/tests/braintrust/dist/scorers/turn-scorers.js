@@ -658,7 +658,8 @@ Reply with ONLY one letter: A, B, C, D, or F`;
  * - TOTAL row with rollups
  */
 export function scoreAudienceSizing(output, currentStep) {
-    // Only score in Step 4 (Geography) or when transitioning to Step 5
+    // Only score in Steps 4-5 when geography/audience sizing should be discussed
+    // After Step 5, table is not required every turn - give neutral score
     if (currentStep < 4) {
         return {
             scorer: "audience-sizing",
@@ -667,17 +668,31 @@ export function scoreAudienceSizing(output, currentStep) {
             scope: "turn",
         };
     }
+    // After Step 5, table is not required every turn
+    if (currentStep > 5) {
+        // Only score if response mentions geography/audience - otherwise neutral
+        const mentionsGeography = /\b(dma|metro|market|geography|audience size|target audience)\b/i.test(output);
+        if (!mentionsGeography) {
+            return {
+                scorer: "audience-sizing",
+                score: 1.0,
+                metadata: { status: "not_applicable_post_step5" },
+                scope: "turn",
+            };
+        }
+    }
     // Check for table presence
     const hasTable = /\|.*\|.*\|/.test(output);
     // Check for proper column structure (DMA/Geo, Population, Target Audience, %)
-    const hasGeoColumn = /\|\s*(dma|geo|market|city|region|location)/i.test(output);
+    // Added "metro", "area", "metros" to match common variations
+    const hasGeoColumn = /\|\s*(dma|geo|market|city|region|location|metro|area|metros)/i.test(output);
     const hasPopulationColumn = /\|\s*(total\s*)?(pop|population)/i.test(output);
     const hasTargetAudienceColumn = /\|\s*(target\s*)?(aud|audience|size)/i.test(output);
     const hasPercentColumn = /\|\s*(target\s*)?(%|pct|percent|penetration)/i.test(output);
     // Check for absolute numbers in target audience (not just percentages)
     const hasAbsoluteNumbers = /\|\s*[\d,]{4,}\s*\|/g.test(output); // Numbers with 4+ digits
     // Check for TOTAL/rollup row
-    const hasTotalRow = /\|\s*(total|grand total|sum|rollup)/i.test(output);
+    const hasTotalRow = /\|\s*(\**)?(total|grand total|sum|rollup)(\**)?\s*\|/i.test(output);
     // Check for multiple DMAs (at least 2 data rows plus header and total)
     const tableRows = (output.match(/\|[^|]+\|[^|]+\|[^|]+\|/g) || []).length;
     const hasMultipleDMAs = tableRows >= 4; // header + 2 DMAs + total
@@ -716,7 +731,7 @@ export function scoreAudienceSizing(output, currentStep) {
     return {
         scorer: "audience-sizing",
         score: Math.min(1.0, score),
-        metadata: { ...checks, tableRows },
+        metadata: { ...checks, tableRows, currentStep },
         scope: "turn",
     };
 }
@@ -813,12 +828,293 @@ export function scoreResponseFormatting(output) {
     };
 }
 // =============================================================================
+// VALIDATION LAYER SCORERS (Strategic Quality)
+// =============================================================================
+/**
+ * Parse a number from various formats (e.g., "8.3M", "245K", "2.9%", "$750K")
+ */
+function parseNumberFromText(text) {
+    // Remove commas and trim
+    const cleaned = text.replace(/,/g, "").trim();
+    // Handle percentage
+    if (cleaned.endsWith("%")) {
+        const num = parseFloat(cleaned.slice(0, -1));
+        return isNaN(num) ? null : num / 100;
+    }
+    // Handle dollar amounts
+    const dollarMatch = cleaned.match(/^\$?([\d.]+)([KMB])?$/i);
+    if (dollarMatch) {
+        let num = parseFloat(dollarMatch[1]);
+        if (isNaN(num))
+            return null;
+        const suffix = (dollarMatch[2] || "").toUpperCase();
+        if (suffix === "K")
+            num *= 1000;
+        else if (suffix === "M")
+            num *= 1000000;
+        else if (suffix === "B")
+            num *= 1000000000;
+        return num;
+    }
+    // Handle plain numbers with K/M suffix
+    const numMatch = cleaned.match(/^([\d.]+)([KMB])?$/i);
+    if (numMatch) {
+        let num = parseFloat(numMatch[1]);
+        if (isNaN(num))
+            return null;
+        const suffix = (numMatch[2] || "").toUpperCase();
+        if (suffix === "K")
+            num *= 1000;
+        else if (suffix === "M")
+            num *= 1000000;
+        else if (suffix === "B")
+            num *= 1000000000;
+        return num;
+    }
+    return null;
+}
+/**
+ * Score mathematical accuracy in agent responses
+ *
+ * Validates:
+ * 1. Table percentage calculations (target_audience / population = stated_percent)
+ * 2. CAC calculations (budget / customers = stated_CAC)
+ * 3. Basic arithmetic expressions (A / B = C)
+ */
+export function scoreMathAccuracy(output, conversationContext) {
+    const errors = [];
+    const validations = [];
+    // 1. Validate table percentage calculations
+    // Pattern: | Name | Population | Target Audience | Target % |
+    const tableRowPattern = /\|\s*[^|]+\|\s*([\d.,]+[KMB]?)\s*\|\s*([\d.,]+[KMB]?)\s*\|\s*([\d.]+)%\s*\|/gi;
+    let match;
+    while ((match = tableRowPattern.exec(output)) !== null) {
+        const population = parseNumberFromText(match[1]);
+        const targetAudience = parseNumberFromText(match[2]);
+        const statedPercent = parseFloat(match[3]);
+        if (population && targetAudience && !isNaN(statedPercent)) {
+            const calculatedPercent = (targetAudience / population) * 100;
+            const tolerance = 0.5; // Allow 0.5% tolerance for rounding
+            if (Math.abs(calculatedPercent - statedPercent) > tolerance) {
+                errors.push(`Table math error: ${targetAudience} / ${population} = ${calculatedPercent.toFixed(1)}%, stated ${statedPercent}%`);
+            }
+            else {
+                validations.push(`Table percentage correct: ${statedPercent}%`);
+            }
+        }
+    }
+    // 2. Validate CAC calculations: budget / customers = CAC
+    // Pattern: "$750K budget and 15,000 customer target, that's $50 per customer"
+    const cacPattern = /\$?([\d.,]+[KMB]?)\s*(?:budget|spend).*?(\d{1,3}(?:,\d{3})*)\s*(?:customer|acquisition).*?\$(\d+(?:\.\d+)?)\s*(?:per|each|CAC)/gi;
+    while ((match = cacPattern.exec(output)) !== null) {
+        const budget = parseNumberFromText(match[1]);
+        const customers = parseNumberFromText(match[2]);
+        const statedCac = parseFloat(match[3]);
+        if (budget && customers && !isNaN(statedCac)) {
+            const calculatedCac = budget / customers;
+            const tolerance = 2; // Allow $2 tolerance
+            if (Math.abs(calculatedCac - statedCac) > tolerance) {
+                errors.push(`CAC math error: $${budget} / ${customers} = $${calculatedCac.toFixed(0)}, stated $${statedCac}`);
+            }
+            else {
+                validations.push(`CAC calculation correct: $${statedCac}`);
+            }
+        }
+    }
+    // 3. Validate explicit arithmetic expressions: X / Y = Z or X x Y = Z
+    const arithmeticPattern = /\$?([\d.,]+[KMB]?)\s*[\/÷]\s*([\d.,]+[KMB]?)\s*=\s*\$?([\d.,]+[KMB]?)/gi;
+    while ((match = arithmeticPattern.exec(output)) !== null) {
+        const operand1 = parseNumberFromText(match[1]);
+        const operand2 = parseNumberFromText(match[2]);
+        const statedResult = parseNumberFromText(match[3]);
+        if (operand1 && operand2 && statedResult) {
+            const calculatedResult = operand1 / operand2;
+            const tolerance = statedResult * 0.05; // 5% tolerance
+            if (Math.abs(calculatedResult - statedResult) > Math.max(tolerance, 1)) {
+                errors.push(`Arithmetic error: ${operand1} / ${operand2} = ${calculatedResult.toFixed(1)}, stated ${statedResult}`);
+            }
+            else {
+                validations.push(`Arithmetic correct: ${match[0]}`);
+            }
+        }
+    }
+    // If no math found, return neutral score
+    if (validations.length === 0 && errors.length === 0) {
+        return {
+            scorer: "math-accuracy",
+            score: 1.0,
+            metadata: { status: "no_math_found" },
+            scope: "turn",
+        };
+    }
+    // Score based on accuracy ratio
+    const total = validations.length + errors.length;
+    const score = validations.length / total;
+    return {
+        scorer: "math-accuracy",
+        score,
+        metadata: {
+            validations,
+            errors,
+            validCount: validations.length,
+            errorCount: errors.length,
+        },
+        scope: "turn",
+    };
+}
+/**
+ * Score feasibility of stated CAC given audience and budget constraints
+ *
+ * Validates:
+ * 1. Required conversion rate is realistic (< 5% for cold traffic)
+ * 2. Budget per person in audience is sufficient for reach + conversion
+ * 3. Audience size supports stated volume without saturation
+ */
+export function scoreFeasibilityValidation(output, extractedData) {
+    const issues = [];
+    const validations = [];
+    // Extract key metrics from the response or conversation context
+    const budget = extractedData.budget;
+    const customerTarget = extractedData.customerTarget;
+    const audienceSize = extractedData.audienceSize;
+    const statedCac = extractedData.cac;
+    // Check if we have enough data to validate
+    if (!budget || !customerTarget) {
+        return {
+            scorer: "feasibility-validation",
+            score: 1.0,
+            metadata: { status: "insufficient_data" },
+            scope: "turn",
+        };
+    }
+    // 1. Validate implied conversion rate
+    if (audienceSize && customerTarget) {
+        const requiredConversionRate = customerTarget / audienceSize;
+        if (requiredConversionRate > 0.05) {
+            issues.push(`Unrealistic conversion: ${customerTarget} from ${audienceSize} audience requires ${(requiredConversionRate * 100).toFixed(1)}% conversion (>5% is aggressive for cold traffic)`);
+        }
+        else if (requiredConversionRate > 0.02) {
+            validations.push(`Aggressive but possible: ${(requiredConversionRate * 100).toFixed(1)}% conversion required`);
+        }
+        else {
+            validations.push(`Feasible conversion rate: ${(requiredConversionRate * 100).toFixed(2)}%`);
+        }
+    }
+    // 2. Validate budget per person (investment density)
+    if (audienceSize && budget) {
+        const budgetPerPerson = budget / audienceSize;
+        if (budgetPerPerson < 0.5) {
+            issues.push(`Low investment density: $${budgetPerPerson.toFixed(2)} per person may be insufficient for conversion`);
+        }
+        else {
+            validations.push(`Investment density: $${budgetPerPerson.toFixed(2)} per person`);
+        }
+    }
+    // 3. Validate market penetration (avoid saturation)
+    if (audienceSize && customerTarget) {
+        const penetrationRate = customerTarget / audienceSize;
+        if (penetrationRate > 0.1) {
+            issues.push(`High penetration risk: ${(penetrationRate * 100).toFixed(1)}% of audience must convert - saturation likely`);
+        }
+    }
+    // Score based on issues found
+    if (issues.length === 0 && validations.length === 0) {
+        return {
+            scorer: "feasibility-validation",
+            score: 1.0,
+            metadata: { status: "no_feasibility_claims" },
+            scope: "turn",
+        };
+    }
+    const total = validations.length + issues.length;
+    const score = total > 0 ? validations.length / total : 1.0;
+    return {
+        scorer: "feasibility-validation",
+        score,
+        metadata: {
+            validations,
+            issues,
+            validCount: validations.length,
+            issueCount: issues.length,
+            extractedMetrics: { budget, customerTarget, audienceSize, statedCac },
+        },
+        scope: "turn",
+    };
+}
+/**
+ * Score benchmark sourcing - verify that "Based on Knowledge Base" claims
+ * reference actual data from the KB
+ *
+ * This scorer requires KB content to be passed in for verification
+ */
+export function scoreBenchmarkSourcing(output, kbContent) {
+    // Find all KB citations
+    const kbCitations = output.match(/based on knowledge base[^.]*\./gi) || [];
+    if (kbCitations.length === 0) {
+        return {
+            scorer: "benchmark-sourcing",
+            score: 1.0,
+            metadata: { status: "no_kb_citations" },
+            scope: "turn",
+        };
+    }
+    // If no KB content provided, we can't verify - give partial credit
+    if (!kbContent) {
+        return {
+            scorer: "benchmark-sourcing",
+            score: 0.7,
+            metadata: {
+                status: "kb_not_provided",
+                citationCount: kbCitations.length,
+                message: "KB content not available for verification",
+            },
+            scope: "turn",
+        };
+    }
+    const verified = [];
+    const unverified = [];
+    for (const citation of kbCitations) {
+        // Extract the claimed data from the citation
+        // e.g., "Based on Knowledge Base, typical ecommerce CAC is $20-80"
+        const claimMatch = citation.match(/based on knowledge base,?\s*(.+)/i);
+        if (claimMatch) {
+            const claim = claimMatch[1];
+            // Extract key terms from the claim to search in KB
+            const keyTerms = claim.match(/\$[\d-]+|\d+%|\d+x|[\w]+/gi) || [];
+            // Check if key terms appear in KB content
+            const foundInKb = keyTerms.some(term => {
+                const termLower = term.toLowerCase();
+                return kbContent.toLowerCase().includes(termLower);
+            });
+            if (foundInKb) {
+                verified.push(claim);
+            }
+            else {
+                unverified.push(claim);
+            }
+        }
+    }
+    const total = verified.length + unverified.length;
+    const score = total > 0 ? verified.length / total : 1.0;
+    return {
+        scorer: "benchmark-sourcing",
+        score,
+        metadata: {
+            verified,
+            unverified,
+            verifiedCount: verified.length,
+            unverifiedCount: unverified.length,
+        },
+        scope: "turn",
+    };
+}
+// =============================================================================
 // AGGREGATED SCORER
 // =============================================================================
 /**
  * Score a single turn with all applicable scorers
  */
-export async function scoreTurn(userMessage, agentResponse, currentStep, stepState, userSophistication, cacAggressiveness = "unknown", conversationHistory) {
+export async function scoreTurn(userMessage, agentResponse, currentStep, stepState, userSophistication, cacAggressiveness = "unknown", conversationHistory, extractedData, kbContent) {
     const scores = {};
     // Code-based scorers (run synchronously)
     scores["response-length"] = scoreResponseLength(agentResponse);
@@ -830,6 +1126,10 @@ export async function scoreTurn(userMessage, agentResponse, currentStep, stepSta
     scores["calculation-presence"] = scoreCalculationPresence(agentResponse, userMessage);
     scores["response-formatting"] = scoreResponseFormatting(agentResponse);
     scores["audience-sizing"] = scoreAudienceSizing(agentResponse, currentStep);
+    // Validation layer scorers (strategic quality)
+    scores["math-accuracy"] = scoreMathAccuracy(agentResponse, conversationHistory);
+    scores["feasibility-validation"] = scoreFeasibilityValidation(agentResponse, extractedData || {});
+    scores["benchmark-sourcing"] = scoreBenchmarkSourcing(agentResponse, kbContent);
     // LLM-based scorers (run in parallel)
     const hasEnoughData = stepState.collectedData[currentStep]?.minimumViableMet || false;
     const [adaptiveScore, proactiveScore, progressScore, riskScore, audienceCompletenessScore, precisionConnectionScore,] = await Promise.all([

@@ -1,0 +1,403 @@
+{
+  "scenario": {
+    "id": "channel-mix-change",
+    "name": "Channel Mix Change",
+    "persona": "channel-mix-cpg-manager"
+  },
+  "result": {
+    "compositeScore": 0.8267884615384613,
+    "passed": true,
+    "totalTurns": 10,
+    "stepsCompleted": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "turnsPerStep": {
+      "1": 2,
+      "2": 1,
+      "3": 2,
+      "4": 1,
+      "5": 1,
+      "6": 2,
+      "7": 1
+    },
+    "failures": {
+      "warnings": [],
+      "major": [
+        {
+          "id": "duplicate-question",
+          "description": "Agent asks the same question again (80%+ similarity)",
+          "type": "duplicate_question",
+          "severity": "major",
+          "scorePenalty": 0.15,
+          "terminateOnDetect": false
+        }
+      ],
+      "critical": []
+    },
+    "primeDirective": {
+      "planQualityScore": 0.928,
+      "dataCompleteness": 1,
+      "feasibilityAssessment": 1,
+      "riskIdentification": 1,
+      "mentorshipScore": 0.9500000000000001,
+      "explanationClarity": 1,
+      "calculationTransparency": 0.8,
+      "userGrowth": 1,
+      "turnsPerDirectiveAchievement": 10.649627263045792,
+      "tokensPerInsight": 0,
+      "stepsPerDecisionPoint": 1.4285714285714286,
+      "combinedEfficiency": 0.9390000000000001
+    }
+  },
+  "turnScoreAggregates": {
+    "response-length": {
+      "min": 0.8,
+      "max": 1,
+      "mean": 0.9,
+      "median": 0.9,
+      "scores": [
+        1,
+        1,
+        1,
+        0.8,
+        0.8,
+        1,
+        1,
+        0.8,
+        0.8,
+        0.8
+      ]
+    },
+    "single-question": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "step-boundary": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "source-citation": {
+      "min": 0.7,
+      "max": 1,
+      "mean": 0.9400000000000001,
+      "median": 1,
+      "scores": [
+        1,
+        0.7,
+        0.7,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "acronym-definition": {
+      "min": 0,
+      "max": 1,
+      "mean": 0.85,
+      "median": 1,
+      "scores": [
+        1,
+        0.5,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "idk-protocol": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "calculation-presence": {
+      "min": 0.5,
+      "max": 1,
+      "mean": 0.8,
+      "median": 1,
+      "scores": [
+        0.5,
+        0.5,
+        0.5,
+        1,
+        0.5,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "response-formatting": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "audience-sizing": {
+      "min": 0,
+      "max": 1,
+      "mean": 0.8550000000000001,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        0.5499999999999999,
+        0,
+        1,
+        1,
+        1
+      ]
+    },
+    "math-accuracy": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "feasibility-validation": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "benchmark-sourcing": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "adaptive-sophistication": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "proactive-intelligence": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "progress-over-perfection": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "risk-opportunity-flagging": {
+      "min": 1,
+      "max": 1,
+      "mean": 1,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "audience-completeness": {
+      "min": 0.8,
+      "max": 1,
+      "mean": 0.9800000000000001,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        1,
+        0.8,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "precision-connection": {
+      "min": 0.8,
+      "max": 1,
+      "mean": 0.9800000000000001,
+      "median": 1,
+      "scores": [
+        1,
+        1,
+        0.8,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  },
+  "conversationScores": {
+    "step-completion-rate": 1,
+    "conversation-efficiency": 1,
+    "context-retention": 1,
+    "greeting-uniqueness": 1,
+    "loop-detection": 0.85,
+    "failure-penalty": 0.85,
+    "step-transition-quality": 0.8,
+    "overall-coherence": 0.8
+  },
+  "executionMetadata": {
+    "startTime": 1768488806061,
+    "endTime": 1768488957374,
+    "totalDurationMs": 151313,
+    "averageLatencyMs": 14481.1,
+    "totalTokensUsed": 0,
+    "modelUsed": "claude-sonnet-4-20250514",
+    "promptVersion": "v5_8_rag"
+  }
+}

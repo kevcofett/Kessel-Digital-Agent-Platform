@@ -163,6 +163,7 @@ function parseUserResponse(response, persona) {
 export class UserSimulator {
     anthropic;
     config;
+    triggeredDataChanges = new Set();
     constructor(config = {}) {
         this.config = { ...DEFAULT_CONFIG, ...config };
         this.anthropic = new Anthropic({
@@ -170,20 +171,35 @@ export class UserSimulator {
         });
     }
     /**
+     * Reset triggered data changes (call at start of new conversation)
+     */
+    resetTriggeredChanges() {
+        this.triggeredDataChanges.clear();
+    }
+    /**
      * Check if a data change should be triggered at this turn
+     * Each data change can only be triggered once per conversation
      */
     checkForDataChange(turnNumber, agentMessage, dataChanges) {
         if (!dataChanges || dataChanges.length === 0)
             return null;
         for (const change of dataChanges) {
+            // Create a unique key for this change
+            const changeKey = `${change.field}-${change.newValue}`;
+            // Skip if this change has already been triggered
+            if (this.triggeredDataChanges.has(changeKey)) {
+                continue;
+            }
             // Check turn-based trigger
             if (change.triggerTurn === turnNumber) {
+                this.triggeredDataChanges.add(changeKey);
                 return change;
             }
-            // Check condition-based trigger
-            if (change.triggerCondition) {
+            // Check condition-based trigger (only if we're at or past the trigger turn)
+            if (change.triggerCondition && (!change.triggerTurn || turnNumber >= change.triggerTurn)) {
                 const regex = new RegExp(change.triggerCondition, "i");
                 if (regex.test(agentMessage)) {
+                    this.triggeredDataChanges.add(changeKey);
                     return change;
                 }
             }

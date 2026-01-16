@@ -56,7 +56,7 @@ const MPA_STEP_KEYWORDS = {
 // ============================================================================
 // DOCUMENT TYPE PATTERNS
 // ============================================================================
-const MPA_DOCUMENT_PATTERNS = {
+const MPA_DOCUMENT_TYPE_PATTERNS = {
     'benchmark': [
         /benchmark/i,
         /industry.*average/i,
@@ -101,136 +101,170 @@ const MPA_DOCUMENT_PATTERNS = {
     ],
 };
 // ============================================================================
-// TOPIC DETECTION PATTERNS
+// DOCUMENT PURPOSE PATTERNS
 // ============================================================================
-const MPA_TOPIC_PATTERNS = {
-    'audience': [
-        /audience/i,
-        /targeting/i,
-        /segment/i,
-        /persona/i,
-        /demographic/i,
-        /customer/i,
-    ],
-    'budget': [
-        /budget/i,
-        /spend/i,
-        /allocation/i,
-        /investment/i,
-        /cost/i,
-        /funding/i,
-    ],
-    'channel': [
-        /channel/i,
-        /media/i,
-        /platform/i,
-        /tactic/i,
-        /paid.*search/i,
-        /paid.*social/i,
-        /display/i,
-        /ctv/i,
-        /retail.*media/i,
-    ],
-    'measurement': [
-        /measurement/i,
-        /attribution/i,
-        /analytics/i,
-        /tracking/i,
-        /reporting/i,
-        /mmm/i,
-        /incrementality/i,
-    ],
-    'benchmark': [
+const MPA_DOCUMENT_PURPOSE_PATTERNS = {
+    'definitive': [
         /benchmark/i,
-        /average/i,
-        /typical/i,
-        /industry.*standard/i,
-        /baseline/i,
+        /authoritative/i,
+        /official/i,
     ],
-    'efficiency': [
-        /efficiency/i,
-        /optimization/i,
-        /performance/i,
-        /improvement/i,
-        /roas/i,
-        /roi/i,
+    'guidance': [
+        /playbook/i,
+        /guide/i,
+        /best.*practice/i,
     ],
-    'general': [
-        /strategy/i,
-        /planning/i,
-        /approach/i,
-        /overview/i,
+    'reference': [
+        /reference/i,
+        /glossary/i,
+        /terminology/i,
+    ],
+    'procedural': [
+        /process/i,
+        /procedure/i,
+        /workflow/i,
+    ],
+    'template': [
+        /template/i,
+        /format/i,
+    ],
+    'example': [
+        /example/i,
+        /conversation/i,
+        /sample/i,
     ],
 };
+// ============================================================================
+// TOPIC KEYWORD MAPPINGS
+// ============================================================================
+const MPA_TOPIC_KEYWORDS = {
+    'audience': [
+        'audience',
+        'targeting',
+        'segment',
+        'persona',
+        'demographic',
+        'customer',
+    ],
+    'budget': [
+        'budget',
+        'spend',
+        'allocation',
+        'investment',
+        'cost',
+        'funding',
+    ],
+    'channel': [
+        'channel',
+        'media',
+        'platform',
+        'tactic',
+        'paid search',
+        'paid social',
+        'display',
+        'ctv',
+        'retail media',
+    ],
+    'measurement': [
+        'measurement',
+        'attribution',
+        'analytics',
+        'tracking',
+        'reporting',
+        'mmm',
+        'incrementality',
+    ],
+    'benchmark': [
+        'benchmark',
+        'average',
+        'typical',
+        'industry standard',
+        'baseline',
+    ],
+    'efficiency': [
+        'efficiency',
+        'optimization',
+        'performance',
+        'improvement',
+        'roas',
+        'roi',
+    ],
+    'general': [
+        'strategy',
+        'planning',
+        'approach',
+        'overview',
+    ],
+};
+// ============================================================================
+// VERTICAL AND METRIC PATTERNS
+// ============================================================================
+const MPA_VERTICAL_PATTERNS = [
+    'ecommerce',
+    'e-commerce',
+    'retail',
+    'dtc',
+    'direct-to-consumer',
+    'b2b',
+    'saas',
+    'financial',
+    'finance',
+    'healthcare',
+    'pharma',
+    'pharmaceutical',
+    'automotive',
+    'travel',
+    'cpg',
+    'consumer packaged goods',
+    'technology',
+    'tech',
+    'entertainment',
+    'education',
+];
+const MPA_METRIC_PATTERNS = [
+    'cac',
+    'cpa',
+    'cpm',
+    'cpc',
+    'ctr',
+    'cvr',
+    'roas',
+    'roi',
+    'ltv',
+    'aov',
+    'reach',
+    'frequency',
+    'impressions',
+    'clicks',
+    'conversions',
+];
 // ============================================================================
 // MAIN CONFIGURATION EXPORT
 // ============================================================================
 export const MPA_AGENT_CONFIG = {
-    agentId: 'mpa',
-    agentName: 'Media Planning Agent',
-    agentVersion: '5.5',
     // Knowledge Base Configuration
     kbPath: '../../kb', // Relative to braintrust directory
-    kbFilePattern: '*.txt',
-    // Document Processing
-    chunkSize: 1000,
-    chunkOverlap: 200,
-    // Retrieval Configuration
-    topK: 5,
-    minRelevanceScore: 0.3,
+    // Excluded files (none for MPA)
+    excludedFiles: [],
+    // Deprioritized files (conversation examples)
+    deprioritizedFiles: [
+        'conversation-examples.txt',
+        'sample-dialogues.txt',
+    ],
     // Synonym Expansion
     synonymMappings: MPA_SYNONYM_MAPPINGS,
-    enableSynonymExpansion: true,
+    // Document Type Detection
+    documentTypePatterns: MPA_DOCUMENT_TYPE_PATTERNS,
+    // Document Purpose Detection
+    documentPurposePatterns: MPA_DOCUMENT_PURPOSE_PATTERNS,
+    // Topic Keywords
+    topicKeywords: MPA_TOPIC_KEYWORDS,
     // Step Detection (MPA-specific)
     stepKeywords: MPA_STEP_KEYWORDS,
-    enableStepDetection: true,
-    // Document Type Detection
-    documentTypePatterns: MPA_DOCUMENT_PATTERNS,
-    // Topic Detection
-    topicPatterns: MPA_TOPIC_PATTERNS,
-    // Vertical Support
-    supportedVerticals: [
-        'ecommerce',
-        'retail',
-        'dtc',
-        'b2b',
-        'saas',
-        'financial',
-        'healthcare',
-        'pharma',
-        'automotive',
-        'travel',
-        'cpg',
-        'technology',
-        'entertainment',
-        'education',
-    ],
-    // Metrics
-    supportedMetrics: [
-        'cac',
-        'cpa',
-        'cpm',
-        'cpc',
-        'ctr',
-        'cvr',
-        'roas',
-        'roi',
-        'ltv',
-        'aov',
-        'reach',
-        'frequency',
-        'impressions',
-        'clicks',
-        'conversions',
-    ],
-    // Feature Flags
-    features: {
-        enableHybridSearch: true,
-        enableQueryExpansion: true,
-        enableReranking: false, // Enable when semantic embedding available
-        enableCaching: true,
-        cacheTTLSeconds: 3600,
-    },
+    // Vertical Patterns
+    verticalPatterns: MPA_VERTICAL_PATTERNS,
+    // Metric Patterns
+    metricPatterns: MPA_METRIC_PATTERNS,
 };
 // ============================================================================
 // UTILITY FUNCTIONS
@@ -254,9 +288,9 @@ export function detectMPAStep(query) {
  */
 export function detectMPATopic(query) {
     const normalizedQuery = query.toLowerCase();
-    for (const [topic, patterns] of Object.entries(MPA_TOPIC_PATTERNS)) {
-        for (const pattern of patterns) {
-            if (pattern.test(normalizedQuery)) {
+    for (const [topic, keywords] of Object.entries(MPA_TOPIC_KEYWORDS)) {
+        for (const keyword of keywords) {
+            if (normalizedQuery.includes(keyword.toLowerCase())) {
                 return topic;
             }
         }

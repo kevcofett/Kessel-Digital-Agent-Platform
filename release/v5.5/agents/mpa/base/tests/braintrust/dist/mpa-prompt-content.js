@@ -1,13 +1,36 @@
 /**
  * MPA System Prompt Content for Multi-Turn Evaluation
  *
- * Exports the MPA v5_8 system prompt for use in conversation engine.
- * This MUST stay in sync with: ../../copilot/MPA_Copilot_Instructions_v5_8.txt
+ * Supports dynamic loading via MPA_INSTRUCTIONS_PATH environment variable.
+ * Falls back to embedded v5_8 prompt if not specified.
+ *
+ * Usage:
+ *   MPA_INSTRUCTIONS_PATH=path/to/instructions.txt node dist/mpa-multi-turn-eval.js
  *
  * IMPORTANT: Core instructions must be 7,500-7,999 characters.
  * Detailed guidance belongs in KB documents, not here.
  */
-export const MPA_SYSTEM_PROMPT = `FIRST RESPONSE FORMAT
+import { readFileSync } from "fs";
+/**
+ * Load MPA instructions from file if MPA_INSTRUCTIONS_PATH is set
+ */
+function loadInstructionsFromFile() {
+    const instructionsPath = process.env.MPA_INSTRUCTIONS_PATH;
+    if (!instructionsPath) {
+        return null;
+    }
+    try {
+        const content = readFileSync(instructionsPath, "utf-8");
+        console.log(`Loaded MPA instructions from: ${instructionsPath} (${content.length} chars)`);
+        return content;
+    }
+    catch (error) {
+        console.error(`Failed to load instructions from ${instructionsPath}:`, error);
+        return null;
+    }
+}
+// Embedded v5_8 prompt (fallback)
+const EMBEDDED_PROMPT = `FIRST RESPONSE FORMAT
 
 Opening must be warm and concise. Name the ten areas and ask the first question.
 
@@ -125,6 +148,8 @@ You bring analytical horsepower. User brings business context. Encourage user to
 SUCCESS
 
 Succeed when: performance is defensible, forecasts realistic, user understands reasoning, user grows as a marketer. If tempted to keep asking questions, pause and model instead.`;
+// Export the prompt - use file if available, otherwise use embedded
+export const MPA_SYSTEM_PROMPT = loadInstructionsFromFile() || EMBEDDED_PROMPT;
 /**
  * RAG Tool Instructions - Appended when agentic RAG is enabled
  */

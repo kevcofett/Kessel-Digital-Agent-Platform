@@ -20,9 +20,11 @@ import {
 import {
   QueryIntent,
   KBSectionMetadata,
+  KBDocumentMetadata,
+  ChunkPriority,
   scoreMetadataMatch,
 } from './kb-metadata-parser.js';
-import { AnalyzedQuery } from './query-understanding.js';
+import { AnalyzedQuery, EnhancedAnalyzedQuery } from './query-understanding.js';
 import { EnhancedDocumentChunk } from './document-processor.js';
 
 // ============================================================================
@@ -88,6 +90,7 @@ export interface DomainRerankFactors {
   benchmarkPresence: number;       // Boost for benchmark data
   recencyFactor: number;           // Boost for recent content
   confidenceLevel: number;         // Boost based on content confidence
+  chunkPriority: number;           // KB v6.0: Boost based on META_CHUNK_PRIORITY (0=highest)
 }
 
 // ============================================================================
@@ -110,6 +113,7 @@ const DEFAULT_DOMAIN_FACTORS: DomainRerankFactors = {
   benchmarkPresence: 0.15,
   recencyFactor: 0.10,
   confidenceLevel: 0.10,
+  chunkPriority: 0.15,    // KB v6.0: Priority 0 gets full boost, 3 gets none
 };
 
 // ============================================================================
@@ -329,6 +333,9 @@ export class ResultFusion {
     // Confidence level boost (if enhanced chunk)
     boost += this.calculateConfidenceBoost(chunk);
 
+    // KB v6.0: Chunk priority boost
+    boost += this.calculateChunkPriorityBoost(chunk);
+
     return boost;
   }
 
@@ -452,6 +459,25 @@ export class ResultFusion {
       default:
         return 0;
     }
+  }
+
+  /**
+   * KB v6.0: Boost based on META_CHUNK_PRIORITY
+   * Priority 0 (highest) = full boost, Priority 3 (lowest) = no boost
+   */
+  private calculateChunkPriorityBoost(chunk: DocumentChunk | EnhancedDocumentChunk): number {
+    const enhancedChunk = chunk as EnhancedDocumentChunk;
+
+    // Check if we have document-level metadata with chunk priority
+    if (!enhancedChunk.documentMetadata) {
+      return 0;
+    }
+
+    const priority = enhancedChunk.documentMetadata.chunkPriority;
+
+    // Priority 0 = 100% boost, 1 = 66%, 2 = 33%, 3 = 0%
+    const boostMultiplier = Math.max(0, 1 - (priority / 3));
+    return this.domainFactors.chunkPriority * boostMultiplier;
   }
 
   // ============================================================================

@@ -139,8 +139,33 @@ export declare function scorePrecisionConnection(output: string, currentStep: nu
  */
 export declare function scoreResponseFormatting(output: string): TurnScore;
 /**
+ * Score mathematical accuracy in agent responses
+ *
+ * Validates:
+ * 1. Table percentage calculations (target_audience / population = stated_percent)
+ * 2. CAC calculations (budget / customers = stated_CAC)
+ * 3. Basic arithmetic expressions (A / B = C)
+ */
+export declare function scoreMathAccuracy(output: string, conversationContext?: string): TurnScore;
+/**
+ * Score feasibility of stated CAC given audience and budget constraints
+ *
+ * Validates:
+ * 1. Required conversion rate is realistic (< 5% for cold traffic)
+ * 2. Budget per person in audience is sufficient for reach + conversion
+ * 3. Audience size supports stated volume without saturation
+ */
+export declare function scoreFeasibilityValidation(output: string, extractedData: Record<string, unknown>): TurnScore;
+/**
+ * Score benchmark sourcing - verify that "Based on Knowledge Base" claims
+ * reference actual data from the KB
+ *
+ * This scorer requires KB content to be passed in for verification
+ */
+export declare function scoreBenchmarkSourcing(output: string, kbContent?: string): TurnScore;
+/**
  * Score a single turn with all applicable scorers
  */
-export declare function scoreTurn(userMessage: string, agentResponse: string, currentStep: number, stepState: StepTrackingState, userSophistication: string, cacAggressiveness?: "aggressive" | "moderate" | "conservative" | "unknown", conversationHistory?: string): Promise<Record<string, TurnScore>>;
+export declare function scoreTurn(userMessage: string, agentResponse: string, currentStep: number, stepState: StepTrackingState, userSophistication: string, cacAggressiveness?: "aggressive" | "moderate" | "conservative" | "unknown", conversationHistory?: string, extractedData?: Record<string, unknown>, kbContent?: string): Promise<Record<string, TurnScore>>;
 export default scoreTurn;
 //# sourceMappingURL=turn-scorers.d.ts.map

@@ -301,10 +301,9 @@ TABLE_CONFIG_V6 = {
     },
     "iab_taxonomy": {
         "entity_set": "mpa_iab_taxonomies",
-        "primary_key": "mpa_iabid",
+        "primary_key": "mpa_iabcode",
         "csv_file": "mpa_iab_taxonomy_seed.csv",
         "column_mappings": {
-            "mpa_iab_id": "mpa_iabid",
             "mpa_iab_code": "mpa_iabcode",
             "mpa_iab_tier": "mpa_iabtier",
             "mpa_iab_parent_code": "mpa_iabparentcode",

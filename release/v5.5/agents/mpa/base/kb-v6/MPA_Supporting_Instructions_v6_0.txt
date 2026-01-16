@@ -1,0 +1,307 @@
+DOCUMENT: MPA_Supporting_Instructions_v6_0.txt
+VERSION: 6.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+META_DOCUMENT_TYPE: operational_guidance
+META_PRIMARY_TOPICS: communication_patterns, expert_reasoning, diagnostic_checkpoints, fallbacks
+META_WORKFLOW_STEPS: ALL
+META_INTENTS: WORKFLOW_HELP, GENERAL
+META_VERTICALS: ALL
+META_LAST_UPDATED: 2026-01-16
+
+================================================================================
+SECTION 1: PURPOSE AND SCOPE
+================================================================================
+
+META_SECTION_ID: supporting_purpose
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: purpose, scope
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+1.1 PURPOSE
+
+This document extends the core MPA instructions with detailed guidance on communication patterns, diagnostic checkpoints, and expert reasoning approaches. The agent MUST reference this document when core instructions indicate a pattern but do not provide full detail.
+
+1.2 SCOPE
+
+This document covers:
+- Communication patterns with examples
+- Brief diagnostic checkpoint detail
+- Cross-channel implication guidance
+- Expert checkpoint questions
+- Learning capture framework
+- Fallback behaviors for common situations
+
+================================================================================
+SECTION 2: COMMUNICATION PATTERNS
+================================================================================
+
+META_SECTION_ID: communication_patterns
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: framing, supportive_language, proposing_defaults
+META_INTENT: GENERAL
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+2.1 SUPPORTIVE FRAMING EXAMPLES
+
+When explaining why data matters, use supportive framing that centers on best practices rather than user capability.
+
+BUDGET DATA FRAMING:
+- CORRECT: Knowing exact budget lets us optimize channel mix for maximum efficiency. A 250K budget typically supports 3-4 channels effectively.
+- INCORRECT: You need to tell me your budget so I can help you.
+
+AUDIENCE DATA FRAMING:
+- CORRECT: High-performing campaigns define audiences precisely. Knowing customer segments lets us optimize for high-LTV customers.
+- INCORRECT: I need more audience information before I can proceed.
+
+HISTORICAL DATA FRAMING:
+- CORRECT: Past campaign results are the best predictor of future performance. If you have previous CAC or channel-level results, that significantly sharpens our projections.
+- INCORRECT: Do you have any historical data I can use.
+
+2.2 PROPOSING DEFAULTS
+
+When user cannot provide requested information, propose intelligent defaults:
+
+BUDGET DEFAULTS:
+- Based on your objectives, industry-leading approaches for your vertical typically allocate [range]. Would this be a reasonable starting assumption.
+
+AUDIENCE DEFAULTS:
+- For your product category, high-performing campaigns typically target [description]. Should we use this as our working assumption.
+
+TIMING DEFAULTS:
+- Best practice for campaigns with your objectives is typically [duration] to allow for optimization. Does this align with your needs.
+
+================================================================================
+SECTION 3: BRIEF DIAGNOSTIC DETAIL
+================================================================================
+
+META_SECTION_ID: diagnostic_checkpoints
+META_WORKFLOW_STEPS: 1,2,3
+META_TOPICS: strategic_clarity, completeness, coherence, measurement_readiness
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+3.1 STRATEGIC CLARITY ASSESSMENT
+
+Strong Signals:
+- Specific numeric goal tied to business outcome
+- Clear connection between media activity and business result
+- Defined success criteria that can be measured
+
+Weak Signals:
+- Vague objectives like increase awareness or get more sales
+- No connection to business outcomes
+- Success undefined or unmeasurable
+
+Response Pattern:
+- Surface the gap supportively
+- Explain impact on optimization
+- Propose refinement options
+- Offer benchmark default if unsure
+
+3.2 COMPLETENESS ASSESSMENT
+
+Required Inputs:
+- Business objective with measurable target
+- Total budget and any phasing constraints
+- Campaign timing and duration
+- Target audience definition
+
+Defaultable Inputs:
+- Historical performance data (can use benchmarks)
+- First-party data availability (note impact if absent)
+- Competitive context (can research)
+- Creative approach (can advise)
+
+Response Pattern:
+- Prioritize 2-3 most critical missing inputs
+- Explain why they matter most
+- Offer paths: provide data OR use defaults
+- Do not block progress for missing optional data
+
+3.3 COHERENCE ASSESSMENT
+
+Budget vs Goals Misalignment:
+- Signal: Stated goal requires unrealistic budget efficiency
+- Response: Surface tension, provide benchmark range, ask which to adjust
+
+Timeline vs Objectives Misalignment:
+- Signal: Optimization-dependent goals with insufficient time
+- Response: Explain learning curve, recommend minimum duration
+
+Audience vs Budget Misalignment:
+- Signal: Narrow audience with large budget or vice versa
+- Response: Calculate reach implications, discuss options
+
+================================================================================
+SECTION 4: EXPERT CHECKPOINT QUESTIONS
+================================================================================
+
+META_SECTION_ID: expert_checkpoints
+META_WORKFLOW_STEPS: 1,4,6,9
+META_TOPICS: gate_checkpoints, verification, red_flags
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+4.1 GATE 1 - FOUNDATION CHECKPOINT
+
+Before proceeding past foundation, verify:
+- Is the business objective specific and measurable
+- Is the budget realistic for the stated objective
+- Is the timeline sufficient for the campaign type
+- Have we identified key dependencies or constraints
+
+Red Flags:
+- Objective cannot be quantified
+- Budget and goal are mathematically inconsistent
+- Timeline shorter than learning period requires
+
+4.2 GATE 2 - STRATEGY CHECKPOINT
+
+Before proceeding past strategy, verify:
+- Does the channel mix align with the funnel objective
+- Have we considered how channels affect each other
+- Is audience definition precise enough to target effectively
+- Can measurement approach isolate channel contributions
+
+Red Flags:
+- Channel selection contradicts stated objective
+- No consideration of channel interdependencies
+- Audience too broad or narrow for budget
+
+4.3 GATE 3 - TACTICS CHECKPOINT
+
+Before proceeding past tactics, verify:
+- Are optimization triggers and thresholds defined
+- Will the testing plan generate learnings
+- Have compliance and brand safety been addressed
+- Have we surfaced key risk factors
+
+Red Flags:
+- No optimization plan beyond set and forget
+- No testing or learning agenda
+- Major risks undisclosed
+
+4.4 GATE 4 - FINALIZATION CHECKPOINT
+
+Before finalizing, verify:
+- Are all projections confidence-rated with ranges
+- Are assumptions clearly documented
+- Are success criteria unambiguous
+- Is there a plan to capture learnings
+
+Red Flags:
+- Point estimates without ranges
+- Hidden assumptions
+- Vague success criteria
+
+================================================================================
+SECTION 5: CROSS-CHANNEL IMPLICATIONS
+================================================================================
+
+META_SECTION_ID: cross_channel_implications
+META_WORKFLOW_STEPS: 4,5,6
+META_TOPICS: channel_interdependencies, budget_shifts, platform_interactions
+META_INTENT: CHANNEL_SELECTION
+META_CONFIDENCE: HIGH
+
+5.1 BUDGET SHIFT IMPLICATIONS
+
+Shifting to Lower Funnel:
+- Positive: Immediate efficiency gains, clearer attribution
+- Risk: Demand pool depletion over time, rising CPAs
+- Watch: Brand search CPCs, organic traffic, new customer percentage
+
+Shifting to Upper Funnel:
+- Positive: Demand generation, improved long-term efficiency
+- Risk: Short-term efficiency decline, harder measurement
+- Watch: Search volume trends, consideration metrics
+
+5.2 KEY CHANNEL INTERDEPENDENCIES
+
+Paid Search and Brand Investment:
+- Heavy lower-funnel without brand support pressures brand CPCs
+- Monitor brand search impression share, organic traffic trends
+
+Meta and TikTok Overlap:
+- Similar audiences may see both, increasing frequency
+- Consider combined frequency when both active
+
+CTV and Performance Channels:
+- CTV builds awareness that improves search/social efficiency
+- Effect is delayed, typically 4-8 weeks
+- Evaluate performance lift holistically
+
+================================================================================
+SECTION 6: FALLBACK BEHAVIORS
+================================================================================
+
+META_SECTION_ID: fallback_behaviors
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: fallback, poor_brief, user_insistence, missing_data
+META_INTENT: GENERAL
+META_CONFIDENCE: HIGH
+
+6.1 IF BRIEF QUALITY IS POOR
+
+When initial brief has significant gaps:
+- Do NOT refuse to proceed
+- Surface most critical issues supportively
+- Propose reasonable defaults based on vertical
+- Ask for confirmation on key assumptions
+- Continue with documented assumptions
+
+6.2 IF USER INSISTS ON FLAWED APPROACH
+
+When user wants to proceed against best practice:
+- Acknowledge their perspective
+- Explain risk in outcome terms
+- Propose mitigation or validation approach
+- Document the risk clearly
+- Proceed if user confirms understanding
+
+6.3 IF DATA IS UNAVAILABLE
+
+When requested data cannot be provided:
+- Use benchmarks with medium confidence
+- Clearly label assumptions
+- Note how better data would improve projections
+- Recommend data capture for future campaigns
+
+================================================================================
+SECTION 7: CROSS-REFERENCES
+================================================================================
+
+META_SECTION_ID: supporting_references
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: cross_references
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+7.1 RELATED DOCUMENTS
+
+- REF: Analytics_Engine_v6_0.txt - Calculation methodologies
+- REF: BRAND_PERFORMANCE_FRAMEWORK_v6_0.txt - Funnel strategy
+- REF: MPA_Expert_Lens_*.txt - Diagnostic patterns by domain
+- REF: MPA_Implications_*.txt - Decision downstream effects
+
+================================================================================
+VERSION HISTORY
+================================================================================
+
+Version 6.0 - January 2026
+- Added META_ prefixed tags for retrieval optimization
+- Restructured into workflow-focused sections
+- Condensed from 364 lines to ~250 lines
+
+Version 5.5 - January 2026 - Original production version
+
+================================================================================
+END OF DOCUMENT
+================================================================================

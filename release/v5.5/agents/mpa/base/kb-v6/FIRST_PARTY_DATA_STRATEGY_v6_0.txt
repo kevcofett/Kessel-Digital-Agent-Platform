@@ -1,0 +1,224 @@
+DOCUMENT: FIRST_PARTY_DATA_STRATEGY_v6_0.txt
+VERSION: 6.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+META_DOCUMENT_TYPE: strategic_guide
+META_PRIMARY_TOPICS: first_party_data, data_strategy, privacy, cdp, audience_activation
+META_WORKFLOW_STEPS: 2,3,4
+META_INTENTS: AUDIENCE_TARGETING, CHANNEL_SELECTION
+META_VERTICALS: ALL
+META_LAST_UPDATED: 2026-01-16
+
+================================================================================
+SECTION 1: PURPOSE AND FUNDAMENTALS
+================================================================================
+
+META_SECTION_ID: first_party_purpose
+META_WORKFLOW_STEPS: 2,3
+META_TOPICS: purpose, first_party_data, privacy_landscape
+META_INTENT: AUDIENCE_TARGETING
+META_CONFIDENCE: HIGH
+
+1.1 PURPOSE
+
+This document provides guidance on first-party data strategy for media planning. First-party data has become the foundation of effective marketing due to privacy regulations, consumer expectations, and platform signal loss.
+
+1.2 WHAT IS FIRST-PARTY DATA
+
+Information collected directly from customers and prospects through owned touchpoints with consent:
+- Website and app interactions
+- Purchase and transaction history
+- Customer account information
+- Email and communication engagement
+- Loyalty program participation
+- Customer service interactions
+
+1.3 WHY IT MATTERS
+
+Privacy Landscape Context:
+- Third-party cookies blocked in Safari/Firefox (~21% of traffic)
+- Regulatory requirements (GDPR, CCPA) restrict third-party data
+- Consumer privacy expectations continue rising
+- Platform signal loss from app tracking transparency
+
+Marketing Effectiveness:
+- Deterministic matching to known customers
+- Higher accuracy than modeled or probabilistic data
+- Better personalization drives improved outcomes
+- Foundation for customer lifetime value optimization
+
+1.4 DATA TYPE COMPARISON
+
+First-Party: Collected directly, highest accuracy, requires consent
+Zero-Party: Explicitly provided preferences, highest trust indicator
+Second-Party: Partner's first-party data shared directly
+Third-Party: Aggregated from providers, declining availability
+
+================================================================================
+SECTION 2: DATA ACTIVATION STRATEGIES
+================================================================================
+
+META_SECTION_ID: data_activation
+META_WORKFLOW_STEPS: 2,3,4
+META_TOPICS: activation, lookalikes, suppression, retargeting
+META_INTENT: AUDIENCE_TARGETING
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+2.1 CUSTOMER MATCH AND LOOKALIKES
+
+High-Value Lookalikes:
+- Seed with top 10-20% customers by LTV
+- Typically 40-60% better CAC than prospecting
+- Update seed audiences quarterly minimum
+
+Broad Lookalikes:
+- Seed with all customers or converters
+- Good balance of efficiency and scale
+- Refresh monthly to capture recent patterns
+
+2.2 AUDIENCE SUPPRESSION
+
+Customer Suppression:
+- Exclude existing customers from acquisition campaigns
+- Update suppression lists weekly minimum
+- Monitor new-to-brand rate as quality check
+
+Recent Purchaser Suppression:
+- Exclude recent purchasers from retargeting
+- Window depends on purchase cycle (30-90 days typical)
+- Prevents wasted spend on already-converted
+
+2.3 RETARGETING SEGMENTS
+
+Site Visitor Retargeting:
+- 7-day visitors: highest intent, smaller pool
+- 30-day visitors: balance of intent and scale
+- 90-day visitors: broader reach, lower intent
+
+Cart Abandoners:
+- Highest intent retargeting segment
+- Aggressive frequency acceptable (5-10/week)
+- Time-decay messaging effective
+
+2.4 LIFECYCLE MARKETING
+
+Onboarding Sequences:
+- New customer activation focus
+- First 30 days critical for retention
+- Cross-sell and education content
+
+Win-Back Campaigns:
+- Lapsed customer reactivation
+- 90-180 day inactivity trigger typical
+- Test offers and messaging
+
+================================================================================
+SECTION 3: CDP AND TECHNOLOGY CONSIDERATIONS
+================================================================================
+
+META_SECTION_ID: cdp_technology
+META_WORKFLOW_STEPS: 2,3
+META_TOPICS: cdp, customer_data_platform, technology, clean_rooms
+META_INTENT: AUDIENCE_TARGETING
+META_CONFIDENCE: MEDIUM
+
+3.1 WHEN CDP IS NEEDED
+
+Strong Indicators:
+- Multiple data sources requiring unification
+- Need for real-time personalization
+- Complex customer journeys across channels
+- Advanced segmentation requirements
+
+May Not Need CDP:
+- Single data source (CRM or e-commerce only)
+- Basic segmentation needs
+- Limited channel activation requirements
+- Small customer base (under 100K)
+
+3.2 DATA CLEAN ROOMS
+
+Use Cases:
+- Measuring overlap with partner audiences
+- Enriching first-party data with second-party
+- Privacy-compliant measurement across walled gardens
+- Collaborative audience building
+
+Major Platforms:
+- Google Ads Data Hub
+- Amazon Marketing Cloud
+- Meta Advanced Analytics
+- LiveRamp Safe Haven
+- Snowflake Data Clean Room
+
+================================================================================
+SECTION 4: PRIVACY COMPLIANCE
+================================================================================
+
+META_SECTION_ID: privacy_compliance
+META_WORKFLOW_STEPS: 2,3
+META_TOPICS: privacy, consent, gdpr, ccpa, compliance
+META_INTENT: AUDIENCE_TARGETING
+META_CONFIDENCE: HIGH
+
+4.1 CONSENT REQUIREMENTS
+
+Collection Consent:
+- Clear disclosure of data collection
+- Opt-in required for sensitive data
+- Easy opt-out mechanism required
+- Record of consent for audit
+
+Activation Consent:
+- Marketing consent separate from service consent
+- Third-party sharing requires explicit consent
+- Cross-border transfer restrictions apply
+
+4.2 PLATFORM COMPLIANCE
+
+Platform-Specific Requirements:
+- Meta Custom Audiences: Consent and opt-out required
+- Google Customer Match: Enhanced Conversions consent
+- LinkedIn Matched Audiences: Professional purpose limitation
+
+================================================================================
+SECTION 5: CROSS-REFERENCES
+================================================================================
+
+META_SECTION_ID: first_party_references
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: cross_references
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+5.1 RELATED DOCUMENTS
+
+- REF: MPA_Expert_Lens_Audience_Strategy_v6_0.txt - Audience targeting guidance
+- REF: MPA_Audience_Taxonomy_Structure_v6_0.txt - Platform taxonomy codes
+- REF: MPA_Expert_Lens_Measurement_Attribution_v6_0.txt - Measurement considerations
+
+5.2 WEB SEARCH TRIGGERS
+
+The agent SHOULD use web search when:
+- Platform-specific data matching requirements
+- Privacy regulation updates
+- CDP vendor comparisons
+- Clean room platform capabilities
+
+================================================================================
+VERSION HISTORY
+================================================================================
+
+Version 6.0 - January 2026
+- Added META_ prefixed tags for retrieval optimization
+- Restructured into activation-focused sections
+- Condensed from 819 lines to ~250 lines
+
+Version 5.5 - January 2026 - Original production version
+
+================================================================================
+END OF DOCUMENT
+================================================================================

@@ -1,0 +1,230 @@
+DOCUMENT: MPA_Implications_Measurement_Choices_v6_0.txt
+VERSION: 6.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+META_DOCUMENT_TYPE: implications_mapping
+META_PRIMARY_TOPICS: measurement_choices, attribution_decisions, kpi_selection, tracking
+META_WORKFLOW_STEPS: 3,8
+META_INTENTS: MEASUREMENT_GUIDANCE
+META_VERTICALS: ALL
+META_LAST_UPDATED: 2026-01-16
+
+================================================================================
+SECTION 1: PURPOSE AND SCOPE
+================================================================================
+
+META_SECTION_ID: measurement_implications_purpose
+META_WORKFLOW_STEPS: 3,8
+META_TOPICS: purpose, scope
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+1.1 PURPOSE
+
+This document provides comprehensive implication mapping for measurement decisions. The agent MUST consult this document when users propose KPI changes, attribution methodology changes, or measurement framework decisions.
+
+1.2 SCOPE
+
+This document covers implication chains for:
+- Primary KPI selection changes
+- Attribution window modifications
+- Attribution model changes
+- Tracking and data collection decisions
+
+================================================================================
+SECTION 2: KPI SELECTION IMPLICATIONS
+================================================================================
+
+META_SECTION_ID: kpi_selection_implications
+META_WORKFLOW_STEPS: 3,8
+META_TOPICS: kpi_selection, primary_kpi, secondary_kpi
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+2.1 CHOOSING ROAS AS PRIMARY KPI
+
+Immediate effects:
+- Campaigns optimize toward revenue generation
+- Lower-funnel channels appear more efficient
+- Algorithm prioritizes conversion-likely audiences
+
+Medium-term effects:
+- Audience pool may narrow to high-propensity
+- Brand building efforts appear wasteful
+- Upper-funnel gets deprioritized
+
+Long-term effects:
+- Demand generation deficit may emerge
+- Customer acquisition costs rise over time
+- Brand consideration metrics decline
+
+2.2 CHOOSING CPA AS PRIMARY KPI
+
+Immediate effects:
+- Campaigns optimize toward conversion efficiency
+- Quality of conversions may not be weighted
+- Volume may decline as efficiency increases
+
+Medium-term effects:
+- May attract lower-value customers if LTV not weighted
+- Conversion volume may plateau
+- Efficiency gains may reach limits
+
+Long-term effects:
+- Customer quality trends need monitoring
+- May need to shift to value-based KPIs
+- Growth may stall without volume objectives
+
+2.3 CHOOSING VOLUME (CONVERSIONS) AS PRIMARY KPI
+
+Immediate effects:
+- Maximum conversion volume pursued
+- Efficiency may decline initially
+- Broader audience targeting activated
+
+Medium-term effects:
+- Customer acquisition costs may rise
+- Quality distribution needs monitoring
+- Scale unlocked but efficiency traded
+
+Long-term effects:
+- Market share growth possible
+- Efficiency can be optimized secondarily
+- Customer quality segmentation important
+
+================================================================================
+SECTION 3: ATTRIBUTION WINDOW IMPLICATIONS
+================================================================================
+
+META_SECTION_ID: attribution_window_implications
+META_WORKFLOW_STEPS: 8
+META_TOPICS: attribution_window, click_window, view_through
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+3.1 SHORTENING ATTRIBUTION WINDOW
+
+Immediate effects:
+- Reported conversions decrease
+- ROAS appears to decline
+- Lower-funnel channels less affected
+
+Medium-term effects:
+- More conservative measurement baseline
+- Upper-funnel contribution appears lower
+- Cleaner incrementality signal
+
+Long-term effects:
+- Reallocation may favor lower-funnel
+- Brand investment harder to justify
+- Measurement aligns with incrementality
+
+3.2 LENGTHENING ATTRIBUTION WINDOW
+
+Immediate effects:
+- Reported conversions increase
+- ROAS appears to improve
+- All channels show higher attributed volume
+
+Medium-term effects:
+- Organic conversions included in attribution
+- True incremental impact obscured
+- Cross-channel overlap increases
+
+Long-term effects:
+- May overinvest based on inflated metrics
+- Incrementality testing becomes more critical
+- Platform incentives reinforced
+
+3.3 ADDING VIEW-THROUGH ATTRIBUTION
+
+Immediate effects:
+- Significant increase in attributed conversions
+- Display and video channels appear more efficient
+- ROAS metrics improve substantially
+
+Medium-term effects:
+- Attribution includes many organic conversions
+- Incrementality rate typically 20-40 percent
+- Channel comparison distorted
+
+Better approach:
+- Use view-through only with incrementality validation
+- Apply discount factor to view-through conversions
+- Consider removing if incrementality not validated
+
+================================================================================
+SECTION 4: ATTRIBUTION MODEL IMPLICATIONS
+================================================================================
+
+META_SECTION_ID: attribution_model_implications
+META_WORKFLOW_STEPS: 8
+META_TOPICS: last_click, multi_touch, data_driven, mmm
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+
+4.1 SWITCHING FROM LAST-CLICK TO MULTI-TOUCH
+
+Immediate effects:
+- Credit redistributes across touchpoints
+- Lower-funnel channels lose apparent efficiency
+- Upper-funnel channels gain credit
+
+Medium-term effects:
+- Budget allocation decisions change
+- Channel comparison more balanced
+- Attribution model assumptions affect results
+
+Long-term effects:
+- Investment in upper-funnel may increase
+- Need to validate with incrementality
+- Model assumptions require monitoring
+
+4.2 SWITCHING TO DATA-DRIVEN ATTRIBUTION
+
+Immediate effects:
+- Algorithm determines credit distribution
+- Results may differ significantly from rules-based
+- Transparency into credit assignment decreases
+
+Medium-term effects:
+- Model learns from conversion patterns
+- May favor channels that touch most journeys
+- Difficult to explain to stakeholders
+
+Long-term effects:
+- Requires ongoing validation
+- Platform-specific models favor platform
+- Cross-platform comparison challenging
+
+================================================================================
+SECTION 5: CROSS-REFERENCES
+================================================================================
+
+META_SECTION_ID: measurement_implications_references
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: cross_references
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+5.1 RELATED DOCUMENTS
+
+- REF: MPA_Expert_Lens_Measurement_Attribution_v6_0.txt - Attribution methodology guidance
+- REF: Analytics_Engine_v6_0.txt - Calculation formulas
+- REF: mpa_kpi (Dataverse) - KPI definitions
+
+================================================================================
+VERSION HISTORY
+================================================================================
+
+Version 6.0 - January 2026
+- Added META_ prefixed tags for retrieval optimization
+- Restructured by decision type
+
+================================================================================
+END OF DOCUMENT
+================================================================================

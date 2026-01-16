@@ -1,0 +1,247 @@
+DOCUMENT: MPA_Geography_DMA_Planning_v6_0.txt
+VERSION: 6.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+META_DOCUMENT_TYPE: operational_framework
+META_PRIMARY_TOPICS: geography, dma, census_data, market_planning, population_data
+META_WORKFLOW_STEPS: 2,4,5
+META_INTENTS: AUDIENCE_TARGETING, BUDGET_PLANNING
+META_VERTICALS: ALL
+META_LAST_UPDATED: 2026-01-16
+
+================================================================================
+SECTION 1: PURPOSE AND CORE PRINCIPLE
+================================================================================
+
+META_SECTION_ID: geography_purpose
+META_WORKFLOW_STEPS: 4
+META_TOPICS: purpose, core_principle, census_requirement
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+1.1 PURPOSE
+
+This document defines requirements for Geography planning in Step 4. Geography planning establishes WHERE the campaign will run and provides the foundation for budget allocation and outcome projections by market.
+
+1.2 CORE PRINCIPLE
+
+Geography is not just a targeting input - it is an analytical framework. Every geography decision must be justified with:
+- Census-validated population data
+- Target audience sizing with calculation methodology
+- Projected outcomes
+- Structured table format with rollup calculations and source citations
+
+1.3 MANDATORY CENSUS REQUIREMENT
+
+The agent MUST web search for current census data. Estimates without census validation are not acceptable. This is not optional.
+
+================================================================================
+SECTION 2: CENSUS DATA SOURCES BY REGION
+================================================================================
+
+META_SECTION_ID: census_sources
+META_WORKFLOW_STEPS: 2,4
+META_TOPICS: census_sources, web_search, population_data
+META_INTENT: AUDIENCE_TARGETING
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+META_WEB_SEARCH_TRIGGER: TRUE
+
+2.1 UNITED STATES
+
+Primary: US Census Bureau American Community Survey
+- Search: site:census.gov [DMA name] population American Community Survey
+- Tables: B01003 Total Population, B03002 Hispanic Origin, B19001 Household Income
+
+DMA Definitions: Nielsen
+- Search: Nielsen DMA [market name] population households
+
+2.2 CANADA
+
+Primary: Statistics Canada
+- Search: site:statcan.gc.ca [CMA name] population census profile
+
+2.3 UNITED KINGDOM
+
+Primary: Office for National Statistics
+- Search: site:ons.gov.uk [region] population census
+
+2.4 EUROPEAN UNION
+
+Primary: Eurostat
+- Search: site:ec.europa.eu/eurostat [country] population
+
+National Offices:
+- Germany: site:destatis.de [bundesland] population
+- France: site:insee.fr [region] population recensement
+- Spain: site:ine.es [comunidad] poblacion
+
+2.5 OTHER REGIONS
+
+Australia: site:abs.gov.au [state] population census
+Mexico: site:inegi.org.mx [estado] poblacion censo
+Brazil: site:ibge.gov.br [estado] populacao censo
+Fallback: World Bank population data [country] [year]
+
+2.6 CITATION FORMAT
+
+Every population figure must include citation with:
+- Source name (US Census ACS, Statistics Canada, etc.)
+- Geographic level (DMA, State, CMA)
+- Data year or range
+- Table reference if applicable
+
+================================================================================
+SECTION 3: GEOGRAPHY HIERARCHY LEVELS
+================================================================================
+
+META_SECTION_ID: geography_hierarchy
+META_WORKFLOW_STEPS: 4
+META_TOPICS: hierarchy, dma, corridor, zip_code
+META_INTENT: AUDIENCE_TARGETING
+META_CONFIDENCE: HIGH
+
+3.1 LEVEL 1 - COUNTRY
+
+- Simplest level for national campaigns
+- Single row plus total
+- Used when no geographic variation in strategy
+
+3.2 LEVEL 2 - DMA
+
+- Designated Market Area level
+- Standard for most campaigns
+- 210 DMAs in United States
+- Rolls up to Country total
+
+3.3 LEVEL 3 - DMA PLUS CORRIDOR
+
+- DMA level with corridor subdivisions
+- Corridors are named geographic clusters within DMAs
+- Each corridor rolls up to parent DMA
+- DMAs roll up to Country total
+
+3.4 LEVEL 4 - ZIP CODES
+
+- Most granular level
+- ZIP codes roll up to parent DMA
+- Used for hyperlocal campaigns
+- Requires first-party data for precision
+
+================================================================================
+SECTION 4: MANDATORY TABLE STRUCTURE
+================================================================================
+
+META_SECTION_ID: table_structure
+META_WORKFLOW_STEPS: 4,5
+META_TOPICS: table_format, columns, rollups
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+4.1 PHASE 1 COLUMNS - GEOGRAPHY DEFINITION
+
+Present when Step 4 Geography is being defined:
+- Geography Name
+- Parent Geography (for rollup)
+- Total Population (census data with citation)
+- Target Audience Size (after demographic/behavioral filters)
+- Target Audience Percent
+
+4.2 PHASE 2 COLUMNS - POST BUDGET ALLOCATION
+
+Add once Step 5 Budget is complete:
+- Planned Media Spend
+- Spend Per Target
+- Projected Impressions
+- Projected Conversions
+- Projected CAC/CPA
+
+4.3 ROLLUP RULES
+
+SUM aggregation: Population, Audience Size, Spend, Impressions, Conversions
+WEIGHTED AVERAGE: Target Percent, Spend Per Target, CAC/CPA
+
+Always include:
+- Subtotal row after each DMA grouping (for ZIP/Corridor tables)
+- Grand total row at bottom
+- Data Sources section with census citations
+
+================================================================================
+SECTION 5: TARGET AUDIENCE SIZING METHODOLOGY
+================================================================================
+
+META_SECTION_ID: audience_sizing
+META_WORKFLOW_STEPS: 2,4
+META_TOPICS: audience_sizing, calculation_chain, signal_filters
+META_INTENT: AUDIENCE_TARGETING
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+5.1 CALCULATION METHODOLOGY
+
+Start with total population from census.
+Apply each signal as filter with explicit percentage.
+Show calculation chain at each step.
+Result is target audience size.
+
+5.2 EXAMPLE CALCULATION
+
+Los Angeles DMA Audience Sizing:
+- Total population: 13,200,000 (Source: US Census ACS 2019-2023)
+- Age 25 to 54: 40% of population = 5,280,000
+- HHI over 75K: 50% of age-qualified = 2,640,000
+- Hispanic origin: 45% of income-qualified = 1,188,000
+- In-market for financial services: 8% = 95,040
+- Target audience: 95,040 (0.7% of total DMA population)
+
+================================================================================
+SECTION 6: ERROR CONDITIONS
+================================================================================
+
+META_SECTION_ID: error_conditions
+META_WORKFLOW_STEPS: 4,5
+META_TOPICS: validation, errors, flags
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+6.1 FLAGS TO RAISE
+
+- Total budget in geography table does not equal campaign budget
+- Target audience size exceeds total population for any geography
+- Spend per target varies more than 50% across geographies
+- Population data has no census citation
+- Any geography has zero spend but is included in table
+
+================================================================================
+SECTION 7: CROSS-REFERENCES
+================================================================================
+
+META_SECTION_ID: geography_references
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: cross_references
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+7.1 RELATED DOCUMENTS
+
+- REF: MPA_Expert_Lens_Audience_Strategy_v6_0.txt - Audience sizing guidelines
+- REF: MPA_Audience_Taxonomy_Structure_v6_0.txt - Platform taxonomy codes
+- REF: Analytics_Engine_v6_0.txt - Projection calculations
+
+================================================================================
+VERSION HISTORY
+================================================================================
+
+Version 6.0 - January 2026
+- Added META_ prefixed tags for retrieval optimization
+- Added META_WEB_SEARCH_TRIGGER for census sections
+- Condensed from 309 lines to ~220 lines
+
+Version 5.8 - January 2026 - Census requirements and international sources
+
+================================================================================
+END OF DOCUMENT
+================================================================================

@@ -1,0 +1,180 @@
+DOCUMENT: MPA_Implications_Timing_Pacing_v6_0.txt
+VERSION: 6.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+META_DOCUMENT_TYPE: implications_mapping
+META_PRIMARY_TOPICS: timing, pacing, flight_dates, campaign_schedule, seasonality
+META_WORKFLOW_STEPS: 5,6,7
+META_INTENTS: BUDGET_PLANNING
+META_VERTICALS: ALL
+META_LAST_UPDATED: 2026-01-16
+
+================================================================================
+SECTION 1: PURPOSE AND SCOPE
+================================================================================
+
+META_SECTION_ID: timing_pacing_purpose
+META_WORKFLOW_STEPS: 7
+META_TOPICS: purpose, scope
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+1.1 PURPOSE
+
+This document provides implication mapping for timing and pacing decisions. The agent MUST consult this document when users define campaign timing, pacing strategies, or flight schedules.
+
+1.2 SCOPE
+
+This document covers implication chains for:
+- Campaign flight timing decisions
+- Pacing strategy selection
+- Seasonal and event-based timing
+- Always-on versus flighting strategies
+
+================================================================================
+SECTION 2: FLIGHT TIMING IMPLICATIONS
+================================================================================
+
+META_SECTION_ID: flight_timing_implications
+META_WORKFLOW_STEPS: 5,7
+META_TOPICS: flight_length, learning_phase, campaign_duration
+META_INTENT: BUDGET_PLANNING
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+2.1 SHORT FLIGHTS (1-4 WEEKS)
+
+- Week 1: Learning phase consumes significant portion
+- Week 2-3: Optimization limited by insufficient data
+- Week 4: Performance stabilizes just as flight ends
+- Post-flight: Measurement window too short for accurate attribution
+- Long-term: Brand impact minimal, momentum lost between flights
+
+2.2 MEDIUM FLIGHTS (5-8 WEEKS)
+
+- Week 1-2: Learning phase completes for most channels
+- Week 3-4: Optimization adjustments possible with data
+- Week 5-6: Performance reaches steady state
+- Week 7-8: Creative fatigue may emerge
+- Post-flight: Sufficient data for performance analysis
+
+2.3 LONG FLIGHTS (9+ WEEKS)
+
+- Week 1-2: Learning phase completes
+- Week 3-6: Multiple optimization cycles possible
+- Week 7-9: Creative refresh likely required
+- Week 10+: Audience fatigue and frequency caps critical
+- Long-term: Brand awareness builds cumulatively
+
+2.4 DIAGNOSTIC QUESTIONS
+
+- Does the flight length allow sufficient learning phase
+- What creative refresh strategy exists for longer flights
+- How will success be measured at flight conclusion
+
+================================================================================
+SECTION 3: PACING STRATEGY IMPLICATIONS
+================================================================================
+
+META_SECTION_ID: pacing_strategy_implications
+META_WORKFLOW_STEPS: 5,7
+META_TOPICS: pacing, front_loaded, back_loaded, even_pacing, pulse
+META_INTENT: BUDGET_PLANNING
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+3.1 FRONT-LOADED PACING
+
+- Week 1-2: Maximum reach during high-priority period
+- Week 3-4: Creative fatigue accelerates
+- Week 5-6: Audience exhaustion risk increases
+- Week 7-8: Limited budget remaining for optimization
+- Long-term: Momentum advantage but flexibility sacrificed
+
+3.2 BACK-LOADED PACING
+
+- Week 1-2: Lower reach and frequency during opening
+- Week 3-4: Competitors may gain advantage early
+- Week 5-6: Learning phase data informs later optimization
+- Week 7-8: Maximum investment with optimization insights
+- Long-term: Risk of under-delivery if channels cannot absorb surge
+
+3.3 EVEN PACING
+
+- Week 1-2: Consistent reach from campaign start
+- Week 3-4: Predictable frequency builds
+- Week 5-6: Steady optimization possible throughout
+- Week 7-8: Balanced performance throughout flight
+- Long-term: No peak impact but sustained presence
+
+3.4 PULSE PACING
+
+- High-burst periods: Reaches awareness threshold quickly
+- Low/off periods: Allows creative refresh, reduces fatigue
+- Pattern: Typical 2 weeks on, 1 week off cycle
+- Best for: Seasonal products, limited budgets, brand awareness
+
+================================================================================
+SECTION 4: SEASONAL TIMING IMPLICATIONS
+================================================================================
+
+META_SECTION_ID: seasonal_implications
+META_WORKFLOW_STEPS: 5,7
+META_TOPICS: seasonality, q4, holiday, competitive_periods
+META_INTENT: BUDGET_PLANNING
+META_CONFIDENCE: HIGH
+
+4.1 PEAK SEASON IMPLICATIONS (Q4, HOLIDAYS)
+
+- CPMs typically increase 20-40% in Q4
+- Competitive clutter reduces message retention
+- Customer intent higher but acquisition more expensive
+- Requires earlier creative development for approval queues
+
+4.2 OFF-PEAK IMPLICATIONS
+
+- Lower CPMs improve efficiency
+- Less competitive clutter
+- Customer intent may be lower
+- Good for brand building and testing
+
+4.3 COUNTER-CYCLICAL STRATEGY
+
+When advertising heavily during competitor light periods:
+- Share of voice advantage at lower cost
+- Build brand awareness when clutter is reduced
+- Requires patience for delayed conversion impact
+- Best for brands with longer consideration cycles
+
+================================================================================
+SECTION 5: CROSS-REFERENCES
+================================================================================
+
+META_SECTION_ID: timing_pacing_references
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: cross_references
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+5.1 RELATED DOCUMENTS
+
+- REF: MPA_Implications_Budget_Decisions_v6_0.txt - Budget pacing effects
+- REF: Analytics_Engine_v6_0.txt - Flighting calculations
+- REF: mpa_benchmark (Dataverse) - Seasonal benchmark adjustments
+
+================================================================================
+VERSION HISTORY
+================================================================================
+
+Version 6.0 - January 2026
+- Added META_ prefixed tags for retrieval optimization
+- Restructured into decision-focused sections
+- Condensed from 437 lines to ~180 lines
+
+Version 5.5 - January 2026 - Original production version
+
+================================================================================
+END OF DOCUMENT
+================================================================================

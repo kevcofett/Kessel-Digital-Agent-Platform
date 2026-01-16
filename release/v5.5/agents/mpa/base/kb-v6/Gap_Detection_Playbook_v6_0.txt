@@ -1,0 +1,711 @@
+DOCUMENT: Gap_Detection_Playbook_v6_0.txt
+VERSION: 6.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+META_DOCUMENT_TYPE: operational_playbook
+META_PRIMARY_TOPICS: gap_detection, missing_targets, options_framework, iteration
+META_WORKFLOW_STEPS: 5,6,7,8,9
+META_INTENTS: BUDGET_PLANNING, MEASUREMENT_GUIDANCE
+META_VERTICALS: ALL
+META_LAST_UPDATED: 2026-01-16
+
+================================================================================
+SECTION 1: PURPOSE AND SCOPE
+================================================================================
+
+META_SECTION_ID: gap_detection_purpose
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: purpose, scope, principles
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+1.1 PURPOSE
+
+This playbook defines the complete methodology for detecting gaps between projected outcomes and user targets, and for presenting structured options to close those gaps. The Media Planning Agent MUST use this playbook whenever projections fall short of stated objectives.
+
+Gap detection and resolution is a core value-add of the agent. Users depend on the agent to:
+- Identify when projections will not meet targets
+- Quantify the gap precisely
+- Present actionable options to close the gap
+- Calculate the impact of each option
+- Support unlimited iteration until user is satisfied
+- Never rush to completion when gaps exist
+
+1.2 SCOPE
+
+This playbook applies to all gap scenarios including:
+- PLANNING MODE: When initial projections miss targets
+- IN-FLIGHT MODE: When actual performance trails planned performance
+- POST-MORTEM MODE: When analyzing gaps between plan and actual for learnings
+
+Gap detection covers all measurable KPIs:
+- Conversion gaps (conversions, leads, signups below target)
+- Revenue gaps (revenue, ROAS below target)
+- Efficiency gaps (CAC, CPA above target)
+- Delivery gaps (impressions, reach below target)
+- Engagement gaps (clicks, CTR below target)
+
+1.3 CORE PRINCIPLES
+
+PRINCIPLE 1: PROACTIVE DETECTION
+The agent MUST proactively identify gaps without waiting for user to notice. If projections miss targets by more than 10 percent, the agent MUST flag the gap.
+
+PRINCIPLE 2: QUANTIFIED OPTIONS
+Every option MUST include specific calculations showing exactly how it closes the gap. Vague recommendations are not acceptable.
+
+PRINCIPLE 3: UNLIMITED ITERATION
+The user can iterate as many times as needed. The agent MUST never rush to completion or suggest settling for suboptimal outcomes.
+
+PRINCIPLE 4: NO JUDGMENT
+The agent presents options without judgment. If user chooses to increase budget, adjust goals, or combine approaches, all are equally valid paths forward.
+
+PRINCIPLE 5: TRANSPARENT TRADE-OFFS
+Every option has trade-offs. The agent MUST clearly articulate pros and cons for each option.
+
+================================================================================
+SECTION 2: GAP CALCULATION METHODOLOGY
+================================================================================
+
+META_SECTION_ID: gap_calculation_methodology
+META_WORKFLOW_STEPS: 5,6,9
+META_TOPICS: gap_calculation, quantification, root_cause, formulas
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+2.1 GAP DETECTION TRIGGER
+
+The agent MUST trigger gap detection when:
+- Projected outcome is more than 10 percent below target
+- Projected cost metric is more than 10 percent above target
+- User explicitly asks about hitting targets
+- In-flight actual is more than 15 percent behind plan
+
+FORMULA: Gap Percentage
+Gap Percent = ((Target - Projection) / Target) times 100
+
+2.2 GAP QUANTIFICATION
+
+The agent MUST quantify the gap in multiple ways:
+
+ABSOLUTE GAP: The raw number difference between target and projection
+PERCENTAGE GAP: The percentage shortfall from target
+DOLLAR IMPACT: The revenue or cost impact of the gap
+EFFORT TO CLOSE: What improvement is needed to close the gap
+
+2.3 ROOT CAUSE IDENTIFICATION
+
+Before presenting options, identify the root cause:
+
+BUDGET-DRIVEN GAP:
+- Budget insufficient for target at current efficiency rates
+- Symptom: All metrics proportionally short
+- Solution focus: Increase budget or reduce target
+
+EFFICIENCY-DRIVEN GAP:
+- Budget adequate but efficiency (CTR, CVR) below benchmark
+- Symptom: Impressions on track but conversions short
+- Solution focus: Improve rates or adjust expectations
+
+CHANNEL-DRIVEN GAP:
+- Channel mix not optimal for objectives
+- Symptom: Some channels overperforming, others underperforming
+- Solution focus: Rebalance channel allocation
+
+MARKET-DRIVEN GAP:
+- External factors affecting performance
+- Symptom: Benchmarks not holding in current conditions
+- Solution focus: Adjust expectations or timing
+
+2.4 GAP COMMUNICATION FORMAT
+
+The agent MUST communicate gaps using this format:
+
+GAP DETECTED: Projection of [X] falls short of [target] by [Y] percent.
+
+At current projections:
+- You will achieve: [projection]
+- Your target is: [target]
+- Gap to close: [absolute gap] ([percentage] percent)
+- Impact: [dollar or business impact]
+
+Root cause assessment: [budget/efficiency/channel/market]
+
+================================================================================
+SECTION 3: THE 6 OPTIONS FRAMEWORK
+================================================================================
+
+META_SECTION_ID: options_framework_overview
+META_WORKFLOW_STEPS: 5,6,7
+META_TOPICS: options, gap_closure, decision_framework
+META_INTENT: BUDGET_PLANNING
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+OVERVIEW
+
+When a gap is detected, the agent presents up to 6 options to close it. Not all options apply to every situation. The agent selects applicable options based on the gap type and user constraints.
+
+THE 6 OPTIONS:
+1. INCREASE BUDGET - Add investment to reach target
+2. IMPROVE CVR - Optimize conversion rate
+3. IMPROVE CTR - Optimize click-through rate
+4. CHANGE CHANNEL MIX - Reallocate to more efficient channels
+5. ADJUST GOAL - Revise target to match realistic projection
+6. COMBINE APPROACHES - Mix multiple options
+
+--------------------------------------------------------------------------------
+OPTION 1: INCREASE BUDGET
+--------------------------------------------------------------------------------
+
+META_SECTION_ID: gap_option_increase_budget
+META_WORKFLOW_STEPS: 5,6
+META_TOPICS: budget_increase, gap_closure, investment
+META_INTENT: BUDGET_PLANNING
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 2
+
+WHEN TO PRESENT THIS OPTION:
+- Gap is budget-driven (efficiency rates are reasonable)
+- User has not indicated budget is fixed
+- Additional investment is feasible
+
+CALCULATION METHOD:
+
+Current state:
+- Budget: [current budget]
+- Projected conversions: [current projection]
+- Target conversions: [target]
+- Gap: [gap amount]
+
+To close gap through budget:
+- Additional conversions needed: [gap]
+- Current CPA: [budget / projected conversions]
+- Additional budget needed: [gap times CPA]
+- New total budget: [current + additional]
+- Percentage increase: [additional / current times 100]
+
+PRESENTATION FORMAT:
+
+Option 1: Increase Budget
+
+To achieve [target] conversions:
+- Additional budget needed: [amount]
+- New total budget: [amount] (up [X] percent from [current])
+- Expected conversions: [target]
+- Resulting CPA: [CPA] (unchanged)
+
+Trade-offs:
+- Pro: Maintains efficiency targets
+- Pro: Straightforward to implement
+- Con: Requires incremental investment
+- Con: May face diminishing returns at scale
+
+DIMINISHING RETURNS WARNING:
+If budget increase exceeds 30 percent, warn user: Significant budget increases often see efficiency decline as campaigns exhaust high-intent audiences. Consider combining with efficiency improvements.
+
+--------------------------------------------------------------------------------
+OPTION 2: IMPROVE CONVERSION RATE (CVR)
+--------------------------------------------------------------------------------
+
+META_SECTION_ID: gap_option_improve_cvr
+META_WORKFLOW_STEPS: 5,6,7
+META_TOPICS: cvr_improvement, conversion_optimization, landing_page
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: MEDIUM
+
+WHEN TO PRESENT THIS OPTION:
+- Current CVR is below vertical benchmark
+- Gap is efficiency-driven
+- User has landing page or checkout optimization capability
+
+CALCULATION METHOD:
+
+Current state:
+- Clicks: [projected clicks]
+- CVR: [current CVR]
+- Conversions: [clicks times CVR]
+- Target conversions: [target]
+
+To close gap through CVR improvement:
+- Required CVR: [target / clicks]
+- CVR improvement needed: [required - current]
+- Percentage improvement: [(required - current) / current times 100]
+
+BENCHMARK CONTEXT:
+- Vertical median CVR: [from benchmark data]
+- Vertical best-in-class CVR: [from benchmark data]
+- Current CVR vs benchmark: [comparison]
+
+PRESENTATION FORMAT:
+
+Option 2: Improve Conversion Rate
+
+To achieve [target] conversions at current click volume:
+- Current CVR: [X] percent
+- Required CVR: [Y] percent
+- Improvement needed: [Z] percentage points (up [W] percent)
+- Benchmark reference: Vertical median is [M] percent
+
+Trade-offs:
+- Pro: No additional budget required
+- Pro: Sustainable improvement
+- Con: Requires optimization work
+- Con: Results not guaranteed
+
+FEASIBILITY GUIDANCE:
+- CVR improvement up to 20 percent: Achievable with focused optimization
+- CVR improvement 20-40 percent: Challenging, requires significant changes
+- CVR improvement over 40 percent: Unlikely without major structural changes
+
+--------------------------------------------------------------------------------
+OPTION 3: IMPROVE CLICK-THROUGH RATE (CTR)
+--------------------------------------------------------------------------------
+
+META_SECTION_ID: gap_option_improve_ctr
+META_WORKFLOW_STEPS: 5,6,7
+META_TOPICS: ctr_improvement, creative_optimization, ad_copy
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: MEDIUM
+
+WHEN TO PRESENT THIS OPTION:
+- Current CTR is below vertical benchmark
+- Delivery (impressions) is on track but clicks are short
+- User has creative optimization capability
+
+CALCULATION METHOD:
+
+Current state:
+- Impressions: [projected impressions]
+- CTR: [current CTR]
+- Clicks: [impressions times CTR]
+- Required clicks for target: [target / CVR]
+
+To close gap through CTR improvement:
+- Required clicks: [target / CVR]
+- Required CTR: [required clicks / impressions]
+- CTR improvement needed: [required - current]
+
+PRESENTATION FORMAT:
+
+Option 3: Improve Click-Through Rate
+
+To achieve enough clicks for [target] conversions:
+- Current CTR: [X] percent
+- Required CTR: [Y] percent
+- Improvement needed: [Z] percentage points
+
+Trade-offs:
+- Pro: No additional budget required
+- Pro: Better creative benefits all metrics
+- Con: Creative development takes time
+- Con: CTR gains may not convert proportionally
+
+--------------------------------------------------------------------------------
+OPTION 4: CHANGE CHANNEL MIX
+--------------------------------------------------------------------------------
+
+META_SECTION_ID: gap_option_change_channel_mix
+META_WORKFLOW_STEPS: 4,5,6
+META_TOPICS: channel_reallocation, channel_mix, efficiency_optimization
+META_INTENT: CHANNEL_SELECTION, BUDGET_PLANNING
+META_CONFIDENCE: MEDIUM
+
+WHEN TO PRESENT THIS OPTION:
+- Some channels significantly outperform others
+- Efficiency varies materially across channels
+- Budget can be reallocated between channels
+
+CALCULATION METHOD:
+
+Current allocation:
+- Channel A: [budget A], [CPA A], [conversions A]
+- Channel B: [budget B], [CPA B], [conversions B]
+
+If Channel A is more efficient:
+- Shift budget from B to A
+- Calculate new total conversions at new allocation
+- Compare to target
+
+PRESENTATION FORMAT:
+
+Option 4: Reallocate Channel Budget
+
+Current mix generates [X] conversions at [Y] blended CPA.
+Shifting [amount] from [Channel B] to [Channel A]:
+- Projected conversions: [new total]
+- Improvement: [additional conversions]
+- New blended CPA: [new CPA]
+
+Trade-offs:
+- Pro: Uses existing budget more efficiently
+- Pro: Leverages proven performance
+- Con: May reduce reach or presence in some channels
+- Con: Concentrated risk if reallocation is aggressive
+
+--------------------------------------------------------------------------------
+OPTION 5: ADJUST GOAL
+--------------------------------------------------------------------------------
+
+META_SECTION_ID: gap_option_adjust_goal
+META_WORKFLOW_STEPS: 3,5,6
+META_TOPICS: goal_adjustment, target_revision, expectation_setting
+META_INTENT: BUDGET_PLANNING
+META_CONFIDENCE: HIGH
+
+WHEN TO PRESENT THIS OPTION:
+- Gap cannot be closed through options 1-4
+- User indicates budget is fixed
+- Market conditions make original goal unrealistic
+
+CALCULATION METHOD:
+
+If original target cannot be achieved:
+- Calculate achievable target at current budget and benchmarks
+- Present realistic expectation
+- Quantify gap between original and achievable
+
+PRESENTATION FORMAT:
+
+Option 5: Revise Target
+
+Based on [budget] and current benchmarks:
+- Achievable conversions: [realistic projection]
+- Original target: [original target]
+- Recommended revision: Adjust target to [realistic]
+
+Context:
+- This represents [X] percent of original goal
+- Current benchmarks suggest this is realistic given budget
+- [Any market factors affecting performance]
+
+Trade-offs:
+- Pro: Sets achievable expectations
+- Pro: Avoids overpromising
+- Con: Does not hit original objective
+- Con: May require stakeholder alignment
+
+--------------------------------------------------------------------------------
+OPTION 6: COMBINE APPROACHES
+--------------------------------------------------------------------------------
+
+META_SECTION_ID: gap_option_combine_approaches
+META_WORKFLOW_STEPS: 5,6,7
+META_TOPICS: combined_options, hybrid_approach, multiple_levers
+META_INTENT: BUDGET_PLANNING
+META_CONFIDENCE: HIGH
+
+WHEN TO PRESENT THIS OPTION:
+- Gap is too large for any single option
+- User wants to balance risk across multiple levers
+- Some options are partially applicable
+
+CALCULATION METHOD:
+
+Combine partial contributions from multiple options:
+- Partial budget increase: [X] additional budget yields [Y] conversions
+- Partial CVR improvement: [A] percent improvement yields [B] conversions
+- Partial channel shift: Reallocation yields [C] conversions
+- Total improvement: [Y + B + C]
+
+PRESENTATION FORMAT:
+
+Option 6: Combined Approach
+
+To close the [gap] conversion gap:
+
+Component 1 - Modest budget increase:
+- Add [amount] ([X] percent increase)
+- Yields: [Y] additional conversions
+
+Component 2 - CVR optimization:
+- Improve CVR by [Z] percent (from [current] to [target])
+- Yields: [B] additional conversions
+
+Component 3 - Channel reallocation:
+- Shift [amount] from [Channel B] to [Channel A]
+- Yields: [C] additional conversions
+
+Combined result:
+- Total additional conversions: [Y + B + C]
+- Gap closure: [percentage] percent
+- Remaining gap: [if any]
+
+Trade-offs:
+- Pro: Distributes risk across multiple levers
+- Pro: More achievable than single large change
+- Con: More complex to execute
+- Con: Harder to attribute results
+
+================================================================================
+SECTION 4: ITERATION GUIDANCE
+================================================================================
+
+META_SECTION_ID: gap_iteration_guidance
+META_WORKFLOW_STEPS: 5,6,7,8
+META_TOPICS: iteration, refinement, user_feedback, scenario_comparison
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+4.1 UNLIMITED ITERATION PRINCIPLE
+
+The agent MUST support unlimited iteration. Users may:
+- Ask to see different scenarios
+- Combine options differently
+- Add constraints mid-process
+- Change priorities
+- Request additional detail
+
+The agent NEVER:
+- Suggests settling for suboptimal outcomes
+- Rushes to close the conversation
+- Limits the number of iterations
+- Shows impatience with continued exploration
+
+4.2 ITERATION TRIGGERS
+
+Continue iterating when user says:
+- What if we...
+- Can you show me...
+- Let me think about this differently
+- What about combining...
+- Is there another way...
+
+4.3 SCENARIO COMPARISON
+
+When presenting multiple scenarios, use consistent format:
+
+SCENARIO COMPARISON:
+
+| Metric | Current | Option A | Option B | Option C |
+|--------|---------|----------|----------|----------|
+| Budget | [X] | [X+A] | [X] | [X+C] |
+| Conversions | [Y] | [Y+A] | [Y+B] | [Y+C] |
+| CPA | [Z] | [Z'] | [Z''] | [Z'''] |
+| Gap Closure | 0% | [A%] | [B%] | [C%] |
+
+================================================================================
+SECTION 5: WHEN TO RECOMMEND GOAL ADJUSTMENT
+================================================================================
+
+META_SECTION_ID: gap_goal_adjustment_guidance
+META_WORKFLOW_STEPS: 3,5,6
+META_TOPICS: goal_adjustment, realistic_targets, expectation_management
+META_INTENT: BUDGET_PLANNING
+META_CONFIDENCE: HIGH
+
+5.1 GOAL ADJUSTMENT TRIGGERS
+
+Recommend goal adjustment when:
+- Gap exceeds 40 percent and budget is fixed
+- Required efficiency improvements exceed best-in-class benchmarks
+- Market conditions have materially changed
+- User has exhausted willingness to explore other options
+
+5.2 FRAMING GOAL ADJUSTMENT
+
+Never frame goal adjustment as failure. Instead:
+
+WRONG: Your goal is unrealistic. You should lower your expectations.
+
+RIGHT: Based on current benchmarks and your budget constraints, a target of [X] would be achievable with high confidence. This represents [Y] percent of your original goal and would position the campaign for success within available resources.
+
+5.3 PARTIAL GOAL ADJUSTMENT
+
+Sometimes partial adjustment combined with optimization works:
+
+Example:
+- Original target: 10,000 conversions
+- Achievable at current budget: 7,500 conversions
+- With optimization: 8,500 conversions
+- Recommended: Adjust target to 8,500 with optimization plan
+
+================================================================================
+SECTION 6: DIALOGUE EXAMPLES
+================================================================================
+
+META_SECTION_ID: gap_dialogue_examples
+META_WORKFLOW_STEPS: 5,6,7
+META_TOPICS: examples, dialogue, conversation_patterns
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 2
+
+6.1 EXAMPLE: BUDGET-DRIVEN GAP
+
+User: We have $500K budget and need 5,000 conversions.
+
+Agent: Based on your vertical benchmarks, $500K would generate approximately 3,800 conversions at current efficiency rates.
+
+GAP DETECTED: Projection of 3,800 falls short of 5,000 by 24 percent.
+
+Gap to close: 1,200 conversions
+
+OPTIONS TO CLOSE GAP:
+
+Option 1: Increase Budget
+- Additional budget needed: $158K
+- New total: $658K (32% increase)
+- Expected conversions: 5,000
+
+Option 2: Improve Conversion Rate
+- Current projected CVR: 2.5%
+- Required CVR: 3.3%
+- Improvement needed: 32% (challenging but possible)
+
+Option 3: Combined Approach
+- Add $80K budget (+16%)
+- Improve CVR by 15% (2.5% to 2.9%)
+- Combined result: ~5,000 conversions
+
+Which option would you like to explore further?
+
+6.2 EXAMPLE: EFFICIENCY-DRIVEN GAP
+
+User: We're getting plenty of traffic but conversions are short.
+
+Agent: Let me analyze the efficiency gap.
+
+Current state:
+- Clicks: 150,000
+- Conversions: 2,250
+- CVR: 1.5%
+- Target conversions: 3,500
+
+GAP DETECTED: Current CVR of 1.5% yields 2,250 conversions versus target of 3,500.
+
+Gap: 1,250 conversions (36% short)
+
+Root cause: Efficiency-driven. Traffic volume is adequate but conversion rate is below vertical median of 2.2%.
+
+OPTIONS:
+
+Option 1: Improve CVR to vertical median
+- Target CVR: 2.2%
+- Projected conversions: 3,300
+- Gap closure: 84%
+
+Option 2: Improve CVR to best-in-class
+- Target CVR: 3.0%
+- Projected conversions: 4,500
+- Exceeds target by 29%
+
+Option 3: Adjust goal to match current efficiency
+- Recommended target: 2,500-2,750 conversions
+- Represents achievable outcome at current CVR with modest improvement
+
+What would you like to focus on?
+
+================================================================================
+SECTION 7: QUICK REFERENCE
+================================================================================
+
+META_SECTION_ID: gap_quick_reference
+META_WORKFLOW_STEPS: 5,6,7
+META_TOPICS: quick_reference, summary, decision_tree
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+7.1 GAP DETECTION DECISION TREE
+
+1. Calculate projection versus target
+2. If gap greater than 10 percent, trigger gap detection
+3. Identify root cause (budget, efficiency, channel, market)
+4. Present applicable options from the 6 options framework
+5. Support iteration until user is satisfied
+
+7.2 OPTION SELECTION GUIDE
+
+| Root Cause | Primary Options | Secondary Options |
+|------------|-----------------|-------------------|
+| Budget-driven | 1 (Budget), 5 (Goal) | 6 (Combine) |
+| Efficiency-driven | 2 (CVR), 3 (CTR) | 4 (Channel), 6 (Combine) |
+| Channel-driven | 4 (Channel Mix) | 1 (Budget), 6 (Combine) |
+| Market-driven | 5 (Goal Adjust) | 6 (Combine) |
+
+7.3 KEY FORMULAS
+
+Gap Percentage: ((Target - Projection) / Target) x 100
+Additional Budget Needed: Gap x Current CPA
+Required CVR: Target Conversions / Projected Clicks
+Required CTR: Required Clicks / Projected Impressions
+
+================================================================================
+SECTION 8: FALLBACK BEHAVIOR
+================================================================================
+
+META_SECTION_ID: gap_fallback_behavior
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: fallback, error_handling, missing_data
+META_INTENT: GENERAL
+META_CONFIDENCE: HIGH
+
+8.1 IF BENCHMARK DATA UNAVAILABLE
+
+When vertical-specific benchmarks are missing:
+- Use GENERAL vertical benchmarks as fallback
+- Flag uncertainty: These projections use general benchmarks. Your vertical may perform differently.
+- Recommend conservative estimates
+
+8.2 IF USER CONSTRAINTS ELIMINATE ALL OPTIONS
+
+When no option is viable:
+- Acknowledge the constraint clearly
+- Present the achievable outcome given constraints
+- Offer to revisit if constraints change
+- Document the gap for stakeholder communication
+
+8.3 IF GAP IS VERY SMALL
+
+When gap is less than 10 percent:
+- Do not trigger full gap detection
+- Note that projections are close to target
+- Suggest margin of error may cover the gap
+- Offer optimization suggestions if user wants to close fully
+
+================================================================================
+SECTION 9: CROSS-REFERENCES
+================================================================================
+
+META_SECTION_ID: gap_cross_references
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: cross_references, related_documents
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+9.1 RELATED DOCUMENTS
+
+- REF: mpa_benchmark (Dataverse) - Performance benchmarks by vertical and channel
+- REF: mpa_kpi (Dataverse) - KPI definitions and formulas
+- REF: MPA_Expert_Lens_Budget_Allocation_v6_0.txt - Budget optimization guidance
+- REF: MPA_Implications_Budget_Decisions_v6_0.txt - Budget change implications
+- REF: Output_Templates_v6_0.txt - Output formatting standards
+
+9.2 DATAVERSE QUERIES
+
+For gap analysis, query:
+- mpa_benchmark: Get vertical + channel benchmarks for CTR, CVR, CPA
+- mpa_kpi: Get KPI definitions and calculation methods
+- mpa_channel: Get channel-specific efficiency patterns
+
+================================================================================
+VERSION HISTORY
+================================================================================
+
+Version 6.0 - January 2026
+- Added META_ prefixed tags for retrieval optimization
+- Restructured into semantically bounded sections
+- Added section-level metadata for filtered retrieval
+- Condensed from 2772 lines to ~600 lines while preserving core methodology
+- Enhanced cross-reference format for multi-hop retrieval
+
+Version 5.5 - January 2026 - Original production version (2772 lines)
+
+================================================================================
+END OF DOCUMENT
+================================================================================

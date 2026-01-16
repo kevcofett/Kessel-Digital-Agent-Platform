@@ -54,6 +54,16 @@ export {
   type SupportedVertical,
 } from "./v6-scorers.js";
 
+// Tier 3: v6.1 Outcome-Focused Scorers
+export {
+  scoreAutomaticBenchmarkComparison,
+  scoreDataConfidence,
+  scorePlatformTaxonomyUsage,
+  scoreGeographyCensusUsage,
+  scoreBehavioralContextualUsage,
+  v61Scorers,
+} from "./v61-scorers.js";
+
 // Benchmark Data Loader v6.0
 export {
   loadBenchmarks,
@@ -386,7 +396,7 @@ export function evaluateSuccess(
   },
   criteria: {
     minimumOverallScore: number;
-    requiredStepsComplete: number[];
+    requiredStepsComplete?: number[];
     noCriticalFailures: boolean;
   }
 ): { passed: boolean; reasons: string[] } {
@@ -401,13 +411,15 @@ export function evaluateSuccess(
     );
   }
 
-  // Check required steps
-  const missingSteps = criteria.requiredStepsComplete.filter(
-    (step) => !completedSteps.includes(step)
-  );
-  if (missingSteps.length > 0) {
-    passed = false;
-    reasons.push(`Missing required steps: ${missingSteps.join(", ")}`);
+  // Check required steps (if specified)
+  if (criteria.requiredStepsComplete && criteria.requiredStepsComplete.length > 0) {
+    const missingSteps = criteria.requiredStepsComplete.filter(
+      (step) => !completedSteps.includes(step)
+    );
+    if (missingSteps.length > 0) {
+      passed = false;
+      reasons.push(`Missing required steps: ${missingSteps.join(", ")}`);
+    }
   }
 
   // Check critical failures

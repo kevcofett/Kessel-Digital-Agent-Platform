@@ -93,17 +93,18 @@ export declare function createInitialConversationState(budget?: number, funnel?:
 export interface QualityContext {
     scenarioType: string;
     vertical: string;
-    channels: string[];
-    expectedBenchmarks: Record<string, {
+    channels?: string[];
+    expectedBenchmarks?: Record<string, {
         min: number;
         max: number;
         typical: number;
     }>;
-    marketConditions: string;
+    marketConditions?: string;
     seasonality?: string;
     complianceRequirements?: string[];
     targetDemographic?: string;
     salesCycle?: string;
+    targetDMAs?: string[];
 }
 /**
  * User persona defining how the simulated user behaves
@@ -340,11 +341,13 @@ export interface CustomCriterion {
  */
 export interface ScenarioSuccessCriteria {
     /** All these steps must be marked complete */
-    requiredStepsComplete: number[];
+    requiredStepsComplete?: number[];
     /** Minimum conversation-level score to pass */
     minimumOverallScore: number;
     /** No critical failures allowed */
     noCriticalFailures: boolean;
+    /** Required behaviors (v6.1+) */
+    requiredBehaviors?: string[];
     /** Per-turn score thresholds (optional) */
     perTurnThresholds?: {
         responseLengthMin: number;

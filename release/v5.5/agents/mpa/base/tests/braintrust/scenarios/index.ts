@@ -49,6 +49,16 @@ import {
   aggressiveKpiNarrowTargetingContext,
 } from "./aggressive-kpi-narrow-targeting.js";
 
+// Import V6.1 Test Scenarios
+import {
+  V61_TEST_SCENARIOS,
+  automaticBenchmarkScenario,
+  dataConfidenceScenario,
+  platformTaxonomyScenario,
+  geographyCensusScenario,
+  comprehensiveV61Scenario,
+} from "./v61-test-scenarios.js";
+
 // Import Multi-Audience Scenarios
 import {
   multiAudienceUnifiedPlanScenario,
@@ -263,6 +273,8 @@ export const ALL_SCENARIOS: TestScenario[] = [
   outcomeKPIChangeScenario,
   audienceAdditionChangeScenario,
   audienceRemovalChangeScenario,
+  // V6.1 Capability scenarios
+  ...V61_TEST_SCENARIOS,
 ];
 
 /**

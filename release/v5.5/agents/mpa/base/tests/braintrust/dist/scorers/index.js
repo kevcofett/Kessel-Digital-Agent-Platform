@@ -31,6 +31,8 @@ export { scoreCrossStepSynthesis } from "./cross-step-synthesis.js";
 // =============================================================================
 // Tier 3: v6.0 Specific Scorers
 export { scoreBenchmarkVerticalCoverage, scoreWebSearchTrigger, scoreKbRoutingValidation, scoreConfidenceLevelAttribution, normalizeVertical, isVerticalSupported, detectIntent, SUPPORTED_VERTICALS, SUPPORTED_CHANNELS, } from "./v6-scorers.js";
+// Tier 3: v6.1 Outcome-Focused Scorers
+export { scoreAutomaticBenchmarkComparison, scoreDataConfidence, scorePlatformTaxonomyUsage, scoreGeographyCensusUsage, scoreBehavioralContextualUsage, v61Scorers, } from "./v61-scorers.js";
 // Benchmark Data Loader v6.0
 export { loadBenchmarks, getBenchmark, getBenchmarksByVertical, getBenchmarksByChannel, formatBenchmarkRange, validateBenchmarkClaim, getBenchmarkSummary, clearBenchmarkCache, } from "./benchmark-loader.js";
 // =============================================================================
@@ -202,11 +204,13 @@ export function evaluateSuccess(compositeScore, completedSteps, failures, criter
         passed = false;
         reasons.push(`Score ${(compositeScore * 100).toFixed(1)}% below threshold ${(criteria.minimumOverallScore * 100).toFixed(1)}%`);
     }
-    // Check required steps
-    const missingSteps = criteria.requiredStepsComplete.filter((step) => !completedSteps.includes(step));
-    if (missingSteps.length > 0) {
-        passed = false;
-        reasons.push(`Missing required steps: ${missingSteps.join(", ")}`);
+    // Check required steps (if specified)
+    if (criteria.requiredStepsComplete && criteria.requiredStepsComplete.length > 0) {
+        const missingSteps = criteria.requiredStepsComplete.filter((step) => !completedSteps.includes(step));
+        if (missingSteps.length > 0) {
+            passed = false;
+            reasons.push(`Missing required steps: ${missingSteps.join(", ")}`);
+        }
     }
     // Check critical failures
     if (criteria.noCriticalFailures && failures.critical.length > 0) {

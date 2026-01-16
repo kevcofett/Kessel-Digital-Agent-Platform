@@ -1,0 +1,451 @@
+DOCUMENT: MPA_Expert_Lens_Measurement_Attribution_v6_0.txt
+VERSION: 6.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+META_DOCUMENT_TYPE: expert_guidance
+META_PRIMARY_TOPICS: measurement, attribution, kpis, incrementality, roas, analytics
+META_WORKFLOW_STEPS: 3,8,9
+META_INTENTS: MEASUREMENT_GUIDANCE, BENCHMARK_LOOKUP
+META_VERTICALS: ALL
+META_LAST_UPDATED: 2026-01-16
+
+================================================================================
+SECTION 1: PURPOSE AND SCOPE
+================================================================================
+
+META_SECTION_ID: measurement_purpose
+META_WORKFLOW_STEPS: 3,8
+META_TOPICS: purpose, scope, measurement_strategy
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+1.1 PURPOSE
+
+This document provides diagnostic reasoning patterns and expert-level guidance for measurement and attribution decisions. The agent MUST use this document to identify measurement pitfalls, surface attribution limitations, and ensure plans have valid success criteria.
+
+1.2 SCOPE
+
+This document covers:
+- Critical measurement considerations that determine success
+- Common pitfalls with recommended alternatives
+- Diagnostic signals indicating measurement problems
+- Attribution methodology comparison
+- Questions worth asking that users may not consider
+- Benchmark reference points for measurement setup
+
+================================================================================
+SECTION 2: CRITICAL MEASUREMENT CONSIDERATIONS
+================================================================================
+
+META_SECTION_ID: measurement_critical_considerations
+META_WORKFLOW_STEPS: 3,8,9
+META_TOPICS: metrics, attribution_bias, incrementality, measurement_design
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+
+2.1 THE FIVE CRITICAL MEASUREMENT CONSIDERATIONS
+
+CONSIDERATION 1: WHAT YOU MEASURE DETERMINES WHAT YOU OPTIMIZE
+Campaigns optimize toward measured outcomes. Flawed metrics produce flawed optimization. If you measure clicks, you get clicks. If you measure value, you get value.
+
+Why it matters: The wrong primary metric can cause campaigns to optimize away from business objectives while appearing successful.
+
+CONSIDERATION 2: ATTRIBUTION HAS KNOWN BIASES
+Every attribution model has limitations. Last-click undervalues awareness. Platform attribution overvalues platform touchpoints. No model is truth.
+
+Why it matters: Understanding biases prevents over-reliance on misleading data. Best practice is triangulation across methods.
+
+CONSIDERATION 3: INCREMENTALITY IS THE GOLD STANDARD
+Only incremental conversions represent true campaign value. Many attributed conversions would have occurred anyway through organic channels or existing customer behavior.
+
+Why it matters: Scaling based on attributed results without incrementality validation often produces disappointing business outcomes.
+
+CONSIDERATION 4: MEASUREMENT CAPABILITY VARIES BY CHANNEL
+Some channels support clean measurement, others do not. CTV is harder to attribute than search. Brand effects are harder to measure than clicks.
+
+Why it matters: Channel selection should consider measurement quality. Heavy investment in unmeasurable channels requires alternative validation.
+
+CONSIDERATION 5: MEASUREMENT DESIGN AFFECTS LEARNING
+Good measurement generates learnings that improve future campaigns. Poor measurement produces data but not insight.
+
+Why it matters: Campaigns should teach you something. Measurement design determines whether you learn or just count.
+
+================================================================================
+SECTION 3: COMMON PITFALLS
+================================================================================
+
+META_SECTION_ID: measurement_pitfalls
+META_WORKFLOW_STEPS: 3,8,9
+META_TOPICS: pitfalls, roas, attribution_windows, single_source, baselines
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+
+3.1 PITFALL: ROAS AS PRIMARY KPI
+
+What it looks like:
+- Campaign success defined by platform-reported ROAS
+- Budget decisions based on channel ROAS comparison
+- Scaling to channels with highest reported ROAS
+
+Why it matters:
+- Platform ROAS typically overstates true value by 20-50 percent
+- Channels that capture existing demand look most efficient
+- Lower funnel gets credit for upper funnel work
+
+Better approach:
+- Use iROAS (incremental ROAS) validated by testing
+- Use MER for portfolio-level efficiency
+- Validate high-ROAS channels with incrementality testing before scaling
+
+3.2 PITFALL: LONG ATTRIBUTION WINDOWS WITHOUT VALIDATION
+
+What it looks like:
+- 28-day or longer click attribution windows
+- High view-through attribution included
+- Large volume of conversions attributed
+
+Why it matters:
+- Long windows capture conversions that would happen anyway
+- View-through especially inflates results
+- True campaign impact is overstated
+
+Better approach:
+- Start with 7-day click attribution
+- Test multiple windows to understand sensitivity
+- Add view-through only with holdout validation
+
+3.3 PITFALL: SINGLE-SOURCE ATTRIBUTION
+
+What it looks like:
+- Reliance on one platform or tool for all attribution
+- No cross-validation of results
+- Decisions based on single data source
+
+Why it matters:
+- Every source has inherent biases
+- Platform attribution favors the platform
+- Errors are not caught without triangulation
+
+Better approach:
+- Use multiple measurement methods
+- Compare platform attribution to MER trends
+- Validate with incrementality testing
+
+3.4 PITFALL: MEASURING WHAT IS EASY INSTEAD OF WHAT MATTERS
+
+What it looks like:
+- Focus on clicks, impressions, and engagement
+- Limited connection to business outcomes
+- Proxies substituted for actual objectives
+
+Better approach:
+- Define business outcome KPIs first
+- Connect proxy metrics to outcomes with validation
+- Accept measurement latency for accurate data
+
+3.5 PITFALL: NO BASELINE OR CONTROL
+
+What it looks like:
+- All budget allocated to active campaigns
+- No holdout for comparison
+- Cannot separate campaign effect from organic
+
+Better approach:
+- Maintain geographic or audience holdouts
+- Use 5-10 percent of budget or audience for control
+- Rotate holdouts to validate ongoing
+
+================================================================================
+SECTION 4: DIAGNOSTIC SIGNALS
+================================================================================
+
+META_SECTION_ID: measurement_diagnostics
+META_WORKFLOW_STEPS: 8,9
+META_TOPICS: diagnostics, attribution_discrepancies, roas_variance, incrementality
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+
+4.1 IF ATTRIBUTED CONVERSIONS EXCEED BUSINESS RESULTS
+
+What to check:
+- Are multiple channels claiming same conversions
+- Is attribution window too long
+- Are view-through conversions included
+
+Typical implications:
+- Attribution is overstating impact
+- Need to deduplicate or adjust methodology
+- Incrementality testing required for validation
+
+4.2 IF CHANNEL ROAS VARIES DRAMATICALLY
+
+What to check:
+- Are channels at different funnel stages
+- Are attribution windows consistent
+- Is one channel getting credit for another work
+
+Typical implications:
+- Lower funnel typically shows higher ROAS but lower incrementality
+- Upper funnel contribution is undervalued
+- Need holistic view, not channel comparison
+
+4.3 IF PERFORMANCE LOOKS GREAT BUT BUSINESS RESULTS LAG
+
+What to check:
+- Are metrics connected to actual business outcomes
+- Is measurement capturing right conversions
+- Are there delays in outcome realization
+
+Typical implications:
+- Metrics may not correlate with business outcomes
+- Need to validate measurement against business results
+- May be optimizing for wrong objectives
+
+4.4 IF INCREMENTALITY RESULTS ARE LOWER THAN ATTRIBUTION
+
+What to check:
+- How much was baseline or organic activity
+- Which channels have lowest incrementality
+- What portion of conversions would happen anyway
+
+Typical implications:
+- Attribution overstated true impact
+- Some channels are capturing not creating demand
+- Budget reallocation may improve true efficiency
+
+================================================================================
+SECTION 5: ATTRIBUTION METHODOLOGY COMPARISON
+================================================================================
+
+META_SECTION_ID: attribution_methodologies
+META_WORKFLOW_STEPS: 3,8
+META_TOPICS: last_click, multi_touch, mmm, incrementality_testing, triangulation
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+
+5.1 LAST-CLICK ATTRIBUTION
+
+How it works: 100 percent credit to final touchpoint before conversion
+
+Strengths:
+- Simple and easy to understand
+- Provides clear channel credit
+- Actionable for direct response
+
+Weaknesses:
+- Ignores all prior touchpoints
+- Undervalues awareness and consideration
+- Favors lower-funnel channels
+
+When to use: Short purchase cycles, single-channel campaigns
+
+5.2 MULTI-TOUCH ATTRIBUTION
+
+How it works: Distributes credit across multiple touchpoints (rules-based or algorithmic)
+
+Strengths:
+- Recognizes journey complexity
+- More balanced than last-click
+- Can reveal channel interactions
+
+Weaknesses:
+- Requires significant data
+- Model assumptions affect results
+- Still based on observed conversions only
+
+When to use: Longer purchase cycles, multi-channel campaigns
+
+5.3 MEDIA MIX MODELING (MMM)
+
+How it works: Statistical regression on aggregate data separating marketing from baseline
+
+Strengths:
+- Does not require user-level tracking
+- Works across all channels including offline
+- Accounts for external factors
+
+Weaknesses:
+- Requires 2-3 years historical data
+- Aggregate level, not user level
+- Significant expertise required
+
+When to use: Large budgets, privacy-constrained environments
+
+5.4 INCREMENTALITY TESTING
+
+How it works: Compare test group to control group to measure lift
+
+Strengths:
+- Measures true causal impact
+- Gold standard for validation
+- Works for any channel or tactic
+
+Weaknesses:
+- Requires dedicated budget or audience
+- Foregoes some conversions for measurement
+- Statistical expertise required
+
+When to use: Validating channel contribution, before major scaling decisions
+
+5.5 MEASUREMENT TRIANGULATION
+
+How it works: Use multiple methods and compare to build confidence
+
+Strengths:
+- Reduces reliance on any single method
+- Catches errors and biases
+- Builds more complete picture
+
+When to use: Always to some degree, especially for major decisions
+
+================================================================================
+SECTION 6: QUESTIONS WORTH ASKING
+================================================================================
+
+META_SECTION_ID: measurement_questions
+META_WORKFLOW_STEPS: 3,8
+META_TOPICS: discovery_questions, success_criteria, data_quality
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+
+6.1 SUCCESS DEFINITION QUESTIONS
+
+- What is the business outcome we are ultimately trying to drive (Reveals true objective)
+- How will you know if this campaign was successful (Reveals success criteria)
+- What would make this campaign a failure (Reveals floor)
+- How does this campaign connect to broader business goals (Reveals context)
+
+6.2 METHODOLOGY QUESTIONS
+
+- How are you currently attributing conversions (Reveals methodology)
+- What attribution window are you using and why (Reveals assumptions)
+- Have you validated your attribution with incrementality testing (Reveals validation)
+- How do you handle conversions that touch multiple channels (Reveals sophistication)
+
+6.3 DATA QUALITY QUESTIONS
+
+- How confident are you in your conversion tracking (Reveals data quality)
+- What percentage of conversions are you able to track (Reveals coverage)
+- Are there known gaps in your measurement (Reveals blind spots)
+- How often does attributed performance differ from business results (Reveals calibration)
+
+================================================================================
+SECTION 7: BENCHMARKS AND REFERENCE POINTS
+================================================================================
+
+META_SECTION_ID: measurement_benchmarks
+META_WORKFLOW_STEPS: 3,8,9
+META_TOPICS: benchmarks, attribution_windows, incrementality_rates, test_design
+META_INTENT: BENCHMARK_LOOKUP, MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+
+7.1 ATTRIBUTION WINDOW BENCHMARKS
+
+Recommended starting points by objective:
+- Direct response, short cycle: 7-day click
+- E-commerce, consideration purchase: 7-14 day click
+- B2B, long sales cycle: 30-day click
+- Awareness campaigns: View-through requires validation
+
+7.2 INCREMENTALITY RATE BENCHMARKS
+
+Typical incrementality by channel (percent of attributed that is truly incremental):
+- Brand search: 20-40 percent incremental
+- Non-brand search: 50-70 percent incremental
+- Retargeting: 30-50 percent incremental
+- Prospecting social: 40-60 percent incremental
+- CTV and video: 60-80 percent incremental
+- Display prospecting: 30-50 percent incremental
+
+These are approximate ranges. Actual incrementality varies by advertiser and context.
+
+7.3 TEST DESIGN BENCHMARKS
+
+Recommended parameters for incrementality testing:
+- Minimum test duration: 4 weeks
+- Control holdout size: 5-10 percent of budget or audience
+- Statistical significance target: 90-95 percent confidence
+- Minimum detectable effect: Define before test begins
+
+7.4 ROAS VERSUS iROAS BENCHMARKS
+
+Typical relationship:
+- Platform ROAS typically 20-50 percent higher than true iROAS
+- Gap is largest for lower-funnel channels
+- Gap is smallest for upper-funnel channels
+- Specific gap should be validated by testing
+
+================================================================================
+SECTION 8: FALLBACK BEHAVIOR
+================================================================================
+
+META_SECTION_ID: measurement_fallbacks
+META_WORKFLOW_STEPS: 3,8
+META_TOPICS: fallback, missing_data, methodology_conflicts
+META_INTENT: GENERAL
+META_CONFIDENCE: HIGH
+
+8.1 IF INCREMENTALITY TESTING IS NOT POSSIBLE
+
+When testing cannot be conducted:
+- Use benchmark incrementality rates to discount attributed results
+- Flag which channels have highest validation need
+- Recommend testing when resources allow
+- Apply conservative estimates for scaling decisions
+
+8.2 IF ATTRIBUTION METHODOLOGY IS UNCLEAR
+
+When client measurement approach is undefined:
+- Recommend starting with platform attribution plus MER
+- Establish attribution settings consistently across channels
+- Plan for incrementality validation over time
+
+8.3 IF MEASUREMENT RESULTS CONFLICT
+
+When different methods produce different results:
+- Investigate sources of discrepancy
+- Weight toward incrementality testing if available
+- Use conservative estimate for decisions
+
+================================================================================
+SECTION 9: CROSS-REFERENCES
+================================================================================
+
+META_SECTION_ID: measurement_cross_references
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: cross_references, related_documents
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+9.1 RELATED DOCUMENTS
+
+- REF: Analytics_Engine_v6_0.txt - Detailed calculation methodologies
+- REF: mpa_kpi (Dataverse) - Metric definitions and benchmarks
+- REF: AI_ADVERTISING_GUIDE_v6_0.txt - AI campaign measurement challenges
+- REF: MPA_Implications_Measurement_Choices_v6_0.txt - Downstream effects
+
+9.2 WEB SEARCH TRIGGERS
+
+The agent SHOULD use web search when:
+- Platform-specific attribution updates needed
+- Recent incrementality research requested
+- Privacy regulation impacts on measurement
+- Emerging measurement methodologies
+
+================================================================================
+VERSION HISTORY
+================================================================================
+
+Version 6.0 - January 2026
+- Added META_ prefixed tags for retrieval optimization
+- Restructured sections with semantic boundaries
+- Added section-level metadata for filtered retrieval
+- Enhanced cross-reference format for multi-hop retrieval
+
+Version 5.5 - January 2026 - Original production version
+
+================================================================================
+END OF DOCUMENT
+================================================================================

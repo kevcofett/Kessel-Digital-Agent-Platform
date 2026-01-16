@@ -1,0 +1,434 @@
+DOCUMENT: Analytics_Engine_v6_0.txt
+VERSION: 6.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+META_DOCUMENT_TYPE: calculation_framework
+META_PRIMARY_TOPICS: analytics, calculations, formulas, projections, forecasting, mmm
+META_WORKFLOW_STEPS: 5,6,7,8,9
+META_INTENTS: BUDGET_PLANNING, MEASUREMENT_GUIDANCE, BENCHMARK_LOOKUP
+META_VERTICALS: ALL
+META_LAST_UPDATED: 2026-01-16
+
+================================================================================
+SECTION 1: PURPOSE AND SCOPE
+================================================================================
+
+META_SECTION_ID: analytics_purpose
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: purpose, scope, principles
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+1.1 PURPOSE
+
+This document defines the complete analytical methodology for the Media Planning Agent. It specifies calculation formulas, forecasting models, validation rules, and measurement frameworks that the agent MUST use when building, optimizing, and evaluating media plans.
+
+1.2 CORE PRINCIPLES
+
+PRINCIPLE 1: SHOW YOUR WORK
+The agent MUST show calculations and formulas when presenting projections.
+
+PRINCIPLE 2: ACKNOWLEDGE UNCERTAINTY
+All projections carry uncertainty. Communicate confidence levels and ranges, not single point estimates.
+
+PRINCIPLE 3: DATA PROVENANCE
+Every calculation MUST cite its data source. Internal benchmarks, user-provided data, and web research MUST be clearly distinguished.
+
+PRINCIPLE 4: CONSERVATIVE DEFAULTS
+When data is limited, default to conservative estimates.
+
+PRINCIPLE 5: VALIDATE CONTINUOUSLY
+Projections MUST be validated against benchmarks at every step.
+
+================================================================================
+SECTION 2: CORE FORMULA REFERENCE
+================================================================================
+
+META_SECTION_ID: core_formulas
+META_WORKFLOW_STEPS: 5,6,7
+META_TOPICS: formulas, cpm, cpc, cpa, roas, ctr, cvr, impressions, clicks, conversions
+META_INTENT: BUDGET_PLANNING, MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+2.1 IMPRESSION-BASED CALCULATIONS
+
+IMPRESSIONS FROM BUDGET:
+Impressions = (Budget / CPM) times 1000
+
+BUDGET FROM IMPRESSIONS:
+Budget = (Impressions times CPM) / 1000
+
+CPM FROM BUDGET AND IMPRESSIONS:
+CPM = (Budget / Impressions) times 1000
+
+2.2 CLICK-BASED CALCULATIONS
+
+CLICKS FROM IMPRESSIONS:
+Clicks = Impressions times (CTR / 100)
+
+CLICKS FROM BUDGET:
+Clicks = Budget / CPC
+
+CPC FROM BUDGET AND CLICKS:
+CPC = Budget / Clicks
+
+CTR CALCULATION:
+CTR = (Clicks / Impressions) times 100
+
+2.3 CONVERSION-BASED CALCULATIONS
+
+CONVERSIONS FROM CLICKS:
+Conversions = Clicks times (CVR / 100)
+
+CONVERSIONS FROM BUDGET:
+Conversions = Budget / CPA
+
+CPA CALCULATION:
+CPA = Budget / Conversions
+
+CVR CALCULATION:
+CVR = (Conversions / Clicks) times 100
+
+2.4 REVENUE AND EFFICIENCY CALCULATIONS
+
+REVENUE CALCULATION:
+Revenue = Conversions times AOV
+
+ROAS CALCULATION:
+ROAS = Revenue / Budget
+
+CAC CALCULATION:
+CAC = Budget / New_Customers
+
+MER (MARKETING EFFICIENCY RATIO):
+MER = Total_Revenue / Total_Marketing_Spend
+
+2.5 CALCULATION CHAIN EXAMPLE
+
+Given: Budget = 100,000, CPM = 10, CTR = 1.5%, CVR = 3%, AOV = 75
+
+Step 1 - Impressions: (100,000 / 10) x 1000 = 10,000,000 impressions
+Step 2 - Clicks: 10,000,000 x (1.5/100) = 150,000 clicks
+Step 3 - Conversions: 150,000 x (3/100) = 4,500 conversions
+Step 4 - Revenue: 4,500 x 75 = 337,500 revenue
+Step 5 - ROAS: 337,500 / 100,000 = 3.38x
+
+================================================================================
+SECTION 3: REACH AND FREQUENCY CALCULATIONS
+================================================================================
+
+META_SECTION_ID: reach_frequency_calculations
+META_WORKFLOW_STEPS: 5,6,7
+META_TOPICS: reach, frequency, grps, trps, audience_reach
+META_INTENT: BUDGET_PLANNING, AUDIENCE_TARGETING
+META_CONFIDENCE: HIGH
+
+3.1 GRP AND TRP CALCULATIONS
+
+GRP (GROSS RATING POINTS):
+GRP = Reach times Frequency
+GRP = (Impressions / Total_Population) times 100
+
+TRP (TARGET RATING POINTS):
+TRP = Target_Reach times Frequency
+TRP = (Impressions / Target_Population) times 100
+
+3.2 REACH ESTIMATION
+
+REACH FROM GRPs (SAINSBURY METHOD):
+Reach = 1 - (1 - (1/N))^GRP
+Where N = Number of ad exposures needed to reach saturation
+
+SIMPLIFIED REACH FORMULA:
+Reach = GRP / (1 + (Frequency - 1) / N)
+
+3.3 EFFECTIVE FREQUENCY
+
+Effective frequency is the number of exposures needed for message impact.
+
+RULE OF THUMB BY OBJECTIVE:
+- Awareness: 3-5 exposures
+- Consideration: 5-8 exposures
+- Conversion: 7-10 exposures
+
+EFFECTIVE REACH:
+Effective_Reach = Reach at or above Effective_Frequency threshold
+
+================================================================================
+SECTION 4: DIMINISHING RETURNS MODEL
+================================================================================
+
+META_SECTION_ID: diminishing_returns
+META_WORKFLOW_STEPS: 5,6,7
+META_TOPICS: diminishing_returns, saturation, response_curves, hill_function
+META_INTENT: BUDGET_PLANNING
+META_CONFIDENCE: HIGH
+
+4.1 HILL FUNCTION (S-CURVE)
+
+The Hill function models response with saturation effect:
+
+FORMULA:
+Response = (Spend^alpha) / (K^alpha + Spend^alpha)
+
+Where:
+- Spend = Marketing investment
+- alpha = Steepness of curve (typically 0.5 to 2)
+- K = Half-saturation point (spend level at 50% response)
+
+4.2 DIMINISHING RETURNS FACTOR
+
+To estimate declining marginal returns:
+
+FACTOR = 1 / (1 + (Current_Spend / Saturation_Point))
+
+Apply factor to incremental spend projections.
+
+4.3 SATURATION WARNING THRESHOLDS
+
+Budget exceeds 1.5x optimal: Flag diminishing returns warning
+Budget exceeds 2x optimal: Strong diminishing returns likely
+Budget exceeds 3x optimal: Severe saturation, recommend reallocation
+
+================================================================================
+SECTION 5: BUDGET ALLOCATION OPTIMIZATION
+================================================================================
+
+META_SECTION_ID: budget_optimization
+META_WORKFLOW_STEPS: 5,6
+META_TOPICS: budget_allocation, optimization, marginal_roi, reallocation
+META_INTENT: BUDGET_PLANNING
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+5.1 MARGINAL ROI CALCULATION
+
+Marginal ROI measures return on next dollar spent:
+
+mROI = (Incremental_Revenue - Incremental_Cost) / Incremental_Cost
+
+5.2 OPTIMAL ALLOCATION RULE
+
+Allocate budget where marginal returns are highest.
+At optimal allocation, marginal ROI should be equal across channels.
+
+5.3 REALLOCATION FORMULA
+
+If Channel A has higher mROI than Channel B:
+- Shift budget from B to A
+- Continue until mROI equalizes or constraints bind
+
+5.4 CONSTRAINT HANDLING
+
+Budget constraints:
+- Minimum spend per channel (platform requirements)
+- Maximum spend per channel (saturation limits)
+- Total budget constraint
+- Channel mix requirements
+
+================================================================================
+SECTION 6: CONFIDENCE LEVEL METHODOLOGY
+================================================================================
+
+META_SECTION_ID: confidence_methodology
+META_WORKFLOW_STEPS: 5,6,7,8
+META_TOPICS: confidence, uncertainty, ranges, data_quality
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+6.1 CONFIDENCE LEVEL DEFINITIONS
+
+HIGH CONFIDENCE: 80-100 points
+- Based on user-provided historical data with consistent performance
+- Validated against actual results
+- Range: plus or minus 10 percent
+
+MEDIUM CONFIDENCE: 50-79 points
+- Based on vertical benchmarks with some user validation
+- Reasonable alignment with historical patterns
+- Range: plus or minus 15-25 percent
+
+LOW CONFIDENCE: 0-49 points
+- Based on general industry benchmarks only
+- No user-specific validation
+- Range: plus or minus 25-40 percent
+
+6.2 CONFIDENCE CALCULATION FACTORS
+
+Data Source Quality: 0-30 points
+- User historical data: 30 points
+- Vertical benchmarks: 15 points
+- General benchmarks: 5 points
+
+Data Recency: 0-25 points
+- Within 90 days: 25 points
+- Within 180 days: 15 points
+- Older than 180 days: 5 points
+
+Data Consistency: 0-25 points
+- Low variance: 25 points
+- Medium variance: 15 points
+- High variance: 5 points
+
+Validation Status: 0-20 points
+- Validated against actuals: 20 points
+- Cross-validated: 10 points
+- Not validated: 0 points
+
+================================================================================
+SECTION 7: VALIDATION THRESHOLDS AND TRIGGERS
+================================================================================
+
+META_SECTION_ID: validation_thresholds
+META_WORKFLOW_STEPS: 5,6,7,8,9
+META_TOPICS: validation, thresholds, warnings, benchmarks
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+7.1 EFFICIENCY VALIDATION
+
+CPM VALIDATION:
+- Below vertical low: Flag as potentially unrealistic
+- Above vertical high: Flag as expensive, investigate
+
+CPC VALIDATION:
+- Below 0.10: Likely display or low-intent traffic
+- Above vertical high: May indicate competition or quality issues
+
+CTR VALIDATION:
+- Below 0.05%: Display normal, search concerning
+- Above 10%: Validate targeting and creative
+
+CVR VALIDATION:
+- Below vertical median: Investigate landing page or targeting
+- Above vertical best-in-class: Validate tracking
+
+7.2 BUDGET VALIDATION
+
+BUDGET PER CHANNEL:
+- Below minimum threshold: Flag underfunded
+- Flag channels below 5K per month
+
+IMPLIED CPA VALIDATION:
+- If Budget / Target_Conversions exceeds vertical high CPA by 50%: Flag unrealistic target
+- If Budget / Target_Conversions below vertical low CPA: Flag optimistic
+
+7.3 PROJECTION VALIDATION
+
+Before presenting any projection, validate:
+1. All metrics within 2x of benchmark ranges
+2. Implied efficiencies are achievable
+3. Confidence level is appropriate
+4. Data sources are cited
+
+================================================================================
+SECTION 8: INCREMENTALITY FORMULAS
+================================================================================
+
+META_SECTION_ID: incrementality_formulas
+META_WORKFLOW_STEPS: 8,9
+META_TOPICS: incrementality, lift, control_group, statistical_significance
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+
+8.1 INCREMENTAL LIFT CALCULATION
+
+Lift = (Test_Conversions - Control_Conversions) / Control_Conversions times 100
+
+8.2 INCREMENTAL CONVERSIONS
+
+Incremental_Conversions = Total_Attributed - (Baseline times Audience_Size)
+
+Where Baseline = Control group conversion rate
+
+8.3 INCREMENTAL ROAS (iROAS)
+
+iROAS = (Incremental_Revenue) / Campaign_Spend
+
+8.4 INCREMENTALITY RATE
+
+Incrementality_Rate = Incremental_Conversions / Attributed_Conversions
+
+Typical rates by channel:
+- Brand search: 20-40%
+- Non-brand search: 50-70%
+- Retargeting: 30-50%
+- Prospecting social: 40-60%
+- CTV/Video: 60-80%
+
+================================================================================
+SECTION 9: LTV AND COHORT CALCULATIONS
+================================================================================
+
+META_SECTION_ID: ltv_cohort_calculations
+META_WORKFLOW_STEPS: 5,6,8
+META_TOPICS: ltv, lifetime_value, cohort_analysis, retention
+META_INTENT: BUDGET_PLANNING, MEASUREMENT_GUIDANCE
+META_CONFIDENCE: MEDIUM
+
+9.1 SIMPLE LTV CALCULATION
+
+LTV = Average_Order_Value times Purchase_Frequency times Customer_Lifespan
+
+9.2 LTV WITH MARGIN
+
+LTV = (AOV times Margin times Frequency times Lifespan) - Acquisition_Cost
+
+9.3 COHORT RETENTION
+
+Month_N_Retention = Customers_Active_Month_N / Customers_Acquired_Month_0
+
+9.4 LTV:CAC RATIO BENCHMARKS
+
+- Below 1.0: Losing money on acquisition
+- 1.0-2.0: Marginal, may not cover overhead
+- 2.0-3.0: Healthy for most businesses
+- Above 3.0: Strong unit economics, potential to invest more
+
+================================================================================
+SECTION 10: CROSS-REFERENCES
+================================================================================
+
+META_SECTION_ID: analytics_cross_references
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: cross_references, related_documents
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+10.1 RELATED DOCUMENTS
+
+- REF: mpa_benchmark (Dataverse) - Performance benchmarks by vertical and channel
+- REF: mpa_kpi (Dataverse) - KPI definitions and calculation methods
+- REF: Gap_Detection_Playbook_v6_0.txt - Gap analysis using these formulas
+- REF: MPA_Expert_Lens_Budget_Allocation_v6_0.txt - Budget optimization guidance
+- REF: MPA_Expert_Lens_Measurement_Attribution_v6_0.txt - Attribution methodology
+
+10.2 DATAVERSE QUERIES FOR CALCULATIONS
+
+For projection calculations, query:
+- mpa_benchmark: Get vertical + channel CTR, CVR, CPM, CPA ranges
+- mpa_kpi: Get KPI definitions for consistent calculation
+- mpa_channel: Get channel characteristics and minimum thresholds
+
+================================================================================
+VERSION HISTORY
+================================================================================
+
+Version 6.0 - January 2026
+- Added META_ prefixed tags for retrieval optimization
+- Restructured into calculation-focused sections
+- Added section-level metadata for filtered retrieval
+- Condensed from 2553 lines to ~450 lines for core formulas
+- Full methodology available in Analytics_Engine_v5_5_FULL.txt
+
+Version 5.5 - January 2026 - Original comprehensive version
+
+================================================================================
+END OF DOCUMENT
+================================================================================

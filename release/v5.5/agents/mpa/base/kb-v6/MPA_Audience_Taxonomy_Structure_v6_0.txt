@@ -1,0 +1,272 @@
+DOCUMENT: MPA_Audience_Taxonomy_Structure_v6_0.txt
+VERSION: 6.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+META_DOCUMENT_TYPE: reference_framework
+META_PRIMARY_TOPICS: audience_taxonomy, iab_codes, google_affinity, meta_targeting, linkedin
+META_WORKFLOW_STEPS: 2,3,4
+META_INTENTS: AUDIENCE_TARGETING
+META_VERTICALS: ALL
+META_LAST_UPDATED: 2026-01-16
+
+================================================================================
+SECTION 1: PURPOSE AND CORE PRINCIPLE
+================================================================================
+
+META_SECTION_ID: taxonomy_purpose
+META_WORKFLOW_STEPS: 2,3
+META_TOPICS: purpose, core_principle, web_search_requirement
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+1.1 PURPOSE
+
+This document provides the structural framework for platform-specific audience taxonomies. Activation-ready audience specifications require platform-specific taxonomy codes.
+
+1.2 CORE PRINCIPLE
+
+The agent must web search for current codes rather than relying solely on this reference, as platforms update taxonomies quarterly. This document provides structure and search patterns, not a complete code database.
+
+================================================================================
+SECTION 2: IAB CONTENT TAXONOMY
+================================================================================
+
+META_SECTION_ID: iab_taxonomy
+META_WORKFLOW_STEPS: 2,3,4
+META_TOPICS: iab_codes, content_taxonomy, contextual_targeting
+META_INTENT: AUDIENCE_TARGETING
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+META_WEB_SEARCH_TRIGGER: TRUE
+
+2.1 STRUCTURE FORMAT
+
+Tier 1: IAB## - Primary category
+Tier 2: IAB##-## - Subcategory
+Tier 3: IAB##-##-## - Detailed subcategory
+
+2.2 TIER 1 CATEGORIES
+
+IAB1 Arts and Entertainment
+IAB2 Automotive
+IAB3 Business
+IAB4 Careers
+IAB5 Education
+IAB6 Family and Parenting
+IAB7 Health and Fitness
+IAB8 Food and Drink
+IAB9 Hobbies and Interests
+IAB10 Home and Garden
+IAB11 Law Government Politics
+IAB12 News
+IAB13 Personal Finance
+IAB14 Society
+IAB15 Science
+IAB16 Pets
+IAB17 Sports
+IAB18 Style and Fashion
+IAB19 Technology and Computing
+IAB20 Travel
+IAB21 Real Estate
+IAB22 Shopping
+IAB23 Religion and Spirituality
+
+2.3 COMMON FINANCE SEGMENTS
+
+IAB13-1 Beginning Investing
+IAB13-2 Credit Debt and Loans
+IAB13-6 Insurance
+IAB13-7 Investing
+IAB13-10 Retirement Planning
+
+2.4 SEARCH PATTERN
+
+site:iabtechlab.com IAB content taxonomy [category] code
+
+================================================================================
+SECTION 3: GOOGLE AUDIENCE TAXONOMY
+================================================================================
+
+META_SECTION_ID: google_taxonomy
+META_WORKFLOW_STEPS: 2,3,4
+META_TOPICS: google_affinity, google_inmarket, google_ads
+META_INTENT: AUDIENCE_TARGETING
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+META_WEB_SEARCH_TRIGGER: TRUE
+
+3.1 AFFINITY AUDIENCES
+
+Format: /Affinity/[Category]/[Subcategory]
+
+Major Categories:
+- Banking and Finance
+- Beauty and Wellness
+- Food and Dining
+- Home and Garden
+- Media and Entertainment
+- Shoppers
+- Sports and Fitness
+- Technology
+- Travel
+
+Common Segments:
+- /Affinity/Banking and Finance/Avid Investors
+- /Affinity/Travel/Frequent Travelers
+- /Affinity/Technology/Tech Enthusiasts
+
+Search pattern: site:support.google.com Google Ads affinity audience [category]
+
+3.2 IN-MARKET AUDIENCES
+
+Format: /In-Market/[Category]/[Subcategory]
+
+Major Categories:
+- Apparel and Accessories
+- Autos and Vehicles
+- Consumer Electronics
+- Financial Services
+- Home and Garden
+- Real Estate
+- Software
+- Travel
+
+Common Segments:
+- /In-Market/Financial Services/Banking Services
+- /In-Market/Financial Services/Investment Services
+- /In-Market/Travel/Air Travel
+- /In-Market/Autos and Vehicles/Motor Vehicles (New)
+
+Search pattern: site:support.google.com Google Ads in-market audience [category]
+
+================================================================================
+SECTION 4: META DETAILED TARGETING
+================================================================================
+
+META_SECTION_ID: meta_taxonomy
+META_WORKFLOW_STEPS: 2,3,4
+META_TOPICS: meta_interests, meta_behaviors, facebook_targeting
+META_INTENT: AUDIENCE_TARGETING
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+META_WEB_SEARCH_TRIGGER: TRUE
+
+4.1 INTERESTS STRUCTURE
+
+Format: [Category] > [Subcategory] > [Interest]
+
+Major Interest Categories:
+- Business and Industry
+- Entertainment
+- Family and Relationships
+- Fitness and Wellness
+- Food and Drink
+- Hobbies and Activities
+- Shopping and Fashion
+- Sports and Outdoors
+- Technology
+
+4.2 BEHAVIORS STRUCTURE
+
+Format: [Behavior Category] > [Specific Behavior]
+
+Key Behavior Categories:
+- Purchase Behavior
+- Travel
+- Residential Profiles
+- Seasonal and Events
+- Digital Activities
+- Mobile Device User
+
+4.3 SEARCH PATTERN
+
+Meta detailed targeting [category] [interest] available options
+
+================================================================================
+SECTION 5: LINKEDIN TARGETING (B2B)
+================================================================================
+
+META_SECTION_ID: linkedin_taxonomy
+META_WORKFLOW_STEPS: 2,3,4
+META_TOPICS: linkedin_targeting, b2b_audiences, professional_targeting
+META_INTENT: AUDIENCE_TARGETING
+META_CONFIDENCE: HIGH
+META_WEB_SEARCH_TRIGGER: TRUE
+
+5.1 TARGETING DIMENSIONS
+
+Job Title: Specific titles or title groups
+Job Function: Marketing, Sales, Finance, IT, HR, Operations
+Seniority: Entry, Senior, Manager, Director, VP, C-Suite
+Industry: 150+ industry categories
+Company Size: 1-10, 11-50, 51-200, 201-500, 501-1000, 1001-5000, 5001-10000, 10001+
+Company Name: Specific company targeting
+
+5.2 SEARCH PATTERN
+
+site:linkedin.com/help LinkedIn targeting [dimension] options
+
+================================================================================
+SECTION 6: OUTPUT REQUIREMENTS
+================================================================================
+
+META_SECTION_ID: taxonomy_output
+META_WORKFLOW_STEPS: 2,3
+META_TOPICS: output_format, activation_ready
+META_INTENT: AUDIENCE_TARGETING
+META_CONFIDENCE: HIGH
+
+6.1 ACTIVATION-READY FORMAT
+
+Complete audience specifications must include:
+
+IAB Codes (contextual):
+- List applicable IAB codes with full code and description
+
+Google Affinity:
+- List applicable /Affinity/ paths
+
+Google In-Market:
+- List applicable /In-Market/ paths
+
+Meta Interests:
+- List interests in Category > Subcategory format
+
+Meta Behaviors:
+- List behaviors in Category > Behavior format
+
+LinkedIn (if B2B):
+- Job titles, functions, seniority, industries
+
+================================================================================
+SECTION 7: CROSS-REFERENCES
+================================================================================
+
+META_SECTION_ID: taxonomy_references
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: cross_references
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+7.1 RELATED DOCUMENTS
+
+- REF: MPA_Expert_Lens_Audience_Strategy_v6_0.txt - Audience strategy guidance
+- REF: MPA_Geography_DMA_Planning_v6_0.txt - Census data integration
+- REF: FIRST_PARTY_DATA_STRATEGY_v6_0.txt - 1P data activation
+
+================================================================================
+VERSION HISTORY
+================================================================================
+
+Version 6.0 - January 2026
+- Added META_ prefixed tags for retrieval optimization
+- Added META_WEB_SEARCH_TRIGGER for taxonomy sections
+- Condensed from 425 lines to ~230 lines
+
+Version 5.8 - January 2026 - Full taxonomy reference
+
+================================================================================
+END OF DOCUMENT
+================================================================================

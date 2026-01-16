@@ -73,6 +73,8 @@ export class ConversationEngine {
         }
         // Reset failure detector for new conversation
         this.failureDetector.reset();
+        // Reset user simulator's triggered data changes for new conversation
+        this.userSimulator.resetTriggeredChanges();
         // Initialize step tracking state
         let stepState = this.stepTracker.initializeState();
         // Build message history for agent context
@@ -149,8 +151,17 @@ export class ConversationEngine {
             }
             // Build conversation history from prior agent responses for acronym tracking
             const conversationHistory = turns.map(t => t.agentResponse).join("\n");
+            // Build accumulated extracted data for feasibility validation
+            // Combine all collected data points across steps
+            const accumulatedData = {};
+            for (const stepNum of Object.keys(stepState.collectedData)) {
+                const stepData = stepState.collectedData[parseInt(stepNum)];
+                Object.assign(accumulatedData, stepData.collectedDataPoints);
+            }
+            // Also include data from current turn
+            Object.assign(accumulatedData, userResponse.revealedData);
             // Score this turn
-            const turnScores = await scoreTurn(userResponse.message, agentResult.response, currentStep, stepState, scenario.persona.sophisticationLevel, "unknown", conversationHistory);
+            const turnScores = await scoreTurn(userResponse.message, agentResult.response, currentStep, stepState, scenario.persona.sophisticationLevel, "unknown", conversationHistory, accumulatedData, kbContent);
             // Create turn record
             const turn = {
                 turnNumber,

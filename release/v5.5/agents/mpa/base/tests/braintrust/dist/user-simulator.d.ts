@@ -18,9 +18,15 @@ declare function parseUserResponse(response: string, persona: UserPersona): User
 export declare class UserSimulator {
     private anthropic;
     private config;
+    private triggeredDataChanges;
     constructor(config?: Partial<UserSimulatorConfig>);
     /**
+     * Reset triggered data changes (call at start of new conversation)
+     */
+    resetTriggeredChanges(): void;
+    /**
      * Check if a data change should be triggered at this turn
+     * Each data change can only be triggered once per conversation
      */
     private checkForDataChange;
     /**

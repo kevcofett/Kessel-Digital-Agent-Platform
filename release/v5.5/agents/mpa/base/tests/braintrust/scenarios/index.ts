@@ -128,6 +128,23 @@ import {
   audienceRemovalChangeContext,
 } from "./audience-removal-change.js";
 
+// Import v6.0 Vertical Benchmark Scenarios
+import {
+  retailBenchmarkScenario,
+  healthcareBenchmarkScenario,
+  gamingBenchmarkScenario,
+  b2bBenchmarkScenario,
+  VERTICAL_BENCHMARK_SCENARIOS,
+  retailMarketingManagerPersona,
+  healthcareMarketingDirectorPersona,
+  gamingStartupFounderPersona,
+  b2bSaasVpMarketingPersona,
+  retailBenchmarkContext,
+  healthcareBenchmarkContext,
+  gamingBenchmarkContext,
+  b2bBenchmarkContext,
+} from "./vertical-benchmark-scenarios.js";
+
 // Export individual scenarios
 export {
   basicUserStep1_2Scenario,

@@ -44,7 +44,7 @@ function getAnthropicClient(): Anthropic {
   return anthropic;
 }
 
-// Load MPA instructions dynamically (defaults to v5.11)
+// Load MPA instructions dynamically (defaults to v6.0)
 const MPA_SYSTEM_PROMPT = loadInstructions();
 console.log(`Loaded MPA instructions from: ${INSTRUCTIONS_PATH} (${MPA_SYSTEM_PROMPT.length} chars)`);
 

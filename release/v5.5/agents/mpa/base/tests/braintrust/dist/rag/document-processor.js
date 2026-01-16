@@ -114,8 +114,8 @@ export class DocumentProcessor {
     async processFileEnhanced(filepath) {
         const content = await fs.readFile(filepath, 'utf-8');
         const filename = path.basename(filepath);
-        // Use new metadata parser
-        const docMetadata = this.metadataParser.parseDocument(content, filename);
+        // Use new metadata parser - include filepath for v6.0 metadata
+        const docMetadata = this.metadataParser.parseDocument(content, filename, filepath);
         const chunks = [];
         let chunkIndex = 0;
         // If document has structured sections from parser, use them
@@ -125,6 +125,8 @@ export class DocumentProcessor {
                 const contentType = this.detectContentType(sectionContent, section);
                 const sectionChunks = this.chunkSectionSemantic(sectionContent, section, filename, docMetadata.documentType, chunkIndex, contentType);
                 for (const chunk of sectionChunks) {
+                    // KB v6.0: Attach document-level metadata for priority boosting
+                    chunk.documentMetadata = docMetadata;
                     chunks.push(chunk);
                     chunkIndex++;
                 }
@@ -139,6 +141,8 @@ export class DocumentProcessor {
                 for (const chunk of sectionChunks) {
                     // Set section title from legacy parsing
                     chunk.sectionTitle = section.title;
+                    // KB v6.0: Attach document-level metadata for priority boosting
+                    chunk.documentMetadata = docMetadata;
                     chunks.push(chunk);
                     chunkIndex++;
                 }

@@ -9,7 +9,7 @@
  * @module query-understanding
  * @version 6.0
  */
-import { getDocumentTypesForIntent, getStepsForIntent, } from './kb-metadata-parser.js';
+import { getDocumentTypesForIntent, getStepsForIntent, getDocumentsForIntentV6, getDocumentsForStepV6, shouldTriggerWebSearch, } from './kb-metadata-parser.js';
 import { SYNONYM_MAPPINGS } from './types.js';
 // ============================================================================
 // CONSTANTS
@@ -119,6 +119,25 @@ const INTENT_PATTERNS = {
         /contingency/i,
         /downside/i,
     ],
+    // KB v6.0 intents from KB_INDEX
+    CONFIDENCE_ASSESSMENT: [
+        /confidence/i,
+        /uncertainty/i,
+        /how\s+sure/i,
+        /data\s+quality/i,
+        /source/i,
+        /reliable/i,
+        /trust/i,
+    ],
+    GAP_RESOLUTION: [
+        /miss(ed|ing)?\s+target/i,
+        /gap/i,
+        /short\s+of\s+goal/i,
+        /increase\s+conversions/i,
+        /not\s+hitting/i,
+        /underperform/i,
+        /falling\s+short/i,
+    ],
     GENERAL_GUIDANCE: [], // Fallback
 };
 /**
@@ -162,7 +181,7 @@ export class QueryUnderstanding {
     analyzeQuery(query) {
         const normalizedQuery = this.normalizeQuery(query);
         const entities = this.extractEntities(query);
-        const { primaryIntent, secondaryIntents, confidence } = this.classifyIntent(query, entities);
+        const { primaryIntent, secondaryIntents, confidence, triggerKeywords } = this.classifyIntent(query, entities);
         const expandedTerms = this.expandQuery(query).expanded;
         // Determine relevant workflow steps based on intent
         const relevantSteps = this.getRelevantSteps(primaryIntent, secondaryIntents, entities);
@@ -170,6 +189,10 @@ export class QueryUnderstanding {
         const relevantDocumentTypes = this.getRelevantDocumentTypes(primaryIntent, secondaryIntents);
         // Determine relevant topics
         const relevantTopics = this.getRelevantTopics(primaryIntent, entities);
+        // Determine if web search should be used
+        const shouldUseWebSearch = this.shouldUseWebSearch(query, primaryIntent, entities);
+        // Suggest Dataverse tables based on intent
+        const suggestedDataverseTables = this.getSuggestedDataverseTables(primaryIntent, entities);
         return {
             originalQuery: query,
             normalizedQuery,
@@ -181,6 +204,34 @@ export class QueryUnderstanding {
             relevantSteps,
             relevantDocumentTypes,
             relevantTopics,
+            triggerKeywords,
+            shouldUseWebSearch,
+            suggestedDataverseTables,
+        };
+    }
+    /**
+     * Analyze query with KB v6.0 index for document routing
+     */
+    analyzeQueryWithIndex(query, kbIndex) {
+        const baseAnalysis = this.analyzeQuery(query);
+        // Get documents from KB index based on intent
+        const { primary, secondary } = getDocumentsForIntentV6(kbIndex, baseAnalysis.primaryIntent);
+        // Also get documents for workflow steps
+        const stepDocuments = baseAnalysis.relevantSteps.flatMap(step => getDocumentsForStepV6(kbIndex, step));
+        // Deduplicate secondary with step documents
+        const allSecondary = [...secondary, ...stepDocuments];
+        const uniqueSecondary = allSecondary.filter((doc, idx, arr) => arr.findIndex(d => d.filename === doc.filename) === idx);
+        // Find intent mapping
+        const intentMapping = kbIndex.intentMappings.find(m => m.intent === baseAnalysis.primaryIntent) || null;
+        // Check if web search should be triggered based on documents
+        const shouldUseWebSearch = baseAnalysis.shouldUseWebSearch ||
+            shouldTriggerWebSearch([...primary, ...uniqueSecondary], query);
+        return {
+            ...baseAnalysis,
+            shouldUseWebSearch,
+            primaryDocuments: primary,
+            secondaryDocuments: uniqueSecondary.filter(d => !primary.some(p => p.filename === d.filename)),
+            intentMapping,
         };
     }
     /**
@@ -197,13 +248,21 @@ export class QueryUnderstanding {
             WORKFLOW_HELP: 0,
             ECONOMICS_VALIDATION: 0,
             RISK_ASSESSMENT: 0,
+            CONFIDENCE_ASSESSMENT: 0,
+            GAP_RESOLUTION: 0,
             GENERAL_GUIDANCE: 0.1, // Small baseline for fallback
         };
+        const triggerKeywords = [];
         // Score based on pattern matches
         for (const [intent, patterns] of Object.entries(INTENT_PATTERNS)) {
             for (const pattern of patterns) {
-                if (pattern.test(queryLower)) {
+                const match = queryLower.match(pattern);
+                if (match) {
                     scores[intent] += 1;
+                    // Collect trigger keywords
+                    if (match[0]) {
+                        triggerKeywords.push(match[0]);
+                    }
                 }
             }
         }
@@ -246,6 +305,7 @@ export class QueryUnderstanding {
             primaryIntent,
             secondaryIntents,
             confidence: Math.round(confidence * 100) / 100,
+            triggerKeywords: [...new Set(triggerKeywords)],
         };
     }
     /**
@@ -475,6 +535,73 @@ export class QueryUnderstanding {
             topics.add('general');
         }
         return Array.from(topics);
+    }
+    /**
+     * Determine if web search should be used for this query
+     */
+    shouldUseWebSearch(query, primaryIntent, entities) {
+        const queryLower = query.toLowerCase();
+        // Web search trigger patterns
+        const webSearchPatterns = [
+            /latest|recent|current|today|2026|this year/i,
+            /competitor|competitive intelligence/i,
+            /census|population data|market size/i,
+            /platform.*(feature|update|change)/i,
+            /pricing|cost.*(current|now)/i,
+            /industry.*(news|update|trend)/i,
+        ];
+        // Check if query matches web search patterns
+        if (webSearchPatterns.some(p => p.test(queryLower))) {
+            return true;
+        }
+        // Geography queries with DMA/region often need census data
+        if (entities.dmas.length > 0 || entities.regions.length > 0) {
+            if (queryLower.includes('population') || queryLower.includes('census') || queryLower.includes('size')) {
+                return true;
+            }
+        }
+        // Benchmark queries with specific timeframe may need current data
+        if (primaryIntent === 'BENCHMARK_LOOKUP' && entities.timeframe) {
+            if (entities.timeframe.toLowerCase().includes('2026') || entities.timeframe.toLowerCase().includes('this year')) {
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
+     * Get suggested Dataverse tables based on intent and entities
+     */
+    getSuggestedDataverseTables(primaryIntent, entities) {
+        const tables = new Set();
+        // Map intents to Dataverse tables
+        const intentToTables = {
+            BENCHMARK_LOOKUP: ['mpa_benchmark', 'mpa_vertical', 'mpa_channel', 'mpa_kpi'],
+            CHANNEL_SELECTION: ['mpa_channel', 'mpa_benchmark'],
+            BUDGET_PLANNING: ['mpa_benchmark'],
+            AUDIENCE_TARGETING: ['mpa_vertical'],
+            MEASUREMENT_GUIDANCE: ['mpa_kpi', 'mpa_benchmark'],
+            GAP_RESOLUTION: ['mpa_benchmark'],
+        };
+        const intentTables = intentToTables[primaryIntent];
+        if (intentTables) {
+            for (const table of intentTables) {
+                tables.add(table);
+            }
+        }
+        // Add tables based on entities
+        if (entities.verticals.length > 0) {
+            tables.add('mpa_vertical');
+            tables.add('mpa_benchmark'); // Benchmarks are vertical-specific
+        }
+        if (entities.channels.length > 0) {
+            tables.add('mpa_channel');
+            tables.add('mpa_benchmark'); // Benchmarks are channel-specific
+        }
+        if (entities.kpis.length > 0) {
+            tables.add('mpa_kpi');
+            tables.add('mpa_benchmark'); // Benchmarks are KPI-specific
+        }
+        return Array.from(tables);
     }
     /**
      * Escape special regex characters

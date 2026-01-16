@@ -1,0 +1,4035 @@
+[
+  {
+    "scenario_id": "FULL-001",
+    "scenario_name": "Complete Linear Flow - B2B SaaS",
+    "category": "End-to-End Linear",
+    "total_turns": 25,
+    "completed_turns": 25,
+    "turn_results": [
+      {
+        "turn_number": 1,
+        "user_input": "Hi, I need help creating a media plan.",
+        "agent_response": "Hi! I'm excited to build a media plan with you. We'll cover ten areas: Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, and Risks. Each step builds on the last.\n\nWhat business outcome are you trying to achieve?",
+        "response_time_ms": 3587,
+        "scores": {
+          "response_length": 1.0,
+          "single_question": 1.0,
+          "tone": 0.5
+        },
+        "score_details": {
+          "response_length": {
+            "word_count": 40,
+            "status": "optimal"
+          },
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          },
+          "tone": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 2,
+        "user_input": "We want to generate qualified leads for our B2B software product.",
+        "agent_response": "Perfect. Lead generation is clear.\n\nHow do you measure a qualified lead - what makes a lead \"qualified\" for your team?",
+        "response_time_ms": 2404,
+        "scores": {
+          "single_question": 1.0,
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          },
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 3,
+        "user_input": "A qualified lead is someone who books a demo with our sales team.",
+        "agent_response": "Got it - demo bookings as your primary KPI. That's clean and measurable.\n\nHow many demo bookings do you want to generate?",
+        "response_time_ms": 1646,
+        "scores": {
+          "single_question": 1.0,
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          },
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 4,
+        "user_input": "We want 500 demo bookings this quarter. Our budget is $150,000.",
+        "agent_response": "Step 1 complete with Objective: qualified leads, KPI: demo bookings, Target: 500. Now Step 2 Economics.\n\nWith your $150K budget and 500 demo targets, that's $300 per demo. Here's the thing - that's aggressive for B2B software. Based on Knowledge Base benchmarks, typical cost per demo runs $400-800 depending on deal size and competition.\n\nWhat's the average value of a customer who converts from demo?",
+        "response_time_ms": 3307,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 1.0,
+          "feasibility_framing": 0.8
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "has_calculation": true,
+            "has_benchmark": true,
+            "has_assessment": true
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          },
+          "feasibility_framing": {
+            "has_assessment": true,
+            "has_source": true,
+            "has_path": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 5,
+        "user_input": "Is that a realistic target?",
+        "agent_response": "Based on your $300 cost per demo target, it's ambitious but not impossible. Knowledge Base data shows typical B2B software demo costs run $400-800, so you're targeting the aggressive end.\n\nTo hit $300 per demo, we'll need tight audience definition and efficient channel selection. Doable with the right approach.\n\nWhat's the average value of a customer who converts from demo?",
+        "response_time_ms": 4289,
+        "scores": {
+          "source_citation": 0.0,
+          "feasibility_framing": 1.0
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          },
+          "feasibility_framing": {
+            "has_assessment": true,
+            "has_source": true,
+            "has_path": true
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 6,
+        "user_input": "What's the typical lifetime value for customers in this space?",
+        "agent_response": "Got it, I'll model using typical B2B software LTV. Based on Knowledge Base data for this category, typical LTV ranges $15K-50K depending on deal size and retention. You can adjust anytime.\n\nWhat percentage of your demos typically convert to paying customers?",
+        "response_time_ms": 2937,
+        "scores": {
+          "source_citation": 1.0,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 7,
+        "user_input": "Our average contract is $50,000 annually with 80% gross margin.",
+        "agent_response": "Excellent economics. With $50K annual contracts at 80% margin, that's $40K gross profit per customer.\n\nWhat percentage of your demos typically convert to paying customers?",
+        "response_time_ms": 2450,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 8,
+        "user_input": "Who should we be targeting?",
+        "agent_response": "We'll get to audience targeting next, but first I need to complete the economics.\n\nWhat percentage of your demos typically convert to paying customers?",
+        "response_time_ms": 3793,
+        "scores": {
+          "step_boundary": 0.5,
+          "single_question": 1.0
+        },
+        "score_details": {
+          "step_boundary": {
+            "status": "scorer_not_implemented"
+          },
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 9,
+        "user_input": "IT directors and CIOs at mid-market companies, 500-5000 employees, in financial services and healthcare.",
+        "agent_response": "That's helpful for Step 3 Audience, but I need one more piece for economics first.\n\nWhat percentage of your demos typically convert to paying customers?",
+        "response_time_ms": 1591,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "source_citation": {
+            "has_data": false,
+            "status": "no_data_claims"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 10,
+        "user_input": "Where should we focus geographically?",
+        "agent_response": "I'll model using typical B2B software demo conversion. Based on Knowledge Base benchmarks, typical demo-to-customer conversion is 15-25%. You can adjust anytime.\n\nAt 20% conversion, your 500 demos yield 100 customers worth $4M revenue ($3.2M gross profit). Your $150K spend against $3.2M profit shows strong unit economics.\n\nStep 2 complete. Now Step 3 Audience - you mentioned IT directors and CIOs at mid-market companies in financial services and healthcare.\n\nWhich geographic markets should we prioritize?",
+        "response_time_ms": 7267,
+        "scores": {
+          "step_boundary": 0.5,
+          "single_question": 1.0
+        },
+        "score_details": {
+          "step_boundary": {
+            "status": "scorer_not_implemented"
+          },
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 11,
+        "user_input": "US only, focused on major metros - NYC, SF, Chicago, Boston, LA.",
+        "agent_response": "Step 3 complete with Audience: IT directors/CIOs at 500-5000 employee companies in financial services and healthcare. Step 4 complete with Geography: US major metros (NYC, SF, Chicago, Boston, LA).\n\nYour audience is well-defined but narrow. Based on Knowledge Base data, this target universe is roughly 8,000-12,000 people across those metros and verticals. To generate 500 demos, you need 4-6% response rate - that's aggressive but achievable with strong messaging.\n\nStep 5 Budget - we have your $150K total. How do you want to allocate this across the quarter?",
+        "response_time_ms": 4921,
+        "scores": {
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 12,
+        "user_input": "We already said our budget is $150K. What else do you need?",
+        "agent_response": "You're right - we have the $150K total budget covered.\n\nStep 5 complete. Now Step 6 Value Proposition.\n\nWhat's your core value proposition - how do you position your software to IT directors and CIOs?",
+        "response_time_ms": 4972,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "single_question": 1.0
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 13,
+        "user_input": "The campaign runs Q2, April through June.",
+        "agent_response": "Got it - Q2 timing noted for implementation.\n\nWhat's your core value proposition - how do you position your software to IT directors and CIOs in financial services and healthcare?",
+        "response_time_ms": 3733,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 14,
+        "user_input": "What makes our product unique is that we reduce compliance costs by 40% guaranteed.",
+        "agent_response": "Strong value prop - 40% guaranteed compliance cost reduction. That's compelling for your target audience, especially in heavily regulated sectors like finance and healthcare.\n\nStep 6 complete. Now Step 7 Channels.\n\nGiven your narrow but high-value audience of IT executives, which channels are you considering - LinkedIn ads, industry events, email outreach, or others?",
+        "response_time_ms": 4246,
+        "scores": {
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 15,
+        "user_input": "Now what channels should we use?",
+        "agent_response": "With your tight audience of 8K-12K IT executives and $300 cost per demo target, here's what works:\n\n**LinkedIn ads** - Best for precise targeting of IT directors/CIOs by company size and industry. Expect $50-80 CPCs, 2-4% CTR to landing page.\n\n**Account-based display** - Reaches your target accounts across the web. Lower CPCs ($15-25) but needs bigger funnel.\n\n**Industry publications** - CFO Magazine, CIO.com for thought leadership content. Higher engagement but limited scale.\n\nI'd recommend 70% LinkedIn, 30% account-based display for your targets and budget.\n\nWhich channels do you want to test?",
+        "response_time_ms": 6113,
+        "scores": {
+          "step_boundary": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "step_boundary": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 16,
+        "user_input": "Why LinkedIn over other options?",
+        "agent_response": "LinkedIn wins for three reasons with your specific targets:\n\n**Precision targeting** - You can target exactly \"IT Director/CIO at 500-5000 employee companies in Financial Services/Healthcare in NYC/SF/Chicago/Boston/LA.\" No other channel gets this granular.\n\n**Decision-maker reach** - Your audience actually uses LinkedIn professionally. IT executives check it for industry updates and vendor research.\n\n**Intent matching** - When CIOs are researching compliance solutions, they're often doing it on LinkedIn through content and peer discussions.\n\nOther channels can't match this targeting precision for B2B executives. Email lists get stale, display is broad, industry events are expensive per contact.\n\nWhich channels do you want to include in the mix?",
+        "response_time_ms": 6405,
+        "scores": {
+          "source_citation": 1.0,
+          "tone": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": false,
+            "status": "no_data_claims"
+          },
+          "tone": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 17,
+        "user_input": "What about Google?",
+        "agent_response": "Good question. Google search works well when people actively search for compliance software solutions. Problem is your audience doesn't search frequently - IT executives research sporadically when compliance issues arise.\n\nSearch volume for \"compliance software\" or \"reduce compliance costs\" is limited, and you're competing with established players on expensive keywords ($15-40+ CPCs).\n\nLinkedIn lets you interrupt them with your 40% cost reduction message when they're not actively searching but should be thinking about it.\n\nI'd still prioritize LinkedIn, but we could test Google for 10-15% of budget if you want to capture active intent.\n\nWhat's your preference on channel mix?",
+        "response_time_ms": 7228,
+        "scores": {
+          "source_citation": 0.0,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 18,
+        "user_input": "How should we split the budget across channels?",
+        "agent_response": "Based on your targets and audience, here's my recommended split:\n\n**LinkedIn Ads: $105K (70%)**\n- Sponsored Content and Message Ads\n- Best targeting precision for IT executives\n- Expected 1,500-2,000 clicks, 350+ demos\n\n**Account-Based Display: $30K (20%)**  \n- Retargeting and prospecting across your target accounts\n- Lower cost, broader reach, supports LinkedIn\n\n**Google Search: $15K (10%)**\n- Capture active compliance software searchers\n- Small budget test for incremental volume\n\nThis allocation prioritizes your highest-probability channel while testing complementary approaches.\n\nDoes this split align with your comfort level, or would you adjust the percentages?",
+        "response_time_ms": 6489,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 0.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 19,
+        "user_input": "How do we measure success?",
+        "agent_response": "Step 8 Measurement. Your primary KPI is demo bookings - we're tracking toward 500.\n\nHere's your measurement framework:\n\n**Primary:** Demo bookings by channel (target: 500 total)\n**Secondary:** Cost per demo by channel (target: $300 average)  \n**Leading indicators:** Click-through rates, landing page conversions, form fills\n\n**Attribution:** First-touch and last-touch tracking. IT executives research over weeks, so expect multi-touch journeys.\n\n**Reporting cadence:** Weekly channel performance, monthly forecasting against 500 target.\n\n**Red flags:** If cost per demo exceeds $400 by week 3, we reallocate budget from underperforming channels.\n\nWhat's your current tracking setup - do you have analytics and CRM integration in place?",
+        "response_time_ms": 6584,
+        "scores": {
+          "step_boundary": 0.5,
+          "source_citation": 0.0
+        },
+        "score_details": {
+          "step_boundary": {
+            "status": "scorer_not_implemented"
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 20,
+        "user_input": "Should we use ROAS as our primary metric?",
+        "agent_response": "No - ROAS is misleading for your campaign. Here's why:\n\n**Platform inflation** - LinkedIn and Google inflate revenue attribution, often claiming 300-500% ROAS when true incrementality is much lower.\n\n**Attribution gaps** - Your IT executives research over weeks across multiple touchpoints. ROAS misses the complex B2B buyer journey.\n\n**Wrong optimization** - ROAS pushes toward cheaper, lower-quality leads instead of qualified demos that actually convert.\n\nStick with demo bookings as your primary KPI. It's clean, measurable, and directly tied to sales outcomes. Your sales team can tell you if demo quality drops - ROAS can't.\n\nTrack cost per demo instead. It's honest math and aligns with your business model.\n\nWhat's your current tracking setup for demo bookings?",
+        "response_time_ms": 5858,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "tone": 0.5
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "tone": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 21,
+        "user_input": "What should we test?",
+        "agent_response": "Step 9 Testing. With your $150K budget and tight audience, here are the key tests:\n\n**Audience segments (Week 1-2)**\n- IT Directors vs CIOs separately \n- Financial Services vs Healthcare performance\n- Metro market efficiency comparison\n\n**Creative messaging (Week 3-4)**\n- \"40% compliance cost reduction\" vs \"guaranteed compliance savings\"\n- Problem-focused vs solution-focused headlines\n- Video demos vs static case studies\n\n**Channel efficiency (Ongoing)**\n- LinkedIn Sponsored Content vs Message Ads\n- Display retargeting windows (7-day vs 30-day)\n\nStart with audience segmentation - if one vertical significantly outperforms, shift budget there mid-quarter.\n\nWhich test interests you most for early insights?",
+        "response_time_ms": 5587,
+        "scores": {
+          "step_boundary": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "step_boundary": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 22,
+        "user_input": "What are the biggest risks?",
+        "agent_response": "Step 10 Risks. Here are your biggest threats:\n\n**Audience too narrow** - 8K-12K universe means limited scale. If response rates disappoint, you can't easily expand volume without diluting quality.\n\n**Aggressive efficiency target** - $300 per demo is 25% below market benchmarks. If costs run $400+, you hit budget constraints fast.\n\n**Long B2B sales cycles** - IT executives research slowly. You might see strong early engagement but delayed demo bookings, making mid-quarter optimization harder.\n\n**Competition** - Major compliance vendors likely targeting same audience with bigger budgets.\n\n**Mitigation:** Build backup audience segments (expand company size to 200-5000 employees) and have budget reallocation plan if primary channels underperform by week 3.\n\nYour biggest risk is the narrow audience. Should we discuss backup targeting options now?",
+        "response_time_ms": 7403,
+        "scores": {
+          "step_boundary": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "step_boundary": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 23,
+        "user_input": "Can you summarize the complete plan?",
+        "agent_response": "## Complete Media Plan Summary\n\n**OBJECTIVES & ECONOMICS**\n- Goal: 500 demo bookings, Q2 (April-June)\n- Budget: $150K ($300 per demo target - aggressive but achievable)\n- Economics: $50K annual contracts, 80% margin, 20% demo conversion\n- ROI: $4M revenue potential from $150K investment\n\n**AUDIENCE & GEOGRAPHY**\n- Primary: IT Directors/CIOs at 500-5000 employee companies\n- Verticals: Financial Services & Healthcare\n- Geography: US major metros (NYC, SF, Chicago, Boston, LA)\n- Universe: ~8-12K prospects (narrow but high-value)\n\n**CHANNEL STRATEGY & BUDGET**\n- LinkedIn Ads: $105K (70%) - primary targeting precision\n- Account-Based Display: $30K (20%) - support and retargeting  \n- Google Search: $15K (10%) - capture active intent\n\n**VALUE PROPOSITION**\n- Core message: 40% guaranteed compliance cost reduction\n\n**MEASUREMENT & TESTING**\n- Primary KPI: Demo bookings (not ROAS)\n- Key tests: Audience segments, creative messaging, channel efficiency\n- Tracking: Weekly performance, monthly forecasting\n\n**KEY RISKS**\n- Narrow audience limits scale potential\n- Aggressive $300 per demo efficiency target\n- Long B2B decision cycles\n\nReady to launch or want to refine any area?",
+        "response_time_ms": 9742,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 24,
+        "user_input": "Actually, our budget just got cut to $100K. What changes?",
+        "agent_response": "With the budget cut to $100K, we need to recalibrate. Previously targeting 500 demos, now we're working with tighter efficiency.\n\n**New math:** $100K \u00f7 500 demos = $200 per demo target. That's extremely aggressive - 50% below market benchmarks.\n\n**Realistic options:**\n1. **Reduce volume target** - 333 demos at $300 each (more achievable)\n2. **Keep 500 target** - Accept $200 efficiency risk, need perfect execution\n\n**Revised channel allocation if targeting 333 demos:**\n- LinkedIn: $70K (70%)\n- Account-Based Display: $20K (20%) \n- Google: $10K (10%)\n\nThe narrow audience becomes an even bigger constraint with less budget for testing.\n\nDo you want to adjust the demo target to 333, or push for the aggressive 500 at $200 each?",
+        "response_time_ms": 6530,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 25,
+        "user_input": "Give me the final updated plan.",
+        "agent_response": "## Final Media Plan Summary\n\n**OBJECTIVES & ECONOMICS**\n- Goal: 333 demo bookings, Q2 (April-June)\n- Budget: $100K ($300 per demo target - achievable)\n- Economics: $50K annual contracts, 80% margin, 20% demo conversion\n- ROI: $2.66M revenue potential from $100K investment\n\n**AUDIENCE & GEOGRAPHY**\n- Primary: IT Directors/CIOs at 500-5000 employee companies\n- Verticals: Financial Services & Healthcare\n- Geography: US major metros (NYC, SF, Chicago, Boston, LA)\n- Universe: ~8-12K prospects\n\n**CHANNEL STRATEGY & BUDGET**\n- LinkedIn Ads: $70K (70%) - primary targeting precision\n- Account-Based Display: $20K (20%) - support and retargeting  \n- Google Search: $10K (10%) - capture active intent\n\n**VALUE PROPOSITION**\n- Core message: 40% guaranteed compliance cost reduction\n\n**MEASUREMENT & TESTING**\n- Primary KPI: Demo bookings (target: 333)\n- Key tests: Audience segments, creative messaging, channel efficiency\n- Weekly performance tracking, monthly forecasting\n\n**KEY RISKS**\n- Narrow audience limits scale options\n- Long B2B decision cycles affect timing\n- Competition from major compliance vendors\n\nPlan is realistic and executable. Ready to launch?",
+        "response_time_ms": 7124,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      }
+    ],
+    "overall_scores": {
+      "response_length": 1.0,
+      "single_question": 1.0,
+      "tone": 0.5,
+      "step_completion": 0.5,
+      "proactive_intelligence": 1.0,
+      "source_citation": 0.5,
+      "feasibility_framing": 0.9,
+      "step_boundary": 0.5,
+      "self_referential_learning": 0.5
+    },
+    "passed": false,
+    "error": null,
+    "start_time": "2026-01-14T18:19:45.098968",
+    "end_time": "2026-01-14T18:22:28.846390",
+    "duration_seconds": 163.747422
+  },
+  {
+    "scenario_id": "FULL-002",
+    "scenario_name": "Complete Linear Flow - DTC E-commerce",
+    "category": "End-to-End Linear",
+    "total_turns": 24,
+    "completed_turns": 24,
+    "turn_results": [
+      {
+        "turn_number": 1,
+        "user_input": "I need a media plan for our direct-to-consumer skincare brand.",
+        "agent_response": "Hi! I'm excited to build a media plan with you. We'll cover ten areas: Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, and Risks. Each step builds on the last.\n\nWhat business outcome are you trying to achieve with this campaign?",
+        "response_time_ms": 2604,
+        "scores": {
+          "response_length": 1.0,
+          "single_question": 1.0,
+          "tone": 0.5
+        },
+        "score_details": {
+          "response_length": {
+            "word_count": 43,
+            "status": "optimal"
+          },
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          },
+          "tone": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 2,
+        "user_input": "We want to acquire new customers profitably.",
+        "agent_response": "Got it - new customer acquisition. How do you want to measure success as a number? Are you targeting a specific number of new customers, revenue amount, or something else?",
+        "response_time_ms": 2664,
+        "scores": {
+          "single_question": 0.0,
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "single_question": {
+            "question_count": 2,
+            "status": "multiple_questions"
+          },
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 3,
+        "user_input": "A new customer is someone who makes their first purchase.",
+        "agent_response": "Perfect - first-time purchasers. How many new customers do you want to acquire?",
+        "response_time_ms": 2529,
+        "scores": {
+          "single_question": 1.0
+        },
+        "score_details": {
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 4,
+        "user_input": "We have $500,000 for the year and want 10,000 new customers.",
+        "agent_response": "Step 1 complete with Objective: new customer acquisition, KPI: first-time purchasers, Target: 10,000 customers. Now Step 2 Economics.\n\nWith your $500K budget targeting 10,000 customers, that's $50 customer acquisition cost (CAC). \n\nWhat's your average order value for new customers?",
+        "response_time_ms": 4465,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 0.0,
+          "feasibility_framing": 0.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          },
+          "feasibility_framing": {
+            "has_assessment": false,
+            "has_source": false,
+            "has_path": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 5,
+        "user_input": "Our average order value is $85 and we have 40% gross margin.",
+        "agent_response": "Here's the thing - your economics need work. With $85 AOV and 40% margin, you make $34 gross profit per customer. But you're spending $50 to acquire each one. That's a $16 loss per customer.\n\nBased on Knowledge Base benchmarks for DTC skincare, sustainable CAC typically runs 20-30% of AOV. For you, that means $17-$25 CAC, not $50.\n\nDo you have repeat purchase data or lifetime value calculations we can factor in?",
+        "response_time_ms": 6166,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 6,
+        "user_input": "Our target customer is women 25-45 interested in clean beauty and sustainability.",
+        "agent_response": "I hear you on audience - we'll dive deep into that in Step 3. But first, we need to solve the economics issue. You're losing $16 per customer with current targets.\n\nDo you track repeat purchases or customer lifetime value beyond that first $85 order?",
+        "response_time_ms": 4661,
+        "scores": {
+          "single_question": 1.0,
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          },
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 7,
+        "user_input": "They shop at Sephora and Whole Foods, follow beauty influencers, and care about ingredients.",
+        "agent_response": "Those are great audience insights for later. Right now we're stuck on a math problem - you'll lose money on every customer acquired.\n\nLet me model with an assumption and we'll move forward: Based on Knowledge Base data for DTC skincare, typical customers purchase 2-3 times per year with 60% repeat rate. Using conservative 2x annual purchases at $85, your customer lifetime value would be roughly $170.\n\nWith $170 LTV and 40% margin, that's $68 lifetime gross profit. Your $50 CAC becomes profitable.\n\nDoes 2x annual frequency sound realistic for your brand?",
+        "response_time_ms": 8064,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 8,
+        "user_input": "We sell nationwide in the US.",
+        "agent_response": "Perfect - Step 4 complete with Geography: nationwide US. Going back to your economics, does 2x annual purchases sound realistic for your customers, or do they buy more or less frequently?",
+        "response_time_ms": 3369,
+        "scores": {
+          "single_question": 1.0
+        },
+        "score_details": {
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 9,
+        "user_input": "No concentration - we want national coverage.",
+        "agent_response": "Got it on national coverage. \n\nStep 2 Economics still needs resolution. I modeled 2x annual purchases to make your $50 CAC profitable. If customers buy less frequently, we need to lower your acquisition cost or increase order value.\n\nDoes twice per year purchase frequency match what you see with existing customers?",
+        "response_time_ms": 5978,
+        "scores": {
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 10,
+        "user_input": "Budget is spread evenly across the year with a bump for Q4 holiday.",
+        "agent_response": "I hear you moving ahead to budget allocation. Let me complete Step 2 first.\n\nBased on your silence on purchase frequency, I'll model using typical DTC skincare patterns: customers purchase 2.5 times annually with 65% repeat rate. That gives you roughly $140 customer lifetime value with 40% margin = $56 lifetime gross profit.\n\nStep 2 complete with Economics: $50 CAC against $56 LTV gross profit = $6 contribution per customer.\n\nNow Step 3 Audience. You mentioned women 25-45 interested in clean beauty. How large is your addressable market within that demographic?",
+        "response_time_ms": 5391,
+        "scores": {
+          "single_question": 1.0
+        },
+        "score_details": {
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 11,
+        "user_input": "60% in Q4, 40% spread across Q1-Q3.",
+        "agent_response": "I understand your budget split - 60% Q4, 40% across Q1-Q3. We'll get to Step 5 Budget allocation.\n\nRight now Step 3 Audience: You're targeting women 25-45 interested in clean beauty nationwide. That's roughly 25-30 million people based on census data and category interest.\n\nWith 10,000 customers needed, you're looking at 0.03% conversion rate from total addressable market. That's realistic.\n\nWhat's your primary value proposition - what makes customers choose your brand over competitors?",
+        "response_time_ms": 5856,
+        "scores": {
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 12,
+        "user_input": "Our differentiator is we're the only brand with USDA organic certification and plastic-free packaging.",
+        "agent_response": "Strong differentiator - USDA organic plus plastic-free packaging is rare in skincare. That should resonate with your clean beauty audience.\n\nStep 6 complete with Value Proposition: only USDA organic certified brand with plastic-free packaging.\n\nNow Step 7 Channels. Given your $50 CAC target and audience of sustainability-focused women 25-45, which digital channels are you considering?",
+        "response_time_ms": 3395,
+        "scores": {
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 13,
+        "user_input": "What channels work best for DTC beauty?",
+        "agent_response": "Based on Knowledge Base benchmarks for DTC beauty brands, here's what typically works:\n\n**Meta (Facebook/Instagram)** - Best reach for beauty audiences, $25-40 CAC range\n**Google Search** - High intent, $30-50 CAC but premium traffic  \n**Pinterest** - Strong for beauty discovery, $20-35 CAC\n**TikTok** - Growing for beauty, younger skew, $35-60 CAC\n**Influencer partnerships** - Variable costs, good for organic certification story\n\nWith your $50 CAC target and sustainability angle, I'd test Meta and Pinterest first - they align with your clean beauty audience and efficiency needs.\n\nWhich of these channels do you have experience with or want to prioritize?",
+        "response_time_ms": 5273,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 14,
+        "user_input": "How should we allocate budget across channels?",
+        "agent_response": "With your $500K total budget, here's my recommended starting allocation based on your clean beauty positioning and $50 CAC target:\n\n**Meta (60% = $300K)** - Primary reach vehicle, proven beauty performance\n**Pinterest (20% = $100K)** - Strong sustainability/wellness audience overlap  \n**Google Search (15% = $75K)** - Capture high-intent organic/clean beauty searches\n**Testing budget (5% = $25K)** - TikTok trials, influencer experiments\n\nThis gives you proven channels with room to test. Meta gets majority because it offers scale at your efficiency target.\n\nStep 7 complete with Channels: Meta-primary, Pinterest and Google Search as support, testing allocation.\n\nNow Step 8 Measurement. Beyond new customer count, what other metrics will you track to optimize performance?",
+        "response_time_ms": 6182,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 0.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 15,
+        "user_input": "What CPMs should we expect?",
+        "agent_response": "Based on Knowledge Base data for beauty brands targeting women 25-45:\n\n**Meta CPMs:** $8-15 (higher in Q4, potentially $12-20)\n**Pinterest CPMs:** $4-8 \n**Google Search:** CPC-based, expect $1-3 per click for clean beauty terms\n\nWith your Q4 budget concentration (60% = $300K), expect elevated CPMs during holiday season. Your annual blended CPM across channels should average $6-10.\n\nWhat metrics beyond new customer count will you use to optimize campaigns?",
+        "response_time_ms": 4344,
+        "scores": {
+          "source_citation": 1.0,
+          "acronym_definition": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          },
+          "acronym_definition": {
+            "used": [
+              "CPM",
+              "CPC"
+            ],
+            "undefined": [
+              "CPM"
+            ]
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 16,
+        "user_input": "How do we know if it's working?",
+        "agent_response": "Here's how to know if it's working:\n\n**Primary KPI:** Cost per new customer stays under $50\n**Secondary metrics:** \n- Click-through rates (2-3% good for beauty)\n- Conversion rate (1-2% typical for DTC)\n- Return on ad spend (2:1 minimum for profitability)\n\nTrack weekly. If CAC creeps above $50, pause and optimize. If it's significantly below, increase spend.\n\nStep 8 complete with Measurement: $50 CAC primary, CTR/CVR/ROAS secondary.\n\nNow Step 9 Testing. What creative angles or audience segments do you want to test first?",
+        "response_time_ms": 4192,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 0.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 17,
+        "user_input": "What's incrementality testing?",
+        "agent_response": "Incrementality testing measures true lift - customers you wouldn't have gotten without ads. It separates paid contribution from organic growth.\n\nFor your plan: Run geo-holdout tests by pausing ads in select markets for 2-4 weeks. Compare performance in test vs. control markets. True incrementality is typically 60-80% of reported conversions.\n\nWith your tight $50 CAC target, incrementality testing helps avoid over-attributing results and overspending.\n\nWhat creative concepts do you want to test - ingredient stories, sustainability messaging, or before/after results?",
+        "response_time_ms": 5325,
+        "scores": {
+          "tone": 0.5,
+          "adaptive_sophistication": 0.5
+        },
+        "score_details": {
+          "tone": {
+            "status": "scorer_not_implemented"
+          },
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 18,
+        "user_input": "What should we test first?",
+        "agent_response": "Test these creative angles first based on your positioning:\n\n**Primary test:** Ingredient transparency vs. sustainability messaging\n- Version A: \"USDA Organic certified ingredients you can trust\" \n- Version B: \"Plastic-free beauty that doesn't compromise the planet\"\n\n**Secondary test:** Content format\n- Static product shots vs. ingredient close-ups vs. customer testimonials\n\nStart with Meta since it's 60% of budget. Test for 2 weeks minimum, 1000+ conversions per variant for significance.\n\nStep 9 complete with Testing: ingredient messaging vs. sustainability messaging, static vs. video formats.\n\nFinal step - what risks concern you most about this plan?",
+        "response_time_ms": 6153,
+        "scores": {
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 19,
+        "user_input": "What are the biggest risks to this plan?",
+        "agent_response": "Here are the biggest risks to your plan:\n\n**Efficiency risk:** Your $50 CAC target sits at the high end for DTC beauty. If CPMs spike beyond forecast or conversion rates disappoint, you'll exceed target quickly.\n\n**Q4 concentration risk:** 60% budget in Q4 means competing against every retailer. CPMs could hit $20+ on Meta, destroying your economics.\n\n**Scale risk:** Needing 10,000 customers annually requires significant daily volume. Audience fatigue could force expansion beyond core 25-45 clean beauty demographic.\n\n**Attribution risk:** Platform over-reporting could make $50 CAC look achievable when true incrementality is higher.\n\nStep 10 complete with Risks identified. Your plan is aggressive but achievable with tight execution and constant optimization.\n\nReady to move forward, or want to adjust any elements?",
+        "response_time_ms": 7099,
+        "scores": {
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 20,
+        "user_input": "Summarize the plan.",
+        "agent_response": "**DTC Skincare Media Plan Summary**\n\n**CONFIRMED BY USER:**\n- Objective: Acquire 10,000 new customers (first-time purchasers)\n- Budget: $500K annually (40% Q1-Q3, 60% Q4)\n- Target: $50 CAC\n- Audience: Women 25-45, clean beauty/sustainability focused, nationwide\n- Value Prop: Only USDA organic certified + plastic-free packaging\n- AOV: $85, 40% gross margin\n\n**MODELED ASSUMPTIONS (using Knowledge Base):**\n- Customer LTV: ~$140 (2.5x annual purchases, 65% repeat rate)\n- Lifetime gross profit: $56 per customer\n- Addressable market: 25-30M people\n\n**RECOMMENDED STRATEGY:**\n- Channels: Meta (60%), Pinterest (20%), Google Search (15%), Testing (5%)\n- Expected CPMs: $6-10 blended, $12-20 in Q4\n- Primary test: Ingredient transparency vs. sustainability messaging\n- Key risk: Aggressive CAC target with Q4 concentration\n\n**STILL NEEDED:**\n- Creative asset development timeline\n- Campaign launch sequence\n- Detailed measurement dashboard setup\n\nPlan is ambitious but executable with disciplined optimization.",
+        "response_time_ms": 8266,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 21,
+        "user_input": "Wait, I forgot to mention we also sell on Amazon. Does that change anything?",
+        "agent_response": "Yes, that changes things significantly. Amazon is a different acquisition channel with its own economics.\n\nAre you looking to drive new customers through Amazon ads, or does Amazon represent existing business we should factor into your customer lifetime value calculations?\n\nAlso, when you say \"new customers,\" do you mean new to your brand across all channels, or new customers specifically through your DTC site?",
+        "response_time_ms": 3754,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "single_question": 0.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "single_question": {
+            "question_count": 2,
+            "status": "multiple_questions"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 22,
+        "user_input": "About 40% of our sales are on Amazon.",
+        "agent_response": "Got it - 40% Amazon sales mix. This impacts our economics significantly.\n\nWhen you want to acquire \"10,000 new customers,\" are you targeting:\n1. New customers specifically to your DTC site (Amazon separate)\n2. New customers to your brand overall (across DTC + Amazon)\n\nThis changes budget allocation and CAC targets since Amazon has different acquisition costs and customer behaviors than DTC channels.",
+        "response_time_ms": 3693,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 23,
+        "user_input": "How does that change the budget allocation?",
+        "agent_response": "Let me clarify first - when you said \"10,000 new customers,\" did you mean new to your DTC site specifically, or new to your brand across all channels including Amazon?\n\nThis determines whether we're allocating the full $500K to DTC channels, or if some budget should go to Amazon advertising to drive brand-wide acquisition.",
+        "response_time_ms": 2984,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 24,
+        "user_input": "Final summary with Amazon included.",
+        "agent_response": "I need to clarify one key point before the final summary:\n\nWhen you want 10,000 new customers, do you mean:\n- New to your DTC site only (Amazon separate business)\n- New to your brand across DTC + Amazon combined\n\nAnd should any of your $500K budget go toward Amazon advertising, or is this $500K purely for DTC channels?\n\nWithout knowing this, I can't provide an accurate allocation between DTC channels vs. Amazon spend.",
+        "response_time_ms": 4173,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      }
+    ],
+    "overall_scores": {
+      "response_length": 1.0,
+      "single_question": 0.7142857142857143,
+      "tone": 0.5,
+      "step_completion": 0.5,
+      "proactive_intelligence": 1.0,
+      "source_citation": 0.5,
+      "feasibility_framing": 0.0,
+      "acronym_definition": 0.5,
+      "adaptive_sophistication": 0.5,
+      "self_referential_learning": 0.5
+    },
+    "passed": false,
+    "error": null,
+    "start_time": "2026-01-14T18:22:28.846658",
+    "end_time": "2026-01-14T18:25:01.467738",
+    "duration_seconds": 152.62108
+  },
+  {
+    "scenario_id": "NONLIN-001",
+    "scenario_name": "Non-Linear Navigation - Jump Ahead",
+    "category": "Non-Linear Navigation",
+    "total_turns": 15,
+    "completed_turns": 15,
+    "turn_results": [
+      {
+        "turn_number": 1,
+        "user_input": "Hi, I need a media plan for a mobile game launch.",
+        "agent_response": "Hi! I'm excited to build a media plan with you. We'll cover ten areas: Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, and Risks. Each step builds on the last.\n\nWhat business outcome are you trying to achieve with this mobile game launch?",
+        "response_time_ms": 2420,
+        "scores": {
+          "response_length": 1.0,
+          "single_question": 1.0
+        },
+        "score_details": {
+          "response_length": {
+            "word_count": 45,
+            "status": "optimal"
+          },
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 2,
+        "user_input": "Should we use TikTok or Instagram for this?",
+        "agent_response": "Let's step back first. Before we can determine the right channels like TikTok or Instagram, we need to understand what success looks like for your game launch.\n\nWhat business outcome are you trying to achieve - new player downloads, revenue targets, or something else?",
+        "response_time_ms": 2375,
+        "scores": {
+          "step_boundary": 0.5
+        },
+        "score_details": {
+          "step_boundary": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 3,
+        "user_input": "I really want to know about channels first.",
+        "agent_response": "I understand you're eager to dive into channels, but here's the thing - picking TikTok versus Instagram without knowing your goals is like choosing a car before knowing if you need to haul cargo or race.\n\nYour channel choice completely depends on who you're targeting and what you're measuring. Are you launching to drive downloads, in-app purchases, or daily active users?",
+        "response_time_ms": 3992,
+        "scores": {
+          "tone": 0.5,
+          "step_boundary": 0.5
+        },
+        "score_details": {
+          "tone": {
+            "status": "scorer_not_implemented"
+          },
+          "step_boundary": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 4,
+        "user_input": "Fine. We want 100,000 app installs.",
+        "agent_response": "Perfect. So your objective is user acquisition with a primary KPI of app installs, targeting 100,000 downloads.\n\nOver what timeframe do you want to achieve these 100,000 installs?",
+        "response_time_ms": 2314,
+        "scores": {
+          "single_question": 1.0
+        },
+        "score_details": {
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 5,
+        "user_input": "Budget is $200,000.",
+        "agent_response": "Step 1 complete with Objective: user acquisition, KPI: app installs, Target: 100,000. Now Step 2 Economics.\n\nWith your $200K budget targeting 100,000 installs, that's $2 per install. Based on Knowledge Base benchmarks, typical mobile game install costs range from $1.50 to $4.00, so you're in the conservative-to-typical range.\n\nWhat's your target cost per install, and do you have data on how much revenue each new player generates?",
+        "response_time_ms": 4008,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 1.0,
+          "feasibility_framing": 0.8
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          },
+          "feasibility_framing": {
+            "has_assessment": true,
+            "has_source": true,
+            "has_path": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 6,
+        "user_input": "OK now can we talk about channels?",
+        "agent_response": "Hold on - we need to nail down if your economics work first. Your $2 cost per install is achievable, but we need to know if you can afford that.\n\nWhat revenue does a typical player generate for your game - through in-app purchases, ads, or subscriptions?",
+        "response_time_ms": 3470,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 7,
+        "user_input": "Go back - who should we target?",
+        "agent_response": "Got it. Step 2 Economics is incomplete, but let's tackle Step 3 Audience since that impacts everything else.\n\nYour mobile game - what genre is it and who is your ideal player?",
+        "response_time_ms": 3216,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "single_question": 1.0
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 8,
+        "user_input": "Casual gamers, 18-35, who play puzzle and word games.",
+        "agent_response": "Good start. Casual puzzle/word gamers 18-35 gives us direction. \n\nBased on Knowledge Base data, this demographic skews 60-70% female and is active across multiple platforms. Your 100,000 install target needs a reachable audience of roughly 2-4 million people to allow for frequency and conversion rates.\n\nAre you targeting globally or specific countries?",
+        "response_time_ms": 4648,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 9,
+        "user_input": "Does that change your channel recommendations?",
+        "agent_response": "Yes, absolutely. Female-skewed casual puzzle gamers behave differently across platforms. But we need geography first since platform reach and costs vary dramatically by country.\n\nAre you launching globally, US-only, or specific regions?",
+        "response_time_ms": 4698,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 10,
+        "user_input": "What about measurement?",
+        "agent_response": "I hear you wanting to jump around, but here's why sequence matters - we can't set up proper measurement without knowing who we're targeting where.\n\nYou mentioned casual puzzle gamers 18-35. Are you launching in the US, globally, or specific countries? This determines platform availability and measurement capabilities.",
+        "response_time_ms": 3718,
+        "scores": {
+          "step_boundary": 0.5
+        },
+        "score_details": {
+          "step_boundary": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 11,
+        "user_input": "We skipped geography and budget allocation.",
+        "agent_response": "You're right. Let me track where we are:\n\n**CONFIRMED:** Objective (user acquisition), KPI (100K installs), Budget ($200K), Audience (casual puzzle/word gamers 18-35)\n\n**STILL NEEDED:** Geography, Economics (player revenue), then we can tackle Channels and Measurement properly.\n\nAre you launching in the US, globally, or specific regions?",
+        "response_time_ms": 3823,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 12,
+        "user_input": "US only, even split across months.",
+        "agent_response": "Step 4 complete - US only launch with even monthly pacing.\n\nNow back to Step 2 Economics. With $200K for 100K US installs, you need $2 cost per install. Based on Knowledge Base benchmarks, US mobile game installs typically cost $2-5, so you're on the efficient end.\n\nWhat's your target revenue per player - through in-app purchases, ads, or other monetization?",
+        "response_time_ms": 3925,
+        "scores": {
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 13,
+        "user_input": "What's still missing?",
+        "agent_response": "Here's what we have and what's missing:\n\n**CONFIRMED:**\n- Objective: 100K app installs \n- Budget: $200K ($2 per install target)\n- Audience: Casual puzzle/word gamers 18-35\n- Geography: US only, even monthly split\n\n**STILL NEEDED:**\n- Economics: Player revenue/monetization model\n- Value Proposition: What makes your game compelling\n- Channels: Platform selection and allocation\n- Measurement: Tracking setup beyond installs\n- Testing: Creative and audience experiments\n- Risks: What could derail the plan\n\nWe're stuck on Economics - need to know if $2 per install is profitable for you.",
+        "response_time_ms": 4848,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 14,
+        "user_input": "Fill in reasonable defaults for the rest.",
+        "agent_response": "Got it. Based on Knowledge Base benchmarks for casual puzzle games, I'll model reasonable assumptions:\n\n**ECONOMICS:** Target $4 revenue per player (typical for casual games with ads + IAP)\n**VALUE PROP:** Free puzzle game with satisfying progression and social features\n**CHANNELS:** 60% Meta (Instagram/Facebook), 25% TikTok, 15% Google App Campaigns\n**MEASUREMENT:** Install attribution, Day 1/7/30 retention, revenue per user\n**TESTING:** Creative formats (gameplay vs lifestyle), audience segments\n**RISKS:** iOS 14.5 attribution limits, seasonal competition, creative fatigue\n\nWith $4 revenue per $2 install cost, you'd have 100% ROI within 30 days - aggressive but achievable for strong casual games.\n\nWhat do you want to refine first, or shall we dive deeper into the channel strategy?",
+        "response_time_ms": 7429,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "idk_protocol": 0.5
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "idk_protocol": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 15,
+        "user_input": "Summarize everything including what you assumed.",
+        "agent_response": "**MOBILE GAME LAUNCH MEDIA PLAN SUMMARY**\n\n**CONFIRMED BY USER:**\n- Objective: User acquisition, 100,000 app installs\n- Budget: $200,000 ($2 per install target)\n- Audience: Casual puzzle/word gamers, ages 18-35\n- Geography: US only, even monthly distribution\n\n**ASSUMPTIONS I'M USING (Based on Knowledge Base):**\n- Economics: $4 revenue per player (typical casual game monetization)\n- Value Prop: Free puzzle game with progression and social features\n- Channels: 60% Meta ($120K), 25% TikTok ($50K), 15% Google ($30K)\n- Measurement: Install attribution, D1/7/30 retention, revenue per user\n- Testing: Creative formats and audience segments\n- Timeline: Not specified - assuming 3-6 month campaign\n\n**FEASIBILITY:** Conservative install costs with aggressive revenue assumptions. 100% ROI target is ambitious but achievable for strong casual games.\n\n**STILL NEEDED:** Campaign timeline, creative assets, measurement platform preferences.\n\nWhat would you like to adjust or explore deeper?",
+        "response_time_ms": 6882,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "source_citation": 1.0
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      }
+    ],
+    "overall_scores": {
+      "response_length": 1.0,
+      "single_question": 1.0,
+      "step_boundary": 0.5,
+      "tone": 0.5,
+      "proactive_intelligence": 1.0,
+      "source_citation": 1.0,
+      "feasibility_framing": 0.8,
+      "self_referential_learning": 0.5,
+      "step_completion": 0.5,
+      "idk_protocol": 0.5
+    },
+    "passed": false,
+    "error": null,
+    "start_time": "2026-01-14T18:25:01.467852",
+    "end_time": "2026-01-14T18:26:25.759254",
+    "duration_seconds": 84.291402
+  },
+  {
+    "scenario_id": "NONLIN-002",
+    "scenario_name": "Non-Linear Navigation - Skip Steps",
+    "category": "Non-Linear Navigation",
+    "total_turns": 12,
+    "completed_turns": 12,
+    "turn_results": [
+      {
+        "turn_number": 1,
+        "user_input": "Media plan for a fitness app. Skip the intro, I know the process.",
+        "agent_response": "What specific business outcome are you trying to achieve with this media campaign?",
+        "response_time_ms": 1413,
+        "scores": {
+          "adaptive_sophistication": 0.5,
+          "single_question": 1.0
+        },
+        "score_details": {
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          },
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 2,
+        "user_input": "Objective: 50K paid subscribers. Budget: $1M. Skip audience and geography, I'll handle those.",
+        "agent_response": "Step 1 complete with Objective: 50K paid subscribers, Budget: $1M, Target: 50K subscribers. Now Step 2 Economics.\n\nWhat is your subscription price and typical subscriber lifetime value?",
+        "response_time_ms": 1752,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 0.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 3,
+        "user_input": "Jump to channels.",
+        "agent_response": "I need economics first to validate if $20 per subscriber ($1M \u00f7 50K) is achievable. Based on Knowledge Base benchmarks for fitness apps, typical customer acquisition costs range $15-40 depending on subscription price and retention.\n\nWhat is your monthly subscription price?",
+        "response_time_ms": 3883,
+        "scores": {
+          "step_boundary": 0.5,
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "step_boundary": {
+            "status": "scorer_not_implemented"
+          },
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 4,
+        "user_input": "Recommend allocation percentages.",
+        "agent_response": "I cannot recommend channel allocation without knowing if your $20 target CAC is realistic. \n\nBased on Knowledge Base benchmarks, fitness apps with $9.99/month subscriptions typically achieve $15-25 CAC, while premium apps ($29.99+) can support $30-50 CAC.\n\nWhat is your monthly subscription price so I can validate feasibility and then recommend channels?",
+        "response_time_ms": 3420,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 5,
+        "user_input": "Actually, target audience is women 25-40 interested in yoga and mindfulness.",
+        "agent_response": "Got it, target audience is women 25-40 interested in yoga and mindfulness. That helps with channel selection.\n\nI still need your subscription price to validate the $20 CAC and recommend allocation. Yoga/mindfulness apps typically range $9.99-19.99 monthly.\n\nWhat is your subscription price?",
+        "response_time_ms": 3105,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 6,
+        "user_input": "Does that change the allocation?",
+        "agent_response": "Yes, subscription price significantly changes allocation. Higher-priced apps can afford premium channels like influencer partnerships and YouTube, while lower-priced apps need high-volume, efficient channels like Meta and Google.\n\nYour $20 CAC with women 25-40 yoga audience suggests different strategies at $9.99 versus $19.99 pricing.\n\nWhat is your monthly subscription price?",
+        "response_time_ms": 4234,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 7,
+        "user_input": "Skip measurement and testing. Go to risks.",
+        "agent_response": "I cannot assess risks without knowing if your plan is realistic. With $1M budget targeting 50K subscribers, you need $20 CAC. \n\nBased on Knowledge Base benchmarks, women 25-40 yoga audience typically converts at $15-35 CAC depending on subscription price and channels.\n\nThe biggest risk is budget efficiency. What is your monthly subscription price so I can validate feasibility?",
+        "response_time_ms": 5908,
+        "scores": {
+          "step_boundary": 0.5,
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "step_boundary": {
+            "status": "scorer_not_implemented"
+          },
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 8,
+        "user_input": "What are we missing that's critical?",
+        "agent_response": "Critical gaps preventing a defensible plan:\n\n**Economics**: Need subscription price to validate if $20 CAC is achievable. Yoga apps range $10-20/month with vastly different CAC tolerance.\n\n**Value Proposition**: What differentiates you from Peloton, Down Dog, Daily Yoga? This drives channel strategy and creative.\n\n**Geography**: US-only versus global changes budget allocation significantly.\n\nWithout these, any channel recommendation is speculation. The subscription price unlocks everything else.\n\nWhat is your monthly subscription price?",
+        "response_time_ms": 4787,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 9,
+        "user_input": "LTV is $300 with 70% margin.",
+        "agent_response": "Step 2 complete. With $300 LTV and 70% margin, your economics are strong - $210 contribution margin easily supports $20 CAC target.\n\nStep 7 Channels. For women 25-40 yoga audience with solid economics, recommended allocation:\n\n- **Meta (40%)** - $400K. Exceptional targeting for wellness interests\n- **Google (25%)** - $250K. Capture high-intent yoga searches  \n- **YouTube (20%)** - $200K. Video format perfect for yoga content\n- **Influencer/Creator (15%)** - $150K. Authentic endorsements crucial for wellness\n\nThis targets 15-25% blended efficiency improvement over industry benchmark.\n\nWhat is your current customer acquisition mix or strongest performing channel?",
+        "response_time_ms": 9007,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 10,
+        "user_input": "Summarize what we have and what's still TBD.",
+        "agent_response": "**CONFIRMED BY USER:**\n- Objective: 50K paid subscribers\n- Budget: $1M (implies $20 CAC)\n- Target audience: Women 25-40 interested in yoga/mindfulness\n- LTV: $300 with 70% margin ($210 contribution margin)\n- Economics validated: Strong unit economics support target\n\n**RECOMMENDED ALLOCATION:**\n- Meta: 40% ($400K)\n- Google: 25% ($250K) \n- YouTube: 20% ($200K)\n- Influencer: 15% ($150K)\n\n**STILL NEEDED:**\n- Geography (US-only vs global affects budget efficiency)\n- Value proposition (differentiation from competitors)\n- Measurement framework (attribution, incrementality testing)\n- Risk mitigation (audience saturation, seasonal fluctuations)\n- Current performance baseline for optimization\n\nReady to tackle any of these gaps?",
+        "response_time_ms": 7377,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 11,
+        "user_input": "Fill in measurement with reasonable defaults.",
+        "agent_response": "**Step 8 Measurement Framework:**\n\n**Primary KPI:** Cost per subscriber at $20 target\n**Attribution:** 7-day click, 1-day view with platform native tracking\n**Incrementality:** Monthly geo-holdout tests rotating 5% of markets\n**Reporting Cadence:** Daily performance dashboards, weekly channel optimization\n**Benchmarking:** Track against fitness app industry CAC range of $15-35\n\n**Platform Tracking:**\n- Meta: Conversions API + pixel for iOS attribution gaps\n- Google: Enhanced conversions for first-party data matching  \n- YouTube: View-through conversion tracking with assisted conversions\n- Influencer: UTM parameters + promo codes for direct attribution\n\n**Key Assumption:** 15% attribution gap due to iOS changes, budget accordingly.\n\nStill need geography and value proposition. What region are you targeting?",
+        "response_time_ms": 8934,
+        "scores": {
+          "idk_protocol": 0.5,
+          "source_citation": 0.0
+        },
+        "score_details": {
+          "idk_protocol": {
+            "status": "scorer_not_implemented"
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 12,
+        "user_input": "Final complete plan.",
+        "agent_response": "**COMPLETE MEDIA PLAN - FITNESS APP**\n\n**OUTCOMES & ECONOMICS (COMPLETE)**\n- Objective: 50K paid subscribers\n- Budget: $1M ($20 CAC target)\n- LTV: $300, 70% margin ($210 contribution)\n- Economics: Strong - 10.5x LTV:CAC ratio\n\n**AUDIENCE & GEOGRAPHY (ASSUMPTIONS)**\n- Target: Women 25-40 interested in yoga/mindfulness\n- Geography: US-only (assumed - affects reach and efficiency)\n\n**CHANNEL ALLOCATION**\n- Meta: 40% ($400K) - Wellness interest targeting\n- Google: 25% ($250K) - High-intent yoga searches\n- YouTube: 20% ($200K) - Video content format\n- Influencer: 15% ($150K) - Authentic wellness endorsements\n\n**MEASUREMENT**\n- Primary KPI: $20 CAC\n- Attribution: 7-day click, 1-day view\n- Incrementality: Monthly 5% geo-holdout tests\n- Platform tracking: Conversions API, enhanced conversions, UTM codes\n\n**GAPS STILL NEEDING INPUT**\n- Value proposition differentiation\n- Geographic confirmation\n- Risk mitigation strategies\n- Current performance baseline\n\nPlan is executable with strong economics. Ready to launch with confirmed geography and value prop.",
+        "response_time_ms": 6995,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      }
+    ],
+    "overall_scores": {
+      "adaptive_sophistication": 0.5,
+      "single_question": 1.0,
+      "proactive_intelligence": 1.0,
+      "source_citation": 0.3333333333333333,
+      "step_boundary": 0.5,
+      "self_referential_learning": 0.5,
+      "idk_protocol": 0.5,
+      "step_completion": 0.5
+    },
+    "passed": false,
+    "error": null,
+    "start_time": "2026-01-14T18:26:25.759369",
+    "end_time": "2026-01-14T18:27:44.595748",
+    "duration_seconds": 78.836379
+  },
+  {
+    "scenario_id": "CHANGE-001",
+    "scenario_name": "Mid-Process Data Changes - Budget Cut",
+    "category": "Data Changes",
+    "total_turns": 14,
+    "completed_turns": 14,
+    "turn_results": [
+      {
+        "turn_number": 1,
+        "user_input": "Media plan for launching a new CRM product.",
+        "agent_response": "Hi! I'm excited to build a media plan with you. We'll cover ten areas: Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, and Risks. Each step builds on the last.\n\nWhat specific business outcome are you trying to achieve with this CRM launch?",
+        "response_time_ms": 2495,
+        "scores": {
+          "response_length": 1.0,
+          "single_question": 1.0
+        },
+        "score_details": {
+          "response_length": {
+            "word_count": 45,
+            "status": "optimal"
+          },
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 2,
+        "user_input": "Goal is 1,000 enterprise sales demos. Budget is $2 million.",
+        "agent_response": "Perfect. Step 1 complete with Objective: CRM launch, KPI: enterprise sales demos, Target: 1,000 demos.\n\nNow Step 2 Economics. With your $2M budget and 1,000 demo target, that's $2,000 per demo. Based on Knowledge Base benchmarks for enterprise software, typical demo costs range $800-$1,500, so your target is aggressive but achievable with tight execution.\n\nWhat's your average deal size for enterprise CRM sales?",
+        "response_time_ms": 3616,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 3,
+        "user_input": "Target: IT decision makers at Fortune 1000 companies.",
+        "agent_response": "I see you're defining audience - that's Step 3. Let me complete Step 2 Economics first since deal value determines if your $2,000 per demo is viable.\n\nBased on Knowledge Base benchmarks, enterprise CRM deals typically range $50K-$300K annually. I'll model using $150K average deal size for now.\n\nWith $150K deals and $2,000 demo cost, you need 1.3% demo-to-close rate to break even. That's realistic for enterprise sales.\n\nWhat's your expected average deal size?",
+        "response_time_ms": 5361,
+        "scores": {
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 4,
+        "user_input": "Focus on US, major business hubs.",
+        "agent_response": "You're jumping to geography (Step 4), but we still need Step 2 Economics locked down. Without your deal size, I can't validate if this plan will be profitable.\n\nI'm modeling $150K average deal size based on enterprise CRM benchmarks. With your $2,000 cost per demo, you'd need just 1.3% of demos to close for breakeven - that's very achievable.\n\nWhat's your actual expected deal size for this CRM product?",
+        "response_time_ms": 4128,
+        "scores": {
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 5,
+        "user_input": "Even monthly spend over 12 months.",
+        "agent_response": "That's budget timing, but we still need to complete Step 2 Economics. Your deal size determines whether this entire plan is financially viable.\n\nBased on Knowledge Base benchmarks, I'm using $150K average enterprise CRM deal size. With your $2,000 demo cost, that requires only 1.3% demo-to-close rate for profitability - very reasonable for enterprise sales.\n\nStep 2 complete with strong economics assuming $150K deals.\n\nNow Step 3 Audience. IT decision makers at Fortune 1000 is solid targeting. How large is your buying committee - just IT or does it include CFO, operations, other stakeholders?",
+        "response_time_ms": 5015,
+        "scores": {
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 6,
+        "user_input": "What channels do you recommend?",
+        "agent_response": "That's Step 7 Channels, but we need Steps 3-6 first to determine the right mix. Your channel strategy depends on audience specifics, geography, and value proposition.\n\nWe're currently on Step 3 Audience. You said IT decision makers at Fortune 1000 companies - that's about 200,000 people total. Strong targeting.\n\nFor your buying committee, does the CRM purchase decision include CFO, operations, or other stakeholders beyond IT?",
+        "response_time_ms": 3873,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "source_citation": {
+            "has_data": false,
+            "status": "no_data_claims"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 7,
+        "user_input": "Bad news - budget just got cut to $500K. Everything else stays the same.",
+        "agent_response": "With the budget cut to $500K, we need to recalibrate. Previously targeting 1,000 demos at $2,000 each, now we're working with $500 per demo.\n\nBased on Knowledge Base benchmarks, $500 per enterprise demo is extremely aggressive - typical range is $800-$1,500. This means either reducing demo target to 300-600 or finding highly efficient channels.\n\nStep 2 Economics now shows challenging efficiency requirements.\n\nBack to Step 3 Audience. With tighter budget, precise targeting becomes critical. Does your CRM solve a specific pain point that would make certain IT roles more likely to engage?",
+        "response_time_ms": 6884,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "proactive_intelligence": 1.0,
+          "feasibility_framing": 0.8
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "feasibility_framing": {
+            "has_assessment": true,
+            "has_source": true,
+            "has_path": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 8,
+        "user_input": "Is the original goal still achievable?",
+        "agent_response": "With $500K budget, hitting 1,000 enterprise demos is extremely challenging. Your $500 per demo is 40-60% below Knowledge Base benchmarks for enterprise software.\n\nHere's the thing - you need either tighter audience targeting or different demo qualification to hit that efficiency. Enterprise demos typically cost $800-$1,500 due to long sales cycles and gatekeepers.\n\nYour options: reduce target to 300-600 demos at market rates, or find highly efficient channels like referrals and intent-based targeting to stretch budget.\n\nShould we adjust the demo target or focus on maximum efficiency tactics?",
+        "response_time_ms": 5464,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "feasibility_framing": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "feasibility_framing": {
+            "has_assessment": true,
+            "has_source": true,
+            "has_path": true
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 9,
+        "user_input": "What if we reduced the target to 300 demos?",
+        "agent_response": "That works much better. At 300 demos with $500K budget, you're at $1,667 per demo - right in the Knowledge Base benchmark range of $800-$1,500 for enterprise software.\n\nStep 2 Economics complete with realistic efficiency target.\n\nNow Step 3 Audience. With 300 demos from Fortune 1000 IT decision makers, we need precise targeting. Your CRM likely solves specific problems - is it focused on sales automation, customer service, data integration, or something else?",
+        "response_time_ms": 3312,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 10,
+        "user_input": "How does this change the channel mix?",
+        "agent_response": "That's still Step 7 Channels - we need to complete audience and geography first to determine the right mix.\n\nWe're on Step 3 Audience. With 300 demos needed from Fortune 1000 IT decision makers, precision targeting is critical. \n\nWhat specific CRM problem does your product solve - sales automation, customer service, data integration, or another pain point?",
+        "response_time_ms": 2660,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 11,
+        "user_input": "What trade-offs am I making?",
+        "agent_response": "With 300 vs 1,000 demos, you're trading volume for efficiency. You'll hit fewer prospects but at sustainable cost per demo.\n\nTrade-offs: slower market penetration, longer path to revenue goals, but much higher campaign success probability. Your 300 demos at realistic $1,667 cost beats 1,000 demos at impossible $500 cost.\n\nThis actually strengthens your position - better to exceed a smaller target than miss a big one.\n\nNow back to Step 3 Audience. What specific CRM challenge does your product solve?",
+        "response_time_ms": 4991,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 12,
+        "user_input": "Can we be more efficient if we narrow the audience?",
+        "agent_response": "Yes, narrowing audience is exactly how to drive efficiency. Instead of all Fortune 1000 IT decision makers (200,000+ people), targeting specific CRM pain points or company characteristics could cut your universe to 20,000-50,000 highly qualified prospects.\n\nThis would reduce waste and improve conversion rates significantly.\n\nWhat specific CRM problem does your product solve - sales process automation, customer data unification, service desk integration, or something else?",
+        "response_time_ms": 4919,
+        "scores": {
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 13,
+        "user_input": "Go with healthcare IT only.",
+        "agent_response": "Smart move. Healthcare IT at Fortune 1000 cuts your universe from 200,000 to roughly 15,000-20,000 decision makers. Healthcare has specific CRM needs around patient data, compliance, and care coordination.\n\nStep 3 Audience complete with healthcare IT decision makers at Fortune 1000 companies.\n\nNow Step 4 Geography. You mentioned US major business hubs earlier. For healthcare, that means markets like Boston, San Francisco, Chicago, and NYC where major health systems have headquarters.\n\nWhich specific metro areas should we prioritize?",
+        "response_time_ms": 4387,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 14,
+        "user_input": "Final plan with all the changes.",
+        "agent_response": "We're only partway through - still need Geography, Value Proposition, Channels, Measurement, Testing, and Risks. Let me give you what we have confirmed so far:\n\n**CONFIRMED BY USER:**\n- Objective: CRM product launch\n- KPI: Enterprise sales demos  \n- Target: 300 demos (revised from 1,000)\n- Budget: $500K (revised from $2M)\n- Audience: Healthcare IT decision makers at Fortune 1000\n\n**ASSUMPTIONS I'M USING:**\n- $150K average deal size (Knowledge Base benchmark)\n- $1,667 cost per demo (realistic range)\n- US geographic focus\n\n**STILL NEEDED:**\n- Specific metro areas\n- Value proposition messaging\n- Channel mix and allocation\n- Measurement framework\n- Testing approach\n- Risk mitigation\n\nShould we complete the remaining steps or do you need this partial plan for now?",
+        "response_time_ms": 8122,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      }
+    ],
+    "overall_scores": {
+      "response_length": 1.0,
+      "single_question": 1.0,
+      "proactive_intelligence": 1.0,
+      "source_citation": 1.0,
+      "step_completion": 0.5,
+      "self_referential_learning": 0.5,
+      "feasibility_framing": 0.9
+    },
+    "passed": false,
+    "error": null,
+    "start_time": "2026-01-14T18:27:44.596046",
+    "end_time": "2026-01-14T18:29:10.844430",
+    "duration_seconds": 86.248384
+  },
+  {
+    "scenario_id": "CHANGE-002",
+    "scenario_name": "Mid-Process Data Changes - Objective Pivot",
+    "category": "Data Changes",
+    "total_turns": 12,
+    "completed_turns": 12,
+    "turn_results": [
+      {
+        "turn_number": 1,
+        "user_input": "Media plan for our meal kit delivery service.",
+        "agent_response": "Hi! I'm excited to build a media plan with you. We'll cover ten areas: Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, and Risks. Each step builds on the last.\n\nWhat business outcome are you trying to achieve with this campaign?",
+        "response_time_ms": 3489,
+        "scores": {
+          "response_length": 1.0,
+          "single_question": 1.0
+        },
+        "score_details": {
+          "response_length": {
+            "word_count": 43,
+            "status": "optimal"
+          },
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 2,
+        "user_input": "Objective is brand awareness. We want 50 million impressions.",
+        "agent_response": "Got it - brand awareness with 50 million impressions as your target volume. \n\nHow will you measure whether those impressions are actually driving brand awareness success?",
+        "response_time_ms": 2174,
+        "scores": {
+          "single_question": 1.0
+        },
+        "score_details": {
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 3,
+        "user_input": "Budget is $300K, target is health-conscious millennials.",
+        "agent_response": "Perfect - I have your $300K budget and health-conscious millennials audience. Let me finish Step 1 first.\n\nYou said brand awareness, but I need to know how you'll measure success as a number. Will you track aided brand recall, unaided awareness, brand lift surveys, or something else?",
+        "response_time_ms": 2811,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 0.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 4,
+        "user_input": "What channels work best for awareness?",
+        "agent_response": "Let me complete our objectives first before we dive into channels - that foundation determines everything else.\n\nYou want brand awareness with 50 million impressions, but I still need your primary KPI. How will you measure whether those impressions actually increased brand awareness? For example, brand lift percentage, aided recall rate, or website traffic increase?",
+        "response_time_ms": 5771,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "source_citation": {
+            "has_data": false,
+            "status": "no_data_claims"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 5,
+        "user_input": "Actually, leadership just changed priorities. We need to pivot to customer acquisition instead.",
+        "agent_response": "Got it - pivoting to customer acquisition. Much clearer objective for a meal kit service.\n\nWith your $300K budget targeting customer acquisition, how many new customers do you want to acquire?",
+        "response_time_ms": 1979,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "single_question": 1.0
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 6,
+        "user_input": "New goal: 5,000 first-time orders. Same budget.",
+        "agent_response": "Step 1 complete with Objective: customer acquisition, KPI: first-time orders, Target: 5,000. Now Step 2 Economics.\n\nWith your $300K budget and 5,000 orders, that's $60 per order. \n\nWhat's your profit margin on first orders after fulfillment costs?",
+        "response_time_ms": 3022,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 0.0,
+          "feasibility_framing": 0.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          },
+          "feasibility_framing": {
+            "has_assessment": false,
+            "has_source": false,
+            "has_path": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 7,
+        "user_input": "How does the channel mix change?",
+        "agent_response": "Let me finish economics first - channel decisions depend on whether your $60 per order is realistic.\n\nWhat's your profit margin on first orders after fulfillment costs?",
+        "response_time_ms": 2677,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 8,
+        "user_input": "What about the audience - does that need to change?",
+        "agent_response": "We're still in economics. I need your profit margin to determine if $60 per new customer is workable before we tackle audience and channels.\n\nWhat's your profit margin on first orders after fulfillment costs?",
+        "response_time_ms": 2393,
+        "scores": {
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 9,
+        "user_input": "Measurement must have changed too.",
+        "agent_response": "I understand you're thinking ahead, but we need to finish economics first. The $60 per order math determines if your plan is feasible at all.\n\nWhat's your profit margin on first orders after fulfillment costs?",
+        "response_time_ms": 4232,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 10,
+        "user_input": "What were the biggest changes from the pivot?",
+        "agent_response": "Here are the biggest changes from the pivot:\n\n**Before:** Brand awareness, 50M impressions, unmeasurable ROI\n**After:** Customer acquisition, 5,000 orders, $60 per order\n\nThe shift to acquisition makes everything measurable and accountable. Now I need your profit margin to assess if $60 per customer is realistic.\n\nWhat's your profit margin on first orders after fulfillment costs?",
+        "response_time_ms": 2950,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 11,
+        "user_input": "Are there any elements that stayed the same?",
+        "agent_response": "Yes - your $300K budget and health-conscious millennials audience stayed the same. The target volume shifted from 50M impressions to 5,000 orders.\n\nNow, what's your profit margin on first orders after fulfillment costs?",
+        "response_time_ms": 2353,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 12,
+        "user_input": "Final acquisition-focused plan.",
+        "agent_response": "I need one key piece to build that final plan - your first-order profit margin. Without it, I can't assess if $60 per customer is achievable.\n\nWhat's your profit margin on first orders after fulfillment costs?",
+        "response_time_ms": 2407,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      }
+    ],
+    "overall_scores": {
+      "response_length": 1.0,
+      "single_question": 1.0,
+      "proactive_intelligence": 1.0,
+      "source_citation": 0.3333333333333333,
+      "self_referential_learning": 0.5,
+      "feasibility_framing": 0.0,
+      "step_completion": 0.5
+    },
+    "passed": false,
+    "error": null,
+    "start_time": "2026-01-14T18:29:10.844531",
+    "end_time": "2026-01-14T18:30:05.123848",
+    "duration_seconds": 54.279317
+  },
+  {
+    "scenario_id": "RAG-001",
+    "scenario_name": "RAG Performance - Benchmark Retrieval",
+    "category": "RAG Validation",
+    "total_turns": 10,
+    "completed_turns": 10,
+    "turn_results": [
+      {
+        "turn_number": 1,
+        "user_input": "What's a typical CPM for LinkedIn advertising?",
+        "agent_response": "Based on Knowledge Base benchmarks, typical LinkedIn CPM ranges from $15-30, with $20-25 being most common for business audiences.\n\nLinkedIn runs higher than other platforms because of professional targeting precision and audience quality. Finance/tech sectors often see the high end due to competition.\n\nAre you building a LinkedIn campaign or comparing channel costs for a broader media plan?",
+        "response_time_ms": 3786,
+        "scores": {
+          "source_citation": 1.0,
+          "rag_retrieval": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          },
+          "rag_retrieval": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 2,
+        "user_input": "How does that compare to Facebook?",
+        "agent_response": "Facebook CPM typically runs $8-15, so LinkedIn is roughly 2-3x higher.\n\nThe trade-off: Facebook has massive reach and lower costs, but LinkedIn delivers better B2B targeting and higher-intent professional audiences. If you're targeting decision-makers or specific job titles, LinkedIn's premium often pays off despite higher CPM.\n\nWhat type of audience are you trying to reach?",
+        "response_time_ms": 6224,
+        "scores": {
+          "source_citation": 0.0,
+          "rag_retrieval": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          },
+          "rag_retrieval": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 3,
+        "user_input": "What about conversion rates for B2B lead gen?",
+        "agent_response": "Based on Knowledge Base benchmarks for B2B lead gen:\n\n**LinkedIn:** 2-5% conversion rates, with 3% being typical\n**Facebook:** 1-3% for B2B audiences, often closer to 1-2%\n\nLinkedIn's professional context drives higher conversion intent. Users expect business content there, while Facebook requires more disruptive creative to break through social browsing behavior.\n\nThe combined effect: LinkedIn often delivers 2-3x better cost per lead despite higher CPM, because conversion rates offset the premium.\n\nAre you planning to run both channels or choosing between them?",
+        "response_time_ms": 5421,
+        "scores": {
+          "source_citation": 1.0,
+          "rag_retrieval": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          },
+          "rag_retrieval": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 4,
+        "user_input": "What's typical CAC for fintech apps?",
+        "agent_response": "Based on Knowledge Base benchmarks, fintech app CAC varies significantly by product type:\n\n**Consumer fintech (budgeting, investing):** $50-150\n**SMB financial tools:** $200-800  \n**Enterprise fintech:** $1,000-5,000+\n\nThe range depends on customer LTV. Consumer apps need lean acquisition, while enterprise tools can support higher CAC due to larger contract values.\n\nWhat type of fintech product are you working with?",
+        "response_time_ms": 5358,
+        "scores": {
+          "source_citation": 1.0,
+          "rag_retrieval": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          },
+          "rag_retrieval": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 5,
+        "user_input": "How about e-commerce DTC brands?",
+        "agent_response": "Based on Knowledge Base benchmarks for DTC e-commerce CAC:\n\n**General DTC:** $25-75\n**Beauty/skincare:** $40-100\n**Apparel:** $30-80\n**Home/lifestyle:** $35-90\n**Subscription products:** $50-150\n\nThese assume healthy unit economics - typically 3:1 LTV:CAC ratio minimum. Premium brands can support higher CAC, while commodity products need to stay lean.\n\nAre you modeling acquisition costs for a specific DTC vertical?",
+        "response_time_ms": 4705,
+        "scores": {
+          "source_citation": 1.0,
+          "rag_retrieval": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          },
+          "rag_retrieval": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 6,
+        "user_input": "What's a good ROAS benchmark for fashion?",
+        "agent_response": "I need to flag something important about ROAS first: it's commonly requested but misleading due to platform attribution inflation and last-click bias. Platforms often claim credit for conversions that would have happened anyway.\n\nThat said, fashion DTC brands typically report:\n**Platform ROAS:** 3-6x (what Facebook/Google show)\n**Blended ROAS:** 2-4x (true incrementality across all channels)\n\nThe gap between these numbers is significant. Platform ROAS looks great but doesn't account for organic traffic, email, or brand lift from your ads.\n\nAre you setting internal targets or trying to evaluate current performance?",
+        "response_time_ms": 6008,
+        "scores": {
+          "source_citation": 1.0,
+          "rag_retrieval": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": false,
+            "status": "no_data_claims"
+          },
+          "rag_retrieval": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 7,
+        "user_input": "What channels work best for B2B SaaS?",
+        "agent_response": "Based on Knowledge Base benchmarks for B2B SaaS by deal size:\n\n**SMB SaaS ($50-500 MRR):** Google Ads, Facebook, content marketing\n**Mid-market ($500-5K MRR):** LinkedIn, Google Ads, email nurture sequences  \n**Enterprise ($5K+ MRR):** LinkedIn, ABM campaigns, events, direct sales outreach\n\nLinkedIn dominates mid-market and enterprise due to professional targeting. Google captures high-intent search behavior across all segments. Facebook works for SMB when you can scale volume.\n\nWhat's your typical contract value range?",
+        "response_time_ms": 4342,
+        "scores": {
+          "source_citation": 1.0,
+          "rag_retrieval": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          },
+          "rag_retrieval": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 8,
+        "user_input": "What about mobile gaming user acquisition?",
+        "agent_response": "Based on Knowledge Base benchmarks for mobile gaming UA:\n\n**Casual games:** $1-5 CAC, heavy focus on Facebook/Instagram and TikTok\n**Mid-core games:** $5-20 CAC, Google UAC and ironSource/Unity\n**Hardcore games:** $15-50+ CAC, more sophisticated LTV models needed\n\nMobile gaming is all about LTV:CAC ratios and retention curves. Day 1, Day 7, Day 30 retention rates drive everything. Most successful games target 3-5x LTV:CAC minimum with 6-12 month payback periods.\n\nTikTok has emerged as major channel for younger demographics, while Google UAC dominates for scale.\n\nWhat type of game mechanics are you working with?",
+        "response_time_ms": 5128,
+        "scores": {
+          "source_citation": 1.0,
+          "rag_retrieval": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          },
+          "rag_retrieval": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 9,
+        "user_input": "How much should I budget for testing?",
+        "agent_response": "Based on Knowledge Base recommendations, allocate 10-20% of total media budget for testing:\n\n**Conservative approach:** 10-15% for established brands with proven channels\n**Growth phase:** 15-25% for scaling brands exploring new audiences/channels\n\nThis covers new creative concepts, audience segments, bidding strategies, and channel expansion. You need enough budget per test to reach statistical significance - typically $1,000+ minimum per test depending on conversion volume.\n\nTesting isn't optional overhead - it's how you find efficiency gains that scale.\n\nWhat's your total media budget range?",
+        "response_time_ms": 5613,
+        "scores": {
+          "source_citation": 1.0,
+          "rag_retrieval": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          },
+          "rag_retrieval": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 10,
+        "user_input": "What's the typical attribution window for different channels?",
+        "agent_response": "Based on Knowledge Base data, attribution windows vary significantly by channel:\n\n**Paid Search:** 1-7 days (short consideration, high intent)\n**Paid Social:** 7-28 days (longer nurture cycles)\n**Display/Programmatic:** 7-30 days (awareness plays, longer path)\n**Email:** 1-3 days (immediate response medium)\n**Connected TV:** 14-30+ days (brand building, harder to track)\n\nMost platforms default to 7-day click, 1-day view windows, but this undercounts social and display impact. B2B often needs 30-90 day windows due to longer sales cycles.\n\nThe real issue: overlapping attribution creates inflated ROAS when channels work together.\n\nAre you trying to set measurement windows or diagnose attribution conflicts?",
+        "response_time_ms": 6359,
+        "scores": {
+          "source_citation": 1.0,
+          "rag_retrieval": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": false,
+            "status": "no_data_claims"
+          },
+          "rag_retrieval": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      }
+    ],
+    "overall_scores": {
+      "source_citation": 0.9,
+      "rag_retrieval": 0.5
+    },
+    "passed": false,
+    "error": null,
+    "start_time": "2026-01-14T18:30:05.123978",
+    "end_time": "2026-01-14T18:31:13.085182",
+    "duration_seconds": 67.961204
+  },
+  {
+    "scenario_id": "RAG-002",
+    "scenario_name": "RAG Performance - Web Search Validation",
+    "category": "RAG Validation",
+    "total_turns": 8,
+    "completed_turns": 8,
+    "turn_results": [
+      {
+        "turn_number": 1,
+        "user_input": "We have $100K to acquire 2,000 customers for our crypto trading app.",
+        "agent_response": "Hi! I am excited to build a media plan with you. We will cover ten areas: Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, and Risks. Each step builds on the last.\n\nStep 1 complete with Objective: acquire 2,000 customers, Primary KPI: customer acquisitions, Target: 2,000 customers. Now Step 2 Economics.\n\nWith your $100K budget and 2,000 customer target, that's $50 cost per acquisition (CPA). Based on Knowledge Base benchmarks for fintech apps, typical CPA ranges from $75-$200. Your target is aggressive but achievable with tight execution.\n\nWhat's your customer lifetime value or average revenue per user?",
+        "response_time_ms": 4848,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "has_calculation": true,
+            "has_benchmark": true,
+            "has_assessment": true
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 2,
+        "user_input": "How does that compare to traditional fintech?",
+        "agent_response": "Based on Knowledge Base data for fintech, your $50 target CPA is significantly below market benchmarks. Traditional fintech apps typically see:\n\n- Neobanks: $75-$150 CPA\n- Investment apps: $100-$200 CPA  \n- Lending platforms: $150-$300 CPA\n\nCrypto trading sits on the higher end due to regulatory restrictions and platform policies. Your $50 target is ambitious - roughly 30-50% below typical performance.\n\nTo hit this efficiency, we'll need laser-focused targeting and high-converting creative that emphasizes trust and compliance.\n\nWhat's your customer lifetime value?",
+        "response_time_ms": 6838,
+        "scores": {
+          "source_citation": 1.0,
+          "rag_retrieval": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          },
+          "rag_retrieval": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 3,
+        "user_input": "What's the latest on iOS privacy changes affecting this?",
+        "agent_response": "iOS privacy changes hit crypto apps hard. ATT (App Tracking Transparency) reduced attribution visibility by 60-80% for most fintech. Facebook and Google can't track conversions as effectively, driving CPAs up 40-60% industry-wide.\n\nCrypto faces additional challenges - many major platforms restrict crypto advertising, pushing traffic to higher-cost, less-targeted channels.\n\nThis makes your $50 CPA target even more aggressive in the current environment. We'll need strong first-party data capture and potentially weighted toward Android initially.\n\nWhat's your customer lifetime value so we can assess if $50 CPA works economically?",
+        "response_time_ms": 7894,
+        "scores": {
+          "source_citation": 0.0,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 4,
+        "user_input": "We're targeting Gen Z crypto investors specifically.",
+        "agent_response": "That's helpful audience context for later. Right now I need to validate whether your $50 CPA is economically viable.\n\nGen Z crypto users typically have lower initial deposits but higher engagement rates. Based on Knowledge Base data, Gen Z fintech users show 20-30% lower initial LTV but better retention curves.\n\nYour $50 CPA needs to work against your unit economics first, then we can optimize for Gen Z behaviors.\n\nWhat's your customer lifetime value or average revenue per user?",
+        "response_time_ms": 3867,
+        "scores": {
+          "source_citation": 1.0,
+          "rag_retrieval": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          },
+          "rag_retrieval": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 5,
+        "user_input": "What channels are they most responsive to?",
+        "agent_response": "We'll dive deep into channels in Step 7 - I want to nail that analysis for you. But first, your economics need to work or the channel strategy won't matter.\n\nYou're targeting $50 CPA in a post-iOS environment where crypto apps typically see $100-$200. That's aggressive. \n\nWithout knowing your LTV, I can't tell if this target makes business sense. If your LTV is $25, we have a problem. If it's $250, you have room to work.\n\nWhat's your customer lifetime value?",
+        "response_time_ms": 4362,
+        "scores": {
+          "source_citation": 0.0,
+          "rag_retrieval": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          },
+          "rag_retrieval": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 6,
+        "user_input": "What's TikTok CPM running these days for fintech?",
+        "agent_response": "I need your LTV first to validate the plan works economically. Once we confirm $50 CPA makes sense for your business, I'll give you detailed TikTok analysis including current CPMs and Gen Z performance data.\n\nRight now you're asking about tactics before we know if the strategy is viable. That's backwards.\n\nWhat's your customer lifetime value?",
+        "response_time_ms": 3418,
+        "scores": {
+          "source_citation": 0.0,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 7,
+        "user_input": "Any regulatory considerations I should know about?",
+        "agent_response": "Yes - crypto advertising faces major regulatory hurdles. Most platforms heavily restrict or ban crypto ads. Google requires certification, Facebook has complex approval processes, and many traditional channels are off-limits entirely.\n\nThis directly impacts your $50 CPA target - regulatory restrictions force you into limited, higher-cost channels.\n\nBut regulatory strategy comes after economic validation. If your unit economics don't support $50 CPA, channel restrictions become irrelevant.\n\nWhat's your customer lifetime value?",
+        "response_time_ms": 7142,
+        "scores": {
+          "source_citation": 0.0,
+          "rag_retrieval": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          },
+          "rag_retrieval": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 8,
+        "user_input": "Summarize with all your sourced data.",
+        "agent_response": "Here's what we have confirmed and modeled:\n\n**CONFIRMED BY USER:**\n- Budget: $100K\n- Target: 2,000 customers  \n- Audience: Gen Z crypto investors\n- Business: Crypto trading app\n\n**ANALYSIS WITH SOURCES:**\n- Target CPA: $50 (direct calculation: $100K \u00f7 2,000)\n- Market benchmark: Based on Knowledge Base data, fintech apps typically see $75-$200 CPA\n- Your target is 30-50% below typical performance\n- iOS impact: My estimate based on industry patterns shows 40-60% CPA increases post-ATT\n- Regulatory constraints: Crypto advertising heavily restricted on major platforms\n\n**STILL NEEDED:**\n- Customer lifetime value (critical gap - can't validate economic viability)\n- Profit margins\n- Geographic focus\n- Specific value proposition\n\nYour $50 CPA target is ambitious in current environment. Need LTV to assess if it's realistic or needs adjustment before building channel strategy.",
+        "response_time_ms": 9142,
+        "scores": {
+          "source_citation": 1.0,
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          },
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      }
+    ],
+    "overall_scores": {
+      "proactive_intelligence": 1.0,
+      "source_citation": 0.5,
+      "rag_retrieval": 0.5,
+      "self_referential_learning": 0.5
+    },
+    "passed": false,
+    "error": null,
+    "start_time": "2026-01-14T18:31:13.085361",
+    "end_time": "2026-01-14T18:32:12.612466",
+    "duration_seconds": 59.527105
+  },
+  {
+    "scenario_id": "LEARN-001",
+    "scenario_name": "Self-Referential Learning - Context Retention",
+    "category": "Self-Referential Learning",
+    "total_turns": 15,
+    "completed_turns": 15,
+    "turn_results": [
+      {
+        "turn_number": 1,
+        "user_input": "Media plan for ABC Corp's new product launch.",
+        "agent_response": "Hi! I am excited to build a media plan with you. We will cover ten areas: Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, and Risks. Each step builds on the last.\n\nWhat business outcome are you trying to achieve with this product launch?",
+        "response_time_ms": 2696,
+        "scores": {
+          "single_question": 1.0
+        },
+        "score_details": {
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 2,
+        "user_input": "Lead generation for our enterprise security software. 500 leads, $400K budget.",
+        "agent_response": "Step 1 complete with Objective: lead generation, KPI: leads, Target: 500. Now Step 2 Economics.\n\nWith your $400K budget targeting 500 leads, that is $800 per lead. What is the average deal value for your enterprise security software?",
+        "response_time_ms": 2168,
+        "scores": {
+          "proactive_intelligence": 0.4
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "has_calculation": true,
+            "has_benchmark": false,
+            "has_assessment": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 3,
+        "user_input": "Target: CISOs and security directors at companies with 1000+ employees.",
+        "agent_response": "Got it on the audience - CISOs and security directors at 1000+ employee companies. That is a well-defined target.\n\nBut I still need the economics to assess if your plan is realistic. What is the average deal value when you close one of these enterprise security deals?",
+        "response_time_ms": 3244,
+        "scores": {
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 4,
+        "user_input": "Focus on healthcare and financial services verticals.",
+        "agent_response": "Perfect - healthcare and financial services verticals for 1000+ employee companies. That is smart vertical focus for enterprise security.\n\nI still need to understand your deal economics before we can validate if $800 per lead works. What is the average contract value when you close an enterprise security deal?",
+        "response_time_ms": 3380,
+        "scores": {
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 5,
+        "user_input": "What was our budget again?",
+        "agent_response": "Your budget is $400K targeting 500 leads, which implies $800 per lead.\n\nWhat is the average contract value when you close an enterprise security deal?",
+        "response_time_ms": 2864,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 6,
+        "user_input": "And the target number of leads?",
+        "agent_response": "500 leads with your $400K budget.\n\nWhat is the average contract value when you close an enterprise security deal?",
+        "response_time_ms": 2280,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 7,
+        "user_input": "Continue with channels.",
+        "agent_response": "I need to complete Step 2 Economics first. Without deal value, I cannot assess if $800 per lead is realistic for enterprise security.\n\nGot it, I will model using typical enterprise security contract values. Based on Knowledge Base data for this category, average deal value ranges from $50K to $200K annually. I will use $100K for modeling. You can adjust anytime.\n\nStep 2 complete - your $800 cost per lead looks efficient if deals average $100K+.\n\nNow Step 7 Channels. For reaching CISOs at 1000+ employee healthcare and financial services companies, which channels are you considering?",
+        "response_time_ms": 5800,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 8,
+        "user_input": "Actually, let me add that our average deal size is $150K.",
+        "agent_response": "Perfect - $150K average deals changes everything positively. With $800 cost per lead and $150K deals, your economics are very strong.\n\nBased on your input, even at 10% close rate that is $15K revenue per $800 investment - excellent efficiency for enterprise security.\n\nNow Step 7 Channels. For reaching CISOs at 1000+ employee healthcare and financial services companies, which channels are you considering?",
+        "response_time_ms": 3320,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 9,
+        "user_input": "Does that change anything?",
+        "agent_response": "Yes, it strengthens your position significantly. With $150K deals, you can afford much higher lead costs than typical. Your $800 per lead target is conservative - you could spend up to $15K per lead and still maintain 10:1 ROAS.\n\nThis gives you flexibility to use premium channels like account-based marketing, industry events, and high-quality content syndication that competitors might find too expensive.\n\nWhich channels are you considering for reaching these CISOs?",
+        "response_time_ms": 5930,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 10,
+        "user_input": "What company are we planning for again?",
+        "agent_response": "ABC Corp's new enterprise security software product launch.\n\nTarget: 500 leads, $400K budget, CISOs and security directors at 1000+ employee companies in healthcare and financial services, $150K average deal value.\n\nWhich channels are you considering for reaching these CISOs?",
+        "response_time_ms": 1804,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 11,
+        "user_input": "What verticals did we say?",
+        "agent_response": "Healthcare and financial services verticals.\n\nWhich channels are you considering for reaching CISOs in these sectors?",
+        "response_time_ms": 2237,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 12,
+        "user_input": "Provide a summary so far.",
+        "agent_response": "**ABC Corp Media Plan Summary**\n\n**CONFIRMED BY USER:**\n- Objective: Lead generation for enterprise security software\n- Target: 500 leads \n- Budget: $400K ($800 per lead)\n- Audience: CISOs and security directors\n- Company size: 1000+ employees\n- Verticals: Healthcare and financial services  \n- Average deal value: $150K\n\n**ANALYSIS:**\nYour economics are very strong. Even at 10% close rate, that's $15K revenue per $800 investment. This gives you flexibility for premium channels.\n\n**STILL NEEDED:**\n- Channel selection and mix\n- Geographic focus\n- Value proposition messaging\n- Measurement approach\n- Testing strategy\n- Risk mitigation\n\nWhich channels are you considering for reaching these CISOs?",
+        "response_time_ms": 4695,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 13,
+        "user_input": "Add technology vertical too.",
+        "agent_response": "Updated - now targeting CISOs and security directors at 1000+ employee companies in healthcare, financial services, and technology verticals.\n\nThat's a smart expansion since technology companies often have larger security budgets and shorter sales cycles.\n\nWhich channels are you considering for reaching these CISOs across all three verticals?",
+        "response_time_ms": 2999,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 14,
+        "user_input": "Final summary with all updates.",
+        "agent_response": "**ABC Corp Enterprise Security Software Launch - Final Summary**\n\n**CONFIRMED BY USER:**\n- Objective: Lead generation for new enterprise security software\n- Target: 500 leads \n- Budget: $400K ($800 per lead)\n- Audience: CISOs and security directors\n- Company size: 1000+ employees\n- Verticals: Healthcare, financial services, and technology\n- Average deal value: $150K\n\n**ANALYSIS:**\nExcellent economics - even at 10% close rate, that's $15K revenue per $800 investment. Conservative efficiency target enables premium channel investments.\n\n**STILL NEEDED:**\n- Channel selection and mix\n- Geographic focus  \n- Value proposition messaging\n- Measurement framework\n- Testing strategy\n- Risk mitigation\n\nReady to continue with channel strategy?",
+        "response_time_ms": 2955,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 15,
+        "user_input": "List every piece of information I gave you.",
+        "agent_response": "**Every Piece of Information You Provided:**\n\n1. Company: ABC Corp\n2. Product: New enterprise security software\n3. Campaign type: Product launch\n4. Objective: Lead generation\n5. Lead target: 500 leads\n6. Budget: $400K\n7. Audience: CISOs and security directors\n8. Company size: 1000+ employees\n9. Verticals: Healthcare, financial services, technology (added technology later)\n10. Average deal value: $150K\n\n**What you asked for but I answered:**\n- Budget amount (you asked \"what was our budget again\")\n- Lead target (you asked \"and the target number of leads\")\n- Company name (you asked \"what company are we planning for again\")\n- Verticals (you asked \"what verticals did we say\")\n\n**Your process notes:**\n- Jumped ahead to channels before completing economics\n- Added technology vertical as update\n- Requested multiple summaries\n\nThat's everything you shared with me.",
+        "response_time_ms": 7566,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      }
+    ],
+    "overall_scores": {
+      "single_question": 1.0,
+      "proactive_intelligence": 0.7999999999999999,
+      "step_completion": 0.5,
+      "self_referential_learning": 0.5
+    },
+    "passed": false,
+    "error": null,
+    "start_time": "2026-01-14T18:32:12.612690",
+    "end_time": "2026-01-14T18:33:29.077208",
+    "duration_seconds": 76.464518
+  },
+  {
+    "scenario_id": "IDK-001",
+    "scenario_name": "I Don't Know Protocol - User Uncertainty",
+    "category": "IDK Protocol",
+    "total_turns": 10,
+    "completed_turns": 10,
+    "turn_results": [
+      {
+        "turn_number": 1,
+        "user_input": "Media plan for a new coffee brand.",
+        "agent_response": "Hi! I'm excited to build a media plan with you. We'll cover ten areas: Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, and Risks. Each step builds on the last.\n\nWhat business outcome are you trying to achieve with this new coffee brand?",
+        "response_time_ms": 2309,
+        "scores": {
+          "single_question": 1.0
+        },
+        "score_details": {
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 2,
+        "user_input": "Customer acquisition. Not sure how many we need.",
+        "agent_response": "Got it, I'll model using 1,000 new customers as a starting target. Based on Knowledge Base data for new coffee brands, typical first-year acquisition targets range from 500 to 2,500 customers depending on market and budget.\n\nHow will you measure success - total customers acquired, monthly recurring customers, or something else?",
+        "response_time_ms": 4120,
+        "scores": {
+          "single_question": 1.0,
+          "idk_protocol": 0.5
+        },
+        "score_details": {
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          },
+          "idk_protocol": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 3,
+        "user_input": "Budget is around $200K. I don't know what a realistic target is.",
+        "agent_response": "Based on your $200K budget, that works out to $200 per customer if we target 1,000 acquisitions. For coffee brands, Knowledge Base benchmarks show typical customer acquisition costs range from $75-300 depending on channel mix and lifetime value.\n\nWhat's your profit margin per customer or average customer lifetime value?",
+        "response_time_ms": 2844,
+        "scores": {
+          "idk_protocol": 0.5,
+          "source_citation": 0.0
+        },
+        "score_details": {
+          "idk_protocol": {
+            "status": "scorer_not_implemented"
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 4,
+        "user_input": "I don't know our customer LTV either.",
+        "agent_response": "Got it, I'll model using $400 customer LTV. Based on Knowledge Base data for premium coffee brands, typical LTV ranges from $200-600 over 18-24 months. You can adjust anytime.\n\nWith your $200K budget targeting 1,000 customers at $200 each, and $400 LTV, you'd generate 2:1 return. This is conservative and achievable - Knowledge Base shows successful coffee launches typically hit 2.5-4:1 LTV to CAC ratios.\n\nStep 2 complete. Your economics look realistic. Now Step 3 - who is your ideal customer?",
+        "response_time_ms": 4641,
+        "scores": {
+          "idk_protocol": 0.5,
+          "progress_over_perfection": 0.5
+        },
+        "score_details": {
+          "idk_protocol": {
+            "status": "scorer_not_implemented"
+          },
+          "progress_over_perfection": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 5,
+        "user_input": "I'm not sure who our target customer is exactly.",
+        "agent_response": "Got it, I'll model using coffee enthusiasts aged 25-45, household income $60K+, who value premium quality and convenience. Based on Knowledge Base data for specialty coffee brands, this demographic typically shows strongest acquisition rates and retention.\n\nWhat geography are you planning to launch in - specific cities, regions, or nationwide?",
+        "response_time_ms": 2709,
+        "scores": {
+          "idk_protocol": 0.5,
+          "progress_over_perfection": 0.5
+        },
+        "score_details": {
+          "idk_protocol": {
+            "status": "scorer_not_implemented"
+          },
+          "progress_over_perfection": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 6,
+        "user_input": "No idea about geography either.",
+        "agent_response": "Got it, I'll model using 3-5 major metro markets for launch - typically includes markets like Seattle, Portland, San Francisco, Austin, and Denver. Based on Knowledge Base data for coffee brand launches, concentrated metro approach allows better testing and word-of-mouth before expansion.\n\nStep 4 complete with focused metro launch strategy. Now Step 5 - you mentioned $200K total budget. How do you want to allocate this - is this purely for media, or does it include creative production and other costs?",
+        "response_time_ms": 4897,
+        "scores": {
+          "idk_protocol": 0.5,
+          "progress_over_perfection": 0.5
+        },
+        "score_details": {
+          "idk_protocol": {
+            "status": "scorer_not_implemented"
+          },
+          "progress_over_perfection": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 7,
+        "user_input": "Continue with assumptions.",
+        "agent_response": "Got it, I'll model using $160K for media and $40K for creative/production. Based on Knowledge Base data, typical allocation is 80/20 for new brand launches. You can adjust anytime.\n\nStep 5 complete with $160K media budget. Now Step 6 - what makes your coffee brand different from competitors like Blue Bottle, Stumptown, or local roasters?",
+        "response_time_ms": 4508,
+        "scores": {
+          "idk_protocol": 0.5,
+          "progress_over_perfection": 0.5
+        },
+        "score_details": {
+          "idk_protocol": {
+            "status": "scorer_not_implemented"
+          },
+          "progress_over_perfection": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 8,
+        "user_input": "What have you assumed so far?",
+        "agent_response": "Here's what I've modeled so far:\n\n**CONFIRMED BY USER:**\n- Objective: Customer acquisition\n- Budget: $200K total\n- Primary KPI: Total customers acquired\n\n**ASSUMPTIONS I'M USING:**\n- Target: 1,000 new customers ($200 CAC)\n- Customer LTV: $400 (2:1 return ratio)\n- Audience: Coffee enthusiasts, 25-45, $60K+ income\n- Geography: 3-5 major metros (Seattle, Portland, SF, Austin, Denver)\n- Budget split: $160K media, $40K creative/production\n\n**STILL NEEDED:**\n- Your unique value proposition\n- Channel preferences\n- Measurement approach\n- Testing priorities\n- Risk mitigation\n\nYour economics are conservative and realistic. Ready to continue with what makes your coffee different?",
+        "response_time_ms": 7012,
+        "scores": {
+          "self_referential_learning": 0.5,
+          "source_citation": 0.0
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 9,
+        "user_input": "Actually I know our margin is 65%.",
+        "agent_response": "Perfect! With 65% margin, your unit economics improve significantly. If average customer spends $100 initially, that's $65 gross profit versus my assumed $400 LTV. \n\nWhat's your average customer order value or how much does a typical customer spend with you?",
+        "response_time_ms": 2709,
+        "scores": {
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 10,
+        "user_input": "Final plan with assumptions clearly marked.",
+        "agent_response": "# COFFEE BRAND MEDIA PLAN\n\n## CONFIRMED BY USER\n- **Objective:** Customer acquisition\n- **Total Budget:** $200K\n- **Margin:** 65%\n\n## ASSUMPTIONS I'M USING (KB Sources)\n\n**STEP 1-2: OUTCOMES & ECONOMICS**\n- Target: 1,000 new customers\n- Customer LTV: $400 over 18-24 months (KB: specialty coffee typical range $200-600)\n- CAC Target: $200 with 2:1 LTV ratio (KB: successful launches hit 2.5-4:1)\n\n**STEP 3-4: AUDIENCE & GEOGRAPHY**  \n- Audience: Coffee enthusiasts, 25-45, HHI $60K+ (KB: strongest acquisition demographic)\n- Geography: 3-5 major metros - Seattle, Portland, SF, Austin, Denver (KB: concentrated metro launch strategy)\n\n**STEP 5-6: BUDGET & VALUE PROP**\n- Media Budget: $160K, Creative/Production: $40K (KB: typical 80/20 allocation)\n- Value Prop: Premium quality + convenience (modeled assumption - needs refinement)\n\n**STEP 7-8: CHANNELS & MEASUREMENT**\n- Channel Mix: 40% Meta/Google, 30% Connected TV, 20% Influencer, 10% Audio (KB: new brand launch mix)\n- Primary KPI: Customer acquisitions\n- Secondary: CAC by channel, LTV cohorts\n\n**STEP 9-10: TESTING & RISKS**\n- Test: Audience segments, creative messaging, geographic expansion\n- Risk: CAC inflation, attribution gaps, seasonal demand\n\n**ASSESSMENT:** Plan is conservative and achievable. Your 65% margin provides cushion for optimization.",
+        "response_time_ms": 11365,
+        "scores": {
+          "idk_protocol": 0.5,
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "idk_protocol": {
+            "status": "scorer_not_implemented"
+          },
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      }
+    ],
+    "overall_scores": {
+      "single_question": 1.0,
+      "idk_protocol": 0.5,
+      "source_citation": 0.0,
+      "progress_over_perfection": 0.5,
+      "self_referential_learning": 0.5
+    },
+    "passed": false,
+    "error": null,
+    "start_time": "2026-01-14T18:33:29.077376",
+    "end_time": "2026-01-14T18:34:31.209214",
+    "duration_seconds": 62.131838
+  },
+  {
+    "scenario_id": "SOPH-001",
+    "scenario_name": "Adaptive Sophistication - Basic User",
+    "category": "Adaptive Sophistication",
+    "total_turns": 8,
+    "completed_turns": 8,
+    "turn_results": [
+      {
+        "turn_number": 1,
+        "user_input": "Hi I need help with advertising for my small business.",
+        "agent_response": "Hi! I'm excited to build a media plan with you. We'll cover ten areas: Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, and Risks. Each step builds on the last.\n\nWhat business outcome are you trying to achieve with your advertising?",
+        "response_time_ms": 4498,
+        "scores": {
+          "adaptive_sophistication": 0.5,
+          "tone": 0.5
+        },
+        "score_details": {
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          },
+          "tone": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 2,
+        "user_input": "I sell homemade candles online.",
+        "agent_response": "Got it! Candle business can be really rewarding. \n\nAre you looking to get more customers to buy your candles, increase how much existing customers spend, or something else entirely?",
+        "response_time_ms": 3115,
+        "scores": {
+          "adaptive_sophistication": 0.5
+        },
+        "score_details": {
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 3,
+        "user_input": "I want more customers. I have about $5000 to spend.",
+        "agent_response": "Perfect! With your $5000 budget, let's figure out how many new customers you want to attract.\n\nHow many new customers are you hoping to get?",
+        "response_time_ms": 1520,
+        "scores": {
+          "adaptive_sophistication": 0.5,
+          "acronym_definition": 1.0
+        },
+        "score_details": {
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          },
+          "acronym_definition": {
+            "used": [],
+            "undefined": [],
+            "status": "no_acronyms"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 4,
+        "user_input": "What's a realistic goal for that budget?",
+        "agent_response": "Got it, I'll model using typical candle business metrics. Based on Knowledge Base data for handmade products, customer acquisition costs range from $15-40. With your $5000 budget, that suggests 125-330 new customers is realistic.\n\nYou can adjust anytime.\n\nHow much profit do you typically make on each candle sale?",
+        "response_time_ms": 3919,
+        "scores": {
+          "adaptive_sophistication": 0.5,
+          "source_citation": 1.0
+        },
+        "score_details": {
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 5,
+        "user_input": "What advertising should I use?",
+        "agent_response": "I hear you want to jump to advertising channels, but let's nail down the economics first - this determines which channels will actually work for you.\n\nHow much profit do you typically make when someone buys your candles?",
+        "response_time_ms": 2279,
+        "scores": {
+          "adaptive_sophistication": 0.5
+        },
+        "score_details": {
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 6,
+        "user_input": "I heard about something called ROAS. What is that?",
+        "agent_response": "ROAS means Return on Ad Spend - if you spend $100 and get $300 in sales, that's 3:1 ROAS. But here's the thing: ROAS can be misleading because platforms inflate numbers and don't show the full picture.\n\nFor your candle business, profit per customer matters more than total sales.\n\nWhat's your profit when someone buys your candles - roughly how much do you keep after costs?",
+        "response_time_ms": 3999,
+        "scores": {
+          "adaptive_sophistication": 0.5,
+          "acronym_definition": 1.0,
+          "tone": 0.5
+        },
+        "score_details": {
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          },
+          "acronym_definition": {
+            "used": [
+              "ROAS"
+            ],
+            "undefined": []
+          },
+          "tone": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 7,
+        "user_input": "This is all new to me. Am I doing okay?",
+        "agent_response": "You're doing great! Every successful business owner started exactly where you are. Asking smart questions shows you want to do this right.\n\nThe profit question matters because it tells us how much we can spend to get each customer. If you make $20 profit per sale, we can spend up to $20 to get that customer and break even.\n\nWhat do your candles typically sell for, and what do the materials cost you to make them?",
+        "response_time_ms": 4275,
+        "scores": {
+          "tone": 0.5
+        },
+        "score_details": {
+          "tone": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 8,
+        "user_input": "Give me a simple plan I can understand.",
+        "agent_response": "I understand you want to get straight to action. Here's what we need to build your simple plan:\n\n1. Your candles sell for $X each\n2. Your materials cost $Y each\n3. So you profit $Z per sale\n\nOnce I know your profit per candle, I can show you exactly which advertising will work with your $5000 budget.\n\nWhat do you charge for a typical candle?",
+        "response_time_ms": 3906,
+        "scores": {
+          "adaptive_sophistication": 0.5
+        },
+        "score_details": {
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      }
+    ],
+    "overall_scores": {
+      "adaptive_sophistication": 0.5,
+      "tone": 0.5,
+      "acronym_definition": 1.0,
+      "source_citation": 1.0
+    },
+    "passed": false,
+    "error": null,
+    "start_time": "2026-01-14T18:34:31.209410",
+    "end_time": "2026-01-14T18:35:10.735158",
+    "duration_seconds": 39.525748
+  },
+  {
+    "scenario_id": "SOPH-002",
+    "scenario_name": "Adaptive Sophistication - Expert User",
+    "category": "Adaptive Sophistication",
+    "total_turns": 8,
+    "completed_turns": 8,
+    "turn_results": [
+      {
+        "turn_number": 1,
+        "user_input": "Need to optimize our media mix for a $2M B2B SaaS campaign targeting enterprise MQLs.",
+        "agent_response": "Hi! I'm excited to build a media plan with you. We'll cover ten areas: Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, and Risks. Each step builds on the last.\n\nWith your $2M budget targeting enterprise MQLs, what's the specific business outcome you're trying to achieve - new customer acquisition, expansion revenue, or pipeline acceleration?",
+        "response_time_ms": 3172,
+        "scores": {
+          "adaptive_sophistication": 0.5
+        },
+        "score_details": {
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 2,
+        "user_input": "Current CAC is $800, LTV:CAC is 4:1, targeting 2500 MQLs at 20% SQL conversion.",
+        "agent_response": "Step 1 complete with Objective: new customer acquisition, KPI: MQLs, Target: 2500 MQLs.\n\nNow Step 2 Economics. With 2500 MQLs converting at 20% to 500 SQLs, and your current $800 CAC, that implies $400K in acquisition costs for the SQLs. Your 4:1 LTV:CAC suggests $3200 LTV per customer.\n\nWhat's your SQL-to-customer conversion rate? This determines if your $2M budget aligns with realistic acquisition volumes.",
+        "response_time_ms": 3781,
+        "scores": {
+          "adaptive_sophistication": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 3,
+        "user_input": "ABM heavy, intent data overlay, looking at 6sense vs Bombora.",
+        "agent_response": "Got it on the ABM approach and intent data providers - both strong for enterprise targeting.\n\nI still need your SQL-to-customer conversion rate to validate the economics. With your current funnel showing 2500 MQLs \u2192 500 SQLs, what percentage of those SQLs typically convert to customers?",
+        "response_time_ms": 2950,
+        "scores": {
+          "adaptive_sophistication": 0.5
+        },
+        "score_details": {
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 4,
+        "user_input": "What's your view on incrementality measurement for LinkedIn ABM?",
+        "agent_response": "LinkedIn incrementality testing is critical - platform attribution can inflate ROAS 2-3x. Standard approaches include geo holdouts, audience splits, and conversion lifts with synthetic controls.\n\nLet me model your economics first. Based on typical enterprise SaaS patterns, SQL-to-customer is usually 15-25%. Using 20%, your 500 SQLs would yield 100 customers at $8000 effective CAC ($800K total). That maintains your 4:1 LTV:CAC ratio.\n\nDoes 20% SQL conversion match your experience?",
+        "response_time_ms": 6235,
+        "scores": {
+          "adaptive_sophistication": 0.5,
+          "source_citation": 0.0
+        },
+        "score_details": {
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 5,
+        "user_input": "We're seeing platform ROAS of 3.2x but incrementality tests show 1.8x actual lift.",
+        "agent_response": "Exactly - that 44% difference between platform and incremental ROAS is typical. Your true efficiency is substantially lower than LinkedIn reports.\n\nWith 1.8x incremental ROAS and $2M budget, you're generating $3.6M in attributed revenue. At your economics, that suggests roughly 1125 customers acquired ($3200 LTV each).\n\nStep 2 Economics complete - your incrementally-measured efficiency is realistic for enterprise ABM.\n\nNow Step 3 Audience. Beyond 6sense/Bombora intent overlay, what firmographics define your ideal customer profile?",
+        "response_time_ms": 8111,
+        "scores": {
+          "adaptive_sophistication": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 6,
+        "user_input": "Recommendations on MMM vs MTA vs geo-lift for our measurement stack?",
+        "agent_response": "For your scale, MMM + geo-lift is optimal. MMM handles cross-channel attribution at $2M spend levels, geo-lift validates incrementality for LinkedIn ABM specifically. MTA struggles with B2B's long consideration cycles and LinkedIn's walled garden.\n\nWe're still in Step 3 Audience definition. What firmographics define your ICP - company size, industry verticals, or specific roles you're targeting with the ABM approach?",
+        "response_time_ms": 5121,
+        "scores": {
+          "adaptive_sophistication": 0.5,
+          "source_citation": 0.0
+        },
+        "score_details": {
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 7,
+        "user_input": "Skip to allocation. I know the fundamentals.",
+        "agent_response": "Step 7 Channels. With $2M targeting enterprise and your ABM approach:\n\nBased on your incrementally-validated LinkedIn performance (1.8x ROAS), I'd model:\n- LinkedIn ABM: $1.2M (60%) - your proven performer\n- Programmatic display: $400K (20%) - intent amplification via 6sense\n- Search: $300K (15%) - capture existing demand\n- Content syndication: $100K (5%) - top-funnel awareness\n\nThis assumes LinkedIn maintains current efficiency at scale. What's your current monthly spend on LinkedIn, and have you seen performance degradation as you've increased investment?",
+        "response_time_ms": 6022,
+        "scores": {
+          "adaptive_sophistication": 0.5
+        },
+        "score_details": {
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 8,
+        "user_input": "Executive summary with the key decisions and trade-offs.",
+        "agent_response": "**Executive Summary: $2M B2B Enterprise SaaS Media Plan**\n\n**Key Numbers:**\n- Target: 2,500 MQLs \u2192 500 SQLs \u2192 100 customers\n- True CAC: $8,000 (using 1.8x incremental ROAS vs 3.2x platform)\n- Projected revenue: $3.6M at current efficiency\n\n**Critical Decisions:**\n1. **Measurement**: MMM + geo-lift over platform attribution (prevents 44% efficiency overestimation)\n2. **Channel allocation**: 60% LinkedIn ABM, 20% programmatic, 15% search, 5% content syndication\n3. **Intent data**: Choose between 6sense vs Bombora for audience overlay\n\n**Key Risks:**\n- LinkedIn efficiency degradation at 2x current spend\n- Need audience expansion beyond current ICP if reach insufficient\n- MMM setup required for true cross-channel attribution\n\n**Missing for finalization:**\n- Current LinkedIn monthly spend and performance curves\n- Detailed ICP firmographics for programmatic targeting\n- Geographic concentration strategy\n\nReady to dive deeper into any area?",
+        "response_time_ms": 8528,
+        "scores": {
+          "adaptive_sophistication": 0.5,
+          "self_referential_learning": 0.5
+        },
+        "score_details": {
+          "adaptive_sophistication": {
+            "status": "scorer_not_implemented"
+          },
+          "self_referential_learning": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      }
+    ],
+    "overall_scores": {
+      "adaptive_sophistication": 0.5,
+      "proactive_intelligence": 1.0,
+      "source_citation": 0.0,
+      "self_referential_learning": 0.5
+    },
+    "passed": false,
+    "error": null,
+    "start_time": "2026-01-14T18:35:10.735323",
+    "end_time": "2026-01-14T18:36:06.667682",
+    "duration_seconds": 55.932359
+  },
+  {
+    "scenario_id": "EDGE-001",
+    "scenario_name": "Edge Case - Unrealistic Expectations",
+    "category": "Edge Cases",
+    "total_turns": 8,
+    "completed_turns": 8,
+    "turn_results": [
+      {
+        "turn_number": 1,
+        "user_input": "I have $1,000 and want 100,000 customers.",
+        "agent_response": "Hi! I'm excited to build a media plan with you. We'll cover ten areas: Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, and Risks. Each step builds on the last.\n\nYour target implies $0.01 per customer acquisition, which is extremely aggressive. Based on Knowledge Base benchmarks, typical customer acquisition costs range from $10-$500+ depending on business model.\n\nWhat business outcome are you trying to achieve with these 100,000 customers?",
+        "response_time_ms": 5669,
+        "scores": {
+          "feasibility_framing": 1.0,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "feasibility_framing": {
+            "has_assessment": true,
+            "has_source": true,
+            "has_path": true
+          },
+          "proactive_intelligence": {
+            "has_calculation": true,
+            "has_benchmark": true,
+            "has_assessment": true
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 2,
+        "user_input": "But I've heard of viral growth.",
+        "agent_response": "Viral growth can definitely amplify reach, but it still requires initial paid investment to seed the viral loops. Even highly viral campaigns typically need $1-5 per initial customer to trigger the sharing mechanism.\n\nYour $1,000 budget with 100,000 target assumes every dollar generates 100 customers - that's beyond viral, that's unprecedented.\n\nWhat specific business outcome are you trying to achieve? Are you looking to build brand awareness, generate leads, drive app downloads, or something else?",
+        "response_time_ms": 4732,
+        "scores": {
+          "tone": 0.5,
+          "feasibility_framing": 0.6000000000000001
+        },
+        "score_details": {
+          "tone": {
+            "status": "scorer_not_implemented"
+          },
+          "feasibility_framing": {
+            "has_assessment": true,
+            "has_source": false,
+            "has_path": true
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 3,
+        "user_input": "What could I realistically achieve with $1,000?",
+        "agent_response": "With $1,000, here's what's realistic based on Knowledge Base benchmarks:\n\n**App downloads:** 200-1,000 installs ($1-5 each)\n**Email signups:** 100-500 leads ($2-10 each) \n**Brand awareness:** 50,000-200,000 impressions\n**E-commerce customers:** 10-50 customers ($20-100 each)\n**B2B leads:** 5-20 qualified leads ($50-200 each)\n\nThe range depends heavily on your business model, audience, and offer strength.\n\nWhat type of business are you running?",
+        "response_time_ms": 4053,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "source_citation": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "source_citation": {
+            "has_data": true,
+            "has_source": true
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 4,
+        "user_input": "What if I increased to $10,000?",
+        "agent_response": "With $10,000, you'd get roughly 10x the volume:\n\n**App downloads:** 2,000-10,000 installs\n**Email signups:** 1,000-5,000 leads  \n**Brand awareness:** 500,000-2,000,000 impressions\n**E-commerce customers:** 100-500 customers\n**B2B leads:** 50-200 qualified leads\n\nStill far from your 100,000 customer target. To hit 100,000 customers through paid media alone, you'd typically need $200,000-$5,000,000 depending on your business model.\n\nWhat type of business are you running? That will help me show you the most relevant benchmarks.",
+        "response_time_ms": 4588,
+        "scores": {
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 5,
+        "user_input": "I need massive reach on a tiny budget. What's the best approach?",
+        "agent_response": "Got it - you need maximum reach efficiency. Here are the highest-leverage approaches:\n\n**Earned media first:** PR, influencer partnerships, community building. One viral story can deliver millions of impressions for near-zero cost.\n\n**Content multiplication:** Create one strong piece, then adapt across 5-10 platforms. Your $1,000 goes toward production, distribution is mostly free.\n\n**Partnership amplification:** Find businesses with your target audience. Cross-promote, co-create content, share costs.\n\n**Referral mechanics:** Build sharing incentives into your product. Dropbox got 3900% growth this way.\n\nBut I need to know your business to recommend the right mix. What are you selling or promoting?",
+        "response_time_ms": 6833,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "feasibility_framing": 0.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "feasibility_framing": {
+            "has_assessment": false,
+            "has_source": false,
+            "has_path": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 6,
+        "user_input": "My competitor supposedly got 1M users with no marketing spend.",
+        "agent_response": "That's worth investigating. Zero-spend growth usually means one of these:\n\n**Product-led growth:** They solved a problem so well users naturally shared (think Zoom during COVID)\n\n**Network effects:** Each user made the product more valuable for others (WhatsApp model)\n\n**Timing advantage:** They caught a massive trend wave early\n\n**Hidden advantages:** Founder connections, existing audience, or technical virality built into the product\n\n**Creative accounting:** \"No marketing spend\" might exclude founder time, partnerships, or PR efforts\n\nTo build a realistic plan for you, I need to know what business outcome you're actually trying to achieve. Are you launching an app, growing a service, building an audience, or something else?",
+        "response_time_ms": 5612,
+        "scores": {
+          "tone": 0.5,
+          "feasibility_framing": 0.6000000000000001
+        },
+        "score_details": {
+          "tone": {
+            "status": "scorer_not_implemented"
+          },
+          "feasibility_framing": {
+            "has_assessment": true,
+            "has_source": false,
+            "has_path": true
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 7,
+        "user_input": "Fine, I'll be realistic. $5,000 for 500 customers.",
+        "agent_response": "Perfect - $10 per customer is much more realistic. That puts you in achievable territory for many business models.\n\nStep 1 complete with Budget $5,000, Volume Target 500 customers. Now Step 2 Economics.\n\nTo assess if $10 per customer works, I need to understand your unit economics. What's the revenue or profit you make from each customer? This helps determine if the acquisition cost is sustainable.",
+        "response_time_ms": 4019,
+        "scores": {
+          "proactive_intelligence": 0.7,
+          "feasibility_framing": 0.4
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "has_calculation": true,
+            "has_benchmark": false,
+            "has_assessment": true
+          },
+          "feasibility_framing": {
+            "has_assessment": true,
+            "has_source": false,
+            "has_path": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 8,
+        "user_input": "That seems doable. Let's plan for that.",
+        "agent_response": "Got it, I'll model using $50 average customer value. Based on Knowledge Base data for typical businesses, $50 per customer is common for mid-range products or services. You can adjust anytime.\n\nWith $50 revenue per customer and $10 acquisition cost, you'd have 5:1 return on ad spend - that's strong and sustainable.\n\nStep 2 complete with $10 target acquisition cost and $50 customer value. Now Step 3 Audience.\n\nWho is your ideal customer? Describe them in terms of demographics, interests, or behaviors.",
+        "response_time_ms": 4706,
+        "scores": {
+          "tone": 0.5,
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "tone": {
+            "status": "scorer_not_implemented"
+          },
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      }
+    ],
+    "overall_scores": {
+      "feasibility_framing": 0.52,
+      "proactive_intelligence": 0.9400000000000001,
+      "tone": 0.5,
+      "source_citation": 1.0,
+      "step_completion": 0.5
+    },
+    "passed": false,
+    "error": null,
+    "start_time": "2026-01-14T18:36:06.667827",
+    "end_time": "2026-01-14T18:36:58.895793",
+    "duration_seconds": 52.227966
+  },
+  {
+    "scenario_id": "EDGE-002",
+    "scenario_name": "Edge Case - Conflicting Requirements",
+    "category": "Edge Cases",
+    "total_turns": 8,
+    "completed_turns": 8,
+    "turn_results": [
+      {
+        "turn_number": 1,
+        "user_input": "I want maximum reach but also highly targeted precision.",
+        "agent_response": "Hi! I'm excited to build a media plan with you. We'll cover ten areas: Outcomes, Economics, Audience, Geography, Budget, Value Proposition, Channels, Measurement, Testing, and Risks. Each step builds on the last.\n\nI hear you want both maximum reach and precision - that's the eternal marketing tension. We can solve it, but first need to define what success looks like for your business.\n\nWhat business outcome are you trying to achieve?",
+        "response_time_ms": 3729,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "single_question": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 2,
+        "user_input": "I want both. Reach everyone who matters.",
+        "agent_response": "Got it - you want comprehensive coverage of your ideal market. That's smart when the audience definition is tight.\n\nTo model this properly, I need to understand what business result you're driving toward. Are you trying to generate leads, drive sales, build awareness, or something else?",
+        "response_time_ms": 3737,
+        "scores": {
+          "tone": 0.5,
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "tone": {
+            "status": "scorer_not_implemented"
+          },
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 3,
+        "user_input": "Budget is $50K but I want Super Bowl level impact.",
+        "agent_response": "That's ambitious. Based on Knowledge Base data, Super Bowl ads cost $7M for 30 seconds plus production, reaching 100M+ viewers.\n\nYour $50K budget puts us in a completely different category - we need surgical precision to create meaningful impact. \n\nLet me model what's realistic: With $50K, you could reach maybe 500K-2M people depending on targeting and channels, or drive 500-5,000 actions depending on what you're optimizing for.\n\nWhat specific business outcome do you need - new customers, brand awareness, or something else?",
+        "response_time_ms": 7898,
+        "scores": {
+          "feasibility_framing": 0.8,
+          "tone": 0.5
+        },
+        "score_details": {
+          "feasibility_framing": {
+            "has_assessment": true,
+            "has_source": true,
+            "has_path": false
+          },
+          "tone": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 4,
+        "user_input": "I want awareness AND immediate sales conversion.",
+        "agent_response": "Those are two different objectives that pull budget in opposite directions. Awareness needs reach, conversions need precision.\n\nWith $50K, you'll need to pick a primary focus or your budget gets spread too thin to move either needle meaningfully.\n\nWhich matters more to your business right now - getting your name out there, or driving immediate revenue?",
+        "response_time_ms": 6276,
+        "scores": {
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 5,
+        "user_input": "Which should I prioritize?",
+        "agent_response": "Based on your $50K budget, prioritize immediate sales conversion.\n\nHere's why: Awareness campaigns need sustained frequency over time to build mental availability. $50K won't buy enough reach and frequency to meaningfully shift brand awareness. But $50K can absolutely drive measurable conversions if we target precisely.\n\nPlus, conversion campaigns generate data and revenue that fund future awareness efforts. Start where you can win.\n\nWhat specific action do you want people to take - purchase, demo request, trial signup?",
+        "response_time_ms": 7480,
+        "scores": {
+          "single_question": 1.0
+        },
+        "score_details": {
+          "single_question": {
+            "question_count": 1,
+            "status": "pass"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 6,
+        "user_input": "We're a new brand so probably need awareness, but investors want conversion metrics.",
+        "agent_response": "That's a classic startup tension. Here's the strategic path: Lead with conversion campaigns that generate investor-friendly metrics while building awareness among your best prospects.\n\nConversion-focused ads to high-intent audiences create awareness as a byproduct. You get measurable leads/sales for investors plus brand exposure in the right market segments.\n\nMy recommendation: Make conversion your primary objective and treat awareness as secondary benefit.\n\nWhat specific conversion action drives the most business value - purchases, demos, trials, or something else?",
+        "response_time_ms": 5699,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "tone": 0.5
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "tone": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 7,
+        "user_input": "How do I satisfy both needs?",
+        "agent_response": "Use conversion-optimized campaigns with high-visibility creative and broad enough targeting to capture your core market.\n\nHere's the approach: Target your ideal customer segments with compelling ads optimized for conversions. You'll generate the metrics investors want while building awareness among people who actually matter to your business.\n\nConcrete example: Instead of pure brand ads, run \"Free Trial\" campaigns to your target industries. You get trial signups (investor metrics) plus awareness among qualified prospects.\n\nWhat specific conversion action would both drive business value AND impress investors?",
+        "response_time_ms": 5832,
+        "scores": {
+          "proactive_intelligence": 1.0
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      },
+      {
+        "turn_number": 8,
+        "user_input": "Give me a plan that balances these.",
+        "agent_response": "I need one more piece to model your balanced plan. You mentioned conversions and awareness, but haven't specified what conversion action drives your business.\n\nWhat specific action do you want people to take - sign up for trial, request demo, make purchase, download something, or book consultation?\n\nOnce I know this, I can show you exactly how $50K splits between awareness-driving conversion campaigns.",
+        "response_time_ms": 3669,
+        "scores": {
+          "proactive_intelligence": 1.0,
+          "step_completion": 0.5
+        },
+        "score_details": {
+          "proactive_intelligence": {
+            "status": "not_applicable",
+            "has_calculable_data": false
+          },
+          "step_completion": {
+            "status": "scorer_not_implemented"
+          }
+        },
+        "passed_behaviors": [],
+        "failed_behaviors": [],
+        "issues": []
+      }
+    ],
+    "overall_scores": {
+      "proactive_intelligence": 1.0,
+      "single_question": 1.0,
+      "tone": 0.5,
+      "feasibility_framing": 0.8,
+      "step_completion": 0.5
+    },
+    "passed": false,
+    "error": null,
+    "start_time": "2026-01-14T18:36:58.895917",
+    "end_time": "2026-01-14T18:37:55.227937",
+    "duration_seconds": 56.33202
+  }
+]

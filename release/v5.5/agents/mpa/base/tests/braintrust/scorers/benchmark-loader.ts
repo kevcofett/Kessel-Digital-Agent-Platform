@@ -12,8 +12,29 @@
  */
 
 import { readFileSync } from "fs";
-import { parse } from "csv-parse/sync";
 import * as path from "path";
+
+/**
+ * Simple CSV parser (avoids external dependency)
+ */
+function parseCSV(content: string): Record<string, string>[] {
+  const lines = content.trim().split('\n');
+  if (lines.length < 2) return [];
+  
+  const headers = lines[0].split(',').map(h => h.trim());
+  const records: Record<string, string>[] = [];
+  
+  for (let i = 1; i < lines.length; i++) {
+    const values = lines[i].split(',').map(v => v.trim());
+    const record: Record<string, string> = {};
+    headers.forEach((header, idx) => {
+      record[header] = values[idx] || '';
+    });
+    records.push(record);
+  }
+  
+  return records;
+}
 
 // Benchmark record from v6.0 seed data
 export interface Benchmark {
@@ -88,11 +109,7 @@ export function loadBenchmarks(
 
   try {
     const csvContent = readFileSync(filePath, "utf-8");
-    const records = parse(csvContent, {
-      columns: true,
-      skip_empty_lines: true,
-      trim: true,
-    });
+    const records = parseCSV(csvContent);
 
     benchmarkCache = records.map((row: Record<string, string>) => ({
       mpa_benchmarkid: row.mpa_benchmarkid,

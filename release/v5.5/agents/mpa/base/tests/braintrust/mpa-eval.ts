@@ -558,70 +558,71 @@ Eval("Kessel-MPA-Agent", {
     input: tc.input,
     expected: tc.expected,
     metadata: tc.metadata,
-  })),
-  task: async (input, { metadata }) => {
+  })) as any,
+  task: async (input: any, hooks: any) => {
     // Simulate RAG: inject KB content for test cases with userSophistication metadata
-    const needsAdaptiveKB = (metadata as { userSophistication?: string })?.userSophistication !== undefined;
+    const metadata = hooks?.metadata as { userSophistication?: string } | undefined;
+    const needsAdaptiveKB = metadata?.userSophistication !== undefined;
     return await runMPA(input, needsAdaptiveKB ? KB_ADAPTIVE_LANGUAGE : undefined);
   },
   scores: [
-    async (args) => {
-      const result = scoreResponseLength(args.output);
+    async (args: any) => {
+      const result = scoreResponseLength(args.output as string);
       return { name: "mpa-response-length", score: result.score, metadata: result.metadata };
     },
-    async (args) => {
-      const result = scoreSingleQuestion(args.output);
+    async (args: any) => {
+      const result = scoreSingleQuestion(args.output as string);
       return { name: "mpa-single-question", score: result.score, metadata: result.metadata };
     },
-    async (args) => {
-      const result = scoreIdkProtocol(args.input.message, args.output);
+    async (args: any) => {
+      const result = scoreIdkProtocol(args.input?.message as string, args.output as string);
       return { name: "mpa-idk-protocol", score: result.score, metadata: result.metadata };
     },
-    async (args) => {
+    async (args: any) => {
       const currentStep = (args.metadata as { currentStep?: number })?.currentStep || 1;
-      const result = scoreStepBoundary(args.output, currentStep);
+      const result = scoreStepBoundary(args.output as string, currentStep);
       return { name: "mpa-step-boundary", score: result.score, metadata: result.metadata };
     },
-    async (args) => {
-      const result = await scoreProgressOverPerfection(args.input.message, args.output);
+    async (args: any) => {
+      const result = await scoreProgressOverPerfection(args.input?.message as string, args.output as string);
       return { name: "mpa-progress-over-perfection", score: result.score, metadata: result.metadata };
     },
-    async (args) => {
-      const result = await scoreAdaptiveSophistication(args.input.message, args.output);
+    async (args: any) => {
+      const result = await scoreAdaptiveSophistication(args.input?.message as string, args.output as string);
       return { name: "mpa-adaptive-sophistication", score: result.score, metadata: result.metadata };
     },
-    async (args) => {
+    async (args: any) => {
       const hasEnoughData = (args.metadata as { hasEnoughDataToModel?: boolean })?.hasEnoughDataToModel || false;
-      const result = await scoreProactiveIntelligence(args.input.message, args.output, hasEnoughData);
+      const result = await scoreProactiveIntelligence(args.input?.message as string, args.output as string, hasEnoughData);
       return { name: "mpa-proactive-intelligence", score: result.score, metadata: result.metadata };
     },
     // New scorers to match local test runner (14 total)
-    async (args) => {
-      const result = scoreAcronymDefinition(args.output);
+    async (args: any) => {
+      const result = scoreAcronymDefinition(args.output as string);
       return { name: "mpa-acronym-definition", score: result.score, metadata: result.metadata };
     },
-    async (args) => {
-      const result = scoreSourceCitation(args.output);
+    async (args: any) => {
+      const result = scoreSourceCitation(args.output as string);
       return { name: "mpa-source-citation", score: result.score, metadata: result.metadata };
     },
-    async (args) => {
-      const result = scoreFeasibilityFraming(args.output);
+    async (args: any) => {
+      const result = scoreFeasibilityFraming(args.output as string);
       return { name: "mpa-feasibility-framing", score: result.score, metadata: result.metadata };
     },
-    async (args) => {
-      const result = await scoreTone(args.output);
+    async (args: any) => {
+      const result = await scoreTone(args.output as string);
       return { name: "mpa-tone", score: result.score, metadata: result.metadata };
     },
-    async (args) => {
-      const result = await scoreStepCompletion(args.input.message, args.output);
+    async (args: any) => {
+      const result = await scoreStepCompletion(args.input?.message as string, args.output as string);
       return { name: "mpa-step-completion", score: result.score, metadata: result.metadata };
     },
-    async (args) => {
-      const result = await scoreSelfReferentialLearning(args.input.message, args.output);
+    async (args: any) => {
+      const result = await scoreSelfReferentialLearning(args.input?.message as string, args.output as string);
       return { name: "mpa-self-referential-learning", score: result.score, metadata: result.metadata };
     },
-    async (args) => {
-      const result = scoreRagRetrieval(args.output);
+    async (args: any) => {
+      const result = scoreRagRetrieval(args.output as string);
       return { name: "mpa-rag-retrieval", score: result.score, metadata: result.metadata };
     },
   ],

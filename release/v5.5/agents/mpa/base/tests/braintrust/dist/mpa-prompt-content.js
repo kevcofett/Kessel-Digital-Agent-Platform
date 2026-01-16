@@ -1,8 +1,10 @@
 /**
  * MPA System Prompt Content for Multi-Turn Evaluation
  *
+ * VERSION: v6.0 - Updated for MPA v6.0 KB Architecture
+ *
  * Supports dynamic loading via MPA_INSTRUCTIONS_PATH environment variable.
- * Falls back to embedded v5_8 prompt if not specified.
+ * Falls back to embedded v6_0 prompt if not specified.
  *
  * Usage:
  *   MPA_INSTRUCTIONS_PATH=path/to/instructions.txt node dist/mpa-multi-turn-eval.js
@@ -11,25 +13,29 @@
  * Detailed guidance belongs in KB documents, not here.
  */
 import { readFileSync } from "fs";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
+// Get current directory for relative path resolution
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+// Default to v6.0 instructions
+const DEFAULT_INSTRUCTIONS_PATH = resolve(__dirname, "../../../base/copilot/MPA_Copilot_Instructions_v6_0.txt");
 /**
  * Load MPA instructions from file if MPA_INSTRUCTIONS_PATH is set
  */
 function loadInstructionsFromFile() {
-    const instructionsPath = process.env.MPA_INSTRUCTIONS_PATH;
-    if (!instructionsPath) {
-        return null;
-    }
+    const instructionsPath = process.env.MPA_INSTRUCTIONS_PATH || DEFAULT_INSTRUCTIONS_PATH;
     try {
         const content = readFileSync(instructionsPath, "utf-8");
         console.log(`Loaded MPA instructions from: ${instructionsPath} (${content.length} chars)`);
         return content;
     }
     catch (error) {
-        console.error(`Failed to load instructions from ${instructionsPath}:`, error);
+        console.warn(`Could not load instructions from ${instructionsPath}, using embedded fallback`);
         return null;
     }
 }
-// Embedded v5_8 prompt (fallback)
+// Embedded v6_0 prompt (fallback - matches MPA_Copilot_Instructions_v6_0.txt)
 const EMBEDDED_PROMPT = `FIRST RESPONSE FORMAT
 
 Opening must be warm and concise. Name the ten areas and ask the first question.
@@ -75,9 +81,17 @@ DATA HIERARCHY
 
 Prioritize: 1) Direct API data, 2) Web research from credible sources, 3) User provided data, 4) KB benchmarks, 5) Your estimate. Label estimates clearly and recommend validation.
 
-KNOWLEDGE BASE FIRST
+KNOWLEDGE BASE ARCHITECTURE
 
-Before each conversation, read KB 00 Agent Core Operating Standards for required behaviors. During planning, reference KB 01-05 for strategic frameworks, benchmarks, and execution guidance. If documents conflict, use most conservative guidance.
+KB documents use META tags for retrieval routing. Key document categories:
+- Expert Lens: Channel Mix, Budget Allocation, Audience Strategy, Measurement Attribution
+- Frameworks: Analytics Engine, Confidence Level, Data Provenance, Measurement
+- Implications: Budget, Channel, Measurement, Audience, Timing decisions
+- Support: Output Templates, Geography DMA Planning
+
+Before each step, retrieve relevant KB using META_WORKFLOW_STEPS tags.
+Reference KB_INDEX for routing guidance.
+Use web search for census data and current taxonomy codes as indicated by META_WEB_SEARCH_TRIGGER tags.
 
 OPERATING MODE
 
@@ -109,7 +123,7 @@ Once you have enough data to model, DO THE MATH. Present findings. Guide with an
 
 VALIDATION TRIGGER
 
-When you have budget and volume target, calculate implied efficiency. Do not ask another question first. Compare to benchmarks. If target is aggressive, call it out explicitly with source. Acknowledge ambition, cite what market typically shows, explain what it takes to hit it.
+When you have budget and volume target, calculate implied efficiency. Do not ask another question first. Compare to mpa_benchmark table for vertical. If target is aggressive, call it out explicitly with source. Acknowledge ambition, cite what market typically shows, explain what it takes to hit it.
 
 PROGRESS OVER PERFECTION
 
@@ -152,6 +166,7 @@ Succeed when: performance is defensible, forecasts realistic, user understands r
 export const MPA_SYSTEM_PROMPT = loadInstructionsFromFile() || EMBEDDED_PROMPT;
 /**
  * RAG Tool Instructions - Appended when agentic RAG is enabled
+ * Updated for v6.0 KB architecture
  */
 export const RAG_TOOL_INSTRUCTIONS = `
 
@@ -160,21 +175,28 @@ KNOWLEDGE BASE TOOLS
 You have access to tools for searching the media planning knowledge base:
 
 1. search_knowledge_base - Search for relevant information, frameworks, or guidance
+   - Uses META tag routing from KB_INDEX for optimal retrieval
+   - Returns confidence level (HIGH/MEDIUM/LOW) for each result
 2. get_benchmark - Get specific benchmark values for industry verticals and metrics
+   - Supports 14 verticals: RETAIL, ECOMMERCE, CPG, FINANCE, TECHNOLOGY, HEALTHCARE, AUTOMOTIVE, TRAVEL, ENTERTAINMENT, TELECOM, GAMING, HOSPITALITY, EDUCATION, B2B_PROFESSIONAL
+   - Returns channel-specific metrics (PAID_SEARCH, PAID_SOCIAL, PROGRAMMATIC_DISPLAY, CTV_OTT)
 3. get_audience_sizing - Get audience size estimates with methodology
+   - NOTE: For census data, use web_search tool as indicated by META_WEB_SEARCH_TRIGGER
 
 TOOL USAGE RULES
 
 1. Use get_benchmark BEFORE citing any specific benchmark number (CAC, CPM, conversion rates, etc.)
 2. Use search_knowledge_base when you need framework guidance or best practices
 3. Use get_audience_sizing when discussing market size or targeting precision
-4. If a tool returns no results, clearly state "My estimate" instead of fabricating data
-5. Do not use tools for basic conversation - only for data retrieval needs
+4. For census population data, use web_search - do NOT fabricate census statistics
+5. If a tool returns no results, clearly state "My estimate" instead of fabricating data
+6. Do not use tools for basic conversation - only for data retrieval needs
 
 CITATION FORMAT
 
 After using a tool, incorporate the provided citation naturally:
-- CORRECT: "Based on Knowledge Base, typical ecommerce CAC runs $25-45."
+- CORRECT: "Based on Knowledge Base, typical ecommerce CAC runs $25-45 (confidence: HIGH)."
+- CORRECT: "Based on benchmark data for RETAIL vertical, CPM ranges $8-15."
 - INCORRECT: "Industry benchmarks suggest CAC is typically around $25-45."
 
 The tool results include pre-formatted citation text. Use it directly.
@@ -186,5 +208,73 @@ WHEN NOT TO USE TOOLS
 - When making general strategic recommendations that don't require specific numbers
 - When you've already retrieved the relevant information in this conversation
 `;
+/**
+ * KB v6.0 Document Index (for RAG simulation in testing)
+ * Maps intents to KB documents
+ */
+export const KB_V6_DOCUMENT_MAP = {
+    CHANNEL_SELECTION: [
+        'MPA_Expert_Lens_Channel_Mix_v6_0.txt',
+        'AI_ADVERTISING_GUIDE_v6_0.txt',
+        'RETAIL_MEDIA_NETWORKS_v6_0.txt',
+    ],
+    BUDGET_PLANNING: [
+        'MPA_Expert_Lens_Budget_Allocation_v6_0.txt',
+        'Analytics_Engine_v6_0.txt',
+        'MPA_Implications_Budget_Decisions_v6_0.txt',
+    ],
+    AUDIENCE_TARGETING: [
+        'MPA_Expert_Lens_Audience_Strategy_v6_0.txt',
+        'MPA_Audience_Taxonomy_Structure_v6_0.txt',
+        'KB_02_Audience_Targeting_Sophistication_v6_0.txt',
+    ],
+    MEASUREMENT_GUIDANCE: [
+        'MPA_Expert_Lens_Measurement_Attribution_v6_0.txt',
+        'MEASUREMENT_FRAMEWORK_v6_0.txt',
+        'MPA_Implications_Measurement_Choices_v6_0.txt',
+    ],
+    BENCHMARK_LOOKUP: [
+        'Analytics_Engine_v6_0.txt', // mpa_benchmark Dataverse table
+    ],
+    GAP_RESOLUTION: [
+        'Gap_Detection_Playbook_v6_0.txt',
+    ],
+    WORKFLOW_HELP: [
+        'MPA_Supporting_Instructions_v6_0.txt',
+        'KB_00_Agent_Core_Operating_Standards_v6_0.txt',
+    ],
+    CONFIDENCE_ASSESSMENT: [
+        'Confidence_Level_Framework_v6_0.txt',
+        'Data_Provenance_Framework_v6_0.txt',
+    ],
+};
+/**
+ * Supported verticals for benchmark retrieval (v6.0)
+ */
+export const SUPPORTED_VERTICALS = [
+    'RETAIL',
+    'ECOMMERCE',
+    'CPG',
+    'FINANCE',
+    'TECHNOLOGY',
+    'HEALTHCARE',
+    'AUTOMOTIVE',
+    'TRAVEL',
+    'ENTERTAINMENT',
+    'TELECOM',
+    'GAMING',
+    'HOSPITALITY',
+    'EDUCATION',
+    'B2B_PROFESSIONAL',
+];
+/**
+ * Supported channels for benchmark retrieval (v6.0)
+ */
+export const SUPPORTED_CHANNELS = [
+    'PAID_SEARCH',
+    'PAID_SOCIAL',
+    'PROGRAMMATIC_DISPLAY',
+    'CTV_OTT',
+];
 export default MPA_SYSTEM_PROMPT;
 //# sourceMappingURL=mpa-prompt-content.js.map

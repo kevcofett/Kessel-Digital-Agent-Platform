@@ -154,10 +154,7 @@ Succeed when: performance is defensible, forecasts realistic, user understands r
       content: "{{input.message}}",
     },
   ],
-  modelParams: {
-    temperature: 0.7,
-    maxTokens: 1024,
-  },
+  // Model parameters configured at runtime via Eval
 });
 
 export default project;

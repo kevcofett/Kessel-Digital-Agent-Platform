@@ -186,7 +186,7 @@ export class ConversationEngine {
         // Calculate conversation-level scores
         const conversationScores = await scoreConversation(turns, scenario, allEvents, failures);
         // Calculate turn score aggregates
-        const turnScoreAggregates = calculateTurnAggregates(turns);
+        const turnScoreAggregates = calculateTurnAggregates(turns.filter(t => t.turnScores));
         // Calculate composite score
         const compositeScore = calculateCompositeScore(turnScoreAggregates, conversationScores, failures);
         // Evaluate success

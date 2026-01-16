@@ -11,12 +11,13 @@
  * - Content-type aware chunk sizing
  */
 import { DocumentChunk } from './types.js';
-import { KBSectionMetadata } from './kb-metadata-parser.js';
+import { KBSectionMetadata, KBDocumentMetadata } from './kb-metadata-parser.js';
 /**
  * Enhanced chunk with v6.0 metadata from KBMetadataParser
  */
 export interface EnhancedDocumentChunk extends DocumentChunk {
     kbMetadata?: KBSectionMetadata;
+    documentMetadata?: KBDocumentMetadata;
     contentType: string;
     semanticBoundary: boolean;
 }

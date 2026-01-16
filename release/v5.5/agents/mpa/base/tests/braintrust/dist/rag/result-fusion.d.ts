@@ -67,6 +67,7 @@ export interface DomainRerankFactors {
     benchmarkPresence: number;
     recencyFactor: number;
     confidenceLevel: number;
+    chunkPriority: number;
 }
 export declare class ResultFusion {
     private config;
@@ -116,6 +117,11 @@ export declare class ResultFusion {
      * Boost based on confidence level (for enhanced chunks)
      */
     private calculateConfidenceBoost;
+    /**
+     * KB v6.0: Boost based on META_CHUNK_PRIORITY
+     * Priority 0 (highest) = full boost, Priority 3 (lowest) = no boost
+     */
+    private calculateChunkPriorityBoost;
     /**
      * Build source attribution for a result
      */

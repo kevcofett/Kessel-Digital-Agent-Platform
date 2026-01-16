@@ -605,13 +605,4 @@ export function scoreConfidenceLevelAttribution(output: string): TurnScore {
   };
 }
 
-// =============================================================================
-// EXPORTS
-// =============================================================================
-
-export {
-  scoreBenchmarkVerticalCoverage,
-  scoreWebSearchTrigger,
-  scoreKbRoutingValidation,
-  scoreConfidenceLevelAttribution,
-};
+// Functions are exported inline with 'export function' declarations above

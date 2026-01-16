@@ -22,7 +22,11 @@ import time
 import asyncio
 import aiohttp
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
+
+# Force unbuffered output
+sys.stdout.reconfigure(line_buffering=True)
+sys.stderr.reconfigure(line_buffering=True)
 from typing import Optional, List, Dict, Any, Tuple
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
@@ -54,27 +58,37 @@ except ImportError:
 class Config:
     # Anthropic API for scoring
     ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")
-    
-    # Copilot Studio SDK
-    COPILOT_SDK_ENDPOINT: str = os.getenv("COPILOT_SDK_ENDPOINT", 
+
+    # Direct Line (preferred - no Azure AD permissions needed)
+    DIRECTLINE_SECRET: str = os.getenv("DIRECTLINE_SECRET", "")
+    DIRECTLINE_ENDPOINT: str = os.getenv("DIRECTLINE_ENDPOINT", "https://directline.botframework.com/v3/directline")
+
+    # Copilot Studio SDK (fallback - requires Azure AD permissions)
+    COPILOT_SDK_ENDPOINT: str = os.getenv("COPILOT_SDK_ENDPOINT",
         "https://c672b4709cc7e9d8a0e2ca83751f80.0c.environment.api.powerplatform.com/copilotstudio/dataverse-backed/authenticated/bots/copilots_header_a2740/conversations")
     API_VERSION: str = os.getenv("API_VERSION", "2022-03-01-preview")
-    
-    # Azure AD Authentication
+
+    # Azure AD Authentication (only needed for SDK endpoint)
     AZURE_TENANT_ID: str = os.getenv("AZURE_TENANT_ID", "")
     AZURE_CLIENT_ID: str = os.getenv("AZURE_CLIENT_ID", "")
     AZURE_CLIENT_SECRET: str = os.getenv("AZURE_CLIENT_SECRET", "")
-    
+
     # Or use device code flow for interactive auth
     USE_DEVICE_CODE: bool = os.getenv("USE_DEVICE_CODE", "true").lower() == "true"
-    
+
     # Scoring
     SCORING_MODEL: str = os.getenv("SCORING_MODEL", "claude-sonnet-4-20250514")
     OUTPUT_DIR: str = os.getenv("OUTPUT_DIR", "./test_results")
-    
+
     # Timeouts
     RESPONSE_TIMEOUT: int = int(os.getenv("RESPONSE_TIMEOUT", "60"))
     TURN_DELAY: float = float(os.getenv("TURN_DELAY", "1.5"))
+
+    def get_connection_type(self) -> str:
+        """Determine which connection method to use."""
+        if self.DIRECTLINE_SECRET:
+            return "directline"
+        return "sdk"
 
 
 config = Config()
@@ -119,60 +133,93 @@ class ScenarioResult:
 
 class AzureAuthenticator:
     """Handles Azure AD authentication for Copilot Studio SDK."""
-    
+
     def __init__(self, config: Config):
         self.config = config
         self.token: Optional[str] = None
         self.token_expiry: Optional[datetime] = None
-    
+        self._app: Optional[PublicClientApplication] = None
+        self._scopes = ["https://api.powerplatform.com/.default"]
+
+    def _get_app(self) -> PublicClientApplication:
+        """Get or create MSAL app with persistent cache."""
+        if self._app is None:
+            # Use file-based token cache for persistence
+            cache_file = Path(__file__).parent / ".msal_token_cache.json"
+            cache = None
+            try:
+                from msal import SerializableTokenCache
+                cache = SerializableTokenCache()
+                if cache_file.exists():
+                    cache.deserialize(cache_file.read_text())
+            except Exception:
+                pass
+
+            self._app = PublicClientApplication(
+                client_id=self.config.AZURE_CLIENT_ID or "51f81489-12ee-4a9e-aaae-a2591f45987d",
+                authority=f"https://login.microsoftonline.com/{self.config.AZURE_TENANT_ID or 'common'}",
+                token_cache=cache
+            )
+
+            # Save cache on changes
+            if cache:
+                def save_cache():
+                    if cache.has_state_changed:
+                        cache_file.write_text(cache.serialize())
+                import atexit
+                atexit.register(save_cache)
+
+        return self._app
+
     async def get_token(self) -> str:
         """Get a valid access token, refreshing if needed."""
-        if self.token and self.token_expiry and datetime.now() < self.token_expiry:
+        # Return cached token if still valid (with 5 min buffer)
+        if self.token and self.token_expiry and datetime.now() < (self.token_expiry - timedelta(minutes=5)):
             return self.token
-        
+
+        # Use device code flow with custom app registration
         if self.config.USE_DEVICE_CODE:
             return await self._device_code_flow()
         else:
             return await self._client_credentials_flow()
-    
+
     async def _device_code_flow(self) -> str:
         """Interactive device code authentication."""
         if not PublicClientApplication:
             raise ImportError("msal not installed")
-        
-        # Use the Power Platform scope
-        scopes = ["https://api.powerplatform.com/.default"]
-        
-        app = PublicClientApplication(
-            client_id=self.config.AZURE_CLIENT_ID or "51f81489-12ee-4a9e-aaae-a2591f45987d",  # Power Platform CLI client ID
-            authority=f"https://login.microsoftonline.com/{self.config.AZURE_TENANT_ID or 'common'}"
-        )
-        
-        # Try to get token from cache first
+
+        app = self._get_app()
+
+        # Try to get token from cache first (silent refresh)
         accounts = app.get_accounts()
         if accounts:
-            result = app.acquire_token_silent(scopes, account=accounts[0])
+            result = app.acquire_token_silent(self._scopes, account=accounts[0])
             if result and "access_token" in result:
                 self.token = result["access_token"]
+                # Parse expiry from token or default to 1 hour
+                expires_in = result.get("expires_in", 3600)
+                self.token_expiry = datetime.now() + timedelta(seconds=expires_in)
+                print("  Using cached token (silent refresh)")
                 return self.token
-        
-        # Device code flow
-        flow = app.initiate_device_flow(scopes=scopes)
+
+        # Device code flow for new authentication
+        flow = app.initiate_device_flow(scopes=self._scopes)
         if "user_code" not in flow:
             raise Exception(f"Failed to create device flow: {flow.get('error_description', 'Unknown error')}")
-        
+
         print("\n" + "=" * 60)
         print("AUTHENTICATION REQUIRED")
         print("=" * 60)
         print(flow["message"])
         print("=" * 60 + "\n")
-        
+
         result = app.acquire_token_by_device_flow(flow)
-        
+
         if "access_token" in result:
             self.token = result["access_token"]
             # Token typically valid for 1 hour
-            self.token_expiry = datetime.now().replace(second=0, microsecond=0)
+            expires_in = result.get("expires_in", 3600)
+            self.token_expiry = datetime.now() + timedelta(seconds=expires_in)
             return self.token
         else:
             raise Exception(f"Authentication failed: {result.get('error_description', 'Unknown error')}")
@@ -196,6 +243,173 @@ class AzureAuthenticator:
             return self.token
         else:
             raise Exception(f"Authentication failed: {result.get('error_description', 'Unknown error')}")
+
+
+# =============================================================================
+# DIRECT LINE CLIENT
+# =============================================================================
+
+class DirectLineClient:
+    """Client for Direct Line API - simpler auth, no Azure AD permissions needed."""
+
+    def __init__(self, config: Config):
+        self.config = config
+        self.conversation_id: Optional[str] = None
+        self.watermark: Optional[str] = None
+        self.conversation_history: List[Dict] = []
+
+    async def start_conversation(self) -> bool:
+        """Start a new Direct Line conversation."""
+        try:
+            async with aiohttp.ClientSession() as session:
+                headers = {
+                    "Authorization": f"Bearer {self.config.DIRECTLINE_SECRET}",
+                    "Content-Type": "application/json"
+                }
+
+                url = f"{self.config.DIRECTLINE_ENDPOINT}/conversations"
+
+                async with session.post(url, headers=headers, json={}) as response:
+                    if response.status in [200, 201]:
+                        data = await response.json()
+                        self.conversation_id = data.get("conversationId")
+                        print(f"  Started Direct Line conversation: {self.conversation_id[:20]}...")
+                        return True
+                    else:
+                        error_text = await response.text()
+                        print(f"  Failed to start Direct Line conversation: {response.status} - {error_text[:200]}")
+                        return False
+
+        except Exception as e:
+            print(f"  Error starting Direct Line conversation: {e}")
+            return False
+
+    async def send_message(self, message: str) -> Tuple[str, int]:
+        """Send a message via Direct Line and get response."""
+        start_time = time.time()
+
+        try:
+            async with aiohttp.ClientSession() as session:
+                headers = {
+                    "Authorization": f"Bearer {self.config.DIRECTLINE_SECRET}",
+                    "Content-Type": "application/json"
+                }
+
+                # Send message
+                url = f"{self.config.DIRECTLINE_ENDPOINT}/conversations/{self.conversation_id}/activities"
+
+                payload = {
+                    "type": "message",
+                    "text": message,
+                    "from": {
+                        "id": "test_user",
+                        "name": "Test User"
+                    }
+                }
+
+                async with session.post(url, headers=headers, json=payload) as response:
+                    if response.status not in [200, 201]:
+                        response_time_ms = int((time.time() - start_time) * 1000)
+                        error_text = await response.text()
+                        return f"[ERROR: {response.status}] {error_text[:100]}", response_time_ms
+
+                # Poll for response
+                bot_response = await self._poll_for_response(session, headers)
+                response_time_ms = int((time.time() - start_time) * 1000)
+
+                self.conversation_history.append({"role": "user", "content": message})
+                self.conversation_history.append({"role": "assistant", "content": bot_response})
+
+                return bot_response, response_time_ms
+
+        except Exception as e:
+            response_time_ms = int((time.time() - start_time) * 1000)
+            return f"[ERROR: {str(e)}]", response_time_ms
+
+    async def _poll_for_response(self, session: aiohttp.ClientSession, headers: Dict) -> str:
+        """Poll Direct Line for bot response."""
+        url = f"{self.config.DIRECTLINE_ENDPOINT}/conversations/{self.conversation_id}/activities"
+        if self.watermark:
+            url += f"?watermark={self.watermark}"
+
+        timeout = self.config.RESPONSE_TIMEOUT
+        start_time = time.time()
+
+        while time.time() - start_time < timeout:
+            async with session.get(url, headers=headers) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    self.watermark = data.get("watermark")
+
+                    # Find bot messages
+                    for activity in data.get("activities", []):
+                        if activity.get("from", {}).get("role") == "bot" or \
+                           activity.get("from", {}).get("id", "").lower() != "test_user":
+                            if activity.get("type") == "message" and activity.get("text"):
+                                return activity["text"]
+
+            await asyncio.sleep(0.5)
+
+        return "[ERROR: Timeout waiting for response]"
+
+
+# =============================================================================
+# MOCK COPILOT CLIENT (for local testing without live deployment)
+# =============================================================================
+
+class MockCopilotClient:
+    """Mock client that simulates MPA responses using Claude API."""
+
+    def __init__(self, config: Config, instructions_path: str, model: str = "claude-sonnet-4-20250514"):
+        self.config = config
+        self.model = model
+        self.anthropic = Anthropic(api_key=config.ANTHROPIC_API_KEY)
+        self.instructions = Path(instructions_path).read_text()
+        self.conversation_history: List[Dict] = []
+
+    async def start_conversation(self) -> bool:
+        """Start a new mock conversation (just resets state)."""
+        self.conversation_history = []
+        print(f"  Started mock conversation (model: {self.model})")
+        return True
+
+    async def send_message(self, message: str) -> Tuple[str, int]:
+        """Send a message and get simulated MPA response from Claude."""
+        start_time = time.time()
+
+        try:
+            # Build messages for Claude
+            messages = []
+            for entry in self.conversation_history:
+                messages.append(entry)
+            messages.append({"role": "user", "content": message})
+
+            # Call Claude API with MPA instructions as system prompt
+            response = self.anthropic.messages.create(
+                model=self.model,
+                max_tokens=500,
+                system=self.instructions,
+                messages=messages
+            )
+
+            response_time_ms = int((time.time() - start_time) * 1000)
+            bot_response = response.content[0].text
+
+            # Update conversation history
+            self.conversation_history.append({"role": "user", "content": message})
+            self.conversation_history.append({"role": "assistant", "content": bot_response})
+
+            return bot_response, response_time_ms
+
+        except Exception as e:
+            response_time_ms = int((time.time() - start_time) * 1000)
+            return f"[ERROR: {str(e)}]", response_time_ms
+
+    def get_conversation_history(self) -> List[Dict]:
+        return self.conversation_history.copy()
+
+    def reset(self):
+        self.conversation_history = []
 
 
 # =============================================================================
@@ -242,45 +456,47 @@ class CopilotSDKClient:
     async def send_message(self, message: str) -> Tuple[str, int]:
         """Send a message and get response."""
         start_time = time.time()
-        
+
         try:
             token = await self.authenticator.get_token()
-            
+
             async with aiohttp.ClientSession() as session:
                 headers = {
                     "Authorization": f"Bearer {token}",
                     "Content-Type": "application/json"
                 }
-                
-                # Send message
-                url = f"{self.config.COPILOT_SDK_ENDPOINT}/{self.conversation_id}/activities?api-version={self.config.API_VERSION}"
-                
+
+                # Copilot Studio SDK: POST message directly to conversation endpoint
+                url = f"{self.config.COPILOT_SDK_ENDPOINT}/{self.conversation_id}?api-version={self.config.API_VERSION}"
+
                 payload = {
-                    "type": "message",
-                    "text": message,
-                    "from": {
-                        "id": "test_user",
-                        "name": "Test User"
+                    "activity": {
+                        "type": "message",
+                        "text": message,
+                        "from": {
+                            "id": "test_user",
+                            "name": "Test User"
+                        }
                     }
                 }
-                
+
                 async with session.post(url, headers=headers, json=payload) as response:
                     response_time_ms = int((time.time() - start_time) * 1000)
-                    
+
                     if response.status in [200, 201]:
                         data = await response.json()
-                        
-                        # Extract bot response from activities
+
+                        # Extract bot response
                         bot_response = self._extract_bot_response(data)
-                        
+
                         self.conversation_history.append({"role": "user", "content": message})
                         self.conversation_history.append({"role": "assistant", "content": bot_response})
-                        
+
                         return bot_response, response_time_ms
                     else:
                         error_text = await response.text()
                         return f"[ERROR: {response.status}] {error_text[:100]}", response_time_ms
-                        
+
         except Exception as e:
             response_time_ms = int((time.time() - start_time) * 1000)
             return f"[ERROR: {str(e)}]", response_time_ms
@@ -427,11 +643,33 @@ class Scorers:
 
 class TestRunner:
     """Runs test scenarios and collects results."""
-    
-    def __init__(self, config: Config):
+
+    def __init__(self, config: Config, mock_mode: bool = False, mock_model: str = "claude-sonnet-4-20250514",
+                 instructions_path: Optional[str] = None):
         self.config = config
-        self.authenticator = AzureAuthenticator(config)
-        self.client = CopilotSDKClient(config, self.authenticator)
+        self.mock_mode = mock_mode
+
+        if mock_mode:
+            # Mock mode: use Claude to simulate MPA responses
+            if not instructions_path:
+                raise ValueError("instructions_path required for mock mode")
+            if not config.ANTHROPIC_API_KEY:
+                raise ValueError("ANTHROPIC_API_KEY required for mock mode")
+            print(f"Using MOCK mode (model: {mock_model})")
+            self.client = MockCopilotClient(config, instructions_path, mock_model)
+            self.authenticator = None
+        else:
+            # Live mode: connect to Copilot Studio
+            self.connection_type = config.get_connection_type()
+            if self.connection_type == "directline":
+                print(f"Using Direct Line connection")
+                self.client = DirectLineClient(config)
+                self.authenticator = None
+            else:
+                print(f"Using Copilot Studio SDK connection")
+                self.authenticator = AzureAuthenticator(config)
+                self.client = CopilotSDKClient(config, self.authenticator)
+
         self.anthropic = Anthropic(api_key=config.ANTHROPIC_API_KEY) if config.ANTHROPIC_API_KEY else None
         self.scorers = Scorers(self.anthropic, config.SCORING_MODEL) if self.anthropic else None
     
@@ -629,6 +867,11 @@ async def main():
     parser.add_argument("--all", action="store_true", help="Run all scenarios")
     parser.add_argument("--list", action="store_true", help="List available scenarios")
     parser.add_argument("--suite", default="mpa_comprehensive_test_suite.json", help="Test suite file")
+    parser.add_argument("--mock", action="store_true", help="Run in mock mode using Claude to simulate MPA responses")
+    parser.add_argument("--mock-model", default=os.getenv("MOCK_MODEL", "claude-sonnet-4-20250514"),
+                        help="Model to use for mock MPA responses (default: claude-sonnet-4-20250514)")
+    parser.add_argument("--instructions", default="../kb/MPA_Copilot_Instructions_v5_9.txt",
+                        help="Path to MPA instructions file (relative to tests dir, used in mock mode)")
     
     args = parser.parse_args()
     
@@ -662,15 +905,30 @@ async def main():
     if not scenarios:
         print("No matching scenarios found")
         sys.exit(1)
-    
+
+    # Resolve instructions path for mock mode
+    instructions_path = None
+    if args.mock:
+        instructions_path = Path(__file__).parent / args.instructions
+        if not instructions_path.exists():
+            print(f"Instructions file not found: {instructions_path}")
+            sys.exit(1)
+        instructions_path = str(instructions_path)
+
     print(f"\n{'='*60}")
     print(f"MPA SDK Test Runner")
     print(f"{'='*60}")
+    print(f"Mode: {'MOCK' if args.mock else 'LIVE'}")
+    if args.mock:
+        print(f"Mock Model: {args.mock_model}")
+        print(f"Instructions: {args.instructions}")
+    else:
+        print(f"Endpoint: {config.COPILOT_SDK_ENDPOINT[:50]}...")
     print(f"Scenarios: {len(scenarios)}")
-    print(f"Endpoint: {config.COPILOT_SDK_ENDPOINT[:50]}...")
     print(f"{'='*60}\n")
-    
-    runner = TestRunner(config)
+
+    runner = TestRunner(config, mock_mode=args.mock, mock_model=args.mock_model,
+                        instructions_path=instructions_path)
     results = []
     
     for scenario in scenarios:

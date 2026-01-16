@@ -88,27 +88,57 @@ export interface MediaPlanData {
  */
 export declare function createInitialConversationState(budget?: number, funnel?: "awareness" | "consideration" | "performance", kpiAggressiveness?: "conservative" | "moderate" | "aggressive", userSophistication?: "low" | "medium" | "high"): ConversationState;
 /**
+ * Quality context for vertical benchmark scenarios
+ */
+export interface QualityContext {
+    scenarioType: string;
+    vertical: string;
+    channels: string[];
+    expectedBenchmarks: Record<string, {
+        min: number;
+        max: number;
+        typical: number;
+    }>;
+    marketConditions: string;
+    seasonality?: string;
+    complianceRequirements?: string[];
+    targetDemographic?: string;
+    salesCycle?: string;
+}
+/**
  * User persona defining how the simulated user behaves
  */
 export interface UserPersona {
     /** Unique identifier for the persona */
-    id: string;
+    id?: string;
     /** Human-readable name for the persona */
-    name: string;
+    name?: string;
     /** Job title (optional) */
     title?: string;
     /** Company name (optional) */
     company?: string;
+    /** Role description */
+    role?: string;
+    /** Company size tier */
+    companySize?: string;
+    /** Prior media experience description */
+    priorMediaExperience?: string;
+    /** Communication style description */
+    communicationStyle?: string;
+    /** Decision authority description */
+    decisionAuthority?: string;
+    /** Sophistication level (legacy naming) */
+    sophistication?: "basic" | "intermediate" | "advanced" | "expert";
     /** Sophistication level affects language complexity matching */
-    sophisticationLevel: "basic" | "intermediate" | "advanced" | "expert";
+    sophisticationLevel?: "basic" | "intermediate" | "advanced" | "expert";
     /** Industry vertical affects benchmark expectations */
-    industry: string;
+    industry?: string;
     /** Known data the user has available to provide */
-    knownData: UserKnownData;
+    knownData?: UserKnownData;
     /** Behavioral traits affecting conversation dynamics */
-    behavioralTraits: UserBehavioralTraits;
+    behavioralTraits?: UserBehavioralTraits;
     /** Language patterns for response generation */
-    languagePatterns: UserLanguagePatterns;
+    languagePatterns?: UserLanguagePatterns;
     /** Response style preferences (optional) */
     responseStyle?: {
         typicalLength?: "short" | "medium" | "long";
@@ -228,15 +258,19 @@ export interface TestScenario {
     description: string;
     /** The user persona for this scenario */
     persona: UserPersona;
+    /** Pre-defined conversation turns (optional - for scripted scenarios) */
+    turns?: ConversationTurn[];
+    /** Quality context for benchmark scenarios (optional) */
+    qualityContext?: QualityContext;
     /** Optional: specific opening message to start conversation */
     openingMessage?: string;
     /** Minimum expected turns (optional) */
     minExpectedTurns?: number;
     minTurns?: number;
     /** Maximum turns before forced termination */
-    maxTurns: number;
+    maxTurns?: number;
     /** Which steps should be completed by end of scenario */
-    expectedCompletedSteps: number[];
+    expectedCompletedSteps?: number[];
     /** Step-specific expectations for validation (optional) */
     stepExpectations?: StepExpectation[];
     /** Expected events to occur (optional) */
@@ -245,9 +279,9 @@ export interface TestScenario {
         description: string;
     }>;
     /** Failure conditions that should trigger early termination */
-    failureConditions: FailureCondition[];
+    failureConditions?: FailureCondition[];
     /** KB files that should be injected at each step */
-    kbInjectionMap: Record<number, string[]>;
+    kbInjectionMap?: Record<number, string[]>;
     /** Success criteria for the overall scenario */
     successCriteria: ScenarioSuccessCriteria;
     /**
@@ -329,32 +363,38 @@ export interface ConversationTurn {
     /** Turn number (1-indexed) */
     turnNumber: number;
     /** Which MPA step this turn belongs to */
-    currentStep: number;
+    currentStep?: number;
     /** User message for this turn */
     userMessage: string;
     /** Agent response */
-    agentResponse: string;
+    agentResponse?: string;
+    /** Expected behaviors (for test scenarios) */
+    expectedBehaviors?: string[];
+    /** Quality focus areas (for test scenarios) */
+    qualityFocus?: string[];
+    /** Scoring emphasis multipliers (for test scenarios) */
+    scoringEmphasis?: Record<string, number>;
     /** KB content injected for this turn */
-    kbContentInjected: string[];
+    kbContentInjected?: string[];
     /** Token counts for monitoring */
-    tokenCounts: {
+    tokenCounts?: {
         userTokens: number;
         agentTokens: number;
         kbTokens: number;
         totalContextTokens: number;
     };
     /** Timestamp for latency tracking */
-    timestamp: number;
+    timestamp?: number;
     /** Latency in milliseconds */
-    latencyMs: number;
+    latencyMs?: number;
     /** Per-turn scores from all applicable scorers */
-    turnScores: Record<string, TurnScore>;
+    turnScores?: Record<string, TurnScore>;
     /** Detected events (failures, transitions, etc.) */
-    detectedEvents: ConversationEvent[];
+    detectedEvents?: ConversationEvent[];
     /** Extracted data from this turn */
-    extractedData: Record<string, unknown>;
+    extractedData?: Record<string, unknown>;
     /** Step tracking state after this turn */
-    stepState: StepTrackingState;
+    stepState?: StepTrackingState;
 }
 /**
  * Score for a single turn

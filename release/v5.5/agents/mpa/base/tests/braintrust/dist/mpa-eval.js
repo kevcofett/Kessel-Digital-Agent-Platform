@@ -268,6 +268,91 @@ const testCases = [
         },
         metadata: { currentStep: 1, hasEnoughDataToModel: true, vertical: "B2B_PROFESSIONAL" },
     },
+    // =============================================================================
+    // STEP 3 SCENARIOS - Platform Taxonomy & Behavioral Targeting
+    // =============================================================================
+    {
+        name: "Step 3 - Audience Targeting (B2B)",
+        input: {
+            message: "How should we target IT decision makers for our cybersecurity software?",
+            context: "B2B software, $500K budget, 300 demos target. Step 3 audience.",
+        },
+        expected: {
+            behaviors: [
+                "References LinkedIn job function/seniority targeting",
+                "May mention Google in-market audiences",
+                "Discusses platform-specific options",
+                "Recommends behavioral layering",
+            ],
+        },
+        metadata: { currentStep: 3, hasEnoughDataToModel: true, vertical: "B2B_PROFESSIONAL" },
+    },
+    {
+        name: "Step 3 - Behavioral Signals",
+        input: {
+            message: "What behavioral signals should we layer on top of the IT audience?",
+            context: "B2B targeting IT directors, cybersecurity software. Step 3.",
+        },
+        expected: {
+            behaviors: [
+                "References behavioral targeting signals",
+                "Discusses purchase intent signals",
+                "Mentions engagement patterns or browsing behavior",
+                "Platform-specific behavioral options",
+            ],
+        },
+        metadata: { currentStep: 3, hasEnoughDataToModel: true, vertical: "B2B_PROFESSIONAL" },
+    },
+    {
+        name: "Step 3 - Consumer Audience (Ecommerce)",
+        input: {
+            message: "How do we reach fitness enthusiasts on Facebook and Google?",
+            context: "DTC fitness brand, $300K budget. Step 3 audience.",
+        },
+        expected: {
+            behaviors: [
+                "References Meta/Facebook interest targeting",
+                "References Google affinity audiences",
+                "Fitness-specific segment recommendations",
+            ],
+        },
+        metadata: { currentStep: 3, hasEnoughDataToModel: true, vertical: "ECOMMERCE" },
+    },
+    // =============================================================================
+    // STEP 4 SCENARIOS - Geography & Census Data
+    // =============================================================================
+    {
+        name: "Step 4 - Geography Sizing",
+        input: {
+            message: "What's the total addressable market in the Dallas and Houston DMAs?",
+            context: "Regional bank, Texas expansion. Step 4 geography.",
+        },
+        expected: {
+            behaviors: [
+                "References DMA population data",
+                "Provides specific population numbers",
+                "May note household counts",
+                "Indicates data source",
+            ],
+        },
+        metadata: { currentStep: 4, hasEnoughDataToModel: true, vertical: "FINANCE" },
+    },
+    {
+        name: "Step 4 - Budget Allocation by Geography",
+        input: {
+            message: "How should we split the $800K budget between Dallas and Houston?",
+            context: "Regional bank, Texas expansion. Population-based allocation.",
+        },
+        expected: {
+            behaviors: [
+                "Uses population/market size for allocation",
+                "Provides specific percentages",
+                "May reference demographic differences",
+                "Shows data-driven reasoning",
+            ],
+        },
+        metadata: { currentStep: 4, hasEnoughDataToModel: true, vertical: "FINANCE" },
+    },
 ];
 // =============================================================================
 // TASK FUNCTION

@@ -1,0 +1,160 @@
+{
+  "schemaName": "mpa_behavioral_attribute",
+  "displayName": "Behavioral Attribute",
+  "pluralName": "Behavioral Attributes",
+  "description": "Behavioral targeting signals and attributes for audience segmentation",
+  "tier": 1,
+  "featureGate": null,
+  "category": "ReferenceData",
+  "primaryKey": "mpa_behavioralattributeid",
+  "primaryNameColumn": "mpa_behaviorname",
+  "ownershipType": "OrganizationOwned",
+  "publisherPrefix": "mpa",
+  "columns": [
+    {
+      "schemaName": "mpa_behavioralattributeid",
+      "displayName": "Behavioral Attribute",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Unique identifier for entity instances"
+    },
+    {
+      "schemaName": "mpa_behaviorid",
+      "displayName": "Behavior ID",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique behavior identifier (e.g., BEH-PURCH-001)"
+    },
+    {
+      "schemaName": "mpa_behaviorcategory",
+      "displayName": "Behavior Category",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Category of behavior (PURCHASE, BROWSING, SEARCH, CONTENT, DEVICE, TEMPORAL, SOCIAL, TRANSACTION)"
+    },
+    {
+      "schemaName": "mpa_behaviorname",
+      "displayName": "Behavior Name",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": true,
+      "description": "Display name of the behavioral attribute"
+    },
+    {
+      "schemaName": "mpa_behaviordescription",
+      "displayName": "Behavior Description",
+      "dataType": "MultilineText",
+      "maxLength": 1000,
+      "required": false,
+      "description": "Detailed description of the behavioral signal"
+    },
+    {
+      "schemaName": "mpa_signaltype",
+      "displayName": "Signal Type",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Type of signal (FIRST_PARTY, THIRD_PARTY, INFERRED, DECLARED)"
+    },
+    {
+      "schemaName": "mpa_platformsavailable",
+      "displayName": "Platforms Available",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": false,
+      "description": "Comma-separated list of platforms where available (GOOGLE, META, LINKEDIN, DV360, TTD)"
+    },
+    {
+      "schemaName": "mpa_verticalrelevance",
+      "displayName": "Vertical Relevance",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Comma-separated list of relevant verticals"
+    },
+    {
+      "schemaName": "mpa_intentlevel",
+      "displayName": "Intent Level",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": false,
+      "description": "Level of purchase intent (HIGH, MEDIUM, LOW, AWARENESS)"
+    },
+    {
+      "schemaName": "mpa_datafreshness",
+      "displayName": "Data Freshness",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": false,
+      "description": "Typical data freshness (REAL_TIME, DAILY, WEEKLY, MONTHLY, QUARTERLY)"
+    },
+    {
+      "schemaName": "mpa_isactive",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "options": ["Yes", "No"],
+      "description": "Indicates if the behavioral attribute is currently active"
+    },
+    {
+      "schemaName": "statecode",
+      "displayName": "Status",
+      "dataType": "State",
+      "required": true,
+      "options": ["Active", "Inactive"],
+      "description": "Status of the Behavioral Attribute"
+    },
+    {
+      "schemaName": "statuscode",
+      "displayName": "Status Reason",
+      "dataType": "Status",
+      "required": false,
+      "options": ["Active", "Inactive"],
+      "description": "Reason for the status of the Behavioral Attribute"
+    },
+    {
+      "schemaName": "createdon",
+      "displayName": "Created On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was created"
+    },
+    {
+      "schemaName": "modifiedon",
+      "displayName": "Modified On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_behavior_id",
+      "columns": ["mpa_behaviorid"],
+      "unique": true
+    },
+    {
+      "name": "idx_behavior_category",
+      "columns": ["mpa_behaviorcategory"],
+      "unique": false
+    },
+    {
+      "name": "idx_behavior_signaltype",
+      "columns": ["mpa_signaltype"],
+      "unique": false
+    },
+    {
+      "name": "idx_behavior_intentlevel",
+      "columns": ["mpa_intentlevel"],
+      "unique": false
+    }
+  ],
+  "seedDataFiles": [
+    "mpa_behavioral_attributes_seed.csv"
+  ],
+  "seedDataNote": "Behavioral targeting signals across purchase, browsing, search, content, device, temporal, social, and transaction categories (~200 signals)"
+}

@@ -1,10 +1,15 @@
 /**
  * Scorers Index - Exports and Composite Score Calculation
  *
- * SCORER_SPECIFICATION_v2: 14 optimized scorers with three-tier weighting
+ * SCORER_SPECIFICATION_v3: 16 scorers with three-tier weighting
  * - Tier 1: Core Quality (65%)
  * - Tier 2: Structural Compliance (20%)
  * - Tier 3: Advanced Quality (15%)
+ *
+ * v3.0 Updates:
+ * - Added benchmark-vertical-coverage (2%)
+ * - Added web-search-trigger (2%)
+ * - Updated source-citation for v6.0 KB patterns
  */
 import { SCORER_WEIGHTS, } from "../mpa-multi-turn-types.js";
 // =============================================================================
@@ -21,6 +26,13 @@ export { scoreRecalculationOnChange } from "./recalculation-on-change.js";
 // Tier 3: Advanced Quality Scorers (15%)
 export { scoreAudienceSizingCompleteness } from "./audience-sizing-completeness.js";
 export { scoreCrossStepSynthesis } from "./cross-step-synthesis.js";
+// =============================================================================
+// V6.0 SCORERS (SCORER_SPECIFICATION_v3)
+// =============================================================================
+// Tier 3: v6.0 Specific Scorers
+export { scoreBenchmarkVerticalCoverage, scoreWebSearchTrigger, scoreKbRoutingValidation, scoreConfidenceLevelAttribution, normalizeVertical, isVerticalSupported, detectIntent, SUPPORTED_VERTICALS, SUPPORTED_CHANNELS, } from "./v6-scorers.js";
+// Benchmark Data Loader v6.0
+export { loadBenchmarks, getBenchmark, getBenchmarksByVertical, getBenchmarksByChannel, formatBenchmarkRange, validateBenchmarkClaim, getBenchmarkSummary, clearBenchmarkCache, } from "./benchmark-loader.js";
 // =============================================================================
 // TURN SCORERS (Tier 2 Compliance + Legacy)
 // =============================================================================

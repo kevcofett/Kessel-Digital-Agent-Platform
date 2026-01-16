@@ -14,6 +14,7 @@ import {
   StepTrackingState,
   FailureCondition,
   ConversationEngineConfig,
+  TurnScore,
 } from "./mpa-multi-turn-types.js";
 import { UserSimulator } from "./user-simulator.js";
 import { StepTracker } from "./step-tracker.js";
@@ -307,7 +308,9 @@ export class ConversationEngine {
     );
 
     // Calculate turn score aggregates
-    const turnScoreAggregates = calculateTurnAggregates(turns);
+    const turnScoreAggregates = calculateTurnAggregates(
+      turns.filter(t => t.turnScores) as Array<{ turnScores: Record<string, TurnScore> }>
+    );
 
     // Calculate composite score
     const compositeScore = calculateCompositeScore(

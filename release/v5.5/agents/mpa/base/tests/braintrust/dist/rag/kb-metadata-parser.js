@@ -4,25 +4,29 @@
  * Parses structured metadata from KB document headers for improved retrieval.
  * Supports the new document header standard with META_ prefixed fields.
  *
- * Header Format:
- * ================================================================================
- * [SECTION TITLE]
- * ================================================================================
+ * Document-Level META Tags (KB v6.0):
+ * META_DOCUMENT_TYPE: expert_guidance | framework | playbook | index | ...
+ * META_PRIMARY_TOPICS: comma-separated topic list
+ * META_WORKFLOW_STEPS: 3,4,5 | ALL
+ * META_INTENTS: CHANNEL_SELECTION, BUDGET_PLANNING | ALL
+ * META_VERTICALS: ALL | RETAIL, ECOMMERCE
+ * META_CHANNELS: ALL | PAID_SEARCH, CTV_OTT
+ * META_LAST_UPDATED: 2026-01-16
+ * META_CHUNK_PRIORITY: 0-3 (0=highest, 3=lowest)
  *
- * META_WORKFLOW_STEPS: 3,4,5
- * META_TOPICS: channel_selection, budget_allocation
- * META_VERTICALS: ALL
- * META_CHANNELS: PROGRAMMATIC_DISPLAY, CTV_OTT
- * META_INTENT: CHANNEL_SELECTION, BUDGET_PLANNING
- * META_CONFIDENCE: HIGH
- * META_LAST_UPDATED: 2026-01-15
- *
- * [Section content...]
- * ================================================================================
+ * Section-Level META Tags:
+ * META_SECTION_ID: unique_section_identifier
+ * META_TOPICS: section-specific topics
+ * META_WORKFLOW_STEPS: section-specific steps
+ * META_INTENT: section-specific intent (singular)
+ * META_CONFIDENCE: HIGH | MEDIUM | LOW
+ * META_WEB_SEARCH_TRIGGER: TRUE | FALSE
  *
  * @module kb-metadata-parser
  * @version 6.0
  */
+import * as fs from 'fs';
+import * as path from 'path';
 // ============================================================================
 // CONSTANTS
 // ============================================================================
@@ -30,19 +34,40 @@
  * META_ field definitions and their parsers
  */
 const META_FIELD_PARSERS = {
-    META_WORKFLOW_STEPS: (v) => v.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n)),
+    // Document-level META fields
+    META_DOCUMENT_TYPE: (v) => v.trim().toLowerCase(),
+    META_PRIMARY_TOPICS: (v) => v.split(',').map(s => s.trim().toLowerCase()),
+    META_CHUNK_PRIORITY: (v) => {
+        const num = parseInt(v.trim());
+        return (num >= 0 && num <= 3 ? num : 2);
+    },
+    META_INTENTS: (v) => {
+        if (v.toUpperCase().trim() === 'ALL') {
+            return ['GENERAL_GUIDANCE']; // 'ALL' means applicable to all intents
+        }
+        return v.split(',').map(s => s.trim().toUpperCase());
+    },
+    // Section-level META fields
+    META_SECTION_ID: (v) => v.trim(),
+    META_WORKFLOW_STEPS: (v) => {
+        if (v.toUpperCase().trim() === 'ALL') {
+            return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        }
+        return v.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
+    },
     META_TOPICS: (v) => v.split(',').map(s => s.trim().toLowerCase()),
-    META_VERTICALS: (v) => v.toUpperCase() === 'ALL' ? ['ALL'] : v.split(',').map(s => s.trim().toUpperCase()),
-    META_CHANNELS: (v) => v.split(',').map(s => s.trim().toUpperCase()),
+    META_VERTICALS: (v) => v.toUpperCase().trim() === 'ALL' ? ['ALL'] : v.split(',').map(s => s.trim().toUpperCase()),
+    META_CHANNELS: (v) => v.toUpperCase().trim() === 'ALL' ? ['ALL'] : v.split(',').map(s => s.trim().toUpperCase()),
     META_INTENT: (v) => v.split(',').map(s => s.trim().toUpperCase()),
     META_CONFIDENCE: (v) => v.trim().toUpperCase(),
     META_LAST_UPDATED: (v) => {
         const parsed = new Date(v.trim());
         return isNaN(parsed.getTime()) ? null : parsed;
     },
+    META_WEB_SEARCH_TRIGGER: (v) => v.trim().toUpperCase() === 'TRUE',
 };
 /**
- * Legacy header field patterns
+ * Legacy header field patterns (including new v6.0 fields)
  */
 const LEGACY_HEADER_PATTERNS = {
     document: /^DOCUMENT:\s*(.+)$/m,
@@ -51,6 +76,7 @@ const LEGACY_HEADER_PATTERNS = {
     version: /^VERSION:\s*(.+)$/m,
     date: /^DATE:\s*(.+)$/m,
     status: /^STATUS:\s*(.+)$/m,
+    compliance: /^COMPLIANCE:\s*(.+)$/m,
 };
 /**
  * Section delimiter pattern (line of = characters)
@@ -75,7 +101,7 @@ export class KBMetadataParser {
     /**
      * Parse a complete KB document and extract all metadata
      */
-    parseDocument(content, filename) {
+    parseDocument(content, filename, filepath) {
         const legacyHeader = this.parseLegacyHeader(content);
         const sections = this.parseSections(content);
         // Aggregate topics from all sections
@@ -85,20 +111,33 @@ export class KBMetadataParser {
                 allTopics.add(topic);
             }
         }
+        // Check if any section has web search triggers
+        const hasWebSearchTriggers = sections.some(s => s.webSearchTrigger);
         return {
             filename,
-            documentType: this.inferDocumentType(filename, legacyHeader.category),
+            filepath: filepath || filename,
+            documentType: this.inferDocumentType(filename, legacyHeader.category, legacyHeader.documentTypeCode),
+            documentTypeCode: legacyHeader.documentTypeCode,
             category: legacyHeader.category,
             version: legacyHeader.version,
             date: legacyHeader.date,
             status: legacyHeader.status,
+            compliance: legacyHeader.compliance,
             sections,
             totalSections: sections.length,
             topics: Array.from(allTopics),
+            primaryTopics: legacyHeader.primaryTopics,
+            workflowSteps: legacyHeader.workflowSteps,
+            intents: legacyHeader.intents,
+            verticals: legacyHeader.verticals,
+            channels: legacyHeader.channels,
+            chunkPriority: legacyHeader.chunkPriority,
+            lastUpdated: legacyHeader.lastUpdated,
+            hasWebSearchTriggers,
         };
     }
     /**
-     * Parse legacy header format (DOCUMENT:, CATEGORY:, etc.)
+     * Parse legacy header format (DOCUMENT:, CATEGORY:, etc.) plus v6.0 document-level META
      */
     parseLegacyHeader(content) {
         const header = {
@@ -108,9 +147,20 @@ export class KBMetadataParser {
             version: '',
             date: null,
             status: '',
+            compliance: null,
+            // v6.0 document-level META defaults
+            documentTypeCode: null,
+            primaryTopics: [],
+            workflowSteps: [],
+            intents: [],
+            verticals: [],
+            channels: [],
+            chunkPriority: 2,
+            lastUpdated: null,
         };
         // Extract first 2000 chars for header search (headers are at top)
         const headerSection = content.slice(0, 2000);
+        // Parse legacy fields
         for (const [field, pattern] of Object.entries(LEGACY_HEADER_PATTERNS)) {
             const match = headerSection.match(pattern);
             if (match) {
@@ -122,6 +172,24 @@ export class KBMetadataParser {
                 }
             }
         }
+        // Parse v6.0 document-level META tags
+        const metaPattern = new RegExp(META_LINE_PATTERN.source, 'gm');
+        const rawMetadata = {};
+        let match;
+        while ((match = metaPattern.exec(headerSection)) !== null) {
+            rawMetadata[match[1]] = match[2];
+        }
+        // Extract document-level META fields
+        header.documentTypeCode = this.parseMetaField('META_DOCUMENT_TYPE', rawMetadata, null);
+        header.primaryTopics = this.parseMetaField('META_PRIMARY_TOPICS', rawMetadata, []);
+        header.chunkPriority = this.parseMetaField('META_CHUNK_PRIORITY', rawMetadata, 2);
+        header.lastUpdated = this.parseMetaField('META_LAST_UPDATED', rawMetadata, null);
+        // Document-level intents (META_INTENTS plural)
+        header.intents = this.parseMetaField('META_INTENTS', rawMetadata, []);
+        // Document-level workflow steps, verticals, channels
+        header.workflowSteps = this.parseMetaField('META_WORKFLOW_STEPS', rawMetadata, []);
+        header.verticals = this.parseMetaField('META_VERTICALS', rawMetadata, []);
+        header.channels = this.parseMetaField('META_CHANNELS', rawMetadata, []);
         return header;
     }
     /**
@@ -175,6 +243,7 @@ export class KBMetadataParser {
             rawMetadata[match[1]] = match[2];
         }
         // Parse each META_ field
+        const sectionId = this.parseMetaField('META_SECTION_ID', rawMetadata, null);
         const workflowSteps = this.parseMetaField('META_WORKFLOW_STEPS', rawMetadata, []);
         const topics = this.parseMetaField('META_TOPICS', rawMetadata, []);
         const verticals = this.parseMetaField('META_VERTICALS', rawMetadata, []);
@@ -182,10 +251,12 @@ export class KBMetadataParser {
         const intents = this.parseMetaField('META_INTENT', rawMetadata, ['GENERAL_GUIDANCE']);
         const confidence = this.parseMetaField('META_CONFIDENCE', rawMetadata, 'MEDIUM');
         const lastUpdated = this.parseMetaField('META_LAST_UPDATED', rawMetadata, null);
+        const webSearchTrigger = this.parseMetaField('META_WEB_SEARCH_TRIGGER', rawMetadata, false);
         // If no explicit metadata, infer from content
         const inferredMetadata = this.inferMetadataFromContent(content, title);
         return {
             sectionTitle: title,
+            sectionId,
             workflowSteps: workflowSteps.length > 0 ? workflowSteps : inferredMetadata.workflowSteps,
             topics: topics.length > 0 ? topics : inferredMetadata.topics,
             verticals: verticals.length > 0 ? verticals : inferredMetadata.verticals,
@@ -193,6 +264,7 @@ export class KBMetadataParser {
             intents: intents.length > 0 ? intents : inferredMetadata.intents,
             confidence,
             lastUpdated,
+            webSearchTrigger,
             rawMetadata,
         };
     }
@@ -328,9 +400,25 @@ export class KBMetadataParser {
         };
     }
     /**
-     * Infer document type from filename and category
+     * Infer document type from filename, category, and v6.0 documentTypeCode
      */
-    inferDocumentType(filename, category) {
+    inferDocumentType(filename, category, documentTypeCode) {
+        // If we have a v6.0 document type code, use it
+        if (documentTypeCode) {
+            const typeCodeMapping = {
+                index: 'operating-standards',
+                expert_guidance: 'framework',
+                framework: 'framework',
+                playbook: 'playbook',
+                guide: 'framework',
+                implications: 'implications',
+                audience: 'framework',
+                support: 'operating-standards',
+                core_standards: 'operating-standards',
+            };
+            return typeCodeMapping[documentTypeCode] || 'framework';
+        }
+        // Legacy inference from filename and category
         const filenameLower = filename.toLowerCase();
         const categoryLower = category.toLowerCase();
         if (filenameLower.includes('benchmark') || filenameLower.includes('analytics')) {
@@ -412,6 +500,8 @@ export function getDocumentTypesForIntent(intent) {
         WORKFLOW_HELP: ['operating-standards', 'examples'],
         ECONOMICS_VALIDATION: ['benchmark', 'framework'],
         RISK_ASSESSMENT: ['playbook', 'implications'],
+        CONFIDENCE_ASSESSMENT: ['framework', 'playbook'],
+        GAP_RESOLUTION: ['playbook', 'framework'],
         GENERAL_GUIDANCE: ['framework', 'operating-standards'],
     };
     return intentToTypes[intent] || ['framework'];
@@ -422,13 +512,15 @@ export function getDocumentTypesForIntent(intent) {
 export function getStepsForIntent(intent) {
     const intentToSteps = {
         BENCHMARK_LOOKUP: [2, 7, 8],
-        CHANNEL_SELECTION: [7],
+        CHANNEL_SELECTION: [4], // Step 4 in KB_INDEX_v6_0
         BUDGET_PLANNING: [5],
-        AUDIENCE_TARGETING: [3, 4],
-        MEASUREMENT_GUIDANCE: [8],
+        AUDIENCE_TARGETING: [2], // Step 2 in KB_INDEX_v6_0
+        MEASUREMENT_GUIDANCE: [3, 8], // Steps 3 and 8 in KB_INDEX_v6_0
         WORKFLOW_HELP: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         ECONOMICS_VALIDATION: [2],
         RISK_ASSESSMENT: [10],
+        CONFIDENCE_ASSESSMENT: [6], // Step 6 in KB_INDEX_v6_0
+        GAP_RESOLUTION: [6], // Step 6 in KB_INDEX_v6_0
         GENERAL_GUIDANCE: [],
     };
     return intentToSteps[intent] || [];
@@ -462,6 +554,177 @@ export function scoreMetadataMatch(sectionMetadata, queryIntent, querySteps) {
         }
     }
     return Math.min(1, score);
+}
+// ============================================================================
+// KB V6.0 DIRECTORY LOADING
+// ============================================================================
+/**
+ * Default path to KB v6.0 directory
+ */
+export const KB_V6_DEFAULT_PATH = '../../../kb-v6';
+/**
+ * Load and parse all KB v6.0 documents from a directory
+ */
+export function loadKBV6Documents(kbDir) {
+    const parser = new KBMetadataParser();
+    const documents = [];
+    // Check if directory exists
+    if (!fs.existsSync(kbDir)) {
+        console.warn(`KB v6.0 directory not found: ${kbDir}`);
+        return documents;
+    }
+    // Read all .txt files
+    const files = fs.readdirSync(kbDir).filter(f => f.endsWith('.txt'));
+    for (const filename of files) {
+        const filepath = path.join(kbDir, filename);
+        try {
+            const content = fs.readFileSync(filepath, 'utf-8');
+            const metadata = parser.parseDocument(content, filename, filepath);
+            documents.push(metadata);
+        }
+        catch (error) {
+            console.warn(`Failed to parse KB file ${filename}:`, error);
+        }
+    }
+    return documents;
+}
+/**
+ * Parse KB_INDEX_v6_0.txt to extract intent-to-document mappings
+ */
+export function parseKBIndex(indexContent) {
+    const mappings = [];
+    // Pattern to find INTENT blocks
+    const intentPattern = /INTENT:\s+(\w+)\n([\s\S]*?)(?=\nINTENT:|================================================================================|$)/g;
+    let match;
+    while ((match = intentPattern.exec(indexContent)) !== null) {
+        const intentName = match[1].toUpperCase();
+        const block = match[2];
+        const mapping = {
+            intent: intentName,
+            primary: [],
+            secondary: [],
+            implications: [],
+            triggers: [],
+        };
+        // Extract Primary documents
+        const primaryMatch = block.match(/Primary:\s*(.+)/);
+        if (primaryMatch) {
+            mapping.primary = primaryMatch[1].split(',').map(s => s.trim()).filter(Boolean);
+        }
+        // Extract Secondary documents
+        const secondaryMatch = block.match(/Secondary:\s*(.+)/);
+        if (secondaryMatch) {
+            mapping.secondary = secondaryMatch[1].split(',').map(s => s.trim()).filter(Boolean);
+        }
+        // Extract Implications documents
+        const implicationsMatch = block.match(/Implications:\s*(.+)/);
+        if (implicationsMatch) {
+            mapping.implications = implicationsMatch[1].split(',').map(s => s.trim()).filter(Boolean);
+        }
+        // Extract Triggers
+        const triggersMatch = block.match(/Triggers:\s*(.+)/);
+        if (triggersMatch) {
+            mapping.triggers = triggersMatch[1].split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+        }
+        mappings.push(mapping);
+    }
+    return mappings;
+}
+/**
+ * Parse workflow step mappings from KB_INDEX_v6_0.txt
+ */
+export function parseWorkflowStepMappings(indexContent) {
+    const mappings = new Map();
+    // Pattern to find STEP blocks
+    const stepPattern = /STEP\s+(\d+(?:-\d+)?)\s*-\s*\w+[:\s]*\n([\s\S]*?)(?=\nSTEP\s+\d|================================================================================|$)/gi;
+    let match;
+    while ((match = stepPattern.exec(indexContent)) !== null) {
+        const stepRange = match[1];
+        const block = match[2];
+        // Extract document references (lines starting with -)
+        const docLines = block.match(/^-\s+(.+)$/gm) || [];
+        const documents = docLines.map(line => line.replace(/^-\s+/, '').trim());
+        // Handle step ranges like "9-10"
+        if (stepRange.includes('-')) {
+            const [start, end] = stepRange.split('-').map(Number);
+            for (let step = start; step <= end; step++) {
+                mappings.set(step, documents);
+            }
+        }
+        else {
+            mappings.set(parseInt(stepRange), documents);
+        }
+    }
+    return mappings;
+}
+/**
+ * Load complete KB v6.0 index including documents and mappings
+ */
+export function loadKBV6Index(kbDir) {
+    const documents = loadKBV6Documents(kbDir);
+    // Find and parse KB_INDEX
+    const indexPath = path.join(kbDir, 'KB_INDEX_v6_0.txt');
+    let intentMappings = [];
+    let workflowStepMappings = new Map();
+    const dataverseTables = ['mpa_benchmark', 'mpa_channel', 'mpa_kpi', 'mpa_vertical'];
+    if (fs.existsSync(indexPath)) {
+        try {
+            const indexContent = fs.readFileSync(indexPath, 'utf-8');
+            intentMappings = parseKBIndex(indexContent);
+            workflowStepMappings = parseWorkflowStepMappings(indexContent);
+        }
+        catch (error) {
+            console.warn('Failed to parse KB_INDEX_v6_0.txt:', error);
+        }
+    }
+    return {
+        documents,
+        intentMappings,
+        workflowStepMappings,
+        dataverseTables,
+        totalDocuments: documents.length,
+    };
+}
+/**
+ * Get documents relevant to a specific intent from KB v6.0 index
+ */
+export function getDocumentsForIntentV6(index, intent) {
+    const mapping = index.intentMappings.find(m => m.intent === intent);
+    if (!mapping) {
+        return { primary: [], secondary: [] };
+    }
+    const findDocs = (names) => index.documents.filter(d => names.some(name => d.filename.includes(name.replace('.txt', '')) ||
+        d.filename.toLowerCase() === name.toLowerCase()));
+    return {
+        primary: findDocs(mapping.primary),
+        secondary: findDocs([...mapping.secondary, ...mapping.implications]),
+    };
+}
+/**
+ * Get documents relevant to a workflow step from KB v6.0 index
+ */
+export function getDocumentsForStepV6(index, step) {
+    const docNames = index.workflowStepMappings.get(step) || [];
+    return index.documents.filter(d => docNames.some(name => d.filename.includes(name.replace('.txt', '')) ||
+        // Also check document-level workflow steps
+        d.workflowSteps.includes(step)));
+}
+/**
+ * Check if a query should trigger web search based on KB document metadata
+ */
+export function shouldTriggerWebSearch(documents, query) {
+    // Check if any retrieved document has web search triggers
+    const hasWebSearchDoc = documents.some(d => d.hasWebSearchTriggers);
+    // Also check for common web search trigger patterns in query
+    const webSearchPatterns = [
+        /latest|recent|current|today|2026|this year/i,
+        /competitor|competitive intelligence/i,
+        /census|population data|market size/i,
+        /platform.*(feature|update|change)/i,
+        /pricing|cost.*(current|now)/i,
+    ];
+    const queryTriggersWebSearch = webSearchPatterns.some(p => p.test(query));
+    return hasWebSearchDoc || queryTriggersWebSearch;
 }
 export default KBMetadataParser;
 //# sourceMappingURL=kb-metadata-parser.js.map

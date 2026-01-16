@@ -1,10 +1,15 @@
 /**
  * Scorers Index - Exports and Composite Score Calculation
  *
- * SCORER_SPECIFICATION_v2: 14 optimized scorers with three-tier weighting
+ * SCORER_SPECIFICATION_v3: 16 scorers with three-tier weighting
  * - Tier 1: Core Quality (65%)
  * - Tier 2: Structural Compliance (20%)
  * - Tier 3: Advanced Quality (15%)
+ *
+ * v3.0 Updates:
+ * - Added benchmark-vertical-coverage (2%)
+ * - Added web-search-trigger (2%)
+ * - Updated source-citation for v6.0 KB patterns
  */
 import { TurnScore, FailureCondition } from "../mpa-multi-turn-types.js";
 export { callLLMJudge, JUDGE_PROMPTS, type JudgeResult, type JudgePromptContext } from "./llm-judge.js";
@@ -15,6 +20,8 @@ export { scoreSourceCitation as scoreSourceCitationV2, type SourceCitationResult
 export { scoreRecalculationOnChange, type RecalculationContext } from "./recalculation-on-change.js";
 export { scoreAudienceSizingCompleteness, type AudienceSizingResult, type TableAnalysis } from "./audience-sizing-completeness.js";
 export { scoreCrossStepSynthesis, type CrossStepSynthesisContext } from "./cross-step-synthesis.js";
+export { scoreBenchmarkVerticalCoverage, scoreWebSearchTrigger, scoreKbRoutingValidation, scoreConfidenceLevelAttribution, normalizeVertical, isVerticalSupported, detectIntent, SUPPORTED_VERTICALS, SUPPORTED_CHANNELS, type SupportedVertical, } from "./v6-scorers.js";
+export { loadBenchmarks, getBenchmark, getBenchmarksByVertical, getBenchmarksByChannel, formatBenchmarkRange, validateBenchmarkClaim, getBenchmarkSummary, clearBenchmarkCache, type Benchmark, } from "./benchmark-loader.js";
 export { scoreResponseLength, scoreSingleQuestion, scoreStepBoundary, scoreSourceCitation, scoreAcronymDefinition, scoreIdkProtocol, scoreAdaptiveSophistication, scoreRiskOpportunityFlagging, scoreResponseFormatting, scoreTurn, } from "./turn-scorers.js";
 export { calculateFailurePenalty, scoreStepTransitionQuality, scoreOverallCoherence, scoreConversation, } from "./conversation-scorers.js";
 export { scoreTeachingBehavior as scoreTeachingBehaviorLegacy, scoreProactiveCalculation as scoreProactiveCalculationLegacy, scoreBenchmarkCitation, scoreCriticalThinking, scoreStrategicSynthesis, calculateMentorshipScore, scoreMentorship, } from "./mentorship-scorers.js";

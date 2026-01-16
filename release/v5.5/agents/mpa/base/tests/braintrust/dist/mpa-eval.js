@@ -12,9 +12,9 @@ import { config } from "dotenv";
 import { readFileSync } from "fs";
 // Load environment variables
 config({ path: "/Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/integrations/vercel-ai-gateway/.env" });
-// Load MPA instructions from file - default to v5.11
+// Load MPA instructions from file - default to v6.0
 const INSTRUCTIONS_PATH = process.env.MPA_INSTRUCTIONS_PATH ||
-    "/Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/agents/mpa/base/kb/MPA_Copilot_Instructions_v5_11.txt";
+    "/Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/release/v5.5/agents/mpa/personal/instructions/MPA_Copilot_Instructions_v6_0.txt";
 function loadInstructions() {
     try {
         return readFileSync(INSTRUCTIONS_PATH, "utf-8");
@@ -37,7 +37,7 @@ function getAnthropicClient() {
     }
     return anthropic;
 }
-// Load MPA instructions dynamically (defaults to v5.11)
+// Load MPA instructions dynamically (defaults to v6.0)
 const MPA_SYSTEM_PROMPT = loadInstructions();
 console.log(`Loaded MPA instructions from: ${INSTRUCTIONS_PATH} (${MPA_SYSTEM_PROMPT.length} chars)`);
 // KB Document: Adaptive Language Guide (for RAG simulation)
@@ -517,8 +517,9 @@ Eval("Kessel-MPA-Agent", {
         expected: tc.expected,
         metadata: tc.metadata,
     })),
-    task: async (input, { metadata }) => {
+    task: async (input, hooks) => {
         // Simulate RAG: inject KB content for test cases with userSophistication metadata
+        const metadata = hooks?.metadata;
         const needsAdaptiveKB = metadata?.userSophistication !== undefined;
         return await runMPA(input, needsAdaptiveKB ? KB_ADAPTIVE_LANGUAGE : undefined);
     },
@@ -532,7 +533,7 @@ Eval("Kessel-MPA-Agent", {
             return { name: "mpa-single-question", score: result.score, metadata: result.metadata };
         },
         async (args) => {
-            const result = scoreIdkProtocol(args.input.message, args.output);
+            const result = scoreIdkProtocol(args.input?.message, args.output);
             return { name: "mpa-idk-protocol", score: result.score, metadata: result.metadata };
         },
         async (args) => {
@@ -541,16 +542,16 @@ Eval("Kessel-MPA-Agent", {
             return { name: "mpa-step-boundary", score: result.score, metadata: result.metadata };
         },
         async (args) => {
-            const result = await scoreProgressOverPerfection(args.input.message, args.output);
+            const result = await scoreProgressOverPerfection(args.input?.message, args.output);
             return { name: "mpa-progress-over-perfection", score: result.score, metadata: result.metadata };
         },
         async (args) => {
-            const result = await scoreAdaptiveSophistication(args.input.message, args.output);
+            const result = await scoreAdaptiveSophistication(args.input?.message, args.output);
             return { name: "mpa-adaptive-sophistication", score: result.score, metadata: result.metadata };
         },
         async (args) => {
             const hasEnoughData = args.metadata?.hasEnoughDataToModel || false;
-            const result = await scoreProactiveIntelligence(args.input.message, args.output, hasEnoughData);
+            const result = await scoreProactiveIntelligence(args.input?.message, args.output, hasEnoughData);
             return { name: "mpa-proactive-intelligence", score: result.score, metadata: result.metadata };
         },
         // New scorers to match local test runner (14 total)
@@ -571,11 +572,11 @@ Eval("Kessel-MPA-Agent", {
             return { name: "mpa-tone", score: result.score, metadata: result.metadata };
         },
         async (args) => {
-            const result = await scoreStepCompletion(args.input.message, args.output);
+            const result = await scoreStepCompletion(args.input?.message, args.output);
             return { name: "mpa-step-completion", score: result.score, metadata: result.metadata };
         },
         async (args) => {
-            const result = await scoreSelfReferentialLearning(args.input.message, args.output);
+            const result = await scoreSelfReferentialLearning(args.input?.message, args.output);
             return { name: "mpa-self-referential-learning", score: result.score, metadata: result.metadata };
         },
         async (args) => {

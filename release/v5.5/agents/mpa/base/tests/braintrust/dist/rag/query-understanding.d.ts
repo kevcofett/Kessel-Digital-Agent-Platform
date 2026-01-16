@@ -9,7 +9,7 @@
  * @module query-understanding
  * @version 6.0
  */
-import { QueryIntent } from './kb-metadata-parser.js';
+import { QueryIntent, KBIndexV6, IntentDocumentMapping, KBDocumentMetadata } from './kb-metadata-parser.js';
 import { DocumentType, Topic } from './types.js';
 /**
  * Extracted entities from a user query
@@ -41,6 +41,17 @@ export interface AnalyzedQuery {
     relevantSteps: number[];
     relevantDocumentTypes: DocumentType[];
     relevantTopics: Topic[];
+    triggerKeywords: string[];
+    shouldUseWebSearch: boolean;
+    suggestedDataverseTables: string[];
+}
+/**
+ * KB v6.0 enhanced query analysis with document routing
+ */
+export interface EnhancedAnalyzedQuery extends AnalyzedQuery {
+    primaryDocuments: KBDocumentMetadata[];
+    secondaryDocuments: KBDocumentMetadata[];
+    intentMapping: IntentDocumentMapping | null;
 }
 /**
  * Query expansion result
@@ -61,12 +72,17 @@ export declare class QueryUnderstanding {
      */
     analyzeQuery(query: string): AnalyzedQuery;
     /**
+     * Analyze query with KB v6.0 index for document routing
+     */
+    analyzeQueryWithIndex(query: string, kbIndex: KBIndexV6): EnhancedAnalyzedQuery;
+    /**
      * Classify query intent
      */
     classifyIntent(query: string, entities?: ExtractedEntities): {
         primaryIntent: QueryIntent;
         secondaryIntents: QueryIntent[];
         confidence: number;
+        triggerKeywords: string[];
     };
     /**
      * Extract domain entities from query
@@ -104,6 +120,14 @@ export declare class QueryUnderstanding {
      * Get relevant topics based on intent and entities
      */
     private getRelevantTopics;
+    /**
+     * Determine if web search should be used for this query
+     */
+    private shouldUseWebSearch;
+    /**
+     * Get suggested Dataverse tables based on intent and entities
+     */
+    private getSuggestedDataverseTables;
     /**
      * Escape special regex characters
      */

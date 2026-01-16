@@ -123,6 +123,11 @@ class Settings:
         return self._env_file_path.parent.parent.parent / "agents" / "mpa" / "base" / "data" / "seed"
 
     @property
+    def seed_data_v6_path(self) -> Path:
+        """Get path to v6.0 seed data directory (reference data)."""
+        return self._env_file_path.parent.parent.parent / "agents" / "mpa" / "base" / "seed-data-v6"
+
+    @property
     def kb_path(self) -> Path:
         """Get path to KB files directory."""
         return self._env_file_path.parent.parent.parent / "agents" / "mpa" / "base" / "kb"
@@ -225,6 +230,150 @@ TABLE_CONFIG = {
             "mpa_metrichigh": "float",
             "mpa_metricbest": "float"
         }
+    }
+}
+
+# v6.0 Reference Data Table Configurations
+TABLE_CONFIG_V6 = {
+    "geography": {
+        "entity_set": "mpa_geographies",
+        "primary_key": "mpa_geoid",
+        "csv_files": [
+            "mpa_geography_us_seed.csv",
+            "mpa_geography_ca_seed.csv",
+            "mpa_geography_uk_seed.csv",
+            "mpa_geography_mx_seed.csv",
+            "mpa_geography_au_seed.csv",
+            "mpa_geography_de_seed.csv",
+            "mpa_geography_fr_seed.csv",
+            "mpa_geography_cl_seed.csv",
+            "mpa_geography_es_seed.csv",
+            "mpa_geography_br_seed.csv"
+        ],
+        "column_mappings": {
+            "mpa_geo_id": "mpa_geoid",
+            "mpa_country": "mpa_country",
+            "mpa_geo_type": "mpa_geotype",
+            "mpa_geo_code": "mpa_geocode",
+            "mpa_geo_name": "mpa_geoname",
+            "mpa_geo_rank": "mpa_georank",
+            "mpa_total_population": "mpa_totalpopulation",
+            "mpa_total_households": "mpa_totalhouseholds",
+            "mpa_median_age": "mpa_medianage",
+            "mpa_median_hhi": "mpa_medianhhi",
+            "mpa_pct_male": "mpa_pctmale",
+            "mpa_pct_female": "mpa_pctfemale",
+            "mpa_pct_age_0_17": "mpa_pctage0to17",
+            "mpa_pct_age_18_34": "mpa_pctage18to34",
+            "mpa_pct_age_25_54": "mpa_pctage25to54",
+            "mpa_pct_age_55_plus": "mpa_pctage55plus",
+            "mpa_pct_hhi_under_50k": "mpa_pcthhiunder50k",
+            "mpa_pct_hhi_50k_100k": "mpa_pcthhi50kto100k",
+            "mpa_pct_hhi_over_100k": "mpa_pcthhiover100k",
+            "mpa_pct_hhi_over_150k": "mpa_pcthhiover150k",
+            "mpa_pct_college_degree": "mpa_pctcollegedegree",
+            "mpa_pct_graduate_degree": "mpa_pctgraduatedegree",
+            "mpa_state_primary": "mpa_stateprimary",
+            "mpa_states_included": "mpa_statesincluded",
+            "mpa_data_source": "mpa_datasource",
+            "mpa_data_year": "mpa_datayear"
+        },
+        "transforms": {
+            "mpa_georank": "int_nullable",
+            "mpa_totalpopulation": "int_nullable",
+            "mpa_totalhouseholds": "int_nullable",
+            "mpa_medianage": "float_nullable",
+            "mpa_medianhhi": "float_nullable",
+            "mpa_pctmale": "float_nullable",
+            "mpa_pctfemale": "float_nullable",
+            "mpa_pctage0to17": "float_nullable",
+            "mpa_pctage18to34": "float_nullable",
+            "mpa_pctage25to54": "float_nullable",
+            "mpa_pctage55plus": "float_nullable",
+            "mpa_pcthhiunder50k": "float_nullable",
+            "mpa_pcthhi50kto100k": "float_nullable",
+            "mpa_pcthhiover100k": "float_nullable",
+            "mpa_pcthhiover150k": "float_nullable",
+            "mpa_pctcollegedegree": "float_nullable",
+            "mpa_pctgraduatedegree": "float_nullable",
+            "mpa_datayear": "int"
+        }
+    },
+    "iab_taxonomy": {
+        "entity_set": "mpa_iab_taxonomies",
+        "primary_key": "mpa_iabid",
+        "csv_file": "mpa_iab_taxonomy_seed.csv",
+        "column_mappings": {
+            "mpa_iab_id": "mpa_iabid",
+            "mpa_iab_code": "mpa_iabcode",
+            "mpa_iab_tier": "mpa_iabtier",
+            "mpa_iab_parent_code": "mpa_iabparentcode",
+            "mpa_iab_name": "mpa_iabname",
+            "mpa_iab_description": "mpa_iabdescription",
+            "mpa_vertical_relevance": "mpa_verticalrelevance",
+            "mpa_contextual_signal_strength": "mpa_contextualsignalstrength"
+        },
+        "transforms": {
+            "mpa_iabtier": "int"
+        }
+    },
+    "platform_taxonomy": {
+        "entity_set": "mpa_platform_taxonomies",
+        "primary_key": "mpa_segmentid",
+        "csv_files": [
+            "mpa_taxonomy_google_seed.csv",
+            "mpa_taxonomy_meta_seed.csv",
+            "mpa_taxonomy_linkedin_seed.csv"
+        ],
+        "column_mappings": {
+            "mpa_segment_id": "mpa_segmentid",
+            "mpa_platform": "mpa_platform",
+            "mpa_taxonomy_type": "mpa_taxonomytype",
+            "mpa_segment_path": "mpa_segmentpath",
+            "mpa_segment_name": "mpa_segmentname",
+            "mpa_parent_path": "mpa_parentpath",
+            "mpa_tier": "mpa_tier",
+            "mpa_vertical_relevance": "mpa_verticalrelevance",
+            "mpa_reach_tier": "mpa_reachtier",
+            "mpa_last_verified": "mpa_lastverified"
+        },
+        "transforms": {
+            "mpa_tier": "int",
+            "mpa_lastverified": "datetime_nullable"
+        }
+    },
+    "behavioral_attribute": {
+        "entity_set": "mpa_behavioral_attributes",
+        "primary_key": "mpa_behaviorid",
+        "csv_file": "mpa_behavioral_attributes_seed.csv",
+        "column_mappings": {
+            "mpa_behavior_id": "mpa_behaviorid",
+            "mpa_behavior_category": "mpa_behaviorcategory",
+            "mpa_behavior_name": "mpa_behaviorname",
+            "mpa_behavior_description": "mpa_behaviordescription",
+            "mpa_signal_type": "mpa_signaltype",
+            "mpa_platforms_available": "mpa_platformsavailable",
+            "mpa_vertical_relevance": "mpa_verticalrelevance",
+            "mpa_intent_level": "mpa_intentlevel",
+            "mpa_data_freshness": "mpa_datafreshness"
+        },
+        "transforms": {}
+    },
+    "contextual_attribute": {
+        "entity_set": "mpa_contextual_attributes",
+        "primary_key": "mpa_contextid",
+        "csv_file": "mpa_contextual_attributes_seed.csv",
+        "column_mappings": {
+            "mpa_context_id": "mpa_contextid",
+            "mpa_context_category": "mpa_contextcategory",
+            "mpa_context_name": "mpa_contextname",
+            "mpa_context_description": "mpa_contextdescription",
+            "mpa_iab_mapping": "mpa_iabmapping",
+            "mpa_signal_type": "mpa_signaltype",
+            "mpa_brand_safety_tier": "mpa_brandsafetytier",
+            "mpa_vertical_relevance": "mpa_verticalrelevance"
+        },
+        "transforms": {}
     }
 }
 

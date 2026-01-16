@@ -1,0 +1,306 @@
+{
+  "schemaName": "mpa_geography",
+  "displayName": "Geography",
+  "pluralName": "Geographies",
+  "description": "Geographic regions with demographic data for media planning targeting (DMAs, CMAs, ITV Regions, etc.)",
+  "tier": 1,
+  "featureGate": null,
+  "category": "ReferenceData",
+  "primaryKey": "mpa_geographyid",
+  "primaryNameColumn": "mpa_geoname",
+  "ownershipType": "OrganizationOwned",
+  "publisherPrefix": "mpa",
+  "columns": [
+    {
+      "schemaName": "mpa_geographyid",
+      "displayName": "Geography",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Unique identifier for entity instances"
+    },
+    {
+      "schemaName": "mpa_geoid",
+      "displayName": "Geo ID",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "unique": true,
+      "description": "Unique geography identifier (e.g., US-DMA-501, CA-CMA-535)"
+    },
+    {
+      "schemaName": "mpa_geoname",
+      "displayName": "Geography Name",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": true,
+      "description": "Name of the geographic region (e.g., New York, Toronto)"
+    },
+    {
+      "schemaName": "mpa_country",
+      "displayName": "Country",
+      "dataType": "Text",
+      "maxLength": 10,
+      "required": true,
+      "description": "ISO country code (US, CA, UK, MX, AU, DE, FR, CL, ES, BR)"
+    },
+    {
+      "schemaName": "mpa_geotype",
+      "displayName": "Geography Type",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": true,
+      "description": "Type of geographic unit (DMA, CMA, ITVR, NUTS1, ZM, GCCSA, LAND, REG, CCAA, UF)"
+    },
+    {
+      "schemaName": "mpa_geocode",
+      "displayName": "Geography Code",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": true,
+      "description": "Official code for the geographic unit (e.g., Nielsen DMA code 501)"
+    },
+    {
+      "schemaName": "mpa_georank",
+      "displayName": "Geography Rank",
+      "dataType": "Integer",
+      "required": false,
+      "description": "Rank by population within country (1 = largest)"
+    },
+    {
+      "schemaName": "mpa_totalpopulation",
+      "displayName": "Total Population",
+      "dataType": "Integer",
+      "required": false,
+      "description": "Total population of the geographic region"
+    },
+    {
+      "schemaName": "mpa_totalhouseholds",
+      "displayName": "Total Households",
+      "dataType": "Integer",
+      "required": false,
+      "description": "Total number of households (TV households for DMAs)"
+    },
+    {
+      "schemaName": "mpa_medianage",
+      "displayName": "Median Age",
+      "dataType": "Decimal",
+      "precision": 1,
+      "required": false,
+      "description": "Median age of population"
+    },
+    {
+      "schemaName": "mpa_medianhhi",
+      "displayName": "Median Household Income",
+      "dataType": "Decimal",
+      "precision": 0,
+      "required": false,
+      "description": "Median household income in local currency"
+    },
+    {
+      "schemaName": "mpa_pctmale",
+      "displayName": "Percent Male",
+      "dataType": "Decimal",
+      "precision": 1,
+      "required": false,
+      "description": "Percentage of population that is male"
+    },
+    {
+      "schemaName": "mpa_pctfemale",
+      "displayName": "Percent Female",
+      "dataType": "Decimal",
+      "precision": 1,
+      "required": false,
+      "description": "Percentage of population that is female"
+    },
+    {
+      "schemaName": "mpa_pctage0to17",
+      "displayName": "Percent Age 0-17",
+      "dataType": "Decimal",
+      "precision": 1,
+      "required": false,
+      "description": "Percentage of population aged 0-17"
+    },
+    {
+      "schemaName": "mpa_pctage18to34",
+      "displayName": "Percent Age 18-34",
+      "dataType": "Decimal",
+      "precision": 1,
+      "required": false,
+      "description": "Percentage of population aged 18-34"
+    },
+    {
+      "schemaName": "mpa_pctage25to54",
+      "displayName": "Percent Age 25-54",
+      "dataType": "Decimal",
+      "precision": 1,
+      "required": false,
+      "description": "Percentage of population aged 25-54"
+    },
+    {
+      "schemaName": "mpa_pctage55plus",
+      "displayName": "Percent Age 55+",
+      "dataType": "Decimal",
+      "precision": 1,
+      "required": false,
+      "description": "Percentage of population aged 55 and older"
+    },
+    {
+      "schemaName": "mpa_pcthhiunder50k",
+      "displayName": "Percent HHI Under 50K",
+      "dataType": "Decimal",
+      "precision": 1,
+      "required": false,
+      "description": "Percentage of households with income under $50K"
+    },
+    {
+      "schemaName": "mpa_pcthhi50kto100k",
+      "displayName": "Percent HHI 50K-100K",
+      "dataType": "Decimal",
+      "precision": 1,
+      "required": false,
+      "description": "Percentage of households with income $50K-$100K"
+    },
+    {
+      "schemaName": "mpa_pcthhiover100k",
+      "displayName": "Percent HHI Over 100K",
+      "dataType": "Decimal",
+      "precision": 1,
+      "required": false,
+      "description": "Percentage of households with income over $100K"
+    },
+    {
+      "schemaName": "mpa_pcthhiover150k",
+      "displayName": "Percent HHI Over 150K",
+      "dataType": "Decimal",
+      "precision": 1,
+      "required": false,
+      "description": "Percentage of households with income over $150K"
+    },
+    {
+      "schemaName": "mpa_pctcollegedegree",
+      "displayName": "Percent College Degree",
+      "dataType": "Decimal",
+      "precision": 1,
+      "required": false,
+      "description": "Percentage of population with bachelor's degree or higher"
+    },
+    {
+      "schemaName": "mpa_pctgraduatedegree",
+      "displayName": "Percent Graduate Degree",
+      "dataType": "Decimal",
+      "precision": 1,
+      "required": false,
+      "description": "Percentage of population with graduate degree"
+    },
+    {
+      "schemaName": "mpa_stateprimary",
+      "displayName": "Primary State/Province",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": false,
+      "description": "Primary state, province, or region"
+    },
+    {
+      "schemaName": "mpa_statesincluded",
+      "displayName": "States/Provinces Included",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": false,
+      "description": "Comma-separated list of all states/provinces in the region"
+    },
+    {
+      "schemaName": "mpa_datasource",
+      "displayName": "Data Source",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Source of demographic data (e.g., Nielsen/Census ACS, Statistics Canada)"
+    },
+    {
+      "schemaName": "mpa_datayear",
+      "displayName": "Data Year",
+      "dataType": "Integer",
+      "required": true,
+      "description": "Year of the demographic data"
+    },
+    {
+      "schemaName": "mpa_isactive",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "options": ["Yes", "No"],
+      "description": "Indicates if the geography record is currently active"
+    },
+    {
+      "schemaName": "statecode",
+      "displayName": "Status",
+      "dataType": "State",
+      "required": true,
+      "options": ["Active", "Inactive"],
+      "description": "Status of the Geography"
+    },
+    {
+      "schemaName": "statuscode",
+      "displayName": "Status Reason",
+      "dataType": "Status",
+      "required": false,
+      "options": ["Active", "Inactive"],
+      "description": "Reason for the status of the Geography"
+    },
+    {
+      "schemaName": "createdon",
+      "displayName": "Created On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was created"
+    },
+    {
+      "schemaName": "modifiedon",
+      "displayName": "Modified On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_geography_geoid",
+      "columns": ["mpa_geoid"],
+      "unique": true
+    },
+    {
+      "name": "idx_geography_country",
+      "columns": ["mpa_country"],
+      "unique": false
+    },
+    {
+      "name": "idx_geography_geotype",
+      "columns": ["mpa_geotype"],
+      "unique": false
+    },
+    {
+      "name": "idx_geography_country_type",
+      "columns": ["mpa_country", "mpa_geotype"],
+      "unique": false
+    },
+    {
+      "name": "idx_geography_rank",
+      "columns": ["mpa_country", "mpa_georank"],
+      "unique": false
+    }
+  ],
+  "seedDataFiles": [
+    "mpa_geography_us_seed.csv",
+    "mpa_geography_ca_seed.csv",
+    "mpa_geography_uk_seed.csv",
+    "mpa_geography_mx_seed.csv",
+    "mpa_geography_au_seed.csv",
+    "mpa_geography_de_seed.csv",
+    "mpa_geography_fr_seed.csv",
+    "mpa_geography_cl_seed.csv",
+    "mpa_geography_es_seed.csv",
+    "mpa_geography_br_seed.csv"
+  ],
+  "seedDataNote": "Geographic regions with demographic data from official census sources"
+}

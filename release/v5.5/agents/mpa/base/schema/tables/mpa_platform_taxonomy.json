@@ -1,0 +1,173 @@
+{
+  "schemaName": "mpa_platform_taxonomy",
+  "displayName": "Platform Taxonomy",
+  "pluralName": "Platform Taxonomies",
+  "description": "Platform-specific audience taxonomy segments for Google, Meta, LinkedIn targeting",
+  "tier": 1,
+  "featureGate": null,
+  "category": "ReferenceData",
+  "primaryKey": "mpa_platformtaxonomyid",
+  "primaryNameColumn": "mpa_segmentname",
+  "ownershipType": "OrganizationOwned",
+  "publisherPrefix": "mpa",
+  "columns": [
+    {
+      "schemaName": "mpa_platformtaxonomyid",
+      "displayName": "Platform Taxonomy",
+      "dataType": "UniqueIdentifier",
+      "required": true,
+      "description": "Unique identifier for entity instances"
+    },
+    {
+      "schemaName": "mpa_segmentid",
+      "displayName": "Segment ID",
+      "dataType": "Text",
+      "maxLength": 100,
+      "required": true,
+      "unique": true,
+      "description": "Unique segment identifier (e.g., GOOGLE-AFF-001, META-INT-001)"
+    },
+    {
+      "schemaName": "mpa_platform",
+      "displayName": "Platform",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": true,
+      "description": "Advertising platform (GOOGLE, META, LINKEDIN)"
+    },
+    {
+      "schemaName": "mpa_taxonomytype",
+      "displayName": "Taxonomy Type",
+      "dataType": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Type of targeting taxonomy (AFFINITY, IN_MARKET, INTEREST, BEHAVIOR, JOB_FUNCTION, INDUSTRY, etc.)"
+    },
+    {
+      "schemaName": "mpa_segmentpath",
+      "displayName": "Segment Path",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": true,
+      "description": "Full hierarchical path (e.g., Banking & Finance > Investment Services)"
+    },
+    {
+      "schemaName": "mpa_segmentname",
+      "displayName": "Segment Name",
+      "dataType": "Text",
+      "maxLength": 200,
+      "required": true,
+      "description": "Display name of the segment"
+    },
+    {
+      "schemaName": "mpa_parentpath",
+      "displayName": "Parent Path",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Parent segment path (null for top-level)"
+    },
+    {
+      "schemaName": "mpa_tier",
+      "displayName": "Tier",
+      "dataType": "Integer",
+      "required": true,
+      "description": "Hierarchy tier level (1 = top, 2 = sub, 3 = sub-sub)"
+    },
+    {
+      "schemaName": "mpa_verticalrelevance",
+      "displayName": "Vertical Relevance",
+      "dataType": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Comma-separated list of relevant verticals"
+    },
+    {
+      "schemaName": "mpa_reachtier",
+      "displayName": "Reach Tier",
+      "dataType": "Text",
+      "maxLength": 20,
+      "required": false,
+      "description": "Estimated reach tier (HIGH, MEDIUM, LOW, NICHE)"
+    },
+    {
+      "schemaName": "mpa_lastverified",
+      "displayName": "Last Verified",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date when segment was last verified as available on platform"
+    },
+    {
+      "schemaName": "mpa_isactive",
+      "displayName": "Is Active",
+      "dataType": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "options": ["Yes", "No"],
+      "description": "Indicates if the segment is currently available"
+    },
+    {
+      "schemaName": "statecode",
+      "displayName": "Status",
+      "dataType": "State",
+      "required": true,
+      "options": ["Active", "Inactive"],
+      "description": "Status of the Platform Taxonomy"
+    },
+    {
+      "schemaName": "statuscode",
+      "displayName": "Status Reason",
+      "dataType": "Status",
+      "required": false,
+      "options": ["Active", "Inactive"],
+      "description": "Reason for the status of the Platform Taxonomy"
+    },
+    {
+      "schemaName": "createdon",
+      "displayName": "Created On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was created"
+    },
+    {
+      "schemaName": "modifiedon",
+      "displayName": "Modified On",
+      "dataType": "DateTime",
+      "required": false,
+      "description": "Date and time when the record was modified"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_platform_segmentid",
+      "columns": ["mpa_segmentid"],
+      "unique": true
+    },
+    {
+      "name": "idx_platform_platform",
+      "columns": ["mpa_platform"],
+      "unique": false
+    },
+    {
+      "name": "idx_platform_type",
+      "columns": ["mpa_taxonomytype"],
+      "unique": false
+    },
+    {
+      "name": "idx_platform_platform_type",
+      "columns": ["mpa_platform", "mpa_taxonomytype"],
+      "unique": false
+    },
+    {
+      "name": "idx_platform_tier",
+      "columns": ["mpa_platform", "mpa_tier"],
+      "unique": false
+    }
+  ],
+  "seedDataFiles": [
+    "mpa_taxonomy_google_seed.csv",
+    "mpa_taxonomy_meta_seed.csv",
+    "mpa_taxonomy_linkedin_seed.csv"
+  ],
+  "seedDataNote": "Platform audience taxonomies from Google, Meta, and LinkedIn (~1200 total segments)"
+}

@@ -195,4 +195,393 @@ declare const _default: {
     formatBenchmarkResponse: typeof formatBenchmarkResponse;
 };
 export default _default;
+/**
+ * Geographic/Census Data Schema
+ * Supports multi-region deployment (US, CA, UK, MX, AU, DE, FR, CL, ES, BR, IT, JP)
+ */
+export declare const GEOGRAPHY_SCHEMA: {
+    tableName: string;
+    displayName: string;
+    description: string;
+    columns: ({
+        logicalName: string;
+        displayName: string;
+        type: string;
+        maxLength: number;
+        required: boolean;
+        description: string;
+        options?: undefined;
+        precision?: undefined;
+        scale?: undefined;
+    } | {
+        logicalName: string;
+        displayName: string;
+        type: string;
+        options: string[];
+        required: boolean;
+        description: string;
+        maxLength?: undefined;
+        precision?: undefined;
+        scale?: undefined;
+    } | {
+        logicalName: string;
+        displayName: string;
+        type: string;
+        required: boolean;
+        description: string;
+        maxLength?: undefined;
+        options?: undefined;
+        precision?: undefined;
+        scale?: undefined;
+    } | {
+        logicalName: string;
+        displayName: string;
+        type: string;
+        precision: number;
+        scale: number;
+        required: boolean;
+        description: string;
+        maxLength?: undefined;
+        options?: undefined;
+    })[];
+    alternateKeys: {
+        name: string;
+        columns: string[];
+    }[];
+};
+/**
+ * IAB Content Taxonomy Schema
+ * IAB Tech Lab Content Taxonomy 3.0
+ */
+export declare const IAB_TAXONOMY_SCHEMA: {
+    tableName: string;
+    displayName: string;
+    description: string;
+    columns: ({
+        logicalName: string;
+        displayName: string;
+        type: string;
+        maxLength: number;
+        required: boolean;
+        description: string;
+        options?: undefined;
+    } | {
+        logicalName: string;
+        displayName: string;
+        type: string;
+        required: boolean;
+        description: string;
+        maxLength?: undefined;
+        options?: undefined;
+    } | {
+        logicalName: string;
+        displayName: string;
+        type: string;
+        options: string[];
+        required: boolean;
+        description: string;
+        maxLength?: undefined;
+    })[];
+    alternateKeys: {
+        name: string;
+        columns: string[];
+    }[];
+};
+/**
+ * Platform Audience Taxonomy Schema
+ * Google Affinity/In-Market, Meta Interests/Behaviors, LinkedIn
+ */
+export declare const PLATFORM_TAXONOMY_SCHEMA: {
+    tableName: string;
+    displayName: string;
+    description: string;
+    columns: ({
+        logicalName: string;
+        displayName: string;
+        type: string;
+        maxLength: number;
+        required: boolean;
+        description: string;
+        options?: undefined;
+    } | {
+        logicalName: string;
+        displayName: string;
+        type: string;
+        options: string[];
+        required: boolean;
+        description: string;
+        maxLength?: undefined;
+    } | {
+        logicalName: string;
+        displayName: string;
+        type: string;
+        required: boolean;
+        description: string;
+        maxLength?: undefined;
+        options?: undefined;
+    })[];
+    alternateKeys: {
+        name: string;
+        columns: string[];
+    }[];
+};
+/**
+ * Behavioral Attributes Schema
+ * Cross-platform behavioral signals
+ */
+export declare const BEHAVIORAL_ATTRIBUTES_SCHEMA: {
+    tableName: string;
+    displayName: string;
+    description: string;
+    columns: ({
+        logicalName: string;
+        displayName: string;
+        type: string;
+        maxLength: number;
+        required: boolean;
+        description: string;
+        options?: undefined;
+    } | {
+        logicalName: string;
+        displayName: string;
+        type: string;
+        options: string[];
+        required: boolean;
+        description: string;
+        maxLength?: undefined;
+    })[];
+    alternateKeys: {
+        name: string;
+        columns: string[];
+    }[];
+};
+/**
+ * Contextual Attributes Schema
+ * Content and environment-based targeting signals
+ */
+export declare const CONTEXTUAL_ATTRIBUTES_SCHEMA: {
+    tableName: string;
+    displayName: string;
+    description: string;
+    columns: ({
+        logicalName: string;
+        displayName: string;
+        type: string;
+        maxLength: number;
+        required: boolean;
+        description: string;
+        options?: undefined;
+    } | {
+        logicalName: string;
+        displayName: string;
+        type: string;
+        options: string[];
+        required: boolean;
+        description: string;
+        maxLength?: undefined;
+    })[];
+    alternateKeys: {
+        name: string;
+        columns: string[];
+    }[];
+};
+/**
+ * Build OData filter for geography query
+ */
+export declare function buildGeographyFilter(country: string, geoType?: string, minPopulation?: number, maxRank?: number): string;
+/**
+ * Build OData filter for IAB taxonomy query
+ */
+export declare function buildIABFilter(tier?: number, parentCode?: string, vertical?: string): string;
+/**
+ * Build OData filter for platform taxonomy query
+ */
+export declare function buildPlatformTaxonomyFilter(platform: string, taxonomyType?: string, vertical?: string): string;
+/**
+ * Build OData filter for behavioral attributes query
+ */
+export declare function buildBehavioralFilter(category?: string, intentLevel?: string, platform?: string): string;
+/**
+ * Build OData filter for contextual attributes query
+ */
+export declare function buildContextualFilter(category?: string, brandSafetyTier?: string, iabCode?: string): string;
+export declare const REFERENCE_DATA_SCHEMAS: {
+    GEOGRAPHY_SCHEMA: {
+        tableName: string;
+        displayName: string;
+        description: string;
+        columns: ({
+            logicalName: string;
+            displayName: string;
+            type: string;
+            maxLength: number;
+            required: boolean;
+            description: string;
+            options?: undefined;
+            precision?: undefined;
+            scale?: undefined;
+        } | {
+            logicalName: string;
+            displayName: string;
+            type: string;
+            options: string[];
+            required: boolean;
+            description: string;
+            maxLength?: undefined;
+            precision?: undefined;
+            scale?: undefined;
+        } | {
+            logicalName: string;
+            displayName: string;
+            type: string;
+            required: boolean;
+            description: string;
+            maxLength?: undefined;
+            options?: undefined;
+            precision?: undefined;
+            scale?: undefined;
+        } | {
+            logicalName: string;
+            displayName: string;
+            type: string;
+            precision: number;
+            scale: number;
+            required: boolean;
+            description: string;
+            maxLength?: undefined;
+            options?: undefined;
+        })[];
+        alternateKeys: {
+            name: string;
+            columns: string[];
+        }[];
+    };
+    IAB_TAXONOMY_SCHEMA: {
+        tableName: string;
+        displayName: string;
+        description: string;
+        columns: ({
+            logicalName: string;
+            displayName: string;
+            type: string;
+            maxLength: number;
+            required: boolean;
+            description: string;
+            options?: undefined;
+        } | {
+            logicalName: string;
+            displayName: string;
+            type: string;
+            required: boolean;
+            description: string;
+            maxLength?: undefined;
+            options?: undefined;
+        } | {
+            logicalName: string;
+            displayName: string;
+            type: string;
+            options: string[];
+            required: boolean;
+            description: string;
+            maxLength?: undefined;
+        })[];
+        alternateKeys: {
+            name: string;
+            columns: string[];
+        }[];
+    };
+    PLATFORM_TAXONOMY_SCHEMA: {
+        tableName: string;
+        displayName: string;
+        description: string;
+        columns: ({
+            logicalName: string;
+            displayName: string;
+            type: string;
+            maxLength: number;
+            required: boolean;
+            description: string;
+            options?: undefined;
+        } | {
+            logicalName: string;
+            displayName: string;
+            type: string;
+            options: string[];
+            required: boolean;
+            description: string;
+            maxLength?: undefined;
+        } | {
+            logicalName: string;
+            displayName: string;
+            type: string;
+            required: boolean;
+            description: string;
+            maxLength?: undefined;
+            options?: undefined;
+        })[];
+        alternateKeys: {
+            name: string;
+            columns: string[];
+        }[];
+    };
+    BEHAVIORAL_ATTRIBUTES_SCHEMA: {
+        tableName: string;
+        displayName: string;
+        description: string;
+        columns: ({
+            logicalName: string;
+            displayName: string;
+            type: string;
+            maxLength: number;
+            required: boolean;
+            description: string;
+            options?: undefined;
+        } | {
+            logicalName: string;
+            displayName: string;
+            type: string;
+            options: string[];
+            required: boolean;
+            description: string;
+            maxLength?: undefined;
+        })[];
+        alternateKeys: {
+            name: string;
+            columns: string[];
+        }[];
+    };
+    CONTEXTUAL_ATTRIBUTES_SCHEMA: {
+        tableName: string;
+        displayName: string;
+        description: string;
+        columns: ({
+            logicalName: string;
+            displayName: string;
+            type: string;
+            maxLength: number;
+            required: boolean;
+            description: string;
+            options?: undefined;
+        } | {
+            logicalName: string;
+            displayName: string;
+            type: string;
+            options: string[];
+            required: boolean;
+            description: string;
+            maxLength?: undefined;
+        })[];
+        alternateKeys: {
+            name: string;
+            columns: string[];
+        }[];
+    };
+};
+export declare const REFERENCE_DATA_QUERIES: {
+    buildGeographyFilter: typeof buildGeographyFilter;
+    buildIABFilter: typeof buildIABFilter;
+    buildPlatformTaxonomyFilter: typeof buildPlatformTaxonomyFilter;
+    buildBehavioralFilter: typeof buildBehavioralFilter;
+    buildContextualFilter: typeof buildContextualFilter;
+};
 //# sourceMappingURL=dataverse-schema.d.ts.map

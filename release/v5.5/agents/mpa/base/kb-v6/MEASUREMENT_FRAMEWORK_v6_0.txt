@@ -1,0 +1,225 @@
+DOCUMENT: MEASUREMENT_FRAMEWORK_v6_0.txt
+VERSION: 6.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+META_DOCUMENT_TYPE: operational_framework
+META_PRIMARY_TOPICS: measurement, attribution, kpis, conversion_tracking, analytics
+META_WORKFLOW_STEPS: 3,8,9
+META_INTENTS: MEASUREMENT_GUIDANCE
+META_VERTICALS: ALL
+META_LAST_UPDATED: 2026-01-16
+
+================================================================================
+SECTION 1: MEASUREMENT PHILOSOPHY
+================================================================================
+
+META_SECTION_ID: measurement_philosophy
+META_WORKFLOW_STEPS: 8
+META_TOPICS: philosophy, principles
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+
+1.1 CORE PRINCIPLE
+
+Measurement exists to inform decisions, not to prove success. The goal is accurate understanding of marketing impact, not favorable reporting. Honest measurement enables optimization. Biased measurement enables waste.
+
+================================================================================
+SECTION 2: THE MEASUREMENT TRINITY
+================================================================================
+
+META_SECTION_ID: measurement_trinity
+META_WORKFLOW_STEPS: 8
+META_TOPICS: mmm, mta, incrementality, triangulation
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+2.1 MARKETING MIX MODELING (MMM)
+
+Characteristics:
+- Top-down statistical analysis using aggregate data
+- Measures all channels including offline
+- Accounts for external factors
+- Strategic timeframe (quarterly, annually)
+- Privacy-safe (no user-level tracking)
+
+Best For: Budget allocation, channel mix optimization, long-term planning
+
+2.2 MULTI-TOUCH ATTRIBUTION (MTA)
+
+Characteristics:
+- Bottom-up analysis using user-level journey data
+- Assigns credit to digital touchpoints
+- Near real-time optimization
+- Tactical timeframe (daily, weekly)
+- Requires user-level tracking (privacy challenged)
+
+Best For: In-flight optimization, creative testing, tactical decisions
+
+2.3 INCREMENTALITY TESTING
+
+Characteristics:
+- Controlled experiments measuring true causal impact
+- Holdout groups establish baseline
+- Isolates marketing effect from organic demand
+- Gold standard for proving causation
+
+Best For: Validating channel value, major budget decisions, new channel evaluation
+
+2.4 TRIANGULATION PRINCIPLE
+
+No single approach provides complete truth. Triangulate:
+- If MMM and MTA agree: High confidence
+- If MMM and incrementality agree: Strong strategic evidence
+- If MTA and incrementality disagree: Investigate attribution assumptions
+- If all three disagree: Examine data quality
+
+================================================================================
+SECTION 3: ATTRIBUTION MODEL SELECTION
+================================================================================
+
+META_SECTION_ID: attribution_models
+META_WORKFLOW_STEPS: 8
+META_TOPICS: first_touch, last_touch, multi_touch, data_driven
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+3.1 SINGLE-TOUCH MODELS
+
+First-Touch Attribution:
+- 100% credit to first interaction
+- Best for: Awareness channel effectiveness
+- Use when: Evaluating top-of-funnel campaigns
+
+Last-Touch Attribution:
+- 100% credit to final interaction
+- Best for: Immediate conversion triggers
+- Use when: Short cycles, direct response, limited data
+
+3.2 MULTI-TOUCH MODELS
+
+Linear Attribution:
+- Equal credit to all touchpoints
+- Simple, fair distribution
+- Weakness: Ignores relative impact
+
+Time-Decay Attribution:
+- More credit to recent touchpoints
+- Better for short consideration cycles
+- Weakness: May undervalue awareness
+
+Position-Based (U-Shaped):
+- 40% first, 40% last, 20% middle
+- Balances awareness and conversion
+- Common default for complex funnels
+
+3.3 DATA-DRIVEN ATTRIBUTION
+
+Uses machine learning to determine credit based on actual conversion patterns.
+- Requires significant conversion volume (300+/month minimum)
+- Most accurate when data is sufficient
+- Platform-specific (Google, Meta implementations differ)
+
+================================================================================
+SECTION 4: KPI SELECTION BY OBJECTIVE
+================================================================================
+
+META_SECTION_ID: kpi_selection
+META_WORKFLOW_STEPS: 3
+META_TOPICS: kpi_mapping, objective_alignment
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+
+4.1 AWARENESS OBJECTIVES
+
+Primary: Reach, Brand Lift, Aided Recall
+Secondary: Impressions, Frequency, Video Completion Rate
+Validation: Brand search volume, direct traffic trends
+
+4.2 CONSIDERATION OBJECTIVES
+
+Primary: Site Visits, Time on Site, Content Engagement
+Secondary: Video Views, Social Engagement, Email Signups
+Validation: Retargeting pool growth, return visitor rate
+
+4.3 CONVERSION OBJECTIVES
+
+Primary: Conversions, Revenue, ROAS
+Secondary: CVR, AOV, Cart Abandonment Rate
+Validation: Incrementality tests, new customer rate
+
+4.4 RETENTION OBJECTIVES
+
+Primary: LTV, Repeat Purchase Rate, Churn Rate
+Secondary: NPS, Customer Satisfaction, Engagement Score
+Validation: Cohort analysis, retention curves
+
+================================================================================
+SECTION 5: CONVERSION TRACKING REQUIREMENTS
+================================================================================
+
+META_SECTION_ID: conversion_tracking
+META_WORKFLOW_STEPS: 8
+META_TOPICS: tracking, pixels, server_side, data_quality
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+
+5.1 TRACKING METHODS
+
+Client-Side (Pixel-Based):
+- Standard implementation
+- Subject to ad blockers and ITP
+- 20-40% signal loss expected
+
+Server-Side (CAPI):
+- Direct server communication
+- More reliable in privacy era
+- Requires development resources
+
+Hybrid (Recommended):
+- Both client and server tracking
+- Deduplication required
+- Best balance of coverage and reliability
+
+5.2 DATA QUALITY REQUIREMENTS
+
+Minimum Standards:
+- Conversion pixel firing within 24 hours of conversion
+- Revenue values passed accurately
+- Unique transaction IDs for deduplication
+- Consistent event naming across platforms
+
+================================================================================
+SECTION 6: CROSS-REFERENCES
+================================================================================
+
+META_SECTION_ID: measurement_references
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: cross_references
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+6.1 RELATED DOCUMENTS
+
+- REF: MPA_Expert_Lens_Measurement_Attribution_v6_0.txt - Strategic guidance
+- REF: Analytics_Engine_v6_0.txt - Calculation formulas
+- REF: MPA_Implications_Measurement_Choices_v6_0.txt - Decision effects
+- REF: mpa_kpi (Dataverse) - KPI benchmarks
+
+================================================================================
+VERSION HISTORY
+================================================================================
+
+Version 6.0 - January 2026
+- Added META_ prefixed tags for retrieval optimization
+- Condensed from 627 lines to ~250 lines
+- Focus on operational guidance vs strategic (in Expert Lens)
+
+Version 5.5 - January 2026 - Original comprehensive version
+
+================================================================================
+END OF DOCUMENT
+================================================================================

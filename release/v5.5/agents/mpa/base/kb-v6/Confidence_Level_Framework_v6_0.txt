@@ -1,0 +1,229 @@
+DOCUMENT: Confidence_Level_Framework_v6_0.txt
+VERSION: 6.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+META_DOCUMENT_TYPE: methodology_framework
+META_PRIMARY_TOPICS: confidence_levels, data_quality, uncertainty, scoring, projections
+META_WORKFLOW_STEPS: 6,9,10
+META_INTENTS: MEASUREMENT_GUIDANCE, GENERAL
+META_VERTICALS: ALL
+META_LAST_UPDATED: 2026-01-16
+
+================================================================================
+SECTION 1: PURPOSE AND CORE PRINCIPLE
+================================================================================
+
+META_SECTION_ID: confidence_purpose
+META_WORKFLOW_STEPS: 6,9
+META_TOPICS: purpose, core_principle
+META_INTENT: GENERAL
+META_CONFIDENCE: HIGH
+
+1.1 PURPOSE
+
+This framework defines methodology for assigning and communicating confidence levels for all projections. Every forecast MUST include a confidence level indicator to ensure users understand projection reliability.
+
+1.2 CORE PRINCIPLE
+
+The agent MUST always communicate uncertainty honestly. Overstating confidence erodes trust. Understating confidence creates unnecessary concern. The goal is calibrated accuracy where stated confidence ranges match actual outcome distributions.
+
+================================================================================
+SECTION 2: CONFIDENCE LEVEL DEFINITIONS
+================================================================================
+
+META_SECTION_ID: confidence_definitions
+META_WORKFLOW_STEPS: 6,9
+META_TOPICS: high_confidence, medium_confidence, low_confidence, ranges
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+2.1 HIGH CONFIDENCE
+
+Range: Plus or minus 5-10 percent
+
+Characteristics:
+- Based on platform-reported data or verified historical performance
+- Calculations use known, stable inputs (contracted CPMs, guaranteed rates)
+- Market conditions are stable and predictable
+- Short forecast horizon (days to weeks)
+
+When to Assign:
+- Impressions from confirmed CPM and budget
+- Reach from platform-provided audience size
+- CPM projections based on contracted rates
+
+2.2 MEDIUM CONFIDENCE
+
+Range: Plus or minus 15-20 percent
+
+Characteristics:
+- Based on industry benchmarks or similar campaign data
+- Calculations include assumptions about engagement rates
+- Market conditions are relatively stable
+- Medium forecast horizon (weeks to months)
+
+When to Assign:
+- Click projections using benchmark CTRs
+- Conversion projections with historical CVR data
+- Efficiency metrics with reasonable benchmark basis
+
+2.3 LOW CONFIDENCE
+
+Range: Plus or minus 25-35 percent or higher
+
+Characteristics:
+- Based on general industry data or limited benchmarks
+- Significant assumptions required
+- Market conditions uncertain or volatile
+- Long forecast horizon or new market entry
+
+When to Assign:
+- Revenue projections without historical data
+- New channel performance estimates
+- Long-range (3+ month) forecasts
+- Novel audience or creative approach
+
+================================================================================
+SECTION 3: DATA INPUT SCORING
+================================================================================
+
+META_SECTION_ID: data_input_scoring
+META_WORKFLOW_STEPS: 6
+META_TOPICS: data_quality, input_scoring, reliability
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+META_CHUNK_PRIORITY: 1
+
+3.1 DATA SOURCE HIERARCHY
+
+Tier 1 - Highest Reliability:
+- Client's verified historical data (same brand, same market)
+- Platform-reported actuals from recent campaigns
+- Contracted rates and guarantees
+
+Tier 2 - High Reliability:
+- Client's related historical data (similar products/markets)
+- Category benchmarks from verified sources
+- Platform planning estimates
+
+Tier 3 - Medium Reliability:
+- Industry benchmarks from reputable sources
+- Analogous brand performance data
+- Multi-source averaged benchmarks
+
+Tier 4 - Lower Reliability:
+- General category averages
+- Extrapolated or modeled estimates
+- Single-source benchmarks
+
+3.2 CONFIDENCE SCORING FORMULA
+
+Base confidence starts at MEDIUM.
+Adjust based on data inputs:
+- All Tier 1 inputs: Upgrade to HIGH
+- Mix of Tier 1/2: Stay at MEDIUM
+- Heavy Tier 3/4 reliance: Downgrade to LOW
+- Missing critical inputs: Downgrade to LOW
+
+================================================================================
+SECTION 4: COMMUNICATION STANDARDS
+================================================================================
+
+META_SECTION_ID: communication_standards
+META_WORKFLOW_STEPS: 9,10
+META_TOPICS: display_format, ranges, communication
+META_INTENT: GENERAL
+META_CONFIDENCE: HIGH
+
+4.1 DISPLAY FORMAT
+
+Always present projections with:
+- Point estimate (most likely outcome)
+- Confidence level label (HIGH/MEDIUM/LOW)
+- Range (lower bound - upper bound)
+
+Example Format:
+Projected Conversions: 50,000 (MEDIUM CONFIDENCE)
+Range: 40,000 - 60,000
+
+4.2 RANGE CALCULATION
+
+HIGH: Point estimate × 0.90 to 1.10
+MEDIUM: Point estimate × 0.80 to 1.20
+LOW: Point estimate × 0.65 to 1.35
+
+4.3 SCENARIO PRESENTATION
+
+For critical decisions, present three scenarios:
+- Conservative (lower bound)
+- Base (point estimate)
+- Optimistic (upper bound)
+
+================================================================================
+SECTION 5: CONFIDENCE IMPROVEMENT PATH
+================================================================================
+
+META_SECTION_ID: confidence_improvement
+META_WORKFLOW_STEPS: 6,9
+META_TOPICS: improvement, data_collection, refinement
+META_INTENT: MEASUREMENT_GUIDANCE
+META_CONFIDENCE: HIGH
+
+5.1 UPGRADING FROM LOW TO MEDIUM
+
+Required:
+- Obtain category-specific benchmarks
+- Validate assumptions against at least 2 sources
+- Reduce forecast horizon if possible
+- Clarify audience definition
+
+5.2 UPGRADING FROM MEDIUM TO HIGH
+
+Required:
+- Obtain client's verified historical data
+- Use platform-reported actuals
+- Secure contracted rates where applicable
+- Shorten forecast horizon to under 4 weeks
+
+5.3 AGENT BEHAVIOR
+
+When confidence is LOW, the agent SHOULD:
+- Explicitly state the uncertainty
+- Identify what data would improve confidence
+- Recommend test-and-learn approach
+- Set appropriate expectations
+
+================================================================================
+SECTION 6: CROSS-REFERENCES
+================================================================================
+
+META_SECTION_ID: confidence_references
+META_WORKFLOW_STEPS: ALL
+META_TOPICS: cross_references
+META_INTENT: WORKFLOW_HELP
+META_CONFIDENCE: HIGH
+
+6.1 RELATED DOCUMENTS
+
+- REF: Analytics_Engine_v6_0.txt - Calculation formulas
+- REF: Data_Provenance_Framework_v6_0.txt - Source attribution
+- REF: mpa_benchmark (Dataverse) - Benchmark data source
+
+================================================================================
+VERSION HISTORY
+================================================================================
+
+Version 6.0 - January 2026
+- Added META_ prefixed tags for retrieval optimization
+- Condensed from 1619 lines to ~240 lines
+- Focus on core methodology over extensive examples
+- Full examples available in v5.5 detailed version
+
+Version 5.5 - January 2026 - Original comprehensive version
+
+================================================================================
+END OF DOCUMENT
+================================================================================

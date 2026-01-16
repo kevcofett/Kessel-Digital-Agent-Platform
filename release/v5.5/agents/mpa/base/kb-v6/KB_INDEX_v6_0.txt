@@ -27,36 +27,36 @@ SECTION 1: DOCUMENT CATALOG BY CATEGORY
 META_SECTION_ID: document_catalog
 META_TOPICS: catalog, documents, categories
 
-CATEGORY: EXPERT GUIDANCE (Diagnostic Reasoning)
+CATEGORY: EXPERT GUIDANCE (4 files - Diagnostic Reasoning)
 - MPA_Expert_Lens_Channel_Mix_v6_0.txt - Channel selection, interdependencies, pitfalls
 - MPA_Expert_Lens_Budget_Allocation_v6_0.txt - Budget strategy, pacing, allocation
-- MPA_Expert_Lens_Audience_Strategy_v6_0.txt - Targeting, segmentation, taxonomy codes
+- MPA_Expert_Lens_Audience_Strategy_v6_0.txt - Targeting, census validation, taxonomy codes
 - MPA_Expert_Lens_Measurement_Attribution_v6_0.txt - Attribution, incrementality, KPIs
 
-CATEGORY: OPERATIONAL PLAYBOOKS
+CATEGORY: OPERATIONAL PLAYBOOKS (1 file)
 - Gap_Detection_Playbook_v6_0.txt - Gap analysis, 6 options framework, iteration
 
-CATEGORY: CALCULATION FRAMEWORKS
+CATEGORY: CALCULATION FRAMEWORKS (2 files)
 - Analytics_Engine_v6_0.txt - Formulas, projections, validation thresholds
+- BRAND_PERFORMANCE_FRAMEWORK_v6_0.txt - Brand vs performance balance
 
-CATEGORY: IMPLICATIONS DOCUMENTS
+CATEGORY: GUIDES (3 files)
+- AI_ADVERTISING_GUIDE_v6_0.txt - AI campaign guidance (PMax, ASC, etc.)
+- RETAIL_MEDIA_NETWORKS_v6_0.txt - Amazon, Walmart, retail media specifics
+- FIRST_PARTY_DATA_STRATEGY_v6_0.txt - 1P data utilization, CDP, privacy
+
+CATEGORY: IMPLICATIONS (5 files)
 - MPA_Implications_Budget_Decisions_v6_0.txt - Budget change effects
 - MPA_Implications_Channel_Shifts_v6_0.txt - Channel reallocation effects
 - MPA_Implications_Audience_Targeting_v6_0.txt - Targeting change effects
 - MPA_Implications_Measurement_Choices_v6_0.txt - Measurement decision effects
 - MPA_Implications_Timing_Pacing_v6_0.txt - Timing and pacing effects
 
-CATEGORY: SUPPORTING FRAMEWORKS
-- AI_ADVERTISING_GUIDE_v6_0.txt - AI campaign guidance (PMax, ASC, etc.)
-- BRAND_PERFORMANCE_FRAMEWORK_v6_0.txt - Brand vs performance balance
-- RETAIL_MEDIA_NETWORKS_v6_0.txt - Retail media specifics
-- FIRST_PARTY_DATA_STRATEGY_v6_0.txt - 1P data utilization
-
-CATEGORY: WORKFLOW SUPPORT
-- MPA_Supporting_Instructions_v6_0.txt - Communication patterns
+CATEGORY: SUPPORT DOCUMENTS (4 files)
+- MPA_Supporting_Instructions_v6_0.txt - Communication patterns, checkpoints
 - Output_Templates_v6_0.txt - Output formatting standards
-- Confidence_Level_Framework_v6_0.txt - Confidence scoring
-- Data_Provenance_Framework_v6_0.txt - Source attribution
+- MPA_Geography_DMA_Planning_v6_0.txt - Census data requirements, DMA hierarchy
+- MPA_Audience_Taxonomy_Structure_v6_0.txt - Platform taxonomy codes
 
 ================================================================================
 SECTION 2: INTENT-TO-DOCUMENT MAPPING
@@ -67,22 +67,27 @@ META_TOPICS: intent_routing, query_classification
 
 INTENT: CHANNEL_SELECTION
 Primary: MPA_Expert_Lens_Channel_Mix_v6_0.txt
-Secondary: mpa_channel (Dataverse), AI_ADVERTISING_GUIDE_v6_0.txt
-Triggers: channel mix, platform selection, which channels, add channel, remove channel
+Secondary: mpa_channel (Dataverse), AI_ADVERTISING_GUIDE_v6_0.txt, RETAIL_MEDIA_NETWORKS_v6_0.txt
+Implications: MPA_Implications_Channel_Shifts_v6_0.txt
+Triggers: channel mix, platform selection, which channels, add channel, remove channel, PMax, ASC
 
 INTENT: BUDGET_PLANNING
 Primary: MPA_Expert_Lens_Budget_Allocation_v6_0.txt, Analytics_Engine_v6_0.txt
 Secondary: Gap_Detection_Playbook_v6_0.txt, mpa_benchmark (Dataverse)
-Triggers: budget allocation, how much to spend, budget increase, budget decrease, pacing
+Implications: MPA_Implications_Budget_Decisions_v6_0.txt, MPA_Implications_Timing_Pacing_v6_0.txt
+Triggers: budget allocation, how much to spend, budget increase, budget decrease, pacing, flighting
 
 INTENT: AUDIENCE_TARGETING
 Primary: MPA_Expert_Lens_Audience_Strategy_v6_0.txt
-Secondary: MPA_Audience_Taxonomy_Structure_v6_0.txt, census data (web search)
-Triggers: audience, targeting, segmentation, lookalike, demographics, census
+Secondary: MPA_Audience_Taxonomy_Structure_v6_0.txt, MPA_Geography_DMA_Planning_v6_0.txt
+Implications: MPA_Implications_Audience_Targeting_v6_0.txt
+Data: FIRST_PARTY_DATA_STRATEGY_v6_0.txt
+Triggers: audience, targeting, segmentation, lookalike, demographics, census, taxonomy codes
 
 INTENT: MEASUREMENT_GUIDANCE
 Primary: MPA_Expert_Lens_Measurement_Attribution_v6_0.txt, Analytics_Engine_v6_0.txt
 Secondary: mpa_kpi (Dataverse)
+Implications: MPA_Implications_Measurement_Choices_v6_0.txt
 Triggers: measurement, attribution, ROAS, incrementality, KPI, tracking
 
 INTENT: BENCHMARK_LOOKUP
@@ -98,12 +103,8 @@ Triggers: miss target, gap, short of goal, increase conversions, close gap
 INTENT: WORKFLOW_HELP
 Primary: MPA_Supporting_Instructions_v6_0.txt
 Secondary: Step-specific Expert Lens document
+Templates: Output_Templates_v6_0.txt
 Triggers: how does this work, what step, help with workflow, what should I do
-
-INTENT: IMPLICATION_ANALYSIS
-Primary: Relevant MPA_Implications_*.txt based on decision type
-Secondary: Expert Lens document for decision area
-Triggers: what happens if, implications of, downstream effects, consequences
 
 ================================================================================
 SECTION 3: WORKFLOW STEP ROUTING
@@ -114,11 +115,11 @@ META_TOPICS: workflow_steps, step_mapping
 
 STEP 1 - OBJECTIVES:
 - MPA_Supporting_Instructions_v6_0.txt
-- Confidence_Level_Framework_v6_0.txt
 
 STEP 2 - TARGET AUDIENCE:
 - MPA_Expert_Lens_Audience_Strategy_v6_0.txt
 - MPA_Audience_Taxonomy_Structure_v6_0.txt
+- MPA_Geography_DMA_Planning_v6_0.txt
 - Census data via web search
 
 STEP 3 - KPI SELECTION:
@@ -130,11 +131,13 @@ STEP 4 - CHANNEL STRATEGY:
 - MPA_Expert_Lens_Channel_Mix_v6_0.txt
 - mpa_channel (Dataverse)
 - AI_ADVERTISING_GUIDE_v6_0.txt
+- RETAIL_MEDIA_NETWORKS_v6_0.txt
 
 STEP 5 - BUDGET ALLOCATION:
 - MPA_Expert_Lens_Budget_Allocation_v6_0.txt
 - Analytics_Engine_v6_0.txt
 - mpa_benchmark (Dataverse)
+- MPA_Implications_Budget_Decisions_v6_0.txt
 
 STEP 6 - PROJECTIONS:
 - Analytics_Engine_v6_0.txt
@@ -143,15 +146,15 @@ STEP 6 - PROJECTIONS:
 
 STEP 7 - TIMELINE:
 - MPA_Implications_Timing_Pacing_v6_0.txt
-- Analytics_Engine_v6_0.txt (flighting calculations)
+- Analytics_Engine_v6_0.txt
 
 STEP 8 - MEASUREMENT PLAN:
 - MPA_Expert_Lens_Measurement_Attribution_v6_0.txt
-- Analytics_Engine_v6_0.txt
+- MPA_Implications_Measurement_Choices_v6_0.txt
 
 STEP 9 - REVIEW:
 - Output_Templates_v6_0.txt
-- All relevant Expert Lens documents for validation
+- All relevant Expert Lens documents
 
 STEP 10 - FINALIZE:
 - Output_Templates_v6_0.txt
@@ -167,28 +170,32 @@ META_TOPICS: dataverse, structured_data, tables
 mpa_benchmark:
 - Contains: Performance benchmarks by vertical + channel + KPI
 - Use for: Efficiency projections, validation, benchmark lookups
-- Query pattern: Filter by vertical, then channel, then KPI
+- Query: Filter by vertical, then channel, then KPI
 
 mpa_channel:
 - Contains: Channel definitions, minimum thresholds, characteristics
 - Use for: Channel selection, minimum investment validation
-- Query pattern: Filter by channel code
+- Query: Filter by channel code
 
 mpa_kpi:
 - Contains: KPI definitions, formulas, calculation methods
 - Use for: KPI selection, formula reference
-- Query pattern: Filter by KPI code or name
+- Query: Filter by KPI code or name
 
 mpa_vertical:
 - Contains: Vertical definitions, coverage targets
 - Use for: Vertical identification, benchmark availability
-- Query pattern: Filter by vertical code or name
+- Query: Filter by vertical code or name
 
 ================================================================================
 VERSION HISTORY
 ================================================================================
 
-Version 6.0 - January 2026 - Initial creation for v6 retrieval system
+Version 6.0 - January 2026
+- Complete catalog of all 20 KB v6.0 files
+- Enhanced intent-to-document mapping
+- Added implications documents to routing
+- Added RETAIL_MEDIA_NETWORKS and FIRST_PARTY_DATA references
 
 ================================================================================
 END OF DOCUMENT

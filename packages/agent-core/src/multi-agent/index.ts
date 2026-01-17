@@ -11,3 +11,9 @@ export * from './types/index.js';
 
 // Export all contracts
 export * from './contracts/index.js';
+
+// Export session management
+export * from './session/index.js';
+
+// Export audit logging
+export * from './audit/index.js';

@@ -95,7 +95,7 @@ export class FailureDetector {
      */
     detectFailures(turnNumber, agentResponse, previousTurns, customFailures, currentStep = 1, userSaidIDK = false) {
         const detected = [];
-        const allFailures = [...BUILTIN_FAILURES, ...customFailures];
+        const allFailures = [...BUILTIN_FAILURES, ...(customFailures || [])];
         // Update provided data from previous turns
         this.updateProvidedData(previousTurns);
         for (const failure of allFailures) {

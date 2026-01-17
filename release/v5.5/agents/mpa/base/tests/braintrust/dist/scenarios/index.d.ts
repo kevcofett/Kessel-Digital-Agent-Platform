@@ -98,7 +98,7 @@ export declare function getScenarioById(id: string): TestScenario | undefined;
 /**
  * Get scenarios by tag/category
  */
-export declare function getScenariosByCategory(category: "quick" | "full" | "phase1" | "targeting" | "multi-audience" | "reforecasting" | "adis" | "all"): TestScenario[];
+export declare function getScenariosByCategory(category: "quick" | "full" | "phase1" | "targeting" | "multi-audience" | "reforecasting" | "adis" | "advanced-analytics" | "all"): TestScenario[];
 /**
  * Scenario metadata for reporting
  */

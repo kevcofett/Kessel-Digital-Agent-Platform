@@ -18,8 +18,8 @@ import { fileURLToPath } from "url";
 // Get current directory for relative path resolution
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-// Default to v6.0 instructions
-const DEFAULT_INSTRUCTIONS_PATH = resolve(__dirname, "../../../base/copilot/MPA_Copilot_Instructions_v6_0.txt");
+// Default to v6.5 instructions
+const DEFAULT_INSTRUCTIONS_PATH = resolve(__dirname, "../../../base/instructions/MPA_Copilot_Instructions_v6_5.txt");
 /**
  * Load MPA instructions from file if MPA_INSTRUCTIONS_PATH is set
  */

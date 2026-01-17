@@ -116,46 +116,66 @@ class DataverseClient:
         description = table_def.get("description", "")
         primary_column = table_def.get("primary_column", f"{logical_name}name")
 
+        # Build primary attribute (required for entity creation)
+        primary_attr_display = display_name.split()[0] + " Name"
+        primary_attribute = {
+            "AttributeType": "String",
+            "AttributeTypeName": {"Value": "StringType"},
+            "SchemaName": primary_column,
+            "LogicalName": primary_column.lower(),
+            "IsPrimaryName": True,
+            "RequiredLevel": {"Value": "ApplicationRequired", "CanBeChanged": True, "ManagedPropertyLogicalName": "canmodifyrequirementlevelsettings"},
+            "MaxLength": 200,
+            "FormatName": {"Value": "Text"},
+            "DisplayName": {
+                "@odata.type": "Microsoft.Dynamics.CRM.Label",
+                "LocalizedLabels": [
+                    {"@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel", "Label": primary_attr_display, "LanguageCode": 1033}
+                ],
+                "UserLocalizedLabel": {"@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel", "Label": primary_attr_display, "LanguageCode": 1033}
+            },
+            "Description": {
+                "@odata.type": "Microsoft.Dynamics.CRM.Label",
+                "LocalizedLabels": [
+                    {"@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel", "Label": f"Primary name for {display_name}", "LanguageCode": 1033}
+                ],
+                "UserLocalizedLabel": {"@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel", "Label": f"Primary name for {display_name}", "LanguageCode": 1033}
+            },
+            "@odata.type": "Microsoft.Dynamics.CRM.StringAttributeMetadata"
+        }
+
         # Build entity definition
         entity_def = {
+            "@odata.type": "Microsoft.Dynamics.CRM.EntityMetadata",
             "SchemaName": logical_name,
+            "LogicalName": logical_name.lower(),
             "DisplayName": {
                 "@odata.type": "Microsoft.Dynamics.CRM.Label",
                 "LocalizedLabels": [
                     {"@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel", "Label": display_name, "LanguageCode": 1033}
-                ]
+                ],
+                "UserLocalizedLabel": {"@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel", "Label": display_name, "LanguageCode": 1033}
             },
             "DisplayCollectionName": {
                 "@odata.type": "Microsoft.Dynamics.CRM.Label",
                 "LocalizedLabels": [
                     {"@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel", "Label": plural_name, "LanguageCode": 1033}
-                ]
+                ],
+                "UserLocalizedLabel": {"@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel", "Label": plural_name, "LanguageCode": 1033}
             },
             "Description": {
                 "@odata.type": "Microsoft.Dynamics.CRM.Label",
                 "LocalizedLabels": [
                     {"@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel", "Label": description, "LanguageCode": 1033}
-                ]
+                ],
+                "UserLocalizedLabel": {"@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel", "Label": description, "LanguageCode": 1033}
             },
             "OwnershipType": "UserOwned",
             "HasNotes": False,
             "HasActivities": False,
             "IsActivity": False,
-            "PrimaryNameAttribute": primary_column,
-            "Attributes": [
-                {
-                    "@odata.type": "Microsoft.Dynamics.CRM.StringAttributeMetadata",
-                    "SchemaName": primary_column,
-                    "RequiredLevel": {"Value": "ApplicationRequired"},
-                    "MaxLength": 200,
-                    "DisplayName": {
-                        "@odata.type": "Microsoft.Dynamics.CRM.Label",
-                        "LocalizedLabels": [
-                            {"@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel", "Label": display_name.split()[0] + " Name", "LanguageCode": 1033}
-                        ]
-                    }
-                }
-            ]
+            "PrimaryNameAttribute": primary_column.lower(),
+            "Attributes": [primary_attribute]
         }
 
         return self._request("POST", "EntityDefinitions", entity_def)
@@ -323,7 +343,12 @@ def get_token_interactive(org_url: str) -> str:
     if "user_code" not in flow:
         raise Exception(f"Failed to initiate device flow: {flow.get('error_description', 'Unknown error')}")
 
-    print(f"\n{flow['message']}\n")
+    # Write device code to file for non-interactive capture
+    import sys
+    sys.stdout.write(f"\n{flow['message']}\n")
+    sys.stdout.flush()
+    with open("/tmp/adis_device_code.txt", "w") as f:
+        f.write(flow['message'])
 
     result = app.acquire_token_by_device_flow(flow)
 

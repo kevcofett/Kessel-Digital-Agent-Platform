@@ -25,6 +25,19 @@ This workplan details the transformation of the monolithic MPA into a 7-agent sp
 
 ---
 
+## COMPLIANCE REQUIREMENTS
+
+**CRITICAL:** All Copilot instruction and KB files MUST comply with `COPILOT_COMPLIANCE_REQUIREMENTS.md` before deployment.
+
+Key requirements:
+- Core instruction files: 7,500-7,999 characters exactly
+- 6-Rule Framework: ALL-CAPS headers, hyphens only, ASCII only, no visual dependencies, mandatory language, professional tone
+- KB files: Under 36,000 characters (split if larger)
+
+See `docs/multi-agent/COPILOT_COMPLIANCE_REQUIREMENTS.md` for full validation checklist.
+
+---
+
 ## BUILD RESPONSIBILITY MATRIX
 
 | Component | Claude.ai | VS Code | Rationale |

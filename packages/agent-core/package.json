@@ -30,7 +30,8 @@
   "dependencies": {
     "@anthropic-ai/sdk": ">=0.50.0",
     "natural": "^8.0.1",
-    "uuid": "^13.0.0"
+    "uuid": "^13.0.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/natural": "^5.1.5",
@@ -61,6 +62,10 @@
     "./evaluation": {
       "import": "./dist/evaluation/index.js",
       "types": "./dist/evaluation/index.d.ts"
+    },
+    "./multi-agent": {
+      "import": "./dist/multi-agent/index.js",
+      "types": "./dist/multi-agent/index.d.ts"
     }
   }
 }

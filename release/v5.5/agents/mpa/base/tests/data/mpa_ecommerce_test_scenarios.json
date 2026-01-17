@@ -1,0 +1,105 @@
+[
+  {
+    "scenario_id": "ecommerce_rfm_reactivation",
+    "description": "Test MPA guidance for reactivating dormant ecommerce customers using RFM data",
+    "vertical": "ECOMMERCE",
+    "context": {
+      "business_type": "Direct-to-consumer ecommerce",
+      "customer_base": 13879,
+      "dormant_segment": 2883,
+      "dormant_pct": 20.8,
+      "average_ltv": 396.51
+    },
+    "turns": [
+      {
+        "user": "I have an ecommerce business with about 14,000 customers. About 21% haven't purchased in over a year. How should I allocate my $50K monthly budget to reactivate them?",
+        "expect_topics": ["EMAIL", "META", "dormant reactivation", "win-back campaigns", "segmentation"],
+        "expect_calculations": ["reactivation budget allocation", "expected recovery rate", "customer lifetime value consideration"]
+      },
+      {
+        "user": "What kind of return can I expect from reactivating these dormant customers versus acquiring new ones?",
+        "expect_topics": ["CAC comparison", "reactivation ROI", "cohort analysis"],
+        "expect_data_reference": ["dormant customer value", "acquisition cost benchmarks"]
+      }
+    ]
+  },
+  {
+    "scenario_id": "new_vs_returning_attribution",
+    "description": "Test MPA understanding of new vs returning customer attribution",
+    "vertical": "ECOMMERCE",
+    "context": {
+      "new_customer_revenue_share": 36,
+      "returning_customer_revenue_share": 64,
+      "new_customer_aos": 119.23,
+      "returning_customer_aos": 128.95
+    },
+    "turns": [
+      {
+        "user": "My data shows new customers drive 36% of revenue but returning customers drive 64%. New customers have $119 AOS vs $129 for returning. How should this affect my channel mix?",
+        "expect_topics": ["retention vs acquisition", "channel role", "META", "EMAIL", "PAID_SEARCH"],
+        "expect_guidance": ["balance acquisition and retention", "returning customer higher value", "loyalty investment"]
+      },
+      {
+        "user": "Should I focus more on acquisition channels or retention channels given these numbers?",
+        "expect_topics": ["incrementality", "marginal efficiency", "portfolio approach"],
+        "expect_calculations": ["customer lifetime value", "acquisition cost threshold"]
+      }
+    ]
+  },
+  {
+    "scenario_id": "cohort_retention_optimization",
+    "description": "Test MPA guidance on improving cohort retention rates",
+    "vertical": "ECOMMERCE",
+    "context": {
+      "retention_2018_to_2019": 21.0,
+      "retention_2017_to_2018": 24.6,
+      "retention_trend": "declining"
+    },
+    "turns": [
+      {
+        "user": "Our year-over-year customer retention has dropped from 25% to 21%. What media strategies can help improve retention?",
+        "expect_topics": ["retention media", "EMAIL", "SMS", "loyalty programs", "CRM"],
+        "expect_guidance": ["retention vs acquisition balance", "customer lifecycle", "engagement sequencing"]
+      }
+    ]
+  },
+  {
+    "scenario_id": "high_value_segment_targeting",
+    "description": "Test MPA audience targeting for high-value customer segments",
+    "vertical": "ECOMMERCE",
+    "context": {
+      "vip_customers_10_plus_orders": 2666,
+      "vip_pct": 19.2,
+      "vip_ltv_threshold": 500
+    },
+    "turns": [
+      {
+        "user": "I have about 2,700 VIP customers who have 10+ orders and $500+ lifetime value. How do I find more customers like them?",
+        "expect_topics": ["lookalike audiences", "META", "GOOGLE_PMAX", "first-party data", "seed audiences"],
+        "expect_guidance": ["audience expansion", "value-based lookalikes", "customer data platform"]
+      },
+      {
+        "user": "What channels are best for reaching lookalikes of my VIP segment?",
+        "expect_topics": ["META", "AMAZON_DSP", "GOOGLE_PMAX", "audience matching"],
+        "expect_benchmarks": ["CPM ranges", "audience size tradeoffs"]
+      }
+    ]
+  },
+  {
+    "scenario_id": "seasonal_planning_with_cohorts",
+    "description": "Test MPA seasonal planning using cohort data",
+    "vertical": "ECOMMERCE",
+    "context": {
+      "q4_new_customers": 4087,
+      "q4_transaction_spike": "Nov-Dec highest",
+      "q1_retention_challenge": "Jan drop-off"
+    },
+    "turns": [
+      {
+        "user": "Our data shows we acquire most customers in Q4 but many don't come back. How should I plan my Q1 budget to retain holiday customers?",
+        "expect_topics": ["post-holiday retention", "EMAIL", "lifecycle campaigns", "welcome series"],
+        "expect_timing": ["January reactivation window", "90-day engagement window"]
+      }
+    ]
+  }
+]

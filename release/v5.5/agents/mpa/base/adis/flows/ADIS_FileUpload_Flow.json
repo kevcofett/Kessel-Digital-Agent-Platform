@@ -1,0 +1,213 @@
+{
+  "name": "ADIS-FileUploadTrigger",
+  "description": "Triggers when a file is uploaded to ADIS for processing",
+  "version": "1.0",
+  "trigger": {
+    "type": "PowerAutomate",
+    "kind": "Button",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "title": "File Name",
+            "description": "Name of the uploaded file"
+          },
+          "fileContent": {
+            "type": "string",
+            "format": "byte",
+            "title": "File Content",
+            "description": "Base64 encoded file content"
+          },
+          "sessionId": {
+            "type": "string",
+            "title": "Session ID",
+            "description": "MPA Session ID for tracking"
+          },
+          "dataCategory": {
+            "type": "string",
+            "title": "Data Category",
+            "enum": ["Transaction", "Engagement", "Loyalty", "CRM", "Survey", "Mixed", "Unknown"]
+          },
+          "sourceDescription": {
+            "type": "string",
+            "title": "Source Description",
+            "description": "User-provided description of the data source"
+          }
+        },
+        "required": ["fileName", "fileContent", "sessionId"]
+      }
+    }
+  },
+  "actions": [
+    {
+      "name": "Initialize_UploadJobId",
+      "type": "InitializeVariable",
+      "inputs": {
+        "name": "uploadJobId",
+        "type": "string",
+        "value": "@{guid()}"
+      }
+    },
+    {
+      "name": "Create_UploadJob_Record",
+      "type": "Dataverse_CreateRecord",
+      "inputs": {
+        "entityName": "mpa_upload_jobs",
+        "record": {
+          "mpa_upload_job_id": "@{variables('uploadJobId')}",
+          "mpa_job_name": "Upload_@{utcNow('yyyyMMdd_HHmmss')}",
+          "mpa_file_name": "@{triggerBody()?['fileName']}",
+          "mpa_file_type": "@{last(split(triggerBody()?['fileName'], '.'))}",
+          "mpa_file_size_bytes": "@{length(base64ToBinary(triggerBody()?['fileContent']))}",
+          "mpa_upload_timestamp": "@{utcNow()}",
+          "mpa_processing_status": 100000000,
+          "mpa_session_id": "@{triggerBody()?['sessionId']}",
+          "mpa_data_category": "@{triggerBody()?['dataCategory']}",
+          "mpa_source_description": "@{triggerBody()?['sourceDescription']}"
+        }
+      }
+    },
+    {
+      "name": "Update_Status_Processing",
+      "type": "Dataverse_UpdateRecord",
+      "inputs": {
+        "entityName": "mpa_upload_jobs",
+        "recordId": "@{variables('uploadJobId')}",
+        "record": {
+          "mpa_processing_status": 100000001
+        }
+      }
+    },
+    {
+      "name": "Call_DocumentParser_Function",
+      "type": "HTTP",
+      "inputs": {
+        "method": "POST",
+        "uri": "@{parameters('DocumentParserFunctionUrl')}/api/parse-document",
+        "headers": {
+          "Content-Type": "application/octet-stream",
+          "X-File-Name": "@{triggerBody()?['fileName']}",
+          "X-Upload-Job-Id": "@{variables('uploadJobId')}"
+        },
+        "body": "@{base64ToBinary(triggerBody()?['fileContent'])}"
+      },
+      "runAfter": {
+        "Update_Status_Processing": ["Succeeded"]
+      }
+    },
+    {
+      "name": "Parse_Response",
+      "type": "ParseJSON",
+      "inputs": {
+        "content": "@{body('Call_DocumentParser_Function')}",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "upload_job_id": {"type": "string"},
+            "status": {"type": "string"},
+            "summary": {
+              "type": "object",
+              "properties": {
+                "total_rows": {"type": "integer"},
+                "total_columns": {"type": "integer"}
+              }
+            },
+            "schemas": {"type": "array"},
+            "error": {"type": "string"}
+          }
+        }
+      }
+    },
+    {
+      "name": "Condition_ParseSuccess",
+      "type": "If",
+      "expression": {
+        "equals": ["@{body('Parse_Response')?['status']}", "SUCCESS"]
+      },
+      "actions": {
+        "Update_Job_Success": {
+          "type": "Dataverse_UpdateRecord",
+          "inputs": {
+            "entityName": "mpa_upload_jobs",
+            "recordId": "@{variables('uploadJobId')}",
+            "record": {
+              "mpa_processing_status": 100000002,
+              "mpa_row_count": "@{body('Parse_Response')?['summary']?['total_rows']}",
+              "mpa_column_count": "@{body('Parse_Response')?['summary']?['total_columns']}"
+            }
+          }
+        },
+        "ForEach_Schema": {
+          "type": "ForEach",
+          "foreach": "@{body('Parse_Response')?['schemas']}",
+          "actions": {
+            "ForEach_Column": {
+              "type": "ForEach",
+              "foreach": "@{items('ForEach_Schema')?['columns']}",
+              "actions": {
+                "Create_Schema_Record": {
+                  "type": "Dataverse_CreateRecord",
+                  "inputs": {
+                    "entityName": "mpa_data_schemas",
+                    "record": {
+                      "mpa_upload_job_id": "@{variables('uploadJobId')}",
+                      "mpa_column_name": "@{items('ForEach_Column')?['column_name']}",
+                      "mpa_column_index": "@{items('ForEach_Column')?['column_index']}",
+                      "mpa_detected_type": "@{items('ForEach_Column')?['detected_type']}",
+                      "mpa_confidence_score": "@{items('ForEach_Column')?['confidence_score']}",
+                      "mpa_sample_values": "@{join(items('ForEach_Column')?['sample_values'], ', ')}",
+                      "mpa_null_percentage": "@{items('ForEach_Column')?['null_percentage']}",
+                      "mpa_unique_count": "@{items('ForEach_Column')?['unique_count']}",
+                      "mpa_rfm_role": "@{items('ForEach_Column')?['rfm_role']}"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Update_Job_Success": ["Succeeded"]
+          }
+        }
+      },
+      "else": {
+        "actions": {
+          "Update_Job_Failed": {
+            "type": "Dataverse_UpdateRecord",
+            "inputs": {
+              "entityName": "mpa_upload_jobs",
+              "recordId": "@{variables('uploadJobId')}",
+              "record": {
+                "mpa_processing_status": 100000003,
+                "mpa_error_message": "@{body('Parse_Response')?['error']}"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Return_Result",
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "uploadJobId": "@{variables('uploadJobId')}",
+          "status": "@{if(equals(body('Parse_Response')?['status'], 'SUCCESS'), 'Completed', 'Failed')}",
+          "rowCount": "@{body('Parse_Response')?['summary']?['total_rows']}",
+          "columnCount": "@{body('Parse_Response')?['summary']?['total_columns']}",
+          "schemas": "@{body('Parse_Response')?['schemas']}",
+          "message": "@{if(equals(body('Parse_Response')?['status'], 'SUCCESS'), 'File processed successfully', body('Parse_Response')?['error'])}"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "DocumentParserFunctionUrl": {
+      "type": "string",
+      "defaultValue": "https://func-adis-personal.azurewebsites.net"
+    }
+  }
+}

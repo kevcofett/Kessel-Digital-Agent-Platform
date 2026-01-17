@@ -383,6 +383,12 @@ def main():
         action="store_true",
         help="Print verbose output"
     )
+    parser.add_argument(
+        "--env",
+        choices=["personal", "mastercard"],
+        default="personal",
+        help="Environment to use (default: personal). Uses environment.{env}.json config."
+    )
 
     args = parser.parse_args()
 
@@ -392,8 +398,9 @@ def main():
 
     # Load settings
     try:
-        settings = Settings()
-        print(f"\nEnvironment: {settings.dataverse.environment_url}")
+        settings = Settings(env_name=args.env)
+        print(f"\nEnvironment: {args.env}")
+        print(f"Dataverse URL: {settings.dataverse.environment_url}")
         print(f"Seed Data:   {settings.seed_data_v6_path}")
     except FileNotFoundError as e:
         print(f"Error: {e}")

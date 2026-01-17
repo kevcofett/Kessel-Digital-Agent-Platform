@@ -1,0 +1,189 @@
+{
+  "name": "ADIS-CreateAudience",
+  "description": "Creates audience definitions from model outputs with rules",
+  "version": "1.0",
+  "trigger": {
+    "type": "PowerAutomate",
+    "kind": "Button",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "sessionId": {"type": "string", "title": "Session ID"},
+          "audienceName": {"type": "string", "title": "Audience Name"},
+          "description": {"type": "string", "title": "Description"},
+          "modelRunId": {"type": "string", "title": "Source Model Run ID"},
+          "rules": {
+            "type": "array",
+            "title": "Filtering Rules",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field_name": {"type": "string"},
+                "operator": {"type": "string"},
+                "value": {"type": "string"}
+              }
+            }
+          }
+        },
+        "required": ["sessionId", "audienceName", "modelRunId"]
+      }
+    }
+  },
+  "actions": [
+    {
+      "name": "Initialize_AudienceId",
+      "type": "InitializeVariable",
+      "inputs": {
+        "name": "audienceId",
+        "type": "string",
+        "value": "@{guid()}"
+      }
+    },
+    {
+      "name": "Get_ModelOutputs",
+      "type": "Dataverse_ListRecords",
+      "inputs": {
+        "entityName": "mpa_model_outputs",
+        "filter": "mpa_model_run_id eq '@{triggerBody()?['modelRunId']}'"
+      }
+    },
+    {
+      "name": "Call_AudienceManager_Create",
+      "type": "HTTP",
+      "inputs": {
+        "method": "POST",
+        "uri": "@{parameters('AudienceManagerFunctionUrl')}/api/create-audience",
+        "headers": {"Content-Type": "application/json"},
+        "body": {
+          "audience_name": "@{triggerBody()?['audienceName']}",
+          "description": "@{triggerBody()?['description']}",
+          "source_type": "MODEL_OUTPUT",
+          "model_outputs": "@{body('Get_ModelOutputs')?['value']}",
+          "rules": "@{triggerBody()?['rules']}"
+        }
+      }
+    },
+    {
+      "name": "Parse_AudienceResponse",
+      "type": "ParseJSON",
+      "inputs": {
+        "content": "@{body('Call_AudienceManager_Create')}",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "audience_id": {"type": "string"},
+            "audience_name": {"type": "string"},
+            "member_count": {"type": "integer"},
+            "total_value": {"type": "number"},
+            "avg_ltv": {"type": "number"},
+            "audience_type": {"type": "string"},
+            "dominant_segment": {"type": "string"},
+            "segment_composition": {"type": "object"},
+            "recommended_channels": {"type": "object"},
+            "suggested_use_cases": {"type": "array"},
+            "members": {"type": "array"}
+          }
+        }
+      }
+    },
+    {
+      "name": "Create_Audience_Record",
+      "type": "Dataverse_CreateRecord",
+      "inputs": {
+        "entityName": "mpa_audiences",
+        "record": {
+          "mpa_audience_id": "@{variables('audienceId')}",
+          "mpa_audience_name": "@{triggerBody()?['audienceName']}",
+          "mpa_description": "@{triggerBody()?['description']}",
+          "mpa_created_date": "@{utcNow()}",
+          "mpa_status": 100000000,
+          "mpa_member_count": "@{body('Parse_AudienceResponse')?['member_count']}",
+          "mpa_total_value": "@{body('Parse_AudienceResponse')?['total_value']}",
+          "mpa_avg_ltv": "@{body('Parse_AudienceResponse')?['avg_ltv']}",
+          "mpa_audience_type": "@{body('Parse_AudienceResponse')?['audience_type']}",
+          "mpa_model_run_id": "@{triggerBody()?['modelRunId']}",
+          "mpa_session_id": "@{triggerBody()?['sessionId']}",
+          "mpa_recommended_channels": "@{string(body('Parse_AudienceResponse')?['recommended_channels'])}",
+          "mpa_recommended_use_cases": "@{string(body('Parse_AudienceResponse')?['suggested_use_cases'])}"
+        }
+      }
+    },
+    {
+      "name": "ForEach_Rule",
+      "type": "ForEach",
+      "foreach": "@{triggerBody()?['rules']}",
+      "actions": {
+        "Create_Rule_Record": {
+          "type": "Dataverse_CreateRecord",
+          "inputs": {
+            "entityName": "mpa_audience_rules",
+            "record": {
+              "mpa_audience_id": "@{variables('audienceId')}",
+              "mpa_rule_sequence": "@{iterationIndexes('ForEach_Rule')}",
+              "mpa_field_name": "@{items('ForEach_Rule')?['field_name']}",
+              "mpa_operator": "@{items('ForEach_Rule')?['operator']}",
+              "mpa_value": "@{items('ForEach_Rule')?['value']}",
+              "mpa_logic_connector": "@{coalesce(items('ForEach_Rule')?['logic_connector'], 'AND')}"
+            }
+          }
+        }
+      },
+      "runAfter": {
+        "Create_Audience_Record": ["Succeeded"]
+      }
+    },
+    {
+      "name": "ForEach_Member",
+      "type": "ForEach",
+      "foreach": "@{body('Parse_AudienceResponse')?['members']}",
+      "actions": {
+        "Create_Member_Record": {
+          "type": "Dataverse_CreateRecord",
+          "inputs": {
+            "entityName": "mpa_audience_members",
+            "record": {
+              "mpa_audience_id": "@{variables('audienceId')}",
+              "mpa_customer_key": "@{items('ForEach_Member')?['customer_key']}",
+              "mpa_inclusion_date": "@{utcNow()}",
+              "mpa_is_active": true,
+              "mpa_member_value": "@{items('ForEach_Member')?['predicted_ltv']}",
+              "mpa_member_score": "@{items('ForEach_Member')?['score_primary']}"
+            }
+          }
+        }
+      },
+      "runAfter": {
+        "ForEach_Rule": ["Succeeded"]
+      },
+      "runtimeConfiguration": {
+        "concurrency": {"repetitions": 50}
+      }
+    },
+    {
+      "name": "Return_AudienceResult",
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "audienceId": "@{variables('audienceId')}",
+          "audienceName": "@{triggerBody()?['audienceName']}",
+          "memberCount": "@{body('Parse_AudienceResponse')?['member_count']}",
+          "totalValue": "@{body('Parse_AudienceResponse')?['total_value']}",
+          "avgLtv": "@{body('Parse_AudienceResponse')?['avg_ltv']}",
+          "audienceType": "@{body('Parse_AudienceResponse')?['audience_type']}",
+          "dominantSegment": "@{body('Parse_AudienceResponse')?['dominant_segment']}",
+          "recommendedChannels": "@{body('Parse_AudienceResponse')?['recommended_channels']}",
+          "suggestedUseCases": "@{body('Parse_AudienceResponse')?['suggested_use_cases']}",
+          "status": "Created"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "AudienceManagerFunctionUrl": {
+      "type": "string",
+      "defaultValue": "https://func-adis-personal.azurewebsites.net"
+    }
+  }
+}

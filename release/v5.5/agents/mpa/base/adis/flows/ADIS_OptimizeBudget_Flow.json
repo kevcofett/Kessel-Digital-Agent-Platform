@@ -1,0 +1,180 @@
+{
+  "name": "ADIS-OptimizeBudget",
+  "description": "Runs AMMO budget optimization across audiences and channels",
+  "version": "1.0",
+  "trigger": {
+    "type": "PowerAutomate",
+    "kind": "Button",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "sessionId": {"type": "string", "title": "Session ID"},
+          "totalBudget": {"type": "number", "title": "Total Budget"},
+          "audienceIds": {
+            "type": "array",
+            "title": "Audience IDs",
+            "items": {"type": "string"}
+          },
+          "channels": {
+            "type": "array",
+            "title": "Channels to Consider",
+            "items": {"type": "string"}
+          },
+          "currentAllocation": {
+            "type": "object",
+            "title": "Current Channel Allocation (optional)"
+          },
+          "constraints": {
+            "type": "object",
+            "title": "Channel Constraints"
+          },
+          "objective": {
+            "type": "string",
+            "title": "Optimization Objective",
+            "enum": ["ROI", "REVENUE", "CONVERSIONS"],
+            "default": "ROI"
+          }
+        },
+        "required": ["sessionId", "totalBudget", "audienceIds"]
+      }
+    }
+  },
+  "actions": [
+    {
+      "name": "Initialize_OptimizationId",
+      "type": "InitializeVariable",
+      "inputs": {
+        "name": "optimizationId",
+        "type": "string",
+        "value": "@{guid()}"
+      }
+    },
+    {
+      "name": "Initialize_AudiencesArray",
+      "type": "InitializeVariable",
+      "inputs": {
+        "name": "audiencesArray",
+        "type": "array",
+        "value": []
+      }
+    },
+    {
+      "name": "ForEach_AudienceId",
+      "type": "ForEach",
+      "foreach": "@{triggerBody()?['audienceIds']}",
+      "actions": {
+        "Get_Audience",
+          "type": "Dataverse_GetRecord",
+          "inputs": {
+            "entityName": "mpa_audiences",
+            "recordId": "@{items('ForEach_AudienceId')}"
+          }
+        },
+        "Append_Audience": {
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "audiencesArray",
+            "value": {
+              "segment_name": "@{body('Get_Audience')?['mpa_audience_name']}",
+              "member_count": "@{body('Get_Audience')?['mpa_member_count']}",
+              "total_value": "@{body('Get_Audience')?['mpa_total_value']}",
+              "avg_ltv": "@{body('Get_Audience')?['mpa_avg_ltv']}"
+            }
+          },
+          "runAfter": {
+            "Get_Audience": ["Succeeded"]
+          }
+        }
+      }
+    },
+    {
+      "name": "Call_AMMO_Optimize",
+      "type": "HTTP",
+      "inputs": {
+        "method": "POST",
+        "uri": "@{parameters('AMMOFunctionUrl')}/api/optimize-allocation",
+        "headers": {"Content-Type": "application/json"},
+        "body": {
+          "total_budget": "@{triggerBody()?['totalBudget']}",
+          "audiences": "@{variables('audiencesArray')}",
+          "channels": "@{coalesce(triggerBody()?['channels'], json('[\"Email\", \"Paid Search\", \"Paid Social\", \"Programmatic Display\", \"CTV\"]'))}",
+          "current_allocation": "@{triggerBody()?['currentAllocation']}",
+          "constraints": "@{triggerBody()?['constraints']}",
+          "objective": "@{coalesce(triggerBody()?['objective'], 'ROI')}"
+        }
+      },
+      "runAfter": {
+        "ForEach_AudienceId": ["Succeeded"]
+      }
+    },
+    {
+      "name": "Parse_OptimizationResponse",
+      "type": "ParseJSON",
+      "inputs": {
+        "content": "@{body('Call_AMMO_Optimize')}",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "status": {"type": "string"},
+            "total_budget": {"type": "number"},
+            "total_expected_conversions": {"type": "number"},
+            "total_expected_revenue": {"type": "number"},
+            "total_expected_roi": {"type": "number"},
+            "allocations": {"type": "array"},
+            "comparison": {"type": "object"},
+            "optimization_details": {"type": "object"}
+          }
+        }
+      }
+    },
+    {
+      "name": "ForEach_Audience_CampaignLink",
+      "type": "ForEach",
+      "foreach": "@{triggerBody()?['audienceIds']}",
+      "actions": {
+        "Create_CampaignAudience_Record": {
+          "type": "Dataverse_CreateRecord",
+          "inputs": {
+            "entityName": "mpa_campaign_audiences",
+            "record": {
+              "mpa_session_id": "@{triggerBody()?['sessionId']}",
+              "mpa_audience_id": "@{items('ForEach_Audience_CampaignLink')}",
+              "mpa_linkage_name": "Campaign_@{utcNow('yyyyMMdd')}_@{items('ForEach_Audience_CampaignLink')}",
+              "mpa_allocated_budget": "@{div(triggerBody()?['totalBudget'], length(triggerBody()?['audienceIds']))}",
+              "mpa_expected_roi": "@{body('Parse_OptimizationResponse')?['total_expected_roi']}",
+              "mpa_ammo_recommendation": "@{string(body('Parse_OptimizationResponse'))}"
+            }
+          }
+        }
+      },
+      "runAfter": {
+        "Parse_OptimizationResponse": ["Succeeded"]
+      }
+    },
+    {
+      "name": "Return_OptimizationResult",
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "optimizationId": "@{variables('optimizationId')}",
+          "status": "@{body('Parse_OptimizationResponse')?['status']}",
+          "totalBudget": "@{body('Parse_OptimizationResponse')?['total_budget']}",
+          "expectedConversions": "@{body('Parse_OptimizationResponse')?['total_expected_conversions']}",
+          "expectedRevenue": "@{body('Parse_OptimizationResponse')?['total_expected_revenue']}",
+          "expectedROI": "@{body('Parse_OptimizationResponse')?['total_expected_roi']}",
+          "allocations": "@{body('Parse_OptimizationResponse')?['allocations']}",
+          "comparison": "@{body('Parse_OptimizationResponse')?['comparison']}",
+          "audienceCount": "@{length(triggerBody()?['audienceIds'])}"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "AMMOFunctionUrl": {
+      "type": "string",
+      "defaultValue": "https://func-adis-personal.azurewebsites.net"
+    }
+  }
+}

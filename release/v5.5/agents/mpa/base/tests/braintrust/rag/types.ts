@@ -173,7 +173,7 @@ export const RAG_CONFIG = {
     exactMatchBoost: 1.5, // Reduced from 2.0 to reduce over-emphasis
   },
   paths: {
-    kbDirectory: '../../../kb',
+    kbDirectory: '../../kb-v6',
     chunksCache: './rag-cache/kb-chunks.json',
     indexCache: './rag-cache/kb-index.json',
   },

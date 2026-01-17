@@ -1,0 +1,315 @@
+{
+  "schema_version": "1.0",
+  "created_date": "2026-01-16",
+  "description": "Audience Data Intelligence System (ADIS) Dataverse Schema",
+  "publisher_prefix": "mpa",
+  "tables": [
+    {
+      "logical_name": "mpa_upload_job",
+      "display_name": "Upload Job",
+      "plural_name": "Upload Jobs",
+      "description": "Tracks file upload processing jobs",
+      "primary_column": "mpa_job_name",
+      "columns": [
+        {
+          "logical_name": "mpa_upload_job_id",
+          "display_name": "Upload Job ID",
+          "type": "uniqueidentifier",
+          "is_primary_key": true
+        },
+        {
+          "logical_name": "mpa_job_name",
+          "display_name": "Job Name",
+          "type": "string",
+          "max_length": 200,
+          "required": true
+        },
+        {
+          "logical_name": "mpa_file_name",
+          "display_name": "File Name",
+          "type": "string",
+          "max_length": 500,
+          "required": true
+        },
+        {
+          "logical_name": "mpa_file_type",
+          "display_name": "File Type",
+          "type": "picklist",
+          "options": [
+            {"value": 100000000, "label": "XLSX"},
+            {"value": 100000001, "label": "XLS"},
+            {"value": 100000002, "label": "CSV"},
+            {"value": 100000003, "label": "DOCX"},
+            {"value": 100000004, "label": "PDF"},
+            {"value": 100000005, "label": "PPTX"}
+          ],
+          "required": true
+        },
+        {
+          "logical_name": "mpa_file_size_bytes",
+          "display_name": "File Size (Bytes)",
+          "type": "whole_number",
+          "min_value": 0,
+          "max_value": 268435456
+        },
+        {
+          "logical_name": "mpa_upload_timestamp",
+          "display_name": "Upload Timestamp",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "logical_name": "mpa_processing_status",
+          "display_name": "Processing Status",
+          "type": "picklist",
+          "options": [
+            {"value": 100000000, "label": "Pending"},
+            {"value": 100000001, "label": "Processing"},
+            {"value": 100000002, "label": "Completed"},
+            {"value": 100000003, "label": "Failed"},
+            {"value": 100000004, "label": "Partial"}
+          ],
+          "default_value": 100000000,
+          "required": true
+        },
+        {
+          "logical_name": "mpa_row_count",
+          "display_name": "Row Count",
+          "type": "whole_number",
+          "min_value": 0
+        },
+        {
+          "logical_name": "mpa_column_count",
+          "display_name": "Column Count",
+          "type": "whole_number",
+          "min_value": 0
+        },
+        {
+          "logical_name": "mpa_error_message",
+          "display_name": "Error Message",
+          "type": "memo",
+          "max_length": 10000
+        },
+        {
+          "logical_name": "mpa_source_description",
+          "display_name": "Source Description",
+          "type": "memo",
+          "max_length": 2000
+        },
+        {
+          "logical_name": "mpa_data_category",
+          "display_name": "Data Category",
+          "type": "picklist",
+          "options": [
+            {"value": 100000000, "label": "Transaction"},
+            {"value": 100000001, "label": "Engagement"},
+            {"value": 100000002, "label": "Loyalty"},
+            {"value": 100000003, "label": "CRM"},
+            {"value": 100000004, "label": "Survey"},
+            {"value": 100000005, "label": "Mixed"},
+            {"value": 100000006, "label": "Unknown"}
+          ]
+        }
+      ],
+      "relationships": [
+        {
+          "type": "many_to_one",
+          "related_table": "mpa_session",
+          "lookup_column": "mpa_session_id"
+        }
+      ]
+    },
+    {
+      "logical_name": "mpa_data_schema",
+      "display_name": "Data Schema",
+      "plural_name": "Data Schemas",
+      "description": "Stores detected schema for uploaded data columns",
+      "primary_column": "mpa_column_name",
+      "columns": [
+        {
+          "logical_name": "mpa_schema_id",
+          "display_name": "Schema ID",
+          "type": "uniqueidentifier",
+          "is_primary_key": true
+        },
+        {
+          "logical_name": "mpa_column_name",
+          "display_name": "Column Name",
+          "type": "string",
+          "max_length": 200,
+          "required": true
+        },
+        {
+          "logical_name": "mpa_column_index",
+          "display_name": "Column Index",
+          "type": "whole_number",
+          "min_value": 0
+        },
+        {
+          "logical_name": "mpa_detected_type",
+          "display_name": "Detected Type",
+          "type": "picklist",
+          "options": [
+            {"value": 100000000, "label": "CUSTOMER_ID"},
+            {"value": 100000001, "label": "TRANSACTION_ID"},
+            {"value": 100000002, "label": "EMAIL"},
+            {"value": 100000003, "label": "PHONE"},
+            {"value": 100000004, "label": "DATE"},
+            {"value": 100000005, "label": "CURRENCY"},
+            {"value": 100000006, "label": "CATEGORY"},
+            {"value": 100000007, "label": "NUMERIC"},
+            {"value": 100000008, "label": "TEXT"},
+            {"value": 100000009, "label": "BOOLEAN"},
+            {"value": 100000010, "label": "ENGAGEMENT_SCORE"},
+            {"value": 100000011, "label": "LOYALTY_TIER"},
+            {"value": 100000012, "label": "LOCATION"}
+          ],
+          "required": true
+        },
+        {
+          "logical_name": "mpa_confidence_score",
+          "display_name": "Confidence Score",
+          "type": "decimal",
+          "precision": 4,
+          "min_value": 0,
+          "max_value": 1
+        },
+        {
+          "logical_name": "mpa_sample_values",
+          "display_name": "Sample Values",
+          "type": "memo",
+          "max_length": 2000
+        },
+        {
+          "logical_name": "mpa_null_percentage",
+          "display_name": "Null Percentage",
+          "type": "decimal",
+          "precision": 4,
+          "min_value": 0,
+          "max_value": 100
+        },
+        {
+          "logical_name": "mpa_unique_count",
+          "display_name": "Unique Count",
+          "type": "whole_number",
+          "min_value": 0
+        },
+        {
+          "logical_name": "mpa_semantic_role",
+          "display_name": "Semantic Role",
+          "type": "picklist",
+          "options": [
+            {"value": 100000000, "label": "Primary Key"},
+            {"value": 100000001, "label": "Foreign Key"},
+            {"value": 100000002, "label": "Measure"},
+            {"value": 100000003, "label": "Dimension"},
+            {"value": 100000004, "label": "Timestamp"},
+            {"value": 100000005, "label": "Identifier"},
+            {"value": 100000006, "label": "Attribute"}
+          ]
+        },
+        {
+          "logical_name": "mpa_use_for_rfm",
+          "display_name": "Use for RFM",
+          "type": "boolean",
+          "default_value": false
+        },
+        {
+          "logical_name": "mpa_rfm_role",
+          "display_name": "RFM Role",
+          "type": "picklist",
+          "options": [
+            {"value": 100000000, "label": "None"},
+            {"value": 100000001, "label": "Recency Date"},
+            {"value": 100000002, "label": "Frequency Count"},
+            {"value": 100000003, "label": "Monetary Value"},
+            {"value": 100000004, "label": "Customer Key"}
+          ]
+        }
+      ],
+      "relationships": [
+        {
+          "type": "many_to_one",
+          "related_table": "mpa_upload_job",
+          "lookup_column": "mpa_upload_job_id"
+        }
+      ]
+    },
+    {
+      "logical_name": "mpa_customer_record",
+      "display_name": "Customer Record",
+      "plural_name": "Customer Records",
+      "description": "Stores normalized customer data from uploads",
+      "primary_column": "mpa_customer_key",
+      "columns": [
+        {
+          "logical_name": "mpa_record_id",
+          "display_name": "Record ID",
+          "type": "uniqueidentifier",
+          "is_primary_key": true
+        },
+        {
+          "logical_name": "mpa_customer_key",
+          "display_name": "Customer Key",
+          "type": "string",
+          "max_length": 100,
+          "required": true,
+          "indexed": true
+        },
+        {
+          "logical_name": "mpa_customer_key_hash",
+          "display_name": "Customer Key Hash",
+          "type": "string",
+          "max_length": 64,
+          "description": "SHA-256 hash for PII protection"
+        },
+        {
+          "logical_name": "mpa_record_data",
+          "display_name": "Record Data",
+          "type": "memo",
+          "max_length": 100000,
+          "description": "JSON blob of all record attributes"
+        },
+        {
+          "logical_name": "mpa_source_row_number",
+          "display_name": "Source Row Number",
+          "type": "whole_number",
+          "min_value": 1
+        },
+        {
+          "logical_name": "mpa_first_transaction_date",
+          "display_name": "First Transaction Date",
+          "type": "datetime"
+        },
+        {
+          "logical_name": "mpa_last_transaction_date",
+          "display_name": "Last Transaction Date",
+          "type": "datetime"
+        },
+        {
+          "logical_name": "mpa_transaction_count",
+          "display_name": "Transaction Count",
+          "type": "whole_number",
+          "min_value": 0
+        },
+        {
+          "logical_name": "mpa_total_monetary_value",
+          "display_name": "Total Monetary Value",
+          "type": "money"
+        },
+        {
+          "logical_name": "mpa_avg_transaction_value",
+          "display_name": "Average Transaction Value",
+          "type": "money"
+        }
+      ],
+      "relationships": [
+        {
+          "type": "many_to_one",
+          "related_table": "mpa_upload_job",
+          "lookup_column": "mpa_upload_job_id"
+        }
+      ]
+    }
+  ]
+}

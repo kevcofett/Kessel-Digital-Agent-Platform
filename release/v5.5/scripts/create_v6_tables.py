@@ -513,6 +513,12 @@ def main():
         action="store_true",
         help="Show what would be created without making changes"
     )
+    parser.add_argument(
+        "--env",
+        choices=["personal", "mastercard"],
+        default="personal",
+        help="Environment to use (default: personal). Uses environment.{env}.json config."
+    )
 
     args = parser.parse_args()
 
@@ -522,8 +528,9 @@ def main():
 
     # Load settings
     try:
-        settings = Settings()
-        print(f"\nEnvironment: {settings.dataverse.environment_url}")
+        settings = Settings(env_name=args.env)
+        print(f"\nEnvironment: {args.env}")
+        print(f"Dataverse URL: {settings.dataverse.environment_url}")
         print(f"API URL: {settings.dataverse.api_url}")
     except FileNotFoundError as e:
         print(f"Error: {e}")

@@ -1,0 +1,442 @@
+{
+  "schema_version": "1.0",
+  "created_date": "2026-01-16",
+  "description": "ADIS Audience Rules, Campaign Linkage, and Performance Tables",
+  "publisher_prefix": "mpa",
+  "tables": [
+    {
+      "logical_name": "mpa_audience_rule",
+      "display_name": "Audience Rule",
+      "plural_name": "Audience Rules",
+      "description": "Defines filtering rules for audience membership",
+      "primary_column": "mpa_rule_name",
+      "columns": [
+        {
+          "logical_name": "mpa_rule_id",
+          "display_name": "Rule ID",
+          "type": "uniqueidentifier",
+          "is_primary_key": true
+        },
+        {
+          "logical_name": "mpa_rule_name",
+          "display_name": "Rule Name",
+          "type": "string",
+          "max_length": 200
+        },
+        {
+          "logical_name": "mpa_rule_sequence",
+          "display_name": "Rule Sequence",
+          "type": "whole_number",
+          "min_value": 1,
+          "required": true
+        },
+        {
+          "logical_name": "mpa_field_name",
+          "display_name": "Field Name",
+          "type": "string",
+          "max_length": 100,
+          "required": true
+        },
+        {
+          "logical_name": "mpa_operator",
+          "display_name": "Operator",
+          "type": "picklist",
+          "options": [
+            {"value": 100000000, "label": "EQUALS"},
+            {"value": 100000001, "label": "NOT_EQUALS"},
+            {"value": 100000002, "label": "GREATER_THAN"},
+            {"value": 100000003, "label": "GREATER_THAN_OR_EQUAL"},
+            {"value": 100000004, "label": "LESS_THAN"},
+            {"value": 100000005, "label": "LESS_THAN_OR_EQUAL"},
+            {"value": 100000006, "label": "IN"},
+            {"value": 100000007, "label": "NOT_IN"},
+            {"value": 100000008, "label": "BETWEEN"},
+            {"value": 100000009, "label": "CONTAINS"},
+            {"value": 100000010, "label": "STARTS_WITH"},
+            {"value": 100000011, "label": "IS_NULL"},
+            {"value": 100000012, "label": "IS_NOT_NULL"}
+          ],
+          "required": true
+        },
+        {
+          "logical_name": "mpa_value",
+          "display_name": "Value",
+          "type": "string",
+          "max_length": 1000
+        },
+        {
+          "logical_name": "mpa_value_list",
+          "display_name": "Value List",
+          "type": "memo",
+          "max_length": 10000,
+          "description": "JSON array for IN/NOT_IN operators"
+        },
+        {
+          "logical_name": "mpa_logic_connector",
+          "display_name": "Logic Connector",
+          "type": "picklist",
+          "options": [
+            {"value": 100000000, "label": "AND"},
+            {"value": 100000001, "label": "OR"}
+          ],
+          "default_value": 100000000
+        },
+        {
+          "logical_name": "mpa_group_id",
+          "display_name": "Group ID",
+          "type": "whole_number",
+          "description": "For grouping rules with parentheses"
+        }
+      ],
+      "relationships": [
+        {
+          "type": "many_to_one",
+          "related_table": "mpa_audience",
+          "lookup_column": "mpa_audience_id"
+        }
+      ]
+    },
+    {
+      "logical_name": "mpa_audience_member",
+      "display_name": "Audience Member",
+      "plural_name": "Audience Members",
+      "description": "Maps customers to audience memberships",
+      "primary_column": "mpa_customer_key",
+      "columns": [
+        {
+          "logical_name": "mpa_member_id",
+          "display_name": "Member ID",
+          "type": "uniqueidentifier",
+          "is_primary_key": true
+        },
+        {
+          "logical_name": "mpa_customer_key",
+          "display_name": "Customer Key",
+          "type": "string",
+          "max_length": 100,
+          "required": true,
+          "indexed": true
+        },
+        {
+          "logical_name": "mpa_inclusion_date",
+          "display_name": "Inclusion Date",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "logical_name": "mpa_exclusion_date",
+          "display_name": "Exclusion Date",
+          "type": "datetime"
+        },
+        {
+          "logical_name": "mpa_is_active",
+          "display_name": "Is Active",
+          "type": "boolean",
+          "default_value": true
+        },
+        {
+          "logical_name": "mpa_member_value",
+          "display_name": "Member Value",
+          "type": "money",
+          "description": "LTV or monetary value at time of inclusion"
+        },
+        {
+          "logical_name": "mpa_member_score",
+          "display_name": "Member Score",
+          "type": "decimal",
+          "precision": 6,
+          "description": "Propensity or priority score"
+        }
+      ],
+      "relationships": [
+        {
+          "type": "many_to_one",
+          "related_table": "mpa_audience",
+          "lookup_column": "mpa_audience_id"
+        },
+        {
+          "type": "many_to_one",
+          "related_table": "mpa_customer_record",
+          "lookup_column": "mpa_record_id"
+        }
+      ]
+    },
+    {
+      "logical_name": "mpa_campaign_audience",
+      "display_name": "Campaign Audience",
+      "plural_name": "Campaign Audiences",
+      "description": "Links audiences to media plan campaigns",
+      "primary_column": "mpa_linkage_name",
+      "columns": [
+        {
+          "logical_name": "mpa_campaign_audience_id",
+          "display_name": "Campaign Audience ID",
+          "type": "uniqueidentifier",
+          "is_primary_key": true
+        },
+        {
+          "logical_name": "mpa_linkage_name",
+          "display_name": "Linkage Name",
+          "type": "string",
+          "max_length": 200
+        },
+        {
+          "logical_name": "mpa_allocation_percentage",
+          "display_name": "Allocation Percentage",
+          "type": "decimal",
+          "precision": 4,
+          "min_value": 0,
+          "max_value": 100
+        },
+        {
+          "logical_name": "mpa_allocated_budget",
+          "display_name": "Allocated Budget",
+          "type": "money"
+        },
+        {
+          "logical_name": "mpa_expected_reach",
+          "display_name": "Expected Reach",
+          "type": "whole_number"
+        },
+        {
+          "logical_name": "mpa_expected_conversions",
+          "display_name": "Expected Conversions",
+          "type": "whole_number"
+        },
+        {
+          "logical_name": "mpa_expected_roi",
+          "display_name": "Expected ROI",
+          "type": "decimal",
+          "precision": 4
+        },
+        {
+          "logical_name": "mpa_channel_allocation",
+          "display_name": "Channel Allocation",
+          "type": "memo",
+          "max_length": 20000,
+          "description": "JSON map of channel to budget allocation"
+        },
+        {
+          "logical_name": "mpa_ammo_recommendation",
+          "display_name": "AMMO Recommendation",
+          "type": "memo",
+          "max_length": 50000,
+          "description": "Full AMMO optimization output JSON"
+        }
+      ],
+      "relationships": [
+        {
+          "type": "many_to_one",
+          "related_table": "mpa_session",
+          "lookup_column": "mpa_session_id"
+        },
+        {
+          "type": "many_to_one",
+          "related_table": "mpa_audience",
+          "lookup_column": "mpa_audience_id"
+        }
+      ]
+    },
+    {
+      "logical_name": "mpa_performance_linkage",
+      "display_name": "Performance Linkage",
+      "plural_name": "Performance Linkages",
+      "description": "Tracks actual campaign performance by audience",
+      "primary_column": "mpa_linkage_name",
+      "columns": [
+        {
+          "logical_name": "mpa_linkage_id",
+          "display_name": "Linkage ID",
+          "type": "uniqueidentifier",
+          "is_primary_key": true
+        },
+        {
+          "logical_name": "mpa_linkage_name",
+          "display_name": "Linkage Name",
+          "type": "string",
+          "max_length": 200
+        },
+        {
+          "logical_name": "mpa_channel",
+          "display_name": "Channel",
+          "type": "string",
+          "max_length": 100
+        },
+        {
+          "logical_name": "mpa_platform",
+          "display_name": "Platform",
+          "type": "string",
+          "max_length": 100
+        },
+        {
+          "logical_name": "mpa_measurement_date",
+          "display_name": "Measurement Date",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "logical_name": "mpa_actual_spend",
+          "display_name": "Actual Spend",
+          "type": "money"
+        },
+        {
+          "logical_name": "mpa_actual_impressions",
+          "display_name": "Actual Impressions",
+          "type": "whole_number"
+        },
+        {
+          "logical_name": "mpa_actual_clicks",
+          "display_name": "Actual Clicks",
+          "type": "whole_number"
+        },
+        {
+          "logical_name": "mpa_actual_conversions",
+          "display_name": "Actual Conversions",
+          "type": "whole_number"
+        },
+        {
+          "logical_name": "mpa_actual_revenue",
+          "display_name": "Actual Revenue",
+          "type": "money"
+        },
+        {
+          "logical_name": "mpa_actual_cpm",
+          "display_name": "Actual CPM",
+          "type": "money"
+        },
+        {
+          "logical_name": "mpa_actual_cpc",
+          "display_name": "Actual CPC",
+          "type": "money"
+        },
+        {
+          "logical_name": "mpa_actual_cpa",
+          "display_name": "Actual CPA",
+          "type": "money"
+        },
+        {
+          "logical_name": "mpa_actual_roas",
+          "display_name": "Actual ROAS",
+          "type": "decimal",
+          "precision": 4
+        },
+        {
+          "logical_name": "mpa_vs_expected_variance",
+          "display_name": "Vs Expected Variance",
+          "type": "decimal",
+          "precision": 4,
+          "description": "Percentage variance from expected"
+        },
+        {
+          "logical_name": "mpa_raw_data",
+          "display_name": "Raw Data",
+          "type": "memo",
+          "max_length": 100000,
+          "description": "Full JSON of imported performance data"
+        }
+      ],
+      "relationships": [
+        {
+          "type": "many_to_one",
+          "related_table": "mpa_campaign_audience",
+          "lookup_column": "mpa_campaign_audience_id"
+        }
+      ]
+    },
+    {
+      "logical_name": "mpa_model_catalog",
+      "display_name": "Model Catalog",
+      "plural_name": "Model Catalog",
+      "description": "Reference table of available analysis models",
+      "primary_column": "mpa_model_name",
+      "columns": [
+        {
+          "logical_name": "mpa_catalog_id",
+          "display_name": "Catalog ID",
+          "type": "uniqueidentifier",
+          "is_primary_key": true
+        },
+        {
+          "logical_name": "mpa_model_name",
+          "display_name": "Model Name",
+          "type": "string",
+          "max_length": 100,
+          "required": true
+        },
+        {
+          "logical_name": "mpa_model_category",
+          "display_name": "Model Category",
+          "type": "picklist",
+          "options": [
+            {"value": 100000000, "label": "Segmentation"},
+            {"value": 100000001, "label": "Customer Value"},
+            {"value": 100000002, "label": "Propensity"},
+            {"value": 100000003, "label": "Clustering"},
+            {"value": 100000004, "label": "Uplift"},
+            {"value": 100000005, "label": "Forecasting"},
+            {"value": 100000006, "label": "Attribution"}
+          ]
+        },
+        {
+          "logical_name": "mpa_description",
+          "display_name": "Description",
+          "type": "memo",
+          "max_length": 4000
+        },
+        {
+          "logical_name": "mpa_required_columns",
+          "display_name": "Required Columns",
+          "type": "memo",
+          "max_length": 2000,
+          "description": "JSON array of required input columns"
+        },
+        {
+          "logical_name": "mpa_optional_columns",
+          "display_name": "Optional Columns",
+          "type": "memo",
+          "max_length": 2000,
+          "description": "JSON array of optional input columns"
+        },
+        {
+          "logical_name": "mpa_output_columns",
+          "display_name": "Output Columns",
+          "type": "memo",
+          "max_length": 2000,
+          "description": "JSON array of output columns produced"
+        },
+        {
+          "logical_name": "mpa_min_records",
+          "display_name": "Minimum Records",
+          "type": "whole_number",
+          "description": "Minimum dataset size required"
+        },
+        {
+          "logical_name": "mpa_python_library",
+          "display_name": "Python Library",
+          "type": "string",
+          "max_length": 100
+        },
+        {
+          "logical_name": "mpa_function_endpoint",
+          "display_name": "Function Endpoint",
+          "type": "string",
+          "max_length": 500,
+          "description": "Azure Function URL for this model"
+        },
+        {
+          "logical_name": "mpa_is_active",
+          "display_name": "Is Active",
+          "type": "boolean",
+          "default_value": true
+        },
+        {
+          "logical_name": "mpa_mastercard_approved",
+          "display_name": "Mastercard Approved",
+          "type": "boolean",
+          "default_value": false,
+          "description": "Whether model is approved for Mastercard environment"
+        }
+      ]
+    }
+  ]
+}

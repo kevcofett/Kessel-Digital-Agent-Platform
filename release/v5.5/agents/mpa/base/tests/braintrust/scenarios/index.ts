@@ -138,6 +138,26 @@ import {
   audienceRemovalChangeContext,
 } from "./audience-removal-change.js";
 
+// Import ADIS Scenarios (v6.4)
+import {
+  ADIS_SCENARIOS,
+  ADIS_CONTEXTS,
+  ADIS_SCENARIO_METADATA,
+  adisTriggerScenario,
+  rfmAudienceCreationScenario,
+  ammoBudgetOptimizationScenario,
+  clvAnalysisScenario,
+  segmentationNewbieScenario,
+  adisTriggerContext,
+  rfmAudienceCreationContext,
+  ammoBudgetOptimizationContext,
+  clvAnalysisContext,
+  segmentationNewbieContext,
+  dataRichRetailPersona,
+  customerValueFocusedPersona,
+  segmentationNewbiePersona,
+} from "./adis-scenarios.js";
+
 // Import v6.0 Vertical Benchmark Scenarios
 import {
   retailBenchmarkScenario,
@@ -241,6 +261,26 @@ export {
   audienceRemovalChangeContext,
 };
 
+// Export ADIS Scenarios
+export {
+  ADIS_SCENARIOS,
+  ADIS_CONTEXTS,
+  ADIS_SCENARIO_METADATA,
+  adisTriggerScenario,
+  rfmAudienceCreationScenario,
+  ammoBudgetOptimizationScenario,
+  clvAnalysisScenario,
+  segmentationNewbieScenario,
+  adisTriggerContext,
+  rfmAudienceCreationContext,
+  ammoBudgetOptimizationContext,
+  clvAnalysisContext,
+  segmentationNewbieContext,
+  dataRichRetailPersona,
+  customerValueFocusedPersona,
+  segmentationNewbiePersona,
+};
+
 /**
  * All available test scenarios
  */
@@ -275,6 +315,8 @@ export const ALL_SCENARIOS: TestScenario[] = [
   audienceRemovalChangeScenario,
   // V6.1 Capability scenarios
   ...V61_TEST_SCENARIOS,
+  // ADIS Scenarios (v6.4)
+  ...ADIS_SCENARIOS,
 ];
 
 /**
@@ -381,6 +423,7 @@ export function getScenariosByCategory(
     | "targeting"
     | "multi-audience"
     | "reforecasting"
+    | "adis"
     | "all"
 ): TestScenario[] {
   switch (category) {
@@ -396,6 +439,8 @@ export function getScenariosByCategory(
       return MULTI_AUDIENCE_SCENARIOS;
     case "reforecasting":
       return REFORECASTING_SCENARIOS;
+    case "adis":
+      return ADIS_SCENARIOS;
     case "all":
     default:
       return ALL_SCENARIOS;
@@ -545,6 +590,8 @@ export const SCENARIO_CONTEXTS = {
   "outcome-kpi-change": outcomeKPIChangeContext,
   "audience-addition-change": audienceAdditionChangeContext,
   "audience-removal-change": audienceRemovalChangeContext,
+  // ADIS scenarios (v6.4)
+  ...ADIS_CONTEXTS,
 };
 
 // Backwards compatibility

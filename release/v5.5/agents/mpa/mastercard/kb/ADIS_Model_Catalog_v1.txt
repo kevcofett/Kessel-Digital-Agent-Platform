@@ -1,0 +1,462 @@
+ADIS MODEL CATALOG REFERENCE
+
+VERSION 1.0
+
+OVERVIEW
+
+This document provides technical specifications for all analytical models available within the Audience Data Intelligence System. Users must understand model requirements capabilities and limitations before initiating analysis.
+
+RFM SEGMENTATION MODEL
+
+MODEL TYPE
+
+Traditional segmentation based on customer purchasing behavior patterns.
+
+CATEGORY
+
+Segmentation
+
+PYTHON LIBRARY
+
+Native pandas implementation with numpy for calculations.
+
+REQUIRED INPUT COLUMNS
+
+- customer_key representing unique customer identifier
+- transaction_date representing date of each transaction
+- monetary_value representing transaction amount
+
+OPTIONAL INPUT COLUMNS
+
+- transaction_id for deduplication validation
+- product_category for category-specific RFM variants
+
+OUTPUT COLUMNS
+
+- customer_key matching input identifier
+- recency_days representing days since last transaction
+- frequency representing total transaction count
+- monetary representing total transaction value
+- r_score representing recency quintile from 1 to 5
+- f_score representing frequency quintile from 1 to 5
+- m_score representing monetary quintile from 1 to 5
+- rfm_combined representing concatenated three-digit score
+- segment_name representing named segment classification
+- percentile representing overall customer ranking
+
+MINIMUM RECORDS
+
+100 customers with at least 500 total transactions recommended for reliable quintile boundaries.
+
+SEGMENT DEFINITIONS
+
+Champions receive scores of 5 across all dimensions indicating most recent most frequent highest spending customers.
+
+Loyal Customers show strong frequency and monetary scores with good recency indicating consistent valuable customers.
+
+Potential Loyalists demonstrate recent activity with emerging frequency patterns indicating growth opportunity.
+
+New Customers show very recent first purchases requiring onboarding and development focus.
+
+At Risk customers previously performed well but recency scores indicate declining engagement.
+
+Cannot Lose Them customers show high monetary value but declining recency requiring intervention.
+
+Hibernating customers show low recency with moderate historical value indicating dormancy.
+
+Lost customers show low scores across all dimensions indicating minimal current value.
+
+DECILE ANALYSIS MODEL
+
+MODEL TYPE
+
+Value-based customer stratification into ten equal-sized groups.
+
+CATEGORY
+
+Customer Value
+
+PYTHON LIBRARY
+
+Native pandas implementation with scipy for statistical calculations.
+
+REQUIRED INPUT COLUMNS
+
+- customer_key representing unique customer identifier
+- value_metric representing the measure for ranking such as revenue or LTV
+
+OPTIONAL INPUT COLUMNS
+
+- transaction_count for supplementary analysis
+- customer_tenure for context
+
+OUTPUT COLUMNS
+
+- customer_key matching input identifier
+- monetary representing aggregated value
+- decile representing group assignment from 1 to 10
+- percentile representing precise ranking from 1 to 100
+- segment_code formatted as D01 through D10
+- segment_name formatted as Decile 1 through Decile 10
+
+MINIMUM RECORDS
+
+50 customers minimum for meaningful decile distribution.
+
+MODEL METRICS
+
+Pareto ratio indicates percentage of total value held by top two deciles.
+
+Gini coefficient measures inequality in value distribution from 0 representing perfect equality to 1 representing maximum inequality.
+
+COHORT ANALYSIS MODEL
+
+MODEL TYPE
+
+Temporal segmentation tracking customer groups over time.
+
+CATEGORY
+
+Segmentation
+
+PYTHON LIBRARY
+
+Native pandas implementation with datetime manipulation.
+
+REQUIRED INPUT COLUMNS
+
+- customer_key representing unique customer identifier
+- transaction_date representing activity timestamps
+
+OPTIONAL INPUT COLUMNS
+
+- monetary_value for value-weighted retention analysis
+- activity_type for multi-event cohort tracking
+
+OUTPUT COLUMNS
+
+- customer_key matching input identifier
+- cohort representing acquisition period designation
+- segment_code representing cohort identifier
+- segment_name representing formatted cohort label
+
+MODEL PARAMETERS
+
+- cohort_period accepting M for monthly W for weekly or Q for quarterly grouping
+
+MINIMUM RECORDS
+
+200 customers spanning at least three cohort periods for meaningful retention patterns.
+
+MODEL METRICS
+
+Retention matrix shows percentage of each cohort remaining active in subsequent periods.
+
+Average retention by period aggregates across cohorts for trend identification.
+
+DETERMINISTIC CLV MODEL
+
+MODEL TYPE
+
+Rule-based customer lifetime value calculation using historical averages.
+
+CATEGORY
+
+Customer Value
+
+PYTHON LIBRARY
+
+Native pandas implementation.
+
+REQUIRED INPUT COLUMNS
+
+- customer_key representing unique customer identifier
+- transaction_date representing purchase timestamps
+- monetary_value representing transaction amounts
+
+OPTIONAL INPUT COLUMNS
+
+- None required beyond core transaction data
+
+MODEL PARAMETERS
+
+- margin representing profit margin percentage defaulting to 0.30
+- lifespan_years representing projected customer lifespan defaulting to 3 years
+
+OUTPUT COLUMNS
+
+- customer_key matching input identifier
+- predicted_ltv representing projected lifetime value
+- predicted_ltv_lower representing 80 percent lower bound
+- predicted_ltv_upper representing 120 percent upper bound
+- frequency representing total transaction count
+- monetary representing total historical spend
+- avg_order_value representing mean transaction amount
+- tenure_years representing customer relationship duration
+- decile representing LTV-based ranking
+
+MINIMUM RECORDS
+
+100 customers with transaction history spanning at least 90 days.
+
+CALCULATION FORMULA
+
+CLV equals Average Order Value multiplied by Annual Purchase Frequency multiplied by Lifespan Years multiplied by Margin Percentage.
+
+PROBABILISTIC CLV MODEL BG-NBD
+
+MODEL TYPE
+
+Statistical model predicting customer value with uncertainty quantification.
+
+CATEGORY
+
+Customer Value
+
+PYTHON LIBRARY
+
+lifetimes library version 0.11.3 or higher.
+
+REQUIRED INPUT COLUMNS
+
+- customer_key representing unique customer identifier
+- transaction_date representing purchase timestamps
+- monetary_value representing transaction amounts
+
+OPTIONAL INPUT COLUMNS
+
+- None required beyond core transaction data
+
+MODEL PARAMETERS
+
+- prediction_period representing days to forecast defaulting to 365
+
+OUTPUT COLUMNS
+
+- customer_key matching input identifier
+- predicted_ltv representing expected lifetime value
+- predicted_purchases representing expected transaction count
+- prob_alive representing probability customer is still active
+- frequency representing historical transaction count
+- recency representing days since first to last transaction
+- T representing days since first transaction to analysis date
+- monetary representing average transaction value
+
+MINIMUM RECORDS
+
+500 customers with transaction history spanning at least 180 days for reliable model fitting.
+
+MODEL METRICS
+
+BG-NBD parameters including r alpha a and b describing population-level purchasing patterns.
+
+Gamma-Gamma parameters describing monetary value distribution.
+
+LIMITATIONS
+
+Model assumes stationary purchasing process which may not hold during promotions or seasonality.
+
+Model requires repeat purchasers meaning customers with only one transaction receive limited predictions.
+
+MASTERCARD ENVIRONMENT
+
+Library is pre-approved for Mastercard environment.
+
+KMEANS CLUSTERING MODEL
+
+MODEL TYPE
+
+Unsupervised learning discovering natural customer groupings.
+
+CATEGORY
+
+Clustering
+
+PYTHON LIBRARY
+
+scikit-learn version 1.3.0 or higher.
+
+REQUIRED INPUT COLUMNS
+
+- At minimum two numeric columns for clustering dimensions
+
+OPTIONAL INPUT COLUMNS
+
+- customer_key for customer-level cluster assignment
+- Additional numeric features improve cluster differentiation
+
+MODEL PARAMETERS
+
+- n_clusters representing desired cluster count defaulting to 5
+- feature_columns representing list of columns to use for clustering
+
+OUTPUT COLUMNS
+
+- customer_key if provided in input
+- cluster_id representing assigned cluster from 0 to n_clusters minus 1
+- cluster_distance representing distance to assigned cluster centroid
+- segment_code formatted as C00 through Cnn
+- segment_name formatted as Cluster 0 through Cluster n
+
+MINIMUM RECORDS
+
+500 records minimum for reliable clustering. 1000 or more recommended.
+
+MODEL METRICS
+
+Silhouette score measuring cluster cohesion and separation from negative 1 to 1 where higher is better.
+
+Inertia representing within-cluster sum of squares where lower indicates tighter clusters.
+
+Cluster centroids showing mean feature values for each cluster.
+
+LIMITATIONS
+
+K-Means assumes spherical clusters which may not represent all natural groupings.
+
+Cluster count must be specified or determined through experimentation.
+
+Outliers significantly influence centroid positions.
+
+MASTERCARD ENVIRONMENT
+
+Library is pre-approved for Mastercard environment.
+
+PROPENSITY MODEL
+
+MODEL TYPE
+
+Supervised learning predicting likelihood of target behavior.
+
+CATEGORY
+
+Propensity
+
+PYTHON LIBRARY
+
+scikit-learn for basic models or xgboost version 1.7.0 or higher for gradient boosting.
+
+REQUIRED INPUT COLUMNS
+
+- customer_key representing unique customer identifier
+- target_variable representing binary outcome to predict
+- At minimum three feature columns for model training
+
+OPTIONAL INPUT COLUMNS
+
+- Additional features improve prediction accuracy
+
+OUTPUT COLUMNS
+
+- customer_key matching input identifier
+- propensity_score representing predicted probability from 0 to 1
+- decile representing propensity-based ranking
+- segment_code formatted by propensity tier
+- segment_name describing propensity level
+
+MINIMUM RECORDS
+
+1000 records minimum with at least 100 positive outcomes for reliable model training.
+
+MODEL METRICS
+
+AUC-ROC measuring discrimination ability from 0.5 representing random to 1.0 representing perfect.
+
+Precision and recall at various thresholds.
+
+Feature importance rankings.
+
+MASTERCARD ENVIRONMENT
+
+XGBoost requires approval verification. Scikit-learn alternatives are pre-approved.
+
+UPLIFT MODEL
+
+MODEL TYPE
+
+Causal inference identifying customers most responsive to treatment.
+
+CATEGORY
+
+Uplift
+
+PYTHON LIBRARY
+
+causalml library or custom implementation.
+
+REQUIRED INPUT COLUMNS
+
+- customer_key representing unique customer identifier
+- treatment representing binary treatment indicator
+- outcome representing measured response variable
+- At minimum three feature columns for heterogeneity modeling
+
+OPTIONAL INPUT COLUMNS
+
+- Additional features improve uplift estimation
+
+OUTPUT COLUMNS
+
+- customer_key matching input identifier
+- uplift_score representing estimated treatment effect
+- decile representing uplift-based ranking
+- segment_code formatted by uplift tier
+- segment_name describing uplift level
+
+MINIMUM RECORDS
+
+5000 records minimum with balanced treatment and control groups.
+
+MODEL METRICS
+
+AUUC representing area under uplift curve.
+
+Qini coefficient measuring targeting effectiveness.
+
+LIMITATIONS
+
+Requires valid randomized treatment assignment.
+
+Observational data requires strong assumptions for causal interpretation.
+
+MASTERCARD ENVIRONMENT
+
+CausalML requires approval verification before use.
+
+MODEL AVAILABILITY MATRIX
+
+PERSONAL ENVIRONMENT ARAGORN AI
+
+All models are available without restriction.
+
+MASTERCARD ENVIRONMENT
+
+Pre-approved models include:
+
+- RFM
+- Decile
+- Cohort
+- Deterministic CLV
+- Probabilistic CLV via lifetimes
+- K-Means Clustering
+
+Models requiring approval verification include:
+
+- Propensity via XGBoost
+- Uplift via CausalML
+
+MODEL SELECTION GUIDANCE
+
+For customer understanding start with RFM to establish behavioral segments.
+
+For value analysis use Decile to understand concentration and Deterministic CLV for projections.
+
+For retention focus use Cohort analysis to identify lifecycle patterns.
+
+For sophisticated projections use Probabilistic CLV when data requirements are met.
+
+For behavioral discovery use K-Means when segments should emerge from data patterns.
+
+For targeting optimization use Propensity models when labeled outcomes are available.
+
+For treatment allocation use Uplift models when understanding incremental impact is critical.

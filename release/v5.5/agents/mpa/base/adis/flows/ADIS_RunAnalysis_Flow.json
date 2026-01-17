@@ -1,0 +1,225 @@
+{
+  "name": "ADIS-RunAnalysis",
+  "description": "Executes analytical models on uploaded data",
+  "version": "1.0",
+  "trigger": {
+    "type": "PowerAutomate",
+    "kind": "Button",
+    "inputs": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "uploadJobId": {
+            "type": "string",
+            "title": "Upload Job ID",
+            "description": "ID of the upload job containing data"
+          },
+          "sessionId": {
+            "type": "string",
+            "title": "Session ID"
+          },
+          "modelType": {
+            "type": "string",
+            "title": "Model Type",
+            "enum": ["RFM", "DECILE", "COHORT", "CLV_DETERMINISTIC", "CLV_BGNBD", "CLUSTERING_KMEANS"]
+          },
+          "parameters": {
+            "type": "object",
+            "title": "Model Parameters",
+            "description": "JSON object with model-specific parameters"
+          }
+        },
+        "required": ["uploadJobId", "sessionId", "modelType"]
+      }
+    }
+  },
+  "actions": [
+    {
+      "name": "Initialize_ModelRunId",
+      "type": "InitializeVariable",
+      "inputs": {
+        "name": "modelRunId",
+        "type": "string",
+        "value": "@{guid()}"
+      }
+    },
+    {
+      "name": "Get_UploadJob",
+      "type": "Dataverse_GetRecord",
+      "inputs": {
+        "entityName": "mpa_upload_jobs",
+        "recordId": "@{triggerBody()?['uploadJobId']}"
+      }
+    },
+    {
+      "name": "Get_CustomerRecords",
+      "type": "Dataverse_ListRecords",
+      "inputs": {
+        "entityName": "mpa_customer_records",
+        "filter": "mpa_upload_job_id eq '@{triggerBody()?['uploadJobId']}'"
+      }
+    },
+    {
+      "name": "Create_ModelRun_Record",
+      "type": "Dataverse_CreateRecord",
+      "inputs": {
+        "entityName": "mpa_model_runs",
+        "record": {
+          "mpa_model_run_id": "@{variables('modelRunId')}",
+          "mpa_run_name": "@{triggerBody()?['modelType']}_@{utcNow('yyyyMMdd_HHmmss')}",
+          "mpa_model_type": "@{triggerBody()?['modelType']}",
+          "mpa_run_timestamp": "@{utcNow()}",
+          "mpa_status": 100000001,
+          "mpa_upload_job_id": "@{triggerBody()?['uploadJobId']}",
+          "mpa_session_id": "@{triggerBody()?['sessionId']}",
+          "mpa_parameters": "@{string(triggerBody()?['parameters'])}"
+        }
+      }
+    },
+    {
+      "name": "Prepare_DataPayload",
+      "type": "Compose",
+      "inputs": {
+        "model_type": "@{triggerBody()?['modelType']}",
+        "model_run_id": "@{variables('modelRunId')}",
+        "parameters": "@{triggerBody()?['parameters']}",
+        "data": "@{body('Get_CustomerRecords')?['value']}"
+      }
+    },
+    {
+      "name": "Call_AnalysisEngine_Function",
+      "type": "HTTP",
+      "inputs": {
+        "method": "POST",
+        "uri": "@{parameters('AnalysisEngineFunctionUrl')}/api/run-analysis",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "@{outputs('Prepare_DataPayload')}"
+      },
+      "runAfter": {
+        "Prepare_DataPayload": ["Succeeded"]
+      }
+    },
+    {
+      "name": "Parse_AnalysisResponse",
+      "type": "ParseJSON",
+      "inputs": {
+        "content": "@{body('Call_AnalysisEngine_Function')}",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "model_run_id": {"type": "string"},
+            "model_type": {"type": "string"},
+            "status": {"type": "string"},
+            "records_processed": {"type": "integer"},
+            "segments_created": {"type": "integer"},
+            "duration_seconds": {"type": "number"},
+            "metrics": {"type": "object"},
+            "outputs": {"type": "array"},
+            "error": {"type": "string"}
+          }
+        }
+      }
+    },
+    {
+      "name": "Condition_AnalysisSuccess",
+      "type": "If",
+      "expression": {
+        "equals": ["@{body('Parse_AnalysisResponse')?['status']}", "COMPLETED"]
+      },
+      "actions": {
+        "Update_ModelRun_Success": {
+          "type": "Dataverse_UpdateRecord",
+          "inputs": {
+            "entityName": "mpa_model_runs",
+            "recordId": "@{variables('modelRunId')}",
+            "record": {
+              "mpa_status": 100000002,
+              "mpa_records_processed": "@{body('Parse_AnalysisResponse')?['records_processed']}",
+              "mpa_segments_created": "@{body('Parse_AnalysisResponse')?['segments_created']}",
+              "mpa_duration_seconds": "@{body('Parse_AnalysisResponse')?['duration_seconds']}",
+              "mpa_model_metrics": "@{string(body('Parse_AnalysisResponse')?['metrics'])}"
+            }
+          }
+        },
+        "ForEach_Output": {
+          "type": "ForEach",
+          "foreach": "@{body('Parse_AnalysisResponse')?['outputs']}",
+          "actions": {
+            "Create_ModelOutput_Record": {
+              "type": "Dataverse_CreateRecord",
+              "inputs": {
+                "entityName": "mpa_model_outputs",
+                "record": {
+                  "mpa_model_run_id": "@{variables('modelRunId')}",
+                  "mpa_customer_key": "@{items('ForEach_Output')?['customer_key']}",
+                  "mpa_segment_code": "@{items('ForEach_Output')?['segment_code']}",
+                  "mpa_segment_name": "@{items('ForEach_Output')?['segment_name']}",
+                  "mpa_score_primary": "@{items('ForEach_Output')?['score_primary']}",
+                  "mpa_score_r": "@{items('ForEach_Output')?['r_score']}",
+                  "mpa_score_f": "@{items('ForEach_Output')?['f_score']}",
+                  "mpa_score_m": "@{items('ForEach_Output')?['m_score']}",
+                  "mpa_rfm_combined": "@{items('ForEach_Output')?['rfm_combined']}",
+                  "mpa_predicted_ltv": "@{items('ForEach_Output')?['predicted_ltv']}",
+                  "mpa_predicted_ltv_lower": "@{items('ForEach_Output')?['predicted_ltv_lower']}",
+                  "mpa_predicted_ltv_upper": "@{items('ForEach_Output')?['predicted_ltv_upper']}",
+                  "mpa_cluster_id": "@{items('ForEach_Output')?['cluster_id']}",
+                  "mpa_propensity_score": "@{items('ForEach_Output')?['propensity_score']}",
+                  "mpa_decile": "@{items('ForEach_Output')?['decile']}",
+                  "mpa_percentile": "@{items('ForEach_Output')?['percentile']}"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Update_ModelRun_Success": ["Succeeded"]
+          },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "repetitions": 20
+            }
+          }
+        }
+      },
+      "else": {
+        "actions": {
+          "Update_ModelRun_Failed": {
+            "type": "Dataverse_UpdateRecord",
+            "inputs": {
+              "entityName": "mpa_model_runs",
+              "recordId": "@{variables('modelRunId')}",
+              "record": {
+                "mpa_status": 100000003,
+                "mpa_error_message": "@{body('Parse_AnalysisResponse')?['error']}"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Return_AnalysisResult",
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "modelRunId": "@{variables('modelRunId')}",
+          "modelType": "@{triggerBody()?['modelType']}",
+          "status": "@{body('Parse_AnalysisResponse')?['status']}",
+          "recordsProcessed": "@{body('Parse_AnalysisResponse')?['records_processed']}",
+          "segmentsCreated": "@{body('Parse_AnalysisResponse')?['segments_created']}",
+          "durationSeconds": "@{body('Parse_AnalysisResponse')?['duration_seconds']}",
+          "metrics": "@{body('Parse_AnalysisResponse')?['metrics']}",
+          "message": "@{if(equals(body('Parse_AnalysisResponse')?['status'], 'COMPLETED'), 'Analysis completed successfully', body('Parse_AnalysisResponse')?['error'])}"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "AnalysisEngineFunctionUrl": {
+      "type": "string",
+      "defaultValue": "https://func-adis-personal.azurewebsites.net"
+    }
+  }
+}

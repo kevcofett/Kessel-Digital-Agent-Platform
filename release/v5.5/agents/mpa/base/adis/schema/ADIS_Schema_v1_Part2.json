@@ -1,0 +1,383 @@
+{
+  "schema_version": "1.0",
+  "created_date": "2026-01-16",
+  "description": "ADIS Model and Audience Tables",
+  "publisher_prefix": "mpa",
+  "tables": [
+    {
+      "logical_name": "mpa_model_run",
+      "display_name": "Model Run",
+      "plural_name": "Model Runs",
+      "description": "Tracks analysis model execution",
+      "primary_column": "mpa_run_name",
+      "columns": [
+        {
+          "logical_name": "mpa_model_run_id",
+          "display_name": "Model Run ID",
+          "type": "uniqueidentifier",
+          "is_primary_key": true
+        },
+        {
+          "logical_name": "mpa_run_name",
+          "display_name": "Run Name",
+          "type": "string",
+          "max_length": 200,
+          "required": true
+        },
+        {
+          "logical_name": "mpa_model_type",
+          "display_name": "Model Type",
+          "type": "picklist",
+          "options": [
+            {"value": 100000000, "label": "RFM"},
+            {"value": 100000001, "label": "DECILE"},
+            {"value": 100000002, "label": "COHORT"},
+            {"value": 100000003, "label": "CLV_DETERMINISTIC"},
+            {"value": 100000004, "label": "CLV_BGNBD"},
+            {"value": 100000005, "label": "CLV_PARETONBD"},
+            {"value": 100000006, "label": "CLUSTERING_KMEANS"},
+            {"value": 100000007, "label": "CLUSTERING_DBSCAN"},
+            {"value": 100000008, "label": "PROPENSITY"},
+            {"value": 100000009, "label": "UPLIFT"},
+            {"value": 100000010, "label": "CHURN"},
+            {"value": 100000011, "label": "LOOKALIKE"},
+            {"value": 100000012, "label": "CUSTOM"}
+          ],
+          "required": true
+        },
+        {
+          "logical_name": "mpa_run_timestamp",
+          "display_name": "Run Timestamp",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "logical_name": "mpa_parameters",
+          "display_name": "Parameters",
+          "type": "memo",
+          "max_length": 50000,
+          "description": "JSON blob of model parameters"
+        },
+        {
+          "logical_name": "mpa_status",
+          "display_name": "Status",
+          "type": "picklist",
+          "options": [
+            {"value": 100000000, "label": "Queued"},
+            {"value": 100000001, "label": "Running"},
+            {"value": 100000002, "label": "Completed"},
+            {"value": 100000003, "label": "Failed"},
+            {"value": 100000004, "label": "Cancelled"}
+          ],
+          "default_value": 100000000,
+          "required": true
+        },
+        {
+          "logical_name": "mpa_duration_seconds",
+          "display_name": "Duration (Seconds)",
+          "type": "whole_number",
+          "min_value": 0
+        },
+        {
+          "logical_name": "mpa_records_processed",
+          "display_name": "Records Processed",
+          "type": "whole_number",
+          "min_value": 0
+        },
+        {
+          "logical_name": "mpa_segments_created",
+          "display_name": "Segments Created",
+          "type": "whole_number",
+          "min_value": 0
+        },
+        {
+          "logical_name": "mpa_error_message",
+          "display_name": "Error Message",
+          "type": "memo",
+          "max_length": 10000
+        },
+        {
+          "logical_name": "mpa_model_metrics",
+          "display_name": "Model Metrics",
+          "type": "memo",
+          "max_length": 50000,
+          "description": "JSON blob of model quality metrics (R2, silhouette, etc.)"
+        }
+      ],
+      "relationships": [
+        {
+          "type": "many_to_one",
+          "related_table": "mpa_upload_job",
+          "lookup_column": "mpa_upload_job_id"
+        },
+        {
+          "type": "many_to_one",
+          "related_table": "mpa_session",
+          "lookup_column": "mpa_session_id"
+        }
+      ]
+    },
+    {
+      "logical_name": "mpa_model_output",
+      "display_name": "Model Output",
+      "plural_name": "Model Outputs",
+      "description": "Stores per-customer model results",
+      "primary_column": "mpa_customer_key",
+      "columns": [
+        {
+          "logical_name": "mpa_output_id",
+          "display_name": "Output ID",
+          "type": "uniqueidentifier",
+          "is_primary_key": true
+        },
+        {
+          "logical_name": "mpa_customer_key",
+          "display_name": "Customer Key",
+          "type": "string",
+          "max_length": 100,
+          "required": true,
+          "indexed": true
+        },
+        {
+          "logical_name": "mpa_segment_code",
+          "display_name": "Segment Code",
+          "type": "string",
+          "max_length": 50
+        },
+        {
+          "logical_name": "mpa_segment_name",
+          "display_name": "Segment Name",
+          "type": "string",
+          "max_length": 200
+        },
+        {
+          "logical_name": "mpa_score_primary",
+          "display_name": "Primary Score",
+          "type": "decimal",
+          "precision": 6
+        },
+        {
+          "logical_name": "mpa_score_r",
+          "display_name": "Recency Score",
+          "type": "whole_number",
+          "min_value": 1,
+          "max_value": 5
+        },
+        {
+          "logical_name": "mpa_score_f",
+          "display_name": "Frequency Score",
+          "type": "whole_number",
+          "min_value": 1,
+          "max_value": 5
+        },
+        {
+          "logical_name": "mpa_score_m",
+          "display_name": "Monetary Score",
+          "type": "whole_number",
+          "min_value": 1,
+          "max_value": 5
+        },
+        {
+          "logical_name": "mpa_rfm_combined",
+          "display_name": "RFM Combined",
+          "type": "string",
+          "max_length": 10,
+          "description": "Combined RFM score like '555' or '5-5-5'"
+        },
+        {
+          "logical_name": "mpa_predicted_ltv",
+          "display_name": "Predicted LTV",
+          "type": "money"
+        },
+        {
+          "logical_name": "mpa_predicted_ltv_lower",
+          "display_name": "Predicted LTV Lower Bound",
+          "type": "money"
+        },
+        {
+          "logical_name": "mpa_predicted_ltv_upper",
+          "display_name": "Predicted LTV Upper Bound",
+          "type": "money"
+        },
+        {
+          "logical_name": "mpa_cluster_id",
+          "display_name": "Cluster ID",
+          "type": "whole_number"
+        },
+        {
+          "logical_name": "mpa_cluster_distance",
+          "display_name": "Cluster Distance",
+          "type": "decimal",
+          "precision": 6,
+          "description": "Distance to cluster centroid"
+        },
+        {
+          "logical_name": "mpa_propensity_score",
+          "display_name": "Propensity Score",
+          "type": "decimal",
+          "precision": 6,
+          "min_value": 0,
+          "max_value": 1
+        },
+        {
+          "logical_name": "mpa_uplift_score",
+          "display_name": "Uplift Score",
+          "type": "decimal",
+          "precision": 6
+        },
+        {
+          "logical_name": "mpa_churn_probability",
+          "display_name": "Churn Probability",
+          "type": "decimal",
+          "precision": 4,
+          "min_value": 0,
+          "max_value": 1
+        },
+        {
+          "logical_name": "mpa_decile",
+          "display_name": "Decile",
+          "type": "whole_number",
+          "min_value": 1,
+          "max_value": 10
+        },
+        {
+          "logical_name": "mpa_percentile",
+          "display_name": "Percentile",
+          "type": "whole_number",
+          "min_value": 1,
+          "max_value": 100
+        }
+      ],
+      "relationships": [
+        {
+          "type": "many_to_one",
+          "related_table": "mpa_model_run",
+          "lookup_column": "mpa_model_run_id"
+        },
+        {
+          "type": "many_to_one",
+          "related_table": "mpa_customer_record",
+          "lookup_column": "mpa_record_id"
+        }
+      ]
+    },
+    {
+      "logical_name": "mpa_audience",
+      "display_name": "Audience",
+      "plural_name": "Audiences",
+      "description": "Defined audience segments for targeting",
+      "primary_column": "mpa_audience_name",
+      "columns": [
+        {
+          "logical_name": "mpa_audience_id",
+          "display_name": "Audience ID",
+          "type": "uniqueidentifier",
+          "is_primary_key": true
+        },
+        {
+          "logical_name": "mpa_audience_name",
+          "display_name": "Audience Name",
+          "type": "string",
+          "max_length": 200,
+          "required": true
+        },
+        {
+          "logical_name": "mpa_description",
+          "display_name": "Description",
+          "type": "memo",
+          "max_length": 4000
+        },
+        {
+          "logical_name": "mpa_created_date",
+          "display_name": "Created Date",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "logical_name": "mpa_status",
+          "display_name": "Status",
+          "type": "picklist",
+          "options": [
+            {"value": 100000000, "label": "Draft"},
+            {"value": 100000001, "label": "Active"},
+            {"value": 100000002, "label": "Archived"},
+            {"value": 100000003, "label": "Expired"}
+          ],
+          "default_value": 100000000,
+          "required": true
+        },
+        {
+          "logical_name": "mpa_member_count",
+          "display_name": "Member Count",
+          "type": "whole_number",
+          "min_value": 0
+        },
+        {
+          "logical_name": "mpa_total_value",
+          "display_name": "Total Value",
+          "type": "money",
+          "description": "Sum of member LTV or monetary value"
+        },
+        {
+          "logical_name": "mpa_avg_ltv",
+          "display_name": "Average LTV",
+          "type": "money"
+        },
+        {
+          "logical_name": "mpa_version",
+          "display_name": "Version",
+          "type": "whole_number",
+          "min_value": 1,
+          "default_value": 1
+        },
+        {
+          "logical_name": "mpa_audience_type",
+          "display_name": "Audience Type",
+          "type": "picklist",
+          "options": [
+            {"value": 100000000, "label": "RFM Segment"},
+            {"value": 100000001, "label": "Value Tier"},
+            {"value": 100000002, "label": "Behavioral Cluster"},
+            {"value": 100000003, "label": "Propensity Based"},
+            {"value": 100000004, "label": "Lifecycle Stage"},
+            {"value": 100000005, "label": "Custom Rule"},
+            {"value": 100000006, "label": "Lookalike"}
+          ]
+        },
+        {
+          "logical_name": "mpa_recommended_channels",
+          "display_name": "Recommended Channels",
+          "type": "memo",
+          "max_length": 2000,
+          "description": "JSON array of recommended media channels"
+        },
+        {
+          "logical_name": "mpa_recommended_use_cases",
+          "display_name": "Recommended Use Cases",
+          "type": "memo",
+          "max_length": 4000,
+          "description": "JSON array of suggested marketing use cases"
+        },
+        {
+          "logical_name": "mpa_platform_ids",
+          "display_name": "Platform IDs",
+          "type": "memo",
+          "max_length": 10000,
+          "description": "JSON map of platform-specific audience IDs after export"
+        }
+      ],
+      "relationships": [
+        {
+          "type": "many_to_one",
+          "related_table": "mpa_model_run",
+          "lookup_column": "mpa_model_run_id"
+        },
+        {
+          "type": "many_to_one",
+          "related_table": "mpa_session",
+          "lookup_column": "mpa_session_id"
+        }
+      ]
+    }
+  ]
+}

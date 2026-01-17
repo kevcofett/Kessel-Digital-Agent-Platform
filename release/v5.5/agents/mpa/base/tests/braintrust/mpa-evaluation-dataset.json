@@ -1,6 +1,6 @@
 {
-  "name": "MPA v5.7 Evaluation Dataset",
-  "description": "Test cases for evaluating MPA Copilot against v5.7 instruction set",
+  "name": "MPA v5.8 Evaluation Dataset",
+  "description": "Test cases for evaluating MPA Copilot against v5.8 instruction set with real-world ecommerce scenarios",
   "test_cases": [
     {
       "id": "uniteller_step1_initial",
@@ -218,6 +218,194 @@
         "explain_what_it_takes",
         "not_discourage",
         "illuminate_path"
+      ]
+    },
+    {
+      "id": "ecommerce_rfm_reactivation_initial",
+      "name": "Ecommerce - Dormant Customer Reactivation Brief",
+      "input": "I have an ecommerce business with about 14,000 customers. About 21% haven't purchased in over a year. How should I allocate my $50K monthly budget to reactivate them?",
+      "metadata": {
+        "currentStep": 3,
+        "userSophistication": "moderate",
+        "vertical": "ECOMMERCE",
+        "collectedData": {
+          "customer_base": 13879,
+          "dormant_segment": 2883,
+          "dormant_pct": 20.8,
+          "budget": 50000,
+          "objective": "reactivation"
+        }
+      },
+      "expected_behaviors": [
+        "recommend_email_for_reactivation",
+        "suggest_meta_for_dormant_reach",
+        "discuss_segmentation_strategy",
+        "mention_win_back_campaigns",
+        "consider_ltv_in_allocation"
+      ],
+      "anti_patterns": [
+        "ignore_dormant_segment_size",
+        "recommend_only_acquisition_channels"
+      ]
+    },
+    {
+      "id": "ecommerce_rfm_reactivation_roi",
+      "name": "Ecommerce - Reactivation vs Acquisition ROI",
+      "input": "What kind of return can I expect from reactivating these dormant customers versus acquiring new ones?",
+      "context": "User has 2,883 dormant customers (21% of 13,879), average LTV is $396.51",
+      "metadata": {
+        "currentStep": 3,
+        "userSophistication": "moderate",
+        "vertical": "ECOMMERCE",
+        "collectedData": {
+          "dormant_segment": 2883,
+          "average_ltv": 396.51
+        }
+      },
+      "expected_behaviors": [
+        "compare_cac_to_reactivation_cost",
+        "cite_reactivation_benchmarks",
+        "discuss_cohort_analysis",
+        "mention_dormant_customer_value"
+      ]
+    },
+    {
+      "id": "ecommerce_new_vs_returning_mix",
+      "name": "Ecommerce - New vs Returning Channel Mix",
+      "input": "My data shows new customers drive 36% of revenue but returning customers drive 64%. New customers have $119 AOS vs $129 for returning. How should this affect my channel mix?",
+      "metadata": {
+        "currentStep": 5,
+        "userSophistication": "high",
+        "vertical": "ECOMMERCE",
+        "collectedData": {
+          "new_customer_revenue_share": 0.36,
+          "returning_customer_revenue_share": 0.64,
+          "new_customer_aos": 119.23,
+          "returning_customer_aos": 128.95
+        }
+      },
+      "expected_behaviors": [
+        "acknowledge_retention_dominance",
+        "recommend_balanced_portfolio",
+        "suggest_email_for_retention",
+        "recommend_meta_for_acquisition",
+        "discuss_channel_roles"
+      ],
+      "anti_patterns": [
+        "ignore_returning_customer_value",
+        "recommend_only_acquisition"
+      ]
+    },
+    {
+      "id": "ecommerce_acquisition_vs_retention_focus",
+      "name": "Ecommerce - Acquisition vs Retention Focus",
+      "input": "Should I focus more on acquisition channels or retention channels given these numbers?",
+      "context": "New customers: 36% revenue, $119 AOS. Returning: 64% revenue, $129 AOS.",
+      "metadata": {
+        "currentStep": 5,
+        "userSophistication": "moderate",
+        "vertical": "ECOMMERCE"
+      },
+      "expected_behaviors": [
+        "discuss_incrementality",
+        "recommend_marginal_efficiency_analysis",
+        "suggest_portfolio_approach",
+        "calculate_ltv_implications"
+      ]
+    },
+    {
+      "id": "ecommerce_retention_decline",
+      "name": "Ecommerce - Declining Retention Strategy",
+      "input": "Our year-over-year customer retention has dropped from 25% to 21%. What media strategies can help improve retention?",
+      "metadata": {
+        "currentStep": 3,
+        "userSophistication": "moderate",
+        "vertical": "ECOMMERCE",
+        "collectedData": {
+          "retention_2017_to_2018": 24.6,
+          "retention_2018_to_2019": 21.0,
+          "retention_trend": "declining"
+        }
+      },
+      "expected_behaviors": [
+        "acknowledge_retention_decline",
+        "recommend_email_lifecycle_campaigns",
+        "suggest_sms_engagement",
+        "discuss_loyalty_programs",
+        "mention_crm_integration"
+      ],
+      "anti_patterns": [
+        "ignore_retention_trend",
+        "recommend_only_acquisition_tactics"
+      ]
+    },
+    {
+      "id": "ecommerce_vip_lookalike_targeting",
+      "name": "Ecommerce - VIP Lookalike Audience Strategy",
+      "input": "I have about 2,700 VIP customers who have 10+ orders and $500+ lifetime value. How do I find more customers like them?",
+      "metadata": {
+        "currentStep": 3,
+        "userSophistication": "moderate",
+        "vertical": "ECOMMERCE",
+        "collectedData": {
+          "vip_customers": 2666,
+          "vip_pct": 19.2,
+          "vip_ltv_threshold": 500,
+          "vip_order_threshold": 10
+        }
+      },
+      "expected_behaviors": [
+        "recommend_lookalike_audiences",
+        "suggest_meta_value_based_lookalikes",
+        "mention_google_pmax",
+        "discuss_first_party_data_strategy",
+        "recommend_seed_audience_quality"
+      ]
+    },
+    {
+      "id": "ecommerce_vip_channel_selection",
+      "name": "Ecommerce - VIP Lookalike Channel Selection",
+      "input": "What channels are best for reaching lookalikes of my VIP segment?",
+      "context": "User has 2,666 VIP customers with 10+ orders and $500+ LTV",
+      "metadata": {
+        "currentStep": 5,
+        "userSophistication": "moderate",
+        "vertical": "ECOMMERCE",
+        "collectedData": {
+          "vip_customers": 2666,
+          "vip_ltv_threshold": 500
+        }
+      },
+      "expected_behaviors": [
+        "recommend_meta_lookalikes",
+        "suggest_amazon_dsp_if_relevant",
+        "mention_google_pmax_audience_signals",
+        "discuss_cpm_vs_audience_quality_tradeoff"
+      ]
+    },
+    {
+      "id": "ecommerce_q1_retention_planning",
+      "name": "Ecommerce - Q1 Holiday Customer Retention",
+      "input": "Our data shows we acquire most customers in Q4 but many don't come back. How should I plan my Q1 budget to retain holiday customers?",
+      "metadata": {
+        "currentStep": 7,
+        "userSophistication": "moderate",
+        "vertical": "ECOMMERCE",
+        "collectedData": {
+          "q4_acquisition_spike": true,
+          "q1_retention_challenge": true
+        }
+      },
+      "expected_behaviors": [
+        "acknowledge_q4_acquisition_pattern",
+        "recommend_january_reactivation_window",
+        "suggest_welcome_series_extension",
+        "discuss_90_day_engagement_window",
+        "recommend_email_lifecycle_for_q1"
+      ],
+      "anti_patterns": [
+        "ignore_seasonal_pattern",
+        "recommend_same_budget_allocation"
       ]
     }
   ]

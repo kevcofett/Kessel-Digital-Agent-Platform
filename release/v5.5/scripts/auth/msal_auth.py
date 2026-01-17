@@ -24,17 +24,26 @@ class MSALAuthenticator:
 
     GRAPH_SCOPE = "https://graph.microsoft.com/.default"
 
-    def __init__(self, tenant_id: str, client_id: str, cache_file: Optional[Path] = None):
+    # Microsoft Azure PowerShell well-known client ID - works for device code flow across tenants
+    # This is a first-party Microsoft app that supports Dynamics CRM scopes
+    DEFAULT_CLIENT_ID = "1950a258-227b-4e31-a9cf-717495945fc2"
+
+    def __init__(self, tenant_id: str, client_id: Optional[str] = None, cache_file: Optional[Path] = None):
         """
         Initialize the authenticator.
 
         Args:
             tenant_id: Azure AD tenant ID
-            client_id: Azure AD application (client) ID
+            client_id: Azure AD application (client) ID. If None or "TO_BE_CONFIGURED",
+                      uses Microsoft's Azure PowerShell well-known client ID for device code flow.
             cache_file: Optional path to token cache file. Defaults to ~/.mpa_token_cache.json
         """
         self.tenant_id = tenant_id
-        self.client_id = client_id
+        # Use default client ID if none provided or placeholder value
+        if not client_id or client_id == "TO_BE_CONFIGURED":
+            self.client_id = self.DEFAULT_CLIENT_ID
+        else:
+            self.client_id = client_id
         self.cache_file = cache_file or Path.home() / ".mpa_token_cache.json"
         self.authority = f"https://login.microsoftonline.com/{tenant_id}"
 

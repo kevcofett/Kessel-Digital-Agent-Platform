@@ -33,6 +33,8 @@ import { behavioralTargetingChangeScenario, behavioralTargetingPersona, behavior
 import { outcomeKPIChangeScenario, outcomeKPIPersona, outcomeKPIChangeContext, } from "./outcome-kpi-change.js";
 import { audienceAdditionChangeScenario, audienceAdditionPersona, audienceAdditionChangeContext, } from "./audience-addition-change.js";
 import { audienceRemovalChangeScenario, audienceRemovalPersona, audienceRemovalChangeContext, } from "./audience-removal-change.js";
+// Import ADIS Scenarios (v6.4)
+import { ADIS_SCENARIOS, ADIS_CONTEXTS, ADIS_SCENARIO_METADATA, adisTriggerScenario, rfmAudienceCreationScenario, ammoBudgetOptimizationScenario, clvAnalysisScenario, segmentationNewbieScenario, adisTriggerContext, rfmAudienceCreationContext, ammoBudgetOptimizationContext, clvAnalysisContext, segmentationNewbieContext, dataRichRetailPersona, customerValueFocusedPersona, segmentationNewbiePersona, } from "./adis-scenarios.js";
 // Export individual scenarios
 export { basicUserStep1_2Scenario, basicUserPersona, sophisticatedIdkScenario, sophisticatedUserPersona, full10StepScenario, intermediateUserPersona, };
 // Export Phase 1 Quality Scenarios
@@ -43,6 +45,8 @@ export { precisionTargetingComplexScenario, precisionTargetingPersona, precision
 export { multiAudienceUnifiedPlanScenario, multiAudienceUnifiedPersona, multiAudienceUnifiedPlanContext, multiAudienceChannelAllocationScenario, multiAudienceChannelPersona, multiAudienceChannelAllocationContext, multiAudienceVaryingKpisScenario, multiAudienceVaryingKpisPersona, multiAudienceVaryingKpisContext, };
 // Export Reforecasting Scenarios
 export { budgetRevisionMidstreamScenario, budgetRevisionPersona, budgetRevisionMidstreamContext, budgetDecreaseMidstreamScenario, budgetDecreasePersona, budgetDecreaseMidstreamContext, volumeTargetIncreaseScenario, volumeTargetIncreasePersona, volumeTargetIncreaseContext, timelineCompressionScenario, timelineCompressionPersona, timelineCompressionContext, efficiencyShockScenario, efficiencyShockPersona, efficiencyShockContext, channelMixChangeScenario, channelMixChangePersona, channelMixChangeContext, geoExpansionChangeScenario, geoExpansionPersona, geoExpansionChangeContext, demographicShiftChangeScenario, demographicShiftPersona, demographicShiftChangeContext, behavioralTargetingChangeScenario, behavioralTargetingPersona, behavioralTargetingChangeContext, outcomeKPIChangeScenario, outcomeKPIPersona, outcomeKPIChangeContext, audienceAdditionChangeScenario, audienceAdditionPersona, audienceAdditionChangeContext, audienceRemovalChangeScenario, audienceRemovalPersona, audienceRemovalChangeContext, };
+// Export ADIS Scenarios
+export { ADIS_SCENARIOS, ADIS_CONTEXTS, ADIS_SCENARIO_METADATA, adisTriggerScenario, rfmAudienceCreationScenario, ammoBudgetOptimizationScenario, clvAnalysisScenario, segmentationNewbieScenario, adisTriggerContext, rfmAudienceCreationContext, ammoBudgetOptimizationContext, clvAnalysisContext, segmentationNewbieContext, dataRichRetailPersona, customerValueFocusedPersona, segmentationNewbiePersona, };
 /**
  * All available test scenarios
  */
@@ -77,6 +81,8 @@ export const ALL_SCENARIOS = [
     audienceRemovalChangeScenario,
     // V6.1 Capability scenarios
     ...V61_TEST_SCENARIOS,
+    // ADIS Scenarios (v6.4)
+    ...ADIS_SCENARIOS,
 ];
 /**
  * Reforecasting Scenarios
@@ -181,6 +187,8 @@ export function getScenariosByCategory(category) {
             return MULTI_AUDIENCE_SCENARIOS;
         case "reforecasting":
             return REFORECASTING_SCENARIOS;
+        case "adis":
+            return ADIS_SCENARIOS;
         case "all":
         default:
             return ALL_SCENARIOS;
@@ -320,6 +328,8 @@ export const SCENARIO_CONTEXTS = {
     "outcome-kpi-change": outcomeKPIChangeContext,
     "audience-addition-change": audienceAdditionChangeContext,
     "audience-removal-change": audienceRemovalChangeContext,
+    // ADIS scenarios (v6.4)
+    ...ADIS_CONTEXTS,
 };
 // Backwards compatibility
 export const PHASE1_CONTEXTS = SCENARIO_CONTEXTS;

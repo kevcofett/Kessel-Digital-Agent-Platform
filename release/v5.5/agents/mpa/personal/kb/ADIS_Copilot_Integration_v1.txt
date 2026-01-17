@@ -1,0 +1,254 @@
+ADIS COPILOT INTEGRATION GUIDE
+
+VERSION 1.0
+
+OVERVIEW
+
+This document specifies how the Media Planning Agent integrates with the Audience Data Intelligence System. The agent must recognize ADIS triggers and guide users through data upload analysis and audience activation workflows.
+
+TRIGGER RECOGNITION
+
+The agent must detect user intent to work with customer data. Trigger patterns include:
+
+USER MENTIONS DATA UPLOAD
+
+When user mentions uploading files or providing customer data the agent must initiate the ADIS file upload workflow.
+
+Example triggers:
+- I have customer data to upload
+- Here is my transaction file
+- Can you analyze this customer list
+- I want to upload my CRM export
+
+Agent response must explain supported file formats and data requirements before accepting upload.
+
+USER REQUESTS AUDIENCE SEGMENTATION
+
+When user requests customer segmentation without existing ADIS data the agent must first determine if data upload is needed.
+
+Example triggers:
+- Segment my customers
+- Create audience groups
+- Who are my best customers
+- Build RFM segments
+
+Agent must check for existing uploaded data before suggesting upload.
+
+USER REFERENCES SPECIFIC ANALYSIS
+
+When user requests specific analytical models the agent must validate data availability and requirements.
+
+Example triggers:
+- Run RFM analysis
+- Calculate customer lifetime value
+- Show me cohort retention
+- Cluster my customers
+
+Agent must verify required columns exist in uploaded data.
+
+CONVERSATION FLOW PATTERNS
+
+FILE UPLOAD WORKFLOW
+
+Step 1 Agent explains ADIS capabilities and supported file formats
+Step 2 User provides file through Copilot file upload interface
+Step 3 Agent invokes ADIS FileUpload flow with file content
+Step 4 Agent presents detected schema and asks user to verify column assignments
+Step 5 Agent confirms successful upload and available analysis options
+
+ANALYSIS WORKFLOW
+
+Step 1 Agent presents available analysis models based on detected data types
+Step 2 User selects desired analysis or agent recommends based on stated objectives
+Step 3 Agent invokes ADIS RunAnalysis flow with appropriate parameters
+Step 4 Agent presents analysis results including segment distributions and key metrics
+Step 5 Agent offers to create audiences from analysis results
+
+AUDIENCE CREATION WORKFLOW
+
+Step 1 Agent presents segment options from completed analysis
+Step 2 User specifies desired audience criteria or selects predefined segments
+Step 3 Agent optionally gathers additional filtering rules from user
+Step 4 Agent invokes ADIS CreateAudience flow with selections
+Step 5 Agent presents audience summary including size value and channel recommendations
+
+OPTIMIZATION WORKFLOW
+
+Step 1 Agent presents created audiences available for campaign linkage
+Step 2 User specifies budget and channel preferences
+Step 3 Agent invokes ADIS OptimizeBudget flow with AMMO parameters
+Step 4 Agent presents optimization results including allocation recommendations
+Step 5 Agent incorporates AMMO recommendations into media plan output
+
+RESPONSE TEMPLATES
+
+UPLOAD CONFIRMATION
+
+After successful file upload the agent must respond with:
+
+Your file has been processed successfully.
+
+File Details:
+- File name and type
+- Row count and column count
+- Detected data category
+
+Detected Columns:
+- List each column with detected type and confidence score
+- Highlight columns identified for RFM analysis
+
+Please verify these column assignments are correct. If any column types need adjustment let me know which column and its correct type.
+
+ANALYSIS RESULTS
+
+After successful analysis the agent must respond with:
+
+Analysis Complete: [Model Type]
+
+Summary:
+- Records processed count
+- Segments created count
+- Processing duration
+
+Key Findings:
+- Primary metric such as segment distribution for RFM or Pareto ratio for Decile
+- Notable patterns or insights
+- Value concentration statistics
+
+Segment Breakdown:
+- List each segment with customer count percentage and total value
+
+Would you like to create audiences from these segments for your media plan?
+
+AUDIENCE CREATION RESULTS
+
+After successful audience creation the agent must respond with:
+
+Audience Created: [Audience Name]
+
+Audience Profile:
+- Member count
+- Total value
+- Average LTV
+- Dominant segment
+
+Recommended Channels:
+- List recommended channels with rationale
+- Note any channels to avoid
+
+Suggested Use Cases:
+- List suggested campaign types
+- Include priority level
+
+Would you like to optimize budget allocation for this audience?
+
+OPTIMIZATION RESULTS
+
+After successful AMMO optimization the agent must respond with:
+
+Budget Optimization Complete
+
+Total Budget: [Amount]
+Expected ROI: [Percentage]
+Expected Revenue: [Amount]
+
+Recommended Allocation:
+- List each channel with budget amount percentage and expected metrics
+
+Comparison to Current Plan:
+- If current allocation provided show lift metrics
+- Revenue lift amount and percentage
+- Conversion lift amount and percentage
+
+This allocation has been incorporated into your media plan recommendations.
+
+ERROR HANDLING
+
+UPLOAD FAILURES
+
+When file processing fails the agent must:
+- Explain the specific error encountered
+- Provide guidance for resolution
+- Offer to retry with corrected file
+
+ANALYSIS FAILURES
+
+When analysis fails the agent must:
+- Explain missing requirements such as columns or minimum records
+- Suggest alternative analyses if applicable
+- Offer to help prepare data for retry
+
+INSUFFICIENT DATA
+
+When data does not meet model requirements the agent must:
+- Explain specific requirements not met
+- Suggest data enrichment or alternative approaches
+- Recommend appropriate analysis for available data
+
+PARAMETER MAPPING
+
+When invoking ADIS flows the agent must map conversation context to flow parameters.
+
+FILE UPLOAD PARAMETERS
+
+- fileName from uploaded file metadata
+- fileContent from base64 encoded file data
+- sessionId from current conversation session
+- dataCategory inferred from user description or detected automatically
+- sourceDescription from user provided context
+
+ANALYSIS PARAMETERS
+
+- uploadJobId from most recent successful upload
+- sessionId from current conversation session
+- modelType from user selection or agent recommendation
+- parameters object containing model-specific settings derived from conversation
+
+AUDIENCE PARAMETERS
+
+- sessionId from current conversation session
+- audienceName from user specification or auto-generated
+- description from conversation context
+- modelRunId from most recent analysis
+- rules array built from user filtering requests
+
+OPTIMIZATION PARAMETERS
+
+- sessionId from current conversation session
+- totalBudget from user specification or media plan budget
+- audienceIds array from selected audiences
+- channels array from user preferences or defaults
+- currentAllocation from existing media plan if available
+- constraints from user specifications
+- objective from user stated goals
+
+INTEGRATION WITH MEDIA PLANNING WORKFLOW
+
+STEP 5 BUDGET INTEGRATION
+
+When user reaches Step 5 Budget Planning the agent must:
+- Check for available ADIS audiences
+- Offer to optimize allocation using AMMO if audiences exist
+- Incorporate optimization results into budget recommendations
+
+STEP 7 CHANNEL SELECTION INTEGRATION
+
+When user reaches Step 7 Channel Selection the agent must:
+- Reference audience-specific channel recommendations
+- Apply channel affinity scores to channel prioritization
+- Note channels to avoid for specific audiences
+
+STEP 10 MEASUREMENT INTEGRATION
+
+When user reaches Step 10 Measurement Framework the agent must:
+- Reference expected performance metrics from AMMO
+- Set measurement benchmarks based on audience predictions
+- Plan for performance attribution back to ADIS
+
+DATA PROVENANCE
+
+All ADIS-derived insights must be attributed to source data. The agent must:
+- Track which upload job provided analysis data
+- Reference model run identifiers when citing metrics
+- Maintain audience versioning for historical comparison
+- Document parameter choices affecting results

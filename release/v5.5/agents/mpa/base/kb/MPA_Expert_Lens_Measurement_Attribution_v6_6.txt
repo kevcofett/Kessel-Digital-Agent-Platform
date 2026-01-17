@@ -1,0 +1,232 @@
+DOCUMENT: MPA_Expert_Lens_Measurement_Attribution_v6_6.txt
+CATEGORY: Expert Lens
+TOPICS: measurement, attribution, MMM, MTA, incrementality, ADIS segment measurement, holdout testing, lift measurement
+VERSION: 6.6
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+RELATED: KB_00_Agent_Core_Operating_Standards_v6_6, ADIS_Quick_Reference_v2, MEASUREMENT_FRAMEWORK_v5_5
+
+MPA EXPERT LENS: MEASUREMENT AND ATTRIBUTION v6.6
+
+PURPOSE
+
+This document provides expert-level guidance for measurement and attribution decisions with v6.6 mandatory response patterns and ADIS segment measurement integration. Use this document for Step 8 Measurement.
+
+V6.6 MEASUREMENT RESPONSE REQUIREMENTS
+
+Every measurement discussion MUST include:
+
+1. CONTEXT CALLBACK: Reference objective and KPIs
+2. METHODOLOGY MATCH: Align measurement to campaign type
+3. KB BENCHMARK: Cite typical lift expectations
+4. ADIS INTEGRATION: If segments exist, add segment-level measurement
+
+MEASUREMENT RECOMMENDATION PATTERN
+
+When discussing measurement:
+
+STEP 1: Reference context
+For your [objective] campaign measuring [KPI]...
+
+STEP 2: Recommend methodology
+I recommend [methodology] because [rationale].
+
+STEP 3: Cite benchmarks
+Based on KB data for [vertical], typical [metric] lift is [range].
+
+STEP 4: Add ADIS measurement
+With your ADIS segments, I also recommend tracking [segment-level metrics].
+
+MEASUREMENT METHODOLOGY SELECTION
+
+LAST-TOUCH ATTRIBUTION
+Use when: Quick directional reads, lower funnel campaigns, limited budget
+Limitations: Over-credits last touchpoint, ignores assist channels
+Based on KB data: Last-touch over-credits search by 30-50%
+
+MULTI-TOUCH ATTRIBUTION (MTA)
+Use when: Understanding cross-channel paths, digital-heavy campaigns
+Limitations: Limited to trackable touchpoints, privacy headwinds
+Based on KB data: MTA reduces search credit 20-30%, increases display credit
+
+MEDIA MIX MODELING (MMM)
+Use when: Full funnel view, significant offline spend, long time horizons
+Limitations: Requires 2+ years data, less granular, slower insights
+Based on KB data: MMM typically shows 15-25% incremental value from upper funnel
+
+INCREMENTALITY TESTING
+Use when: Validating true channel impact, budget allocation decisions
+Limitations: Requires holdout groups, statistical significance needs volume
+Based on KB data: Incremental lift typically 30-50% lower than attributed lift
+
+GEO EXPERIMENTS
+Use when: Testing market-level impact, privacy-compliant measurement
+Limitations: Requires geographic flexibility, longer test periods
+Based on KB data: Geo tests need 4-8 weeks and 10+ markets per cell
+
+BRAND LIFT STUDIES
+Use when: Measuring awareness, consideration, brand perception
+Limitations: Self-reported, sampling limitations
+Based on KB data: Typical brand lift studies show 5-15% awareness lift, 3-8% consideration lift
+
+METHODOLOGY BY OBJECTIVE
+
+BRAND AWARENESS
+Primary: Brand lift studies, MMM
+Secondary: Reach and frequency analysis
+Segment measurement: Awareness lift by ADIS segment
+
+CONSIDERATION
+Primary: MTA, engagement metrics
+Secondary: Brand lift for consideration
+Segment measurement: Engagement rates by ADIS segment
+
+PERFORMANCE/ACQUISITION
+Primary: Incrementality testing, MTA
+Secondary: Last-touch for directional
+Segment measurement: CAC and conversion rate by ADIS segment
+
+RETENTION/LOYALTY
+Primary: Cohort analysis, retention tracking
+Secondary: Incrementality for campaigns
+Segment measurement: Retention rate by ADIS segment, segment migration
+
+ADIS SEGMENT MEASUREMENT
+
+When ADIS segments exist, add segment-level KPIs:
+
+CHAMPIONS SEGMENT
+Track:
+- Retention rate (target: 90%+ annual)
+- Repeat purchase rate
+- Average order value trend
+- NPS/satisfaction scores
+
+Benchmark: Based on KB data, Champion retention should exceed 85% annually
+
+LOYAL CUSTOMERS SEGMENT
+Track:
+- Purchase frequency trend
+- Cross-sell/upsell rate
+- Engagement metrics
+- Migration to Champions rate
+
+Benchmark: Based on KB data, 10-15% of Loyal should migrate to Champions annually
+
+AT RISK SEGMENT
+Track:
+- Reactivation rate (target: 8-15%)
+- Win-back campaign response
+- Recovered revenue
+- Time to reactivation
+
+Benchmark: Based on KB data, well-executed win-back campaigns reactivate 8-15%
+
+NEW CUSTOMERS SEGMENT
+Track:
+- Second purchase rate (target: 25-40%)
+- Time to second purchase
+- 90-day retention rate
+- Early LTV signals
+
+Benchmark: Based on KB data, second purchase within 60 days indicates 3x higher LTV
+
+PROPENSITY DECILES (If Propensity Model Run)
+Track:
+- Actual versus predicted conversion by decile
+- Lift chart performance
+- AUC validation over time
+
+Benchmark: Top decile should convert 5-10x more than bottom decile
+
+UPLIFT DECILES (If Uplift Model Run)
+Track:
+- Incremental conversions by decile
+- True lift versus baseline
+- AUUC metric
+
+Benchmark: Top uplift decile should show 3-5x incremental response versus control
+
+HOLDOUT TESTING FRAMEWORK
+
+For incrementality validation:
+
+DESIGN REQUIREMENTS
+- Minimum 5-10% holdout for statistical power
+- Random assignment at user or geo level
+- Sufficient duration (4-8 weeks typical)
+- Clean measurement of exposed versus holdout
+
+ANALYSIS APPROACH
+- Compare conversion rates: exposed versus holdout
+- Calculate incremental lift: (exposed rate - holdout rate) / holdout rate
+- Confidence intervals at 90% or 95%
+
+Based on KB data, common findings:
+- Retargeting incremental lift: 30-50% (versus 100%+ attributed)
+- Prospecting incremental lift: 50-70% of attributed
+- Brand campaigns: 5-15% incremental lift on baseline
+
+MEASUREMENT PLAN TEMPLATE
+
+For your [objective] campaign with [budget] budget:
+
+PRIMARY KPIs:
+- [KPI 1]: Target [value], measurement method [method]
+- [KPI 2]: Target [value], measurement method [method]
+
+SECONDARY KPIs:
+- [KPI 3]: Directional tracking
+- [KPI 4]: Diagnostic metric
+
+SEGMENT-LEVEL KPIS (if ADIS):
+- Champions: [retention metric]
+- At Risk: [reactivation metric]
+- New: [second purchase metric]
+
+MEASUREMENT METHODOLOGY:
+- Primary: [methodology]
+- Validation: [incrementality approach]
+
+REPORTING CADENCE:
+- Daily: [metrics]
+- Weekly: [metrics]
+- Monthly: [metrics]
+
+COMMON PITFALLS
+
+PITFALL 1: SINGLE-SOURCE ATTRIBUTION
+Signal: Relying only on platform-reported conversions
+Fix: Triangulate with MMM, incrementality testing, or MTA
+
+PITFALL 2: IGNORING INCREMENTALITY
+Signal: Optimizing to attributed conversions without validation
+Fix: Run holdout tests, especially for retargeting
+
+PITFALL 3: NO SEGMENT MEASUREMENT
+Signal: Aggregate metrics only, no ADIS segment tracking
+Fix: Add segment-level KPIs for Champions, At Risk, New
+
+PITFALL 4: MISMATCHED METHODOLOGY
+Signal: Using last-touch for brand campaign
+Fix: Match methodology to campaign objective
+
+CROSS-REFERENCES
+
+For v6.6 response standards: See KB_00_Agent_Core_Operating_Standards_v6_6
+For ADIS model details: See ADIS_Quick_Reference_v2
+For measurement framework: See MEASUREMENT_FRAMEWORK_v5_5
+For channel guidance: See MPA_Expert_Lens_Channel_Mix_v6_6
+
+VERSION HISTORY
+
+Version 6.6 - January 2026 - v6.6 alignment update
+- Added v6.6 response requirements
+- Added ADIS segment measurement section
+- Added methodology by objective matrix
+- Added holdout testing framework
+- Added measurement plan template
+- Added cross-references
+
+Version 5.5 - January 2026 - Original version

@@ -1,0 +1,278 @@
+DOCUMENT: ADIS_Copilot_Integration_v2.txt
+CATEGORY: ADIS
+TOPICS: ADIS integration, step-specific prompts, model selection, RFM, CLV, decile, cohort, clustering, propensity, uplift, segment optimization, AMMO
+VERSION: 2.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+RELATED: ADIS_Quick_Reference_v2, ADIS_Model_Catalog_v1, KB_00_Agent_Core_Operating_Standards_v6_6, MPA_Conversation_Examples_v6_6
+
+ADIS COPILOT INTEGRATION v2
+
+PURPOSE
+
+This document specifies step-by-step ADIS integration for media planning conversations. It provides exact prompts for offering ADIS analysis, selecting appropriate models, and incorporating results into planning recommendations. All prompts follow v6.6 mandatory response elements.
+
+TRIGGER RECOGNITION
+
+Offer ADIS analysis when user mentions ANY of these:
+
+DIRECT TRIGGERS:
+- Customer data, transaction data, purchase history
+- CRM export, customer file, customer list
+- Segmentation, segments, audience groups
+- RFM, recency frequency monetary
+- CLV, LTV, lifetime value, customer value
+- Best customers, high-value customers, top customers
+- Retention, churn, at-risk customers
+- Clustering, customer groups, natural segments
+- Propensity, likelihood, prediction
+- Uplift, incrementality, treatment effect
+
+INDIRECT TRIGGERS:
+- I have data I can share
+- We track customer purchases
+- Our database shows customer behavior
+- Can you analyze our customers
+
+STEP-SPECIFIC INTEGRATION
+
+STEP 3 AUDIENCE - PRIMARY ADIS INTEGRATION POINT
+
+At the start of Step 3, ALWAYS ask:
+
+STANDARD PROMPT:
+Do you have customer transaction data? I can run ADIS analysis to identify your highest-value segments. RFM segmentation will show your Champions, Loyal Customers, At Risk, and other behavioral segments. I can then recommend channel strategies optimized for each group.
+
+If user has data and wants basic segmentation:
+Upload your customer data file. I need columns for customer ID, transaction date, and transaction amount. Once processed, I will run RFM analysis and show your segment distribution.
+
+If user wants to understand customer value:
+For value analysis, I recommend starting with Decile analysis to see how value concentrates across your customer base, then running CLV projections to estimate future value. Upload your transaction data to begin.
+
+If user wants to discover unknown segments:
+K-Means clustering can discover natural customer groupings you may not have identified. This works well when you want segments to emerge from patterns in your data rather than predefined rules. What customer attributes do you want to cluster on?
+
+If user wants to predict behavior:
+Propensity modeling predicts which customers are most likely to take specific actions like purchase, churn, or upgrade. You will need historical outcome data showing which customers took the action. Do you have labeled outcome data?
+
+MODEL SELECTION GUIDANCE AT STEP 3
+
+Use this decision tree:
+
+USER GOAL: Understand customer engagement patterns
+RECOMMEND: RFM Segmentation
+PROMPT: RFM will segment your customers by recency, frequency, and monetary value. Your Champions are recent, frequent, high-spending customers. At Risk customers used to be valuable but have not purchased recently. Want me to run RFM analysis?
+
+USER GOAL: Understand value concentration
+RECOMMEND: Decile Analysis
+PROMPT: Decile analysis ranks customers into ten groups by value. This shows your Pareto concentration - typically 20% of customers drive 80% of value. Want me to run decile analysis to see your value distribution?
+
+USER GOAL: Track retention over time
+RECOMMEND: Cohort Analysis
+PROMPT: Cohort analysis tracks how customer groups perform over time. I will group customers by acquisition month and show retention rates in subsequent periods. This reveals if recent cohorts retain better or worse than older ones. Want me to run cohort analysis?
+
+USER GOAL: Estimate future customer value
+RECOMMEND: Deterministic or Probabilistic CLV
+PROMPT: I can project customer lifetime value using your transaction history. Deterministic CLV uses historical averages - good for quick estimates. Probabilistic CLV uses statistical modeling for more sophisticated predictions with uncertainty ranges. Which approach fits your needs?
+
+USER GOAL: Find natural customer groups
+RECOMMEND: K-Means Clustering
+PROMPT: K-Means clustering discovers natural groupings in your customer data without predefined rules. You choose the features to cluster on - purchase behavior, demographics, engagement patterns - and the algorithm finds similar customers. What attributes are most important for your segmentation?
+
+USER GOAL: Predict specific customer actions
+RECOMMEND: Propensity Model
+PROMPT: Propensity modeling predicts which customers are most likely to take a specific action. You need historical data showing which customers did or did not take the action. What behavior do you want to predict - purchase, churn, upgrade, something else?
+
+USER GOAL: Find customers who respond to marketing
+RECOMMEND: Uplift Model
+PROMPT: Uplift modeling identifies customers who respond BECAUSE of your marketing, not those who would have converted anyway. This requires treatment and control data from past campaigns. Do you have campaign exposure data with outcomes for both groups?
+
+STEP 4 GEOGRAPHY - ADIS SEGMENT SIZING
+
+When user has ADIS segments and moves to geography:
+
+With your [segment name] segments defined, I can now size these audiences by geography. Based on KB data for your vertical, I will estimate how your segment distribution translates to specific DMAs.
+
+For your Champions segment of [X] customers representing [Y]% of your base, I estimate [Z] addressable individuals in [DMA list]. Want me to build the geography-segment matrix?
+
+STEP 5 BUDGET - AMMO OPTIMIZATION
+
+When user has ADIS segments and budget:
+
+STANDARD AMMO PROMPT:
+With your ADIS segments and [budget amount] budget for [vertical], I can optimize allocation using AMMO - Audience-Aware Media Mix Optimization. This allocates budget across segments based on:
+- Segment value and size
+- Channel affinity by segment
+- Expected response rates from KB data
+
+Want me to run AMMO optimization for your segments?
+
+AMMO RESULTS PRESENTATION:
+Based on AMMO optimization of your [budget] across [X] segments:
+
+Champions ([Y] customers, [Z]% of value):
+- Recommended: [amount] ([%] of budget)
+- Channels: Email, direct mail, loyalty programs
+- Rationale: High-value retention focus
+
+At Risk ([Y] customers, [Z]% of value):
+- Recommended: [amount] ([%] of budget)
+- Channels: Retargeting, email win-back
+- Rationale: Reactivation before they churn
+
+New Acquisition:
+- Recommended: [amount] ([%] of budget)
+- Channels: Paid social, search
+- Rationale: Growth using lookalikes of Champions
+
+This allocation weights spend toward segments with highest expected return. Adjust any allocation?
+
+STEP 7 CHANNELS - SEGMENT AFFINITY
+
+When user has ADIS segments and reaches channels:
+
+SEGMENT AFFINITY PROMPT:
+Based on your ADIS analysis, here are channel recommendations by segment:
+
+Champions respond best to:
+- Email: Highest open and conversion rates
+- Direct mail: Premium offers for top customers
+- Loyalty programs: Exclusive access, early releases
+- Avoid: Broad awareness channels (wasteful for already loyal customers)
+
+At Risk customers need:
+- Retargeting: Re-engage across display and social
+- Email win-back: Special offers to return
+- Limited acquisition spend: Focus on reactivation first
+- Avoid: Generic messaging (they need personalized re-engagement)
+
+High Propensity customers (if propensity model run):
+- Concentrate premium channel spend here
+- Higher bid multipliers justified by conversion likelihood
+- Test creative variants to maximize conversion
+
+High Uplift customers (if uplift model run):
+- Prioritize for incremental campaigns
+- A/B test priority segment
+- Highest expected incremental ROI
+
+STEP 8 MEASUREMENT - SEGMENT TRACKING
+
+When user has ADIS segments and reaches measurement:
+
+MEASUREMENT INTEGRATION PROMPT:
+With ADIS segments active, I recommend tracking performance at segment level:
+
+Segment-Level KPIs:
+- Champions: Retention rate, repeat purchase rate, average order value trend
+- At Risk: Reactivation rate, win-back cost, recovered revenue
+- New Customers: Second purchase rate, time to second purchase, early LTV signals
+- Propensity Deciles: Actual versus predicted conversion by decile
+
+Validation Approach:
+- Compare actual segment performance to ADIS predictions
+- Track segment migration (At Risk returning to Loyal, New becoming Champions)
+- Measure lift versus control for segment-specific campaigns
+
+DATA UPLOAD WORKFLOW
+
+When user indicates they have data to upload:
+
+STEP 1 - EXPLAIN REQUIREMENTS:
+To analyze your customer data, I need a file with these columns:
+- Customer identifier (customer_id, email, or similar unique key)
+- Transaction date (any standard date format)
+- Transaction amount (monetary value)
+
+Optional columns that enable additional analysis:
+- Product category (for category-specific insights)
+- Channel source (for acquisition channel analysis)
+- Any outcome labels (for propensity modeling)
+
+Upload your file when ready. I support Excel and CSV formats up to 250MB.
+
+STEP 2 - CONFIRM SCHEMA:
+I have processed your file. Here is what I detected:
+
+File: [filename]
+Records: [count]
+Columns detected:
+- [column 1]: Identified as [type] with [confidence]%
+- [column 2]: Identified as [type] with [confidence]%
+- [column 3]: Identified as [type] with [confidence]%
+
+Please confirm these column assignments are correct. If any need adjustment, tell me which column and what it should be.
+
+STEP 3 - RUN ANALYSIS:
+Column mapping confirmed. Running [model type] analysis now.
+
+[Present results using v6.6 format with context callback, calculation, benchmark citation, and vertical reference]
+
+RESULTS PRESENTATION FORMAT
+
+All ADIS results must follow v6.6 mandatory response elements:
+
+CONTEXT CALLBACK:
+With your [X] customer records for [vertical]...
+
+CALCULATION:
+Your RFM analysis shows [X] Champions representing [Y]% of customers but [Z]% of revenue. That is [ratio] concentration.
+
+KB BENCHMARK:
+Based on KB data for [vertical], typical Champion concentration is [A]% to [B]%. Your [Z]% is [REALISTIC/HIGHER/LOWER] than typical.
+
+VERTICAL REFERENCE:
+For your [vertical] business, this Champion segment...
+
+EXAMPLE COMPLETE RESULTS:
+With your 45,000 customer records for ecommerce apparel, your RFM analysis identified 5 segments:
+
+Champions: 4,500 customers (10%) generating 12.6M revenue (35%)
+- That implies 2,800 average value per Champion
+- Based on KB data for ecommerce, typical Champion concentration is 30-40% of revenue
+- Your 35% is REALISTIC for the vertical
+
+Loyal Customers: 9,000 (20%) generating 10.8M (30%)
+At Risk: 6,750 (15%) generating 5.4M (15%)
+New Customers: 11,250 (25%) generating 4.32M (12%)
+Lost: 13,500 (30%) generating 2.88M (8%)
+
+Your At Risk segment of 6,750 customers previously contributed significant value. Based on KB data for ecommerce, reactivating 10-15% of At Risk customers typically returns 50-75% of their previous annual value. Want me to calculate the reactivation opportunity?
+
+ERROR HANDLING
+
+MISSING REQUIRED COLUMNS:
+Your file is missing [column type] which is required for [model]. To run [model], please provide a file with [required columns]. Alternatively, I can run [alternative model] which only requires [available columns].
+
+INSUFFICIENT RECORDS:
+Your file has [X] records but [model] requires minimum [Y] records for reliable results. Options:
+1. Combine with additional historical data if available
+2. Run [alternative model] which works with smaller datasets
+3. Proceed with current data understanding results may be less reliable
+
+MODEL REQUIREMENTS NOT MET:
+For [propensity/uplift] modeling, I need labeled outcome data showing which customers [took action]. Your data does not include this outcome variable. Options:
+1. Add outcome labels to your data and re-upload
+2. Run RFM or clustering instead which do not require outcomes
+3. Define a proxy outcome I can derive from transaction patterns
+
+CROSS-REFERENCES
+
+For model specifications: See ADIS_Model_Catalog_v1
+For quick model selection: See ADIS_Quick_Reference_v2
+For user documentation: See ADIS_User_Guide_v1
+For v6.6 response standards: See KB_00_Agent_Core_Operating_Standards_v6_6
+For conversation examples: See MPA_Conversation_Examples_v6_6
+
+VERSION HISTORY
+
+Version 2.0 - January 2026 - Major update
+- Expanded to all 8 ADIS models
+- Added step-specific integration prompts
+- Added model selection decision tree
+- Added v6.6 results presentation format
+- Added AMMO optimization workflow
+- Added segment affinity channel guidance
+
+Version 1.0 - January 2026 - Initial release

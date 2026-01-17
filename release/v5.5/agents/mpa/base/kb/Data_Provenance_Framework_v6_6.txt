@@ -1,0 +1,264 @@
+DOCUMENT: Data_Provenance_Framework_v6_6.txt
+CATEGORY: Framework
+TOPICS: data provenance, source citation, mandatory citation patterns, KB benchmark citation, vertical reference, ADIS data, trust hierarchy
+VERSION: 6.6
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+RELATED: KB_00_Agent_Core_Operating_Standards_v6_6, MPA_Conversation_Examples_v6_6, ADIS_Quick_Reference_v2
+
+DATA PROVENANCE FRAMEWORK v6.6
+
+PURPOSE
+
+This framework defines data source categories, trust hierarchy, and MANDATORY citation patterns for v6.6. Every response that includes data claims MUST use the exact citation phrases specified in this document.
+
+v6.6 CRITICAL REQUIREMENTS
+
+Every response with data claims must include:
+1. Source attribution using exact v6.6 phrases
+2. Vertical reference when citing benchmarks
+3. Clear distinction between data sources
+4. ADIS integration when customer data available
+
+MANDATORY CITATION PHRASES
+
+Use ONLY these exact phrases when attributing data sources:
+
+FOR USER-PROVIDED DATA:
+- Your budget of 250K means...
+- You mentioned that...
+- Based on your input...
+- With your 5000 customer target...
+- Given your remittance vertical...
+
+FOR KB BENCHMARKS (MOST COMMON):
+- Based on KB data for [vertical]...
+- Based on KB data for ecommerce, typical CAC runs 35 to 65.
+- Based on KB data for remittance, typical CAC runs 45 to 75.
+- Based on KB data for B2B software, typical CAC runs 2000 to 8000.
+
+FOR WEB RESEARCH:
+- Based on web search...
+- Based on census data...
+- Based on [source name]...
+- Recent research from [source] indicates...
+
+FOR AGENT ESTIMATES:
+- My estimate is...
+- I estimate this at...
+- My projection suggests...
+- Recommend validating with your finance team.
+
+FOR ADIS ANALYSIS:
+- Based on your ADIS analysis...
+- Your RFM segmentation shows...
+- According to your customer data...
+- Your segment analysis indicates...
+
+FORBIDDEN PHRASES
+
+NEVER use these vague attributions:
+- Typically (without source)
+- Generally (without source)
+- Industry data shows (without naming source)
+- Benchmarks suggest (without citing KB or specific source)
+- Market norms indicate (without source)
+- Studies show (without naming study)
+
+WRONG: For subscription businesses, healthy ratios typically run 3:1 to 5:1.
+RIGHT: Based on KB data for subscription services, healthy LTV to CAC ratios run 3:1 to 5:1, with 8:1 considered excellent.
+
+DATA PROVENANCE CATEGORIES
+
+CATEGORY 1: USER PROVIDED
+
+Trust Level: HIGHEST for current session
+Confidence: HIGH when consistent with benchmarks
+
+Source: Information provided by user during current session
+
+Examples:
+- Client targets: Your CAC target of 65...
+- Performance data: The 22 CPM you mentioned...
+- Budget constraints: With your 500K budget...
+- Channel exclusions: Given you cannot use TikTok...
+- Uploaded files: Based on the transaction data you uploaded...
+
+Citation Pattern:
+- Your [metric] of [value]...
+- You mentioned [fact]...
+- Based on your input...
+- With your [target/constraint]...
+
+CATEGORY 2: INTERNAL AGENT KNOWLEDGE BASE
+
+Trust Level: HIGH
+Confidence: BASELINE for projections
+
+Source: SharePoint knowledge base documents, Dataverse benchmark tables
+
+Examples:
+- KPI benchmarks from mpa_kpi table
+- Channel CPM/CPC ranges from mpa_channel table
+- Vertical benchmarks from mpa_benchmark table
+- Strategic frameworks from KB documents
+
+Citation Pattern - ALWAYS include vertical:
+- Based on KB data for [vertical]...
+- Based on KB data for ecommerce, typical CAC runs 35 to 65.
+- Based on KB data for fintech, typical CAC runs 75 to 150.
+
+WRONG: Based on KB data, typical CAC is 50.
+RIGHT: Based on KB data for ecommerce, typical CAC runs 35 to 65.
+
+CATEGORY 3: WEB RESEARCH
+
+Trust Level: MEDIUM
+Confidence: SUPPLEMENTARY - increases or flags concerns
+
+Source: Web search results, census data, platform documentation
+
+Examples:
+- Census population data
+- Platform pricing updates
+- Industry news
+- Competitive intelligence
+
+Citation Pattern:
+- Based on web search for [query]...
+- Based on census data, [DMA] has [population]...
+- According to [source name]...
+- Recent [source] data shows...
+
+CATEGORY 4: ADIS CUSTOMER DATA
+
+Trust Level: HIGH for customer-specific metrics
+Confidence: HIGH when data quality verified
+
+Source: ADIS analysis of user-uploaded customer data
+
+Examples:
+- RFM segment distributions
+- CLV projections
+- Decile analysis results
+- Propensity scores
+- Cluster assignments
+
+Citation Pattern:
+- Based on your ADIS analysis...
+- Your RFM segmentation shows...
+- Your customer data indicates...
+- According to your segment analysis...
+- Your [X] customers in the Champions segment...
+
+CATEGORY 5: AGENT ESTIMATES
+
+Trust Level: LOWEST
+Confidence: LOW - flag for validation
+
+Source: Agent projections without citable source
+
+When to use:
+- No KB benchmark available
+- No web search results
+- Combining multiple data points into projection
+
+Citation Pattern:
+- My estimate is [value].
+- I estimate this at [range].
+- Recommend validating with your finance team.
+- This is my projection based on [reasoning].
+
+TRUST HIERARCHY
+
+When data sources conflict, apply this priority:
+
+1. USER PROVIDED (highest) - Always wins for current session
+2. ADIS CUSTOMER DATA - User's actual customer metrics
+3. DIRECT API - Platform-reported actuals
+4. INTERNAL KB - Validated benchmarks
+5. WEB RESEARCH - Supplementary only
+6. AGENT ESTIMATE (lowest) - Flag for validation
+
+CONFLICT RESOLUTION
+
+USER DATA vs KB BENCHMARK:
+- USE user data for calculations
+- FLAG if significantly different from benchmark
+- Example: Your 25 CAC target is well below the KB benchmark of 45-75 for remittance. This is VERY AGGRESSIVE. Achievable but requires exceptional execution.
+
+KB BENCHMARK vs WEB RESEARCH:
+- DEFAULT to KB benchmark
+- NOTE web discrepancy if significant
+- Example: Based on KB data for ecommerce, typical CAC runs 35 to 65. Recent web search suggests some DTC brands achieving 25-40 through organic channels. I will use the KB range for conservative planning.
+
+ADIS DATA vs KB BENCHMARK:
+- USE ADIS data for customer-specific metrics
+- USE KB benchmark for market comparison
+- Example: Your ADIS analysis shows average CLV of 320 for Champions. Based on KB data for ecommerce, typical CLV runs 150 to 300, so your Champions are performing above benchmark.
+
+V6.6 RESPONSE FORMAT
+
+Every substantive response must include:
+
+1. CONTEXT CALLBACK with source attribution
+With your 250K budget for ecommerce...
+Based on your ADIS segments...
+Given the 15 DMAs you confirmed...
+
+2. CALCULATION with source for inputs
+250K divided by 5000 equals 50 per customer.
+Your Champions at 4,500 customers represent 10% of base but 35% of revenue.
+
+3. KB BENCHMARK CITATION with vertical
+Based on KB data for ecommerce, typical CAC runs 35 to 65.
+Based on KB data for subscription services, typical churn runs 5-8% monthly.
+
+4. VERTICAL REFERENCE in benchmark statement
+For your ecommerce fitness business...
+For subscription box services...
+For remittance services...
+
+COMPLETE EXAMPLE
+
+USER: We have 250K budget to acquire 5000 customers. We sell fitness equipment online.
+
+CORRECT RESPONSE:
+With your 250K budget and 5000 customer target for ecommerce fitness equipment, that implies 50 per customer. Based on KB data for ecommerce, typical CAC runs 35 to 65. Your 50 target is REALISTIC - right in the middle of the range.
+
+Do you have existing customer data? I can analyze it with ADIS to identify your highest-value segments and optimize targeting.
+
+ANALYSIS:
+- Context callback: With your 250K budget and 5000 customer target
+- Vertical reference: ecommerce fitness equipment
+- Calculation: implies 50 per customer
+- KB citation: Based on KB data for ecommerce, typical CAC runs 35 to 65
+- Target label: REALISTIC
+- ADIS offer: proactive customer data integration
+
+SESSION ISOLATION
+
+User-provided data and ADIS results apply ONLY to current session:
+- Store in SessionCustomizations table
+- Do not propagate to other users
+- Do not modify KB benchmarks
+- Clear on session end
+
+CROSS-REFERENCES
+
+For v6.6 operating standards: See KB_00_Agent_Core_Operating_Standards_v6_6
+For conversation examples: See MPA_Conversation_Examples_v6_6
+For ADIS model details: See ADIS_Quick_Reference_v2
+For benchmark data: See Analytics_Engine_v6_6
+
+VERSION HISTORY
+
+Version 6.6 - January 2026 - Major update for v6.6 alignment
+- Added mandatory citation phrases section
+- Added forbidden phrases list
+- Added ADIS as Category 4 data source
+- Added v6.6 response format requirements
+- Added complete example with analysis
+
+Version 5.5 - January 2026 - Previous version

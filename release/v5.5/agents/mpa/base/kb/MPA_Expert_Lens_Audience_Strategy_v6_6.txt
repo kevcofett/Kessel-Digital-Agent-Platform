@@ -1,0 +1,246 @@
+DOCUMENT: MPA_Expert_Lens_Audience_Strategy_v6_6.txt
+CATEGORY: Expert Lens
+TOPICS: audience strategy, targeting, segmentation, ADIS integration, four dimensions, demographic, behavioral, contextual, geographic, signal count
+VERSION: 6.6
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+RELATED: KB_00_Agent_Core_Operating_Standards_v6_6, ADIS_Quick_Reference_v2, MPA_Audience_Dimension_Checklist_v5_8, KB_02_Audience_Targeting_Sophistication_v5_8
+
+MPA EXPERT LENS: AUDIENCE STRATEGY v6.6
+
+PURPOSE
+
+This document provides expert-level guidance for audience definition with v6.6 mandatory response patterns and full ADIS model integration. Use this document for Steps 3-4 Audience and Geography.
+
+V6.6 AUDIENCE RESPONSE REQUIREMENTS
+
+Every audience discussion MUST include:
+
+1. CONTEXT CALLBACK: Reference objective and vertical
+2. FOUR DIMENSIONS: Verify demographic, behavioral, contextual, geographic
+3. SIGNAL COUNT: Match rigor to campaign type
+4. KB BENCHMARK: Cite audience size benchmarks
+5. ADIS OFFER: Proactively offer customer data analysis
+
+AUDIENCE DEFINITION PATTERN
+
+When defining audience:
+
+STEP 1: Reference context
+For your [objective] campaign in [vertical]...
+
+STEP 2: Check four dimensions
+Let me verify we have all four dimensions:
+- Demographic: [status]
+- Behavioral: [status]
+- Contextual: [status]
+- Geographic: [status]
+
+STEP 3: Assess signal count
+For [campaign type], I recommend [X-Y] targeting signals. We currently have [Z].
+
+STEP 4: Offer ADIS
+Do you have customer transaction data? ADIS can identify your best customer segments and create lookalike profiles.
+
+FOUR DIMENSION REQUIREMENTS
+
+DIMENSION 1: DEMOGRAPHIC
+Required signals:
+- Age range with specific bounds
+- Gender if relevant
+- Household income tier
+- Education level if relevant
+- Homeownership status if relevant
+- Presence of children if relevant
+- Life stage indicators
+
+Example: Adults 25-54, HHI 75K+, homeowners, no children
+
+DIMENSION 2: BEHAVIORAL
+Required signals:
+- In-market purchase intent
+- Content consumption patterns
+- Past purchase history
+- Site visitation behavior
+- App usage patterns
+- Search behavior
+- Engagement patterns
+
+Example: In-market for fitness equipment, gym membership, health app users
+
+DIMENSION 3: CONTEXTUAL
+Required signals:
+- Daypart targeting
+- Device targeting
+- Content category alignment
+- Weather triggers if applicable
+- Seasonal patterns
+- Event triggers
+
+Example: Mobile-first, fitness content environments, morning/evening commute
+
+DIMENSION 4: GEOGRAPHIC
+Required signals:
+- Country or countries
+- Region or state level
+- DMA or market level
+- Urban versus suburban versus rural
+- Language preferences
+
+Example: US, top 15 DMAs, suburban and urban
+
+SIGNAL COUNT THRESHOLDS
+
+Based on KB data, recommended signal counts by campaign type:
+
+BRAND AWARENESS: 5-10 signals
+- Broader targeting acceptable
+- Prioritize reach over precision
+- Demographic and geographic focus
+
+CONSIDERATION: 10-20 signals
+- Moderate precision
+- Add behavioral signals
+- Balance reach and relevance
+
+PERFORMANCE/ACQUISITION: 20-40 signals
+- High precision required
+- Heavy behavioral targeting
+- Detailed contextual signals
+
+RETENTION/LOYALTY: 15-30 signals
+- Known customer data available
+- ADIS segment-based targeting
+- Personalization signals
+
+ADIS AUDIENCE INTEGRATION
+
+ALL EIGHT MODELS create audiences. Use the appropriate model:
+
+RFM SEGMENTATION
+Creates: Behavioral segments (Champions, Loyal, At Risk, etc.)
+Use for: Retention, reactivation, lifecycle campaigns
+Audience application: Target each segment with tailored messaging
+
+DECILE ANALYSIS
+Creates: Value-based tiers (Decile 1-10)
+Use for: Budget prioritization, lookalike seeding
+Audience application: Weight spend toward high-value deciles
+
+COHORT ANALYSIS
+Creates: Temporal segments (by acquisition period)
+Use for: Lifecycle stage targeting, retention analysis
+Audience application: Adjust messaging by customer maturity
+
+DETERMINISTIC CLV
+Creates: Predicted value segments
+Use for: Budget allocation, high-value targeting
+Audience application: Prioritize high-LTV customers for premium channels
+
+PROBABILISTIC CLV (BG-NBD)
+Creates: Predicted value with probability-alive scores
+Use for: Reactivation targeting, churn prevention
+Audience application: Target low prob-alive but high historical value
+
+K-MEANS CLUSTERING
+Creates: Natural groupings based on chosen features
+Use for: Audience discovery, creative segmentation
+Audience application: Discover segments you did not know existed
+
+PROPENSITY MODEL
+Creates: Likelihood scores for specific behaviors
+Use for: Precision targeting, lookalike optimization
+Audience application: Concentrate spend on high-propensity customers
+
+UPLIFT MODEL
+Creates: Incremental response scores
+Use for: Incrementality optimization, test prioritization
+Audience application: Target customers who respond BECAUSE of marketing
+
+ADIS AUDIENCE PROMPTS BY STEP
+
+STEP 3 INITIAL:
+Do you have customer transaction data? I can run ADIS analysis to:
+- Identify your Champions, Loyal Customers, and At Risk segments
+- Calculate customer lifetime value for budget prioritization
+- Discover natural customer clusters for creative development
+- Build propensity scores for precision targeting
+
+STEP 3 WITH DATA:
+Your ADIS analysis identified [X] segments across [Y] customers. For your [objective] campaign:
+
+Champions ([Z] customers, [%] of value):
+Targeting approach: Retention, upsell, referral programs
+Channels: Email, direct mail, loyalty programs
+
+At Risk ([Z] customers, [%] of value):
+Targeting approach: Win-back, reactivation offers
+Channels: Retargeting, email win-back
+
+New Acquisition:
+Targeting approach: Lookalike from Champions profile
+Channels: Paid social, search prospecting
+
+STEP 4 GEOGRAPHY WITH ADIS:
+With your ADIS segments defined, I can size audiences by geography. Your Champions index highest in [DMAs]. Your At Risk concentration is heaviest in [DMAs]. Want me to build the geography-segment matrix?
+
+AUDIENCE SIZING REQUIREMENTS
+
+All audience estimates MUST include:
+
+1. THE NUMBER: Estimated addressable audience
+2. THE CALCULATION: How you arrived at it
+3. THE SOURCE: Where base data comes from
+
+EXAMPLE:
+Based on KB data for ecommerce fitness, serious athletes represent 2-4% of the fitness population. For adults 25-54 nationally at roughly 120M, that gives 2.4-4.8M fitness enthusiasts. Narrowing to your income and geographic criteria, I estimate 800K-1.5M addressable individuals across your 15 DMAs.
+
+CENSUS VALIDATION
+
+Geographic audience sizing MUST include census data. Use web search:
+- US: site:census.gov [demographic] [DMA] population
+- Canada: site:statcan.gc.ca [CMA] population
+- UK: site:ons.gov.uk [region] population
+
+COMMON PITFALLS
+
+PITFALL 1: MISSING DIMENSIONS
+Signal: Audience defined by demographics only
+Fix: Verify all four dimensions before proceeding
+
+PITFALL 2: INSUFFICIENT SIGNALS
+Signal: Performance campaign with only 5 targeting signals
+Fix: Match signal count to campaign type
+
+PITFALL 3: IGNORING ADIS
+Signal: Discussing audience without offering customer data analysis
+Fix: ALWAYS ask about customer data at Step 3
+
+PITFALL 4: UNSIZED AUDIENCE
+Signal: Audience described qualitatively without numbers
+Fix: Every audience needs size estimate with source
+
+PITFALL 5: NO SEGMENT DIFFERENTIATION
+Signal: Same targeting for all customer types
+Fix: Use ADIS to create segment-specific targeting
+
+CROSS-REFERENCES
+
+For v6.6 response standards: See KB_00_Agent_Core_Operating_Standards_v6_6
+For ADIS model details: See ADIS_Quick_Reference_v2
+For dimension checklist: See MPA_Audience_Dimension_Checklist_v5_8
+For sophistication tiers: See KB_02_Audience_Targeting_Sophistication_v5_8
+For geography planning: See MPA_Geography_DMA_Planning_v5_8
+
+VERSION HISTORY
+
+Version 6.6 - January 2026 - v6.6 alignment update
+- Added v6.6 response requirements
+- Added all 8 ADIS models for audience creation
+- Added ADIS prompts by step
+- Added signal count thresholds
+- Added audience sizing requirements
+- Added cross-references
+
+Version 5.8 - January 2026 - Previous version with census validation

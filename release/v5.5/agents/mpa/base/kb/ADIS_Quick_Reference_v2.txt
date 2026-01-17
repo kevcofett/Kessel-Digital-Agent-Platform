@@ -1,0 +1,287 @@
+DOCUMENT: ADIS_Quick_Reference_v2.txt
+CATEGORY: ADIS
+TOPICS: customer data analysis, segmentation, RFM, CLV, decile, cohort, clustering, propensity, uplift, ADIS models, data upload
+VERSION: 2.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+RELATED: ADIS_Model_Catalog_v1, ADIS_User_Guide_v1, ADIS_Copilot_Integration_v2, KB_00_Agent_Core_Operating_Standards_v6_6
+
+ADIS QUICK REFERENCE
+
+PURPOSE
+
+This document provides rapid reference for ADIS (Audience Data Intelligence System) capabilities. ADIS analyzes customer data files to create actionable segments for media planning. Use this reference to determine which model to recommend and how to integrate results into planning steps.
+
+WHEN TO OFFER ADIS
+
+Offer ADIS analysis when user mentions ANY of these:
+- Customer data or transaction data
+- CRM exports or customer files
+- Segmentation or segments
+- RFM or recency frequency monetary
+- CLV or lifetime value or LTV
+- Best customers or high-value customers
+- Retention or churn
+- Customer clusters or groupings
+- Propensity or likelihood
+- Uplift or incrementality
+
+STANDARD ADIS PROMPT
+
+I can analyze your customer data to identify segments and optimize targeting. Upload your file to get started. I support Excel, CSV, and text formats.
+
+MODEL SELECTION GUIDE
+
+EIGHT MODELS are available. Select based on user need:
+
+MODEL 1 RFM SEGMENTATION
+
+WHEN TO USE: User wants to understand customer behavior patterns and segment by engagement level.
+
+WHAT IT DOES: Scores customers on recency, frequency, and monetary value. Creates named segments.
+
+KEY SEGMENTS CREATED:
+- Champions: Best customers across all dimensions
+- Loyal Customers: Consistent high value
+- Potential Loyalists: Recent with emerging frequency
+- New Customers: Very recent first purchases
+- At Risk: Previously good, now declining
+- Cannot Lose Them: High value but declining recency
+- Hibernating: Dormant with moderate history
+- Lost: Low across all dimensions
+
+MINIMUM DATA: 100 customers, 500 transactions
+
+REQUIRED COLUMNS: customer_key, transaction_date, monetary_value
+
+MEDIA PLANNING APPLICATION:
+- Champions: Upsell, loyalty programs, referral campaigns
+- At Risk: Retargeting, win-back offers, email reengagement
+- New Customers: Onboarding sequences, second purchase incentives
+- Lost: Exclude from acquisition spend, deep discount reactivation only
+
+MODEL 2 DECILE ANALYSIS
+
+WHEN TO USE: User wants to understand value concentration and identify top versus bottom customer tiers.
+
+WHAT IT DOES: Ranks customers into ten equal groups by value. Shows Pareto ratio and Gini coefficient.
+
+KEY OUTPUTS:
+- Decile 1: Top 10% by value
+- Decile 10: Bottom 10% by value
+- Pareto ratio: Percentage of value from top 20%
+- Gini coefficient: Inequality measure 0 to 1
+
+MINIMUM DATA: 50 customers
+
+REQUIRED COLUMNS: customer_key, value_metric
+
+MEDIA PLANNING APPLICATION:
+- Budget allocation: Weight spend toward deciles with best ROI potential
+- Audience sizing: Use decile distribution to estimate addressable value
+- Exclusions: Consider excluding bottom deciles from acquisition campaigns
+
+MODEL 3 COHORT ANALYSIS
+
+WHEN TO USE: User wants to understand retention patterns and how customer groups perform over time.
+
+WHAT IT DOES: Groups customers by acquisition period and tracks activity in subsequent periods.
+
+KEY OUTPUTS:
+- Retention matrix by cohort
+- Average retention by period
+- Cohort-over-cohort trends
+
+MINIMUM DATA: 200 customers across 3+ periods
+
+REQUIRED COLUMNS: customer_key, transaction_date
+
+MEDIA PLANNING APPLICATION:
+- Budget timing: Invest more during high-retention cohort periods
+- Channel evaluation: Compare retention by acquisition channel
+- Lifecycle targeting: Adjust messaging by cohort maturity
+
+MODEL 4 DETERMINISTIC CLV
+
+WHEN TO USE: User wants straightforward lifetime value estimates using historical averages.
+
+WHAT IT DOES: Calculates CLV using average order value, purchase frequency, lifespan, and margin.
+
+FORMULA: CLV = AOV x Annual Frequency x Lifespan Years x Margin
+
+KEY OUTPUTS:
+- Predicted LTV with upper and lower bounds
+- AOV and frequency metrics
+- Customer tenure
+- LTV-based decile ranking
+
+MINIMUM DATA: 100 customers, 90 days history
+
+REQUIRED COLUMNS: customer_key, transaction_date, monetary_value
+
+MEDIA PLANNING APPLICATION:
+- CAC ceiling: Set acquisition cost targets based on LTV
+- Budget justification: Show LTV to CAC ratio to stakeholders
+- Segment prioritization: Focus on segments with highest LTV
+
+MODEL 5 PROBABILISTIC CLV
+
+WHEN TO USE: User wants sophisticated LTV predictions with uncertainty quantification and probability customer is still active.
+
+WHAT IT DOES: Uses BG-NBD statistical model to predict future purchases and value with confidence intervals.
+
+KEY OUTPUTS:
+- Predicted LTV with statistical confidence
+- Predicted purchase count
+- Probability alive score
+- BG-NBD model parameters
+
+MINIMUM DATA: 500 customers, 180 days history
+
+REQUIRED COLUMNS: customer_key, transaction_date, monetary_value
+
+MEDIA PLANNING APPLICATION:
+- Reactivation targeting: Focus on customers with low prob_alive but high historical value
+- Budget forecasting: Use predicted purchases for revenue modeling
+- Risk assessment: Identify customers likely to churn
+
+MODEL 6 K-MEANS CLUSTERING
+
+WHEN TO USE: User wants to discover natural customer groupings without predefined segment definitions.
+
+WHAT IT DOES: Uses unsupervised machine learning to find clusters based on multiple features.
+
+KEY OUTPUTS:
+- Cluster assignments with distance scores
+- Cluster centroids showing average feature values
+- Silhouette score measuring cluster quality
+- Inertia measuring cluster tightness
+
+MINIMUM DATA: 500 records, 1000+ recommended
+
+REQUIRED COLUMNS: At minimum two numeric feature columns
+
+MEDIA PLANNING APPLICATION:
+- Audience discovery: Find segments you did not know existed
+- Creative development: Tailor messaging to cluster characteristics
+- Channel affinity: Analyze which channels each cluster prefers
+
+MODEL 7 PROPENSITY MODEL
+
+WHEN TO USE: User has labeled outcomes and wants to predict likelihood of specific customer behaviors.
+
+WHAT IT DOES: Trains supervised model to predict probability of target action like purchase, churn, or upgrade.
+
+KEY OUTPUTS:
+- Propensity score 0 to 1 for each customer
+- Propensity-based deciles
+- AUC-ROC model performance
+- Feature importance rankings
+
+MINIMUM DATA: 1000 records, 100+ positive outcomes
+
+REQUIRED COLUMNS: customer_key, target_variable, 3+ feature columns
+
+MEDIA PLANNING APPLICATION:
+- Targeting precision: Focus media on high-propensity customers
+- Lookalike modeling: Use high-propensity customers as seed audience
+- Budget efficiency: Exclude low-propensity customers from expensive channels
+
+MODEL 8 UPLIFT MODEL
+
+WHEN TO USE: User needs to identify customers most responsive to specific treatments or offers rather than just most likely to convert.
+
+WHAT IT DOES: Uses causal inference to estimate incremental treatment effect for each customer.
+
+KEY OUTPUTS:
+- Uplift score per customer
+- Uplift-based deciles
+- AUUC performance metric
+- Qini coefficient
+
+MINIMUM DATA: 5000 records with balanced treatment and control
+
+REQUIRED COLUMNS: customer_key, treatment indicator, outcome, 3+ feature columns
+
+MEDIA PLANNING APPLICATION:
+- Incrementality optimization: Target customers where media drives incremental response
+- Holdout design: Identify optimal treatment and control allocation
+- Budget efficiency: Avoid spending on customers who would convert anyway
+
+STEP-BY-STEP ADIS INTEGRATION
+
+STEP 3-4 AUDIENCE
+
+Ask: Do you have customer transaction data? I can run RFM segmentation to identify your Champions, Loyal Customers, and At Risk segments, then recommend channels optimized for each group.
+
+If user uploads data, run RFM first. Then offer additional models:
+- For value concentration: Also run Decile analysis
+- For retention patterns: Also run Cohort analysis
+- For discovering new segments: Also run K-Means clustering
+
+STEP 5 BUDGET
+
+With ADIS segments available, offer AMMO optimization:
+
+Based on your segment analysis, I can optimize budget allocation across Champions, At Risk, and New Customer segments using channel affinity data. Champions typically respond best to email and loyalty programs. At Risk customers need retargeting investment. Want me to build the segment-level budget allocation?
+
+STEP 7 CHANNELS
+
+Reference ADIS segment affinities in channel recommendations:
+
+Based on your ADIS analysis:
+- Champions: Email, direct mail, loyalty programs
+- Loyal Customers: Email, social, content marketing
+- At Risk: Retargeting, email win-back, limited paid acquisition
+- New Customers: Onboarding email, social proof, review requests
+- High Propensity: Premium channels, personalized offers
+- High Uplift: Treatment-focused campaigns, A/B test priority
+
+FILE REQUIREMENTS
+
+SUPPORTED FORMATS: Excel (.xlsx, .xls), CSV (.csv), tab-delimited text
+
+REQUIRED FOR ALL MODELS:
+- customer_key or customer_id or similar unique identifier
+- Clean headers in first row
+- No merged cells
+- Consistent date formats
+
+SIZE LIMITS: Up to 250MB file size
+
+COMMON ISSUES:
+- Missing customer identifier: Cannot run analysis
+- Mixed date formats: May cause parsing errors
+- Special characters in headers: May cause column mapping issues
+
+ERROR HANDLING
+
+If file upload fails, suggest:
+- Check file format is Excel or CSV
+- Ensure first row contains column headers
+- Remove merged cells or special formatting
+- Verify file is under 250MB
+
+If model requirements not met, explain:
+- Which columns are missing
+- Minimum record count needed
+- Suggest alternative model if data is insufficient
+
+CROSS-REFERENCE
+
+For detailed model specifications: See ADIS_Model_Catalog_v1
+For user-facing documentation: See ADIS_User_Guide_v1
+For step-specific integration: See ADIS_Copilot_Integration_v2
+For core operating standards: See KB_00_Agent_Core_Operating_Standards_v6_6
+
+VERSION HISTORY
+
+Version 2.0 - January 2026 - Major update
+- Expanded from RFM/CLV focus to all 8 models
+- Added model selection guide
+- Added step-by-step integration patterns
+- Added media planning applications for each model
+- Added cross-references to related documents
+
+Version 1.0 - January 2026 - Initial release

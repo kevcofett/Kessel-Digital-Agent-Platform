@@ -122,7 +122,7 @@ export declare const RAG_CONFIG: {
         readonly exactMatchBoost: 1.5;
     };
     readonly paths: {
-        readonly kbDirectory: "../../../kb";
+        readonly kbDirectory: "../../kb-v6";
         readonly chunksCache: "./rag-cache/kb-chunks.json";
         readonly indexCache: "./rag-cache/kb-index.json";
     };

@@ -47,6 +47,22 @@ scoreSegmentPresentation, scoreChannelAffinityRecommendation,
 scoreJargonAvoidance, scoreResultSimplification, 
 // Composite
 scoreAdisIntegration, ADIS_SCORERS, } from "./adis-scorers.js";
+// =============================================================================
+// ECOMMERCE SCORERS (v5.8 - Real-World Ecommerce Scenarios)
+// =============================================================================
+export { 
+// RFM and Segmentation
+scoreRfmSegmentRecognition, scoreReactivationStrategy, 
+// Retention vs Acquisition
+scoreRetentionAcquisitionBalance, scoreCohortAnalysisUsage, 
+// Audience Expansion
+scoreLookalikeAudienceStrategy, 
+// Seasonal and LTV
+scoreSeasonalPlanning, scoreCustomerLtvApplication, 
+// Channel Mix
+scoreRetentionChannelMix, 
+// Collection
+ecommerceScorers, } from "./ecommerce-scorers.js";
 // Benchmark Data Loader v6.0
 export { loadBenchmarks, getBenchmark, getBenchmarksByVertical, getBenchmarksByChannel, formatBenchmarkRange, validateBenchmarkClaim, getBenchmarkSummary, clearBenchmarkCache, } from "./benchmark-loader.js";
 // =============================================================================

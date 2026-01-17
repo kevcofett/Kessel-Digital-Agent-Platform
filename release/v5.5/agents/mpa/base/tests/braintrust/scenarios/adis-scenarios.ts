@@ -31,6 +31,21 @@ export const dataRichRetailPersona: UserPersona = {
     hasObjective: true,
     objective: "retention",
   },
+  behavioralTraits: {
+    responseVerbosity: "normal",
+    uncertaintyFrequency: "sometimes",
+    challengeFrequency: "sometimes",
+    stepSkipTendency: "sequential",
+  },
+  languagePatterns: {
+    usesJargon: true,
+    knownAcronyms: ["RFM", "CLV", "LTV", "CAC"],
+    samplePhrases: [
+      "I have the data, I just need help analyzing it.",
+      "How do I identify my best customers?",
+      "We want to improve retention this quarter.",
+    ],
+  },
 };
 
 export const customerValueFocusedPersona: UserPersona = {
@@ -52,6 +67,21 @@ export const customerValueFocusedPersona: UserPersona = {
     hasCAC: true,
     cac: 400,
   },
+  behavioralTraits: {
+    responseVerbosity: "verbose",
+    uncertaintyFrequency: "rare",
+    challengeFrequency: "often",
+    stepSkipTendency: "occasional_skip",
+  },
+  languagePatterns: {
+    usesJargon: true,
+    knownAcronyms: ["CLV", "LTV", "CAC", "BG/NBD", "MRR", "ARR", "NRR", "Churn"],
+    samplePhrases: [
+      "What's the confidence interval on that prediction?",
+      "How does this model account for cohort effects?",
+      "I need to justify this to the board.",
+    ],
+  },
 };
 
 export const segmentationNewbiePersona: UserPersona = {
@@ -68,6 +98,21 @@ export const segmentationNewbiePersona: UserPersona = {
   knownData: {
     hasBudget: true,
     budget: 50000,
+  },
+  behavioralTraits: {
+    responseVerbosity: "terse",
+    uncertaintyFrequency: "often",
+    challengeFrequency: "rare",
+    stepSkipTendency: "sequential",
+  },
+  languagePatterns: {
+    usesJargon: false,
+    knownAcronyms: [],
+    samplePhrases: [
+      "I'm not really a data person.",
+      "Is there an easy way to do this?",
+      "I just want to know who my best customers are.",
+    ],
   },
 };
 

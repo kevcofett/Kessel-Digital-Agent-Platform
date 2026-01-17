@@ -130,7 +130,7 @@ export class ConversationEngine {
 
     if (this.config.verbose) {
       console.log(
-        `[Opening] Agent: ${openingResult.response.slice(0, 100)}...`
+        `[Opening] Agent: ${openingResult.response}`
       );
     }
 
@@ -194,7 +194,7 @@ export class ConversationEngine {
 
       if (this.config.verbose) {
         console.log(
-          `[Turn ${turnNumber}] Agent: ${agentResult.response.slice(0, 100)}...`
+          `[Turn ${turnNumber}] Agent: ${agentResult.response}`
         );
       }
 
@@ -592,7 +592,11 @@ export class ConversationEngine {
   ): boolean {
     if (stepState.isTerminal) return true;
 
-    // Check if all expected steps are complete
+    // Check if all expected steps are complete (if defined)
+    if (!scenario.expectedCompletedSteps || scenario.expectedCompletedSteps.length === 0) {
+      return false; // No completion criteria defined, keep going
+    }
+
     const allExpectedComplete = scenario.expectedCompletedSteps.every((step) =>
       stepState.completedSteps.includes(step)
     );

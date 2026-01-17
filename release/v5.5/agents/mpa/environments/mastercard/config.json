@@ -1,0 +1,43 @@
+{
+  "environment": "mastercard",
+  "displayName": "Mastercard Media Planning Agent",
+  "description": "Corporate production environment for Mastercard",
+  
+  "platformConfig": "../../../platform/config/environment.mastercard.json",
+  
+  "copilotStudio": {
+    "agentId": "{MASTERCARD_AGENT_ID}",
+    "agentName": "Media Planning Agent",
+    "environmentId": "{MASTERCARD_ENVIRONMENT_ID}"
+  },
+  
+  "sharepoint": {
+    "siteUrl": "{MASTERCARD_SHAREPOINT_URL}",
+    "kbLibrary": "MediaPlanningKB"
+  },
+  
+  "dataverse": {
+    "environmentUrl": "{MASTERCARD_DATAVERSE_URL}",
+    "publisherPrefix": "mpa"
+  },
+  
+  "features": {
+    "enableWebSearch": true,
+    "enableExternalApi": true,
+    "enableDocumentGeneration": true,
+    "enableDebugMode": false,
+    "enableAdvancedOptions": false
+  },
+  
+  "corporateExtensions": {
+    "enableAccessControl": true,
+    "enableAuditLogging": true,
+    "enableRowLevelSecurity": true,
+    "complianceFrameworks": ["SOC2", "ISO27001"]
+  },
+  
+  "deployment": {
+    "branch": "deploy/mastercard",
+    "lastDeployed": null
+  }
+}

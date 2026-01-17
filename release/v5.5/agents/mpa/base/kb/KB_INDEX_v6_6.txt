@@ -22,7 +22,8 @@ When user asks about:
 - Channel selection: MPA_Expert_Lens_Channel_Mix_v6_6
 - Audience targeting: MPA_Expert_Lens_Audience_Strategy_v6_6
 - Measurement approach: MPA_Expert_Lens_Measurement_Attribution_v6_6
-- Benchmarks or calculations: Analytics_Engine_v6_6
+- Benchmarks or industry data: KB_Benchmark_Reference_v6_6
+- Calculation formulas or methodology: Analytics_Engine_v5_5
 - Source citations: Data_Provenance_Framework_v6_6
 
 CORE OPERATING STANDARDS
@@ -149,10 +150,15 @@ Retrieval Priority: HIGH - Step 4 geography
 
 ANALYTICS AND BENCHMARKS
 
-Analytics_Engine_v6_6.txt
-Purpose: Benchmark data and calculation formulas with v6.6 citation patterns
-Keywords: benchmarks, CAC by vertical, CPM ranges, conversion rates, efficiency benchmarks, calculation formulas
-Retrieval Priority: HIGH - For benchmark comparisons
+KB_Benchmark_Reference_v6_6.txt
+Purpose: Comprehensive benchmark data across all verticals including CPC, CPM, AOV, LTV, CAC, ROAS, conversion rates, profit margins, purchase frequency, banking interchange rates
+Keywords: benchmarks, CPC by vertical, CPM by channel, AOV ranges, LTV calculations, CAC by industry, ROAS targets, conversion rates, profit margins, COGS, purchase frequency, new vs returning, interchange rates, banking fees, seasonal adjustments, regional variations
+Retrieval Priority: HIGH - For all benchmark comparisons and calculations
+
+Analytics_Engine_v5_5.txt
+Purpose: Calculation methodology and formulas including MMM, adstock, reach and frequency models, attribution frameworks, LTV models, statistical frameworks
+Keywords: calculation formulas, MMM methodology, adstock decay, reach frequency models, attribution models, LTV formulas, forecasting models, response curves, diminishing returns, incrementality testing, power analysis
+Retrieval Priority: HIGH - For methodology and formula reference
 
 Confidence_Level_Framework_v5_5.txt
 Purpose: Confidence scoring and data quality assessment
@@ -222,13 +228,19 @@ Retrieval Priority: LOW - For document generation
 
 CROSS-REFERENCE PATTERNS
 
-When retrieving for Step 1-2: Core Standards + Analytics Engine
+When retrieving for Step 1-2: Core Standards + KB_Benchmark_Reference + Analytics_Engine
 When retrieving for Step 3-4: Audience Strategy + Dimension Checklist + ADIS Quick Reference
-When retrieving for Step 5-6: Budget Allocation + Analytics Engine + ADIS (if segments exist)
-When retrieving for Step 7-8: Channel Mix + Measurement Attribution + ADIS (for segment affinity)
+When retrieving for Step 5-6: Budget Allocation + KB_Benchmark_Reference + Analytics_Engine + ADIS (if segments exist)
+When retrieving for Step 7-8: Channel Mix + Measurement Attribution + KB_Benchmark_Reference + ADIS (for segment affinity)
 When retrieving for Step 9-10: Gap Detection + Confidence Framework
 
 VERSION HISTORY
+
+v6.6.1 January 2026 - Benchmark expansion update
+- Added KB_Benchmark_Reference_v6_6.txt with comprehensive benchmark data
+- Separated benchmarks (KB_Benchmark_Reference) from methodology (Analytics_Engine)
+- Archived obsolete Analytics_Engine_v5_2.txt
+- Updated cross-reference patterns for dual-document retrieval
 
 v6.6 January 2026 - Major update for v6.6 alignment
 - Added ADIS document section with all 8 models

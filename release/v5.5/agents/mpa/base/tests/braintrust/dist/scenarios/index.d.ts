@@ -27,11 +27,13 @@ import { behavioralTargetingChangeScenario, behavioralTargetingPersona, behavior
 import { outcomeKPIChangeScenario, outcomeKPIPersona, outcomeKPIChangeContext } from "./outcome-kpi-change.js";
 import { audienceAdditionChangeScenario, audienceAdditionPersona, audienceAdditionChangeContext } from "./audience-addition-change.js";
 import { audienceRemovalChangeScenario, audienceRemovalPersona, audienceRemovalChangeContext } from "./audience-removal-change.js";
+import { ADIS_SCENARIOS, ADIS_CONTEXTS, ADIS_SCENARIO_METADATA, adisTriggerScenario, rfmAudienceCreationScenario, ammoBudgetOptimizationScenario, clvAnalysisScenario, segmentationNewbieScenario, adisTriggerContext, rfmAudienceCreationContext, ammoBudgetOptimizationContext, clvAnalysisContext, segmentationNewbieContext, dataRichRetailPersona, customerValueFocusedPersona, segmentationNewbiePersona } from "./adis-scenarios.js";
 export { basicUserStep1_2Scenario, basicUserPersona, sophisticatedIdkScenario, sophisticatedUserPersona, full10StepScenario, intermediateUserPersona, };
 export { highStakesPerformanceScenario, highStakesPerformancePersona, highStakesPerformanceContext, brandBuildingLimitedDataScenario, brandBuildingLimitedDataPersona, brandBuildingLimitedDataContext, };
 export { precisionTargetingComplexScenario, precisionTargetingPersona, precisionTargetingComplexContext, massNationalSimplicityScenario, massNationalPersona, massNationalSimplicityContext, aggressiveKpiNarrowTargetingScenario, aggressiveKpiPersona, aggressiveKpiNarrowTargetingContext, };
 export { multiAudienceUnifiedPlanScenario, multiAudienceUnifiedPersona, multiAudienceUnifiedPlanContext, multiAudienceChannelAllocationScenario, multiAudienceChannelPersona, multiAudienceChannelAllocationContext, multiAudienceVaryingKpisScenario, multiAudienceVaryingKpisPersona, multiAudienceVaryingKpisContext, };
 export { budgetRevisionMidstreamScenario, budgetRevisionPersona, budgetRevisionMidstreamContext, budgetDecreaseMidstreamScenario, budgetDecreasePersona, budgetDecreaseMidstreamContext, volumeTargetIncreaseScenario, volumeTargetIncreasePersona, volumeTargetIncreaseContext, timelineCompressionScenario, timelineCompressionPersona, timelineCompressionContext, efficiencyShockScenario, efficiencyShockPersona, efficiencyShockContext, channelMixChangeScenario, channelMixChangePersona, channelMixChangeContext, geoExpansionChangeScenario, geoExpansionPersona, geoExpansionChangeContext, demographicShiftChangeScenario, demographicShiftPersona, demographicShiftChangeContext, behavioralTargetingChangeScenario, behavioralTargetingPersona, behavioralTargetingChangeContext, outcomeKPIChangeScenario, outcomeKPIPersona, outcomeKPIChangeContext, audienceAdditionChangeScenario, audienceAdditionPersona, audienceAdditionChangeContext, audienceRemovalChangeScenario, audienceRemovalPersona, audienceRemovalChangeContext, };
+export { ADIS_SCENARIOS, ADIS_CONTEXTS, ADIS_SCENARIO_METADATA, adisTriggerScenario, rfmAudienceCreationScenario, ammoBudgetOptimizationScenario, clvAnalysisScenario, segmentationNewbieScenario, adisTriggerContext, rfmAudienceCreationContext, ammoBudgetOptimizationContext, clvAnalysisContext, segmentationNewbieContext, dataRichRetailPersona, customerValueFocusedPersona, segmentationNewbiePersona, };
 /**
  * All available test scenarios
  */
@@ -96,7 +98,7 @@ export declare function getScenarioById(id: string): TestScenario | undefined;
 /**
  * Get scenarios by tag/category
  */
-export declare function getScenariosByCategory(category: "quick" | "full" | "phase1" | "targeting" | "multi-audience" | "reforecasting" | "all"): TestScenario[];
+export declare function getScenariosByCategory(category: "quick" | "full" | "phase1" | "targeting" | "multi-audience" | "reforecasting" | "adis" | "all"): TestScenario[];
 /**
  * Scenario metadata for reporting
  */

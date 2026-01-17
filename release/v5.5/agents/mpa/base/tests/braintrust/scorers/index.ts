@@ -64,6 +64,29 @@ export {
   v61Scorers,
 } from "./v61-scorers.js";
 
+// =============================================================================
+// ADIS SCORERS (v6.4 - Audience Data Intelligence System)
+// =============================================================================
+
+export {
+  // Trigger detection
+  scoreAdisTriggerDetection,
+  scoreRfmRecognition,
+  scoreClvRecognition,
+  // AMMO
+  scoreAmmoTrigger,
+  scoreAllocationRationale,
+  // Segments
+  scoreSegmentPresentation,
+  scoreChannelAffinityRecommendation,
+  // Language
+  scoreJargonAvoidance,
+  scoreResultSimplification,
+  // Composite
+  scoreAdisIntegration,
+  ADIS_SCORERS,
+} from "./adis-scorers.js";
+
 // Benchmark Data Loader v6.0
 export {
   loadBenchmarks,

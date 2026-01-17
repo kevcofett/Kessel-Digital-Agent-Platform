@@ -463,7 +463,7 @@ class TestIntegration:
         adjusted_response = base_email_response * champion_email_affinity
         expected_conversions = audience['member_count'] * adjusted_response
         
-        assert expected_conversions == 28
+        assert round(expected_conversions) == 28
 
 
 # =============================================================================

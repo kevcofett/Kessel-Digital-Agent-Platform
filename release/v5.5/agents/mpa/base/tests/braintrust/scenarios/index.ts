@@ -175,6 +175,20 @@ import {
   b2bBenchmarkContext,
 } from "./vertical-benchmark-scenarios.js";
 
+// Import Advanced Analytics Scenarios
+import {
+  ADVANCED_ANALYTICS_SCENARIOS,
+  rfmSegmentationScenario,
+  propensityModelScenario,
+  decileAnalysisScenario,
+  lookalikeStrategyScenario,
+  nameFlowScenario,
+  profitabilityMediaPlanScenario,
+  dataRichEcommercePersona,
+  printMediaPlannerPersona,
+  lookalikeStrategyPersona,
+} from "./advanced-analytics-scenarios.js";
+
 // Export individual scenarios
 export {
   basicUserStep1_2Scenario,
@@ -317,6 +331,8 @@ export const ALL_SCENARIOS: TestScenario[] = [
   ...V61_TEST_SCENARIOS,
   // ADIS Scenarios (v6.4)
   ...ADIS_SCENARIOS,
+  // Advanced Analytics Scenarios
+  ...ADVANCED_ANALYTICS_SCENARIOS,
 ];
 
 /**
@@ -424,6 +440,7 @@ export function getScenariosByCategory(
     | "multi-audience"
     | "reforecasting"
     | "adis"
+    | "advanced-analytics"
     | "all"
 ): TestScenario[] {
   switch (category) {
@@ -441,6 +458,8 @@ export function getScenariosByCategory(
       return REFORECASTING_SCENARIOS;
     case "adis":
       return ADIS_SCENARIOS;
+    case "advanced-analytics":
+      return ADVANCED_ANALYTICS_SCENARIOS;
     case "all":
     default:
       return ALL_SCENARIOS;

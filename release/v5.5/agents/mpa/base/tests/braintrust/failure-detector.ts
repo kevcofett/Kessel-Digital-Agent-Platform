@@ -109,12 +109,12 @@ export class FailureDetector {
     turnNumber: number,
     agentResponse: string,
     previousTurns: ConversationTurn[],
-    customFailures: FailureCondition[],
+    customFailures: FailureCondition[] | undefined,
     currentStep: number = 1,
     userSaidIDK: boolean = false
   ): FailureCondition[] {
     const detected: FailureCondition[] = [];
-    const allFailures = [...BUILTIN_FAILURES, ...customFailures];
+    const allFailures = [...BUILTIN_FAILURES, ...(customFailures || [])];
 
     // Update provided data from previous turns
     this.updateProvidedData(previousTurns);

@@ -701,7 +701,328 @@ AGENT GUIDANCE
 - Acknowledge that all models have limitations
 
 ================================================================================
-SECTION 8 - FORMULA QUICK REFERENCE
+SECTION 8 - RFM ANALYSIS FUNDAMENTALS
+================================================================================
+
+RFM DEFINITION AND PURPOSE
+
+RFM (Recency, Frequency, Monetary) analysis is a proven marketing technique for behavior-based customer segmentation. RFM groups customers based on three quantifiable transaction behaviors.
+
+RECENCY (R)
+- How recently did the customer make a purchase
+- Measured as days since last transaction
+- Customers who purchased recently are more likely to respond to marketing
+
+FREQUENCY (F)
+- How often does the customer make purchases
+- Measured as number of transactions in a defined period
+- Frequent buyers demonstrate loyalty and engagement
+
+MONETARY (M)
+- How much does the customer spend
+- Measured as total revenue or average order value
+- High spenders represent greater customer value
+
+PURPOSE OF RFM
+- Identify most valuable customers (Champions)
+- Segment customers for targeted marketing
+- Predict future purchase likelihood
+- Optimize marketing budget allocation
+- Reduce wasted spend on unresponsive segments
+- Provide inputs for probabilistic LTV models (BG/NBD, Pareto/NBD)
+
+CALCULATING RFM VALUES
+
+RAW RFM CALCULATIONS
+- Recency_Value = Today_Date minus Last_Purchase_Date (in days)
+- Frequency_Value = Count of distinct transactions in analysis period
+- Monetary_Value = Sum of transaction values in analysis period
+
+ANALYSIS PERIOD GUIDANCE
+- High-frequency businesses: 6 months
+- Standard retail: 12-24 months
+- Low-frequency purchases: 36 months
+
+RFM SCORING METHODOLOGY
+
+QUINTILE METHOD (RECOMMENDED)
+- Divide customers into 5 equal groups (20 percent each) based on each metric
+- Rank customers by Recency (ascending - lower days is better)
+- Assign top 20 percent score of 5, next 20 percent score of 4, etc.
+- Repeat for Frequency (descending - higher is better)
+- Repeat for Monetary (descending - higher is better)
+
+COMBINING SCORES
+- Concatenation: RFM_Code = R concatenated with F concatenated with M (e.g., 543)
+- Creates 125 possible combinations (5 x 5 x 5)
+- Addition: RFM_Total = R plus F plus M (range 3 to 15)
+
+STANDARD RFM CUSTOMER SEGMENTS
+
+CHAMPIONS (R: 5, F: 4-5, M: 4-5)
+- Best customers: bought recently, buy often, spend the most
+- Action: Reward loyalty, offer early access
+
+LOYAL CUSTOMERS (R: 3-4, F: 4-5, M: 4-5)
+- Consistent high-value buyers
+- Action: Upsell premium products, loyalty program
+
+POTENTIAL LOYALISTS (R: 4-5, F: 2-3, M: 2-3)
+- Recent customers with growth potential
+- Action: Onboarding, cross-sell
+
+AT RISK (R: 1-2, F: 3-4, M: 3-4)
+- Previously valuable customers now disengaging
+- Action: Win-back campaigns
+
+LOST (R: 1, F: 1, M: 1)
+- Lowest scores, likely churned
+- Action: Remove from active marketing
+
+RFM BENCHMARKS
+- Champions should represent 5-15 percent of customers
+- At Risk segment requires immediate attention if growing
+- Lost segment exceeding 20 percent indicates retention problem
+
+INTEGRATION WITH MEDIA PLANNING
+- Use RFM segments for audience targeting
+- Exclude Lost customers from prospecting lookalikes
+- Build Champions lookalikes for acquisition
+- Allocate retention budget based on At Risk segment size
+
+================================================================================
+SECTION 9 - CUSTOMER LIFETIME VALUE MODELS
+================================================================================
+
+LTV DEFINITION AND IMPORTANCE
+
+Customer Lifetime Value (CLV or LTV) represents the total revenue a business expects from a customer throughout their entire relationship. LTV is the theoretical maximum a company should pay to acquire a customer.
+
+CORE LTV FORMULAS
+
+SIMPLE LTV
+- LTV = Average_Revenue_Per_Customer x Customer_Lifespan
+
+MARGIN-ADJUSTED LTV
+- LTV = (Average_Order_Value x Purchase_Frequency x Customer_Lifespan) x Gross_Margin
+
+DISCOUNTED LTV (NET PRESENT VALUE)
+- LTV = Sum of (Margin_t / (1 + Discount_Rate)^t) for t = 1 to Lifespan
+
+DETERMINISTIC LTV MODELS
+
+HISTORICAL CLV
+- Based on actual past revenue from customer relationships
+- Formula: Historical_CLV = Sum of all past transactions minus acquisition and service costs
+
+TRADITIONAL CLV (WITH RETENTION AND DISCOUNTING)
+- Formula: CLV = (GML x R) / (1 + D - R)
+- GML = Gross Margin per Lifespan
+- R = Retention Rate (percentage retained per period)
+- D = Discount Rate (cost of capital)
+
+EXAMPLE CALCULATION
+- Average monthly margin per customer: $100
+- Monthly churn rate: 5 percent
+- Retention rate: 95 percent
+- Discount rate: 10 percent annually (0.83 percent monthly)
+- CLV = ($100 x 0.95) / (1 + 0.0083 - 0.95) = $1,630
+
+PROBABILISTIC LTV MODELS
+
+BG/NBD MODEL (BETA-GEOMETRIC/NEGATIVE BINOMIAL DISTRIBUTION)
+- Used for non-contractual continuous purchase settings
+- Developed by Fader, Hardie, and Lee (2005)
+- Assumes purchase rate varies across customers (Gamma distribution)
+- Assumes dropout probability varies across customers (Beta distribution)
+
+KEY INPUTS (FROM RFM DATA)
+- Frequency: Number of repeat purchases (total minus one)
+- Recency: Time since most recent purchase
+- T: Customer age (time since first purchase)
+
+KEY OUTPUTS
+- Expected number of future purchases
+- Probability customer is still active
+- Conditional expected purchases given history
+
+GAMMA-GAMMA MODEL
+- Used with BG/NBD to model monetary value
+- Weights individual and population average transaction values
+
+LTV TO CAC RATIO
+
+CALCULATION
+- LTV_to_CAC = Customer_Lifetime_Value / Customer_Acquisition_Cost
+
+INTERPRETATION
+- Less than 1:0 = Unsustainable (losing money)
+- 1:1 to 2:1 = Marginally profitable
+- 2:1 to 3:1 = Healthy business (industry standard)
+- 3:1 to 5:1 = Strong (may be underinvesting)
+- Greater than 5:1 = Excellent (scale acquisition)
+
+PAYBACK PERIOD
+- Payback_Months = CAC / (Monthly_Revenue x Gross_Margin)
+- SaaS benchmark: 12-18 months
+- E-commerce benchmark: 3-6 months
+
+================================================================================
+SECTION 10 - DECILE ANALYSIS AND MARGINAL OPTIMIZATION
+================================================================================
+
+DECILE ANALYSIS PURPOSE
+
+Decile analysis ranks customers by predicted response probability and divides them into 10 equal groups. This enables identification of most responsive segments and optimal depth of marketing investment.
+
+CONSTRUCTING A DECILE TABLE
+
+PROCESS
+- Build predictive model (logistic regression, ML model)
+- Score all customers with predicted probability
+- Rank customers from highest to lowest probability
+- Divide into 10 equal groups (deciles)
+- Calculate metrics for each decile
+
+STANDARD DECILE TABLE METRICS
+- Number of customers per decile
+- Number of responders per decile
+- Response rate (responders / customers)
+- Cumulative responders
+- Cumulative response rate
+- Lift (decile response rate / overall rate)
+- Cumulative lift
+
+GAINS CHART AND LIFT CHART
+
+GAINS CHART (CUMULATIVE RESPONSE CURVE)
+- Plots cumulative percent of responders captured vs. percent of population contacted
+- Curve above diagonal indicates model has predictive power
+- Steeper curve indicates better model performance
+- Perfect model would be vertical then horizontal
+
+LIFT CHART
+- Plots lift factor for each decile
+- Lift_Decile = Response_Rate_Decile / Overall_Response_Rate
+- Cumulative_Lift = Cumulative_Response_Rate / Overall_Response_Rate
+
+BREAKEVEN ANALYSIS FOR DIRECT MARKETING
+
+BREAKEVEN RESPONSE RATE
+- Minimum response rate required to recover campaign costs
+- Breakeven = Cost_Per_Piece / (Profit_Per_Response x Margin)
+
+BREAKEVEN DEPTH DETERMINATION
+- Mail all deciles where response rate exceeds breakeven
+- Stop at decile where expected response equals breakeven
+- Optimal depth is where marginal profit approaches zero
+
+MARGINAL DOLLAR ALLOCATION PRINCIPLE
+
+CORE CONCEPT
+- Allocate each marketing dollar to the opportunity with highest marginal return
+- Stop when marginal return equals marginal cost
+
+MARGINAL ROI CALCULATION
+- Marginal_ROI = Change_in_Revenue / Change_in_Spend
+
+OPTIMIZATION RULE
+- Continue investing until Marginal_Revenue = Marginal_Cost
+- Equivalently: Marginal_ROI = 1.0
+
+CROSS-CHANNEL OPTIMIZATION
+- At optimum, marginal ROI should be equal across all channels
+- Marginal_ROI_Channel_A = Marginal_ROI_Channel_B = ... = Marginal_ROI_Channel_N
+- If not equal, reallocate from lower to higher marginal ROI channels
+
+AGENT GUIDANCE
+- Always calculate breakeven before recommending campaign depth
+- Present decile analysis to justify targeting decisions
+- Monitor actual response vs. predicted by decile
+- Adjust models based on campaign performance
+
+================================================================================
+SECTION 11 - COHORT AND VINTAGE ANALYSIS
+================================================================================
+
+COHORT ANALYSIS FUNDAMENTALS
+
+Cohort analysis groups customers by a shared characteristic (typically acquisition date) and tracks their behavior over time. This enables apples-to-apples comparison across different time periods.
+
+COHORT TYPES
+
+ACQUISITION COHORTS
+- Grouped by when customer was acquired (first purchase date, signup date)
+- Best for understanding customer lifecycle patterns
+
+BEHAVIORAL COHORTS
+- Grouped by specific actions taken (feature adoption, purchase category)
+- Best for understanding feature impact on retention
+
+TIME-BASED COHORTS
+- Grouped by calendar time period
+- Best for understanding market trends and seasonality
+
+RETENTION MATRIX CONSTRUCTION
+
+STRUCTURE
+- Rows: Acquisition cohorts (by month, quarter, or year)
+- Columns: Tenure periods (months since acquisition)
+- Cells: Retention rate or customer count
+
+CALCULATING RETENTION
+- Retention_Rate_t = Active_Customers_t / Original_Cohort_Size
+
+SURVIVAL FUNCTION
+- S(t) = Probability customer survives to time t
+- S(t) = Product of (1 - Churn_Rate_i) for i = 1 to t
+
+RETENTION CURVE MODELS
+- Exponential: Retention(t) = exp(-lambda x t)
+- Power law: Retention(t) = t^(-alpha)
+- Logarithmic: Retention(t) = a x ln(t) + b
+
+FIVE-YEAR LIFECYCLE FORECASTING
+
+FORECASTING METHODOLOGY
+- Step 1: Analyze 2-3 years of cohort data minimum
+- Step 2: Fit retention model (exponential, power law, or logarithmic)
+- Step 3: Project retention curve forward 60 months
+- Step 4: Overlay average revenue per active customer by tenure
+
+FIVE-YEAR SURVIVAL BENCHMARKS
+- Year 1: 20-35 percent typical survival
+- Year 2: 15-25 percent of original cohort
+- Year 3-5: 8-18 percent of original cohort
+
+COHORT LTV CALCULATION
+
+FORMULA
+- Cohort_LTV = Sum of (Retention_Rate_t x ARPU_t x Discount_Factor_t) for t = 1 to 60
+
+MONTHLY CALCULATION
+- Expected_Active = Original_Cohort_Size x Retention_Rate_t
+- Expected_Revenue_t = Expected_Active x ARPU_t
+- Discounted_Revenue_t = Expected_Revenue_t / (1 + monthly_rate)^t
+
+VINTAGE ANALYSIS FOR ACQUISITION QUALITY
+
+KEY VINTAGE METRICS
+- Retention benchmark: Compare Month 3, 6, 12 retention to historical
+- LTV velocity: Track LTV accumulation rate by cohort
+- Payback trajectory: Track CAC payback timing by cohort
+
+RED FLAGS
+- Declining retention cohort-over-cohort
+- LTV to CAC ratio declining
+- Payback period extending
+
+AGENT GUIDANCE
+- Use cohort analysis to validate LTV assumptions
+- Flag deteriorating acquisition quality early
+
+================================================================================
+SECTION 12 - FORMULA QUICK REFERENCE
 ================================================================================
 
 EFFICIENCY FORMULAS
@@ -712,52 +1033,44 @@ CPA = Total_Spend / Conversions
 CAC = Total_Spend / New_Customers
 ROAS = Revenue / Total_Spend
 ROI = (Revenue - Spend) / Spend x 100
-LTV_to_CAC = Customer_Lifetime_Value / CAC
 
 DELIVERY FORMULAS
 
 CTR = (Clicks / Impressions) x 100
 CVR = (Conversions / Clicks) x 100
-Conversion_Rate = (Conversions / Sessions) x 100
 GRPs = Reach_Percent x Frequency
-Reach = Unique_Users / Target_Audience x 100
 Frequency = Impressions / Unique_Users
-Effective_Frequency_Index = Actual_Frequency / Target_Frequency
-
-BUDGET FORMULAS
-
-Working_Media_Percent = (Budget - All_Fees) / Budget x 100
-Net_Working_Media = Budget x Working_Media_Percent
-Daily_Budget = Total_Budget / Campaign_Days
-Required_Budget = (Target_Conversions x Target_CPA)
-Budget_Gap = Required_Budget - Actual_Budget
 
 PROJECTION FORMULAS
 
 Projected_Impressions = Budget x 1000 / CPM
 Projected_Clicks = Projected_Impressions x CTR / 100
 Projected_Conversions = Projected_Clicks x CVR / 100
-Projected_Revenue = Projected_Conversions x AOV
-Projected_CAC = Budget / Projected_Conversions
 
-VARIANCE FORMULAS
+RFM FORMULAS
 
-Variance_Percent = (Actual - Planned) / Planned x 100
-Pacing_Index = Actual_Spend / Expected_Spend
-Performance_Index = Actual_Conversions / Expected_Conversions
+Recency_Value = Today_Date - Last_Purchase_Date (days)
+Frequency_Value = Count of transactions in period
+Monetary_Value = Sum of transaction values in period
+RFM_Code = R concatenated with F concatenated with M
 
-================================================================================
-COMPLIANCE NOTES
-================================================================================
+LTV FORMULAS
 
-This document follows the 6-Rule Compliance Framework:
+Simple_LTV = Avg_Revenue_Per_Customer x Customer_Lifespan
+Traditional_CLV = (GML x R) / (1 + D - R)
+LTV_to_CAC_Ratio = LTV / CAC
+Payback_Months = CAC / (Monthly_Revenue x Gross_Margin)
 
-1. ALL-CAPS HEADERS: All section headers use uppercase
-2. SIMPLE LISTS: Hyphens only for list items
-3. ASCII ONLY: No special characters or unicode
-4. ZERO VISUAL DEPENDENCIES: No images or complex formatting
-5. MANDATORY LANGUAGE: Professional tone throughout
-6. AGENT-READY: Decision logic and formulas included
+DECILE FORMULAS
+
+Lift = Decile_Response_Rate / Overall_Response_Rate
+Breakeven_Response = Cost_Per_Piece / (Profit_Per_Response x Margin)
+Marginal_ROI = Change_in_Revenue / Change_in_Spend
+
+COHORT FORMULAS
+
+Retention_Rate_t = Active_Customers_t / Original_Cohort_Size
+Cohort_LTV = Sum of (Retention_t x ARPU_t x Discount_t)
 
 ================================================================================
 END OF DOCUMENT

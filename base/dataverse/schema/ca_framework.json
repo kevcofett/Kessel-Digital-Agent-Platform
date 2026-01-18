@@ -1,0 +1,17 @@
+{
+  "table_name": "ca_framework",
+  "display_name": "CA Framework",
+  "description": "Reference data for consulting frameworks",
+  "columns": [
+    {"name": "ca_framework_id", "type": "Autonumber", "primary_key": true},
+    {"name": "framework_code", "type": "Text", "max_length": 20, "required": true, "unique": true},
+    {"name": "framework_name", "type": "Text", "max_length": 100, "required": true},
+    {"name": "category_code", "type": "Choice", "options": ["Domain-Specific", "Strategic", "Operations", "Problem-Solving", "Customer", "Market"]},
+    {"name": "complexity_level", "type": "Choice", "options": ["Simple", "Moderate", "Complex", "Enterprise"]},
+    {"name": "description", "type": "Text", "max_length": 500},
+    {"name": "when_to_use", "type": "Text", "max_length": 1000},
+    {"name": "typical_duration", "type": "Text", "max_length": 50},
+    {"name": "is_active", "type": "Boolean", "default": true},
+    {"name": "display_order", "type": "Integer"}
+  ]
+}

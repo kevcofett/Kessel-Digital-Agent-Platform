@@ -17,3 +17,6 @@ export * from './session/index.js';
 
 // Export audit logging
 export * from './audit/index.js';
+
+// Export agent registry
+export * from './registry/index.js';

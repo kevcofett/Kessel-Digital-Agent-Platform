@@ -1,0 +1,464 @@
+SHARED KNOWLEDGE BASE - FORMULA REFERENCE v1
+VERSION: 1.0
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+================================================================================
+SECTION 1 - CORE FINANCIAL FORMULAS
+================================================================================
+
+RETURN ON AD SPEND (ROAS)
+
+CORRECT FORMULA
+ROAS = (Revenue - Spend) / Spend
+
+FORMULA COMPONENTS
+- Revenue: Total revenue attributed to advertising
+- Spend: Total advertising expenditure
+- Result: Expressed as decimal or percentage
+
+INTERPRETATION
+- ROAS of 1.0 (100%) means break-even after ad costs
+- ROAS of 0.5 (50%) means 50% profit margin on ad spend
+- ROAS of 2.0 (200%) means doubling money invested
+
+IMPORTANT NOTE
+Many platforms display revenue/spend ratio as ROAS. This is incorrect for calculating actual return. When using platform-reported ROAS, convert using:
+Correct_ROAS = Platform_ROAS - 1
+
+EXAMPLE CALCULATIONS
+- Spend $1,000, Revenue $3,000
+- Platform displays: 3.0x ROAS (revenue/spend)
+- Correct ROAS: ($3,000 - $1,000) / $1,000 = 2.0 (200% return)
+
+COST PER ACQUISITION (CPA)
+
+FORMULA
+CPA = Total_Spend / Number_of_Conversions
+
+COMPONENTS
+- Total Spend: All media costs including fees
+- Conversions: Completed desired actions
+
+VARIATIONS BY GOAL
+- Cost Per Lead (CPL): Spend / Leads
+- Cost Per Sale (CPS): Spend / Sales
+- Cost Per Install (CPI): Spend / App Installs
+
+COST PER MILLE (CPM)
+
+FORMULA
+CPM = (Total_Spend / Impressions) x 1000
+
+PURPOSE
+Standard metric for comparing media costs across channels and formats on a per-thousand-impression basis.
+
+EFFECTIVE CPM (eCPM)
+
+FORMULA
+eCPM = (Total_Spend / Impressions) x 1000
+
+PURPOSE
+Normalizes costs across different buying methods (CPC, CPM, CPA) to comparable CPM.
+
+================================================================================
+SECTION 2 - ENGAGEMENT METRICS
+================================================================================
+
+CLICK-THROUGH RATE (CTR)
+
+FORMULA
+CTR = (Clicks / Impressions) x 100
+
+BENCHMARKS BY CHANNEL
+- Search (Brand): 3-8%
+- Search (Non-Brand): 1-4%
+- Display: 0.05-0.15%
+- Social Feed: 0.5-1.5%
+- Video Pre-Roll: 0.5-2%
+- Native: 0.2-0.5%
+
+CONVERSION RATE (CVR)
+
+FORMULA
+CVR = (Conversions / Clicks) x 100
+
+VARIATIONS
+- Site Conversion Rate: Conversions / Site Visitors
+- Landing Page CVR: Conversions / Landing Page Visitors
+- Funnel Step CVR: Step Completions / Step Entries
+
+ENGAGEMENT RATE
+
+FORMULA
+Engagement_Rate = (Total_Engagements / Impressions) x 100
+
+COMPONENTS INCLUDED
+- Likes, reactions
+- Comments
+- Shares
+- Saves
+- Clicks (link and content)
+
+VIDEO COMPLETION RATE (VCR)
+
+FORMULA
+VCR = (Completed_Views / Video_Starts) x 100
+
+QUARTILE METRICS
+- 25% View Rate: Views to 25% / Impressions
+- 50% View Rate: Views to 50% / Impressions
+- 75% View Rate: Views to 75% / Impressions
+- 100% View Rate: Completed Views / Impressions
+
+================================================================================
+SECTION 3 - REACH AND FREQUENCY
+================================================================================
+
+REACH
+
+DEFINITION
+Number of unique individuals exposed to advertising at least once during campaign period.
+
+REACH PERCENTAGE
+Reach_Pct = (Unique_Reach / Target_Population) x 100
+
+FREQUENCY
+
+FORMULA
+Average_Frequency = Total_Impressions / Unique_Reach
+
+EFFECTIVE FREQUENCY
+Minimum exposures needed for message impact. Varies by:
+- Campaign objective (awareness vs conversion)
+- Creative complexity
+- Category involvement
+- Competitive noise
+
+TYPICAL EFFECTIVE FREQUENCY RANGES
+- Simple awareness: 1-3 exposures
+- Brand consideration: 3-5 exposures
+- Purchase intent: 5-8 exposures
+- Complex messaging: 8-12 exposures
+
+GROSS RATING POINTS (GRP)
+
+FORMULA
+GRP = Reach_Pct x Average_Frequency
+
+EXAMPLE
+- 60% reach with 4.0 frequency = 240 GRPs
+
+TARGET RATING POINTS (TRP)
+
+FORMULA
+TRP = Target_Reach_Pct x Target_Frequency
+
+DIFFERENCE FROM GRP
+TRP measures delivery against specific target audience, not total population.
+
+================================================================================
+SECTION 4 - EFFICIENCY METRICS
+================================================================================
+
+COST PER CLICK (CPC)
+
+FORMULA
+CPC = Total_Spend / Total_Clicks
+
+AVERAGE VS ACTUAL
+- Platform CPC: Average across all clicks
+- True CPC: Actual cost per individual click varies by auction
+
+COST PER VIEW (CPV)
+
+FORMULA
+CPV = Total_Spend / Completed_Views
+
+VIEWABLE CPM (vCPM)
+
+FORMULA
+vCPM = (Total_Spend / Viewable_Impressions) x 1000
+
+VIEWABILITY STANDARD
+- Display: 50% of pixels visible for 1 second
+- Video: 50% of pixels visible for 2 continuous seconds
+
+COST PER ENGAGEMENT (CPE)
+
+FORMULA
+CPE = Total_Spend / Total_Engagements
+
+COST PER COMPLETED VIEW (CPCV)
+
+FORMULA
+CPCV = Total_Spend / Completed_Video_Views
+
+================================================================================
+SECTION 5 - ATTRIBUTION AND INCREMENTALITY
+================================================================================
+
+ATTRIBUTION WINDOW METRICS
+
+CLICK-THROUGH CONVERSIONS
+Conversions occurring within X days after ad click.
+
+VIEW-THROUGH CONVERSIONS
+Conversions occurring within X days after ad impression without click.
+
+STANDARD WINDOWS
+- Click-through: 30 days (some platforms 7-90 days)
+- View-through: 1 day (some platforms up to 7 days)
+
+INCREMENTALITY CALCULATIONS
+
+INCREMENTAL LIFT
+
+FORMULA
+Lift_Pct = ((Test_CVR - Control_CVR) / Control_CVR) x 100
+
+COMPONENTS
+- Test Group: Exposed to advertising
+- Control Group: Holdout group not exposed
+
+INCREMENTAL CONVERSIONS
+
+FORMULA
+Incremental_Conversions = Total_Conversions x (1 - (1 / (1 + Lift_Pct/100)))
+
+INCREMENTAL ROAS
+
+FORMULA
+iROAS = (Incremental_Revenue - Spend) / Spend
+
+NOTE
+Incremental ROAS typically lower than attributed ROAS due to baseline conversion removal.
+
+================================================================================
+SECTION 6 - BUDGET AND PACING
+================================================================================
+
+DAILY BUDGET FROM MONTHLY
+
+FORMULA
+Daily_Budget = Monthly_Budget / Days_in_Month
+
+MONTHLY FROM DAILY (GOOGLE METHOD)
+Monthly_Cap = Daily_Budget x 30.4
+
+PACING CALCULATIONS
+
+SPEND PACING
+
+FORMULA
+Pacing_Pct = (Actual_Spend / Expected_Spend) x 100
+
+EXPECTED SPEND (LINEAR)
+Expected_Spend = Total_Budget x (Days_Elapsed / Total_Days)
+
+PACING STATUS
+- Under 90%: Underpacing (may not deliver full budget)
+- 90-110%: On pace
+- Over 110%: Overpacing (may exhaust budget early)
+
+DELIVERY PACING
+
+FORMULA
+Delivery_Pct = (Actual_Impressions / Expected_Impressions) x 100
+
+BUDGET ALLOCATION
+
+SHARE OF VOICE (SOV)
+
+FORMULA
+SOV = (Brand_Impressions / Category_Impressions) x 100
+
+SHARE OF SPEND
+
+FORMULA
+Share_of_Spend = (Brand_Spend / Category_Spend) x 100
+
+EXCESS SHARE OF VOICE (ESOV)
+
+FORMULA
+ESOV = SOV - Market_Share
+
+INTERPRETATION
+Positive ESOV correlated with market share growth over time.
+
+================================================================================
+SECTION 7 - MEDIA MIX MODELING
+================================================================================
+
+CONTRIBUTION CALCULATION
+
+FORMULA
+Channel_Contribution = Channel_Attributed_Revenue / Total_Revenue
+
+MARGINAL ROAS
+
+FORMULA
+mROAS = Change_in_Revenue / Change_in_Spend
+
+PURPOSE
+Measures incremental return of next dollar spent. More accurate for optimization than average ROAS.
+
+SATURATION CURVE FORMULA
+
+HILL FUNCTION
+Response = Saturation_Level x (Spend^Power / (Half_Saturation^Power + Spend^Power))
+
+COMPONENTS
+- Saturation Level: Maximum achievable response
+- Half Saturation: Spend level achieving 50% of max
+- Power: Curve steepness
+
+ADSTOCK CALCULATION
+
+FORMULA (DECAY MODEL)
+Adstock_t = Spend_t + (Decay_Rate x Adstock_t-1)
+
+COMMON DECAY RATES
+- Digital Display: 0.3-0.5 (fast decay)
+- Video/TV: 0.7-0.85 (slower decay)
+- Print: 0.5-0.7 (medium decay)
+- Outdoor: 0.8-0.9 (slow decay)
+
+================================================================================
+SECTION 8 - QUALITY AND BRAND SAFETY
+================================================================================
+
+VIEWABILITY RATE
+
+FORMULA
+Viewability_Rate = (Viewable_Impressions / Measured_Impressions) x 100
+
+BENCHMARKS
+- Industry average: 50-60%
+- Premium inventory: 70%+
+- Target for performance: 65%+
+
+BRAND SAFETY RATE
+
+FORMULA
+Brand_Safe_Rate = (Safe_Impressions / Total_Impressions) x 100
+
+INVALID TRAFFIC RATE (IVT)
+
+FORMULA
+IVT_Rate = (Invalid_Impressions / Total_Impressions) x 100
+
+CATEGORIES
+- GIVT: General Invalid Traffic (bots, crawlers)
+- SIVT: Sophisticated Invalid Traffic (fraud)
+
+TARGET
+Total IVT should be below 3% for quality inventory.
+
+AD FRAUD RATE
+
+FORMULA
+Fraud_Rate = (Fraudulent_Impressions / Total_Impressions) x 100
+
+================================================================================
+SECTION 9 - CROSS-CHANNEL FORMULAS
+================================================================================
+
+BLENDED CPA
+
+FORMULA
+Blended_CPA = Total_Cross_Channel_Spend / Total_Conversions
+
+BLENDED ROAS
+
+FORMULA
+Blended_ROAS = (Total_Revenue - Total_Spend) / Total_Spend
+
+CHANNEL MIX EFFICIENCY
+
+FORMULA
+Mix_Efficiency = Weighted_Channel_ROAS / Blended_ROAS
+
+INTERPRETATION
+- Greater than 1: Channel mix above average efficiency
+- Less than 1: Channel mix below average efficiency
+
+FREQUENCY ACROSS CHANNELS
+
+FORMULA
+Cross_Channel_Frequency = Total_Cross_Channel_Impressions / Deduplicated_Reach
+
+NOTE
+Requires identity resolution or panel data for accurate deduplication.
+
+================================================================================
+SECTION 10 - PLATFORM-SPECIFIC ADJUSTMENTS
+================================================================================
+
+GOOGLE ADS
+
+QUALITY SCORE IMPACT
+Actual_CPC = (Ad_Rank_Below / Your_QS) + 0.01
+
+AD RANK
+Ad_Rank = Bid x Quality_Score x Expected_Impact_of_Extensions
+
+META ADS
+
+RELEVANCE SCORE IMPACT
+Higher relevance scores correlate with:
+- Lower CPM (up to 50% reduction)
+- Better delivery
+- Improved auction competitiveness
+
+PROGRAMMATIC
+
+WIN RATE
+
+FORMULA
+Win_Rate = Impressions_Won / Bids_Submitted
+
+BID SHADING SAVINGS
+
+FORMULA
+Savings_Pct = ((Second_Price - Clearing_Price) / Second_Price) x 100
+
+================================================================================
+SECTION 11 - AGENT APPLICATION NOTES
+================================================================================
+
+FORMULA SELECTION BY OBJECTIVE
+
+AWARENESS CAMPAIGNS
+Primary: CPM, Reach, Frequency, VCR
+Secondary: Brand Lift, SOV
+
+CONSIDERATION CAMPAIGNS
+Primary: CPC, CTR, Engagement Rate, CPV
+Secondary: Site Visit Rate, Content Consumption
+
+CONVERSION CAMPAIGNS
+Primary: CPA, ROAS, Conversion Rate
+Secondary: Revenue, LTV
+
+COMMON CALCULATION ERRORS
+
+ERROR 1 - ROAS MISCALCULATION
+Wrong: ROAS = Revenue / Spend
+Correct: ROAS = (Revenue - Spend) / Spend
+
+ERROR 2 - BLENDED VS CHANNEL METRICS
+Wrong: Averaging channel CPAs
+Correct: Total Spend / Total Conversions
+
+ERROR 3 - FREQUENCY WITHOUT REACH
+Wrong: Impressions / Target Population
+Correct: Impressions / Unique Reach
+
+ERROR 4 - VIEW-THROUGH DOUBLE COUNTING
+Wrong: Adding VTC to CTC without deduplication
+Correct: Deduplicate conversions before summing
+
+================================================================================
+END OF DOCUMENT
+================================================================================

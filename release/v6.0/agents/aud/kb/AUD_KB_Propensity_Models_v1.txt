@@ -1,0 +1,349 @@
+AUD KNOWLEDGE BASE - PROPENSITY MODELS v1
+VERSION: 1.0
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+================================================================================
+SECTION 1 - PROPENSITY SCORING FUNDAMENTALS
+================================================================================
+
+PROPENSITY SCORE DEFINITION
+
+A propensity score is the probability that a customer will take a specific action (convert, churn, upgrade, respond to offer) given their observable characteristics. Propensity models enable targeting based on predicted behavior rather than historical segments alone.
+
+PROPENSITY TYPES
+
+CONVERSION PROPENSITY
+- Probability of purchase within defined window
+- Use for: Prospecting prioritization, bid optimization
+- Typical output: Score 0-100 representing percent likelihood
+
+CHURN PROPENSITY
+- Probability of lapsing or canceling
+- Use for: Retention targeting, win-back timing
+- Typical output: Risk score with urgency indicator
+
+UPSELL PROPENSITY
+- Probability of purchasing premium or additional products
+- Use for: Cross-sell campaign targeting
+- Typical output: Product-specific probability scores
+
+RESPONSE PROPENSITY
+- Probability of responding to marketing treatment
+- Use for: Campaign efficiency, contact strategy
+- Typical output: Response likelihood by channel
+
+================================================================================
+SECTION 2 - LOGISTIC REGRESSION MODELS
+================================================================================
+
+LOGISTIC REGRESSION FUNDAMENTALS
+
+Logistic regression predicts binary outcomes (convert/not convert) using the logistic function to constrain predictions between 0 and 1.
+
+LOGISTIC FUNCTION
+P(Y=1) = 1 / (1 + e^-(B0 + B1X1 + B2X2 + ... + BnXn))
+
+Where:
+- P(Y=1) is probability of positive outcome
+- B0 is intercept (baseline log-odds)
+- B1 through Bn are feature coefficients
+- X1 through Xn are feature values
+
+INTERPRETING COEFFICIENTS
+
+Coefficients represent change in log-odds per unit change in feature.
+
+ODDS RATIO CALCULATION
+Odds_Ratio = e^Coefficient
+
+INTERPRETATION GUIDE
+- Odds ratio of 1.0: No effect
+- Odds ratio greater than 1.0: Increases probability
+- Odds ratio less than 1.0: Decreases probability
+
+EXAMPLE
+- Coefficient for email_opens = 0.15
+- Odds ratio = e^0.15 = 1.16
+- Interpretation: Each additional email open increases conversion odds by 16 percent
+
+FEATURE SELECTION FOR PROPENSITY MODELS
+
+BEHAVIORAL FEATURES (STRONGEST PREDICTORS)
+- Recency of last engagement or purchase
+- Frequency of interactions in period
+- Time spent on site or in app
+- Pages or products viewed
+- Cart additions without purchase
+- Email engagement (opens, clicks)
+- Search queries entered
+
+DEMOGRAPHIC FEATURES (MODERATE PREDICTORS)
+- Age or age band
+- Geographic region
+- Device type
+- Operating system
+- Time zone
+
+CONTEXTUAL FEATURES (SITUATIONAL PREDICTORS)
+- Day of week
+- Time of day
+- Season or holiday proximity
+- Weather conditions
+- Competitive promotions active
+
+HISTORICAL FEATURES (BASELINE PREDICTORS)
+- Previous purchase count
+- Lifetime value to date
+- Days since first purchase
+- Product categories purchased
+- Return rate
+
+MODEL EVALUATION METRICS
+
+AUC-ROC (AREA UNDER RECEIVER OPERATING CURVE)
+- Measures discrimination ability
+- Range: 0.5 (random) to 1.0 (perfect)
+- Acceptable: 0.70 or higher
+- Good: 0.80 or higher
+- Excellent: 0.90 or higher
+
+GINI COEFFICIENT
+- Gini = 2 x AUC - 1
+- Range: 0 (random) to 1 (perfect)
+- Related to AUC but different scale
+
+PRECISION AND RECALL
+- Precision: True positives / Predicted positives
+- Recall: True positives / Actual positives
+- Trade-off depends on use case
+
+F1 SCORE
+- F1 = 2 x (Precision x Recall) / (Precision + Recall)
+- Harmonic mean balancing precision and recall
+
+================================================================================
+SECTION 3 - DECILE ANALYSIS AND TARGETING
+================================================================================
+
+DECILE RANKING METHODOLOGY
+
+After scoring all customers, rank by propensity score and divide into 10 equal groups (deciles).
+
+DECILE CONSTRUCTION
+- Decile 1: Top 10 percent by score (highest propensity)
+- Decile 2: Next 10 percent
+- Continue through Decile 10 (lowest propensity)
+
+LIFT ANALYSIS
+
+LIFT DEFINITION
+Lift measures how much better the model performs compared to random selection.
+
+LIFT FORMULA
+Lift = Decile_Response_Rate / Overall_Response_Rate
+
+EXAMPLE CALCULATION
+- Overall response rate: 2 percent
+- Decile 1 response rate: 12 percent
+- Lift = 12 / 2 = 6.0x
+
+CUMULATIVE LIFT
+- Shows performance when selecting top N deciles
+- Useful for setting targeting thresholds
+
+GAINS CHART
+
+GAINS DEFINITION
+Percentage of total responders captured by targeting top N deciles.
+
+GAINS FORMULA
+Gains_at_Decile_N = Cumulative_Responders_in_Top_N / Total_Responders
+
+EXAMPLE GAINS TABLE
+- Top 1 decile: Captures 35 percent of responders
+- Top 2 deciles: Captures 55 percent of responders
+- Top 3 deciles: Captures 70 percent of responders
+- Top 5 deciles: Captures 85 percent of responders
+
+OPTIMAL TARGETING DEPTH
+
+BREAKEVEN CALCULATION
+Breakeven_Response_Rate = Cost_Per_Contact / (Revenue_Per_Response x Margin)
+
+TARGETING RULE
+Target all deciles where predicted response rate exceeds breakeven rate.
+
+EXAMPLE
+- Cost per contact: $0.50
+- Revenue per response: $100
+- Margin: 40 percent
+- Breakeven = $0.50 / ($100 x 0.40) = 1.25 percent
+- Target deciles with response rate above 1.25 percent
+
+================================================================================
+SECTION 4 - BEHAVIORAL SCORING BEYOND RFM
+================================================================================
+
+ENGAGEMENT SCORING
+
+Engagement scores capture depth and quality of customer interaction beyond simple transaction metrics.
+
+ENGAGEMENT SCORE COMPONENTS
+
+SITE ENGAGEMENT
+- Pages per session (weight: 15 percent)
+- Time on site (weight: 15 percent)
+- Return visits (weight: 20 percent)
+- Search queries (weight: 10 percent)
+
+EMAIL ENGAGEMENT
+- Open rate vs. average (weight: 15 percent)
+- Click rate vs. average (weight: 15 percent)
+- Recency of engagement (weight: 10 percent)
+
+COMPOSITE ENGAGEMENT SCORE
+Engagement_Score = Sum of (Component_Value x Weight) normalized to 0-100
+
+INTENT SCORING
+
+Intent scores predict near-term purchase likelihood based on in-session behavior.
+
+HIGH INTENT SIGNALS (WEIGHT: 3X)
+- Added to cart
+- Viewed pricing page
+- Started checkout
+- Compared products
+- Searched for specific product
+
+MEDIUM INTENT SIGNALS (WEIGHT: 2X)
+- Viewed product detail page
+- Read reviews
+- Checked availability
+- Viewed shipping info
+- Multiple category views
+
+LOW INTENT SIGNALS (WEIGHT: 1X)
+- Homepage visit
+- Category browse
+- Blog content view
+- About page view
+
+INTENT SCORE CALCULATION
+Intent_Score = Sum of (Signal_Count x Signal_Weight) / Max_Possible_Score x 100
+
+VELOCITY SCORING
+
+Velocity captures rate of change in customer behavior, identifying acceleration or deceleration.
+
+VELOCITY COMPONENTS
+- Purchase frequency trend (increasing/stable/decreasing)
+- Engagement trend (rising/flat/falling)
+- Spend trend (growing/stable/declining)
+
+VELOCITY SCORE CALCULATION
+Velocity = (Recent_Period_Metric - Prior_Period_Metric) / Prior_Period_Metric x 100
+
+INTERPRETATION
+- Positive velocity: Customer accelerating
+- Zero velocity: Customer stable
+- Negative velocity: Customer decelerating (churn risk)
+
+================================================================================
+SECTION 5 - MULTI-MODEL ENSEMBLE APPROACHES
+================================================================================
+
+ENSEMBLE FUNDAMENTALS
+
+Combining multiple models often outperforms any single model by reducing variance and capturing different signal types.
+
+ENSEMBLE METHODS
+
+SIMPLE AVERAGING
+Final_Score = (Model_A_Score + Model_B_Score + Model_C_Score) / 3
+
+Use when: Models have similar performance, quick implementation needed
+
+WEIGHTED AVERAGING
+Final_Score = (W1 x Model_A) + (W2 x Model_B) + (W3 x Model_C)
+Where: W1 + W2 + W3 = 1.0
+
+Use when: Models have different strengths, weights based on validation performance
+
+STACKING
+Train meta-model using individual model outputs as features.
+
+Use when: Maximum accuracy required, sufficient data for meta-model training
+
+MODEL COMBINATION STRATEGIES
+
+COMBINING BEHAVIORAL AND CONTEXTUAL
+- Behavioral model: Based on historical customer actions
+- Contextual model: Based on real-time session signals
+- Combined: Behavioral provides baseline, contextual adjusts for current intent
+
+COMBINING DEMOGRAPHIC AND BEHAVIORAL
+- Demographic model: Broad population-level patterns
+- Behavioral model: Individual-level patterns
+- Combined: Demographic for new customers, behavioral for known customers
+
+FALLBACK STRATEGY
+When individual-level data unavailable:
+1. Use individual model if history exists
+2. Fall back to segment-level model
+3. Fall back to population average
+
+================================================================================
+SECTION 6 - AGENT APPLICATION GUIDANCE
+================================================================================
+
+PROPENSITY SCORE USAGE IN MEDIA PLANNING
+
+BID OPTIMIZATION
+- Higher propensity customers justify higher bids
+- Bid multiplier = Base_Bid x (1 + Propensity_Score_Percent / 100)
+- Cap multipliers to prevent overspending
+
+AUDIENCE PRIORITIZATION
+- Rank audiences by average propensity score
+- Allocate budget proportional to expected value
+- Expected_Value = Audience_Size x Avg_Propensity x Revenue_Per_Conversion
+
+SUPPRESSION LOGIC
+- Suppress low propensity customers from expensive channels
+- Threshold: Typically suppress below 20th percentile
+- Exception: Brand building campaigns may include all
+
+FREQUENCY OPTIMIZATION
+- Higher propensity customers can receive higher frequency
+- Lower propensity customers need frequency caps to avoid waste
+
+SCORE INTERPRETATION GUIDANCE
+
+SCORE ABOVE 80
+- High likelihood of action
+- Prioritize for premium placements
+- Higher frequency acceptable
+- Full channel activation
+
+SCORE 50 TO 80
+- Moderate likelihood
+- Standard targeting approach
+- Monitor for score changes
+- Test creative variations
+
+SCORE 20 TO 50
+- Low likelihood
+- Cost-efficient channels only
+- Lower frequency caps
+- Promotional offers may help
+
+SCORE BELOW 20
+- Very low likelihood
+- Consider suppression
+- Only include in broad awareness
+- Reactivation campaigns if lapsed
+
+================================================================================
+END OF DOCUMENT
+================================================================================

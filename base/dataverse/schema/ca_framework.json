@@ -1,17 +1,16 @@
 {
   "table_name": "ca_framework",
   "display_name": "CA Framework",
-  "description": "Reference data for consulting frameworks",
+  "description": "Reference data for 60 consulting frameworks",
   "columns": [
-    {"name": "ca_framework_id", "type": "Autonumber", "primary_key": true},
+    {"name": "ca_framework_id", "type": "GUID", "primary_key": true, "auto_generated": true},
     {"name": "framework_code", "type": "Text", "max_length": 20, "required": true, "unique": true},
     {"name": "framework_name", "type": "Text", "max_length": 100, "required": true},
-    {"name": "category_code", "type": "Choice", "options": ["Domain-Specific", "Strategic", "Operations", "Problem-Solving", "Customer", "Market"]},
-    {"name": "complexity_level", "type": "Choice", "options": ["Simple", "Moderate", "Complex", "Enterprise"]},
+    {"name": "category_code", "type": "Choice", "options": ["Strategic", "Competitive", "Operational", "Customer", "Financial", "Change", "Planning", "Problem"]},
+    {"name": "complexity_level", "type": "Choice", "options": ["Standard", "Advanced", "Expert"]},
     {"name": "description", "type": "Text", "max_length": 500},
     {"name": "when_to_use", "type": "Text", "max_length": 1000},
-    {"name": "typical_duration", "type": "Text", "max_length": 50},
-    {"name": "is_active", "type": "Boolean", "default": true},
-    {"name": "display_order", "type": "Integer"}
+    {"name": "industry_relevance", "type": "MultiSelectLookup", "target_table": "mpa_vertical"},
+    {"name": "is_active", "type": "Boolean", "default": true}
   ]
 }

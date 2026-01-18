@@ -1,0 +1,136 @@
+{
+  "version": "1.0",
+  "description": "End-to-end test scenarios for KDAP v6.0 CA Integration",
+  "routing_tests": [
+    {
+      "id": "ROUTE-001",
+      "query": "Help me with a SWOT analysis",
+      "expected_agent": "CST",
+      "validation": "ORC routes to CST agent"
+    },
+    {
+      "id": "ROUTE-002",
+      "query": "Assess our change readiness",
+      "expected_agent": "CHG",
+      "validation": "ORC routes to CHG agent"
+    },
+    {
+      "id": "ROUTE-003",
+      "query": "Calculate NPV for this investment",
+      "expected_agent": "ANL",
+      "validation": "ORC routes to ANL agent"
+    },
+    {
+      "id": "ROUTE-004",
+      "query": "Create a business case document",
+      "expected_agent": "DOC",
+      "validation": "ORC routes to DOC agent"
+    },
+    {
+      "id": "ROUTE-005",
+      "query": "Help me prioritize using RICE and then calculate the ROI",
+      "expected_agents": ["CST", "ANL"],
+      "validation": "ORC coordinates CST for prioritization, then ANL for ROI calculation"
+    }
+  ],
+  "capability_tests": [
+    {
+      "id": "CAP-001",
+      "capability": "CST_FRAMEWORK_SELECT",
+      "valid_input": {"challenge_type": "market entry", "industry": "SaaS", "complexity": "Standard"},
+      "expected_output_fields": ["frameworks", "rationale"],
+      "validation": "Returns array of frameworks with fit scores"
+    },
+    {
+      "id": "CAP-002",
+      "capability": "CHG_READINESS",
+      "valid_input": {"change_description": "CRM implementation", "org_context": {"size": 500, "culture": "traditional"}},
+      "expected_output_fields": ["readiness_score", "strengths", "gaps"],
+      "validation": "Returns readiness score between 1-10"
+    },
+    {
+      "id": "CAP-003",
+      "capability": "ANL_NPV",
+      "valid_input": {"initial_investment": 100000, "cash_flows": [30000, 35000, 40000, 45000, 50000], "discount_rate": 0.10},
+      "expected_output_fields": ["npv", "sensitivity_analysis"],
+      "validation": "Returns calculated NPV with sensitivity data"
+    },
+    {
+      "id": "CAP-004",
+      "capability": "DOC_BUSINESSCASE",
+      "valid_input": {"title": "CDP Investment", "problem": "Data silos", "solution": "Unified CDP", "financials": {}, "risks": []},
+      "expected_output_fields": ["executive_summary", "sections"],
+      "validation": "Returns structured business case content"
+    }
+  ],
+  "kb_retrieval_tests": [
+    {
+      "id": "KB-001",
+      "agent": "CST",
+      "query": "What is the MECE principle?",
+      "expected_kb": "CST_KB_Consulting_Core",
+      "validation": "CST retrieves consulting core KB"
+    },
+    {
+      "id": "KB-002",
+      "agent": "CHG",
+      "query": "Explain the ADKAR model",
+      "expected_kb": "CHG_KB_Change_Core",
+      "validation": "CHG retrieves change core KB"
+    },
+    {
+      "id": "KB-003",
+      "agent": "CST",
+      "query": "How do I calculate RICE scores?",
+      "expected_kb": "CST_KB_Prioritization_Methods",
+      "validation": "CST retrieves prioritization KB"
+    },
+    {
+      "id": "KB-004",
+      "agent": "CHG",
+      "query": "How do I create a stakeholder map?",
+      "expected_kb": "CHG_KB_Stakeholder_Methods",
+      "validation": "CHG retrieves stakeholder KB"
+    },
+    {
+      "id": "KB-005",
+      "agent": "ANL",
+      "query": "How do I interpret IRR results?",
+      "expected_kb": "ANL_KB_Financial_Investment",
+      "validation": "ANL retrieves financial KB"
+    }
+  ],
+  "e2e_scenarios": [
+    {
+      "id": "E2E-001",
+      "name": "Complete Consulting Engagement Flow",
+      "description": "User needs to build a business case for CDP implementation",
+      "steps": [
+        {"step": 1, "action": "User asks for framework recommendations", "expected_agent": "CST", "expected_capability": "CST_FRAMEWORK_SELECT"},
+        {"step": 2, "action": "User requests SWOT analysis", "expected_agent": "CST", "expected_capability": "CST_STRATEGIC_ANALYZE"},
+        {"step": 3, "action": "User asks for NPV calculation", "expected_agent": "ANL", "expected_capability": "ANL_NPV"},
+        {"step": 4, "action": "User asks for IRR calculation", "expected_agent": "ANL", "expected_capability": "ANL_IRR"},
+        {"step": 5, "action": "User requests business case document", "expected_agent": "DOC", "expected_capability": "DOC_BUSINESSCASE"}
+      ],
+      "validation": "All steps complete successfully with context preserved"
+    },
+    {
+      "id": "E2E-002",
+      "name": "Transformation Roadmap Flow",
+      "description": "User needs to plan an organizational transformation",
+      "steps": [
+        {"step": 1, "action": "User asks for change readiness assessment", "expected_agent": "CHG", "expected_capability": "CHG_READINESS"},
+        {"step": 2, "action": "User requests stakeholder mapping", "expected_agent": "CHG", "expected_capability": "CHG_STAKEHOLDER"},
+        {"step": 3, "action": "User asks for adoption planning", "expected_agent": "CHG", "expected_capability": "CHG_ADOPTION"},
+        {"step": 4, "action": "User requests roadmap document", "expected_agent": "DOC", "expected_capability": "DOC_ROADMAP"}
+      ],
+      "validation": "All steps complete successfully with context preserved"
+    }
+  ],
+  "validation_criteria": {
+    "routing_tests": "100% pass required",
+    "capability_tests": "95%+ pass acceptable",
+    "kb_retrieval_tests": "100% pass required",
+    "e2e_scenarios": "Must complete successfully"
+  }
+}

@@ -39,7 +39,7 @@ export declare class FailureDetector {
     /**
      * Detect failures in a turn
      */
-    detectFailures(turnNumber: number, agentResponse: string, previousTurns: ConversationTurn[], customFailures: FailureCondition[], currentStep?: number, userSaidIDK?: boolean): FailureCondition[];
+    detectFailures(turnNumber: number, agentResponse: string, previousTurns: ConversationTurn[], customFailures: FailureCondition[] | undefined, currentStep?: number, userSaidIDK?: boolean): FailureCondition[];
     /**
      * Update provided data from conversation history
      */

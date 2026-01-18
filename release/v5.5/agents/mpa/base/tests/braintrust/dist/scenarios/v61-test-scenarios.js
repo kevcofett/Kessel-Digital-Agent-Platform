@@ -14,31 +14,103 @@
 // USER PERSONAS
 // =============================================================================
 export const ecommerceMarketingManagerPersona = {
-    sophistication: "intermediate",
-    role: "Marketing Manager",
+    name: "Ecommerce Marketing Manager",
+    title: "Marketing Manager",
+    sophisticationLevel: "intermediate",
     industry: "ECOMMERCE",
     companySize: "mid-market",
     priorMediaExperience: "4 years managing DTC campaigns",
     communicationStyle: "data-driven, results-focused",
     decisionAuthority: "Can approve budgets up to $300K",
+    knownData: {
+        hasBudget: true,
+        budget: 200000,
+        hasVolumeTarget: true,
+        volumeTarget: 4000,
+        volumeType: "customers",
+    },
+    behavioralTraits: {
+        responseVerbosity: "normal",
+        uncertaintyFrequency: "sometimes",
+        challengeFrequency: "sometimes",
+        stepSkipTendency: "sequential",
+    },
+    languagePatterns: {
+        usesJargon: true,
+        knownAcronyms: ["CAC", "LTV", "ROAS", "CPA", "CTR"],
+        samplePhrases: [
+            "What's the benchmark for that?",
+            "How does this compare to industry standards?",
+            "We need to hit our targets this quarter.",
+        ],
+    },
 };
 export const regionalRetailerPersona = {
-    sophistication: "basic",
-    role: "Owner",
+    name: "Regional Retailer Owner",
+    title: "Owner",
+    sophisticationLevel: "basic",
     industry: "RETAIL",
     companySize: "small",
     priorMediaExperience: "First major digital campaign",
     communicationStyle: "plain language, wants clear guidance",
     decisionAuthority: "Full authority",
+    knownData: {
+        hasBudget: true,
+        budget: 150000,
+        hasVolumeTarget: true,
+        volumeTarget: 2000,
+        volumeType: "customers",
+    },
+    behavioralTraits: {
+        responseVerbosity: "normal",
+        uncertaintyFrequency: "often",
+        challengeFrequency: "rare",
+        stepSkipTendency: "sequential",
+    },
+    languagePatterns: {
+        usesJargon: false,
+        knownAcronyms: [],
+        samplePhrases: [
+            "I'm not sure what that means.",
+            "Can you explain that in simpler terms?",
+            "This is our first big campaign.",
+        ],
+    },
 };
 export const b2bDemandGenPersona = {
-    sophistication: "advanced",
-    role: "Director of Demand Gen",
+    name: "B2B Demand Gen Director",
+    title: "Director of Demand Gen",
+    sophisticationLevel: "advanced",
     industry: "B2B_PROFESSIONAL",
     companySize: "enterprise",
     priorMediaExperience: "10+ years B2B marketing",
     communicationStyle: "analytical, ABM-focused",
     decisionAuthority: "Reports to CMO, $1M+ budget authority",
+    knownData: {
+        hasBudget: true,
+        budget: 500000,
+        hasVolumeTarget: true,
+        volumeTarget: 300,
+        volumeType: "leads",
+        hasUnitEconomics: true,
+        ltv: 50000,
+        cac: 1500,
+    },
+    behavioralTraits: {
+        responseVerbosity: "verbose",
+        uncertaintyFrequency: "rare",
+        challengeFrequency: "often",
+        stepSkipTendency: "occasional_skip",
+    },
+    languagePatterns: {
+        usesJargon: true,
+        knownAcronyms: ["ABM", "MQL", "SQL", "CAC", "LTV", "CPL", "ROAS", "MRR", "ARR"],
+        samplePhrases: [
+            "What's the pipeline velocity impact?",
+            "How does this ladder up to revenue targets?",
+            "We need to optimize for qualified pipeline, not just leads.",
+        ],
+    },
 };
 // =============================================================================
 // SCENARIO 1: AUTOMATIC BENCHMARK COMPARISON
@@ -98,6 +170,7 @@ export const automaticBenchmarkScenario = {
     category: "v61-capabilities",
     persona: ecommerceMarketingManagerPersona,
     turns: automaticBenchmarkTurns,
+    maxTurns: 10,
     qualityContext: {
         scenarioType: "benchmark-comparison",
         vertical: "ECOMMERCE",
@@ -165,6 +238,7 @@ export const dataConfidenceScenario = {
     category: "v61-capabilities",
     persona: regionalRetailerPersona,
     turns: dataConfidenceTurns,
+    maxTurns: 10,
     qualityContext: {
         scenarioType: "data-confidence",
         vertical: "RETAIL",
@@ -238,6 +312,7 @@ export const platformTaxonomyScenario = {
     category: "v61-capabilities",
     persona: b2bDemandGenPersona,
     turns: platformTaxonomyTurns,
+    maxTurns: 12,
     qualityContext: {
         scenarioType: "platform-targeting",
         vertical: "B2B_PROFESSIONAL",
@@ -313,15 +388,41 @@ export const geographyCensusScenario = {
     description: "Tests that agent uses DMA population data for audience sizing and budget allocation",
     category: "v61-capabilities",
     persona: {
-        sophistication: "intermediate",
-        role: "VP Marketing",
+        name: "Finance VP Marketing",
+        title: "VP Marketing",
+        sophisticationLevel: "intermediate",
         industry: "FINANCE",
         companySize: "mid-market",
         priorMediaExperience: "5 years in regional banking marketing",
         communicationStyle: "analytical, compliance-aware",
         decisionAuthority: "Regional budget authority",
+        knownData: {
+            hasBudget: true,
+            budget: 800000,
+            hasVolumeTarget: true,
+            volumeTarget: 5000,
+            volumeType: "customers",
+            hasGeography: true,
+            geography: ["Dallas", "Houston"],
+        },
+        behavioralTraits: {
+            responseVerbosity: "normal",
+            uncertaintyFrequency: "sometimes",
+            challengeFrequency: "sometimes",
+            stepSkipTendency: "sequential",
+        },
+        languagePatterns: {
+            usesJargon: true,
+            knownAcronyms: ["DMA", "CAC", "LTV", "TAM"],
+            samplePhrases: [
+                "What does the data show?",
+                "How should we allocate across markets?",
+                "We need to be compliant with regulations.",
+            ],
+        },
     },
     turns: geographyCensusTurns,
+    maxTurns: 12,
     qualityContext: {
         scenarioType: "geography-targeting",
         vertical: "FINANCE",
@@ -416,6 +517,7 @@ export const comprehensiveV61Scenario = {
     category: "v61-capabilities",
     persona: ecommerceMarketingManagerPersona,
     turns: comprehensiveV61Turns,
+    maxTurns: 15,
     qualityContext: {
         scenarioType: "comprehensive-v61",
         vertical: "ECOMMERCE",

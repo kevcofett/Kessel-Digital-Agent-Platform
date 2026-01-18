@@ -35,6 +35,8 @@ import { audienceAdditionChangeScenario, audienceAdditionPersona, audienceAdditi
 import { audienceRemovalChangeScenario, audienceRemovalPersona, audienceRemovalChangeContext, } from "./audience-removal-change.js";
 // Import ADIS Scenarios (v6.4)
 import { ADIS_SCENARIOS, ADIS_CONTEXTS, ADIS_SCENARIO_METADATA, adisTriggerScenario, rfmAudienceCreationScenario, ammoBudgetOptimizationScenario, clvAnalysisScenario, segmentationNewbieScenario, adisTriggerContext, rfmAudienceCreationContext, ammoBudgetOptimizationContext, clvAnalysisContext, segmentationNewbieContext, dataRichRetailPersona, customerValueFocusedPersona, segmentationNewbiePersona, } from "./adis-scenarios.js";
+// Import Advanced Analytics Scenarios
+import { ADVANCED_ANALYTICS_SCENARIOS, } from "./advanced-analytics-scenarios.js";
 // Export individual scenarios
 export { basicUserStep1_2Scenario, basicUserPersona, sophisticatedIdkScenario, sophisticatedUserPersona, full10StepScenario, intermediateUserPersona, };
 // Export Phase 1 Quality Scenarios
@@ -83,6 +85,8 @@ export const ALL_SCENARIOS = [
     ...V61_TEST_SCENARIOS,
     // ADIS Scenarios (v6.4)
     ...ADIS_SCENARIOS,
+    // Advanced Analytics Scenarios
+    ...ADVANCED_ANALYTICS_SCENARIOS,
 ];
 /**
  * Reforecasting Scenarios
@@ -189,6 +193,8 @@ export function getScenariosByCategory(category) {
             return REFORECASTING_SCENARIOS;
         case "adis":
             return ADIS_SCENARIOS;
+        case "advanced-analytics":
+            return ADVANCED_ANALYTICS_SCENARIOS;
         case "all":
         default:
             return ALL_SCENARIOS;

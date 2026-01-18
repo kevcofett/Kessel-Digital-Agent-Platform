@@ -1,0 +1,288 @@
+# EvaluatePartner Power Automate Flow Definition
+# Version: 1.0.0
+# Agent: SPO (Supply Path Optimization)
+# Description: Evaluates and scores programmatic partners (DSPs, SSPs, verification, data)
+
+name: EvaluatePartner
+description: >
+  HTTP-triggered flow that evaluates programmatic partners using weighted
+  scoring across key criteria. Provides tier ranking and recommendations
+  for partner selection and consolidation decisions.
+
+trigger:
+  type: HTTP
+  method: POST
+  schema:
+    type: object
+    required:
+      - session_id
+      - request_id
+      - partner_type
+    properties:
+      session_id:
+        type: string
+        format: uuid
+      request_id:
+        type: string
+        format: uuid
+      partner_name:
+        type: string
+      partner_type:
+        type: string
+        enum: [DSP, SSP, VERIFICATION, DATA]
+      fee_transparency:
+        type: number
+        minimum: 1
+        maximum: 10
+        description: Clarity of fee structure (1-10)
+      supply_quality:
+        type: number
+        minimum: 1
+        maximum: 10
+        description: Quality of inventory/data (1-10)
+      brand_safety:
+        type: number
+        minimum: 1
+        maximum: 10
+        description: Brand safety capabilities (1-10)
+      fraud_prevention:
+        type: number
+        minimum: 1
+        maximum: 10
+        description: Fraud detection/prevention (1-10)
+      support:
+        type: number
+        minimum: 1
+        maximum: 10
+        description: Service and support quality (1-10)
+      integration_ease:
+        type: number
+        minimum: 1
+        maximum: 10
+        description: Technical integration quality (1-10)
+      reporting:
+        type: number
+        minimum: 1
+        maximum: 10
+        description: Reporting capabilities (1-10)
+
+environment_variables:
+  EAP_DATAVERSE_URL:
+    description: EAP Dataverse environment URL
+    required: true
+
+steps:
+  # Step 1: Parse input
+  - id: parse_input
+    type: Compose
+    name: Parse Input
+    inputs:
+      session_id: "@triggerBody()?['session_id']"
+      request_id: "@triggerBody()?['request_id']"
+      partner_name: "@coalesce(triggerBody()?['partner_name'], 'Unnamed Partner')"
+      partner_type: "@triggerBody()?['partner_type']"
+      scores:
+        fee_transparency: "@coalesce(triggerBody()?['fee_transparency'], 5)"
+        supply_quality: "@coalesce(triggerBody()?['supply_quality'], 5)"
+        brand_safety: "@coalesce(triggerBody()?['brand_safety'], 5)"
+        fraud_prevention: "@coalesce(triggerBody()?['fraud_prevention'], 5)"
+        support: "@coalesce(triggerBody()?['support'], 5)"
+        integration_ease: "@coalesce(triggerBody()?['integration_ease'], 5)"
+        reporting: "@coalesce(triggerBody()?['reporting'], 5)"
+      start_time: "@utcNow()"
+
+  # Step 2: Load partner type weights
+  - id: load_weights
+    type: Compose
+    name: Load Partner Type Weights
+    inputs:
+      weights:
+        DSP:
+          fee_transparency: 0.20
+          supply_quality: 0.20
+          brand_safety: 0.15
+          fraud_prevention: 0.15
+          support: 0.10
+          integration_ease: 0.10
+          reporting: 0.10
+          description: "DSPs weighted for fee clarity and supply quality"
+        SSP:
+          fee_transparency: 0.20
+          supply_quality: 0.25
+          brand_safety: 0.20
+          fraud_prevention: 0.20
+          support: 0.05
+          integration_ease: 0.05
+          reporting: 0.05
+          description: "SSPs weighted for inventory quality and safety"
+        VERIFICATION:
+          fee_transparency: 0.10
+          supply_quality: 0.25
+          brand_safety: 0.25
+          fraud_prevention: 0.20
+          support: 0.05
+          integration_ease: 0.10
+          reporting: 0.05
+          description: "Verification partners weighted for detection accuracy"
+        DATA:
+          fee_transparency: 0.15
+          supply_quality: 0.30
+          brand_safety: 0.10
+          fraud_prevention: 0.20
+          support: 0.10
+          integration_ease: 0.10
+          reporting: 0.05
+          description: "Data partners weighted for data quality and freshness"
+    run_after: parse_input
+
+  # Step 3: Calculate weighted score
+  - id: calculate_weighted_score
+    type: Compose
+    name: Calculate Weighted Score
+    inputs:
+      partner_type: "@outputs('parse_input')?['partner_type']"
+      weights: "@outputs('load_weights')?['weights']?[outputs('parse_input')?['partner_type']]"
+      weighted_components:
+        fee_transparency: "@mul(outputs('parse_input')?['scores']?['fee_transparency'], outputs('load_weights')?['weights']?[outputs('parse_input')?['partner_type']]?['fee_transparency'])"
+        supply_quality: "@mul(outputs('parse_input')?['scores']?['supply_quality'], outputs('load_weights')?['weights']?[outputs('parse_input')?['partner_type']]?['supply_quality'])"
+        brand_safety: "@mul(outputs('parse_input')?['scores']?['brand_safety'], outputs('load_weights')?['weights']?[outputs('parse_input')?['partner_type']]?['brand_safety'])"
+        fraud_prevention: "@mul(outputs('parse_input')?['scores']?['fraud_prevention'], outputs('load_weights')?['weights']?[outputs('parse_input')?['partner_type']]?['fraud_prevention'])"
+        support: "@mul(outputs('parse_input')?['scores']?['support'], outputs('load_weights')?['weights']?[outputs('parse_input')?['partner_type']]?['support'])"
+        integration_ease: "@mul(outputs('parse_input')?['scores']?['integration_ease'], outputs('load_weights')?['weights']?[outputs('parse_input')?['partner_type']]?['integration_ease'])"
+        reporting: "@mul(outputs('parse_input')?['scores']?['reporting'], outputs('load_weights')?['weights']?[outputs('parse_input')?['partner_type']]?['reporting'])"
+      total_weighted_score: "@add(add(add(add(add(add(mul(outputs('parse_input')?['scores']?['fee_transparency'], outputs('load_weights')?['weights']?[outputs('parse_input')?['partner_type']]?['fee_transparency']), mul(outputs('parse_input')?['scores']?['supply_quality'], outputs('load_weights')?['weights']?[outputs('parse_input')?['partner_type']]?['supply_quality'])), mul(outputs('parse_input')?['scores']?['brand_safety'], outputs('load_weights')?['weights']?[outputs('parse_input')?['partner_type']]?['brand_safety'])), mul(outputs('parse_input')?['scores']?['fraud_prevention'], outputs('load_weights')?['weights']?[outputs('parse_input')?['partner_type']]?['fraud_prevention'])), mul(outputs('parse_input')?['scores']?['support'], outputs('load_weights')?['weights']?[outputs('parse_input')?['partner_type']]?['support'])), mul(outputs('parse_input')?['scores']?['integration_ease'], outputs('load_weights')?['weights']?[outputs('parse_input')?['partner_type']]?['integration_ease'])), mul(outputs('parse_input')?['scores']?['reporting'], outputs('load_weights')?['weights']?[outputs('parse_input')?['partner_type']]?['reporting']))"
+    run_after: load_weights
+
+  # Step 4: Determine tier
+  - id: determine_tier
+    type: Compose
+    name: Determine Partner Tier
+    inputs:
+      weighted_score: "@outputs('calculate_weighted_score')?['total_weighted_score']"
+      tier: "@if(greaterOrEquals(outputs('calculate_weighted_score')?['total_weighted_score'], 9), 'TIER_1_EXCELLENT', if(greaterOrEquals(outputs('calculate_weighted_score')?['total_weighted_score'], 7.5), 'TIER_2_GOOD', if(greaterOrEquals(outputs('calculate_weighted_score')?['total_weighted_score'], 6), 'TIER_3_ADEQUATE', 'TIER_4_INSUFFICIENT')))"
+      tier_descriptions:
+        TIER_1_EXCELLENT: "Primary partner - strategic relationship"
+        TIER_2_GOOD: "Secondary partner - tactical use"
+        TIER_3_ADEQUATE: "Specialized use cases only"
+        TIER_4_INSUFFICIENT: "Not recommended - consider alternatives"
+    run_after: calculate_weighted_score
+
+  # Step 5: Identify strengths and weaknesses
+  - id: analyze_criteria
+    type: Compose
+    name: Analyze Strengths and Weaknesses
+    inputs:
+      scores: "@outputs('parse_input')?['scores']"
+      strengths: []
+      weaknesses: []
+      strength_threshold: 8
+      weakness_threshold: 5
+      criteria_analysis:
+        fee_transparency:
+          score: "@outputs('parse_input')?['scores']?['fee_transparency']"
+          is_strength: "@greaterOrEquals(outputs('parse_input')?['scores']?['fee_transparency'], 8)"
+          is_weakness: "@less(outputs('parse_input')?['scores']?['fee_transparency'], 5)"
+        supply_quality:
+          score: "@outputs('parse_input')?['scores']?['supply_quality']"
+          is_strength: "@greaterOrEquals(outputs('parse_input')?['scores']?['supply_quality'], 8)"
+          is_weakness: "@less(outputs('parse_input')?['scores']?['supply_quality'], 5)"
+        brand_safety:
+          score: "@outputs('parse_input')?['scores']?['brand_safety']"
+          is_strength: "@greaterOrEquals(outputs('parse_input')?['scores']?['brand_safety'], 8)"
+          is_weakness: "@less(outputs('parse_input')?['scores']?['brand_safety'], 5)"
+        fraud_prevention:
+          score: "@outputs('parse_input')?['scores']?['fraud_prevention']"
+          is_strength: "@greaterOrEquals(outputs('parse_input')?['scores']?['fraud_prevention'], 8)"
+          is_weakness: "@less(outputs('parse_input')?['scores']?['fraud_prevention'], 5)"
+        support:
+          score: "@outputs('parse_input')?['scores']?['support']"
+          is_strength: "@greaterOrEquals(outputs('parse_input')?['scores']?['support'], 8)"
+          is_weakness: "@less(outputs('parse_input')?['scores']?['support'], 5)"
+    run_after: determine_tier
+
+  # Step 6: Generate recommendations
+  - id: generate_recommendations
+    type: Compose
+    name: Generate Partner Recommendations
+    inputs:
+      tier: "@outputs('determine_tier')?['tier']"
+      recommendation: "@if(equals(outputs('determine_tier')?['tier'], 'TIER_1_EXCELLENT'), 'Prioritize as primary partner. Negotiate volume commitments.', if(equals(outputs('determine_tier')?['tier'], 'TIER_2_GOOD'), 'Use as secondary partner. Monitor performance quarterly.', if(equals(outputs('determine_tier')?['tier'], 'TIER_3_ADEQUATE'), 'Limit to specific use cases. Actively evaluate alternatives.', 'Not recommended. Transition to alternative partner.')))"
+      actions:
+        TIER_1_EXCELLENT:
+          - "Negotiate multi-year agreement for fee reduction"
+          - "Explore beta access to new features"
+          - "Schedule quarterly business reviews"
+        TIER_2_GOOD:
+          - "Maintain as tactical option"
+          - "Compare fees against Tier 1 partners"
+          - "Review annually for tier promotion"
+        TIER_3_ADEQUATE:
+          - "Use only where Tier 1/2 lack capability"
+          - "Document specific use cases"
+          - "Actively source alternatives"
+        TIER_4_INSUFFICIENT:
+          - "Create transition plan to alternative"
+          - "Document deficiencies for procurement"
+          - "Set 90-day exit timeline"
+      improvement_areas: "@if(less(outputs('parse_input')?['scores']?['fee_transparency'], 6), 'Fee transparency needs improvement', if(less(outputs('parse_input')?['scores']?['supply_quality'], 6), 'Supply quality below expectations', if(less(outputs('parse_input')?['scores']?['brand_safety'], 6), 'Brand safety capabilities insufficient', 'No critical improvement areas')))"
+    run_after: analyze_criteria
+
+  # Step 7: Build response
+  - id: build_response
+    type: Compose
+    name: Build Response
+    inputs:
+      request_id: "@outputs('parse_input')?['request_id']"
+      timestamp: "@utcNow()"
+      source_agent: "SPO"
+      status: "success"
+      data:
+        partner_evaluation:
+          partner_name: "@outputs('parse_input')?['partner_name']"
+          partner_type: "@outputs('parse_input')?['partner_type']"
+          weighted_score: "@outputs('calculate_weighted_score')?['total_weighted_score']"
+          tier: "@outputs('determine_tier')?['tier']"
+          tier_description: "@outputs('determine_tier')?['tier_descriptions']?[outputs('determine_tier')?['tier']]"
+        scoring_detail:
+          raw_scores: "@outputs('parse_input')?['scores']"
+          weighted_components: "@outputs('calculate_weighted_score')?['weighted_components']"
+          weight_methodology: "@outputs('load_weights')?['weights']?[outputs('parse_input')?['partner_type']]?['description']"
+        analysis:
+          criteria_breakdown: "@outputs('analyze_criteria')?['criteria_analysis']"
+          improvement_areas: "@outputs('generate_recommendations')?['improvement_areas']"
+        recommendation: "@outputs('generate_recommendations')?['recommendation']"
+        recommended_actions: "@outputs('generate_recommendations')?['actions']?[outputs('determine_tier')?['tier']]"
+      confidence: "@if(equals(outputs('determine_tier')?['tier'], 'TIER_1_EXCELLENT'), 'HIGH', if(equals(outputs('determine_tier')?['tier'], 'TIER_4_INSUFFICIENT'), 'HIGH', 'MEDIUM'))"
+      sources:
+        - "CALCULATION"
+        - "AGENT_KB"
+      metadata:
+        processing_time_ms: "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+        evaluation_criteria_count: 7
+    run_after: generate_recommendations
+
+  # Step 8: Return response
+  - id: return_response
+    type: Response
+    name: Return Response
+    inputs:
+      statusCode: 200
+      headers:
+        Content-Type: application/json
+      body: "@outputs('build_response')"
+
+error_handling:
+  on_error:
+    - id: return_error
+      type: Response
+      name: Return Error Response
+      inputs:
+        statusCode: 500
+        headers:
+          Content-Type: application/json
+        body:
+          request_id: "@outputs('parse_input')?['request_id']"
+          source_agent: "SPO"
+          error: true
+          code: "PARTNER_EVALUATION_ERROR"
+          message: "Failed to evaluate partner"

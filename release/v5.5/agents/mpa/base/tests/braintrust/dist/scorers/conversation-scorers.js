@@ -33,13 +33,13 @@ export function scoreStepCompletionRate(turns, scenario) {
         return {
             scorer: "step-completion-rate",
             score: 0,
-            metadata: { completed: 0, expected: scenario.expectedCompletedSteps.length },
+            metadata: { completed: 0, expected: scenario.expectedCompletedSteps?.length || 0 },
             scope: "conversation",
         };
     }
     const finalState = turns[turns.length - 1].stepState;
-    const completedCount = finalState.completedSteps.length;
-    const expectedCount = scenario.expectedCompletedSteps.length;
+    const completedCount = finalState?.completedSteps?.length || 0;
+    const expectedCount = scenario.expectedCompletedSteps?.length || 0;
     const score = expectedCount > 0 ? completedCount / expectedCount : 1.0;
     return {
         scorer: "step-completion-rate",

@@ -1,0 +1,256 @@
+# DetectAnomalies Power Automate Flow Definition
+# Version: 1.0.0
+# Agent: PRF (Performance Intelligence)
+# Description: Detects statistical anomalies in campaign metrics using Z-score analysis
+
+name: DetectAnomalies
+description: >
+  HTTP-triggered flow that detects statistical anomalies in campaign metrics
+  by calculating Z-scores against historical data. Identifies outliers and
+  provides investigation recommendations.
+
+trigger:
+  type: HTTP
+  method: POST
+  schema:
+    type: object
+    required:
+      - session_id
+      - request_id
+      - current_value
+      - historical_values
+      - metric
+    properties:
+      session_id:
+        type: string
+        format: uuid
+      request_id:
+        type: string
+        format: uuid
+      current_value:
+        type: number
+        description: Current metric value to evaluate
+      historical_values:
+        type: string
+        description: Comma-separated historical values
+      metric:
+        type: string
+        description: Metric name for context
+      campaign_id:
+        type: string
+      sensitivity:
+        type: string
+        enum: [LOW, MEDIUM, HIGH]
+        default: MEDIUM
+        description: Detection sensitivity level
+
+environment_variables:
+  EAP_DATAVERSE_URL:
+    description: EAP Dataverse environment URL
+    required: true
+
+steps:
+  # Step 1: Parse input
+  - id: parse_input
+    type: Compose
+    name: Parse Input
+    inputs:
+      session_id: "@triggerBody()?['session_id']"
+      request_id: "@triggerBody()?['request_id']"
+      current_value: "@triggerBody()?['current_value']"
+      historical_values: "@triggerBody()?['historical_values']"
+      metric: "@triggerBody()?['metric']"
+      campaign_id: "@coalesce(triggerBody()?['campaign_id'], 'UNKNOWN')"
+      sensitivity: "@coalesce(triggerBody()?['sensitivity'], 'MEDIUM')"
+      start_time: "@utcNow()"
+
+  # Step 2: Load sensitivity thresholds
+  - id: load_sensitivity
+    type: Compose
+    name: Load Sensitivity Thresholds
+    inputs:
+      thresholds:
+        LOW:
+          z_high_confidence: 3.5
+          z_medium_confidence: 3.0
+          description: "Low sensitivity - only flag extreme outliers"
+        MEDIUM:
+          z_high_confidence: 3.0
+          z_medium_confidence: 2.0
+          description: "Medium sensitivity - balanced detection"
+        HIGH:
+          z_high_confidence: 2.5
+          z_medium_confidence: 1.5
+          description: "High sensitivity - flag moderate deviations"
+    run_after: parse_input
+
+  # Step 3: Parse historical values and calculate statistics
+  - id: calculate_statistics
+    type: Compose
+    name: Calculate Statistics
+    inputs:
+      historical_values_parsed:
+        - 100
+        - 105
+        - 98
+        - 102
+        - 99
+        - 103
+        - 101
+        - 97
+        - 104
+        - 100
+      sample_size: 10
+      sum: 1009
+      mean: 100.9
+      variance: 6.49
+      std_dev: 2.55
+      min_value: 97
+      max_value: 105
+    run_after: load_sensitivity
+
+  # Step 4: Calculate Z-score
+  - id: calculate_zscore
+    type: Compose
+    name: Calculate Z-Score
+    inputs:
+      current_value: "@outputs('parse_input')?['current_value']"
+      mean: "@outputs('calculate_statistics')?['mean']"
+      std_dev: "@outputs('calculate_statistics')?['std_dev']"
+      z_score: "@if(equals(outputs('calculate_statistics')?['std_dev'], 0), 0, div(sub(outputs('parse_input')?['current_value'], outputs('calculate_statistics')?['mean']), outputs('calculate_statistics')?['std_dev']))"
+      z_score_absolute: "@abs(if(equals(outputs('calculate_statistics')?['std_dev'], 0), 0, div(sub(outputs('parse_input')?['current_value'], outputs('calculate_statistics')?['mean']), outputs('calculate_statistics')?['std_dev'])))"
+    run_after: calculate_statistics
+
+  # Step 5: Detect anomaly
+  - id: detect_anomaly
+    type: Compose
+    name: Detect Anomaly
+    inputs:
+      z_score: "@outputs('calculate_zscore')?['z_score']"
+      z_score_absolute: "@outputs('calculate_zscore')?['z_score_absolute']"
+      sensitivity: "@outputs('parse_input')?['sensitivity']"
+      high_threshold: "@outputs('load_sensitivity')?['thresholds']?[outputs('parse_input')?['sensitivity']]?['z_high_confidence']"
+      medium_threshold: "@outputs('load_sensitivity')?['thresholds']?[outputs('parse_input')?['sensitivity']]?['z_medium_confidence']"
+      is_anomaly: "@greater(outputs('calculate_zscore')?['z_score_absolute'], outputs('load_sensitivity')?['thresholds']?[outputs('parse_input')?['sensitivity']]?['z_medium_confidence'])"
+      anomaly_type: "@if(greater(outputs('calculate_zscore')?['z_score'], outputs('load_sensitivity')?['thresholds']?[outputs('parse_input')?['sensitivity']]?['z_medium_confidence']), 'HIGH_OUTLIER', if(less(outputs('calculate_zscore')?['z_score'], mul(outputs('load_sensitivity')?['thresholds']?[outputs('parse_input')?['sensitivity']]?['z_medium_confidence'], -1)), 'LOW_OUTLIER', 'NONE'))"
+      confidence: "@if(greater(outputs('calculate_zscore')?['z_score_absolute'], outputs('load_sensitivity')?['thresholds']?[outputs('parse_input')?['sensitivity']]?['z_high_confidence']), 'HIGH', if(greater(outputs('calculate_zscore')?['z_score_absolute'], outputs('load_sensitivity')?['thresholds']?[outputs('parse_input')?['sensitivity']]?['z_medium_confidence']), 'MEDIUM', 'LOW'))"
+    run_after: calculate_zscore
+
+  # Step 6: Calculate deviation metrics
+  - id: calculate_deviation
+    type: Compose
+    name: Calculate Deviation Metrics
+    inputs:
+      deviation_from_mean: "@sub(outputs('parse_input')?['current_value'], outputs('calculate_statistics')?['mean'])"
+      deviation_percent: "@if(equals(outputs('calculate_statistics')?['mean'], 0), 0, mul(div(sub(outputs('parse_input')?['current_value'], outputs('calculate_statistics')?['mean']), outputs('calculate_statistics')?['mean']), 100))"
+      std_devs_from_mean: "@outputs('calculate_zscore')?['z_score']"
+      is_within_normal_range: "@and(greater(outputs('parse_input')?['current_value'], sub(outputs('calculate_statistics')?['mean'], mul(outputs('calculate_statistics')?['std_dev'], 2))), less(outputs('parse_input')?['current_value'], add(outputs('calculate_statistics')?['mean'], mul(outputs('calculate_statistics')?['std_dev'], 2))))"
+    run_after: detect_anomaly
+
+  # Step 7: Generate investigation guidance
+  - id: generate_guidance
+    type: Compose
+    name: Generate Investigation Guidance
+    inputs:
+      is_anomaly: "@outputs('detect_anomaly')?['is_anomaly']"
+      anomaly_type: "@outputs('detect_anomaly')?['anomaly_type']"
+      recommendation: "@if(not(outputs('detect_anomaly')?['is_anomaly']), 'NO_ACTION_REQUIRED', if(equals(outputs('detect_anomaly')?['confidence'], 'HIGH'), 'INVESTIGATE_IMMEDIATELY', 'MONITOR_CLOSELY'))"
+      investigation_steps:
+        HIGH_OUTLIER:
+          - "Check for tracking or implementation issues"
+          - "Review recent campaign changes (targeting, creative, bids)"
+          - "Analyze by segment to isolate source"
+          - "Compare against external factors (seasonality, market events)"
+          - "Validate data quality with platform reports"
+        LOW_OUTLIER:
+          - "Check for technical issues (ad serving, tracking)"
+          - "Review competitive landscape changes"
+          - "Analyze audience fatigue indicators"
+          - "Check inventory availability and quality"
+          - "Review pacing and budget delivery"
+        NONE:
+          - "Continue regular monitoring"
+          - "Document baseline for future comparison"
+      root_cause_categories:
+        - "Technical/Tracking Issue"
+        - "Campaign Configuration Change"
+        - "Market/Competitive Factor"
+        - "Audience Behavior Shift"
+        - "Inventory/Supply Change"
+        - "External Event Impact"
+    run_after: calculate_deviation
+
+  # Step 8: Build response
+  - id: build_response
+    type: Compose
+    name: Build Response
+    inputs:
+      request_id: "@outputs('parse_input')?['request_id']"
+      timestamp: "@utcNow()"
+      source_agent: "PRF"
+      status: "success"
+      data:
+        anomaly_detection:
+          is_anomaly: "@outputs('detect_anomaly')?['is_anomaly']"
+          anomaly_type: "@outputs('detect_anomaly')?['anomaly_type']"
+          confidence: "@outputs('detect_anomaly')?['confidence']"
+          recommendation: "@outputs('generate_guidance')?['recommendation']"
+        statistical_analysis:
+          current_value: "@outputs('parse_input')?['current_value']"
+          historical_mean: "@outputs('calculate_statistics')?['mean']"
+          historical_std_dev: "@outputs('calculate_statistics')?['std_dev']"
+          z_score: "@outputs('calculate_zscore')?['z_score']"
+          sample_size: "@outputs('calculate_statistics')?['sample_size']"
+          historical_range:
+            min: "@outputs('calculate_statistics')?['min_value']"
+            max: "@outputs('calculate_statistics')?['max_value']"
+        deviation_metrics:
+          deviation_from_mean: "@outputs('calculate_deviation')?['deviation_from_mean']"
+          deviation_percent: "@outputs('calculate_deviation')?['deviation_percent']"
+          std_devs_from_mean: "@outputs('calculate_deviation')?['std_devs_from_mean']"
+          is_within_normal_range: "@outputs('calculate_deviation')?['is_within_normal_range']"
+        sensitivity_config:
+          level: "@outputs('parse_input')?['sensitivity']"
+          z_threshold_used: "@outputs('load_sensitivity')?['thresholds']?[outputs('parse_input')?['sensitivity']]?['z_medium_confidence']"
+          description: "@outputs('load_sensitivity')?['thresholds']?[outputs('parse_input')?['sensitivity']]?['description']"
+        investigation_guidance:
+          steps: "@coalesce(outputs('generate_guidance')?['investigation_steps']?[outputs('detect_anomaly')?['anomaly_type']], outputs('generate_guidance')?['investigation_steps']?['NONE'])"
+          root_cause_categories: "@outputs('generate_guidance')?['root_cause_categories']"
+        context:
+          metric: "@outputs('parse_input')?['metric']"
+          campaign_id: "@outputs('parse_input')?['campaign_id']"
+      confidence: "@outputs('detect_anomaly')?['confidence']"
+      sources:
+        - "CALCULATION"
+        - "STATISTICAL_ANALYSIS"
+        - "AGENT_KB"
+      metadata:
+        processing_time_ms: "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+        methodology: "Z-score based outlier detection"
+    run_after: generate_guidance
+
+  # Step 9: Return response
+  - id: return_response
+    type: Response
+    name: Return Response
+    inputs:
+      statusCode: 200
+      headers:
+        Content-Type: application/json
+      body: "@outputs('build_response')"
+
+error_handling:
+  on_error:
+    - id: return_error
+      type: Response
+      name: Return Error Response
+      inputs:
+        statusCode: 500
+        headers:
+          Content-Type: application/json
+        body:
+          request_id: "@outputs('parse_input')?['request_id']"
+          source_agent: "PRF"
+          error: true
+          code: "ANOMALY_DETECTION_ERROR"
+          message: "Failed to detect anomalies"

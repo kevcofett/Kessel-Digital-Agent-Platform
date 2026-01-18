@@ -1,0 +1,471 @@
+ANL KNOWLEDGE BASE - FORECASTING METHODS v1
+VERSION: 1.0
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+================================================================================
+SECTION 1 - FORECASTING FUNDAMENTALS
+================================================================================
+
+FORECASTING DEFINITION
+
+Forecasting predicts future values based on historical patterns, current conditions, and assumptions about future changes. In media planning, forecasting supports budget allocation, performance projection, and scenario analysis.
+
+FORECASTING HORIZONS
+
+SHORT-TERM (1-4 WEEKS)
+- Campaign pacing adjustments
+- Weekly performance estimates
+- Tactical optimization decisions
+- Highest accuracy achievable
+
+MEDIUM-TERM (1-3 MONTHS)
+- Quarterly planning
+- Budget allocation
+- Channel mix decisions
+- Moderate accuracy expected
+
+LONG-TERM (3-12 MONTHS)
+- Annual planning
+- Strategic budgeting
+- Market sizing
+- Lower accuracy, wider confidence intervals
+
+FORECAST COMPONENTS
+
+LEVEL
+Base value around which series fluctuates.
+
+TREND
+Systematic increase or decrease over time.
+
+SEASONALITY
+Regular patterns that repeat at fixed intervals.
+
+CYCLICAL
+Longer-term fluctuations not tied to calendar.
+
+IRREGULAR
+Random variation unexplained by other components.
+
+================================================================================
+SECTION 2 - TIME SERIES METHODS
+================================================================================
+
+MOVING AVERAGE
+
+Simple method that averages recent observations.
+
+SIMPLE MOVING AVERAGE (SMA)
+Forecast_t+1 = (Y_t + Y_t-1 + ... + Y_t-n+1) / n
+
+Where n is the window size.
+
+CHOOSING WINDOW SIZE
+- Larger n: Smoother forecast, slower response to changes
+- Smaller n: More responsive, noisier forecast
+- Typical: 4-12 periods for weekly data
+
+WEIGHTED MOVING AVERAGE
+More recent observations receive higher weights.
+
+WMA = (W1 x Y_t + W2 x Y_t-1 + ... + Wn x Y_t-n+1) / Sum(W)
+
+EXPONENTIAL SMOOTHING
+
+Weights decrease exponentially for older observations.
+
+SIMPLE EXPONENTIAL SMOOTHING (SES)
+Forecast_t+1 = Alpha x Y_t + (1 - Alpha) x Forecast_t
+
+Where:
+- Alpha is smoothing parameter (0 to 1)
+- Higher Alpha: More weight on recent data
+- Lower Alpha: More weight on historical data
+
+ALPHA SELECTION
+- High variability: Use lower Alpha (0.1-0.3)
+- Stable patterns: Use higher Alpha (0.3-0.5)
+- Optimize Alpha by minimizing forecast error on holdout data
+
+HOLT LINEAR TREND
+Extends SES to capture trends.
+
+Level: L_t = Alpha x Y_t + (1 - Alpha) x (L_t-1 + T_t-1)
+Trend: T_t = Beta x (L_t - L_t-1) + (1 - Beta) x T_t-1
+Forecast: F_t+h = L_t + h x T_t
+
+Where:
+- Alpha is level smoothing (0-1)
+- Beta is trend smoothing (0-1)
+- h is forecast horizon
+
+HOLT-WINTERS SEASONAL
+Adds seasonal component to Holt method.
+
+ADDITIVE SEASONALITY
+Level: L_t = Alpha x (Y_t - S_t-m) + (1 - Alpha) x (L_t-1 + T_t-1)
+Trend: T_t = Beta x (L_t - L_t-1) + (1 - Beta) x T_t-1
+Seasonal: S_t = Gamma x (Y_t - L_t) + (1 - Gamma) x S_t-m
+Forecast: F_t+h = L_t + h x T_t + S_t+h-m
+
+Where m is seasonal period length (e.g., 52 for weekly data with annual seasonality).
+
+MULTIPLICATIVE SEASONALITY
+Use when seasonal variation scales with level.
+
+Level: L_t = Alpha x (Y_t / S_t-m) + (1 - Alpha) x (L_t-1 + T_t-1)
+Seasonal: S_t = Gamma x (Y_t / L_t) + (1 - Gamma) x S_t-m
+Forecast: F_t+h = (L_t + h x T_t) x S_t+h-m
+
+================================================================================
+SECTION 3 - ARIMA MODELS
+================================================================================
+
+ARIMA OVERVIEW
+
+ARIMA (AutoRegressive Integrated Moving Average) models capture complex time series patterns through differencing and lagged relationships.
+
+ARIMA COMPONENTS
+
+AUTOREGRESSIVE (AR)
+Current value depends on past values.
+AR(p): Y_t = C + Phi_1 x Y_t-1 + ... + Phi_p x Y_t-p + Error
+
+INTEGRATED (I)
+Differencing to achieve stationarity.
+First difference: Y'_t = Y_t - Y_t-1
+
+MOVING AVERAGE (MA)
+Current value depends on past forecast errors.
+MA(q): Y_t = C + Error_t + Theta_1 x Error_t-1 + ... + Theta_q x Error_t-q
+
+ARIMA NOTATION
+ARIMA(p, d, q) where:
+- p = AR order (number of lagged values)
+- d = Differencing order (usually 0, 1, or 2)
+- q = MA order (number of lagged errors)
+
+SEASONAL ARIMA
+SARIMA(p, d, q)(P, D, Q)m adds seasonal terms:
+- P = Seasonal AR order
+- D = Seasonal differencing
+- Q = Seasonal MA order
+- m = Seasonal period
+
+MODEL SELECTION
+
+STATIONARITY CHECK
+- Visual inspection of plot
+- Augmented Dickey-Fuller test
+- If non-stationary, difference until stationary
+
+ACF AND PACF ANALYSIS
+- ACF (Autocorrelation Function): Suggests MA order
+- PACF (Partial ACF): Suggests AR order
+- Significant spikes indicate lag orders
+
+INFORMATION CRITERIA
+- AIC (Akaike Information Criterion): Lower is better
+- BIC (Bayesian Information Criterion): Lower is better
+- Compare multiple models, select lowest AIC/BIC
+
+AUTO-ARIMA
+Automated model selection:
+1. Test stationarity
+2. Determine differencing order
+3. Search over p and q values
+4. Select model with best AIC
+
+================================================================================
+SECTION 4 - REGRESSION-BASED FORECASTING
+================================================================================
+
+LINEAR REGRESSION FOR FORECASTING
+
+Use regression when external variables help predict outcomes.
+
+REGRESSION FORMULA
+Y = B0 + B1 X1 + B2 X2 + ... + Bn Xn + Error
+
+PREDICTOR TYPES
+
+LAGGED DEPENDENT VARIABLE
+Include past values of Y as predictors.
+Y_t = B0 + B1 Y_t-1 + B2 Y_t-2 + Error
+
+TREND VARIABLE
+Include time index as predictor.
+Y_t = B0 + B1 t + Error
+
+SEASONAL DUMMIES
+Include binary indicators for seasons.
+Y_t = B0 + B1 Q1 + B2 Q2 + B3 Q3 + Error (Q4 as reference)
+
+EXTERNAL REGRESSORS
+Include causal variables.
+Sales_t = B0 + B1 AdSpend_t + B2 Price_t + B3 Promotion_t + Error
+
+MEDIA MIX REGRESSION
+
+Common model for media planning forecasts.
+
+SPECIFICATION
+Revenue = B0 + B1 TV + B2 Digital + B3 Print + B4 Promo + Seasonality + Error
+
+With adstock transformation:
+Adstock_t = Spend_t + Decay x Adstock_t-1
+
+SATURATION EFFECTS
+Use log or power transformation to capture diminishing returns.
+Revenue = B0 + B1 log(TV + 1) + B2 log(Digital + 1) + Error
+
+================================================================================
+SECTION 5 - BUDGET PACING MODELS
+================================================================================
+
+PACING FUNDAMENTALS
+
+Budget pacing ensures spend is distributed appropriately across campaign duration.
+
+PACING METRICS
+
+PACING INDEX
+Pacing_Index = Actual_Spend_to_Date / Expected_Spend_to_Date
+
+Interpretation:
+- Index = 1.0: On pace
+- Index greater than 1.0: Overpacing
+- Index less than 1.0: Underpacing
+
+PROJECTED FINAL SPEND
+Based on current trajectory:
+Projected_Total = Actual_to_Date / Elapsed_Percent
+
+Where Elapsed_Percent = Days_Elapsed / Total_Days
+
+PACING STRATEGIES
+
+EVEN PACING
+Target equal spend per day/week.
+Daily_Target = Total_Budget / Campaign_Days
+
+FRONT-LOADED PACING
+Spend more early in campaign.
+Example: 60 percent in first half, 40 percent in second half.
+
+BACK-LOADED PACING
+Spend more later in campaign.
+Example: 40 percent in first half, 60 percent in second half.
+
+DYNAMIC PACING
+Adjust based on performance and market conditions.
+If ROAS above target: Accelerate spend
+If ROAS below target: Decelerate spend
+
+PACING ADJUSTMENT CALCULATIONS
+
+REQUIRED DAILY SPEND ADJUSTMENT
+When off pace, calculate required daily spend for remainder:
+
+Required_Daily = (Total_Budget - Actual_to_Date) / Remaining_Days
+
+PACING CORRECTION FACTOR
+Adjustment_Factor = Required_Daily / Original_Daily_Target
+
+Example:
+- Total budget: 100,000
+- Day 15 of 30 (50 percent elapsed)
+- Actual spend: 40,000 (should be 50,000)
+- Remaining budget: 60,000
+- Remaining days: 15
+- Required daily: 60,000 / 15 = 4,000
+- Original daily: 3,333
+- Adjustment factor: 4,000 / 3,333 = 1.20 (increase by 20 percent)
+
+================================================================================
+SECTION 6 - SCENARIO ANALYSIS
+================================================================================
+
+SCENARIO PLANNING FRAMEWORK
+
+Scenario analysis projects outcomes under different assumptions about future conditions.
+
+SCENARIO TYPES
+
+BASE CASE
+Most likely outcome given current trends.
+Probability weighting: 50-60 percent
+
+UPSIDE CASE
+Optimistic scenario with favorable conditions.
+Probability weighting: 15-25 percent
+
+DOWNSIDE CASE
+Pessimistic scenario with unfavorable conditions.
+Probability weighting: 15-25 percent
+
+EXTREME CASES
+Tail scenarios for stress testing.
+Probability weighting: 5-10 percent combined
+
+SCENARIO PARAMETERS
+
+EXTERNAL FACTORS
+- Economic conditions (growth, recession)
+- Competitive activity (stable, aggressive)
+- Seasonality strength (normal, weak, strong)
+- Market trends (continuation, disruption)
+
+INTERNAL FACTORS
+- Budget level (reduced, maintained, increased)
+- Efficiency (declining, stable, improving)
+- Creative performance (fatigue, refresh, breakthrough)
+
+EXPECTED VALUE CALCULATION
+
+PROBABILITY-WEIGHTED FORECAST
+Expected_Value = Sum(Scenario_i_Probability x Scenario_i_Outcome)
+
+Example:
+- Base case (55 percent): 1M revenue
+- Upside (25 percent): 1.3M revenue
+- Downside (20 percent): 0.7M revenue
+- Expected = 0.55 x 1M + 0.25 x 1.3M + 0.20 x 0.7M = 1.015M
+
+CONFIDENCE INTERVALS
+
+80 PERCENT CONFIDENCE INTERVAL
+Range containing true value 80 percent of the time.
+Interval = Forecast +/- 1.28 x Standard_Error
+
+95 PERCENT CONFIDENCE INTERVAL
+Range containing true value 95 percent of the time.
+Interval = Forecast +/- 1.96 x Standard_Error
+
+INTERVAL WIDTH FACTORS
+- Longer horizon: Wider intervals
+- More volatile series: Wider intervals
+- More data: Narrower intervals
+
+================================================================================
+SECTION 7 - FORECAST ACCURACY MEASUREMENT
+================================================================================
+
+ERROR METRICS
+
+MEAN ABSOLUTE ERROR (MAE)
+MAE = Mean(Absolute(Actual - Forecast))
+
+Interpretation: Average magnitude of errors in original units.
+
+MEAN SQUARED ERROR (MSE)
+MSE = Mean((Actual - Forecast)^2)
+
+Penalizes large errors more heavily.
+
+ROOT MEAN SQUARED ERROR (RMSE)
+RMSE = sqrt(MSE)
+
+In original units, comparable to MAE.
+
+MEAN ABSOLUTE PERCENTAGE ERROR (MAPE)
+MAPE = Mean(Absolute((Actual - Forecast) / Actual)) x 100
+
+As percentage, enables cross-series comparison.
+Warning: Undefined when actual equals zero.
+
+FORECAST ACCURACY BENCHMARKS
+
+BY HORIZON
+- 1 week: MAPE under 10 percent achievable
+- 1 month: MAPE under 15 percent good
+- 1 quarter: MAPE under 25 percent reasonable
+- 1 year: MAPE under 35 percent typical
+
+BY VOLATILITY
+- Stable series: MAPE under 10 percent
+- Moderate volatility: MAPE 10-20 percent
+- High volatility: MAPE 20-40 percent
+
+FORECAST VALIDATION
+
+HOLDOUT TESTING
+1. Fit model on training data
+2. Forecast holdout period
+3. Compare to actual holdout values
+4. Calculate error metrics
+
+ROLLING ORIGIN VALIDATION
+1. Start with minimum training period
+2. Forecast one period ahead
+3. Add actual value to training
+4. Repeat through series
+5. Average errors across origins
+
+================================================================================
+SECTION 8 - AGENT APPLICATION GUIDANCE
+================================================================================
+
+FORECASTING METHOD SELECTION
+
+USE EXPONENTIAL SMOOTHING WHEN
+- Series is relatively stable
+- No strong trend or seasonality
+- Quick forecast needed
+- Limited historical data
+
+USE HOLT-WINTERS WHEN
+- Clear trend and seasonality present
+- Sufficient history (2+ seasonal cycles)
+- Patterns expected to continue
+
+USE ARIMA WHEN
+- Complex autocorrelation structure
+- Stationarity can be achieved
+- Automated model selection available
+
+USE REGRESSION WHEN
+- External variables available
+- Causal relationships important
+- Scenario analysis needed
+
+FORECAST PRESENTATION GUIDANCE
+
+ALWAYS INCLUDE
+- Point forecast
+- Confidence interval or range
+- Methodology used
+- Key assumptions
+- Accuracy of similar past forecasts
+
+COMMUNICATE UNCERTAINTY
+- Wider intervals for longer horizons
+- Flag scenarios that could change forecast
+- Update forecasts as new data arrives
+
+AVOID OVERCONFIDENCE
+- Point forecasts are rarely exact
+- Present ranges, not false precision
+- Acknowledge forecast limitations
+
+PACING RECOMMENDATIONS
+
+DAILY MONITORING
+- Calculate pacing index daily
+- Flag significant deviations (greater than 10 percent)
+- Project end-of-period spend
+
+WEEKLY ADJUSTMENTS
+- Evaluate pacing weekly
+- Adjust daily caps if needed
+- Document adjustment rationale
+
+CONTINGENCY PLANNING
+- Define action thresholds
+- Underpacing: Increase bids or expand targeting
+- Overpacing: Reduce bids or narrow targeting
+
+================================================================================
+END OF DOCUMENT
+================================================================================

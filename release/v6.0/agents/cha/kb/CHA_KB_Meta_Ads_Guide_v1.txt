@@ -1,0 +1,499 @@
+CHA KNOWLEDGE BASE - META ADS GUIDE v1
+VERSION: 1.0
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+================================================================================
+SECTION 1 - META CAMPAIGN STRUCTURE
+================================================================================
+
+CAMPAIGN OBJECTIVES
+
+AWARENESS OBJECTIVES
+
+AWARENESS
+- Maximize ad recall lift
+- Best for: Brand building, new market entry
+- Optimization: Reach or ad recall lift
+
+REACH
+- Show ads to maximum unique users
+- Frequency controls available
+- Best for: Announcements, broad messaging
+
+TRAFFIC OBJECTIVES
+
+TRAFFIC
+- Drive clicks to destination
+- Optimize for: Landing page views or link clicks
+- Best for: Content promotion, site visits
+
+ENGAGEMENT
+- Increase post interactions
+- Optimize for: Reactions, comments, shares
+- Best for: Social proof, community building
+
+CONVERSION OBJECTIVES
+
+LEADS
+- Collect lead information
+- Native lead forms or website conversions
+- Best for: B2B, high-consideration products
+
+SALES
+- Drive purchase conversions
+- Requires pixel or CAPI implementation
+- Best for: Ecommerce, direct response
+
+APP PROMOTION
+- Drive app installs or engagement
+- Requires SDK integration
+- Best for: Mobile app advertisers
+
+ADVANTAGE PLUS CAMPAIGNS
+
+ADVANTAGE PLUS SHOPPING (ASC)
+
+PURPOSE
+Automated shopping campaign using machine learning across all placements and audiences.
+
+REQUIREMENTS
+- Product catalog connected
+- Pixel with purchase events
+- Sufficient conversion history (50+ per week ideal)
+
+STRUCTURE
+- Single campaign, minimal ad sets
+- Broad targeting (algorithm finds buyers)
+- Creative variety essential (15+ creatives recommended)
+
+BUDGET ALLOCATION
+- Existing customer cap: 0-25% of budget
+- New customers get remaining budget
+- Start at 10% existing customer cap
+
+ASC BEST PRACTICES
+- Feed quality critical for performance
+- Test creative concepts, not audiences
+- Allow 7+ days for learning
+- Scale gradually (20% budget increases)
+
+ADVANTAGE PLUS APP CAMPAIGNS
+
+PURPOSE
+Automated app install and engagement campaigns.
+
+STRUCTURE
+- Similar to ASC for app advertisers
+- Minimal manual controls
+- Creative testing focus
+
+================================================================================
+SECTION 2 - AUDIENCE TARGETING
+================================================================================
+
+CORE AUDIENCES
+
+DEMOGRAPHIC TARGETING
+- Age: 13-65+ in bands
+- Gender: All, men, women
+- Location: Country, region, city, radius
+- Language: Interface or spoken
+
+DETAILED TARGETING
+
+INTERESTS
+- Based on page likes, content engagement
+- Categories: Business, entertainment, fitness, etc.
+- Broad signals, use for prospecting
+
+BEHAVIORS
+- Based on user actions on/off platform
+- Purchase behaviors, device usage, travel
+- Stronger intent than interests
+
+LIFE EVENTS
+- Recently moved, engaged, new job
+- Time-limited targeting windows
+- High relevance for specific offers
+
+DETAILED TARGETING EXPANSION
+- Meta expands beyond selections when beneficial
+- Can disable for strict targeting
+- Recommended: Keep enabled for most campaigns
+
+CUSTOM AUDIENCES
+
+WEBSITE CUSTOM AUDIENCES
+- Based on pixel events
+- Retention windows: 1-180 days
+- Segment by: All visitors, specific pages, events
+
+EVENT-BASED AUDIENCES
+- Add to cart (high intent)
+- View content (consideration)
+- Purchase (for exclusion or cross-sell)
+- Time-based: Last 7, 30, 90 days
+
+CUSTOMER LIST AUDIENCES
+- Upload hashed customer data
+- Match rates: 50-70% typical for email
+- Refresh monthly minimum
+- Use for: Retention, exclusion, seeding
+
+ENGAGEMENT AUDIENCES
+- Video viewers (25%, 50%, 75%, 95%)
+- Page engagers
+- Ad engagers
+- Instagram profile visitors
+- Lead form openers
+
+LOOKALIKE AUDIENCES
+
+LOOKALIKE CREATION
+- Source: Custom audience (seed)
+- Size: 1-10% of country population
+- Location: Country-specific
+
+SIZE RECOMMENDATIONS
+- 1% lookalike: Highest similarity, smallest reach
+- 1-3% lookalike: Balance of quality and scale
+- 5-10% lookalike: Broad prospecting, lower similarity
+
+SEED QUALITY FACTORS
+- Minimum seed size: 1,000 (100 minimum, 1000 recommended)
+- Higher LTV customers produce better lookalikes
+- Recent customers better than old
+- Purchasers better than leads
+
+LOOKALIKE STACKING
+- Create multiple sizes (1%, 3%, 5%)
+- Test against each other
+- Layer with detailed targeting if needed
+
+ADVANTAGE AUDIENCE FEATURES
+
+ADVANTAGE DETAILED TARGETING
+- Allows Meta to expand beyond selections
+- Default on for most campaigns
+- Keep enabled unless specific exclusion needed
+
+ADVANTAGE LOOKALIKE
+- Expands lookalike when beneficial
+- Particularly useful at scale
+- May reduce audience purity
+
+ADVANTAGE CUSTOM AUDIENCE
+- Expands remarketing audiences
+- Finds similar users to website visitors
+- Good for small remarketing pools
+
+================================================================================
+SECTION 3 - CREATIVE BEST PRACTICES
+================================================================================
+
+AD FORMATS
+
+SINGLE IMAGE
+- Recommended ratio: 1:1 (feed), 9:16 (stories/reels)
+- File size: Under 30MB
+- Text: Primary 125 chars, headline 40 chars
+
+SINGLE VIDEO
+- Recommended ratio: 1:1, 4:5, 9:16
+- Length: 15-30 seconds optimal
+- First 3 seconds critical for hook
+- Captions recommended (85% watch without sound)
+
+CAROUSEL
+- 2-10 cards per carousel
+- Mix of images and videos allowed
+- Tell sequential story or show variety
+- First card most important
+
+COLLECTION
+- Instant Experience required
+- Cover image or video plus products
+- Good for product discovery
+- Requires catalog
+
+CREATIVE STRATEGY
+
+CREATIVE VOLUME
+- Test 3-5 concepts minimum
+- 10-15 ads per ad set for Advantage Plus
+- Refresh every 2-4 weeks
+- Monitor for creative fatigue
+
+CREATIVE DIVERSITY
+- Vary: Hooks, visuals, formats, CTAs
+- Test: UGC vs polished, lifestyle vs product
+- Include: Various aspect ratios for all placements
+
+CREATIVE TESTING FRAMEWORK
+1. Test concepts (different messages/angles)
+2. Winner gets iteration testing
+3. Iterate on winning elements
+4. Always have new concepts in pipeline
+
+FATIGUE INDICATORS
+- CTR declining week-over-week
+- Frequency rising above 3-4
+- CPM increasing without competitive cause
+- Relevance diagnostics declining
+
+CONVERSIONS API (CAPI)
+
+PURPOSE
+Server-side event tracking to supplement pixel.
+
+BENEFITS
+- Resistant to browser restrictions
+- Improved match rates
+- Better attribution
+- Required for iOS 14+ accuracy
+
+IMPLEMENTATION OPTIONS
+- Direct API integration
+- Partner integrations (Shopify, etc.)
+- Google Tag Manager server-side
+- Meta Pixel + CAPI together (deduplication required)
+
+EVENT MATCH QUALITY
+- Target: 6.0+ EMQ score
+- Include: Email, phone, external ID
+- Hash all PII before sending
+
+================================================================================
+SECTION 4 - BIDDING AND OPTIMIZATION
+================================================================================
+
+BID STRATEGIES
+
+LOWEST COST (AUTOMATIC)
+- Maximize results within budget
+- No bid cap set
+- Best for: Learning phase, stable performance
+- Risk: Costs may rise with competition
+
+COST CAP
+- Target average cost per result
+- May limit delivery if cap too low
+- Best for: Strict efficiency requirements
+- Set 10-20% above target initially
+
+BID CAP
+- Maximum bid per auction
+- Most control, most restrictive
+- Best for: Advanced advertisers
+- Risk: Significant delivery limitations
+
+MINIMUM ROAS
+- Target return on ad spend
+- Requires value optimization
+- Best for: Ecommerce with known margins
+- Note: Uses revenue/spend calculation
+
+OPTIMIZATION GOALS
+
+CONVERSION OPTIMIZATION HIERARCHY
+- Purchase (strongest signal)
+- Add to cart
+- Initiate checkout
+- View content
+- Page view (weakest)
+
+OPTIMIZATION SELECTION
+- Optimize for closest to revenue
+- Need 50+ events per week per ad set
+- If insufficient, move up funnel temporarily
+
+VALUE OPTIMIZATION
+- Optimize for highest value conversions
+- Requires passing value with events
+- Best for: Variable order values
+
+LEARNING PHASE
+
+LEARNING PHASE DEFINITION
+- Initial period for algorithm optimization
+- Requires approximately 50 optimization events
+- Performance less stable during learning
+
+EXITING LEARNING
+- Achieve 50 events in 7 days
+- Avoid significant edits during learning
+- Consolidate ad sets if struggling
+
+LEARNING LIMITED
+- Insufficient events to exit learning
+- Causes: Budget too low, audience too small, optimization event too rare
+- Solutions: Increase budget, broaden audience, change optimization
+
+================================================================================
+SECTION 5 - CAMPAIGN STRUCTURE STRATEGY
+================================================================================
+
+SIMPLIFIED STRUCTURE (RECOMMENDED)
+
+CAMPAIGN CONSOLIDATION
+- Fewer campaigns with larger budgets
+- Algorithm benefits from data consolidation
+- Easier management and optimization
+
+RECOMMENDED STRUCTURE
+- 1-3 campaigns per objective
+- 1-5 ad sets per campaign
+- 3-10 ads per ad set
+
+AD SET STRATEGY
+
+BROAD TARGETING AD SET
+- Minimal detailed targeting
+- Let algorithm find converters
+- Best for: ASC and large budgets
+
+INTEREST-BASED AD SET
+- Detailed targeting for guidance
+- Advantage expansion enabled
+- Good for: Mid-size budgets
+
+REMARKETING AD SET
+- Website visitors, engagers
+- Lower funnel, higher intent
+- Separate from prospecting
+
+LOOKALIKE AD SET
+- Seed from best customers
+- 1-5% size typical
+- Test against broad
+
+BUDGET STRUCTURE
+
+CAMPAIGN BUDGET OPTIMIZATION (CBO)
+- Budget set at campaign level
+- Automatically allocates across ad sets
+- Best for: Similar value ad sets
+- Minimum per ad set may be needed
+
+AD SET BUDGET (ABO)
+- Budget controlled per ad set
+- More control, less flexibility
+- Best for: Testing, different values
+
+HYBRID APPROACH
+- CBO for scaling campaigns
+- ABO for testing new audiences/creative
+
+================================================================================
+SECTION 6 - MEASUREMENT AND ATTRIBUTION
+================================================================================
+
+ATTRIBUTION SETTINGS
+
+CLICK-THROUGH WINDOW
+- 1-day, 7-day (default), or 28-day
+- Match to actual purchase cycle
+- Shorter windows reduce reported conversions
+
+VIEW-THROUGH WINDOW
+- 1-day (default) or none
+- View-through often incremental
+- Consider for full-funnel view
+
+ATTRIBUTION SETTING IMPACT
+- Affects reported conversions
+- Affects algorithm optimization
+- Be consistent for comparison
+
+IOS 14+ CONSIDERATIONS
+
+AGGREGATED EVENT MEASUREMENT
+- Limited to 8 conversion events per domain
+- Events ranked by priority
+- Delayed reporting (up to 72 hours)
+
+APP TRACKING TRANSPARENCY
+- Users must opt-in to tracking
+- Modeling fills measurement gaps
+- Focus on modeled conversions
+
+MITIGATION STRATEGIES
+- Implement CAPI for improved signal
+- Use EMQ to maximize match quality
+- Rely on platform modeling
+- Supplement with incrementality testing
+
+REPORTING METRICS
+
+CORE METRICS
+- Results (conversions at campaign level)
+- Cost per result
+- ROAS (platform calculation)
+- Frequency
+- Reach
+
+DIAGNOSTIC METRICS
+- CTR (link and outbound)
+- CPM
+- Landing page views
+- Quality ranking
+- Engagement rate ranking
+
+BREAKDOWN ANALYSIS
+- Placement breakdown (feed vs stories vs reels)
+- Platform breakdown (Facebook vs Instagram)
+- Device breakdown
+- Time breakdown (day, week)
+
+================================================================================
+SECTION 7 - AGENT APPLICATION GUIDANCE
+================================================================================
+
+CAMPAIGN RECOMMENDATIONS BY GOAL
+
+ECOMMERCE SALES
+1. Advantage Plus Shopping (primary scale)
+2. Remarketing (cart abandoners, viewers)
+3. Catalog sales (dynamic retargeting)
+4. Broad prospecting (if ASC maxed)
+
+LEAD GENERATION
+1. Lead ads (native forms)
+2. Website conversion (landing page)
+3. Remarketing (form abandoners)
+4. Lookalike prospecting
+
+AWARENESS
+1. Reach campaign (controlled frequency)
+2. Video views (for video assets)
+3. Engagement (social proof building)
+
+BUDGET RECOMMENDATIONS
+
+MINIMUM BUDGETS
+- Testing: $50-100/day per ad set minimum
+- Scaling: $200+/day for ASC
+- Learning phase: Plan for 50 conversions at target CPA
+
+SCALING APPROACH
+- Increase budgets by 20% maximum per change
+- Allow 3-5 days between increases
+- Monitor for efficiency changes
+- Have cost caps ready if needed
+
+WARNING SIGNS
+- CPM rising more than 30% without cause
+- Frequency above 4-5 in 7 days (prospecting)
+- CTR declining week-over-week
+- Learning limited status persisting
+- ROAS declining despite stable creative
+
+PLATFORM-SPECIFIC GUIDANCE
+- Meta ROAS uses revenue/spend formula
+- Adjust reported ROAS by subtracting 1 for true return
+- Example: Meta reports 4.0x ROAS = 3.0x actual ROAS
+
+================================================================================
+END OF DOCUMENT
+================================================================================

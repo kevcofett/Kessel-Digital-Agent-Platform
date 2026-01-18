@@ -1,0 +1,355 @@
+FORMATTING STANDARDS AND DOCUMENT COMPLIANCE
+
+KESSEL DIGITAL AGENT PLATFORM - SHARED KNOWLEDGE BASE
+Version 1.0
+Document Code EAP-KB-FS-001
+
+This document establishes platform-wide formatting standards for all content created within the platform. These standards ensure consistency, accessibility, and compatibility across all agents and deployment environments.
+
+========================================
+
+THE 6-RULE COMPLIANCE FRAMEWORK
+
+All Knowledge Base files and Copilot Instruction files must comply with the 6-Rule Framework. This ensures compatibility with Microsoft Copilot Studio and consistent rendering across all environments.
+
+RULE 1 - ALL-CAPS HEADERS
+
+Section titles and major headings must use ALL CAPITAL LETTERS.
+
+Correct Examples
+- MARKET ANALYSIS
+- RECOMMENDATIONS
+- AUDIENCE SEGMENTATION
+
+Incorrect Examples
+- Market Analysis (mixed case)
+- Recommendations (sentence case)
+- audience segmentation (lowercase)
+
+Rationale - All-caps headers create visual hierarchy without relying on formatting features like bold or heading styles that may not render in all environments.
+
+RULE 2 - HYPHENS-ONLY LISTS
+
+All list items must use hyphens as the only list marker. Bullets, numbers, and other markers are prohibited.
+
+Correct Format
+- First item
+- Second item
+- Third item
+
+Incorrect Formats
+- Bullet points
+- Numbered lists (1. 2. 3.)
+- Lettered lists (a. b. c.)
+- Asterisks
+- Plus signs
+
+Rationale - Hyphens render consistently across all text environments. Other list markers may render inconsistently or not at all in Copilot Studio.
+
+RULE 3 - ASCII CHARACTERS ONLY
+
+All content must use standard ASCII characters. Extended Unicode, special characters, and formatting characters are prohibited.
+
+Prohibited Characters
+- Em-dash (long dash)
+- En-dash (medium dash)
+- Smart quotes (curly quotes)
+- Bullet characters
+- Copyright and trademark symbols (use text: copyright, trademark)
+- Mathematical symbols beyond basic operators
+- Currency symbols other than USD (use text: EUR, GBP, JPY)
+- Arrows and other decorative characters
+
+Allowed Characters
+- Standard hyphen-minus
+- Straight quotes (apostrophe and quotation mark)
+- Basic punctuation (period, comma, colon, semicolon, parentheses)
+- Standard letters and numbers
+- Basic mathematical operators (plus, minus, asterisk, forward slash, equals)
+- Percent sign, at sign, ampersand, number sign
+- Dollar sign for USD amounts
+
+Rationale - Non-ASCII characters may not render correctly in all environments and can cause parsing errors in Copilot Studio.
+
+RULE 4 - ZERO VISUAL DEPENDENCIES
+
+Content must be fully comprehensible without any visual formatting. The meaning must be clear from text alone.
+
+This Means
+- No reliance on bold or italic for meaning
+- No reliance on color coding
+- No reliance on font size variation
+- No reliance on tables for structure (use text alternatives)
+- No images or diagrams without text description
+
+Testing Method - If content were rendered as plain monospace text, would all meaning be preserved? If yes, it complies. If no, restructure.
+
+Rationale - Copilot Studio strips visual formatting. Content must work as plain text.
+
+RULE 5 - MANDATORY LANGUAGE
+
+Use clear, unambiguous directive language for requirements and prohibitions.
+
+Required Terms for Obligations
+- Must - Required action, no exceptions
+- Shall - Formal requirement, equivalent to must
+- Always - Required in every case
+- Required - Explicit statement of obligation
+
+Required Terms for Prohibitions
+- Never - Prohibited in every case
+- Must not - Prohibited action
+- Shall not - Formal prohibition
+- Prohibited - Explicit statement of prohibition
+
+Avoid Ambiguous Terms
+- Should (use must for requirements, consider for suggestions)
+- Could (use may for permissions, can for capability)
+- Might (use will for predictions, may for uncertainty)
+- Try to (use must, or state best effort explicitly)
+
+Rationale - Clear directive language eliminates ambiguity in agent behavior.
+
+RULE 6 - PROFESSIONAL TONE
+
+Content must maintain professional, authoritative tone throughout.
+
+Tone Requirements
+- Clear and direct statements
+- Active voice preferred over passive
+- Consistent terminology throughout document
+- No casual or colloquial language
+- No humor or entertainment content in KB files
+- Technical precision in terminology
+
+Tone Examples
+
+Professional - The agent must validate input before processing.
+Unprofessional - Basically the agent should try to check the input first.
+
+Professional - Analysis indicates market opportunity exists.
+Unprofessional - Looks like there might be a good opportunity here.
+
+Rationale - Professional tone ensures clarity and builds user confidence.
+
+========================================
+
+DOCUMENT TYPE STANDARDS
+
+KNOWLEDGE BASE FILES
+
+- Compliance requirement - Full 6-Rule compliance mandatory
+- Character limit - Maximum 36,000 characters
+- File naming - AGENT_KB_Topic_v1.txt pattern
+- Section structure - Use equals signs for major dividers, hyphens for subsections
+- No file includes tables, images, or complex formatting
+
+INSTRUCTION FILES
+
+- Compliance requirement - Full 6-Rule compliance mandatory
+- Character limit - Maximum 8,000 characters (Copilot Studio limit)
+- File naming - AGENT_Copilot_Instructions_v1.txt pattern
+- Must include agent identity, capabilities, routing rules, behavior guidelines
+- Critical constraint - Character count must be verified before deployment
+
+USER-FACING DOCUMENTS
+
+- Compliance requirement - Standard markdown formatting permitted
+- Character limit - No specific limit, but consider readability
+- File naming - Descriptive name with version
+- May include tables, headers, emphasis, lists
+- Should still follow professional tone guidelines
+
+DELIVERABLE DOCUMENTS
+
+- Compliance requirement - Full professional formatting permitted
+- Format options - Word documents, PowerPoint, PDF as appropriate
+- Styling - Professional visual design appropriate to deliverable type
+- Branding - Follow client or Kessel Digital brand guidelines as applicable
+- Structure - Follow template patterns from DOC_KB files
+
+========================================
+
+OUTPUT FORMATTING STANDARDS
+
+RESPONSE STRUCTURE PATTERNS
+
+Analysis Response Pattern
+
+ANALYSIS: [Topic]
+
+[Opening statement of key finding]
+
+FINDINGS
+
+[Finding 1 with evidence and confidence]
+[Finding 2 with evidence and confidence]
+
+IMPLICATIONS
+
+[What findings mean for user situation]
+
+RECOMMENDED ACTIONS
+
+[Specific actionable recommendations]
+
+Recommendation Response Pattern
+
+RECOMMENDATION: [Topic]
+
+[Opening recommendation statement]
+
+RATIONALE
+
+[Why this recommendation]
+[Evidence supporting recommendation]
+
+IMPLEMENTATION APPROACH
+
+[How to implement]
+[Key steps or considerations]
+
+ALTERNATIVES CONSIDERED
+
+[Other options and why not recommended]
+
+Error Response Pattern
+
+I was not able to [specific action] because [reason].
+
+What you can do: [User action option]
+What I will try instead: [Alternative approach if applicable]
+
+WHEN TO USE STRUCTURED SECTIONS VERSUS PROSE
+
+Use Structured Sections When
+- Response contains multiple distinct components
+- User needs to scan for specific information
+- Content naturally breaks into categories
+- Length exceeds three paragraphs
+
+Use Prose When
+- Response is conversational clarification
+- Content is single coherent thought
+- Length is short, under three paragraphs
+- Structured format would feel mechanical
+
+NUMBER FORMATTING STANDARDS
+
+Currency
+- Use USD prefix for dollar amounts: USD 4.2M, USD 500K
+- Use three-letter code for other currencies: EUR 1.5M, GBP 800K
+- Use K for thousands, M for millions, B for billions
+- Include decimal for partial millions: USD 1.5M not USD 1,500,000
+
+Percentages
+- Use word percent or percent symbol consistently within document
+- Prefer word percent in prose: growth rate of 15 percent
+- Percent symbol acceptable in tables and lists: 15%
+- Always include leading zero for decimals: 0.5% not .5%
+
+Large Numbers
+- Use comma separators for thousands: 1,000 not 1000
+- Use K, M, B abbreviations for readability in context
+- Spell out numbers one through nine in prose
+- Use numerals for 10 and above in prose
+
+DATE AND TIME FORMATTING
+
+Dates
+- Use format: Month Day, Year (January 15, 2025)
+- Or use ISO format for data: 2025-01-15
+- Abbreviate months in tables: Jan, Feb, Mar
+- Fiscal year notation: FY25 or FY2025
+
+Time References
+- Use relative terms when precision not needed: recently, last quarter
+- Use specific dates when precision matters: Q3 2024, November 2024
+- Note timezone if relevant to analysis
+
+Ranges
+- Date ranges: January 2024 to March 2024 or Q1 2024
+- Value ranges: USD 1.5M to USD 2.0M or 15 to 20 percent
+- Use to rather than hyphen for ranges in prose
+
+========================================
+
+CHARACTER LIMIT ENFORCEMENT
+
+KB FILE LIMITS
+
+- Maximum - 36,000 characters
+- Target range - 8,000 to 30,000 characters for most files
+- Warning threshold - Files over 32,000 characters should be reviewed for splitting
+
+INSTRUCTION FILE LIMITS
+
+- Maximum - 8,000 characters (hard limit imposed by Copilot Studio)
+- Target range - 7,500 to 7,999 characters
+- Below 7,500 may indicate missing required content
+- At or above 8,000 will fail deployment
+
+CHUNKING STRATEGY FOR LARGE CONTENT
+
+When content exceeds KB limits
+
+- Identify natural topic boundaries
+- Create separate files for each major topic
+- Use consistent naming: AGENT_KB_Topic_Part1_v1.txt, AGENT_KB_Topic_Part2_v1.txt
+- Or split by subtopic: AGENT_KB_Topic_Core_v1.txt, AGENT_KB_Topic_Advanced_v1.txt
+- Include cross-references between related files
+
+CHARACTER COUNT VERIFICATION
+
+Before finalizing any Copilot document
+
+- Count total characters including whitespace
+- Verify against applicable limit
+- Document character count in commit message
+- Re-verify after any edit, no matter how small
+
+========================================
+
+COMPLIANCE VERIFICATION CHECKLIST
+
+Before committing any KB or Instruction file, verify
+
+RULE 1 CHECK
+- All section headers are ALL CAPS
+- No mixed case or sentence case headers
+
+RULE 2 CHECK
+- All lists use hyphens only
+- No bullets, numbers, or other markers
+
+RULE 3 CHECK
+- No em-dashes or en-dashes (use regular hyphen)
+- No smart quotes (use straight quotes)
+- No special characters or symbols
+- Verify by searching for common violations
+
+RULE 4 CHECK
+- Remove any formatting like bold markers
+- Ensure meaning clear without visual styling
+- Tables converted to text descriptions
+
+RULE 5 CHECK
+- Requirements use must, shall, always
+- Prohibitions use never, must not, prohibited
+- No ambiguous should, could, might without context
+
+RULE 6 CHECK
+- Professional tone throughout
+- No casual language or humor
+- Consistent terminology
+
+CHARACTER COUNT CHECK
+- KB files under 36,000 characters
+- Instruction files under 8,000 characters
+
+========================================
+
+END OF FORMATTING STANDARDS AND DOCUMENT COMPLIANCE
+
+Document maintained by KDAP Platform Team
+Last updated January 2026

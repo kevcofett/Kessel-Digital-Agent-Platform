@@ -14,7 +14,7 @@ Incrementality measures the true causal impact of marketing. It answers: How man
 FORMULA
 Incremental_Conversions = Total_Conversions - Baseline_Conversions
 Incremental_Lift_Percent = (Incremental_Conversions / Baseline_Conversions) x 100
-iROAS = Incremental_Revenue / Marketing_Spend
+iROAS = (Incremental_Revenue - Marketing_Spend) / Marketing_Spend
 
 GEO-LIFT TESTING
 
@@ -32,7 +32,7 @@ TEST DESIGN
 
 FORMULA
 Lift = (Test_KPI - Control_KPI) / Control_KPI x 100
-iROAS = (Test_Revenue - Control_Revenue) / Test_Spend
+iROAS = ((Test_Revenue - Control_Revenue) - Test_Spend) / Test_Spend
 
 SYNTHETIC CONTROL METHOD
 When perfect control markets are unavailable:

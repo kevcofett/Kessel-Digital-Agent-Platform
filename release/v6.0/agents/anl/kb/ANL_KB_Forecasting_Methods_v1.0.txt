@@ -1,0 +1,402 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 14123
+
+PURPOSE
+
+This knowledge base provides the Analytics Agent with comprehensive forecasting methodology including statistical methods, machine learning approaches, and best practices for marketing performance prediction.
+
+FORECASTING FUNDAMENTALS
+
+Understanding prediction methodology.
+
+FORECASTING CONCEPT
+
+What forecasting achieves.
+
+Future prediction
+- Expected outcomes
+- Point estimates
+- Probability ranges
+- Decision support
+
+Planning support
+- Budget planning
+- Resource allocation
+- Goal setting
+- Performance expectation
+
+Uncertainty quantification
+- Confidence intervals
+- Prediction ranges
+- Risk assessment
+- Scenario bounds
+
+FORECASTING TYPES
+
+Categories of prediction.
+
+Point forecasts
+- Single value prediction
+- Best estimate
+- Expected outcome
+- Central tendency
+
+Interval forecasts
+- Range prediction
+- Confidence bounds
+- Uncertainty capture
+- Decision support
+
+Probabilistic forecasts
+- Full distribution
+- Quantile predictions
+- Probability statements
+- Complete uncertainty
+
+STATISTICAL FORECASTING
+
+Traditional statistical approaches.
+
+EXPONENTIAL SMOOTHING
+
+Weighted average methods.
+
+Simple exponential smoothing
+- Level component only
+- Single parameter
+- Short-term focus
+- No trend or season
+
+Holt method
+- Trend component added
+- Two parameters
+- Medium-term capable
+- Linear trend
+
+Holt-Winters method
+- Seasonal component
+- Three parameters
+- Complete decomposition
+- Seasonal patterns
+
+State space models
+- ETS framework
+- Error-Trend-Season
+- Model selection
+- Automatic fitting
+
+ARIMA FORECASTING
+
+Autoregressive integrated moving average.
+
+Model identification
+- ACF PACF analysis
+- Stationarity checking
+- Order selection
+- Information criteria
+
+ARIMA specification
+- AR order
+- Differencing order
+- MA order
+- Seasonal extension
+
+Forecast generation
+- Point forecast
+- Prediction intervals
+- Multi-step ahead
+- Uncertainty growth
+
+MACHINE LEARNING FORECASTING
+
+Predictive modeling approaches.
+
+REGRESSION-BASED FORECASTING
+
+Feature-based prediction.
+
+Feature engineering
+- Lag features
+- Rolling statistics
+- Calendar features
+- External regressors
+
+Model selection
+- Linear models
+- Tree-based models
+- Ensemble methods
+- Neural networks
+
+Validation approach
+- Time series split
+- Forward validation
+- Rolling origin
+- Multi-step evaluation
+
+GRADIENT BOOSTING
+
+Tree ensemble forecasting.
+
+XGBoost application
+- Tabular features
+- Hyperparameter tuning
+- Feature importance
+- Regularization
+
+LightGBM application
+- Efficiency focus
+- Large dataset handling
+- Categorical features
+- Fast training
+
+DEEP LEARNING
+
+Neural network forecasting.
+
+LSTM networks
+- Sequence modeling
+- Long-term dependencies
+- Multi-step forecasting
+- Complex patterns
+
+Transformer models
+- Attention mechanism
+- Parallel processing
+- Long sequences
+- State of art performance
+
+CAUSAL FORECASTING
+
+Incorporating causal factors.
+
+REGRESSION WITH REGRESSORS
+
+External factor inclusion.
+
+Regressor selection
+- Marketing spend
+- Economic indicators
+- Seasonal events
+- Competitive factors
+
+Dynamic regression
+- ARIMA errors
+- Regressor coefficients
+- Forecast regressors
+- Complete model
+
+Regressor forecasting
+- Known future values
+- Scenario-based
+- Regressor uncertainty
+- Combined forecast
+
+INTERVENTION ANALYSIS
+
+Accounting for structural changes.
+
+Intervention types
+- Level shifts
+- Pulse effects
+- Trend changes
+- Seasonal changes
+
+Intervention modeling
+- Indicator variables
+- Transfer functions
+- Pre-post modeling
+- Effect estimation
+
+HIERARCHICAL FORECASTING
+
+Multi-level forecast reconciliation.
+
+HIERARCHY TYPES
+
+Forecast aggregation structures.
+
+Geographic hierarchy
+- National total
+- Regional breakout
+- Market level
+- Store level
+
+Product hierarchy
+- Total revenue
+- Category level
+- Brand level
+- SKU level
+
+RECONCILIATION METHODS
+
+Ensuring forecast coherence.
+
+Bottom-up approach
+- Forecast at base level
+- Aggregate upward
+- Detail available
+- Upper level accuracy loss
+
+Top-down approach
+- Forecast at top level
+- Disaggregate downward
+- Global view
+- Detail loss
+
+Optimal reconciliation
+- All level forecasts
+- Statistical combination
+- Coherent output
+- Best of both
+
+FORECAST EVALUATION
+
+Assessing prediction accuracy.
+
+ACCURACY METRICS
+
+Measuring forecast error.
+
+MAE
+- Mean absolute error
+- Same units as outcome
+- Intuitive interpretation
+- Outlier robust
+
+MAPE
+- Mean absolute percentage error
+- Scale independent
+- Percentage expression
+- Division by zero issue
+
+RMSE
+- Root mean squared error
+- Larger error emphasis
+- Same units
+- Common metric
+
+EVALUATION APPROACHES
+
+Testing forecast quality.
+
+Holdout testing
+- Reserve recent data
+- Out-of-sample test
+- Realistic assessment
+- Single evaluation
+
+Cross-validation
+- Multiple origins
+- Rolling evaluation
+- Average performance
+- Robust estimate
+
+Benchmark comparison
+- Naive forecast baseline
+- Seasonal naive
+- Improvement measurement
+- Relative performance
+
+MARKETING FORECAST APPLICATIONS
+
+Forecasting in marketing context.
+
+PERFORMANCE FORECASTING
+
+Predicting marketing outcomes.
+
+Conversion forecasting
+- Future conversions
+- Campaign projections
+- Goal probability
+- Resource planning
+
+Revenue forecasting
+- Sales prediction
+- Marketing contribution
+- Budget justification
+- Investment planning
+
+Traffic forecasting
+- Visitor prediction
+- Channel traffic
+- Capacity planning
+- Resource allocation
+
+BUDGET FORECASTING
+
+Marketing investment prediction.
+
+Spend forecasting
+- Pacing prediction
+- Budget consumption
+- Remaining budget
+- Reallocation needs
+
+Efficiency forecasting
+- CPM trends
+- CPA projections
+- ROI expectations
+- Benchmark comparison
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for forecasting.
+
+FORECASTING WORKFLOW
+
+Standard forecasting process.
+
+Preparation phase
+- Data collection
+- Feature engineering
+- Method selection
+- Horizon definition
+
+Modeling phase
+- Model fitting
+- Validation
+- Selection
+- Calibration
+
+Deployment phase
+- Forecast generation
+- Interval estimation
+- Reporting
+- Monitoring
+
+CROSS-AGENT INTEGRATION
+
+Forecasting outputs for downstream agents.
+
+Outputs to ANL Agent
+- Point forecasts
+- Prediction intervals
+- Scenario projections
+- Trend estimates
+
+Outputs to PRF Agent
+- Performance forecasts
+- Goal probability
+- Trend predictions
+- Anomaly baselines
+
+Outputs to CHA Agent
+- Channel forecasts
+- Budget projections
+- Efficiency trends
+- Allocation inputs
+
+Outputs to ORC Agent
+- Campaign projections
+- Goal forecasts
+- Risk assessment
+- Decision support
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive forecasting methodology

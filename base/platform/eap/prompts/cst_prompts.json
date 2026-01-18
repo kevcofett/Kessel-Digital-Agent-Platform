@@ -1,0 +1,74 @@
+{
+  "agent_code": "CST",
+  "agent_name": "Consulting Strategy Agent",
+  "prompts": [
+    {
+      "prompt_code": "CST_FRAMEWORK_SELECT",
+      "prompt_name": "Framework Selection",
+      "description": "Recommend appropriate consulting frameworks based on challenge type and context",
+      "input_parameters": [
+        {"name": "challenge_description", "type": "text", "required": true, "description": "Description of the business challenge or question"},
+        {"name": "industry_code", "type": "text", "required": false, "description": "Industry vertical code from mpa_vertical"},
+        {"name": "complexity_preference", "type": "choice", "required": false, "options": ["Simple", "Moderate", "Complex", "Enterprise"], "description": "Preferred framework complexity level"}
+      ],
+      "output_format": {
+        "recommended_frameworks": "array of framework objects with code, name, rationale, and fit_score",
+        "selection_rationale": "text explaining why these frameworks fit the challenge",
+        "combination_suggestion": "optional suggestion for combining frameworks"
+      },
+      "kb_retrieval": ["CST_KB_Consulting_Core", "CST_KB_Strategic_Frameworks"],
+      "dataverse_lookup": ["ca_framework"]
+    },
+    {
+      "prompt_code": "CST_ENGAGEMENT_GUIDE",
+      "prompt_name": "Engagement Guide",
+      "description": "Guide consulting engagement through discovery, assessment, recommendations, and roadmap phases",
+      "input_parameters": [
+        {"name": "engagement_type", "type": "choice", "required": true, "options": ["Assessment", "Strategy", "Transformation", "Due Diligence"], "description": "Type of consulting engagement"},
+        {"name": "current_phase", "type": "choice", "required": true, "options": ["Discovery", "Assessment", "Recommendations", "Roadmap"], "description": "Current phase of the engagement"},
+        {"name": "context", "type": "text", "required": false, "description": "Additional context about the engagement"}
+      ],
+      "output_format": {
+        "phase_guidance": "detailed guidance for current phase activities",
+        "key_questions": "array of questions to address in current phase",
+        "deliverables": "expected deliverables for current phase",
+        "next_phase_preview": "preview of what comes next"
+      },
+      "kb_retrieval": ["CST_KB_Consulting_Core"]
+    },
+    {
+      "prompt_code": "CST_STRATEGIC_ANALYZE",
+      "prompt_name": "Strategic Analysis",
+      "description": "Apply strategic frameworks to analyze business situations",
+      "input_parameters": [
+        {"name": "framework_code", "type": "text", "required": true, "description": "Framework code to apply (e.g., SWOT, PORTER_5F, PESTEL)"},
+        {"name": "subject", "type": "text", "required": true, "description": "Subject of analysis (company, product, market, etc.)"},
+        {"name": "context_data", "type": "text", "required": false, "description": "Relevant data and context for the analysis"}
+      ],
+      "output_format": {
+        "framework_output": "structured output following framework template",
+        "key_insights": "array of key insights from the analysis",
+        "strategic_implications": "implications for strategy",
+        "recommended_actions": "prioritized action recommendations"
+      },
+      "kb_retrieval": ["CST_KB_Strategic_Frameworks", "CST_KB_Industry_Context"]
+    },
+    {
+      "prompt_code": "CST_PRIORITIZE",
+      "prompt_name": "Prioritization",
+      "description": "Apply prioritization methods to rank initiatives or features",
+      "input_parameters": [
+        {"name": "method", "type": "choice", "required": true, "options": ["RICE", "Weighted Matrix", "MoSCoW", "Effort-Impact"], "description": "Prioritization method to apply"},
+        {"name": "items", "type": "array", "required": true, "description": "Array of items to prioritize with relevant attributes"},
+        {"name": "criteria_weights", "type": "object", "required": false, "description": "Custom weights for criteria (for Weighted Matrix)"}
+      ],
+      "output_format": {
+        "prioritized_list": "array of items with scores and rankings",
+        "scoring_details": "detailed breakdown of how each item was scored",
+        "methodology_notes": "notes on methodology and assumptions",
+        "visualization_data": "data formatted for chart visualization"
+      },
+      "kb_retrieval": ["CST_KB_Prioritization_Methods"]
+    }
+  ]
+}

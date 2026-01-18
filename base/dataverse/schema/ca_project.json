@@ -1,0 +1,16 @@
+{
+  "table_name": "ca_project",
+  "display_name": "CA Project",
+  "description": "Consulting engagement tracking",
+  "columns": [
+    {"name": "ca_project_id", "type": "GUID", "primary_key": true},
+    {"name": "ca_project_name", "type": "Text", "max_length": 200, "required": true},
+    {"name": "ca_client_name", "type": "Text", "max_length": 200, "required": true},
+    {"name": "ca_industry_code", "type": "Lookup", "target_table": "mpa_vertical"},
+    {"name": "ca_engagement_type", "type": "Choice", "options": ["Assessment", "Strategy", "Transformation", "Due Diligence"]},
+    {"name": "ca_status", "type": "Choice", "options": ["Discovery", "Analysis", "Recommendations", "Roadmap", "Complete"]},
+    {"name": "eap_session_id", "type": "Lookup", "target_table": "eap_session"},
+    {"name": "created_on", "type": "DateTime", "auto_set": "create"},
+    {"name": "modified_on", "type": "DateTime", "auto_set": "update"}
+  ]
+}

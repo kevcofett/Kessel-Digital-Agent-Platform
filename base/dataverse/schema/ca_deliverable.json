@@ -1,0 +1,14 @@
+{
+  "table_name": "ca_deliverable",
+  "display_name": "CA Deliverable",
+  "description": "Consulting deliverable tracking",
+  "columns": [
+    {"name": "ca_deliverable_id", "type": "GUID", "primary_key": true},
+    {"name": "ca_project_id", "type": "Lookup", "target_table": "ca_project", "required": true},
+    {"name": "ca_deliverable_type", "type": "Choice", "options": ["Analysis", "Business Case", "Roadmap", "Presentation", "Report"]},
+    {"name": "ca_framework_used", "type": "Text", "max_length": 100},
+    {"name": "ca_status", "type": "Choice", "options": ["Draft", "Review", "Final"]},
+    {"name": "ca_file_url", "type": "Text", "max_length": 500},
+    {"name": "created_on", "type": "DateTime", "auto_set": "create"}
+  ]
+}

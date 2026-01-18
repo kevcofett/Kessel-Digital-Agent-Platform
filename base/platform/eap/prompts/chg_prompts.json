@@ -1,0 +1,63 @@
+{
+  "agent_code": "CHG",
+  "agent_name": "Change Management Agent",
+  "prompts": [
+    {
+      "prompt_code": "CHG_READINESS",
+      "prompt_name": "Readiness Assessment",
+      "description": "Assess organizational change readiness using established change management models",
+      "input_parameters": [
+        {"name": "change_description", "type": "text", "required": true, "description": "Description of the proposed change initiative"},
+        {"name": "organization_context", "type": "text", "required": false, "description": "Context about the organization, culture, and history"},
+        {"name": "assessment_model", "type": "choice", "required": false, "options": ["ADKAR", "Kotter", "Lewin", "Bridges", "Comprehensive"], "default": "Comprehensive", "description": "Change model to use for assessment"}
+      ],
+      "output_format": {
+        "readiness_score": "overall readiness score 1-5 with rationale",
+        "dimension_scores": "scores for each dimension of the selected model",
+        "risk_factors": "identified risks to successful change adoption",
+        "readiness_gaps": "gaps that need to be addressed before or during change",
+        "recommendations": "prioritized recommendations to improve readiness"
+      },
+      "kb_retrieval": ["CHG_KB_Change_Core"]
+    },
+    {
+      "prompt_code": "CHG_STAKEHOLDER",
+      "prompt_name": "Stakeholder Mapping",
+      "description": "Map and analyze stakeholders for change initiatives",
+      "input_parameters": [
+        {"name": "change_initiative", "type": "text", "required": true, "description": "Description of the change initiative"},
+        {"name": "stakeholder_list", "type": "array", "required": false, "description": "Optional list of known stakeholders with roles"},
+        {"name": "analysis_type", "type": "choice", "required": false, "options": ["Power-Interest", "Influence-Impact", "Support-Opposition", "RACI"], "default": "Power-Interest", "description": "Type of stakeholder analysis to perform"}
+      ],
+      "output_format": {
+        "stakeholder_map": "structured stakeholder data with classifications",
+        "quadrant_assignments": "stakeholders assigned to grid quadrants",
+        "engagement_strategies": "recommended engagement strategy per stakeholder group",
+        "coalition_opportunities": "opportunities for building supporting coalitions",
+        "resistance_risks": "stakeholders likely to resist and mitigation strategies"
+      },
+      "kb_retrieval": ["CHG_KB_Stakeholder_Methods"]
+    },
+    {
+      "prompt_code": "CHG_ADOPTION",
+      "prompt_name": "Adoption Planning",
+      "description": "Create adoption and rollout plans for change initiatives",
+      "input_parameters": [
+        {"name": "change_initiative", "type": "text", "required": true, "description": "Description of the change initiative"},
+        {"name": "rollout_preference", "type": "choice", "required": false, "options": ["Big Bang", "Phased", "Pilot First", "Geographic", "Functional"], "description": "Preferred rollout approach"},
+        {"name": "timeline_constraint", "type": "text", "required": false, "description": "Any timeline constraints or target dates"},
+        {"name": "resource_constraints", "type": "text", "required": false, "description": "Budget or resource constraints"}
+      ],
+      "output_format": {
+        "rollout_strategy": "recommended rollout approach with rationale",
+        "phase_plan": "detailed phases with activities, owners, and timing",
+        "training_plan": "training approach including methods and schedule",
+        "change_network": "recommended change champion and super user structure",
+        "sustainment_plan": "plan for reinforcing and sustaining the change",
+        "adoption_metrics": "KPIs and metrics to track adoption success",
+        "risk_mitigation": "risks and mitigation strategies"
+      },
+      "kb_retrieval": ["CHG_KB_Adoption_Planning", "CHG_KB_Change_Core"]
+    }
+  ]
+}

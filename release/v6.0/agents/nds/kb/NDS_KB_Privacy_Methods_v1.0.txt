@@ -1,0 +1,404 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 14123
+
+PURPOSE
+
+This knowledge base provides the Neural Data Science Agent with comprehensive privacy-preserving measurement methodology including differential privacy, aggregation techniques, and best practices for compliant marketing analytics.
+
+PRIVACY CONTEXT
+
+Understanding privacy in marketing measurement.
+
+PRIVACY LANDSCAPE
+
+Current privacy environment.
+
+Regulatory framework
+- GDPR requirements
+- CCPA provisions
+- State privacy laws
+- Industry self-regulation
+
+Platform changes
+- Third-party cookie deprecation
+- iOS App Tracking Transparency
+- Android Privacy Sandbox
+- Walled garden restrictions
+
+Measurement impact
+- Attribution challenges
+- Targeting limitations
+- Personalization constraints
+- Data availability reduction
+
+PRIVACY PRINCIPLES
+
+Foundational privacy concepts.
+
+Data minimization
+- Collect only necessary
+- Purpose limitation
+- Retention limits
+- Deletion requirements
+
+User control
+- Consent requirements
+- Preference management
+- Access rights
+- Portability rights
+
+Accountability
+- Processing records
+- Impact assessments
+- Breach notification
+- Compliance demonstration
+
+DIFFERENTIAL PRIVACY
+
+Mathematical privacy guarantees.
+
+DIFFERENTIAL PRIVACY CONCEPT
+
+Formal privacy definition.
+
+DP definition
+- Bounded influence
+- Individual contribution limited
+- Statistical indistinguishability
+- Privacy parameter epsilon
+
+Privacy guarantee
+- Query result similarity
+- With or without individual
+- Plausible deniability
+- Formal bound
+
+Epsilon interpretation
+- Privacy budget
+- Lower more private
+- Higher more accurate
+- Trade-off management
+
+DIFFERENTIAL PRIVACY MECHANISMS
+
+Implementation approaches.
+
+Laplace mechanism
+- Add Laplace noise
+- Numeric query protection
+- Sensitivity-based
+- Count and sum protection
+
+Gaussian mechanism
+- Add Gaussian noise
+- Composition friendly
+- Approximate DP
+- Complex queries
+
+Randomized response
+- Probabilistic response
+- Survey privacy technique
+- Local DP application
+- Plausible deniability
+
+LOCAL VERSUS GLOBAL DP
+
+Implementation architectures.
+
+Local differential privacy
+- Client-side noise addition
+- No trusted curator
+- Higher noise required
+- Browser-based possible
+
+Global differential privacy
+- Centralized noise addition
+- Trusted curator required
+- Better accuracy
+- Server-side implementation
+
+Choice considerations
+- Trust model
+- Accuracy requirements
+- Implementation feasibility
+- Use case alignment
+
+AGGREGATION TECHNIQUES
+
+Privacy through aggregation.
+
+K-ANONYMITY
+
+Group-based privacy.
+
+K-anonymity concept
+- Minimum group size
+- Identifier generalization
+- Suppression techniques
+- Re-identification prevention
+
+Implementation
+- Quasi-identifier identification
+- Generalization hierarchy
+- Suppression rules
+- K threshold selection
+
+Limitations
+- Homogeneity attacks
+- Background knowledge
+- Attribute disclosure
+- Enhanced variants
+
+L-DIVERSITY AND T-CLOSENESS
+
+Enhanced aggregation.
+
+L-diversity
+- Sensitive value diversity
+- Within equivalence class
+- Attack prevention
+- Diversity threshold
+
+T-closeness
+- Distribution similarity
+- Population comparison
+- Attribute distribution
+- Distance threshold
+
+COHORT-BASED APPROACHES
+
+Group-level measurement.
+
+Cohort concept
+- User grouping
+- Behavioral similarity
+- Minimum cohort size
+- Aggregate reporting
+
+Privacy sandbox cohorts
+- Topics API
+- Attribution Reporting API
+- Aggregated measurement
+- Privacy-preserving ads
+
+Implementation considerations
+- Cohort size thresholds
+- Update frequency
+- Cross-site limitations
+- Utility trade-offs
+
+SECURE COMPUTATION
+
+Cryptographic privacy techniques.
+
+SECURE MULTI-PARTY COMPUTATION
+
+Joint computation without sharing.
+
+MPC concept
+- Multiple party computation
+- Input privacy preservation
+- Result sharing only
+- Cryptographic protocols
+
+MPC applications
+- Cross-platform measurement
+- Private set intersection
+- Secure aggregation
+- Attribution computation
+
+Implementation considerations
+- Computational overhead
+- Communication costs
+- Party coordination
+- Trust assumptions
+
+HOMOMORPHIC ENCRYPTION
+
+Computation on encrypted data.
+
+HE concept
+- Encrypt before processing
+- Compute on ciphertext
+- Decrypt results
+- Data privacy maintained
+
+HE types
+- Partial HE limited operations
+- Somewhat HE bounded depth
+- Fully HE unlimited
+- Performance trade-offs
+
+Marketing applications
+- Encrypted attribution
+- Private lookalike
+- Secure analytics
+- Cross-party computation
+
+PRIVACY-PRESERVING ATTRIBUTION
+
+Attribution under privacy constraints.
+
+AGGREGATED ATTRIBUTION
+
+Group-level credit allocation.
+
+Aggregated reporting
+- Campaign-level attribution
+- No individual paths
+- Delayed reporting
+- Noise addition
+
+Platform implementations
+- Google Attribution Reporting
+- Apple SKAdNetwork
+- Meta Aggregated Events
+- Privacy-preserving credit
+
+Adaptation requirements
+- Modeling approaches
+- Inference techniques
+- Uncertainty handling
+- Decision adaptation
+
+MODELED CONVERSIONS
+
+Statistical estimation approaches.
+
+Conversion modeling
+- Observed to unobserved inference
+- Statistical estimation
+- Confidence intervals
+- Methodology transparency
+
+Modeling inputs
+- Consented user data
+- Aggregate patterns
+- Historical relationships
+- Calibration data
+
+Model validation
+- Accuracy assessment
+- Bias detection
+- Ongoing calibration
+- Transparency reporting
+
+FIRST-PARTY DATA STRATEGY
+
+Owned data approaches.
+
+FIRST-PARTY DATA COLLECTION
+
+Direct relationship data.
+
+Collection approaches
+- Website tracking consented
+- App event collection
+- Transaction data
+- Survey and preference
+
+Quality advantages
+- High accuracy
+- Complete coverage
+- Contextual richness
+- Direct relationship
+
+Privacy considerations
+- Clear consent
+- Purpose specification
+- User control
+- Preference respect
+
+FIRST-PARTY ACTIVATION
+
+Using owned data.
+
+Audience building
+- Segment creation
+- Lookalike seeding
+- Suppression lists
+- Targeting foundation
+
+Measurement support
+- Attribution backbone
+- Conversion tracking
+- Customer journey
+- Analysis foundation
+
+DATA CLEAN ROOMS
+
+Secure collaboration.
+
+Clean room concept
+- Secure environment
+- Data matching without sharing
+- Query-based access
+- Privacy controls
+
+Clean room applications
+- Cross-platform measurement
+- Audience overlap
+- Attribution collaboration
+- Insight generation
+
+Implementation considerations
+- Technical integration
+- Governance framework
+- Privacy compliance
+- Use case alignment
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for privacy methods.
+
+PRIVACY WORKFLOW
+
+Standard privacy-aware process.
+
+Assessment phase
+- Privacy requirement identification
+- Risk assessment
+- Technique selection
+- Implementation planning
+
+Implementation phase
+- Privacy mechanism deployment
+- Testing and validation
+- Documentation
+- Compliance verification
+
+Monitoring phase
+- Ongoing compliance
+- Privacy budget tracking
+- Accuracy monitoring
+- Adaptation as needed
+
+CROSS-AGENT INTEGRATION
+
+Privacy method outputs for downstream agents.
+
+Outputs to NDS Agent
+- Privacy-compliant data
+- Aggregated metrics
+- Modeled conversions
+- Attribution estimates
+
+Outputs to ANL Agent
+- Privacy-aware projections
+- Uncertainty quantification
+- Confidence intervals
+- Limitation documentation
+
+Outputs to AUD Agent
+- Consented segments
+- Aggregated profiles
+- Cohort definitions
+- Privacy-compliant targeting
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive privacy-preserving methodology

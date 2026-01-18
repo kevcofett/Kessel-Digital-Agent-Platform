@@ -1,0 +1,314 @@
+ANL KNOWLEDGE BASE - PROJECTION METHODS v1
+VERSION: 1.0
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+================================================================================
+SECTION 1 - CALCULATIONS BY PLANNING STEP
+================================================================================
+
+STEP 1 - MARKET AND CONTEXT
+
+MARKET SIZE CALCULATION
+Total_Addressable_Market = Category_Buyers x Average_Transaction_Value x Purchase_Frequency
+
+SHARE OF VOICE CALCULATION
+SOV = Brand_Spend / Total_Category_Spend x 100
+
+SHARE OF MARKET CORRELATION
+Research shows SOV must exceed SOM for growth.
+Growth_Premium = SOV - SOM
+If Growth_Premium positive: Brand likely to gain share
+
+STEP 2 - OBJECTIVES AND KPIS
+
+TARGET VALIDATION
+Compare target against vertical benchmarks.
+Deviation_Percent = (Target - Benchmark) / Benchmark x 100
+
+CHALLENGE THRESHOLD
+If Deviation_Percent greater than 20 percent: Flag as aggressive
+If Deviation_Percent greater than 50 percent: Flag as very aggressive, require justification
+
+CONVERSION FUNNEL CALCULATION
+Conversions = Impressions x CTR x CVR
+Required_Impressions = Target_Conversions / (CTR x CVR)
+Required_Budget = Required_Impressions x CPM / 1000
+
+STEP 3 - BUDGET AND TIMELINE
+
+DAILY BUDGET CALCULATION
+Daily_Budget = Total_Budget / Campaign_Days
+
+PACING CHECK
+Daily_Required = Remaining_Budget / Remaining_Days
+Pacing_Index = Actual_Daily_Spend / Daily_Required
+If Pacing_Index less than 0.9: Underpacing
+If Pacing_Index greater than 1.1: Overpacing
+
+WORKING MEDIA PERCENTAGE
+Working_Media_Percent = (Budget - Agency_Fees - Tech_Fees - Data_Fees) / Budget x 100
+Minimum acceptable: 60 percent
+Target: 70 percent or higher
+
+STEP 4 - AUDIENCE DEFINITION
+
+ADDRESSABLE AUDIENCE CALCULATION
+Addressable_Audience = Total_Population x Demographic_Match_Rate x Behavioral_Match_Rate
+
+AUDIENCE OVERLAP CALCULATION
+If Audience_A and Audience_B overlap:
+Unique_Combined_Reach = Audience_A + Audience_B - (Audience_A x Audience_B / Total_Universe)
+
+FREQUENCY DISTRIBUTION
+Using binomial distribution for n exposures:
+P(k exposures) = C(n,k) x p^k x (1 - p)^(n - k)
+
+STEP 5 - CHANNEL STRATEGY
+
+CHANNEL ALLOCATION FORMULA
+Channel_Budget = Total_Budget x Channel_Weight x Efficiency_Adjustment
+
+EFFICIENCY ADJUSTMENT
+Based on response curve position:
+If Marginal_ROI greater than Average: Weight up
+If Marginal_ROI less than Average: Weight down
+
+CROSS-CHANNEL REACH
+Combined_Reach = 1 - Product of (1 - Reach_i) for all channels i
+
+STEP 6 - PARTNER SELECTION
+
+NET WORKING MEDIA
+NWM = Budget - DSP_Fee - SSP_Fee - Verification_Fee - Data_Fee - Other_Fees
+
+NET BENEFIT INDEX
+NBI = (Fee_Savings_Percent - Quality_Impact_Percent) x Relevance_Weight
+
+STEP 7 - MEASUREMENT APPROACH
+
+MINIMUM HOLDOUT SIZE
+For 95 percent confidence and 80 percent power:
+Holdout_Size = 2.8 x (Variance / Effect_Size^2)
+
+STATISTICAL SIGNIFICANCE
+Z_Score = (Test_Mean - Control_Mean) / Standard_Error
+If Z_Score greater than 1.96: Significant at 95 percent
+
+STEP 8 - OPTIMIZATION STRATEGY
+
+OPTIMIZATION TRIGGER THRESHOLDS
+- CPM variance greater than 20 percent: Review creative or targeting
+- CTR variance greater than 30 percent: Review creative
+- CVR variance greater than 25 percent: Review landing page
+- CPA variance greater than 15 percent: Review full funnel
+
+STEP 9 - COMPLIANCE AND BRAND SAFETY
+
+VIEWABILITY ADJUSTMENT
+Effective_Impressions = Total_Impressions x Viewability_Rate
+Adjusted_CPM = Paid_CPM / Viewability_Rate
+
+FRAUD ADJUSTMENT
+Clean_Impressions = Total_Impressions x (1 - IVT_Rate)
+Adjusted_CPM = Paid_CPM / (1 - IVT_Rate)
+
+STEP 10 - FINAL PROJECTION
+
+FINAL PROJECTION FORMULA
+Projected_Outcome = Sum of (Channel_Contribution_i) for all channels
+Where: Channel_Contribution_i = f(Spend_i, Response_Curve_i, Adstock_i, Seasonal_Factor)
+
+CONFIDENCE INTERVAL
+Lower_Bound = Projection x (1 - Uncertainty_Percent)
+Upper_Bound = Projection x (1 + Uncertainty_Percent)
+
+SCENARIO COMPARISON
+Always present base case, optimistic, and conservative scenarios.
+
+================================================================================
+SECTION 2 - CONFIDENCE LEVEL METHODOLOGY
+================================================================================
+
+CONFIDENCE LEVEL DEFINITIONS
+
+HIGH CONFIDENCE
+- Source: Internal benchmarks validated by recent performance data
+- Variance: Plus or minus 10 percent
+- Criteria: Same vertical, same objective, same channels, within past 12 months
+
+MEDIUM CONFIDENCE
+- Source: Industry benchmarks from authoritative sources
+- Variance: Plus or minus 20 percent
+- Criteria: Same vertical, similar objective, validated methodology
+
+MEDIUM-LOW CONFIDENCE
+- Source: Cross-vertical extrapolation or dated benchmarks
+- Variance: Plus or minus 30 percent
+- Criteria: Related vertical or older than 18 months
+
+LOW CONFIDENCE
+- Source: Web research, estimates, or limited data
+- Variance: Plus or minus 40 percent or greater
+- Criteria: Unvalidated or novel approach
+
+CONFIDENCE ASSIGNMENT BY DATA TYPE
+
+METRIC - CPM PROJECTIONS
+- Historical same campaign: HIGH
+- Same vertical benchmark: MEDIUM
+- Cross-vertical estimate: MEDIUM-LOW
+- Web research: LOW
+
+METRIC - CTR PROJECTIONS
+- Same creative type, same platform: HIGH
+- Same platform, different creative: MEDIUM
+- Different platform, similar format: MEDIUM-LOW
+- New format or channel: LOW
+
+METRIC - CONVERSION RATE PROJECTIONS
+- Same landing page, same audience: HIGH
+- Same audience, new page: MEDIUM
+- New audience: MEDIUM-LOW
+- New vertical: LOW
+
+METRIC - TOTAL CONVERSIONS
+- Based on HIGH confidence inputs: MEDIUM (compounding uncertainty)
+- Based on MEDIUM inputs: MEDIUM-LOW
+- Based on LOW inputs: LOW
+
+CONFIDENCE COMMUNICATION
+
+AGENT MUST ALWAYS
+- State confidence level for every projection
+- Explain basis for confidence level
+- Provide range, not just point estimate
+- Offer to improve confidence with additional data
+
+EXAMPLE OUTPUT
+Based on vertical benchmarks (MEDIUM confidence), I project 1500 conversions.
+Range: 1200 to 1800 conversions (plus or minus 20 percent).
+To improve confidence, I would need your historical campaign performance data.
+
+================================================================================
+SECTION 3 - VALIDATION THRESHOLDS AND TRIGGERS
+================================================================================
+
+AUTOMATED VALIDATION TRIGGERS
+
+The agent MUST automatically trigger validation when:
+
+BUDGET TRIGGERS
+- Daily spend greater than 10 percent above plan: ALERT
+- Weekly spend greater than 15 percent above plan: WARNING
+- Daily spend less than 50 percent of plan: ALERT
+- Working media less than 60 percent: WARNING
+
+PERFORMANCE TRIGGERS
+- CPM greater than 130 percent of benchmark: INVESTIGATE
+- CTR less than 50 percent of benchmark: INVESTIGATE
+- CPA greater than 120 percent of target: WARNING
+- ROAS less than 80 percent of target: WARNING
+
+DELIVERY TRIGGERS
+- Impressions less than 80 percent of plan: ALERT
+- Reach less than 70 percent of target: WARNING
+- Frequency greater than 150 percent of cap: WARNING
+
+PROACTIVE CHALLENGE TRIGGERS
+
+The agent MUST challenge user inputs when:
+
+CONVERSION TARGETS
+- Target CVR greater than 150 percent of vertical benchmark
+- Target CPA less than 75 percent of vertical benchmark
+- Target volume exceeds addressable audience capacity
+
+BUDGET ALLOCATIONS
+- Single channel allocation greater than 60 percent of budget
+- Channel allocation below minimum viable threshold
+- Total programmatic greater than 30 percent (triggers SPO analysis)
+
+TIMELINE EXPECTATIONS
+- Campaign shorter than 4 weeks
+- Ramp-up period less than 2 weeks
+- Conversion expectations during learning phase
+
+GAP DETECTION THRESHOLDS
+
+MINOR GAP (10 to 20 percent)
+- Present as observation
+- Offer optimization suggestions
+- Continue with plan if user accepts
+
+MODERATE GAP (20 to 35 percent)
+- Present as concern
+- Require acknowledgment
+- Present 6 options framework
+
+SIGNIFICANT GAP (greater than 35 percent)
+- Present as critical issue
+- Require resolution before proceeding
+- Present 6 options framework with strong recommendations
+
+================================================================================
+SECTION 4 - PROJECTION FORMULA REFERENCE
+================================================================================
+
+EFFICIENCY FORMULAS
+
+CPM = (Total_Spend / Impressions) x 1000
+CPC = Total_Spend / Clicks
+CPA = Total_Spend / Conversions
+CAC = Total_Spend / New_Customers
+ROAS = Revenue / Total_Spend
+ROI = (Revenue - Spend) / Spend x 100
+LTV_to_CAC = Customer_Lifetime_Value / CAC
+
+DELIVERY FORMULAS
+
+CTR = (Clicks / Impressions) x 100
+CVR = (Conversions / Clicks) x 100
+Conversion_Rate = (Conversions / Sessions) x 100
+GRPs = Reach_Percent x Frequency
+Reach = Unique_Users / Target_Audience x 100
+Frequency = Impressions / Unique_Users
+
+BUDGET FORMULAS
+
+Working_Media_Percent = (Budget - All_Fees) / Budget x 100
+Net_Working_Media = Budget x Working_Media_Percent
+Daily_Budget = Total_Budget / Campaign_Days
+Required_Budget = Target_Conversions x Target_CPA
+Budget_Gap = Required_Budget - Actual_Budget
+
+PROJECTION FORMULAS
+
+Projected_Impressions = Budget x 1000 / CPM
+Projected_Clicks = Projected_Impressions x CTR / 100
+Projected_Conversions = Projected_Clicks x CVR / 100
+Projected_Revenue = Projected_Conversions x AOV
+Projected_CAC = Budget / Projected_Conversions
+
+VARIANCE FORMULAS
+
+Variance_Percent = (Actual - Planned) / Planned x 100
+Pacing_Index = Actual_Spend / Expected_Spend
+Performance_Index = Actual_Conversions / Expected_Conversions
+
+================================================================================
+COMPLIANCE NOTES
+================================================================================
+
+This document follows the 6-Rule Compliance Framework:
+
+1. ALL-CAPS HEADERS: All section headers use uppercase
+2. SIMPLE LISTS: Hyphens only for list items
+3. ASCII ONLY: No special characters or unicode
+4. ZERO VISUAL DEPENDENCIES: No images or complex formatting
+5. MANDATORY LANGUAGE: Professional tone throughout
+6. AGENT-READY: Decision logic and formulas included
+
+================================================================================
+END OF DOCUMENT
+================================================================================

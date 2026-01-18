@@ -1,24 +1,41 @@
 # Orchestrator Agent (ORC)
 
-**Version:** 1.0  
-**Status:** Development  
-
 ## Purpose
-Central coordinator that routes requests to specialist agents and maintains session coherence.
-
-## Files
-- `instructions/ORC_Copilot_Instructions_v1.txt` - Copilot Studio instructions
-- `kb/ORC_KB_Routing_Logic_v1.txt` - Routing patterns and fallbacks
+Routes user requests to specialist agents, manages session state, and handles workflow coordination across the multi-agent system.
 
 ## Capabilities
-- Intent classification
-- 10-step workflow progression
-- Gate validation
-- Response synthesis
-- Error recovery
+- Intent classification and agent routing
+- Session initialization and state management
+- Error handling and graceful degradation
+- Workflow gate enforcement
+- Cross-agent handoff coordination
 
-## Tools
-- RouteToSpecialist
-- GetSessionState
-- UpdateProgress
-- GetPlanSummary
+## Knowledge Base Files
+| File | Description |
+|------|-------------|
+| ORC_KB_Workflow_Gates_v1.txt | Step progression rules and gate conditions |
+| ORC_KB_Error_Handling_v1.txt | Error patterns and recovery procedures |
+
+## Flows
+- RouteToAgent: Determines and executes routing to specialist
+- InitializeSession: Creates new planning session
+- GetAgentRegistry: Returns available agents and capabilities
+
+## Example Queries
+- "Help me create a media plan" → Initiates workflow
+- "Route this to analytics" → Explicit routing
+- "What can you help me with?" → Capability overview
+
+## Routing Keywords
+ORC handles general queries and routes based on these patterns:
+- Analytics keywords → ANL
+- Audience/segment keywords → AUD
+- Channel/budget keywords → CHA
+- Supply path/NBI keywords → SPO
+- Document/export keywords → DOC
+- Performance/analyze keywords → PRF
+
+## Dependencies
+- All 6 specialist agents must be deployed
+- Agent registry must be configured
+- Session management flow operational

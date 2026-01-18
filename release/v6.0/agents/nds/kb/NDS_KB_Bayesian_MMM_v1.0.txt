@@ -1,0 +1,454 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 14456
+
+PURPOSE
+
+This knowledge base provides the Neural Data Science Agent with Bayesian Marketing Mix Modeling methodologies including prior specification, hierarchical modeling, uncertainty quantification, and modern implementation approaches.
+
+BAYESIAN MMM ADVANTAGES
+
+Benefits of probabilistic approaches to marketing mix modeling.
+
+UNCERTAINTY QUANTIFICATION
+
+Complete distributional characterization of estimates.
+
+Parameter uncertainty
+- Full posterior distributions
+- Credible intervals versus confidence intervals
+- Multi-modal detection
+- Correlation structure capture
+
+Propagated uncertainty
+- ROI uncertainty quantification
+- Contribution interval estimation
+- Forecast uncertainty bands
+- Decision confidence assessment
+
+Communication benefits
+- Probabilistic statements to stakeholders
+- Risk quantification for decisions
+- Scenario probability assessment
+- Expected value calculations
+
+PRIOR INFORMATION INCORPORATION
+
+Leveraging domain knowledge in estimation.
+
+Industry benchmarks
+- Published effectiveness studies
+- Historical client results
+- Category-specific patterns
+- Reasonable effect ranges
+
+Business constraints
+- Non-negative effects requirement
+- Ordered effectiveness priors
+- Sign restrictions
+- Magnitude bounds
+
+Sequential learning
+- Previous study updates
+- Campaign learning accumulation
+- Temporal prior evolution
+- Knowledge transfer
+
+REGULARIZATION THROUGH PRIORS
+
+Automatic overfitting prevention.
+
+Shrinkage priors
+- Normal priors as ridge equivalent
+- Laplace priors as lasso equivalent
+- Horseshoe for sparse signals
+- Regularized horseshoe refinement
+
+Hierarchical shrinkage
+- Group-level pooling
+- Partial pooling benefits
+- Variance component estimation
+- Borrowing strength across groups
+
+Model complexity control
+- Effective degrees of freedom
+- Prior predictive assessment
+- Cross-validation integration
+- Model comparison metrics
+
+PRIOR SPECIFICATION
+
+Setting appropriate prior distributions.
+
+EFFECT SIZE PRIORS
+
+Priors for marketing effectiveness parameters.
+
+Weakly informative defaults
+- Normal zero center wide variance
+- Half-normal for positive effects
+- Cauchy for heavier tails
+- Scale determination heuristics
+
+Informative priors
+- Meta-analysis derived centers
+- Previous study incorporation
+- Industry benchmark translation
+- Expert elicitation methods
+
+Prior sensitivity analysis
+- Prior influence assessment
+- Data dominance verification
+- Sensitivity visualization
+- Robust prior selection
+
+TRANSFORMATION PRIORS
+
+Priors for adstock and saturation parameters.
+
+Decay rate priors
+- Beta distribution for decay
+- Industry-specific prior centers
+- Physical half-life interpretation
+- Channel-specific differentiation
+
+Saturation priors
+- Hill function parameter priors
+- Inflection point priors
+- Asymptote estimation
+- Prior predictive reasonableness
+
+Lag priors
+- Peak lag expectations
+- Discrete versus continuous
+- Channel-appropriate delays
+- Prior predictive checking
+
+HIERARCHICAL PRIORS
+
+Structured prior specifications.
+
+Group-level structure
+- Channel grouping
+- Geography nesting
+- Time period clustering
+- Brand hierarchy
+
+Hyperprior specification
+- Variance component priors
+- Correlation structure priors
+- Scale parameters
+- Degrees of freedom priors
+
+HIERARCHICAL MODELS
+
+Multi-level marketing mix models.
+
+GEOGRAPHIC HIERARCHY
+
+Regional and market-level modeling.
+
+Nested geography
+- National to region to DMA
+- Pooled versus unpooled tradeoff
+- Partial pooling benefits
+- Shrinkage toward population
+
+Parameter variation
+- Market-specific effects
+- Regional adjustments
+- Local competitive factors
+- Geographic correlation modeling
+
+Model specification
+- Random intercepts
+- Random slopes
+- Correlated random effects
+- Hyperparameter priors
+
+TEMPORAL HIERARCHY
+
+Time-varying parameter models.
+
+Regime detection
+- Structural break models
+- Hidden Markov models
+- Change point detection
+- Regime-specific parameters
+
+Dynamic coefficients
+- Time-varying parameters
+- Random walk priors
+- Autoregressive dynamics
+- Stochastic volatility
+
+Trend and seasonality
+- Gaussian process trends
+- Fourier seasonal components
+- Holiday effect estimation
+- Special event modeling
+
+CROSS-CHANNEL HIERARCHY
+
+Grouping related marketing channels.
+
+Channel families
+- Digital channel grouping
+- Traditional media grouping
+- Owned media grouping
+- Performance versus brand
+
+Hierarchical effects
+- Family-level effects
+- Channel-specific deviations
+- Synergy structure
+- Nested interaction terms
+
+POSTERIOR INFERENCE
+
+Methods for computing posterior distributions.
+
+MCMC METHODS
+
+Markov chain Monte Carlo sampling.
+
+Hamiltonian Monte Carlo
+- Gradient-based proposals
+- NUTS adaptation
+- Mass matrix tuning
+- Step size calibration
+
+Convergence diagnostics
+- R-hat statistic
+- Effective sample size
+- Trace plot inspection
+- Divergence monitoring
+
+Posterior summaries
+- Mean and median estimation
+- Credible interval construction
+- Highest density intervals
+- Posterior predictive samples
+
+VARIATIONAL INFERENCE
+
+Approximate posterior computation.
+
+Mean-field approximation
+- Independent posterior assumption
+- Evidence lower bound optimization
+- Faster computation
+- Accuracy tradeoffs
+
+Full-rank alternatives
+- Covariance structure modeling
+- Better uncertainty estimates
+- Increased computation
+- Application scenarios
+
+Comparison to MCMC
+- Speed versus accuracy tradeoff
+- When VI is appropriate
+- Hybrid approaches
+- Quality assessment
+
+IMPLEMENTATION FRAMEWORKS
+
+Software for Bayesian MMM.
+
+Stan language
+- Probabilistic programming
+- HMC sampling engine
+- Model specification syntax
+- Diagnostic tooling
+
+PyMC framework
+- Python integration
+- Model building API
+- Inference algorithms
+- Visualization support
+
+Lightweight MMM tools
+- Google LightweightMMM
+- Meta Robyn comparison
+- Orbit library
+- Custom implementations
+
+MODEL VALIDATION
+
+Assessing Bayesian MMM quality.
+
+POSTERIOR PREDICTIVE CHECKS
+
+Evaluating model fit to data.
+
+Graphical checks
+- Observed versus predicted plots
+- Residual distributions
+- Time series fit visualization
+- Decomposition plots
+
+Statistical checks
+- Posterior predictive p-values
+- Calibration assessment
+- Coverage evaluation
+- Discrepancy measures
+
+Domain checks
+- Business logic validation
+- Contribution reasonableness
+- ROI plausibility
+- Stakeholder review
+
+MODEL COMPARISON
+
+Selecting among competing models.
+
+Information criteria
+- WAIC calculation
+- LOO-CV estimation
+- DIC alternatives
+- Interpretation guidelines
+
+Bayes factors
+- Marginal likelihood estimation
+- Model odds interpretation
+- Computational challenges
+- Bridge sampling methods
+
+Predictive accuracy
+- Holdout set evaluation
+- Rolling window validation
+- Cross-validation schemes
+- Practical predictive comparison
+
+SENSITIVITY ANALYSIS
+
+Robustness assessment.
+
+Prior sensitivity
+- Alternative prior specifications
+- Prior width variations
+- Informative versus diffuse
+- Key parameter focus
+
+Data sensitivity
+- Influential observation detection
+- Temporal subset analysis
+- Geographic subset robustness
+- Outlier impact assessment
+
+Model sensitivity
+- Functional form alternatives
+- Variable inclusion variations
+- Transformation alternatives
+- Hierarchical structure changes
+
+DECISION INTEGRATION
+
+Using Bayesian MMM for marketing decisions.
+
+UNCERTAINTY-AWARE OPTIMIZATION
+
+Incorporating uncertainty in budget allocation.
+
+Expected value optimization
+- Mean outcome maximization
+- Risk-adjusted objectives
+- Utility function specification
+- Constraint handling
+
+Robust optimization
+- Worst-case consideration
+- Chance constraints
+- Value at risk objectives
+- Minimax approaches
+
+Portfolio perspective
+- Channel diversification benefit
+- Correlation-aware allocation
+- Risk-return tradeoff
+- Rebalancing recommendations
+
+SCENARIO ANALYSIS
+
+Probabilistic scenario evaluation.
+
+Scenario specification
+- Budget change scenarios
+- Channel mix alternatives
+- External factor changes
+- Competitive response
+
+Probability assessment
+- Outcome probability under scenarios
+- Confidence in recommendations
+- Range of plausible outcomes
+- Expected regret calculation
+
+Communication
+- Stakeholder-friendly summaries
+- Visualization of uncertainty
+- Decision recommendation clarity
+- Assumption transparency
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for Bayesian MMM operations.
+
+MODELING WORKFLOW
+
+Standard Bayesian MMM process.
+
+Specification phase
+- Prior elicitation
+- Model structure definition
+- Likelihood specification
+- Diagnostic planning
+
+Estimation phase
+- Sampler configuration
+- Warmup and sampling
+- Convergence assessment
+- Posterior extraction
+
+Validation phase
+- Posterior predictive checks
+- Sensitivity analyses
+- Model comparison
+- Stakeholder validation
+
+Reporting phase
+- Uncertainty communication
+- Decision recommendations
+- Visualization generation
+- Documentation
+
+CROSS-AGENT INTEGRATION
+
+Bayesian MMM outputs for downstream agents.
+
+Outputs to ANL Agent
+- Posterior parameter distributions
+- Uncertainty-aware ROI estimates
+- Probabilistic forecasts
+- Scenario outcome distributions
+
+Outputs to CHA Agent
+- Channel effectiveness distributions
+- Allocation confidence intervals
+- Synergy probability estimates
+- Budget recommendation ranges
+
+Outputs to PRF Agent
+- Prediction intervals
+- Model fit assessment
+- Forecast uncertainty
+- Anomaly context
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive Bayesian MMM methodology for uncertainty-aware marketing measurement

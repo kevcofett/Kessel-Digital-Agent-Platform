@@ -1,0 +1,426 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 14678
+
+PURPOSE
+
+This knowledge base provides the Neural Data Science Agent with comprehensive Marketing Mix Modeling fundamentals including theoretical foundations, model specifications, and implementation best practices for measuring marketing effectiveness.
+
+MMM THEORETICAL FOUNDATIONS
+
+Understanding the econometric principles underlying marketing mix models.
+
+MARKETING RESPONSE FUNCTIONS
+
+How marketing inputs translate to business outcomes.
+
+Linear response
+- Constant marginal returns assumption
+- Simple coefficient interpretation
+- Rarely accurate for marketing reality
+- Useful as baseline benchmark
+
+Diminishing returns
+- Decreasing marginal effectiveness
+- Saturation point concept
+- Logarithmic transformation approach
+- Hill function formulation
+
+S-curve response
+- Initial acceleration phase
+- Inflection point dynamics
+- Saturation at upper asymptote
+- Appropriate for awareness building
+
+Threshold effects
+- Minimum effective dose concept
+- Below-threshold spending waste
+- Discontinuous response
+- Budget allocation implications
+
+CARRYOVER EFFECTS
+
+Marketing impact persistence over time.
+
+Adstock concept
+- Decay rate parameterization
+- Half-life interpretation
+- Geometric decay assumption
+- Peak lag specification
+
+Carryover types
+- Immediate effect component
+- Delayed effect component
+- Cumulative effect measurement
+- Long-term brand building effect
+
+Decay rate estimation
+- Industry benchmarks by channel
+- Data-driven estimation methods
+- Prior specification approaches
+- Validation techniques
+
+INTERACTION EFFECTS
+
+Cross-channel synergies and complementarities.
+
+Synergy identification
+- Super-additive effect detection
+- Interaction term specification
+- Statistical significance testing
+- Business interpretation
+
+Common synergies
+- TV and search interaction
+- Display and social synergy
+- Awareness and performance
+- Online and offline integration
+
+Model specification
+- Multiplicative interaction terms
+- Cross-product variables
+- Nested hierarchy approaches
+- Regularization for stability
+
+MODEL SPECIFICATION
+
+Technical approaches to MMM model construction.
+
+DEPENDENT VARIABLE SELECTION
+
+Choosing the outcome to model.
+
+Revenue modeling
+- Total revenue response
+- Revenue by product line
+- Revenue by region
+- Revenue net of promotions
+
+Volume modeling
+- Unit sales response
+- Transaction count
+- Customer acquisition count
+- Lead generation volume
+
+Brand metrics
+- Awareness levels
+- Consideration scores
+- Brand preference
+- Net promoter score
+
+INDEPENDENT VARIABLE TREATMENT
+
+Preparing marketing variables for modeling.
+
+Spend variables
+- Gross versus net spending
+- Impression-based alternatives
+- GRP equivalents
+- Reach and frequency inputs
+
+Transformation decisions
+- Log transformation for diminishing returns
+- Adstock transformation for carryover
+- Scaling for numerical stability
+- Interaction term construction
+
+Control variables
+- Seasonality controls
+- Trend components
+- Promotional effects
+- Competitive activity
+- Economic indicators
+- Weather and events
+
+FUNCTIONAL FORMS
+
+Model structure specification.
+
+Multiplicative models
+- Log-log specification
+- Elasticity interpretation
+- Proportional effects assumption
+- Interaction handling
+
+Additive models
+- Linear combination
+- Absolute effect measurement
+- Straightforward interpretation
+- Limited interaction capture
+
+Hybrid approaches
+- Mixed functional forms
+- Flexible response curves
+- Custom transformations
+- Piecewise specifications
+
+ESTIMATION METHODS
+
+Techniques for fitting MMM models.
+
+FREQUENTIST APPROACHES
+
+Classical statistical estimation.
+
+Ordinary least squares
+- Closed-form solution
+- Assumption requirements
+- Heteroskedasticity handling
+- Autocorrelation correction
+
+Generalized least squares
+- Correlated error handling
+- Weighted estimation
+- Robust standard errors
+- Feasible GLS implementation
+
+Maximum likelihood
+- Distributional assumptions
+- Likelihood construction
+- Optimization algorithms
+- Asymptotic properties
+
+BAYESIAN APPROACHES
+
+Probabilistic parameter estimation.
+
+Prior specification
+- Informative priors from benchmarks
+- Weakly informative defaults
+- Hierarchical prior structures
+- Prior predictive checking
+
+Posterior estimation
+- MCMC sampling methods
+- Hamiltonian Monte Carlo
+- Variational inference
+- Convergence diagnostics
+
+Uncertainty quantification
+- Credible interval construction
+- Posterior predictive checks
+- Model comparison metrics
+- Decision-relevant summaries
+
+REGULARIZATION METHODS
+
+Preventing overfitting in estimation.
+
+Ridge regression
+- L2 penalty specification
+- Coefficient shrinkage
+- Cross-validation for lambda
+- Interpretation considerations
+
+Lasso regression
+- L1 penalty specification
+- Variable selection property
+- Sparsity promotion
+- Elastic net combination
+
+Bayesian regularization
+- Prior as regularizer
+- Horseshoe priors
+- Spike and slab priors
+- Automatic relevance determination
+
+DATA REQUIREMENTS
+
+Input data preparation for MMM.
+
+DATA GRANULARITY
+
+Temporal and geographic resolution.
+
+Temporal granularity
+- Weekly data standard
+- Daily data considerations
+- Monthly aggregation tradeoffs
+- Seasonality preservation needs
+
+Geographic granularity
+- National level modeling
+- Regional decomposition
+- DMA level analysis
+- Store level modeling
+
+Aggregation effects
+- Information loss in aggregation
+- Variance reduction benefits
+- Matching to decision level
+- Computational considerations
+
+DATA QUALITY
+
+Ensuring reliable input data.
+
+Completeness requirements
+- Full historical coverage
+- Handling gaps and missingness
+- Imputation approaches
+- Documentation of issues
+
+Accuracy validation
+- Source verification
+- Cross-validation against reports
+- Reconciliation procedures
+- Outlier investigation
+
+Consistency checks
+- Unit consistency verification
+- Definition alignment
+- Time zone handling
+- Currency normalization
+
+VARIABLE CONSTRUCTION
+
+Building model-ready variables.
+
+Media variables
+- Spend aggregation rules
+- Impression alternatives
+- Reach deduplication
+- Frequency cap consideration
+
+Sales data
+- Revenue definition clarity
+- Returns handling
+- Promotional adjustment
+- Channel attribution
+
+External variables
+- Economic indicator sourcing
+- Competitive data acquisition
+- Weather data integration
+- Event calendar construction
+
+MODEL OUTPUTS
+
+Interpreting and applying MMM results.
+
+CONTRIBUTION ANALYSIS
+
+Decomposing outcome drivers.
+
+Baseline estimation
+- Non-marketing baseline
+- Trend and seasonality components
+- Promotion effects separation
+- Organic demand estimation
+
+Channel contributions
+- Incremental volume by channel
+- Revenue contribution calculation
+- Contribution share computation
+- Time-varying contributions
+
+Contribution uncertainty
+- Confidence intervals on contributions
+- Scenario sensitivity analysis
+- Parameter uncertainty propagation
+- Interpretation guidelines
+
+ROI CALCULATION
+
+Measuring marketing return on investment.
+
+ROI formulation
+- Incremental revenue over spend
+- Marginal versus average ROI
+- Time horizon considerations
+- Attribution window specification
+
+ROAS calculation
+- Return on ad spend specifics
+- Channel-level ROAS
+- Campaign ROAS aggregation
+- Comparison to targets
+
+Profitability analysis
+- Margin-adjusted returns
+- Customer lifetime value integration
+- Long-term brand effect valuation
+- Full funnel consideration
+
+OPTIMIZATION RECOMMENDATIONS
+
+Translating insights to action.
+
+Budget allocation
+- Marginal ROI equalization
+- Constraint incorporation
+- Diminishing returns consideration
+- Minimum spend thresholds
+
+Scenario planning
+- What-if analysis framework
+- Budget increase simulation
+- Budget cut impact assessment
+- Channel mix optimization
+
+Response curves
+- Curve visualization
+- Saturation point identification
+- Efficient spend range
+- Reallocation opportunity sizing
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for MMM operations.
+
+MMM WORKFLOW
+
+Standard process for MMM execution.
+
+Data preparation phase
+- Variable collection
+- Quality validation
+- Transformation application
+- Model data set construction
+
+Modeling phase
+- Model specification
+- Estimation execution
+- Convergence verification
+- Result extraction
+
+Validation phase
+- Fit assessment
+- Out-of-sample testing
+- Business logic validation
+- Stakeholder review
+
+Activation phase
+- Contribution reporting
+- ROI calculation
+- Optimization recommendations
+- Dashboard integration
+
+CROSS-AGENT INTEGRATION
+
+MMM outputs for downstream agents.
+
+Outputs to ANL Agent
+- Channel effectiveness estimates
+- ROI by channel and period
+- Optimization recommendations
+- Budget reallocation guidance
+
+Outputs to CHA Agent
+- Channel-level ROI for allocation
+- Saturation indicators by channel
+- Synergy estimates
+- Diminishing returns curves
+
+Outputs to PRF Agent
+- Baseline trend estimates
+- Marketing contribution history
+- Forecast accuracy comparison
+- Performance benchmarks
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive MMM fundamentals for marketing effectiveness measurement

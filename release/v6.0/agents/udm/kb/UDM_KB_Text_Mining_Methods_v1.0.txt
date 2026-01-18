@@ -1,0 +1,426 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 14892
+
+PURPOSE
+
+This knowledge base provides the Unstructured Data Mining Agent with comprehensive text mining methodologies for extracting actionable marketing intelligence from unstructured text sources including ad copy, social media content, customer reviews, and campaign narratives.
+
+TEXT PREPROCESSING PIPELINE
+
+Raw text requires systematic preprocessing before analysis. The pipeline ensures consistent quality across all text sources.
+
+TOKENIZATION
+
+Tokenization breaks text into meaningful units for analysis.
+
+Word tokenization methods
+- Whitespace splitting for basic segmentation
+- Punctuation-aware tokenization for preserving contractions
+- Subword tokenization using BPE or WordPiece for handling unknown words
+- Sentence tokenization for document-level analysis
+
+Marketing-specific tokenization considerations
+- Preserve hashtags as single tokens
+- Handle at-mentions as named entities
+- Maintain URL structures for link analysis
+- Recognize emoji sequences as semantic units
+
+NORMALIZATION
+
+Text normalization standardizes variations for consistent analysis.
+
+Case normalization
+- Lowercase conversion for general matching
+- Preserve case for named entity recognition
+- Mixed approach for sentiment analysis where caps indicate emphasis
+
+Unicode normalization
+- NFKC normalization for character consistency
+- Accent handling based on target language
+- Special character mapping to ASCII equivalents
+
+Abbreviation expansion
+- Marketing acronym expansion using domain dictionary
+- Social media abbreviation handling
+- Platform-specific shorthand resolution
+
+STOPWORD REMOVAL
+
+Strategic stopword handling balances noise reduction with semantic preservation.
+
+Standard stopwords
+- Language-specific function words
+- High-frequency low-information terms
+- Numeric placeholders in controlled contexts
+
+Domain-specific stopword considerations
+- Retain brand names regardless of frequency
+- Preserve action verbs critical to CTA analysis
+- Keep temporal references for campaign timing
+- Maintain platform names for channel attribution
+
+STEMMING AND LEMMATIZATION
+
+Root form extraction improves matching and reduces vocabulary size.
+
+Stemming approaches
+- Porter stemmer for English text
+- Snowball stemmer for multilingual support
+- Aggressive versus light stemming tradeoffs
+
+Lemmatization considerations
+- Part-of-speech aware lemmatization
+- Preserve marketing terminology intact
+- Handle brand-specific neologisms
+- Maintain campaign-specific coined terms
+
+EMBEDDING MODELS
+
+Vector representations enable semantic similarity and clustering operations across text corpora.
+
+WORD EMBEDDINGS
+
+Word-level vectors capture distributional semantics.
+
+Word2Vec configurations
+- Skip-gram for rare word handling
+- CBOW for frequent word efficiency
+- Dimension sizing from 100 to 300 based on corpus size
+- Window sizing based on context requirements
+
+GloVe embeddings
+- Pre-trained on large corpora
+- Co-occurrence matrix factorization
+- Efficient for static vocabulary applications
+
+FastText advantages
+- Subword information incorporation
+- Out-of-vocabulary word handling
+- Morphologically rich language support
+
+SENTENCE EMBEDDINGS
+
+Document and sentence-level representations for semantic comparison.
+
+Sentence-BERT models
+- Siamese network architecture
+- Efficient similarity computation
+- Fine-tuning on marketing domain text
+
+Universal Sentence Encoder
+- Transformer-based encoding
+- Multilingual variants available
+- Optimized for semantic similarity
+
+CONTEXTUAL EMBEDDINGS
+
+Dynamic representations based on surrounding context.
+
+BERT-based embeddings
+- Bidirectional context incorporation
+- Layer selection for task optimization
+- Domain adaptation through fine-tuning
+
+Marketing domain adaptation
+- Pre-training on advertising corpora
+- Fine-tuning on campaign performance data
+- Transfer learning from general to specific domains
+
+TOPIC MODELING
+
+Topic extraction reveals thematic patterns across document collections.
+
+LATENT DIRICHLET ALLOCATION
+
+LDA provides probabilistic topic discovery.
+
+Model configuration
+- Topic count selection using coherence scores
+- Alpha and beta hyperparameter tuning
+- Iteration count for convergence
+- Random seed setting for reproducibility
+
+Preprocessing for LDA
+- Bigram and trigram incorporation
+- Minimum document frequency filtering
+- Maximum vocabulary size limits
+
+Evaluation metrics
+- Coherence score calculation using C_v metric
+- Perplexity measurement for held-out data
+- Human evaluation of topic interpretability
+
+Marketing applications of LDA
+- Campaign theme extraction
+- Competitive messaging analysis
+- Content categorization automation
+- Audience interest mapping
+
+NON-NEGATIVE MATRIX FACTORIZATION
+
+NMF provides interpretable additive topic decomposition.
+
+NMF advantages
+- Parts-based representation
+- Interpretable non-negative weights
+- Faster convergence than LDA
+- Suitable for shorter documents
+
+Configuration parameters
+- Component count selection
+- Initialization method using NNDSVD
+- Regularization for sparsity
+
+DYNAMIC TOPIC MODELS
+
+Temporal topic evolution tracking for campaign analysis.
+
+Time-slice configuration
+- Daily slices for active campaigns
+- Weekly aggregation for trend analysis
+- Monthly windows for strategic review
+
+Evolution metrics
+- Topic birth and death detection
+- Topic drift measurement
+- Emerging theme identification
+
+SENTIMENT AND EMOTION ANALYSIS
+
+Affective analysis extracts emotional signals from text for audience understanding.
+
+LEXICON-BASED SENTIMENT
+
+Dictionary approaches provide transparent sentiment scoring.
+
+Sentiment lexicons
+- VADER for social media text
+- SentiWordNet for general purpose
+- Domain-specific marketing lexicons
+- Brand perception dictionaries
+
+Scoring approaches
+- Aggregate polarity scoring
+- Aspect-level sentiment extraction
+- Intensity weighting methods
+- Negation handling rules
+
+Limitations and mitigations
+- Sarcasm detection challenges
+- Context-dependent polarity
+- Domain mismatch issues
+
+MACHINE LEARNING SENTIMENT
+
+Trained classifiers for nuanced sentiment detection.
+
+Model architectures
+- LSTM networks for sequence modeling
+- CNN for phrase-level features
+- Transformer models for context
+- Ensemble methods for robustness
+
+Training data requirements
+- Labeled sentiment datasets
+- Domain-specific annotation
+- Class balance considerations
+- Active learning for efficiency
+
+EMOTION DETECTION
+
+Fine-grained emotional classification beyond positive and negative.
+
+Emotion taxonomies
+- Ekman basic emotions
+- Plutchik emotion wheel
+- Marketing-relevant emotional dimensions
+
+Emotion in advertising
+- Emotional appeal categorization
+- Resonance prediction
+- Creative effectiveness signals
+
+ASPECT-BASED SENTIMENT
+
+Entity and feature-level sentiment for detailed analysis.
+
+Aspect extraction
+- Noun phrase identification
+- Dependency parsing approaches
+- Supervised extraction models
+
+Aspect sentiment association
+- Proximity-based assignment
+- Syntactic relation mapping
+- Neural attention mechanisms
+
+MARKETING APPLICATIONS
+
+Text mining techniques applied to specific marketing intelligence needs.
+
+AD COPY ANALYSIS
+
+Extracting patterns from advertising creative text.
+
+Headline analysis
+- Power word identification
+- Emotional trigger detection
+- CTA clarity scoring
+- Length optimization insights
+
+Body copy patterns
+- Benefit statement extraction
+- Feature mention frequency
+- Proof point identification
+- Urgency language detection
+
+Performance correlation
+- Text features versus CTR analysis
+- Copy elements versus conversion
+- A/B test result patterns
+
+SOCIAL LISTENING
+
+Mining social media for brand and market intelligence.
+
+Mention analysis
+- Brand mention volume tracking
+- Sentiment distribution monitoring
+- Share of voice calculation
+- Influencer identification
+
+Conversation mining
+- Thread analysis for context
+- Response pattern detection
+- Virality predictor extraction
+- Crisis signal detection
+
+Competitive intelligence
+- Competitor mention tracking
+- Comparative sentiment analysis
+- Feature request identification
+- Market positioning signals
+
+REVIEW MINING
+
+Customer feedback analysis for product and messaging insights.
+
+Review summarization
+- Key point extraction
+- Pro and con identification
+- Feature satisfaction scoring
+- Recommendation likelihood prediction
+
+Voice of customer
+- Pain point extraction
+- Unmet need identification
+- Language of customer capture
+- Benefit prioritization signals
+
+CAMPAIGN NARRATIVE ANALYSIS
+
+Processing campaign briefs and strategy documents.
+
+Theme extraction
+- Core message identification
+- Supporting point hierarchy
+- Proof point cataloging
+- Tone and voice characterization
+
+Consistency checking
+- Cross-document alignment
+- Message drift detection
+- Brand guideline adherence
+- Terminology standardization
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for UDM agent text mining operations.
+
+PIPELINE ORCHESTRATION
+
+Standard processing workflows for common use cases.
+
+Social listening pipeline
+- Data ingestion from platform APIs
+- Preprocessing with social-specific handling
+- Entity extraction for brand and product mentions
+- Sentiment scoring with aspect extraction
+- Topic modeling for theme discovery
+- Trend detection and alerting
+
+Creative analysis pipeline
+- Ad copy collection and normalization
+- Feature extraction for text metrics
+- Sentiment and emotion scoring
+- Performance correlation analysis
+- Insight generation and reporting
+
+Customer feedback pipeline
+- Review aggregation from sources
+- Preprocessing and deduplication
+- Aspect-based sentiment extraction
+- Theme clustering and summarization
+- Priority scoring for actionability
+
+CROSS-AGENT INTEGRATION
+
+Handoff patterns for downstream agent consumption.
+
+Outputs to ANL Agent
+- Quantified sentiment scores for modeling
+- Topic distributions for segmentation input
+- Text feature vectors for predictive models
+
+Outputs to AUD Agent
+- Audience language patterns
+- Interest topic distributions
+- Engagement text features
+
+Outputs to CHA Agent
+- Channel-specific text performance
+- Platform language optimization
+- Creative element effectiveness
+
+Outputs to PRF Agent
+- Copy performance correlations
+- Messaging A/B test results
+- Creative fatigue signals
+
+ERROR HANDLING
+
+Robust processing for real-world text data.
+
+Common failure modes
+- Encoding errors in source text
+- Language detection failures
+- Empty document handling
+- Malformed input recovery
+
+Quality assurance
+- Output validation checks
+- Confidence scoring for results
+- Human review triggers
+- Feedback loop integration
+
+PERFORMANCE OPTIMIZATION
+
+Efficient processing at scale.
+
+Batch processing
+- Optimal batch sizing
+- Memory management
+- Parallel processing configuration
+
+Caching strategies
+- Embedding cache for repeated text
+- Model result caching
+- Incremental update patterns
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive text mining methodology coverage for marketing applications

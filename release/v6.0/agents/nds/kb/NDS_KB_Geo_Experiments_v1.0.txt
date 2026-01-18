@@ -1,0 +1,450 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 14234
+
+PURPOSE
+
+This knowledge base provides the Neural Data Science Agent with comprehensive methodologies for geographic incrementality experiments including matched market design, synthetic control methods, and best practices for valid geographic causal inference.
+
+GEO EXPERIMENT RATIONALE
+
+Why geographic experimentation is valuable.
+
+USER-LEVEL LIMITATIONS
+
+Challenges with individual randomization.
+
+Identity fragmentation
+- Cookie deprecation impact
+- Cross-device challenges
+- Privacy restrictions
+- Platform walled gardens
+
+Treatment contamination
+- Household spillover
+- Social network effects
+- Word of mouth
+- Offline exposure
+
+Technical complexity
+- Identity resolution requirements
+- Real-time randomization
+- Platform integration
+- Quality assurance
+
+GEO EXPERIMENT ADVANTAGES
+
+Benefits of geographic approach.
+
+Identity independence
+- Aggregate measurement
+- No individual tracking
+- Privacy compliant
+- Platform agnostic
+
+Natural boundaries
+- Clear geographic separation
+- Reduced spillover
+- Clean treatment regions
+- Observable outcomes
+
+Practical implementation
+- Media buying alignment
+- Existing infrastructure
+- Scalable execution
+- Lower complexity
+
+MATCHED MARKET DESIGN
+
+Traditional geographic experiment approach.
+
+MARKET SELECTION
+
+Choosing experimental markets.
+
+Geographic unit options
+- Designated market areas
+- States or provinces
+- Metropolitan areas
+- Postal codes or ZIP codes
+
+Selection criteria
+- Population size
+- Media market independence
+- Outcome data availability
+- Treatment feasibility
+
+Exclusion criteria
+- Cross-market spillover risk
+- Unusual market characteristics
+- Data quality issues
+- Competitive dynamics
+
+MATCHING PROCESS
+
+Pairing treatment and control markets.
+
+Matching variables
+- Baseline outcome metrics
+- Demographic composition
+- Market size
+- Historical trends
+
+Matching methods
+- Propensity score matching
+- Covariate matching
+- Stratified matching
+- Optimal matching
+
+Match quality assessment
+- Balance statistics
+- Standardized differences
+- Visualization comparison
+- Sensitivity analysis
+
+TREATMENT ASSIGNMENT
+
+Allocating markets to conditions.
+
+Random assignment
+- Matched pairs randomized
+- Block randomization
+- Stratified randomization
+- Coin flip within pairs
+
+Assignment considerations
+- Balance verification
+- Sensitivity checking
+- Documentation
+- Stakeholder communication
+
+Treatment implementation
+- Geographic targeting setup
+- Media activation
+- Quality verification
+- Monitoring
+
+SYNTHETIC CONTROL METHOD
+
+Advanced geographic causal inference.
+
+SYNTHETIC CONTROL CONCEPT
+
+Constructing counterfactual regions.
+
+Core idea
+- Weighted combination of control units
+- Matches treated unit pre-treatment
+- Estimates counterfactual post-treatment
+- Treatment effect as difference
+
+Construction process
+- Select donor pool
+- Match pre-treatment outcomes
+- Optimize weights
+- Apply to post-period
+
+Advantages over matching
+- Data-driven weight selection
+- Transparent counterfactual
+- Single treated unit sufficient
+- Flexible application
+
+WEIGHT OPTIMIZATION
+
+Computing synthetic control weights.
+
+Objective function
+- Minimize pre-treatment difference
+- Weighted sum of donors
+- Non-negative weights
+- Sum to one constraint
+
+Variable selection
+- Outcome variable history
+- Predictor variables
+- Pre-treatment periods
+- Optimization stability
+
+Algorithm implementation
+- Constrained optimization
+- Cross-validation optional
+- Regularization options
+- Convergence verification
+
+INFERENCE METHODS
+
+Assessing synthetic control results.
+
+Placebo tests
+- Apply method to each control unit
+- Distribution of placebo effects
+- Treated effect relative position
+- Pseudo p-value calculation
+
+Permutation inference
+- Reassign treatment randomly
+- Effect distribution under null
+- Significance assessment
+- Robust to model specification
+
+Leave-one-out validation
+- Exclude donors sequentially
+- Sensitivity to donor composition
+- Robustness assessment
+- Outlier identification
+
+ANALYSIS METHODOLOGY
+
+Statistical approaches for geo experiments.
+
+DIFFERENCE-IN-DIFFERENCES
+
+Standard analysis approach.
+
+DID concept
+- Before-after difference
+- Treatment-control difference
+- Double differencing
+- Removes parallel trends
+
+Regression specification
+- Outcome as dependent
+- Treatment indicator
+- Time indicator
+- Interaction term for effect
+
+Parallel trends assumption
+- Pre-treatment trend similarity
+- Visual inspection
+- Statistical testing
+- Violation consequences
+
+Standard error estimation
+- Cluster by geographic unit
+- Heteroskedasticity robust
+- Autocorrelation correction
+- Conservative inference
+
+TIME SERIES APPROACHES
+
+Handling temporal correlation.
+
+Interrupted time series
+- Pre-treatment trend modeling
+- Post-treatment trend comparison
+- Level and slope changes
+- Counterfactual extrapolation
+
+Causal impact method
+- Bayesian structural time series
+- Automatic seasonality handling
+- Posterior inference
+- Credible interval estimation
+
+ARIMA-based analysis
+- Time series modeling
+- Intervention effect estimation
+- Forecast comparison
+- Residual analysis
+
+SAMPLE SIZE AND POWER
+
+Ensuring adequate experiment precision.
+
+Power calculation
+- Expected effect size
+- Variance estimation
+- Significance level
+- Power requirement
+
+Sample size drivers
+- Geographic unit variability
+- Outcome volatility
+- Effect magnitude
+- Duration of experiment
+
+Increasing power
+- More geographic units
+- Longer duration
+- Outcome variance reduction
+- Matched pair design
+
+IMPLEMENTATION CONSIDERATIONS
+
+Practical geo experiment execution.
+
+TREATMENT EXECUTION
+
+Implementing geographic treatment.
+
+Media targeting
+- DMA-level targeting
+- ZIP code targeting
+- Radius targeting
+- Cross-platform consistency
+
+Treatment verification
+- Delivery confirmation
+- Geographic precision
+- Spillover monitoring
+- Documentation
+
+Quality assurance
+- Regular monitoring
+- Anomaly detection
+- Issue resolution
+- Compliance verification
+
+CONTROL PROTECTION
+
+Maintaining clean holdout.
+
+Suppression implementation
+- Geographic exclusion lists
+- Platform configuration
+- Verification monitoring
+- Leakage detection
+
+Contamination sources
+- Cross-DMA media exposure
+- National campaign spillover
+- Organic word of mouth
+- Digital exposure leakage
+
+Mitigation strategies
+- Geographic buffers
+- Clean holdout verification
+- Exposure measurement
+- Analytical adjustment
+
+DURATION CONSIDERATIONS
+
+Experiment length decisions.
+
+Minimum duration
+- Conversion cycle coverage
+- Statistical power needs
+- Seasonality consideration
+- Carryover accumulation
+
+Maximum duration
+- Opportunity cost
+- Competitive response
+- Market changes
+- Stakeholder patience
+
+Optimal duration
+- Power requirements
+- Business constraints
+- Learning objectives
+- Practical tradeoffs
+
+RESULTS APPLICATION
+
+Using geo experiment insights.
+
+LIFT INTERPRETATION
+
+Understanding experiment results.
+
+Effect estimation
+- Point estimate extraction
+- Confidence interval
+- Significance assessment
+- Practical significance
+
+Effect decomposition
+- Channel contribution
+- Temporal pattern
+- Segment variation
+- Geographic heterogeneity
+
+Extrapolation
+- National scaling
+- Market-specific adjustment
+- Uncertainty propagation
+- Conservative estimation
+
+CALIBRATION APPLICATION
+
+Using results for measurement calibration.
+
+MMM calibration
+- Effect comparison
+- Coefficient adjustment
+- Prior specification
+- Validation integration
+
+Attribution calibration
+- Incrementality ratio derivation
+- Credit adjustment
+- Channel-specific factors
+- Ongoing calibration
+
+Budget optimization
+- ROI recalculation
+- Reallocation recommendations
+- Efficiency curves
+- Investment guidance
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for geo experiments.
+
+EXPERIMENT WORKFLOW
+
+Standard geo experiment process.
+
+Design phase
+- Objective specification
+- Market selection
+- Match development
+- Power analysis
+
+Execution phase
+- Treatment implementation
+- Control protection
+- Monitoring setup
+- Quality assurance
+
+Analysis phase
+- Data collection
+- Method application
+- Result estimation
+- Validation checks
+
+Application phase
+- Insight extraction
+- Calibration computation
+- Report generation
+- Recommendation development
+
+CROSS-AGENT INTEGRATION
+
+Geo experiment outputs for downstream agents.
+
+Outputs to ANL Agent
+- Geographic lift estimates
+- Calibration factors
+- ROI adjustments
+- Projection inputs
+
+Outputs to CHA Agent
+- Channel incrementality by geo
+- Budget efficiency data
+- Allocation recommendations
+- Geographic optimization
+
+Outputs to PRF Agent
+- Market performance data
+- Lift benchmarks
+- Trend analysis inputs
+- Monitoring baselines
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive geographic experiment methodology

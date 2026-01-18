@@ -1,0 +1,434 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 14567
+
+PURPOSE
+
+This knowledge base provides the Unstructured Data Mining Agent with natural language processing methodologies and applications for marketing contexts including text classification, information extraction, summarization, and language generation.
+
+TEXT CLASSIFICATION
+
+Categorizing text content into predefined classes for automated processing and routing.
+
+DOCUMENT CLASSIFICATION
+
+Assigning category labels to complete documents.
+
+Multi-class classification
+- Single label assignment
+- Mutually exclusive categories
+- Softmax output layer
+- Argmax prediction selection
+
+Multi-label classification
+- Multiple labels per document
+- Independent label predictions
+- Sigmoid output activations
+- Threshold-based label assignment
+
+Hierarchical classification
+- Nested category structures
+- Parent-child label relationships
+- Level-wise classification
+- Constraint-aware predictions
+
+MARKETING CLASSIFICATION APPLICATIONS
+
+Domain-specific classification use cases.
+
+Content categorization
+- Blog post topic classification
+- Social media content typing
+- Email category assignment
+- Support ticket routing
+
+Intent classification
+- Customer inquiry intent detection
+- Purchase intent scoring
+- Complaint versus question distinction
+- Action request identification
+
+Sentiment classification
+- Positive negative neutral assignment
+- Fine-grained sentiment scales
+- Aspect-specific sentiment
+- Emotion category classification
+
+Brand relevance classification
+- Brand mention relevance scoring
+- Competitive mention identification
+- Industry topic classification
+- Campaign relevance detection
+
+MODEL ARCHITECTURES
+
+Classification model options.
+
+Traditional models
+- Naive Bayes for baseline
+- SVM with TF-IDF features
+- Logistic regression for interpretability
+- Random forest for robustness
+
+Neural network models
+- CNN for phrase patterns
+- LSTM for sequence context
+- Bi-LSTM for bidirectional context
+- Attention mechanisms for focus
+
+Transformer models
+- BERT fine-tuning approach
+- DistilBERT for efficiency
+- RoBERTa for improved training
+- Domain-adapted transformers
+
+INFORMATION EXTRACTION
+
+Extracting structured information from unstructured text.
+
+NAMED ENTITY RECOGNITION
+
+Identifying and classifying named entities.
+
+Standard entity types
+- Person name extraction
+- Organization identification
+- Location recognition
+- Date and time extraction
+
+Marketing entity types
+- Brand name recognition
+- Product name extraction
+- Campaign name identification
+- Channel and platform names
+
+Custom entity training
+- Domain-specific entity definition
+- Training data annotation
+- Model fine-tuning approaches
+- Evaluation and iteration
+
+Entity linking
+- Entity disambiguation
+- Knowledge base connection
+- Canonical form resolution
+- Coreference handling
+
+RELATION EXTRACTION
+
+Identifying relationships between entities.
+
+Relation types
+- Product-brand relationships
+- Person-organization associations
+- Event-location connections
+- Cause-effect relationships
+
+Extraction approaches
+- Pattern-based extraction
+- Supervised classification
+- Distant supervision methods
+- Neural relation extraction
+
+Marketing relation applications
+- Influencer-brand partnerships
+- Competitor product comparisons
+- Customer-product associations
+- Campaign-outcome connections
+
+EVENT EXTRACTION
+
+Identifying events and their components.
+
+Event components
+- Event trigger identification
+- Participant role assignment
+- Temporal anchoring
+- Location specification
+
+Marketing events
+- Product launch announcements
+- Campaign start and end dates
+- Partnership announcements
+- Crisis event detection
+
+Event timeline construction
+- Chronological ordering
+- Duration estimation
+- Causal chain building
+- Narrative reconstruction
+
+TEXT SUMMARIZATION
+
+Condensing text content while preserving key information.
+
+EXTRACTIVE SUMMARIZATION
+
+Selecting important sentences from source text.
+
+Sentence scoring methods
+- Position-based scoring
+- TF-IDF importance weighting
+- TextRank graph-based scoring
+- Supervised relevance scoring
+
+Sentence selection
+- Greedy selection algorithms
+- Integer linear programming
+- MMR for diversity
+- Length constraint handling
+
+Quality considerations
+- Coherence between selected sentences
+- Redundancy elimination
+- Coverage of key points
+- Readability of output
+
+ABSTRACTIVE SUMMARIZATION
+
+Generating new text that captures source meaning.
+
+Sequence-to-sequence models
+- Encoder-decoder architecture
+- Attention mechanisms
+- Copy mechanisms for fidelity
+- Pointer-generator networks
+
+Transformer summarization
+- BART for summarization
+- T5 text-to-text approach
+- Pegasus pre-training
+- LED for long documents
+
+Generation controls
+- Length control parameters
+- Abstractiveness tuning
+- Factuality constraints
+- Style matching
+
+MARKETING SUMMARIZATION APPLICATIONS
+
+Domain-specific summarization use cases.
+
+Report summarization
+- Campaign report condensation
+- Performance summary generation
+- Competitive intelligence briefs
+- Market research highlights
+
+Content summarization
+- Article abstract generation
+- Social media thread summaries
+- Review compilation summaries
+- News digest creation
+
+Meeting and call summarization
+- Call transcript highlights
+- Meeting action item extraction
+- Key decision identification
+- Follow-up task summarization
+
+QUESTION ANSWERING
+
+Extracting answers to natural language questions.
+
+EXTRACTIVE QA
+
+Finding answer spans in context documents.
+
+Span extraction models
+- BERT-based span prediction
+- Start and end position prediction
+- Confidence score calibration
+- No-answer detection
+
+Context retrieval
+- Document retrieval for open QA
+- Passage ranking approaches
+- Dense retrieval methods
+- Hybrid retrieval strategies
+
+GENERATIVE QA
+
+Generating answers based on context.
+
+Generation approaches
+- Seq2seq answer generation
+- Fusion-in-decoder architecture
+- Retrieval-augmented generation
+- Fact-grounded generation
+
+Answer quality
+- Factual accuracy verification
+- Source attribution
+- Confidence expression
+- Uncertainty acknowledgment
+
+MARKETING QA APPLICATIONS
+
+Question answering for marketing use cases.
+
+Knowledge base QA
+- Product information queries
+- Policy and guideline questions
+- Historical campaign questions
+- Benchmark and metric queries
+
+Conversational QA
+- Multi-turn question handling
+- Context carryover
+- Clarification question generation
+- Follow-up handling
+
+Analytical QA
+- Performance metric questions
+- Comparative analysis queries
+- Trend explanation requests
+- Recommendation requests
+
+LANGUAGE GENERATION
+
+Producing natural language text for marketing applications.
+
+CONTENT GENERATION
+
+Creating marketing content.
+
+Ad copy generation
+- Headline generation
+- Body copy creation
+- CTA generation
+- Variation production
+
+Social content generation
+- Post text generation
+- Hashtag suggestion
+- Caption creation
+- Response generation
+
+Email generation
+- Subject line generation
+- Email body creation
+- Personalization insertion
+- A/B variant generation
+
+CONTROLLED GENERATION
+
+Guiding generated content characteristics.
+
+Style control
+- Tone specification
+- Formality level
+- Brand voice matching
+- Audience adaptation
+
+Content control
+- Topic focus enforcement
+- Keyword inclusion
+- Length constraints
+- Format adherence
+
+Quality control
+- Factual grounding
+- Brand safety filtering
+- Bias detection
+- Plagiarism prevention
+
+PERSONALIZATION
+
+Tailoring generated content.
+
+Audience adaptation
+- Segment-specific messaging
+- Persona-based content
+- Journey stage relevance
+- Interest alignment
+
+Dynamic insertion
+- Name personalization
+- Product recommendation insertion
+- Offer customization
+- Location relevance
+
+Template-based generation
+- Slot filling approaches
+- Template selection
+- Natural variation
+- Quality assurance
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for NLP operations.
+
+NLP PIPELINES
+
+Standard workflows for NLP tasks.
+
+Classification pipeline
+- Text preprocessing
+- Feature extraction or encoding
+- Model inference
+- Post-processing and routing
+
+Extraction pipeline
+- Document preprocessing
+- Entity recognition
+- Relation extraction
+- Structured output formatting
+
+Generation pipeline
+- Input processing
+- Context retrieval if needed
+- Generation execution
+- Output filtering and validation
+
+CROSS-AGENT INTEGRATION
+
+NLP outputs for downstream agents.
+
+Outputs to DOC Agent
+- Summarized content blocks
+- Generated draft content
+- Extracted key points
+- Formatted text outputs
+
+Outputs to AUD Agent
+- Classification labels for segmentation
+- Extracted preferences
+- Intent signals
+- Engagement indicators
+
+Outputs to PRF Agent
+- Content quality scores
+- Message effectiveness predictions
+- Brand safety assessments
+- Compliance check results
+
+Outputs to CHA Agent
+- Channel-optimized content
+- Platform-specific adaptations
+- Audience-matched messaging
+- Format recommendations
+
+MODEL MANAGEMENT
+
+NLP model operational considerations.
+
+Model selection criteria
+- Task performance requirements
+- Latency constraints
+- Resource availability
+- Maintenance considerations
+
+Model updating
+- Fine-tuning schedules
+- Performance monitoring
+- Drift detection
+- Retraining triggers
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive NLP application methodology for marketing contexts

@@ -1,0 +1,462 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 13987
+
+PURPOSE
+
+This knowledge base provides the Neural Data Science Agent with comprehensive methodologies for modeling adstock carryover effects and saturation curves in marketing response functions for accurate effectiveness measurement.
+
+ADSTOCK FUNDAMENTALS
+
+Understanding how marketing effects persist and accumulate over time.
+
+CARRYOVER CONCEPT
+
+The persistence of marketing impact beyond exposure.
+
+Memory effect
+- Consumer memory of advertising
+- Repeated exposure reinforcement
+- Brand salience maintenance
+- Delayed action triggering
+
+Behavioral delay
+- Purchase cycle timing
+- Consideration period effects
+- Decision latency
+- Channel-specific delays
+
+Cumulative impact
+- Effect stacking over exposures
+- Building toward threshold
+- Compound awareness effects
+- Long-term brand building
+
+DECAY MODELS
+
+Mathematical representations of effect persistence.
+
+Geometric decay
+- Constant decay rate assumption
+- Exponential decline pattern
+- Single parameter simplicity
+- Most common specification
+
+Delayed decay
+- Initial peak effect maintenance
+- Delayed decline onset
+- Two-parameter specification
+- Captures activation delay
+
+Weibull decay
+- Flexible decay shape
+- Accelerating or decelerating decline
+- Two-parameter specification
+- Broader pattern coverage
+
+Polynomial decay
+- Non-exponential decline
+- Custom shape specification
+- Higher computational cost
+- Specialized applications
+
+ADSTOCK PARAMETERIZATION
+
+Key parameters in adstock specifications.
+
+DECAY RATE
+
+Speed of effect diminishment.
+
+Decay rate definition
+- Proportion retained per period
+- Range zero to one
+- Higher values mean slower decay
+- Channel-specific variation
+
+Half-life interpretation
+- Time to fifty percent effect
+- More intuitive communication
+- Decay rate conversion formula
+- Stakeholder-friendly metric
+
+Estimation approaches
+- Grid search optimization
+- Bayesian estimation
+- Non-linear least squares
+- Profile likelihood methods
+
+Channel benchmarks
+- Television decay rates 0.7 to 0.9
+- Radio decay rates 0.5 to 0.7
+- Digital display 0.3 to 0.5
+- Search minimal carryover
+- Social media 0.4 to 0.6
+- Print 0.6 to 0.8
+
+PEAK LAG
+
+Delay to maximum effect.
+
+Lag specification
+- Periods to peak effect
+- Zero for immediate impact
+- Non-zero for delayed channels
+- Maximum typical lag periods
+
+Channel lag patterns
+- Search zero lag typical
+- Display one to two period lag
+- Television one period lag
+- Brand campaigns longer lag
+
+Lag-decay interaction
+- Combined specification approaches
+- Shape function parameterization
+- Visualization for validation
+- Business logic checking
+
+ADSTOCK WINDOW
+
+Duration of carryover consideration.
+
+Window selection
+- Maximum periods to include
+- Computational considerations
+- Accuracy tradeoffs
+- Standard window lengths
+
+Truncation effects
+- Long tail truncation impact
+- Cumulative effect capture
+- Window sensitivity analysis
+- Practical recommendations
+
+SATURATION FUNDAMENTALS
+
+Understanding diminishing returns in marketing response.
+
+SATURATION CONCEPT
+
+Why marketing effectiveness decreases at higher spending.
+
+Audience exhaustion
+- Finite reachable audience
+- Frequency saturation
+- Diminishing attention
+- Message wear-out
+
+Marginal return decline
+- First exposures most valuable
+- Incremental impact reduction
+- Efficiency frontier
+- Optimal spend identification
+
+Economic interpretation
+- Marketing supply curve
+- Demand elasticity changes
+- Budget efficiency implications
+- Reallocation opportunities
+
+SATURATION FUNCTIONS
+
+Mathematical forms for diminishing returns.
+
+Logarithmic transformation
+- Simple log of spend
+- Constant elasticity assumption
+- Easy interpretation
+- Limited shape flexibility
+
+Hill function
+- S-curve specification
+- Asymptote parameter
+- Inflection point control
+- Half-saturation point
+
+Adbudg function
+- Advertising budget model
+- Flexible response shape
+- Marketing-specific design
+- Multiple parameter control
+
+Michaelis-Menten
+- Biochemistry origin
+- Two-parameter specification
+- Maximum rate parameter
+- Affinity parameter
+
+SATURATION PARAMETERIZATION
+
+Key parameters in saturation specifications.
+
+SATURATION POINT
+
+Level of maximum achievable effect.
+
+Asymptote estimation
+- Maximum response level
+- May be difficult to observe
+- Prior information value
+- Theoretical versus observed maximum
+
+Practical interpretation
+- Unreachable full saturation
+- Efficient range definition
+- Budget ceiling implications
+- Strategic planning use
+
+INFLECTION POINT
+
+Transition in response curve shape.
+
+Half-saturation definition
+- Spend at fifty percent maximum
+- Curve shape control
+- Channel efficiency indicator
+- Budget benchmark
+
+Estimation challenges
+- Data coverage requirements
+- Wide spend variation needed
+- Identifiability issues
+- Prior stabilization
+
+SHAPE PARAMETERS
+
+Additional curve flexibility controls.
+
+Hill exponent
+- Steepness of transition
+- Values around one typical
+- Higher means sharper transition
+- Identification considerations
+
+Scale parameters
+- Input scaling normalization
+- Numerical stability
+- Interpretation alignment
+- Unit consistency
+
+COMBINED ADSTOCK-SATURATION
+
+Integrating both transformations.
+
+TRANSFORMATION ORDER
+
+Sequence of applying transformations.
+
+Saturation first
+- Apply saturation to current period
+- Then apply adstock to saturated values
+- Most common specification
+- Intuitive for efficiency then memory
+
+Adstock first
+- Apply adstock to raw spending
+- Then apply saturation to adstocked values
+- Cumulative exposure saturation
+- Alternative interpretation
+
+Simultaneous specification
+- Joint transformation function
+- More complex parameterization
+- Model flexibility
+- Estimation challenges
+
+ESTIMATION APPROACHES
+
+Fitting combined transformations.
+
+Profile likelihood
+- Fix transformation parameters
+- Estimate linear parameters
+- Grid search over transformations
+- Nested optimization
+
+Full optimization
+- Simultaneous all-parameter estimation
+- Non-linear optimization algorithms
+- Initial value sensitivity
+- Convergence challenges
+
+Bayesian joint estimation
+- Prior specification for all parameters
+- Joint posterior sampling
+- Uncertainty propagation
+- Regularization through priors
+
+VALIDATION APPROACHES
+
+Confirming transformation appropriateness.
+
+FIT ASSESSMENT
+
+Evaluating model quality.
+
+In-sample fit
+- R-squared evaluation
+- Residual analysis
+- Fit improvement from transformations
+- Decomposition visualization
+
+Out-of-sample validation
+- Holdout period testing
+- Rolling window validation
+- Prediction accuracy metrics
+- Generalization assessment
+
+REASONABLENESS CHECKS
+
+Business logic validation.
+
+Decay rate plausibility
+- Comparison to benchmarks
+- Physical interpretation check
+- Cross-channel consistency
+- Extreme value investigation
+
+Saturation plausibility
+- Observed spend coverage
+- Implied efficiency curves
+- Budget recommendation review
+- Stakeholder validation
+
+SENSITIVITY ANALYSIS
+
+Robustness evaluation.
+
+Parameter sensitivity
+- Objective function surface
+- Alternative optima detection
+- Confidence region estimation
+- Practical impact assessment
+
+Specification sensitivity
+- Alternative functional forms
+- Different window lengths
+- Transformation order changes
+- Model comparison
+
+CHANNEL-SPECIFIC GUIDANCE
+
+Tailored transformation parameters by channel.
+
+TELEVISION
+
+Broadcast and streaming video.
+
+Adstock characteristics
+- High persistence typical
+- Decay rates 0.7 to 0.9
+- Half-life one to three weeks
+- Lag zero to one period
+
+Saturation characteristics
+- Strong diminishing returns
+- Reach saturation primary driver
+- National versus local differences
+- GRP-based parameterization
+
+DIGITAL DISPLAY
+
+Programmatic and direct display.
+
+Adstock characteristics
+- Lower persistence than TV
+- Decay rates 0.3 to 0.5
+- Half-life days to one week
+- Minimal lag typical
+
+Saturation characteristics
+- Frequency saturation important
+- Viewability considerations
+- Audience segment variation
+- Impression-based analysis
+
+PAID SEARCH
+
+Search engine marketing.
+
+Adstock characteristics
+- Minimal carryover typical
+- Near-instant effect
+- Decay rates below 0.3
+- Zero lag standard
+
+Saturation characteristics
+- Keyword-level saturation
+- Query volume limits
+- Competitive dynamics
+- Impression share constraints
+
+SOCIAL MEDIA
+
+Paid social advertising.
+
+Adstock characteristics
+- Moderate persistence
+- Decay rates 0.4 to 0.6
+- Platform-specific variation
+- Content type differences
+
+Saturation characteristics
+- Audience size limits
+- Frequency cap effects
+- Format fatigue variation
+- Engagement saturation
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for adstock and saturation modeling.
+
+TRANSFORMATION WORKFLOW
+
+Standard process for transformation fitting.
+
+Exploratory analysis
+- Spend distribution review
+- Historical pattern assessment
+- Benchmark review
+- Initial parameter ranges
+
+Estimation phase
+- Transformation parameter search
+- Model fitting with transforms
+- Alternative specification testing
+- Selection criteria application
+
+Validation phase
+- Reasonableness checking
+- Sensitivity analysis
+- Holdout evaluation
+- Documentation
+
+CROSS-AGENT INTEGRATION
+
+Transformation outputs for downstream agents.
+
+Outputs to ANL Agent
+- Fitted transformation parameters
+- Channel-specific curves
+- Efficient spend ranges
+- Optimization inputs
+
+Outputs to CHA Agent
+- Saturation point estimates
+- Diminishing returns curves
+- Budget efficiency indicators
+- Reallocation recommendations
+
+Outputs to PRF Agent
+- Carryover effect estimates
+- Lagged effect attribution
+- Persistence metrics
+- Trend decomposition
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive adstock and saturation methodology for marketing response modeling

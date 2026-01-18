@@ -1,0 +1,421 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 13562
+
+PURPOSE
+
+This knowledge base provides the Unstructured Data Mining Agent with methodologies for analyzing marketing technology logs including ad server logs, web analytics events, and platform data to extract actionable insights and identify optimization opportunities.
+
+LOG DATA FUNDAMENTALS
+
+Marketing technology generates extensive log data requiring specialized processing approaches.
+
+LOG TYPES AND SOURCES
+
+Common marketing log sources and their characteristics.
+
+Ad server logs
+- Impression logs with placement and creative data
+- Click logs with user and session context
+- Conversion logs with attribution information
+- Bid request and response logs
+
+Web analytics logs
+- Page view events with URL and referrer
+- Custom event tracking data
+- E-commerce transaction logs
+- User session and journey data
+
+Platform-specific logs
+- DSP bid and win logs
+- DMP segment membership logs
+- CDP event streams
+- Tag management firing logs
+
+LOG STRUCTURE PATTERNS
+
+Common formats and parsing approaches.
+
+Structured log formats
+- JSON event payloads
+- CSV export formats
+- Delimited text logs
+- XML configuration logs
+
+Semi-structured patterns
+- Key-value pair logs
+- Mixed format entries
+- Nested data structures
+- Variable field presence
+
+Log parsing strategies
+- Schema-based parsing
+- Regex pattern extraction
+- Streaming parser implementation
+- Error-tolerant processing
+
+DATA QUALITY CONSIDERATIONS
+
+Log data quality challenges and mitigations.
+
+Common quality issues
+- Missing field values
+- Timestamp inconsistencies
+- Encoding problems
+- Truncated entries
+
+Quality validation
+- Schema conformance checking
+- Value range validation
+- Referential integrity verification
+- Duplicate detection
+
+Error handling
+- Malformed entry isolation
+- Partial record recovery
+- Error rate monitoring
+- Quality metric reporting
+
+LOG PROCESSING PIPELINES
+
+Systematic approaches for log data transformation.
+
+INGESTION PATTERNS
+
+Efficient log data collection.
+
+Batch ingestion
+- File-based collection scheduling
+- Compression handling
+- Archive processing
+- Incremental load patterns
+
+Stream ingestion
+- Real-time event consumption
+- Buffer management
+- Backpressure handling
+- Exactly-once processing guarantees
+
+Hybrid approaches
+- Lambda architecture implementation
+- Speed and batch layer coordination
+- Serving layer updates
+- Late data handling
+
+TRANSFORMATION OPERATIONS
+
+Converting raw logs to analysis-ready formats.
+
+Parsing and extraction
+- Field extraction from raw text
+- Type casting and validation
+- Nested structure flattening
+- Array expansion handling
+
+Enrichment processing
+- Timestamp normalization to UTC
+- Geographic lookup from IP
+- Device and browser parsing
+- Referrer URL categorization
+
+Aggregation patterns
+- Time-based rollups
+- Dimension-based grouping
+- Metric computation
+- Window function application
+
+SESSION RECONSTRUCTION
+
+Building user journeys from event logs.
+
+Sessionization logic
+- Session timeout definition
+- Session boundary detection
+- Multi-device session linking
+- Cross-domain session stitching
+
+Journey construction
+- Event sequencing by timestamp
+- Page flow path building
+- Conversion path extraction
+- Drop-off point identification
+
+Session metrics
+- Session duration calculation
+- Page depth measurement
+- Engagement scoring
+- Conversion attribution
+
+PATTERN DETECTION
+
+Identifying meaningful patterns within log data.
+
+ANOMALY DETECTION
+
+Spotting unusual patterns requiring attention.
+
+Statistical anomaly methods
+- Z-score based detection
+- IQR outlier identification
+- Moving average deviation
+- Seasonal decomposition residuals
+
+Time series anomalies
+- Trend breaks detection
+- Seasonality disruption
+- Level shift identification
+- Spike and dip detection
+
+Contextual anomalies
+- Expected pattern deviation
+- Cohort comparison anomalies
+- Cross-metric correlation breaks
+- Sequence pattern violations
+
+Marketing anomaly applications
+- Traffic spike investigation
+- Conversion rate drops
+- Click fraud indicators
+- Tag firing failures
+
+TREND IDENTIFICATION
+
+Detecting meaningful changes over time.
+
+Trend metrics
+- Linear trend calculation
+- Exponential smoothing
+- Seasonal trend decomposition
+- Change point detection
+
+Trend classification
+- Growth versus decline
+- Acceleration patterns
+- Plateau identification
+- Cyclical patterns
+
+Trend alerting
+- Threshold-based notifications
+- Forecast deviation alerts
+- Trend reversal detection
+- Significance testing
+
+SEQUENCE MINING
+
+Discovering ordered patterns in event data.
+
+Frequent sequence patterns
+- Sequential pattern mining algorithms
+- Support and confidence thresholds
+- Gap constraint handling
+- Itemset to sequence extension
+
+Marketing sequence applications
+- Common conversion paths
+- Content consumption patterns
+- Campaign touchpoint sequences
+- Churn indicator sequences
+
+Pattern utilization
+- Journey optimization recommendations
+- Targeting rule generation
+- Predictive trigger identification
+- Personalization pathway design
+
+PERFORMANCE ANALYSIS
+
+Extracting performance insights from log data.
+
+THROUGHPUT ANALYSIS
+
+Understanding system and campaign performance volumes.
+
+Volume metrics
+- Request per second calculation
+- Daily and hourly patterns
+- Peak load identification
+- Capacity utilization tracking
+
+Performance trending
+- Volume growth rates
+- Seasonal pattern recognition
+- Forecasting future volumes
+- Capacity planning inputs
+
+Comparative analysis
+- Period over period comparison
+- Channel volume distribution
+- Creative performance distribution
+- Audience segment volumes
+
+LATENCY ANALYSIS
+
+Timing and response analysis.
+
+Latency metrics
+- Response time distribution
+- Percentile calculations
+- Timeout rate tracking
+- Processing duration analysis
+
+Performance diagnosis
+- Slow response investigation
+- Bottleneck identification
+- Dependency latency impact
+- Geographic latency patterns
+
+Optimization insights
+- Caching opportunity identification
+- Query optimization targets
+- Infrastructure recommendations
+- CDN effectiveness analysis
+
+ERROR ANALYSIS
+
+Understanding and addressing failures.
+
+Error categorization
+- Error code classification
+- Error message clustering
+- Root cause grouping
+- Severity level assignment
+
+Error trending
+- Error rate monitoring
+- New error detection
+- Resolution tracking
+- Regression identification
+
+Impact assessment
+- User impact quantification
+- Revenue impact estimation
+- Experience degradation measurement
+- Priority scoring for resolution
+
+ATTRIBUTION LOG ANALYSIS
+
+Processing logs for marketing attribution.
+
+TOUCHPOINT EXTRACTION
+
+Identifying attribution-relevant events.
+
+Touchpoint identification
+- Channel source classification
+- Campaign parameter extraction
+- Creative identifier parsing
+- Placement information capture
+
+Touchpoint enrichment
+- Cost data association
+- Channel taxonomy mapping
+- Creative metadata linking
+- Audience segment attachment
+
+Quality validation
+- Missing attribution data detection
+- Duplicate touchpoint handling
+- Timestamp accuracy verification
+- Cross-device reconciliation
+
+PATH ANALYSIS
+
+Understanding customer journey patterns.
+
+Path construction
+- Chronological touchpoint ordering
+- Cross-session path building
+- Path deduplication logic
+- Conversion endpoint identification
+
+Path metrics
+- Path length distribution
+- Time to conversion analysis
+- Channel sequence patterns
+- Assist frequency calculation
+
+Path segmentation
+- Converter versus non-converter paths
+- High value customer paths
+- Channel-specific entry paths
+- Device transition patterns
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for log analysis operations.
+
+PROCESSING WORKFLOWS
+
+Standard pipelines for log analysis.
+
+Real-time monitoring pipeline
+- Stream ingestion configuration
+- Real-time parsing and validation
+- Anomaly detection processing
+- Alert generation and routing
+- Dashboard metric updates
+
+Batch analysis pipeline
+- Scheduled file collection
+- Historical data processing
+- Aggregation computation
+- Report generation
+- Archive management
+
+Attribution processing pipeline
+- Touchpoint log collection
+- Session and journey reconstruction
+- Attribution model application
+- Credit distribution calculation
+- Reporting data preparation
+
+CROSS-AGENT INTEGRATION
+
+Outputs for downstream agent consumption.
+
+Outputs to ANL Agent
+- Aggregated performance metrics
+- Attribution model inputs
+- Projection baseline data
+- Correlation-ready time series
+
+Outputs to PRF Agent
+- Anomaly alerts and context
+- Performance trend data
+- Error impact quantification
+- Optimization opportunity flags
+
+Outputs to AUD Agent
+- Behavioral pattern data
+- Segment performance metrics
+- Journey stage populations
+- Engagement scoring inputs
+
+Outputs to SPO Agent
+- Supply path performance logs
+- Fee and cost data extraction
+- Partner performance metrics
+- Inventory quality signals
+
+OPERATIONAL CONSIDERATIONS
+
+Reliable log processing operations.
+
+Scalability patterns
+- Horizontal scaling approaches
+- Partition strategy design
+- Resource allocation optimization
+- Cost management practices
+
+Reliability measures
+- Checkpointing implementation
+- Recovery procedure design
+- Data lineage tracking
+- Audit trail maintenance
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive log analysis methodology for marketing technology data

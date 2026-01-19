@@ -1,0 +1,100 @@
+{
+  "table_name": "eap_capability_implementation",
+  "display_name": "EAP Capability Implementation",
+  "description": "Implementation registry per environment with priority ordering",
+  "columns": [
+    {
+      "name": "eap_capability_implementationid",
+      "display_name": "Implementation ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "capability_code",
+      "display_name": "Capability Code",
+      "type": "nvarchar",
+      "max_length": 50,
+      "required": true
+    },
+    {
+      "name": "environment_code",
+      "display_name": "Environment",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "MASTERCARD"},
+        {"value": 2, "label": "PERSONAL"}
+      ]
+    },
+    {
+      "name": "implementation_type",
+      "display_name": "Implementation Type",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "AI_BUILDER_PROMPT"},
+        {"value": 2, "label": "AZURE_FUNCTION"},
+        {"value": 3, "label": "HTTP_ENDPOINT"},
+        {"value": 4, "label": "DATAVERSE_LOGIC"}
+      ]
+    },
+    {
+      "name": "implementation_reference",
+      "display_name": "Implementation Reference",
+      "type": "nvarchar",
+      "max_length": 500,
+      "required": true
+    },
+    {
+      "name": "configuration_json",
+      "display_name": "Configuration",
+      "type": "nvarchar",
+      "max_length": 8000,
+      "required": false
+    },
+    {
+      "name": "priority_order",
+      "display_name": "Priority",
+      "type": "int",
+      "required": true,
+      "default": 1
+    },
+    {
+      "name": "is_enabled",
+      "display_name": "Is Enabled",
+      "type": "bit",
+      "required": true,
+      "default": true
+    },
+    {
+      "name": "fallback_implementation_id",
+      "display_name": "Fallback Implementation",
+      "type": "lookup",
+      "lookup_table": "eap_capability_implementation",
+      "required": false
+    },
+    {
+      "name": "timeout_seconds",
+      "display_name": "Timeout",
+      "type": "int",
+      "required": false,
+      "default": 30
+    },
+    {
+      "name": "retry_count",
+      "display_name": "Retry Count",
+      "type": "int",
+      "required": false,
+      "default": 3
+    },
+    {
+      "name": "retry_delay_ms",
+      "display_name": "Retry Delay",
+      "type": "int",
+      "required": false,
+      "default": 1000
+    }
+  ]
+}

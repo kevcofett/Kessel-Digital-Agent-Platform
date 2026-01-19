@@ -1,0 +1,78 @@
+{
+  "table_name": "eap_capability",
+  "display_name": "EAP Capability",
+  "description": "Defines what capabilities exist in the system, independent of implementation",
+  "columns": [
+    {
+      "name": "eap_capabilityid",
+      "display_name": "Capability ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "capability_code",
+      "display_name": "Capability Code",
+      "type": "nvarchar",
+      "max_length": 50,
+      "required": true
+    },
+    {
+      "name": "capability_name",
+      "display_name": "Capability Name",
+      "type": "nvarchar",
+      "max_length": 100,
+      "required": true
+    },
+    {
+      "name": "description",
+      "display_name": "Description",
+      "type": "nvarchar",
+      "max_length": 2000,
+      "required": false
+    },
+    {
+      "name": "agent_code",
+      "display_name": "Agent Code",
+      "type": "nvarchar",
+      "max_length": 10,
+      "required": true
+    },
+    {
+      "name": "input_schema",
+      "display_name": "Input Schema",
+      "type": "nvarchar",
+      "max_length": 8000,
+      "required": false
+    },
+    {
+      "name": "output_schema",
+      "display_name": "Output Schema",
+      "type": "nvarchar",
+      "max_length": 8000,
+      "required": false
+    },
+    {
+      "name": "is_active",
+      "display_name": "Is Active",
+      "type": "bit",
+      "required": true,
+      "default": true
+    },
+    {
+      "name": "version",
+      "display_name": "Version",
+      "type": "nvarchar",
+      "max_length": 20,
+      "required": true
+    },
+    {
+      "name": "timeout_default_seconds",
+      "display_name": "Default Timeout",
+      "type": "int",
+      "required": false,
+      "default": 30
+    }
+  ]
+}

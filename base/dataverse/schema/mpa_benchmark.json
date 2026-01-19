@@ -1,0 +1,108 @@
+{
+  "table_name": "mpa_benchmark",
+  "display_name": "MPA Benchmark",
+  "description": "Vertical × channel × KPI benchmark data",
+  "columns": [
+    {
+      "name": "mpa_benchmarkid",
+      "display_name": "Benchmark ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "vertical_code",
+      "display_name": "Vertical Code",
+      "type": "nvarchar",
+      "max_length": 20,
+      "required": true
+    },
+    {
+      "name": "channel_code",
+      "display_name": "Channel Code",
+      "type": "nvarchar",
+      "max_length": 30,
+      "required": true
+    },
+    {
+      "name": "kpi_code",
+      "display_name": "KPI Code",
+      "type": "nvarchar",
+      "max_length": 30,
+      "required": true
+    },
+    {
+      "name": "benchmark_p10",
+      "display_name": "Benchmark P10",
+      "type": "decimal",
+      "precision": 18,
+      "scale": 6,
+      "required": false
+    },
+    {
+      "name": "benchmark_p25",
+      "display_name": "Benchmark P25",
+      "type": "decimal",
+      "precision": 18,
+      "scale": 6,
+      "required": false
+    },
+    {
+      "name": "benchmark_p50",
+      "display_name": "Benchmark P50 (Median)",
+      "type": "decimal",
+      "precision": 18,
+      "scale": 6,
+      "required": true
+    },
+    {
+      "name": "benchmark_p75",
+      "display_name": "Benchmark P75",
+      "type": "decimal",
+      "precision": 18,
+      "scale": 6,
+      "required": false
+    },
+    {
+      "name": "benchmark_p90",
+      "display_name": "Benchmark P90",
+      "type": "decimal",
+      "precision": 18,
+      "scale": 6,
+      "required": false
+    },
+    {
+      "name": "sample_size",
+      "display_name": "Sample Size",
+      "type": "int",
+      "required": false
+    },
+    {
+      "name": "data_source",
+      "display_name": "Data Source",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": false
+    },
+    {
+      "name": "effective_date",
+      "display_name": "Effective Date",
+      "type": "datetime",
+      "required": true
+    },
+    {
+      "name": "expiry_date",
+      "display_name": "Expiry Date",
+      "type": "datetime",
+      "required": false
+    },
+    {
+      "name": "is_active",
+      "display_name": "Is Active",
+      "type": "bit",
+      "required": true,
+      "default": true
+    }
+  ]
+}

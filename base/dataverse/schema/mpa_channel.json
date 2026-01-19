@@ -1,0 +1,126 @@
+{
+  "table_name": "mpa_channel",
+  "display_name": "MPA Channel",
+  "description": "Reference data for marketing channels with capabilities and benchmarks",
+  "columns": [
+    {
+      "name": "mpa_channelid",
+      "display_name": "Channel ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "channel_code",
+      "display_name": "Channel Code",
+      "type": "nvarchar",
+      "max_length": 30,
+      "required": true
+    },
+    {
+      "name": "channel_name",
+      "display_name": "Channel Name",
+      "type": "nvarchar",
+      "max_length": 100,
+      "required": true
+    },
+    {
+      "name": "channel_category",
+      "display_name": "Category",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "PAID_SEARCH"},
+        {"value": 2, "label": "PAID_SOCIAL"},
+        {"value": 3, "label": "DISPLAY"},
+        {"value": 4, "label": "VIDEO"},
+        {"value": 5, "label": "AUDIO"},
+        {"value": 6, "label": "CTV"},
+        {"value": 7, "label": "OOH"},
+        {"value": 8, "label": "AFFILIATE"},
+        {"value": 9, "label": "DIRECT"},
+        {"value": 10, "label": "RETAIL_MEDIA"},
+        {"value": 11, "label": "EMERGING"}
+      ]
+    },
+    {
+      "name": "funnel_stage",
+      "display_name": "Funnel Stage",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "UPPER_FUNNEL"},
+        {"value": 2, "label": "MID_FUNNEL"},
+        {"value": 3, "label": "LOWER_FUNNEL"},
+        {"value": 4, "label": "FULL_FUNNEL"}
+      ]
+    },
+    {
+      "name": "supports_awareness",
+      "display_name": "Supports Awareness",
+      "type": "bit",
+      "required": true,
+      "default": false
+    },
+    {
+      "name": "supports_consideration",
+      "display_name": "Supports Consideration",
+      "type": "bit",
+      "required": true,
+      "default": false
+    },
+    {
+      "name": "supports_conversion",
+      "display_name": "Supports Conversion",
+      "type": "bit",
+      "required": true,
+      "default": false
+    },
+    {
+      "name": "supports_retention",
+      "display_name": "Supports Retention",
+      "type": "bit",
+      "required": true,
+      "default": false
+    },
+    {
+      "name": "typical_cpm_low",
+      "display_name": "Typical CPM Low",
+      "type": "decimal",
+      "precision": 10,
+      "scale": 2,
+      "required": false
+    },
+    {
+      "name": "typical_cpm_high",
+      "display_name": "Typical CPM High",
+      "type": "decimal",
+      "precision": 10,
+      "scale": 2,
+      "required": false
+    },
+    {
+      "name": "min_budget_recommended",
+      "display_name": "Min Budget Recommended",
+      "type": "decimal",
+      "precision": 12,
+      "scale": 2,
+      "required": false
+    },
+    {
+      "name": "description",
+      "display_name": "Description",
+      "type": "nvarchar",
+      "max_length": 2000,
+      "required": false
+    },
+    {
+      "name": "is_active",
+      "display_name": "Is Active",
+      "type": "bit",
+      "required": true,
+      "default": true
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "table_name": "eap_prompt",
+  "display_name": "EAP Prompt",
+  "description": "AI Builder prompt registry for all agents",
+  "columns": [
+    {
+      "name": "eap_promptid",
+      "display_name": "Prompt ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "prompt_code",
+      "display_name": "Prompt Code",
+      "type": "nvarchar",
+      "max_length": 50,
+      "required": true
+    },
+    {
+      "name": "prompt_name",
+      "display_name": "Prompt Name",
+      "type": "nvarchar",
+      "max_length": 100,
+      "required": true
+    },
+    {
+      "name": "agent_code",
+      "display_name": "Agent Code",
+      "type": "nvarchar",
+      "max_length": 10,
+      "required": true
+    },
+    {
+      "name": "description",
+      "display_name": "Description",
+      "type": "nvarchar",
+      "max_length": 2000,
+      "required": false
+    },
+    {
+      "name": "system_prompt_template",
+      "display_name": "System Prompt",
+      "type": "nvarchar",
+      "max_length": 32000,
+      "required": false,
+      "description": "Optional - prompts typically managed in AI Builder"
+    },
+    {
+      "name": "user_prompt_template",
+      "display_name": "User Prompt",
+      "type": "nvarchar",
+      "max_length": 16000,
+      "required": false,
+      "description": "Optional - prompts typically managed in AI Builder"
+    },
+    {
+      "name": "output_format",
+      "display_name": "Output Format",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "JSON"},
+        {"value": 2, "label": "TEXT"},
+        {"value": 3, "label": "MARKDOWN"}
+      ]
+    },
+    {
+      "name": "output_schema",
+      "display_name": "Output Schema",
+      "type": "nvarchar",
+      "max_length": 8000,
+      "required": false
+    },
+    {
+      "name": "temperature",
+      "display_name": "Temperature",
+      "type": "decimal",
+      "precision": 3,
+      "scale": 2,
+      "required": false,
+      "default": 0.7
+    },
+    {
+      "name": "max_tokens",
+      "display_name": "Max Tokens",
+      "type": "int",
+      "required": false,
+      "default": 4096
+    },
+    {
+      "name": "few_shot_examples",
+      "display_name": "Few-Shot Examples",
+      "type": "nvarchar",
+      "max_length": 16000,
+      "required": false
+    },
+    {
+      "name": "version",
+      "display_name": "Version",
+      "type": "nvarchar",
+      "max_length": 20,
+      "required": true
+    },
+    {
+      "name": "is_active",
+      "display_name": "Is Active",
+      "type": "bit",
+      "required": true,
+      "default": true
+    },
+    {
+      "name": "created_at",
+      "display_name": "Created At",
+      "type": "datetime",
+      "required": true,
+      "auto_generated": true
+    },
+    {
+      "name": "last_tested_at",
+      "display_name": "Last Tested",
+      "type": "datetime",
+      "required": false
+    },
+    {
+      "name": "test_pass_rate",
+      "display_name": "Test Pass Rate",
+      "type": "decimal",
+      "precision": 5,
+      "scale": 2,
+      "required": false
+    }
+  ]
+}

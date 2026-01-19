@@ -1,0 +1,165 @@
+{
+  "table_name": "eap_telemetry",
+  "display_name": "EAP Telemetry",
+  "description": "Observability and logging for all capability invocations",
+  "columns": [
+    {
+      "name": "eap_telemetryid",
+      "display_name": "Telemetry ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "session_id",
+      "display_name": "Session ID",
+      "type": "nvarchar",
+      "max_length": 50,
+      "required": false
+    },
+    {
+      "name": "timestamp",
+      "display_name": "Timestamp",
+      "type": "datetime",
+      "required": true,
+      "auto_generated": true
+    },
+    {
+      "name": "event_type",
+      "display_name": "Event Type",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "ROUTING"},
+        {"value": 2, "label": "CAPABILITY_INVOKE"},
+        {"value": 3, "label": "CAPABILITY_SUCCESS"},
+        {"value": 4, "label": "CAPABILITY_FAILURE"},
+        {"value": 5, "label": "CAPABILITY_TIMEOUT"},
+        {"value": 6, "label": "CAPABILITY_FALLBACK"},
+        {"value": 7, "label": "KB_RETRIEVAL"},
+        {"value": 8, "label": "SESSION_START"},
+        {"value": 9, "label": "SESSION_END"},
+        {"value": 10, "label": "GATE_VALIDATION"},
+        {"value": 11, "label": "ERROR"}
+      ]
+    },
+    {
+      "name": "agent_code",
+      "display_name": "Agent Code",
+      "type": "nvarchar",
+      "max_length": 10,
+      "required": false
+    },
+    {
+      "name": "capability_code",
+      "display_name": "Capability Code",
+      "type": "nvarchar",
+      "max_length": 50,
+      "required": false
+    },
+    {
+      "name": "implementation_type",
+      "display_name": "Implementation Type",
+      "type": "choice",
+      "required": false,
+      "choices": [
+        {"value": 1, "label": "AI_BUILDER_PROMPT"},
+        {"value": 2, "label": "AZURE_FUNCTION"},
+        {"value": 3, "label": "HTTP_ENDPOINT"},
+        {"value": 4, "label": "DATAVERSE_LOGIC"}
+      ]
+    },
+    {
+      "name": "environment_code",
+      "display_name": "Environment",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "MASTERCARD"},
+        {"value": 2, "label": "PERSONAL"}
+      ]
+    },
+    {
+      "name": "inputs_json",
+      "display_name": "Inputs",
+      "type": "nvarchar",
+      "max_length": 8000,
+      "required": false
+    },
+    {
+      "name": "outputs_json",
+      "display_name": "Outputs",
+      "type": "nvarchar",
+      "max_length": 8000,
+      "required": false
+    },
+    {
+      "name": "execution_time_ms",
+      "display_name": "Execution Time (ms)",
+      "type": "int",
+      "required": false
+    },
+    {
+      "name": "confidence_level",
+      "display_name": "Confidence Level",
+      "type": "decimal",
+      "precision": 5,
+      "scale": 2,
+      "required": false
+    },
+    {
+      "name": "error_code",
+      "display_name": "Error Code",
+      "type": "nvarchar",
+      "max_length": 50,
+      "required": false
+    },
+    {
+      "name": "error_message",
+      "display_name": "Error Message",
+      "type": "nvarchar",
+      "max_length": 4000,
+      "required": false
+    },
+    {
+      "name": "kb_chunks_retrieved",
+      "display_name": "KB Chunks Retrieved",
+      "type": "nvarchar",
+      "max_length": 4000,
+      "required": false
+    },
+    {
+      "name": "user_feedback",
+      "display_name": "User Feedback",
+      "type": "choice",
+      "required": false,
+      "choices": [
+        {"value": 1, "label": "THUMBS_UP"},
+        {"value": 2, "label": "THUMBS_DOWN"},
+        {"value": 3, "label": "NONE"}
+      ]
+    },
+    {
+      "name": "is_fallback",
+      "display_name": "Is Fallback",
+      "type": "bit",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "retry_count",
+      "display_name": "Retry Count",
+      "type": "int",
+      "required": false,
+      "default": 0
+    },
+    {
+      "name": "correlation_id",
+      "display_name": "Correlation ID",
+      "type": "nvarchar",
+      "max_length": 50,
+      "required": false
+    }
+  ]
+}

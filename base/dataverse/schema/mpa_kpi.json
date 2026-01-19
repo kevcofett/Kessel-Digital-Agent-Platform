@@ -1,0 +1,102 @@
+{
+  "table_name": "mpa_kpi",
+  "display_name": "MPA KPI",
+  "description": "KPI definitions for media planning measurement",
+  "columns": [
+    {
+      "name": "mpa_kpiid",
+      "display_name": "KPI ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "kpi_code",
+      "display_name": "KPI Code",
+      "type": "nvarchar",
+      "max_length": 30,
+      "required": true
+    },
+    {
+      "name": "kpi_name",
+      "display_name": "KPI Name",
+      "type": "nvarchar",
+      "max_length": 100,
+      "required": true
+    },
+    {
+      "name": "kpi_category",
+      "display_name": "Category",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "AWARENESS"},
+        {"value": 2, "label": "ENGAGEMENT"},
+        {"value": 3, "label": "CONVERSION"},
+        {"value": 4, "label": "EFFICIENCY"},
+        {"value": 5, "label": "QUALITY"},
+        {"value": 6, "label": "RETENTION"},
+        {"value": 7, "label": "REVENUE"}
+      ]
+    },
+    {
+      "name": "funnel_stage",
+      "display_name": "Funnel Stage",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "UPPER_FUNNEL"},
+        {"value": 2, "label": "MID_FUNNEL"},
+        {"value": 3, "label": "LOWER_FUNNEL"},
+        {"value": 4, "label": "CROSS_FUNNEL"}
+      ]
+    },
+    {
+      "name": "formula",
+      "display_name": "Formula",
+      "type": "nvarchar",
+      "max_length": 500,
+      "required": false
+    },
+    {
+      "name": "unit_of_measure",
+      "display_name": "Unit of Measure",
+      "type": "nvarchar",
+      "max_length": 50,
+      "required": true
+    },
+    {
+      "name": "direction",
+      "display_name": "Direction",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "HIGHER_BETTER"},
+        {"value": 2, "label": "LOWER_BETTER"},
+        {"value": 3, "label": "TARGET_BASED"}
+      ]
+    },
+    {
+      "name": "description",
+      "display_name": "Description",
+      "type": "nvarchar",
+      "max_length": 2000,
+      "required": false
+    },
+    {
+      "name": "is_primary",
+      "display_name": "Is Primary",
+      "type": "bit",
+      "required": true,
+      "default": false
+    },
+    {
+      "name": "is_active",
+      "display_name": "Is Active",
+      "type": "bit",
+      "required": true,
+      "default": true
+    }
+  ]
+}

@@ -1,0 +1,446 @@
+MEDIA MIX MODELING METHODOLOGY
+
+PURPOSE AND SCOPE
+
+This document provides comprehensive guidance on media mix modeling including econometric methodology model development optimization applications and strategic insights. MMM enables aggregate-level marketing effectiveness measurement across all channels including offline media.
+
+MMM FUNDAMENTALS
+
+MMM PURPOSE
+
+Measurement Goals
+- Channel contribution quantification
+- Marketing effectiveness assessment
+- Budget optimization guidance
+- Strategic planning support
+- Investment justification
+
+Unique Capabilities
+- Offline media measurement
+- Long-term effect capture
+- Aggregate level analysis
+- Privacy-compliant approach
+- Cross-channel view
+
+MMM METHODOLOGY
+
+Econometric Foundation
+- Regression-based approach
+- Dependent variable modeling
+- Independent variable effects
+- Control factor inclusion
+- Statistical inference
+
+Core Principle
+- Decompose outcome variation
+- Attribute to marketing activities
+- Control for non-marketing factors
+- Isolate channel effects
+- Quantify contributions
+
+DATA REQUIREMENTS
+
+DEPENDENT VARIABLES
+
+Outcome Metrics
+- Sales revenue
+- Unit volume
+- Conversion count
+- Lead generation
+- Brand metrics
+
+Data Characteristics
+- Consistent measurement
+- Adequate variation
+- Sufficient history
+- Geographic coverage
+- Time granularity
+
+MARKETING VARIABLES
+
+Media Spend Variables
+- Television spend
+- Digital spend
+- Radio spend
+- Print spend
+- Out of home spend
+
+Marketing Activities
+- Promotional activities
+- Pricing changes
+- Distribution changes
+- Product launches
+- Campaign timing
+
+CONTROL VARIABLES
+
+Seasonality Factors
+- Monthly patterns
+- Weekly patterns
+- Holiday effects
+- Event impacts
+- Weather effects
+
+External Factors
+- Economic indicators
+- Competitive activity
+- Market trends
+- Category dynamics
+- Regulatory changes
+
+MODEL SPECIFICATION
+
+FUNCTIONAL FORM
+
+Linear Models
+- Additive effects
+- Straightforward interpretation
+- Coefficient estimation
+- Standard inference
+- Limited flexibility
+
+Log-Log Models
+- Multiplicative effects
+- Elasticity interpretation
+- Diminishing returns implicit
+- Percentage changes
+- Common specification
+
+Semi-Log Models
+- Mixed interpretation
+- Level to percentage
+- Asymmetric specification
+- Hybrid approach
+- Context dependent
+
+ADSTOCK TRANSFORMATION
+
+Carry-Over Effects
+- Delayed response modeling
+- Decay rate estimation
+- Cumulative impact
+- Memory effect
+- Distribution lag
+
+Adstock Formula
+- Current period spend
+- Plus decayed previous spend
+- Geometric decay common
+- Peak and decay shapes
+- Flexible specification
+
+SATURATION TRANSFORMATION
+
+Diminishing Returns
+- Response curve modeling
+- Hill function common
+- Concave transformation
+- Saturation limits
+- Efficiency assessment
+
+Implementation Options
+- Pre-transformation
+- Within model estimation
+- Bayesian specification
+- Flexible priors
+- Domain constraints
+
+MODEL ESTIMATION
+
+FREQUENTIST APPROACHES
+
+Ordinary Least Squares
+- Standard regression
+- Closed form solution
+- Assumption requirements
+- Diagnostic testing
+- Inference straightforward
+
+Generalized Least Squares
+- Autocorrelation handling
+- Heteroskedasticity adjustment
+- Weighted estimation
+- Efficient estimators
+- Improved inference
+
+BAYESIAN APPROACHES
+
+Bayesian Estimation
+- Prior specification
+- Posterior inference
+- Uncertainty quantification
+- Regularization benefit
+- Hierarchical capability
+
+Implementation Frameworks
+- Stan probabilistic programming
+- PyMC Bayesian modeling
+- Lightweight MMM packages
+- Custom implementations
+- Platform solutions
+
+MODEL VALIDATION
+
+In-Sample Diagnostics
+- R-squared assessment
+- Residual analysis
+- Coefficient sensibility
+- Sign verification
+- Magnitude plausibility
+
+Out-of-Sample Testing
+- Holdout validation
+- Time series splits
+- Forecast accuracy
+- Prediction intervals
+- Robustness assessment
+
+DECOMPOSITION AND CONTRIBUTION
+
+BASELINE DECOMPOSITION
+
+Base Sales Identification
+- Non-marketing driven sales
+- Brand equity contribution
+- Distribution effect
+- Pricing baseline
+- Organic demand
+
+Incremental Attribution
+- Marketing-driven increment
+- Channel contribution
+- Activity attribution
+- Timing effects
+- Interaction allocation
+
+CHANNEL CONTRIBUTION
+
+Contribution Calculation
+- Coefficient times variable
+- Summed over period
+- Share of total
+- Absolute value
+- Relative contribution
+
+ROI Calculation
+- Incremental revenue attributed
+- Divided by channel spend
+- Return on investment
+- Efficiency comparison
+- Investment guidance
+
+BUDGET OPTIMIZATION
+
+OPTIMIZATION METHODOLOGY
+
+Objective Function
+- Maximize total outcome
+- Subject to budget constraint
+- Channel constraints
+- Minimum thresholds
+- Maximum limits
+
+Optimization Algorithm
+- Response curve utilization
+- Marginal equalization
+- Constraint satisfaction
+- Iterative allocation
+- Global optimum search
+
+SCENARIO ANALYSIS
+
+Budget Scenarios
+- Current budget baseline
+- Increased budget scenario
+- Decreased budget scenario
+- Reallocation scenario
+- Optimal allocation
+
+Scenario Outputs
+- Expected outcomes
+- Channel allocations
+- ROI projections
+- Risk assessment
+- Recommendation support
+
+CONSTRAINT HANDLING
+
+Minimum Constraints
+- Channel minimum spend
+- Strategic commitments
+- Testing requirements
+- Partner obligations
+- Learning investments
+
+Maximum Constraints
+- Channel capacity
+- Inventory limits
+- Diminishing returns
+- Diversification goals
+- Risk management
+
+ADVANCED TOPICS
+
+HIERARCHICAL MODELS
+
+Multi-Level Modeling
+- Geography hierarchy
+- Product hierarchy
+- Time hierarchy
+- Brand hierarchy
+- Channel hierarchy
+
+Benefits
+- Borrowing strength
+- Small sample handling
+- Partial pooling
+- Segment insights
+- Heterogeneity modeling
+
+CAUSAL INFERENCE
+
+Identification Challenges
+- Endogeneity concerns
+- Confounding variables
+- Selection bias
+- Reverse causality
+- Omitted variables
+
+Mitigation Approaches
+- Instrumental variables
+- Natural experiments
+- Regression discontinuity
+- Difference in differences
+- Synthetic control
+
+MACHINE LEARNING INTEGRATION
+
+ML Applications
+- Variable selection
+- Interaction discovery
+- Nonlinear modeling
+- Ensemble approaches
+- Validation enhancement
+
+Hybrid Approaches
+- ML for preprocessing
+- Econometric core
+- ML for optimization
+- Interpretability preservation
+- Best of both worlds
+
+IMPLEMENTATION PROCESS
+
+PROJECT PHASES
+
+Discovery Phase
+- Business understanding
+- Data assessment
+- Objective alignment
+- Scope definition
+- Timeline planning
+
+Data Phase
+- Data collection
+- Quality assessment
+- Transformation development
+- Feature engineering
+- Validation preparation
+
+Modeling Phase
+- Model specification
+- Estimation execution
+- Validation testing
+- Iteration refinement
+- Final model selection
+
+Activation Phase
+- Results interpretation
+- Optimization execution
+- Recommendation development
+- Stakeholder presentation
+- Implementation support
+
+ONGOING MAINTENANCE
+
+Model Refresh
+- Scheduled updates
+- Data addition
+- Re-estimation
+- Validation checking
+- Performance monitoring
+
+Continuous Improvement
+- Methodology evolution
+- Data enhancement
+- Capability building
+- Process optimization
+- Learning incorporation
+
+ORGANIZATIONAL CONSIDERATIONS
+
+STAKEHOLDER ALIGNMENT
+
+Executive Buy-In
+- Value communication
+- Expectation setting
+- Results engagement
+- Decision integration
+- Success measurement
+
+Cross-Functional Coordination
+- Finance alignment
+- Marketing partnership
+- Data team collaboration
+- Strategy integration
+- Operations support
+
+CAPABILITY BUILDING
+
+Internal Skills
+- Analytical capability
+- Tool proficiency
+- Interpretation skills
+- Application expertise
+- Continuous learning
+
+External Partnership
+- Vendor selection
+- Collaboration model
+- Knowledge transfer
+- Quality assurance
+- Relationship management
+
+INTEGRATION WITH KDAP
+
+AGENT COORDINATION
+
+ANL Agent Role
+- MMM ownership
+- Analysis execution
+- Insight development
+- Optimization support
+- Knowledge documentation
+
+Cross-Agent Integration
+- CHA Agent channel application
+- PRF Agent performance data
+- AUD Agent audience insights
+- MKT Agent campaign data
+- CST Agent strategic context
+
+WORKFLOW INTEGRATION
+
+Analysis Workflow
+- Data preparation
+- Model execution
+- Validation checks
+- Decomposition analysis
+- Insight development
+
+Planning Workflow
+- Scenario modeling
+- Optimization execution
+- Budget recommendation
+- Forecast generation
+- Decision support

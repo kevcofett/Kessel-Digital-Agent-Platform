@@ -1,0 +1,340 @@
+{
+  "agent": "CHA",
+  "version": "1.0",
+  "description": "Channel Agent test scenarios for channel selection, media mix optimization, and tactical execution",
+  "test_scenarios": [
+    {
+      "id": "CHA-001",
+      "category": "channel_selection",
+      "name": "Digital-First Channel Recommendation",
+      "description": "Test channel selection for a digital-focused brand awareness campaign",
+      "input": {
+        "objective": "brand_awareness",
+        "budget": 500000,
+        "target_audience": "millennials_18-34",
+        "timeline": "3_months",
+        "constraints": ["digital_preferred", "no_traditional_tv"]
+      },
+      "expected_behaviors": [
+        "Recommend social media platforms with rationale",
+        "Include programmatic display in mix",
+        "Consider connected TV as TV alternative",
+        "Provide reach estimates",
+        "Include YouTube video recommendation"
+      ],
+      "success_criteria": {
+        "channels_recommended": ["paid_social", "programmatic_display", "video", "connected_tv"],
+        "includes_rationale": true,
+        "includes_budget_allocation": true,
+        "includes_benchmarks": true
+      }
+    },
+    {
+      "id": "CHA-002",
+      "category": "channel_selection",
+      "name": "B2B Channel Strategy",
+      "description": "Test channel selection for B2B lead generation campaign",
+      "input": {
+        "objective": "lead_generation",
+        "budget": 200000,
+        "target_audience": "enterprise_decision_makers",
+        "industry": "technology",
+        "timeline": "6_months"
+      },
+      "expected_behaviors": [
+        "Prioritize LinkedIn advertising",
+        "Include search marketing",
+        "Consider trade publication options",
+        "Recommend account-based marketing tactics",
+        "Suggest content marketing integration"
+      ],
+      "success_criteria": {
+        "linkedin_included": true,
+        "search_included": true,
+        "provides_targeting_guidance": true,
+        "cost_per_lead_estimates": true
+      }
+    },
+    {
+      "id": "CHA-003",
+      "category": "media_mix_optimization",
+      "name": "Budget Reallocation Recommendation",
+      "description": "Test media mix optimization based on performance data",
+      "input": {
+        "current_allocation": {
+          "paid_search": 100000,
+          "paid_social": 150000,
+          "programmatic": 100000,
+          "connected_tv": 50000
+        },
+        "performance_data": {
+          "paid_search": {"cpa": 45, "conversions": 2222},
+          "paid_social": {"cpa": 65, "conversions": 2308},
+          "programmatic": {"cpa": 120, "conversions": 833},
+          "connected_tv": {"cpa": 200, "conversions": 250}
+        },
+        "objective": "maximize_conversions"
+      },
+      "expected_behaviors": [
+        "Identify underperforming channels",
+        "Recommend budget shifts based on efficiency",
+        "Consider diminishing returns",
+        "Maintain minimum thresholds",
+        "Provide expected impact estimates"
+      ],
+      "success_criteria": {
+        "identifies_programmatic_inefficiency": true,
+        "recommends_search_increase": true,
+        "includes_expected_improvement": true,
+        "respects_minimum_thresholds": true
+      }
+    },
+    {
+      "id": "CHA-004",
+      "category": "media_mix_optimization",
+      "name": "Seasonal Budget Adjustment",
+      "description": "Test flighting and timing recommendations for seasonal campaign",
+      "input": {
+        "campaign_type": "retail_holiday",
+        "total_budget": 1000000,
+        "timeline": "october_through_december",
+        "peak_periods": ["black_friday", "cyber_monday", "christmas"]
+      },
+      "expected_behaviors": [
+        "Recommend heavy-up periods",
+        "Suggest lead-up awareness building",
+        "Plan peak period conversion focus",
+        "Include post-holiday strategy",
+        "Coordinate cross-channel timing"
+      ],
+      "success_criteria": {
+        "includes_flighting_calendar": true,
+        "peak_budget_weighted": true,
+        "channel_timing_coordinated": true,
+        "includes_competitive_considerations": true
+      }
+    },
+    {
+      "id": "CHA-005",
+      "category": "attribution",
+      "name": "Cross-Channel Attribution Interpretation",
+      "description": "Test interpretation of multi-touch attribution data",
+      "input": {
+        "attribution_model": "data_driven",
+        "channel_contributions": {
+          "paid_search": 0.35,
+          "paid_social": 0.25,
+          "programmatic": 0.15,
+          "email": 0.15,
+          "direct": 0.10
+        },
+        "path_data": {
+          "average_touchpoints": 4.2,
+          "common_paths": ["social->search->email->conversion", "display->search->conversion"]
+        }
+      },
+      "expected_behaviors": [
+        "Explain channel roles in journey",
+        "Interpret assist versus closing contributions",
+        "Recommend budget implications",
+        "Note attribution model limitations",
+        "Suggest incrementality testing"
+      ],
+      "success_criteria": {
+        "explains_journey_roles": true,
+        "provides_budget_recommendations": true,
+        "acknowledges_limitations": true,
+        "suggests_validation": true
+      }
+    },
+    {
+      "id": "CHA-006",
+      "category": "digital_playbook",
+      "name": "Paid Search Campaign Setup",
+      "description": "Test tactical guidance for search campaign setup",
+      "input": {
+        "campaign_objective": "conversions",
+        "product_category": "software",
+        "monthly_budget": 50000,
+        "geographic_target": "united_states",
+        "competition_level": "high"
+      },
+      "expected_behaviors": [
+        "Recommend campaign structure",
+        "Suggest keyword strategy",
+        "Provide bidding approach",
+        "Include quality score guidance",
+        "Recommend ad copy best practices"
+      ],
+      "success_criteria": {
+        "includes_campaign_structure": true,
+        "includes_keyword_strategy": true,
+        "includes_bidding_recommendation": true,
+        "includes_optimization_tips": true
+      }
+    },
+    {
+      "id": "CHA-007",
+      "category": "digital_playbook",
+      "name": "Social Media Campaign Tactics",
+      "description": "Test tactical guidance for Meta advertising campaign",
+      "input": {
+        "platform": "meta",
+        "objective": "traffic",
+        "audience": "parents_25-45",
+        "creative_assets": ["images", "video"],
+        "budget": 30000
+      },
+      "expected_behaviors": [
+        "Recommend targeting approach",
+        "Suggest creative format strategy",
+        "Provide placement recommendations",
+        "Include optimization tactics",
+        "Suggest testing framework"
+      ],
+      "success_criteria": {
+        "includes_targeting_guidance": true,
+        "includes_creative_recommendations": true,
+        "includes_placement_strategy": true,
+        "includes_testing_approach": true
+      }
+    },
+    {
+      "id": "CHA-008",
+      "category": "traditional_playbook",
+      "name": "Television Campaign Planning",
+      "description": "Test traditional TV campaign planning guidance",
+      "input": {
+        "campaign_type": "national_brand",
+        "budget": 5000000,
+        "target_demo": "adults_25-54",
+        "flight_dates": "Q4",
+        "creative_length": "30_seconds"
+      },
+      "expected_behaviors": [
+        "Recommend daypart mix",
+        "Suggest network strategy",
+        "Provide reach and frequency estimates",
+        "Include connected TV integration",
+        "Recommend measurement approach"
+      ],
+      "success_criteria": {
+        "includes_daypart_strategy": true,
+        "includes_network_recommendations": true,
+        "includes_reach_frequency": true,
+        "includes_measurement_plan": true
+      }
+    },
+    {
+      "id": "CHA-009",
+      "category": "traditional_playbook",
+      "name": "Out of Home Strategy",
+      "description": "Test OOH campaign planning for local market",
+      "input": {
+        "market": "chicago",
+        "objective": "awareness",
+        "budget": 150000,
+        "duration": "8_weeks",
+        "target": "commuters"
+      },
+      "expected_behaviors": [
+        "Recommend format mix",
+        "Suggest location strategy",
+        "Include digital OOH options",
+        "Provide reach estimates",
+        "Consider transit options"
+      ],
+      "success_criteria": {
+        "includes_format_recommendations": true,
+        "includes_location_strategy": true,
+        "includes_dooh_options": true,
+        "includes_reach_estimates": true
+      }
+    },
+    {
+      "id": "CHA-010",
+      "category": "cross_channel",
+      "name": "Omnichannel Campaign Coordination",
+      "description": "Test cross-channel campaign coordination recommendations",
+      "input": {
+        "channels": ["tv", "digital_video", "social", "search", "display"],
+        "campaign_message": "product_launch",
+        "budget": 2000000,
+        "duration": "6_weeks",
+        "phasing": "required"
+      },
+      "expected_behaviors": [
+        "Recommend channel sequencing",
+        "Coordinate messaging across channels",
+        "Plan frequency management",
+        "Integrate measurement approach",
+        "Suggest creative adaptation"
+      ],
+      "success_criteria": {
+        "includes_sequencing_plan": true,
+        "includes_frequency_coordination": true,
+        "includes_creative_adaptation_guidance": true,
+        "includes_unified_measurement": true
+      }
+    },
+    {
+      "id": "CHA-011",
+      "category": "emerging_channels",
+      "name": "Retail Media Network Strategy",
+      "description": "Test guidance for retail media network advertising",
+      "input": {
+        "retailer": "amazon",
+        "product_category": "consumer_electronics",
+        "budget": 100000,
+        "objective": "sales",
+        "existing_presence": true
+      },
+      "expected_behaviors": [
+        "Recommend ad type mix",
+        "Suggest keyword strategy",
+        "Provide ACOS targets",
+        "Include DSP considerations",
+        "Recommend measurement approach"
+      ],
+      "success_criteria": {
+        "includes_ad_type_recommendations": true,
+        "includes_keyword_strategy": true,
+        "includes_performance_targets": true,
+        "includes_optimization_guidance": true
+      }
+    },
+    {
+      "id": "CHA-012",
+      "category": "emerging_channels",
+      "name": "Connected TV Strategy",
+      "description": "Test CTV campaign planning and execution guidance",
+      "input": {
+        "campaign_type": "brand_awareness",
+        "budget": 300000,
+        "target_audience": "cord_cutters_25-49",
+        "duration": "flight_based",
+        "measurement_priority": "reach_extension"
+      },
+      "expected_behaviors": [
+        "Recommend platform mix",
+        "Suggest buying approach",
+        "Provide targeting strategy",
+        "Include linear TV integration",
+        "Recommend measurement approach"
+      ],
+      "success_criteria": {
+        "includes_platform_recommendations": true,
+        "includes_buying_strategy": true,
+        "includes_targeting_guidance": true,
+        "includes_measurement_plan": true
+      }
+    }
+  ],
+  "evaluation_criteria": {
+    "accuracy": "Recommendations align with industry best practices",
+    "completeness": "All relevant aspects of channel strategy addressed",
+    "actionability": "Guidance is specific and implementable",
+    "data_driven": "Recommendations supported by benchmarks and data",
+    "integrated": "Cross-channel considerations included"
+  }
+}

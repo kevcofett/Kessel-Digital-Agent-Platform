@@ -1,0 +1,322 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowName": "KDAP-AUD-PropensityScoring",
+    "description": "Propensity scoring ML flow for AUD agent - scores customers and segments audience",
+    "author": "KDAP",
+    "version": "1.0.0",
+    "tags": ["KDAP", "ML", "AUD", "Propensity", "Scoring", "Audience"]
+  },
+  "parameters": {
+    "$connections": {
+      "defaultValue": {},
+      "type": "Object"
+    },
+    "KDAP_ML_FUNCTION_URL": {
+      "defaultValue": "https://kdap-ml-functions.azurewebsites.net",
+      "type": "String"
+    },
+    "KDAP_ML_API_KEY": {
+      "defaultValue": "",
+      "type": "SecureString"
+    },
+    "KDAP_MAX_BATCH_SIZE": {
+      "defaultValue": 1000,
+      "type": "Int"
+    },
+    "KDAP_RETRY_MAX_ATTEMPTS": {
+      "defaultValue": 3,
+      "type": "Int"
+    }
+  },
+  "triggers": {
+    "manual": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "Session ID from Copilot Studio"
+            },
+            "customers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "customerId": { "type": "string" },
+                  "recencyDays": { "type": "number" },
+                  "frequencyCount": { "type": "number" },
+                  "monetaryValue": { "type": "number" },
+                  "engagementScore": { "type": "number" },
+                  "tenureMonths": { "type": "number" }
+                },
+                "required": ["customerId", "recencyDays", "frequencyCount", "monetaryValue"]
+              }
+            },
+            "batchMode": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "required": ["sessionId", "customers"]
+        }
+      }
+    }
+  },
+  "actions": {
+    "Initialize_allScores": {
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "allScores",
+            "type": "array",
+            "value": []
+          }
+        ]
+      },
+      "runAfter": {}
+    },
+    "Initialize_batchIndex": {
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "batchIndex",
+            "type": "integer",
+            "value": 0
+          }
+        ]
+      },
+      "runAfter": {
+        "Initialize_allScores": ["Succeeded"]
+      }
+    },
+    "Initialize_totalCustomers": {
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "totalCustomers",
+            "type": "integer",
+            "value": "@length(triggerBody()?['customers'])"
+          }
+        ]
+      },
+      "runAfter": {
+        "Initialize_batchIndex": ["Succeeded"]
+      }
+    },
+    "Calculate_Batches": {
+      "type": "Compose",
+      "inputs": "@add(div(sub(variables('totalCustomers'), 1), parameters('KDAP_MAX_BATCH_SIZE')), 1)",
+      "runAfter": {
+        "Initialize_totalCustomers": ["Succeeded"]
+      }
+    },
+    "Process_Batches": {
+      "type": "Until",
+      "expression": "@greaterOrEquals(variables('batchIndex'), outputs('Calculate_Batches'))",
+      "limit": {
+        "count": 100,
+        "timeout": "PT30M"
+      },
+      "actions": {
+        "Get_Current_Batch": {
+          "type": "Compose",
+          "inputs": "@take(skip(triggerBody()?['customers'], mul(variables('batchIndex'), parameters('KDAP_MAX_BATCH_SIZE'))), parameters('KDAP_MAX_BATCH_SIZE'))",
+          "runAfter": {}
+        },
+        "HTTP_POST_PropensityScoring": {
+          "type": "Http",
+          "inputs": {
+            "method": "POST",
+            "uri": "@{parameters('KDAP_ML_FUNCTION_URL')}/api/propensityScoring",
+            "headers": {
+              "Content-Type": "application/json",
+              "x-functions-key": "@{parameters('KDAP_ML_API_KEY')}",
+              "x-session-id": "@{triggerBody()?['sessionId']}"
+            },
+            "body": {
+              "customers": "@outputs('Get_Current_Batch')"
+            },
+            "retryPolicy": {
+              "type": "exponential",
+              "count": 3,
+              "interval": "PT10S",
+              "maximumInterval": "PT1M"
+            }
+          },
+          "runAfter": {
+            "Get_Current_Batch": ["Succeeded"]
+          }
+        },
+        "Parse_Batch_Response": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('HTTP_POST_PropensityScoring')",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean" },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "scores": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "customerId": { "type": "string" },
+                          "propensityScore": { "type": "number" },
+                          "confidence": { "type": "number" },
+                          "percentileRank": { "type": "number" },
+                          "segment": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "HTTP_POST_PropensityScoring": ["Succeeded"]
+          }
+        },
+        "Append_Scores_to_allScores": {
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "allScores",
+            "value": "@body('Parse_Batch_Response')?['data']?['scores']"
+          },
+          "runAfter": {
+            "Parse_Batch_Response": ["Succeeded"]
+          }
+        },
+        "Increment_batchIndex": {
+          "type": "IncrementVariable",
+          "inputs": {
+            "name": "batchIndex",
+            "value": 1
+          },
+          "runAfter": {
+            "Append_Scores_to_allScores": ["Succeeded"]
+          }
+        }
+      },
+      "runAfter": {
+        "Calculate_Batches": ["Succeeded"]
+      }
+    },
+    "Flatten_Scores": {
+      "type": "Compose",
+      "inputs": "@if(greater(length(variables('allScores')), 0), if(equals(length(variables('allScores')), 1), first(variables('allScores')), union(first(variables('allScores')), skip(variables('allScores'), 1))), createArray())",
+      "runAfter": {
+        "Process_Batches": ["Succeeded"]
+      }
+    },
+    "Calculate_Segment_Summary": {
+      "type": "Compose",
+      "inputs": {
+        "highPropensity": "@length(filter(outputs('Flatten_Scores'), item => greater(item.propensityScore, 0.8)))",
+        "mediumPropensity": "@length(filter(outputs('Flatten_Scores'), item => and(greaterOrEquals(item.propensityScore, 0.5), lessOrEquals(item.propensityScore, 0.8))))",
+        "lowPropensity": "@length(filter(outputs('Flatten_Scores'), item => and(greaterOrEquals(item.propensityScore, 0.2), less(item.propensityScore, 0.5))))",
+        "veryLowPropensity": "@length(filter(outputs('Flatten_Scores'), item => less(item.propensityScore, 0.2)))"
+      },
+      "runAfter": {
+        "Flatten_Scores": ["Succeeded"]
+      }
+    },
+    "Generate_Summary_Message": {
+      "type": "Compose",
+      "inputs": "@concat('Segment Summary: High Propensity (>80%): ', string(outputs('Calculate_Segment_Summary')?['highPropensity']), ' customers (', string(div(mul(outputs('Calculate_Segment_Summary')?['highPropensity'], 100), variables('totalCustomers'))), '%). Medium Propensity (50-80%): ', string(outputs('Calculate_Segment_Summary')?['mediumPropensity']), ' customers. Low Propensity (20-50%): ', string(outputs('Calculate_Segment_Summary')?['lowPropensity']), ' customers. Very Low Propensity (<20%): ', string(outputs('Calculate_Segment_Summary')?['veryLowPropensity']), ' customers. Recommendation: Focus on ', string(outputs('Calculate_Segment_Summary')?['highPropensity']), ' high-propensity customers for immediate outreach.')",
+      "runAfter": {
+        "Calculate_Segment_Summary": ["Succeeded"]
+      }
+    },
+    "Create_Audience_Score_Records": {
+      "type": "Foreach",
+      "foreach": "@take(outputs('Flatten_Scores'), 100)",
+      "actions": {
+        "Create_Dataverse_Score_Record": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": {
+              "connection": {
+                "name": "@parameters('$connections')['commondataserviceforapps']['connectionId']"
+              }
+            },
+            "method": "post",
+            "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default.cds'))}/tables/@{encodeURIComponent(encodeURIComponent('kdap_audience_scores'))}/items",
+            "body": {
+              "kdap_scoreid": "@{guid()}",
+              "kdap_sessionid": "@{triggerBody()?['sessionId']}",
+              "kdap_customerid": "@{items('Create_Audience_Score_Records')?['customerId']}",
+              "kdap_propensityscore": "@{items('Create_Audience_Score_Records')?['propensityScore']}",
+              "kdap_confidence": "@{items('Create_Audience_Score_Records')?['confidence']}",
+              "kdap_percentilerank": "@{items('Create_Audience_Score_Records')?['percentileRank']}",
+              "kdap_segment": "@{items('Create_Audience_Score_Records')?['segment']}"
+            }
+          }
+        }
+      },
+      "runAfter": {
+        "Generate_Summary_Message": ["Succeeded"]
+      },
+      "runtimeConfiguration": {
+        "concurrency": {
+          "repetitions": 20
+        }
+      }
+    },
+    "Create_Prediction_Record": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": {
+            "name": "@parameters('$connections')['commondataserviceforapps']['connectionId']"
+          }
+        },
+        "method": "post",
+        "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default.cds'))}/tables/@{encodeURIComponent(encodeURIComponent('kdap_ml_predictions'))}/items",
+        "body": {
+          "kdap_predictionid": "@{guid()}",
+          "kdap_sessionid": "@{triggerBody()?['sessionId']}",
+          "kdap_modeltype": 2,
+          "kdap_inputpayload": "@{concat('Total customers: ', string(variables('totalCustomers')))}",
+          "kdap_outputpayload": "@{string(outputs('Calculate_Segment_Summary'))}",
+          "kdap_status": 1
+        }
+      },
+      "runAfter": {
+        "Create_Audience_Score_Records": ["Succeeded"]
+      }
+    },
+    "Response": {
+      "type": "Response",
+      "kind": "Http",
+      "inputs": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "success": true,
+          "scores": "@outputs('Flatten_Scores')",
+          "segmentSummary": "@outputs('Calculate_Segment_Summary')",
+          "summary": "@outputs('Generate_Summary_Message')",
+          "scoringId": "@{body('Create_Prediction_Record')?['kdap_predictionid']}"
+        }
+      },
+      "runAfter": {
+        "Create_Prediction_Record": ["Succeeded"]
+      }
+    }
+  },
+  "outputs": {}
+}

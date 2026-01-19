@@ -1,0 +1,150 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/PowerPlatform-DataverseModelBuilder/main/src/schemas/table.schema.json",
+  "schemaName": "kdap_audience_scores",
+  "displayName": "KDAP Audience Scores",
+  "displayCollectionName": "KDAP Audience Scores",
+  "description": "Stores propensity scores for audience members from AUD agent",
+  "ownershipType": "UserOwned",
+  "primaryKey": {
+    "schemaName": "kdap_scoreid",
+    "displayName": "Score ID",
+    "dataType": "Uniqueidentifier"
+  },
+  "primaryName": {
+    "schemaName": "kdap_name",
+    "displayName": "Name",
+    "maxLength": 100
+  },
+  "attributes": [
+    {
+      "schemaName": "kdap_scoreid",
+      "displayName": "Score ID",
+      "description": "Unique identifier for the score record",
+      "dataType": "Uniqueidentifier",
+      "isPrimaryKey": true
+    },
+    {
+      "schemaName": "kdap_sessionid",
+      "displayName": "Session ID",
+      "description": "Copilot Studio session ID",
+      "dataType": "String",
+      "maxLength": 100
+    },
+    {
+      "schemaName": "kdap_customerid",
+      "displayName": "Customer ID",
+      "description": "External customer identifier",
+      "dataType": "String",
+      "maxLength": 100,
+      "isRequired": true
+    },
+    {
+      "schemaName": "kdap_propensityscore",
+      "displayName": "Propensity Score",
+      "description": "ML propensity score (0-1)",
+      "dataType": "Decimal",
+      "precision": 4,
+      "minValue": 0,
+      "maxValue": 1,
+      "isRequired": true
+    },
+    {
+      "schemaName": "kdap_confidence",
+      "displayName": "Confidence",
+      "description": "Model confidence in the score (0-1)",
+      "dataType": "Decimal",
+      "precision": 4,
+      "minValue": 0,
+      "maxValue": 1
+    },
+    {
+      "schemaName": "kdap_percentilerank",
+      "displayName": "Percentile Rank",
+      "description": "Customer rank within scored population",
+      "dataType": "Integer",
+      "minValue": 0,
+      "maxValue": 100
+    },
+    {
+      "schemaName": "kdap_segment",
+      "displayName": "Segment",
+      "description": "Assigned audience segment",
+      "dataType": "Picklist",
+      "options": [
+        { "value": 1, "label": "High Propensity" },
+        { "value": 2, "label": "Medium Propensity" },
+        { "value": 3, "label": "Low Propensity" },
+        { "value": 4, "label": "Very Low Propensity" }
+      ]
+    },
+    {
+      "schemaName": "kdap_recencydays",
+      "displayName": "Recency (Days)",
+      "description": "Days since last interaction",
+      "dataType": "Integer",
+      "minValue": 0
+    },
+    {
+      "schemaName": "kdap_frequencycount",
+      "displayName": "Frequency Count",
+      "description": "Number of interactions in period",
+      "dataType": "Integer",
+      "minValue": 0
+    },
+    {
+      "schemaName": "kdap_monetaryvalue",
+      "displayName": "Monetary Value",
+      "description": "Total monetary value of customer",
+      "dataType": "Money",
+      "minValue": 0
+    },
+    {
+      "schemaName": "kdap_engagementscore",
+      "displayName": "Engagement Score",
+      "description": "Overall engagement score",
+      "dataType": "Decimal",
+      "precision": 2,
+      "minValue": 0,
+      "maxValue": 100
+    },
+    {
+      "schemaName": "kdap_tenuremonths",
+      "displayName": "Tenure (Months)",
+      "description": "Customer tenure in months",
+      "dataType": "Integer",
+      "minValue": 0
+    },
+    {
+      "schemaName": "kdap_scoringmodel",
+      "displayName": "Scoring Model",
+      "description": "ML model version used for scoring",
+      "dataType": "String",
+      "maxLength": 50
+    },
+    {
+      "schemaName": "kdap_campaignid",
+      "displayName": "Campaign ID",
+      "description": "Associated campaign if applicable",
+      "dataType": "String",
+      "maxLength": 100
+    }
+  ],
+  "relationships": [],
+  "indexes": [
+    {
+      "schemaName": "idx_kdap_scores_customer",
+      "columns": ["kdap_customerid"],
+      "isUnique": false
+    },
+    {
+      "schemaName": "idx_kdap_scores_segment",
+      "columns": ["kdap_segment", "kdap_propensityscore"],
+      "isUnique": false
+    },
+    {
+      "schemaName": "idx_kdap_scores_session",
+      "columns": ["kdap_sessionid", "createdon"],
+      "isUnique": false
+    }
+  ]
+}

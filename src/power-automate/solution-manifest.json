@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json.schemastore.org/solution-manifest.json",
+  "name": "KDAPMLIntegration",
+  "displayName": "KDAP ML Integration",
+  "description": "Power Automate flows and Dataverse tables for KDAP ML endpoint integration",
+  "version": "1.0.0.0",
+  "publisher": {
+    "name": "KesselDigital",
+    "displayName": "Kessel Digital",
+    "prefix": "kdap"
+  },
+  "components": {
+    "flows": [
+      {
+        "name": "KDAP-ANL-BudgetOptimization",
+        "displayName": "KDAP ANL Budget Optimization",
+        "description": "Budget optimization ML flow for ANL agent",
+        "category": "ML Integration",
+        "trigger": "Instant (HTTP)",
+        "connections": ["HTTP Premium", "Dataverse"],
+        "file": "flows/KDAP-ANL-BudgetOptimization.json"
+      },
+      {
+        "name": "KDAP-AUD-PropensityScoring",
+        "displayName": "KDAP AUD Propensity Scoring",
+        "description": "Propensity scoring ML flow for AUD agent",
+        "category": "ML Integration",
+        "trigger": "Instant (HTTP)",
+        "connections": ["HTTP Premium", "Dataverse"],
+        "file": "flows/KDAP-AUD-PropensityScoring.json"
+      },
+      {
+        "name": "KDAP-PRF-AnomalyDetection",
+        "displayName": "KDAP PRF Anomaly Detection",
+        "description": "Anomaly detection ML flow for PRF agent",
+        "category": "ML Integration",
+        "trigger": "Instant (HTTP) / Scheduled",
+        "connections": ["HTTP Premium", "Dataverse"],
+        "file": "flows/KDAP-PRF-AnomalyDetection.json"
+      },
+      {
+        "name": "KDAP-PRF-RealtimeAnomalyCheck",
+        "displayName": "KDAP PRF Realtime Anomaly Check",
+        "description": "Real-time anomaly check for single metrics",
+        "category": "ML Integration",
+        "trigger": "Instant (HTTP)",
+        "connections": ["HTTP Premium", "Dataverse"],
+        "file": "flows/KDAP-PRF-RealtimeAnomalyCheck.json"
+      }
+    ],
+    "tables": [
+      {
+        "schemaName": "kdap_ml_predictions",
+        "displayName": "KDAP ML Predictions",
+        "description": "ML prediction results storage",
+        "file": "dataverse/kdap_ml_predictions.json"
+      },
+      {
+        "schemaName": "kdap_anomaly_alerts",
+        "displayName": "KDAP Anomaly Alerts",
+        "description": "Anomaly detection alerts",
+        "file": "dataverse/kdap_anomaly_alerts.json"
+      },
+      {
+        "schemaName": "kdap_error_logs",
+        "displayName": "KDAP Error Logs",
+        "description": "Flow error logging",
+        "file": "dataverse/kdap_error_logs.json"
+      },
+      {
+        "schemaName": "kdap_audience_scores",
+        "displayName": "KDAP Audience Scores",
+        "description": "Propensity scores for audience members",
+        "file": "dataverse/kdap_audience_scores.json"
+      },
+      {
+        "schemaName": "kdap_metric_history",
+        "displayName": "KDAP Metric History",
+        "description": "Historical metric values for anomaly baseline",
+        "file": "dataverse/kdap_metric_history.json"
+      }
+    ],
+    "environmentVariables": {
+      "file": "environment/environment-variables.json"
+    }
+  },
+  "dependencies": {
+    "connectors": [
+      {
+        "name": "HTTP",
+        "displayName": "HTTP with Azure AD",
+        "isPremium": true,
+        "required": true
+      },
+      {
+        "name": "commondataserviceforapps",
+        "displayName": "Microsoft Dataverse",
+        "isPremium": false,
+        "required": true
+      }
+    ],
+    "azureResources": [
+      {
+        "type": "Microsoft.Web/sites",
+        "name": "kdap-ml-functions",
+        "description": "Azure Functions app hosting ML endpoints"
+      }
+    ]
+  },
+  "deployment": {
+    "order": [
+      "environmentVariables",
+      "tables",
+      "flows"
+    ],
+    "postDeployment": [
+      "Configure environment variable values",
+      "Activate all flows",
+      "Test each flow with sample data",
+      "Connect flows to Copilot Studio topics"
+    ]
+  }
+}

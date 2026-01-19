@@ -1,0 +1,114 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/PowerPlatform-DataverseModelBuilder/main/src/schemas/table.schema.json",
+  "schemaName": "kdap_metric_history",
+  "displayName": "KDAP Metric History",
+  "displayCollectionName": "KDAP Metric History",
+  "description": "Stores historical metric values for anomaly detection baseline",
+  "ownershipType": "OrganizationOwned",
+  "primaryKey": {
+    "schemaName": "kdap_metrichistoryid",
+    "displayName": "Metric History ID",
+    "dataType": "Uniqueidentifier"
+  },
+  "primaryName": {
+    "schemaName": "kdap_name",
+    "displayName": "Name",
+    "maxLength": 100
+  },
+  "attributes": [
+    {
+      "schemaName": "kdap_metrichistoryid",
+      "displayName": "Metric History ID",
+      "description": "Unique identifier for the metric history record",
+      "dataType": "Uniqueidentifier",
+      "isPrimaryKey": true
+    },
+    {
+      "schemaName": "kdap_metricname",
+      "displayName": "Metric Name",
+      "description": "Name of the metric",
+      "dataType": "String",
+      "maxLength": 200,
+      "isRequired": true
+    },
+    {
+      "schemaName": "kdap_metricvalue",
+      "displayName": "Metric Value",
+      "description": "Recorded metric value",
+      "dataType": "Decimal",
+      "precision": 6,
+      "minValue": -999999999999,
+      "maxValue": 999999999999,
+      "isRequired": true
+    },
+    {
+      "schemaName": "kdap_metrictimestamp",
+      "displayName": "Metric Timestamp",
+      "description": "When the metric was recorded",
+      "dataType": "DateTime",
+      "dateTimeBehavior": "UserLocal",
+      "isRequired": true
+    },
+    {
+      "schemaName": "kdap_metricsource",
+      "displayName": "Metric Source",
+      "description": "Source system for the metric",
+      "dataType": "String",
+      "maxLength": 100
+    },
+    {
+      "schemaName": "kdap_metriccategory",
+      "displayName": "Metric Category",
+      "description": "Category of the metric",
+      "dataType": "Picklist",
+      "options": [
+        { "value": 1, "label": "Performance" },
+        { "value": 2, "label": "Financial" },
+        { "value": 3, "label": "Engagement" },
+        { "value": 4, "label": "Conversion" },
+        { "value": 5, "label": "Reach" },
+        { "value": 6, "label": "Quality" }
+      ]
+    },
+    {
+      "schemaName": "kdap_campaignid",
+      "displayName": "Campaign ID",
+      "description": "Associated campaign",
+      "dataType": "String",
+      "maxLength": 100
+    },
+    {
+      "schemaName": "kdap_channelid",
+      "displayName": "Channel ID",
+      "description": "Associated channel",
+      "dataType": "String",
+      "maxLength": 100
+    },
+    {
+      "schemaName": "kdap_granularity",
+      "displayName": "Granularity",
+      "description": "Time granularity of the metric",
+      "dataType": "Picklist",
+      "options": [
+        { "value": 1, "label": "Hourly" },
+        { "value": 2, "label": "Daily" },
+        { "value": 3, "label": "Weekly" },
+        { "value": 4, "label": "Monthly" }
+      ],
+      "defaultValue": 2
+    }
+  ],
+  "relationships": [],
+  "indexes": [
+    {
+      "schemaName": "idx_kdap_metrics_name_time",
+      "columns": ["kdap_metricname", "kdap_metrictimestamp"],
+      "isUnique": false
+    },
+    {
+      "schemaName": "idx_kdap_metrics_campaign",
+      "columns": ["kdap_campaignid", "kdap_metricname"],
+      "isUnique": false
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/PowerPlatform-DataverseModelBuilder/main/src/schemas/table.schema.json",
+  "schemaName": "kdap_ml_predictions",
+  "displayName": "KDAP ML Predictions",
+  "displayCollectionName": "KDAP ML Predictions",
+  "description": "Stores ML prediction results from KDAP agent workflows",
+  "ownershipType": "UserOwned",
+  "primaryKey": {
+    "schemaName": "kdap_predictionid",
+    "displayName": "Prediction ID",
+    "dataType": "Uniqueidentifier"
+  },
+  "primaryName": {
+    "schemaName": "kdap_name",
+    "displayName": "Name",
+    "maxLength": 100
+  },
+  "attributes": [
+    {
+      "schemaName": "kdap_predictionid",
+      "displayName": "Prediction ID",
+      "description": "Unique identifier for the prediction record",
+      "dataType": "Uniqueidentifier",
+      "isPrimaryKey": true
+    },
+    {
+      "schemaName": "kdap_sessionid",
+      "displayName": "Session ID",
+      "description": "Copilot Studio session ID",
+      "dataType": "String",
+      "maxLength": 100,
+      "isRequired": true
+    },
+    {
+      "schemaName": "kdap_modeltype",
+      "displayName": "Model Type",
+      "description": "Type of ML model used",
+      "dataType": "Picklist",
+      "options": [
+        { "value": 1, "label": "Budget Optimization" },
+        { "value": 2, "label": "Propensity Scoring" },
+        { "value": 3, "label": "Anomaly Detection" },
+        { "value": 4, "label": "Audience Segmentation" },
+        { "value": 5, "label": "Channel Attribution" }
+      ],
+      "isRequired": true
+    },
+    {
+      "schemaName": "kdap_inputpayload",
+      "displayName": "Input Payload",
+      "description": "JSON input sent to ML endpoint",
+      "dataType": "Memo",
+      "maxLength": 1048576
+    },
+    {
+      "schemaName": "kdap_outputpayload",
+      "displayName": "Output Payload",
+      "description": "JSON response from ML endpoint",
+      "dataType": "Memo",
+      "maxLength": 1048576
+    },
+    {
+      "schemaName": "kdap_latencyms",
+      "displayName": "Latency (ms)",
+      "description": "ML endpoint response time in milliseconds",
+      "dataType": "Integer",
+      "minValue": 0,
+      "maxValue": 300000
+    },
+    {
+      "schemaName": "kdap_status",
+      "displayName": "Status",
+      "description": "Prediction execution status",
+      "dataType": "Picklist",
+      "options": [
+        { "value": 1, "label": "Success" },
+        { "value": 2, "label": "Failed" },
+        { "value": 3, "label": "Timeout" },
+        { "value": 4, "label": "Partial" }
+      ],
+      "defaultValue": 1
+    },
+    {
+      "schemaName": "kdap_agentcode",
+      "displayName": "Agent Code",
+      "description": "KDAP agent that requested the prediction",
+      "dataType": "String",
+      "maxLength": 10
+    },
+    {
+      "schemaName": "kdap_errorcode",
+      "displayName": "Error Code",
+      "description": "Error code if prediction failed",
+      "dataType": "String",
+      "maxLength": 50
+    },
+    {
+      "schemaName": "kdap_errormessage",
+      "displayName": "Error Message",
+      "description": "Error message if prediction failed",
+      "dataType": "Memo",
+      "maxLength": 4000
+    }
+  ],
+  "relationships": [],
+  "indexes": [
+    {
+      "schemaName": "idx_kdap_predictions_session",
+      "columns": ["kdap_sessionid"],
+      "isUnique": false
+    },
+    {
+      "schemaName": "idx_kdap_predictions_model",
+      "columns": ["kdap_modeltype", "createdon"],
+      "isUnique": false
+    }
+  ]
+}

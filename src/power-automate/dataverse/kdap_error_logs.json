@@ -1,0 +1,127 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/PowerPlatform-DataverseModelBuilder/main/src/schemas/table.schema.json",
+  "schemaName": "kdap_error_logs",
+  "displayName": "KDAP Error Logs",
+  "displayCollectionName": "KDAP Error Logs",
+  "description": "Stores error logs from KDAP Power Automate flows",
+  "ownershipType": "OrganizationOwned",
+  "primaryKey": {
+    "schemaName": "kdap_logid",
+    "displayName": "Log ID",
+    "dataType": "Uniqueidentifier"
+  },
+  "primaryName": {
+    "schemaName": "kdap_name",
+    "displayName": "Name",
+    "maxLength": 100
+  },
+  "attributes": [
+    {
+      "schemaName": "kdap_logid",
+      "displayName": "Log ID",
+      "description": "Unique identifier for the error log",
+      "dataType": "Uniqueidentifier",
+      "isPrimaryKey": true
+    },
+    {
+      "schemaName": "kdap_flowname",
+      "displayName": "Flow Name",
+      "description": "Name of the Power Automate flow",
+      "dataType": "String",
+      "maxLength": 200,
+      "isRequired": true
+    },
+    {
+      "schemaName": "kdap_errorcode",
+      "displayName": "Error Code",
+      "description": "Error code identifier",
+      "dataType": "String",
+      "maxLength": 100,
+      "isRequired": true
+    },
+    {
+      "schemaName": "kdap_errormessage",
+      "displayName": "Error Message",
+      "description": "Detailed error message",
+      "dataType": "Memo",
+      "maxLength": 10000
+    },
+    {
+      "schemaName": "kdap_inputpayload",
+      "displayName": "Input Payload",
+      "description": "Input that caused the error",
+      "dataType": "Memo",
+      "maxLength": 1048576
+    },
+    {
+      "schemaName": "kdap_stacktrace",
+      "displayName": "Stack Trace",
+      "description": "Technical stack trace if available",
+      "dataType": "Memo",
+      "maxLength": 100000
+    },
+    {
+      "schemaName": "kdap_sessionid",
+      "displayName": "Session ID",
+      "description": "Copilot Studio session ID",
+      "dataType": "String",
+      "maxLength": 100
+    },
+    {
+      "schemaName": "kdap_agentcode",
+      "displayName": "Agent Code",
+      "description": "KDAP agent that triggered the flow",
+      "dataType": "String",
+      "maxLength": 10
+    },
+    {
+      "schemaName": "kdap_severity",
+      "displayName": "Severity",
+      "description": "Error severity level",
+      "dataType": "Picklist",
+      "options": [
+        { "value": 1, "label": "Critical" },
+        { "value": 2, "label": "Error" },
+        { "value": 3, "label": "Warning" },
+        { "value": 4, "label": "Info" }
+      ],
+      "defaultValue": 2
+    },
+    {
+      "schemaName": "kdap_retrycount",
+      "displayName": "Retry Count",
+      "description": "Number of retries attempted",
+      "dataType": "Integer",
+      "minValue": 0,
+      "maxValue": 100,
+      "defaultValue": 0
+    },
+    {
+      "schemaName": "kdap_resolved",
+      "displayName": "Resolved",
+      "description": "Whether the error has been resolved",
+      "dataType": "Boolean",
+      "defaultValue": false
+    },
+    {
+      "schemaName": "kdap_resolvedon",
+      "displayName": "Resolved On",
+      "description": "When the error was resolved",
+      "dataType": "DateTime",
+      "dateTimeBehavior": "UserLocal"
+    }
+  ],
+  "relationships": [],
+  "indexes": [
+    {
+      "schemaName": "idx_kdap_errors_flow",
+      "columns": ["kdap_flowname", "createdon"],
+      "isUnique": false
+    },
+    {
+      "schemaName": "idx_kdap_errors_severity",
+      "columns": ["kdap_severity", "kdap_resolved"],
+      "isUnique": false
+    }
+  ]
+}

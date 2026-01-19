@@ -1,0 +1,375 @@
+{
+  "version": "1.0.0",
+  "description": "Integration tests for multi-agent collaboration scenarios",
+  "created": "2026-01-19",
+  "total_tests": 25,
+  "categories": {
+    "sequential_handoffs": 8,
+    "parallel_coordination": 5,
+    "context_preservation": 4,
+    "error_recovery": 4,
+    "session_management": 4
+  },
+  "tests": [
+    {
+      "id": "INT-001",
+      "category": "sequential_handoffs",
+      "name": "ANL → CHA Budget to Allocation",
+      "description": "Budget projections flow into channel allocation",
+      "sequence": [
+        {"agent": "ANL", "input": "Project results for $500K budget", "checkpoint": "projections_generated"},
+        {"agent": "CHA", "input": "Allocate this budget across channels", "checkpoint": "allocation_complete"}
+      ],
+      "expected_data_flow": ["budget_amount", "projected_reach", "channel_percentages"],
+      "priority": "P0",
+      "tags": ["integration", "anl-cha"]
+    },
+    {
+      "id": "INT-002",
+      "category": "sequential_handoffs",
+      "name": "AUD → CHA Segment to Targeting",
+      "description": "Audience segments inform channel targeting strategy",
+      "sequence": [
+        {"agent": "AUD", "input": "Segment customers by value tier", "checkpoint": "segments_defined"},
+        {"agent": "CHA", "input": "Recommend channels for high-value segment", "checkpoint": "targeting_complete"}
+      ],
+      "expected_data_flow": ["segment_definitions", "segment_sizes", "channel_recommendations"],
+      "priority": "P0",
+      "tags": ["integration", "aud-cha"]
+    },
+    {
+      "id": "INT-003",
+      "category": "sequential_handoffs",
+      "name": "CHA → SPO Channel to Supply",
+      "description": "Channel selection drives supply path optimization",
+      "sequence": [
+        {"agent": "CHA", "input": "Recommend channel mix for conversion", "checkpoint": "channels_selected"},
+        {"agent": "SPO", "input": "Optimize supply paths for these channels", "checkpoint": "supply_optimized"}
+      ],
+      "expected_data_flow": ["selected_channels", "budget_per_channel", "partner_recommendations"],
+      "priority": "P0",
+      "tags": ["integration", "cha-spo"]
+    },
+    {
+      "id": "INT-004",
+      "category": "sequential_handoffs",
+      "name": "PRF → CHA Performance to Reallocation",
+      "description": "Performance analysis triggers budget reallocation",
+      "sequence": [
+        {"agent": "PRF", "input": "Analyze last week performance", "checkpoint": "analysis_complete"},
+        {"agent": "CHA", "input": "Reallocate based on performance", "checkpoint": "reallocation_complete"}
+      ],
+      "expected_data_flow": ["performance_data", "underperformers", "new_allocation"],
+      "priority": "P0",
+      "tags": ["integration", "prf-cha"]
+    },
+    {
+      "id": "INT-005",
+      "category": "sequential_handoffs",
+      "name": "CHG → MKT Change to Communication",
+      "description": "Change assessment informs marketing communication",
+      "sequence": [
+        {"agent": "CHG", "input": "Assess readiness for new product launch", "checkpoint": "readiness_assessed"},
+        {"agent": "MKT", "input": "Develop communication strategy for launch", "checkpoint": "strategy_complete"}
+      ],
+      "expected_data_flow": ["readiness_score", "stakeholder_map", "communication_plan"],
+      "priority": "P1",
+      "tags": ["integration", "chg-mkt"]
+    },
+    {
+      "id": "INT-006",
+      "category": "sequential_handoffs",
+      "name": "CST → ANL Framework to Projection",
+      "description": "Strategic framework informs analytical approach",
+      "sequence": [
+        {"agent": "CST", "input": "Select framework for market entry", "checkpoint": "framework_selected"},
+        {"agent": "ANL", "input": "Project outcomes using this framework", "checkpoint": "projections_complete"}
+      ],
+      "expected_data_flow": ["framework_parameters", "analysis_methodology", "projections"],
+      "priority": "P1",
+      "tags": ["integration", "cst-anl"]
+    },
+    {
+      "id": "INT-007",
+      "category": "sequential_handoffs",
+      "name": "Full Planning → DOC Export",
+      "description": "Complete planning flow ends with document generation",
+      "sequence": [
+        {"agent": "ORC", "input": "Start planning for Q2 campaign", "checkpoint": "session_started"},
+        {"agent": "AUD", "input": "Define target audience", "checkpoint": "audience_defined"},
+        {"agent": "CHA", "input": "Recommend channel mix", "checkpoint": "channels_selected"},
+        {"agent": "ANL", "input": "Project outcomes", "checkpoint": "projections_complete"},
+        {"agent": "DOC", "input": "Generate media plan", "checkpoint": "document_generated"}
+      ],
+      "expected_data_flow": ["session_context", "audience", "channels", "projections", "document_url"],
+      "priority": "P0",
+      "tags": ["integration", "full-flow"]
+    },
+    {
+      "id": "INT-008",
+      "category": "sequential_handoffs",
+      "name": "Performance Loop Integration",
+      "description": "Performance triggers optimization cycle",
+      "sequence": [
+        {"agent": "PRF", "input": "Detect performance anomalies", "checkpoint": "anomalies_detected"},
+        {"agent": "ANL", "input": "Update projections with actuals", "checkpoint": "projections_updated"},
+        {"agent": "CHA", "input": "Adjust allocation recommendations", "checkpoint": "allocation_adjusted"}
+      ],
+      "expected_data_flow": ["anomaly_data", "updated_forecasts", "new_recommendations"],
+      "priority": "P1",
+      "tags": ["integration", "optimization-loop"]
+    },
+    {
+      "id": "INT-009",
+      "category": "parallel_coordination",
+      "name": "Parallel ANL + AUD Analysis",
+      "description": "Budget and audience analysis run in parallel",
+      "parallel_agents": [
+        {"agent": "ANL", "input": "Project budget scenarios"},
+        {"agent": "AUD", "input": "Analyze audience segments"}
+      ],
+      "synthesis_agent": "ORC",
+      "expected_output": "Combined budget-audience strategy",
+      "priority": "P0",
+      "tags": ["integration", "parallel"]
+    },
+    {
+      "id": "INT-010",
+      "category": "parallel_coordination",
+      "name": "Parallel CHA + SPO Optimization",
+      "description": "Channel and supply optimization in parallel",
+      "parallel_agents": [
+        {"agent": "CHA", "input": "Optimize channel mix"},
+        {"agent": "SPO", "input": "Optimize supply paths"}
+      ],
+      "synthesis_agent": "ORC",
+      "expected_output": "Integrated channel-supply strategy",
+      "priority": "P1",
+      "tags": ["integration", "parallel"]
+    },
+    {
+      "id": "INT-011",
+      "category": "parallel_coordination",
+      "name": "Parallel CHG + CST Assessment",
+      "description": "Change and strategy assessment in parallel",
+      "parallel_agents": [
+        {"agent": "CHG", "input": "Assess change readiness"},
+        {"agent": "CST", "input": "Select strategic framework"}
+      ],
+      "synthesis_agent": "ORC",
+      "expected_output": "Aligned change-strategy approach",
+      "priority": "P1",
+      "tags": ["integration", "parallel"]
+    },
+    {
+      "id": "INT-012",
+      "category": "parallel_coordination",
+      "name": "Triple Parallel Analysis",
+      "description": "ANL, AUD, CHA analyze simultaneously",
+      "parallel_agents": [
+        {"agent": "ANL", "input": "Project outcomes"},
+        {"agent": "AUD", "input": "Profile audience"},
+        {"agent": "CHA", "input": "Recommend channels"}
+      ],
+      "synthesis_agent": "ORC",
+      "expected_output": "Unified media strategy",
+      "priority": "P1",
+      "tags": ["integration", "parallel", "triple"]
+    },
+    {
+      "id": "INT-013",
+      "category": "parallel_coordination",
+      "name": "PRF + ANL Performance Review",
+      "description": "Performance and projections compared in parallel",
+      "parallel_agents": [
+        {"agent": "PRF", "input": "Analyze actual performance"},
+        {"agent": "ANL", "input": "Retrieve original projections"}
+      ],
+      "synthesis_agent": "ORC",
+      "expected_output": "Projection vs actual comparison",
+      "priority": "P1",
+      "tags": ["integration", "parallel", "comparison"]
+    },
+    {
+      "id": "INT-014",
+      "category": "context_preservation",
+      "name": "Session Context Across Agents",
+      "description": "Verify context preserved across agent switches",
+      "sequence": [
+        {"agent": "ORC", "input": "Start session for retail client with $1M budget", "context_set": ["vertical", "budget"]},
+        {"agent": "ANL", "input": "Project outcomes", "context_check": ["vertical", "budget"]},
+        {"agent": "CHA", "input": "Recommend channels", "context_check": ["vertical", "budget", "projections"]}
+      ],
+      "validation": "All agents receive correct context",
+      "priority": "P0",
+      "tags": ["integration", "context"]
+    },
+    {
+      "id": "INT-015",
+      "category": "context_preservation",
+      "name": "Multi-Turn Context Retention",
+      "description": "Context retained across multiple conversation turns",
+      "sequence": [
+        {"turn": 1, "input": "Our budget is $500K for Q2", "context_stored": "budget"},
+        {"turn": 2, "input": "Target millennials in urban areas", "context_stored": "audience"},
+        {"turn": 3, "input": "Focus on brand awareness", "context_stored": "objective"},
+        {"turn": 4, "input": "Recommend channel allocation", "context_verified": ["budget", "audience", "objective"]}
+      ],
+      "priority": "P0",
+      "tags": ["integration", "context", "multi-turn"]
+    },
+    {
+      "id": "INT-016",
+      "category": "context_preservation",
+      "name": "Agent-Specific Context Enhancement",
+      "description": "Each agent adds to shared context",
+      "sequence": [
+        {"agent": "AUD", "adds_context": "segment_definitions"},
+        {"agent": "ANL", "adds_context": "projection_data"},
+        {"agent": "CHA", "uses_context": ["segment_definitions", "projection_data"]}
+      ],
+      "priority": "P1",
+      "tags": ["integration", "context", "enhancement"]
+    },
+    {
+      "id": "INT-017",
+      "category": "context_preservation",
+      "name": "Context Recovery After Error",
+      "description": "Context preserved even after agent error",
+      "sequence": [
+        {"agent": "ORC", "input": "Start session", "context_set": "session_id"},
+        {"agent": "ANL", "input": "Invalid calculation request", "expected_error": true},
+        {"agent": "CHA", "input": "Continue with channel planning", "context_check": "session_id"}
+      ],
+      "priority": "P1",
+      "tags": ["integration", "context", "recovery"]
+    },
+    {
+      "id": "INT-018",
+      "category": "error_recovery",
+      "name": "Agent Unavailable Fallback",
+      "description": "ORC handles unavailable specialist gracefully",
+      "scenario": {
+        "input": "Calculate budget projections",
+        "target_agent": "ANL",
+        "simulate_error": "agent_unavailable",
+        "expected_behavior": "ORC provides fallback response or retries"
+      },
+      "priority": "P0",
+      "tags": ["integration", "error", "fallback"]
+    },
+    {
+      "id": "INT-019",
+      "category": "error_recovery",
+      "name": "Flow Timeout Recovery",
+      "description": "Handle flow execution timeout",
+      "scenario": {
+        "input": "Generate complex document",
+        "target_agent": "DOC",
+        "simulate_error": "flow_timeout",
+        "expected_behavior": "Graceful timeout message with retry option"
+      },
+      "priority": "P1",
+      "tags": ["integration", "error", "timeout"]
+    },
+    {
+      "id": "INT-020",
+      "category": "error_recovery",
+      "name": "Invalid Input Handling",
+      "description": "Agents handle malformed input gracefully",
+      "scenario": {
+        "input": "Calculate projections for -$500 budget",
+        "target_agent": "ANL",
+        "expected_behavior": "Validation error with helpful message"
+      },
+      "priority": "P1",
+      "tags": ["integration", "error", "validation"]
+    },
+    {
+      "id": "INT-021",
+      "category": "error_recovery",
+      "name": "Partial Success Handling",
+      "description": "Handle partial completion of multi-step flow",
+      "scenario": {
+        "sequence": ["AUD succeeds", "ANL fails", "CHA not attempted"],
+        "expected_behavior": "Report partial success with recovery options"
+      },
+      "priority": "P1",
+      "tags": ["integration", "error", "partial"]
+    },
+    {
+      "id": "INT-022",
+      "category": "session_management",
+      "name": "New Session Initialization",
+      "description": "Verify new session creates clean state",
+      "steps": [
+        "Request new session",
+        "Verify session_id assigned",
+        "Verify default pathway selected",
+        "Verify initial step is 1"
+      ],
+      "priority": "P0",
+      "tags": ["integration", "session", "init"]
+    },
+    {
+      "id": "INT-023",
+      "category": "session_management",
+      "name": "Session Resume",
+      "description": "Resume interrupted session correctly",
+      "steps": [
+        "Start session, progress to step 3",
+        "Simulate disconnect",
+        "Resume session",
+        "Verify step 3 context restored"
+      ],
+      "priority": "P0",
+      "tags": ["integration", "session", "resume"]
+    },
+    {
+      "id": "INT-024",
+      "category": "session_management",
+      "name": "Pathway Switching",
+      "description": "Switch between Planning/InFlight/Audit pathways",
+      "steps": [
+        "Start in Planning pathway",
+        "Switch to Audit pathway",
+        "Verify context adapted for Audit",
+        "Verify appropriate agents available"
+      ],
+      "priority": "P1",
+      "tags": ["integration", "session", "pathway"]
+    },
+    {
+      "id": "INT-025",
+      "category": "session_management",
+      "name": "Session Completion",
+      "description": "Verify session completes correctly at Gate 4",
+      "steps": [
+        "Progress through all 10 steps",
+        "Pass all 4 gates",
+        "Complete session",
+        "Verify final status and metrics"
+      ],
+      "priority": "P1",
+      "tags": ["integration", "session", "completion"]
+    }
+  ],
+  "execution_instructions": {
+    "environment": "Copilot Studio test environment",
+    "prerequisites": [
+      "All 10 agents deployed",
+      "All flows connected",
+      "Session management active"
+    ],
+    "pass_criteria": {
+      "P0_tests": "100% pass required",
+      "P1_tests": "85% pass required"
+    },
+    "metrics_to_capture": [
+      "End-to-end latency (ms)",
+      "Context preservation accuracy (%)",
+      "Error recovery success rate (%)",
+      "Data flow integrity (Y/N)"
+    ]
+  }
+}

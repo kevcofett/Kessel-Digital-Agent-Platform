@@ -1,0 +1,314 @@
+# KDAP ML Training - CI/CD Pipeline
+# Builds, tests, and deploys ML infrastructure
+
+name: ML Training CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+    paths:
+      - 'src/ml-training/**'
+      - '.github/workflows/ml-training.yml'
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'src/ml-training/**'
+  workflow_dispatch:
+    inputs:
+      deploy_env:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  PYTHON_VERSION: '3.11'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/kdap-ml-training
+
+jobs:
+  # ===========================================================================
+  # Lint and Type Check
+  # ===========================================================================
+  lint:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/ml-training
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: src/ml-training/requirements.txt
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff mypy black isort
+          pip install -r requirements.txt
+      
+      - name: Run ruff linter
+        run: ruff check kdap_ml/ --output-format=github
+      
+      - name: Run black formatter check
+        run: black --check kdap_ml/
+      
+      - name: Run isort import check
+        run: isort --check-only kdap_ml/
+      
+      - name: Run mypy type check
+        run: mypy kdap_ml/ --ignore-missing-imports
+
+  # ===========================================================================
+  # Unit Tests
+  # ===========================================================================
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    defaults:
+      run:
+        working-directory: src/ml-training
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: src/ml-training/requirements.txt
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-asyncio
+      
+      - name: Run tests with coverage
+        run: |
+          pytest tests/ -v \
+            --cov=kdap_ml \
+            --cov-report=xml \
+            --cov-report=html \
+            --cov-fail-under=80 \
+            --junitxml=test-results.xml
+      
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v3
+        with:
+          files: src/ml-training/coverage.xml
+          flags: ml-training
+          name: kdap-ml-coverage
+      
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: |
+            src/ml-training/test-results.xml
+            src/ml-training/htmlcov/
+
+  # ===========================================================================
+  # Build Docker Images
+  # ===========================================================================
+  build:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    needs: test
+    permissions:
+      contents: read
+      packages: write
+    
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tags }}
+      image_digest: ${{ steps.build.outputs.digest }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix=
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+      
+      - name: Build and push training image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: src/ml-training
+          file: src/ml-training/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
+            VCS_REF=${{ github.sha }}
+      
+      - name: Build and push serving image
+        uses: docker/build-push-action@v5
+        with:
+          context: src/ml-training
+          file: src/ml-training/Dockerfile.serving
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}/kdap-ml-serving:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ===========================================================================
+  # Security Scan
+  # ===========================================================================
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      security-events: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+      
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # ===========================================================================
+  # Deploy to Staging
+  # ===========================================================================
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build, security]
+    if: github.ref == 'refs/heads/develop' || github.event.inputs.deploy_env == 'staging'
+    environment:
+      name: staging
+      url: https://ml-staging.kdap.kesseldigital.com
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS_STAGING }}
+      
+      - name: Deploy to Azure ML
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az ml online-deployment update \
+              --name kdap-ml-staging \
+              --endpoint-name kdap-ml-endpoint-staging \
+              --resource-group ${{ secrets.AZURE_RG_STAGING }} \
+              --workspace-name ${{ secrets.AZURE_ML_WORKSPACE_STAGING }} \
+              --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      
+      - name: Run smoke tests
+        run: |
+          curl -f https://ml-staging.kdap.kesseldigital.com/health || exit 1
+
+  # ===========================================================================
+  # Deploy to Production
+  # ===========================================================================
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [deploy-staging]
+    if: github.ref == 'refs/heads/main' || github.event.inputs.deploy_env == 'production'
+    environment:
+      name: production
+      url: https://ml.kdap.kesseldigital.com
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS_PRODUCTION }}
+      
+      - name: Deploy to Azure ML
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            # Blue-green deployment
+            az ml online-deployment create \
+              --name kdap-ml-green \
+              --endpoint-name kdap-ml-endpoint \
+              --resource-group ${{ secrets.AZURE_RG_PRODUCTION }} \
+              --workspace-name ${{ secrets.AZURE_ML_WORKSPACE_PRODUCTION }} \
+              --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+              --instance-type Standard_DS3_v2 \
+              --instance-count 2
+            
+            # Shift traffic gradually
+            az ml online-endpoint update \
+              --name kdap-ml-endpoint \
+              --resource-group ${{ secrets.AZURE_RG_PRODUCTION }} \
+              --workspace-name ${{ secrets.AZURE_ML_WORKSPACE_PRODUCTION }} \
+              --traffic "kdap-ml-green=100"
+      
+      - name: Run production smoke tests
+        run: |
+          curl -f https://ml.kdap.kesseldigital.com/health || exit 1
+      
+      - name: Create release tag
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tag = `ml-v${new Date().toISOString().split('T')[0]}-${{ github.sha }}`.slice(0, 50);
+            await github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/${tag}`,
+              sha: context.sha
+            });

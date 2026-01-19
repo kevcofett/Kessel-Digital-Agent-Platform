@@ -1,0 +1,169 @@
+# Lookalike Model Configuration
+# AUD Agent - Lookalike Audience Modeling
+
+model:
+  name: lookalike
+  type: similarity
+  algorithm: ensemble
+  task: audience_expansion
+
+seed_audience:
+  min_size: 100
+  max_size: 100000
+  quality_threshold: 0.7
+
+features:
+  demographic:
+    - age_bucket
+    - gender
+    - income_bucket
+    - education_level
+    - occupation_category
+    - household_size
+    - marital_status
+    
+  behavioral:
+    - purchase_frequency
+    - avg_order_value
+    - category_affinity_scores
+    - brand_affinity_scores
+    - channel_preferences
+    - time_of_day_preferences
+    - day_of_week_preferences
+    - device_usage_patterns
+    
+  engagement:
+    - email_engagement_score
+    - web_engagement_score
+    - app_engagement_score
+    - social_engagement_score
+    - content_consumption_score
+    
+  transactional:
+    - recency_score
+    - frequency_score
+    - monetary_score
+    - product_diversity_score
+    - discount_sensitivity
+    
+  derived:
+    - clv_predicted
+    - propensity_score
+    - loyalty_index
+    - engagement_trend
+
+preprocessing:
+  numerical:
+    imputer: median
+    scaler: standard
+    
+  categorical:
+    encoder: target
+    handle_unknown: value
+    
+  embeddings:
+    method: autoencoder
+    latent_dim: 32
+    
+algorithms:
+  knn:
+    n_neighbors: 50
+    metric: cosine
+    weights: distance
+    algorithm: ball_tree
+    
+  random_forest_similarity:
+    n_estimators: 100
+    max_depth: 10
+    proximity_matrix: true
+    
+  embedding_similarity:
+    encoder_layers: [128, 64, 32]
+    activation: relu
+    metric: cosine
+    
+  gradient_boosting:
+    n_estimators: 500
+    max_depth: 6
+    learning_rate: 0.05
+
+ensemble:
+  method: weighted_average
+  weights:
+    knn: 0.25
+    random_forest: 0.25
+    embedding: 0.30
+    gradient_boosting: 0.20
+  calibration: isotonic
+
+training:
+  seed_split_ratio: 0.8
+  negative_sampling_ratio: 3
+  cv_folds: 5
+
+similarity_scoring:
+  method: probability
+  threshold_percentiles:
+    - 99
+    - 95
+    - 90
+    - 80
+    - 70
+    
+expansion_tiers:
+  tier_1:
+    percentile: 99
+    similarity_threshold: 0.95
+    expected_match_rate: 0.85
+  tier_2:
+    percentile: 95
+    similarity_threshold: 0.90
+    expected_match_rate: 0.70
+  tier_3:
+    percentile: 90
+    similarity_threshold: 0.85
+    expected_match_rate: 0.55
+  tier_4:
+    percentile: 80
+    similarity_threshold: 0.75
+    expected_match_rate: 0.40
+  tier_5:
+    percentile: 70
+    similarity_threshold: 0.65
+    expected_match_rate: 0.30
+
+evaluation:
+  primary_metric: auc_roc
+  metrics:
+    - auc_roc
+    - precision_at_k
+    - recall_at_k
+    - lift_at_k
+  k_values: [100, 500, 1000, 5000, 10000]
+  threshold_metrics:
+    auc_roc: 0.75
+    lift_at_1000: 3.0
+
+reach_estimation:
+  method: hypergeometric
+  confidence_level: 0.95
+  
+output:
+  lookalikes:
+    - customer_id
+    - similarity_score
+    - expansion_tier
+    - match_probability
+    - top_matching_features
+    
+  summary:
+    - seed_size
+    - expansion_factor
+    - total_lookalikes
+    - tier_distribution
+    - feature_importance
+    
+  reach_estimate:
+    - estimated_reach
+    - confidence_interval
+    - expected_conversion_rate

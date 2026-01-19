@@ -1,0 +1,166 @@
+# Media Mix Model Configuration
+# CHA Agent - Marketing Mix Modeling with Bayesian Regression
+
+model:
+  name: media_mix
+  type: regression
+  algorithm: bayesian_mmm
+  task: attribution_optimization
+
+features:
+  media_channels:
+    - tv_spend
+    - radio_spend
+    - print_spend
+    - ooh_spend
+    - digital_display_spend
+    - paid_search_spend
+    - paid_social_spend
+    - video_spend
+    - native_spend
+    - affiliate_spend
+    - influencer_spend
+    - email_spend
+    
+  control_variables:
+    - price_index
+    - promotion_indicator
+    - competitor_spend_index
+    - economic_index
+    - seasonality_index
+    - holiday_indicator
+    - weather_index
+    
+  temporal:
+    - week_of_year
+    - month
+    - quarter
+    - year
+    
+  lagged_effects:
+    adstock_decay_rates:
+      tv: 0.7
+      radio: 0.5
+      print: 0.6
+      ooh: 0.65
+      digital_display: 0.3
+      paid_search: 0.1
+      paid_social: 0.2
+      video: 0.4
+      native: 0.25
+      affiliate: 0.15
+      influencer: 0.35
+      email: 0.2
+
+target:
+  name: revenue
+  type: continuous
+  transformation: log
+
+preprocessing:
+  media_spend:
+    transformation: adstock
+    saturation: hill
+    normalize: true
+    
+  control_variables:
+    imputer: forward_fill
+    scaler: standard
+
+hyperparameters:
+  bayesian_mmm:
+    n_samples: 2000
+    n_chains: 4
+    n_warmup: 1000
+    target_accept: 0.9
+    max_treedepth: 12
+    
+  priors:
+    intercept:
+      distribution: normal
+      mu: 0
+      sigma: 5
+    media_coefficients:
+      distribution: half_normal
+      sigma: 2
+    control_coefficients:
+      distribution: normal
+      mu: 0
+      sigma: 2
+    noise:
+      distribution: half_normal
+      sigma: 1
+      
+  saturation:
+    hill_function:
+      alpha_prior:
+        distribution: beta
+        a: 2
+        b: 2
+      gamma_prior:
+        distribution: gamma
+        alpha: 2
+        beta: 1
+
+adstock:
+  method: geometric
+  max_lag_weeks: 8
+  normalize: true
+
+training:
+  time_granularity: weekly
+  min_history_weeks: 52
+  validation_weeks: 12
+  
+cross_validation:
+  method: time_series_split
+  n_splits: 5
+  gap: 4
+
+evaluation:
+  primary_metric: mape
+  metrics:
+    - mape
+    - rmse
+    - r2
+    - dic
+    - waic
+  threshold_metrics:
+    mape: 15
+    r2: 0.70
+
+diagnostics:
+  convergence:
+    r_hat_threshold: 1.05
+    ess_threshold: 400
+  posterior_predictive_check: true
+  
+optimization:
+  method: scipy_minimize
+  constraints:
+    - total_budget
+    - min_channel_spend
+    - max_channel_spend
+  objective: maximize_revenue
+  
+output:
+  channel_contributions:
+    - channel_name
+    - spend
+    - contribution
+    - contribution_pct
+    - roi
+    - marginal_roi
+    - saturation_level
+    
+  optimization_results:
+    - optimal_allocation
+    - expected_revenue
+    - expected_lift
+    - confidence_interval
+    
+  diagnostics:
+    - convergence_metrics
+    - posterior_summaries
+    - adstock_curves
+    - saturation_curves

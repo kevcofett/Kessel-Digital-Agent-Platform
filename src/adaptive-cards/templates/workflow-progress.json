@@ -1,0 +1,175 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body": [
+    {
+      "type": "Container",
+      "style": "emphasis",
+      "items": [
+        {
+          "type": "ColumnSet",
+          "columns": [
+            {
+              "type": "Column",
+              "width": "auto",
+              "items": [
+                {
+                  "type": "Image",
+                  "url": "${iconUrl}",
+                  "size": "Small",
+                  "style": "Default"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "stretch",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "${workflowName}",
+                  "weight": "Bolder",
+                  "size": "Medium",
+                  "wrap": true
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "Step ${currentStep} of ${totalSteps}",
+                  "size": "Small",
+                  "isSubtle": true,
+                  "spacing": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "ColumnSet",
+          "columns": [
+            {
+              "type": "Column",
+              "width": "stretch",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "Progress",
+                  "size": "Small",
+                  "isSubtle": true
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "auto",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "${progressPercent}%",
+                  "size": "Small",
+                  "weight": "Bolder"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Image",
+          "url": "data:image/svg+xml;base64,${progressBarSvg}",
+          "height": "8px"
+        }
+      ],
+      "spacing": "Medium"
+    },
+    {
+      "type": "Container",
+      "separator": true,
+      "spacing": "Medium",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "${nodeLabel}",
+          "weight": "Bolder",
+          "size": "Large",
+          "wrap": true
+        },
+        {
+          "type": "TextBlock",
+          "text": "${nodeDescription}",
+          "wrap": true,
+          "spacing": "Small"
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "FactSet",
+          "facts": [
+            {
+              "title": "Agent",
+              "value": "${agentName}"
+            },
+            {
+              "title": "Capability",
+              "value": "${capability}"
+            },
+            {
+              "title": "Status",
+              "value": "${status}"
+            }
+          ]
+        }
+      ],
+      "spacing": "Medium",
+      "$when": "${agentName != ''}"
+    },
+    {
+      "type": "ActionSet",
+      "actions": [
+        {
+          "type": "Action.Submit",
+          "title": "Continue",
+          "style": "positive",
+          "data": {
+            "action": "continue",
+            "workflowId": "${workflowId}",
+            "nodeId": "${nodeId}",
+            "sessionId": "${sessionId}"
+          }
+        },
+        {
+          "type": "Action.Submit",
+          "title": "View Details",
+          "data": {
+            "action": "viewDetails",
+            "workflowId": "${workflowId}",
+            "nodeId": "${nodeId}",
+            "sessionId": "${sessionId}"
+          }
+        },
+        {
+          "type": "Action.Submit",
+          "title": "Cancel Workflow",
+          "style": "destructive",
+          "data": {
+            "action": "cancel",
+            "workflowId": "${workflowId}",
+            "sessionId": "${sessionId}"
+          }
+        }
+      ],
+      "spacing": "Large"
+    }
+  ],
+  "metadata": {
+    "webUrl": "${webAppUrl}",
+    "templateId": "kdap-workflow-progress"
+  }
+}

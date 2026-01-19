@@ -1,0 +1,212 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowName": "KDAP-PRF-RealtimeAnomalyCheck",
+    "description": "Real-time anomaly check for single metric values - fast response for Copilot Studio",
+    "author": "KDAP",
+    "version": "1.0.0",
+    "tags": ["KDAP", "ML", "PRF", "Anomaly", "Realtime"]
+  },
+  "parameters": {
+    "$connections": {
+      "defaultValue": {},
+      "type": "Object"
+    },
+    "KDAP_ML_FUNCTION_URL": {
+      "defaultValue": "https://kdap-ml-functions.azurewebsites.net",
+      "type": "String"
+    },
+    "KDAP_ML_API_KEY": {
+      "defaultValue": "",
+      "type": "SecureString"
+    }
+  },
+  "triggers": {
+    "manual": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string"
+            },
+            "metricName": {
+              "type": "string"
+            },
+            "currentValue": {
+              "type": "number"
+            },
+            "sensitivity": {
+              "type": "string",
+              "enum": ["low", "medium", "high"],
+              "default": "medium"
+            }
+          },
+          "required": ["sessionId", "metricName", "currentValue"]
+        }
+      }
+    }
+  },
+  "actions": {
+    "Query_Historical_Values": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": {
+            "name": "@parameters('$connections')['commondataserviceforapps']['connectionId']"
+          }
+        },
+        "method": "get",
+        "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default.cds'))}/tables/@{encodeURIComponent(encodeURIComponent('kdap_metric_history'))}/items",
+        "queries": {
+          "$filter": "kdap_metricname eq '@{triggerBody()?['metricName']}' and kdap_createdon ge @{addDays(utcNow(), -30)}",
+          "$orderby": "kdap_createdon desc",
+          "$top": "30"
+        }
+      },
+      "runAfter": {}
+    },
+    "Build_Historical_Data": {
+      "type": "Select",
+      "inputs": {
+        "from": "@body('Query_Historical_Values')?['value']",
+        "select": {
+          "value": "@item()?['kdap_metricvalue']",
+          "timestamp": "@item()?['kdap_createdon']"
+        }
+      },
+      "runAfter": {
+        "Query_Historical_Values": ["Succeeded"]
+      }
+    },
+    "HTTP_POST_RealtimeAnomaly": {
+      "type": "Http",
+      "inputs": {
+        "method": "POST",
+        "uri": "@{parameters('KDAP_ML_FUNCTION_URL')}/api/anomalyDetection/realtime",
+        "headers": {
+          "Content-Type": "application/json",
+          "x-functions-key": "@{parameters('KDAP_ML_API_KEY')}",
+          "x-session-id": "@{triggerBody()?['sessionId']}"
+        },
+        "body": {
+          "metricName": "@triggerBody()?['metricName']",
+          "currentValue": "@triggerBody()?['currentValue']",
+          "historicalData": "@body('Build_Historical_Data')",
+          "sensitivity": "@coalesce(triggerBody()?['sensitivity'], 'medium')"
+        }
+      },
+      "runAfter": {
+        "Build_Historical_Data": ["Succeeded"]
+      }
+    },
+    "Parse_Response": {
+      "type": "ParseJson",
+      "inputs": {
+        "content": "@body('HTTP_POST_RealtimeAnomaly')",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "success": { "type": "boolean" },
+            "data": {
+              "type": "object",
+              "properties": {
+                "isAnomaly": { "type": "boolean" },
+                "anomalyScore": { "type": "number" },
+                "anomalyType": { "type": "string" },
+                "expected": { "type": "number" },
+                "severity": { "type": "string" }
+              }
+            },
+            "latencyMs": { "type": "number" }
+          }
+        }
+      },
+      "runAfter": {
+        "HTTP_POST_RealtimeAnomaly": ["Succeeded"]
+      }
+    },
+    "Calculate_Deviation": {
+      "type": "Compose",
+      "inputs": "@if(equals(body('Parse_Response')?['data']?['expected'], 0), 0, mul(div(abs(sub(triggerBody()?['currentValue'], body('Parse_Response')?['data']?['expected'])), body('Parse_Response')?['data']?['expected']), 100))",
+      "runAfter": {
+        "Parse_Response": ["Succeeded"]
+      }
+    },
+    "Generate_Recommendation": {
+      "type": "Compose",
+      "inputs": "@if(equals(body('Parse_Response')?['data']?['isAnomaly'], false), 'This metric value is within normal range. No action required.', if(equals(body('Parse_Response')?['data']?['severity'], 'Critical'), concat('CRITICAL ALERT: ', triggerBody()?['metricName'], ' is significantly outside expected range. Immediate investigation recommended. Expected: ', string(body('Parse_Response')?['data']?['expected']), ', Actual: ', string(triggerBody()?['currentValue'])), if(equals(body('Parse_Response')?['data']?['severity'], 'Warning'), concat('Warning: ', triggerBody()?['metricName'], ' shows unusual behavior (', body('Parse_Response')?['data']?['anomalyType'], '). Consider monitoring closely.'), concat('Minor anomaly detected in ', triggerBody()?['metricName'], '. Within acceptable variance.'))))",
+      "runAfter": {
+        "Calculate_Deviation": ["Succeeded"]
+      }
+    },
+    "Check_If_Critical": {
+      "type": "Condition",
+      "expression": {
+        "and": [
+          {
+            "equals": ["@body('Parse_Response')?['data']?['severity']", "Critical"]
+          }
+        ]
+      },
+      "actions": {
+        "Create_Critical_Alert": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": {
+              "connection": {
+                "name": "@parameters('$connections')['commondataserviceforapps']['connectionId']"
+              }
+            },
+            "method": "post",
+            "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default.cds'))}/tables/@{encodeURIComponent(encodeURIComponent('kdap_anomaly_alerts'))}/items",
+            "body": {
+              "kdap_alertid": "@{guid()}",
+              "kdap_sessionid": "@{triggerBody()?['sessionId']}",
+              "kdap_metricname": "@{triggerBody()?['metricName']}",
+              "kdap_anomalytype": "@{body('Parse_Response')?['data']?['anomalyType']}",
+              "kdap_severity": 1,
+              "kdap_expectedvalue": "@{body('Parse_Response')?['data']?['expected']}",
+              "kdap_actualvalue": "@{triggerBody()?['currentValue']}",
+              "kdap_deviation": "@{outputs('Calculate_Deviation')}",
+              "kdap_acknowledged": false
+            }
+          },
+          "runAfter": {}
+        }
+      },
+      "else": {
+        "actions": {}
+      },
+      "runAfter": {
+        "Generate_Recommendation": ["Succeeded"]
+      }
+    },
+    "Response": {
+      "type": "Response",
+      "kind": "Http",
+      "inputs": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "success": true,
+          "isAnomaly": "@body('Parse_Response')?['data']?['isAnomaly']",
+          "score": "@body('Parse_Response')?['data']?['anomalyScore']",
+          "type": "@body('Parse_Response')?['data']?['anomalyType']",
+          "expectedValue": "@body('Parse_Response')?['data']?['expected']",
+          "deviation": "@outputs('Calculate_Deviation')",
+          "recommendation": "@outputs('Generate_Recommendation')"
+        }
+      },
+      "runAfter": {
+        "Check_If_Critical": ["Succeeded"]
+      }
+    }
+  },
+  "outputs": {}
+}

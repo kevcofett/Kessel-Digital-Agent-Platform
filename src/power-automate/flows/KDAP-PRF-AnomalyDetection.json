@@ -1,0 +1,366 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowName": "KDAP-PRF-AnomalyDetection",
+    "description": "Anomaly detection ML flow for PRF agent - detects anomalies and generates alerts",
+    "author": "KDAP",
+    "version": "1.0.0",
+    "tags": ["KDAP", "ML", "PRF", "Anomaly", "Detection", "Alerting"]
+  },
+  "parameters": {
+    "$connections": {
+      "defaultValue": {},
+      "type": "Object"
+    },
+    "KDAP_ML_FUNCTION_URL": {
+      "defaultValue": "https://kdap-ml-functions.azurewebsites.net",
+      "type": "String"
+    },
+    "KDAP_ML_API_KEY": {
+      "defaultValue": "",
+      "type": "SecureString"
+    },
+    "KDAP_ANOMALY_THRESHOLD_CRITICAL": {
+      "defaultValue": 0.9,
+      "type": "Float"
+    },
+    "KDAP_ANOMALY_THRESHOLD_WARNING": {
+      "defaultValue": 0.7,
+      "type": "Float"
+    }
+  },
+  "triggers": {
+    "manual": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string"
+            },
+            "metrics": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "metricName": { "type": "string" },
+                  "metricValue": { "type": "number" },
+                  "timestamp": { "type": "string" }
+                },
+                "required": ["metricName", "metricValue"]
+              }
+            },
+            "sensitivity": {
+              "type": "string",
+              "enum": ["low", "medium", "high"],
+              "default": "medium"
+            },
+            "historicalDays": {
+              "type": "integer",
+              "default": 30
+            }
+          },
+          "required": ["sessionId", "metrics"]
+        }
+      }
+    }
+  },
+  "actions": {
+    "Initialize_anomalies": {
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "anomalies",
+            "type": "array",
+            "value": []
+          }
+        ]
+      },
+      "runAfter": {}
+    },
+    "Initialize_alertMessages": {
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "alertMessages",
+            "type": "array",
+            "value": []
+          }
+        ]
+      },
+      "runAfter": {
+        "Initialize_anomalies": ["Succeeded"]
+      }
+    },
+    "Check_Historical_Data_Needed": {
+      "type": "Condition",
+      "expression": {
+        "and": [
+          {
+            "greater": ["@triggerBody()?['historicalDays']", 0]
+          }
+        ]
+      },
+      "actions": {
+        "Query_Historical_Metrics": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": {
+              "connection": {
+                "name": "@parameters('$connections')['commondataserviceforapps']['connectionId']"
+              }
+            },
+            "method": "get",
+            "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default.cds'))}/tables/@{encodeURIComponent(encodeURIComponent('kdap_metric_history'))}/items",
+            "queries": {
+              "$filter": "kdap_createdon ge @{addDays(utcNow(), mul(triggerBody()?['historicalDays'], -1))}"
+            }
+          },
+          "runAfter": {}
+        }
+      },
+      "else": {
+        "actions": {}
+      },
+      "runAfter": {
+        "Initialize_alertMessages": ["Succeeded"]
+      }
+    },
+    "HTTP_POST_AnomalyDetection": {
+      "type": "Http",
+      "inputs": {
+        "method": "POST",
+        "uri": "@{parameters('KDAP_ML_FUNCTION_URL')}/api/anomalyDetection",
+        "headers": {
+          "Content-Type": "application/json",
+          "x-functions-key": "@{parameters('KDAP_ML_API_KEY')}",
+          "x-session-id": "@{triggerBody()?['sessionId']}"
+        },
+        "body": {
+          "metrics": "@triggerBody()?['metrics']",
+          "sensitivity": "@coalesce(triggerBody()?['sensitivity'], 'medium')",
+          "detectTrends": true,
+          "detectSeasonality": true
+        },
+        "retryPolicy": {
+          "type": "exponential",
+          "count": 3,
+          "interval": "PT10S"
+        }
+      },
+      "runAfter": {
+        "Check_Historical_Data_Needed": ["Succeeded"]
+      }
+    },
+    "Parse_ML_Response": {
+      "type": "ParseJson",
+      "inputs": {
+        "content": "@body('HTTP_POST_AnomalyDetection')",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "success": { "type": "boolean" },
+            "data": {
+              "type": "object",
+              "properties": {
+                "anomalies": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "metricName": { "type": "string" },
+                      "value": { "type": "number" },
+                      "expected": { "type": "number" },
+                      "anomalyScore": { "type": "number" },
+                      "anomalyType": { "type": "string" },
+                      "severity": { "type": "string" },
+                      "timestamp": { "type": "string" }
+                    }
+                  }
+                },
+                "summary": {
+                  "type": "object",
+                  "properties": {
+                    "totalMetrics": { "type": "integer" },
+                    "anomalyCount": { "type": "integer" }
+                  }
+                }
+              }
+            },
+            "latencyMs": { "type": "number" }
+          }
+        }
+      },
+      "runAfter": {
+        "HTTP_POST_AnomalyDetection": ["Succeeded"]
+      }
+    },
+    "Filter_By_Sensitivity": {
+      "type": "Query",
+      "inputs": {
+        "from": "@body('Parse_ML_Response')?['data']?['anomalies']",
+        "where": "@or(equals(triggerBody()?['sensitivity'], 'low'), and(equals(triggerBody()?['sensitivity'], 'medium'), greaterOrEquals(item()?['anomalyScore'], 0.5)), and(equals(triggerBody()?['sensitivity'], 'high'), greaterOrEquals(item()?['anomalyScore'], 0.7)))"
+      },
+      "runAfter": {
+        "Parse_ML_Response": ["Succeeded"]
+      }
+    },
+    "Process_Each_Anomaly": {
+      "type": "Foreach",
+      "foreach": "@body('Filter_By_Sensitivity')",
+      "actions": {
+        "Determine_Severity": {
+          "type": "Compose",
+          "inputs": "@if(greaterOrEquals(items('Process_Each_Anomaly')?['anomalyScore'], parameters('KDAP_ANOMALY_THRESHOLD_CRITICAL')), 'Critical', if(greaterOrEquals(items('Process_Each_Anomaly')?['anomalyScore'], parameters('KDAP_ANOMALY_THRESHOLD_WARNING')), 'Warning', 'Info'))",
+          "runAfter": {}
+        },
+        "Calculate_Deviation": {
+          "type": "Compose",
+          "inputs": "@if(equals(items('Process_Each_Anomaly')?['expected'], 0), 100, mul(div(abs(sub(items('Process_Each_Anomaly')?['value'], items('Process_Each_Anomaly')?['expected'])), items('Process_Each_Anomaly')?['expected']), 100))",
+          "runAfter": {
+            "Determine_Severity": ["Succeeded"]
+          }
+        },
+        "Create_Anomaly_Record": {
+          "type": "Compose",
+          "inputs": {
+            "metricName": "@items('Process_Each_Anomaly')?['metricName']",
+            "isAnomaly": true,
+            "anomalyScore": "@items('Process_Each_Anomaly')?['anomalyScore']",
+            "anomalyType": "@items('Process_Each_Anomaly')?['anomalyType']",
+            "expectedValue": "@items('Process_Each_Anomaly')?['expected']",
+            "actualValue": "@items('Process_Each_Anomaly')?['value']",
+            "deviation": "@outputs('Calculate_Deviation')",
+            "severity": "@outputs('Determine_Severity')"
+          },
+          "runAfter": {
+            "Calculate_Deviation": ["Succeeded"]
+          }
+        },
+        "Append_to_Anomalies": {
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "anomalies",
+            "value": "@outputs('Create_Anomaly_Record')"
+          },
+          "runAfter": {
+            "Create_Anomaly_Record": ["Succeeded"]
+          }
+        },
+        "Create_Alert_Message": {
+          "type": "Compose",
+          "inputs": "@if(equals(outputs('Determine_Severity'), 'Critical'), concat('CRITICAL: ', items('Process_Each_Anomaly')?['metricName'], ' shows ', items('Process_Each_Anomaly')?['anomalyType'], ' - actual ', string(items('Process_Each_Anomaly')?['value']), ' vs expected ', string(items('Process_Each_Anomaly')?['expected']), ' (', string(int(outputs('Calculate_Deviation'))), '% deviation)'), if(equals(outputs('Determine_Severity'), 'Warning'), concat('WARNING: ', items('Process_Each_Anomaly')?['metricName'], ' shows ', items('Process_Each_Anomaly')?['anomalyType'], ' - actual ', string(items('Process_Each_Anomaly')?['value']), ' vs expected ', string(items('Process_Each_Anomaly')?['expected']), ' (', string(int(outputs('Calculate_Deviation'))), '% deviation)'), concat('INFO: ', items('Process_Each_Anomaly')?['metricName'], ' shows minor anomaly')))",
+          "runAfter": {
+            "Append_to_Anomalies": ["Succeeded"]
+          }
+        },
+        "Append_Alert_Message": {
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "alertMessages",
+            "value": "@outputs('Create_Alert_Message')"
+          },
+          "runAfter": {
+            "Create_Alert_Message": ["Succeeded"]
+          }
+        },
+        "Create_Dataverse_Alert": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": {
+              "connection": {
+                "name": "@parameters('$connections')['commondataserviceforapps']['connectionId']"
+              }
+            },
+            "method": "post",
+            "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default.cds'))}/tables/@{encodeURIComponent(encodeURIComponent('kdap_anomaly_alerts'))}/items",
+            "body": {
+              "kdap_alertid": "@{guid()}",
+              "kdap_sessionid": "@{triggerBody()?['sessionId']}",
+              "kdap_metricname": "@{items('Process_Each_Anomaly')?['metricName']}",
+              "kdap_anomalytype": "@{items('Process_Each_Anomaly')?['anomalyType']}",
+              "kdap_severity": "@{if(equals(outputs('Determine_Severity'), 'Critical'), 1, if(equals(outputs('Determine_Severity'), 'Warning'), 2, 3))}",
+              "kdap_expectedvalue": "@{items('Process_Each_Anomaly')?['expected']}",
+              "kdap_actualvalue": "@{items('Process_Each_Anomaly')?['value']}",
+              "kdap_deviation": "@{outputs('Calculate_Deviation')}",
+              "kdap_acknowledged": false
+            }
+          },
+          "runAfter": {
+            "Append_Alert_Message": ["Succeeded"]
+          }
+        }
+      },
+      "runAfter": {
+        "Filter_By_Sensitivity": ["Succeeded"]
+      },
+      "runtimeConfiguration": {
+        "concurrency": {
+          "repetitions": 10
+        }
+      }
+    },
+    "Calculate_Summary": {
+      "type": "Compose",
+      "inputs": {
+        "totalMetrics": "@length(triggerBody()?['metrics'])",
+        "anomalyCount": "@length(variables('anomalies'))",
+        "criticalCount": "@length(filter(variables('anomalies'), item => equals(item.severity, 'Critical')))",
+        "warningCount": "@length(filter(variables('anomalies'), item => equals(item.severity, 'Warning')))"
+      },
+      "runAfter": {
+        "Process_Each_Anomaly": ["Succeeded"]
+      }
+    },
+    "Create_Prediction_Record": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": {
+            "name": "@parameters('$connections')['commondataserviceforapps']['connectionId']"
+          }
+        },
+        "method": "post",
+        "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default.cds'))}/tables/@{encodeURIComponent(encodeURIComponent('kdap_ml_predictions'))}/items",
+        "body": {
+          "kdap_predictionid": "@{guid()}",
+          "kdap_sessionid": "@{triggerBody()?['sessionId']}",
+          "kdap_modeltype": 3,
+          "kdap_inputpayload": "@{string(triggerBody())}",
+          "kdap_outputpayload": "@{string(outputs('Calculate_Summary'))}",
+          "kdap_latencyms": "@{body('Parse_ML_Response')?['latencyMs']}",
+          "kdap_status": 1
+        }
+      },
+      "runAfter": {
+        "Calculate_Summary": ["Succeeded"]
+      }
+    },
+    "Response": {
+      "type": "Response",
+      "kind": "Http",
+      "inputs": {
+        "statusCode": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "success": true,
+          "anomalies": "@variables('anomalies')",
+          "summary": "@outputs('Calculate_Summary')",
+          "alerts": "@join(variables('alertMessages'), '\n')",
+          "detectionId": "@{body('Create_Prediction_Record')?['kdap_predictionid']}"
+        }
+      },
+      "runAfter": {
+        "Create_Prediction_Record": ["Succeeded"]
+      }
+    }
+  },
+  "outputs": {}
+}

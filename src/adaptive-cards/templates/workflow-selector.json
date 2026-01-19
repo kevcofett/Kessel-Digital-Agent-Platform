@@ -1,0 +1,252 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body": [
+    {
+      "type": "Container",
+      "style": "emphasis",
+      "bleed": true,
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "KDAP Decision Workflows",
+          "weight": "Bolder",
+          "size": "Large",
+          "horizontalAlignment": "Center"
+        },
+        {
+          "type": "TextBlock",
+          "text": "Select a workflow to begin guided decision-making",
+          "size": "Small",
+          "horizontalAlignment": "Center",
+          "isSubtle": true
+        }
+      ],
+      "padding": "Default"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Available Workflows",
+          "weight": "Bolder",
+          "size": "Medium"
+        }
+      ],
+      "spacing": "Medium"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "$data": "${workflows}",
+          "type": "Container",
+          "style": "emphasis",
+          "items": [
+            {
+              "type": "ColumnSet",
+              "columns": [
+                {
+                  "type": "Column",
+                  "width": "auto",
+                  "items": [
+                    {
+                      "type": "Image",
+                      "url": "${iconUrl}",
+                      "size": "Medium"
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "width": "stretch",
+                  "items": [
+                    {
+                      "type": "TextBlock",
+                      "text": "${name}",
+                      "weight": "Bolder",
+                      "size": "Medium"
+                    },
+                    {
+                      "type": "TextBlock",
+                      "text": "${description}",
+                      "size": "Small",
+                      "wrap": true,
+                      "isSubtle": true
+                    },
+                    {
+                      "type": "ColumnSet",
+                      "columns": [
+                        {
+                          "type": "Column",
+                          "width": "auto",
+                          "items": [
+                            {
+                              "type": "TextBlock",
+                              "text": "${stepCount} steps",
+                              "size": "Small",
+                              "color": "Accent"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Column",
+                          "width": "auto",
+                          "items": [
+                            {
+                              "type": "TextBlock",
+                              "text": "~${estimatedTime}",
+                              "size": "Small",
+                              "isSubtle": true
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Column",
+                          "width": "auto",
+                          "items": [
+                            {
+                              "type": "TextBlock",
+                              "text": "${domain}",
+                              "size": "Small",
+                              "weight": "Bolder"
+                            }
+                          ]
+                        }
+                      ],
+                      "spacing": "Small"
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "width": "auto",
+                  "verticalContentAlignment": "Center",
+                  "items": [
+                    {
+                      "type": "ActionSet",
+                      "actions": [
+                        {
+                          "type": "Action.Submit",
+                          "title": "Start",
+                          "style": "positive",
+                          "data": {
+                            "action": "startWorkflow",
+                            "workflowId": "${id}"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "padding": "Default",
+          "separator": true
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Recent Sessions",
+          "weight": "Bolder",
+          "size": "Medium"
+        }
+      ],
+      "spacing": "Large",
+      "separator": true,
+      "$when": "${length(recentSessions) > 0}"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "$data": "${recentSessions}",
+          "type": "ColumnSet",
+          "columns": [
+            {
+              "type": "Column",
+              "width": "stretch",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "${workflowName}",
+                  "weight": "Bolder"
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "Last updated: ${lastUpdated}",
+                  "size": "Small",
+                  "isSubtle": true
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "auto",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "${progress}%",
+                  "weight": "Bolder",
+                  "color": "Accent"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "auto",
+              "items": [
+                {
+                  "type": "ActionSet",
+                  "actions": [
+                    {
+                      "type": "Action.Submit",
+                      "title": "Resume",
+                      "data": {
+                        "action": "resumeSession",
+                        "sessionId": "${sessionId}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "separator": true
+        }
+      ],
+      "$when": "${length(recentSessions) > 0}"
+    },
+    {
+      "type": "ActionSet",
+      "actions": [
+        {
+          "type": "Action.Submit",
+          "title": "View All Workflows",
+          "data": {
+            "action": "viewAllWorkflows"
+          }
+        },
+        {
+          "type": "Action.Submit",
+          "title": "Help",
+          "data": {
+            "action": "showHelp"
+          }
+        }
+      ],
+      "spacing": "Large"
+    }
+  ],
+  "metadata": {
+    "webUrl": "${webAppUrl}",
+    "templateId": "kdap-workflow-selector"
+  }
+}

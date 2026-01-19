@@ -1,0 +1,153 @@
+# Churn Predictor Model Configuration
+# AUD Agent - Customer Churn Prediction
+
+model:
+  name: churn_predictor
+  type: classification
+  algorithm: catboost
+  task: binary_classification
+
+features:
+  numerical:
+    - days_since_last_purchase
+    - days_since_last_login
+    - purchase_frequency_30d
+    - purchase_frequency_90d
+    - total_spend_lifetime
+    - total_spend_90d
+    - avg_order_value
+    - order_count_lifetime
+    - support_tickets_count
+    - support_tickets_resolved
+    - nps_score
+    - email_open_rate_30d
+    - email_click_rate_30d
+    - app_sessions_30d
+    - page_views_30d
+    - cart_abandonment_rate
+    - return_rate
+    - discount_usage_rate
+    
+  categorical:
+    - customer_segment
+    - acquisition_channel
+    - subscription_tier
+    - preferred_channel
+    - payment_method
+    - geo_region
+    - device_type
+    
+  temporal:
+    - tenure_months
+    - days_to_first_purchase
+    - avg_days_between_purchases
+    
+  derived:
+    - engagement_trend_30d
+    - spend_trend_90d
+    - activity_decline_rate
+    - loyalty_score
+    - risk_score
+
+target:
+  name: churned
+  type: binary
+  positive_class: 1
+  churn_window_days: 90
+
+preprocessing:
+  numerical:
+    imputer: median
+    scaler: standard
+    outlier_treatment: winsorize
+    winsorize_limits: [0.01, 0.99]
+    
+  categorical:
+    encoder: catboost_native
+    handle_unknown: value
+
+hyperparameters:
+  catboost:
+    iterations: 1000
+    depth: 6
+    learning_rate: 0.05
+    l2_leaf_reg: 3
+    border_count: 254
+    auto_class_weights: Balanced
+    eval_metric: AUC
+    random_seed: 42
+    verbose: 100
+    early_stopping_rounds: 50
+    task_type: CPU
+
+tuning:
+  method: optuna
+  n_trials: 100
+  timeout: 3600
+  metric: auc_roc
+  direction: maximize
+  search_space:
+    depth:
+      type: int
+      low: 4
+      high: 10
+    learning_rate:
+      type: float
+      low: 0.01
+      high: 0.3
+      log: true
+    iterations:
+      type: int
+      low: 100
+      high: 2000
+    l2_leaf_reg:
+      type: float
+      low: 1
+      high: 10
+    border_count:
+      type: int
+      low: 32
+      high: 255
+    bagging_temperature:
+      type: float
+      low: 0
+      high: 1
+
+training:
+  cv_folds: 5
+  early_stopping_rounds: 50
+  stratify: true
+  
+evaluation:
+  primary_metric: auc_roc
+  threshold_selection: f1_optimal
+  threshold_metrics:
+    auc_roc: 0.80
+    auc_pr: 0.60
+    recall: 0.75
+    
+risk_tiers:
+  high_risk:
+    threshold: 0.7
+    action: immediate_intervention
+  medium_risk:
+    threshold: 0.4
+    action: proactive_engagement
+  low_risk:
+    threshold: 0.2
+    action: monitor
+  minimal_risk:
+    threshold: 0.0
+    action: standard_nurture
+
+inference:
+  batch_size: 5000
+  timeout_ms: 300
+  
+output:
+  predictions:
+    - churn_probability
+    - risk_tier
+    - days_to_churn_estimate
+    - confidence
+    - top_risk_factors

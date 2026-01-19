@@ -1,0 +1,152 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/PowerPlatform-DataverseModelBuilder/main/src/schemas/table.schema.json",
+  "schemaName": "kdap_anomaly_alerts",
+  "displayName": "KDAP Anomaly Alerts",
+  "displayCollectionName": "KDAP Anomaly Alerts",
+  "description": "Stores anomaly detection alerts from PRF agent",
+  "ownershipType": "UserOwned",
+  "primaryKey": {
+    "schemaName": "kdap_alertid",
+    "displayName": "Alert ID",
+    "dataType": "Uniqueidentifier"
+  },
+  "primaryName": {
+    "schemaName": "kdap_name",
+    "displayName": "Name",
+    "maxLength": 100
+  },
+  "attributes": [
+    {
+      "schemaName": "kdap_alertid",
+      "displayName": "Alert ID",
+      "description": "Unique identifier for the alert",
+      "dataType": "Uniqueidentifier",
+      "isPrimaryKey": true
+    },
+    {
+      "schemaName": "kdap_sessionid",
+      "displayName": "Session ID",
+      "description": "Copilot Studio session ID",
+      "dataType": "String",
+      "maxLength": 100
+    },
+    {
+      "schemaName": "kdap_metricname",
+      "displayName": "Metric Name",
+      "description": "Name of the metric with anomaly",
+      "dataType": "String",
+      "maxLength": 200,
+      "isRequired": true
+    },
+    {
+      "schemaName": "kdap_anomalytype",
+      "displayName": "Anomaly Type",
+      "description": "Type of anomaly detected",
+      "dataType": "Picklist",
+      "options": [
+        { "value": 1, "label": "Spike" },
+        { "value": 2, "label": "Dip" },
+        { "value": 3, "label": "Trend Change" },
+        { "value": 4, "label": "Seasonality Deviation" },
+        { "value": 5, "label": "Level Shift" },
+        { "value": 6, "label": "Variance Change" }
+      ]
+    },
+    {
+      "schemaName": "kdap_severity",
+      "displayName": "Severity",
+      "description": "Alert severity level",
+      "dataType": "Picklist",
+      "options": [
+        { "value": 1, "label": "Critical" },
+        { "value": 2, "label": "Warning" },
+        { "value": 3, "label": "Info" }
+      ],
+      "isRequired": true
+    },
+    {
+      "schemaName": "kdap_expectedvalue",
+      "displayName": "Expected Value",
+      "description": "Expected metric value based on model",
+      "dataType": "Decimal",
+      "precision": 4,
+      "minValue": -999999999999,
+      "maxValue": 999999999999
+    },
+    {
+      "schemaName": "kdap_actualvalue",
+      "displayName": "Actual Value",
+      "description": "Actual observed metric value",
+      "dataType": "Decimal",
+      "precision": 4,
+      "minValue": -999999999999,
+      "maxValue": 999999999999
+    },
+    {
+      "schemaName": "kdap_deviation",
+      "displayName": "Deviation (%)",
+      "description": "Percentage deviation from expected",
+      "dataType": "Decimal",
+      "precision": 2,
+      "minValue": 0,
+      "maxValue": 100000
+    },
+    {
+      "schemaName": "kdap_anomalyscore",
+      "displayName": "Anomaly Score",
+      "description": "ML model anomaly confidence score (0-1)",
+      "dataType": "Decimal",
+      "precision": 4,
+      "minValue": 0,
+      "maxValue": 1
+    },
+    {
+      "schemaName": "kdap_acknowledged",
+      "displayName": "Acknowledged",
+      "description": "Whether the alert has been acknowledged",
+      "dataType": "Boolean",
+      "defaultValue": false
+    },
+    {
+      "schemaName": "kdap_acknowledgedby",
+      "displayName": "Acknowledged By",
+      "description": "User who acknowledged the alert",
+      "dataType": "Lookup",
+      "targetEntity": "systemuser"
+    },
+    {
+      "schemaName": "kdap_acknowledgedon",
+      "displayName": "Acknowledged On",
+      "description": "When the alert was acknowledged",
+      "dataType": "DateTime",
+      "dateTimeBehavior": "UserLocal"
+    },
+    {
+      "schemaName": "kdap_resolutionnotes",
+      "displayName": "Resolution Notes",
+      "description": "Notes on how the anomaly was resolved",
+      "dataType": "Memo",
+      "maxLength": 4000
+    },
+    {
+      "schemaName": "kdap_campaignid",
+      "displayName": "Campaign ID",
+      "description": "Related campaign if applicable",
+      "dataType": "String",
+      "maxLength": 100
+    }
+  ],
+  "relationships": [],
+  "indexes": [
+    {
+      "schemaName": "idx_kdap_alerts_severity",
+      "columns": ["kdap_severity", "kdap_acknowledged", "createdon"],
+      "isUnique": false
+    },
+    {
+      "schemaName": "idx_kdap_alerts_metric",
+      "columns": ["kdap_metricname", "createdon"],
+      "isUnique": false
+    }
+  ]
+}

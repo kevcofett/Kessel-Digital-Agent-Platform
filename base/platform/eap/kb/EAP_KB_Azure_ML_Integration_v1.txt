@@ -1,0 +1,418 @@
+AZURE ML INTEGRATION FRAMEWORK
+
+PURPOSE
+
+This document defines the integration architecture between the Kessel Digital Agent Platform and Azure Machine Learning services. It covers model deployment patterns, real-time inference endpoints, batch scoring pipelines, and model lifecycle management.
+
+INTEGRATION ARCHITECTURE
+
+OVERVIEW
+
+The platform integrates with Azure ML through three primary patterns
+- Real-time inference via managed online endpoints
+- Batch scoring via pipeline endpoints
+- Model registry for versioning and deployment
+
+AUTHENTICATION AND ACCESS
+
+Service Principal Configuration
+- Azure AD application registration required
+- Client credentials flow for service-to-service
+- Managed identity preferred for Azure-hosted components
+- Key Vault for secret management
+
+Required Permissions
+- AzureML Data Scientist role for model operations
+- Contributor role on ML workspace
+- Storage Blob Data Contributor for data access
+- Key Vault Secrets User for credential access
+
+REAL-TIME INFERENCE ENDPOINTS
+
+MANAGED ONLINE ENDPOINTS
+
+Endpoint Types
+- Managed endpoints for fully managed infrastructure
+- Kubernetes endpoints for custom compute requirements
+- Serverless endpoints for cost-optimized sporadic usage
+
+Deployment Configuration
+- Instance type selection based on model requirements
+- Autoscaling rules for traffic patterns
+- Blue-green deployment for zero-downtime updates
+- Traffic splitting for A/B testing models
+
+Performance Optimization
+- Request batching for throughput improvement
+- Model caching for reduced cold start
+- GPU acceleration for deep learning models
+- Regional deployment for latency reduction
+
+ENDPOINT MANAGEMENT
+
+Health Monitoring
+- Endpoint health checks via Azure Monitor
+- Request latency tracking
+- Error rate monitoring
+- Throughput metrics collection
+
+Scaling Policies
+- Minimum instance count for baseline capacity
+- Maximum instance count for peak handling
+- Scale-out threshold typically 70 percent CPU
+- Scale-in delay to prevent thrashing
+- Scheduled scaling for predictable patterns
+
+BATCH SCORING PIPELINES
+
+PIPELINE ARCHITECTURE
+
+Pipeline Components
+- Data ingestion step for source extraction
+- Preprocessing step for feature engineering
+- Scoring step for model inference
+- Postprocessing step for result formatting
+- Output step for result storage
+
+Compute Targets
+- Compute clusters for parallel processing
+- Spark clusters for large-scale data
+- Serverless compute for cost optimization
+- GPU clusters for deep learning workloads
+
+SCHEDULING AND TRIGGERS
+
+Trigger Types
+- Schedule-based triggers for regular scoring
+- Event-based triggers for real-time needs
+- Manual triggers for ad-hoc requests
+- Data arrival triggers for pipeline automation
+
+Schedule Patterns
+- Daily scoring for customer propensity
+- Hourly scoring for real-time recommendations
+- Weekly scoring for segment updates
+- Monthly scoring for churn predictions
+
+MODEL REGISTRY AND VERSIONING
+
+MODEL LIFECYCLE
+
+Registration Process
+- Model artifacts stored in blob storage
+- Metadata captured in model registry
+- Version numbering follows semantic versioning
+- Tags for environment and purpose tracking
+
+Versioning Strategy
+- Major version for breaking changes
+- Minor version for new features
+- Patch version for bug fixes
+- Automated version increment on registration
+
+MODEL METADATA
+
+Required Metadata
+- Model name and description
+- Training dataset reference
+- Performance metrics from validation
+- Feature schema and dependencies
+- Deployment requirements
+
+Optional Metadata
+- Experiment run reference
+- Hyperparameter configuration
+- Training duration and compute used
+- Data drift baseline metrics
+
+DEPLOYMENT PATTERNS
+
+CHAMPION-CHALLENGER
+
+Implementation Approach
+- Champion model receives majority traffic
+- Challenger model receives test traffic
+- Statistical comparison for performance
+- Automated promotion based on metrics
+
+Traffic Split Configuration
+- Champion typically receives 90 percent
+- Challenger receives 10 percent for validation
+- Gradual increase upon positive results
+- Rollback capability for degradation
+
+SHADOW DEPLOYMENT
+
+Shadow Mode Operation
+- New model receives all requests
+- Predictions logged but not returned
+- Comparison against production model
+- No impact on production traffic
+
+Validation Criteria
+- Prediction distribution comparison
+- Latency comparison
+- Error rate comparison
+- Feature importance stability
+
+AGENT-SPECIFIC INTEGRATIONS
+
+ANL AGENT ML CAPABILITIES
+
+Budget Optimization Models
+- Response curve fitting via online endpoint
+- Marginal return calculation in real-time
+- Scenario simulation via batch pipeline
+- Monte Carlo via serverless compute
+
+Forecasting Models
+- Time series forecasting via Prophet endpoint
+- Demand prediction for campaign planning
+- Seasonality adjustment models
+- Anomaly detection for outliers
+
+AUD AGENT ML CAPABILITIES
+
+Propensity Models
+- Purchase propensity scoring endpoint
+- Churn prediction endpoint
+- Engagement propensity endpoint
+- Cross-sell propensity endpoint
+
+Segmentation Models
+- K-means clustering via batch pipeline
+- RFM scoring via online endpoint
+- Lookalike modeling endpoint
+- Customer lifetime value prediction
+
+PRF AGENT ML CAPABILITIES
+
+Anomaly Detection Models
+- Real-time anomaly detection endpoint
+- Batch anomaly scanning pipeline
+- Multi-metric anomaly correlation
+- Alert threshold optimization
+
+Attribution Models
+- Multi-touch attribution calculation
+- Incrementality estimation
+- Channel contribution scoring
+- Campaign effectiveness prediction
+
+CHA AGENT ML CAPABILITIES
+
+Channel Mix Optimization
+- Budget allocation optimization endpoint
+- Channel effectiveness scoring
+- Media mix modeling pipeline
+- Cross-channel attribution
+
+Audience Targeting
+- Audience overlap analysis
+- Reach and frequency optimization
+- Incremental reach calculation
+- Diminishing returns modeling
+
+API SPECIFICATIONS
+
+ENDPOINT REQUEST FORMAT
+
+Standard Request Structure
+- Headers include authentication token
+- Content-Type application/json
+- Request body contains feature vector
+- Optional request ID for tracking
+
+Feature Vector Format
+- Array of feature values in defined order
+- Null handling for missing features
+- Data type validation on server
+- Feature scaling applied automatically
+
+ENDPOINT RESPONSE FORMAT
+
+Standard Response Structure
+- Prediction value or class
+- Confidence score when applicable
+- Model version for traceability
+- Request ID echo for correlation
+
+Error Response Format
+- HTTP status code for error type
+- Error code for specific issue
+- Error message for debugging
+- Retry guidance when applicable
+
+ERROR HANDLING
+
+Error Categories
+- 400 errors for invalid input
+- 401 errors for authentication failure
+- 429 errors for rate limiting
+- 500 errors for server issues
+
+Retry Strategy
+- Exponential backoff for transient errors
+- Maximum retry count of 3
+- Circuit breaker for persistent failures
+- Fallback to cached predictions when available
+
+MONITORING AND OBSERVABILITY
+
+METRICS COLLECTION
+
+Performance Metrics
+- Request latency percentiles
+- Throughput requests per second
+- Error rate percentage
+- Model inference time
+
+Business Metrics
+- Prediction distribution over time
+- Feature importance trends
+- Model accuracy tracking
+- Drift detection scores
+
+ALERTING CONFIGURATION
+
+Alert Types
+- Latency threshold alerts
+- Error rate spike alerts
+- Drift detection alerts
+- Capacity utilization alerts
+
+Alert Routing
+- Critical alerts to on-call team
+- Warning alerts to development team
+- Informational alerts to monitoring dashboard
+- Automated remediation for known issues
+
+DATA DRIFT MONITORING
+
+DRIFT DETECTION
+
+Feature Drift
+- Statistical tests for distribution shift
+- Kolmogorov-Smirnov test for continuous
+- Chi-squared test for categorical
+- Threshold configuration per feature
+
+Prediction Drift
+- Output distribution monitoring
+- Confidence score distribution
+- Prediction class balance
+- Comparison to training baseline
+
+REMEDIATION ACTIONS
+
+Automatic Actions
+- Alert generation for drift detection
+- Logging for investigation
+- Traffic shift to stable model
+- Retraining trigger for pipelines
+
+Manual Actions
+- Root cause analysis
+- Feature engineering review
+- Model retraining decision
+- Threshold adjustment
+
+SECURITY CONSIDERATIONS
+
+DATA PROTECTION
+
+Data In Transit
+- TLS 1.2 minimum for all connections
+- Certificate validation required
+- No sensitive data in URLs
+- Request logging with PII masking
+
+Data At Rest
+- Encryption with customer-managed keys
+- Access logging for compliance
+- Retention policies for model artifacts
+- Secure deletion procedures
+
+ACCESS CONTROL
+
+Authentication Methods
+- Azure AD tokens for user access
+- Managed identity for service access
+- API keys for external integrations
+- SAS tokens for data access
+
+Authorization Levels
+- Read-only for monitoring users
+- Deploy for ML engineers
+- Full access for administrators
+- Audit logging for all operations
+
+COST OPTIMIZATION
+
+COMPUTE OPTIMIZATION
+
+Instance Selection
+- Right-sizing based on workload
+- Spot instances for batch workloads
+- Reserved capacity for predictable usage
+- Autoscaling for variable demand
+
+Cost Monitoring
+- Per-endpoint cost tracking
+- Per-model cost allocation
+- Budget alerts for overruns
+- Cost optimization recommendations
+
+STORAGE OPTIMIZATION
+
+Model Artifact Storage
+- Lifecycle policies for old versions
+- Compression for large models
+- Deduplication for shared components
+- Archive tier for historical versions
+
+Data Storage
+- Partition pruning for efficiency
+- Caching for frequent access
+- Tiered storage for cost optimization
+- Cleanup policies for temporary data
+
+IMPLEMENTATION CHECKLIST
+
+INITIAL SETUP
+
+Prerequisites
+- Azure subscription with ML workspace
+- Service principal with required permissions
+- Network connectivity configured
+- Key Vault for secrets management
+
+Configuration Steps
+- Register service principal in Azure AD
+- Configure workspace access policies
+- Set up monitoring and alerting
+- Create compute targets
+
+MODEL DEPLOYMENT
+
+Deployment Steps
+- Register model in model registry
+- Create scoring script
+- Define environment dependencies
+- Deploy to online endpoint
+- Configure autoscaling
+- Set up monitoring
+
+Validation Steps
+- Endpoint health check
+- Sample request validation
+- Performance baseline
+- Integration testing
+
+MAINTENANCE
+
+Ongoing Tasks
+- Monitor drift metrics weekly
+- Review performance monthly
+- Update models quarterly
+- Security review annually

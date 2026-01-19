@@ -1,0 +1,139 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/powerplatform-actions/main/schemas/environment-variables.schema.json",
+  "description": "KDAP Power Platform Environment Variables",
+  "version": "1.0.0",
+  "variables": [
+    {
+      "schemaName": "kdap_ml_function_url",
+      "displayName": "KDAP ML Function URL",
+      "description": "Base URL for Azure Functions ML endpoints",
+      "type": "String",
+      "defaultValue": "https://kdap-ml-functions.azurewebsites.net",
+      "isRequired": true,
+      "isSecret": false
+    },
+    {
+      "schemaName": "kdap_ml_api_key",
+      "displayName": "KDAP ML API Key",
+      "description": "Azure Function app host key for authentication",
+      "type": "Secret",
+      "defaultValue": "",
+      "isRequired": true,
+      "isSecret": true,
+      "secretStore": "Azure Key Vault",
+      "secretReference": "kdap-ml-api-key"
+    },
+    {
+      "schemaName": "kdap_anomaly_threshold_critical",
+      "displayName": "KDAP Anomaly Threshold - Critical",
+      "description": "Anomaly score threshold for critical severity (0-1)",
+      "type": "Number",
+      "defaultValue": "0.9",
+      "isRequired": true,
+      "isSecret": false,
+      "validation": {
+        "minValue": 0,
+        "maxValue": 1
+      }
+    },
+    {
+      "schemaName": "kdap_anomaly_threshold_warning",
+      "displayName": "KDAP Anomaly Threshold - Warning",
+      "description": "Anomaly score threshold for warning severity (0-1)",
+      "type": "Number",
+      "defaultValue": "0.7",
+      "isRequired": true,
+      "isSecret": false,
+      "validation": {
+        "minValue": 0,
+        "maxValue": 1
+      }
+    },
+    {
+      "schemaName": "kdap_max_batch_size",
+      "displayName": "KDAP Max Batch Size",
+      "description": "Maximum records per ML request batch",
+      "type": "Number",
+      "defaultValue": "1000",
+      "isRequired": true,
+      "isSecret": false,
+      "validation": {
+        "minValue": 1,
+        "maxValue": 10000
+      }
+    },
+    {
+      "schemaName": "kdap_retry_max_attempts",
+      "displayName": "KDAP Retry Max Attempts",
+      "description": "Maximum retry attempts for ML endpoint calls",
+      "type": "Number",
+      "defaultValue": "3",
+      "isRequired": true,
+      "isSecret": false,
+      "validation": {
+        "minValue": 1,
+        "maxValue": 10
+      }
+    },
+    {
+      "schemaName": "kdap_retry_delay_seconds",
+      "displayName": "KDAP Retry Delay Seconds",
+      "description": "Delay between retry attempts in seconds",
+      "type": "Number",
+      "defaultValue": "30",
+      "isRequired": true,
+      "isSecret": false,
+      "validation": {
+        "minValue": 5,
+        "maxValue": 300
+      }
+    },
+    {
+      "schemaName": "kdap_enable_detailed_logging",
+      "displayName": "KDAP Enable Detailed Logging",
+      "description": "Enable detailed logging for debugging",
+      "type": "Boolean",
+      "defaultValue": "false",
+      "isRequired": false,
+      "isSecret": false
+    },
+    {
+      "schemaName": "kdap_alert_notification_email",
+      "displayName": "KDAP Alert Notification Email",
+      "description": "Email address for critical alert notifications",
+      "type": "String",
+      "defaultValue": "",
+      "isRequired": false,
+      "isSecret": false
+    },
+    {
+      "schemaName": "kdap_alert_teams_webhook",
+      "displayName": "KDAP Alert Teams Webhook",
+      "description": "Microsoft Teams webhook URL for alert notifications",
+      "type": "String",
+      "defaultValue": "",
+      "isRequired": false,
+      "isSecret": false
+    }
+  ],
+  "environmentSettings": {
+    "development": {
+      "kdap_ml_function_url": "https://kdap-ml-functions-dev.azurewebsites.net",
+      "kdap_anomaly_threshold_critical": "0.95",
+      "kdap_anomaly_threshold_warning": "0.8",
+      "kdap_enable_detailed_logging": "true"
+    },
+    "test": {
+      "kdap_ml_function_url": "https://kdap-ml-functions-test.azurewebsites.net",
+      "kdap_anomaly_threshold_critical": "0.9",
+      "kdap_anomaly_threshold_warning": "0.7",
+      "kdap_enable_detailed_logging": "true"
+    },
+    "production": {
+      "kdap_ml_function_url": "https://kdap-ml-functions.azurewebsites.net",
+      "kdap_anomaly_threshold_critical": "0.9",
+      "kdap_anomaly_threshold_warning": "0.7",
+      "kdap_enable_detailed_logging": "false"
+    }
+  }
+}

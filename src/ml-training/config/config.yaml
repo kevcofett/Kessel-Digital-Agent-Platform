@@ -1,0 +1,87 @@
+# KDAP ML Training Configuration
+# Global settings for all models
+
+azure_ml:
+  subscription_id: ${AZURE_SUBSCRIPTION_ID}
+  resource_group: ${AZURE_RESOURCE_GROUP}
+  workspace_name: kdap-ml-workspace
+  region: eastus
+  compute:
+    training_cluster: kdap-training-cluster
+    inference_cluster: kdap-inference-cluster
+    vm_size: Standard_DS3_v2
+    min_nodes: 0
+    max_nodes: 4
+
+experiment:
+  name: kdap-model-training
+  tracking_uri: ${MLFLOW_TRACKING_URI}
+  artifact_location: wasbs://mlflow@kdapstorage.blob.core.windows.net/artifacts
+
+data:
+  storage_account: kdapstorage
+  container: training-data
+  raw_path: raw/
+  processed_path: processed/
+  features_path: features/
+
+models:
+  budget_optimizer:
+    name: kdap-budget-optimizer
+    version: v1
+    algorithm: lightgbm
+    endpoint: kdap-budget-optimizer
+    deployment: budget-optimizer-v1
+    
+  propensity:
+    name: kdap-propensity
+    version: v1
+    algorithm: xgboost
+    endpoint: kdap-propensity
+    deployment: propensity-v1
+    
+  anomaly_detector:
+    name: kdap-anomaly-detector
+    version: v1
+    algorithm: isolation_forest
+    endpoint: kdap-anomaly-detector
+    deployment: anomaly-detector-v1
+    
+  churn_predictor:
+    name: kdap-churn-predictor
+    version: v1
+    algorithm: catboost
+    endpoint: kdap-churn-predictor
+    deployment: churn-predictor-v1
+
+training:
+  random_seed: 42
+  test_size: 0.2
+  validation_size: 0.15
+  cv_folds: 5
+  early_stopping_rounds: 50
+  
+logging:
+  level: INFO
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  mlflow_autolog: true
+
+evaluation:
+  metrics:
+    regression:
+      - rmse
+      - mae
+      - mape
+      - r2
+    classification:
+      - accuracy
+      - precision
+      - recall
+      - f1
+      - auc_roc
+      - auc_pr
+    anomaly:
+      - precision
+      - recall
+      - f1
+      - contamination_rate

@@ -1,0 +1,286 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body": [
+    {
+      "type": "Container",
+      "style": "good",
+      "bleed": true,
+      "items": [
+        {
+          "type": "ColumnSet",
+          "columns": [
+            {
+              "type": "Column",
+              "width": "auto",
+              "items": [
+                {
+                  "type": "Image",
+                  "url": "${agentIconUrl}",
+                  "size": "Small",
+                  "style": "Person"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "stretch",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "${agentName} Agent",
+                  "weight": "Bolder",
+                  "color": "Light"
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "${capability}",
+                  "size": "Small",
+                  "color": "Light",
+                  "spacing": "None"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "auto",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "${statusIcon}",
+                  "size": "ExtraLarge"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "padding": "Default",
+      "$when": "${status == 'completed'}"
+    },
+    {
+      "type": "Container",
+      "style": "warning",
+      "bleed": true,
+      "items": [
+        {
+          "type": "ColumnSet",
+          "columns": [
+            {
+              "type": "Column",
+              "width": "auto",
+              "items": [
+                {
+                  "type": "Image",
+                  "url": "${agentIconUrl}",
+                  "size": "Small",
+                  "style": "Person"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "stretch",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "${agentName} Agent",
+                  "weight": "Bolder"
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "Processing...",
+                  "size": "Small",
+                  "spacing": "None"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "auto",
+              "items": [
+                {
+                  "type": "Image",
+                  "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZhNTAwIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMTIgNnY2bDQgMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZhNTAwIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=",
+                  "size": "Small"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "padding": "Default",
+      "$when": "${status == 'in_progress'}"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "${actionLabel}",
+          "weight": "Bolder",
+          "size": "Large",
+          "wrap": true
+        },
+        {
+          "type": "TextBlock",
+          "text": "${actionDescription}",
+          "wrap": true,
+          "spacing": "Small"
+        }
+      ],
+      "spacing": "Medium"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Action Details",
+          "weight": "Bolder",
+          "size": "Small"
+        },
+        {
+          "type": "FactSet",
+          "facts": [
+            {
+              "title": "Started",
+              "value": "${startTime}"
+            },
+            {
+              "title": "Duration",
+              "value": "${duration}"
+            },
+            {
+              "title": "Status",
+              "value": "${statusText}"
+            }
+          ]
+        }
+      ],
+      "separator": true,
+      "spacing": "Medium"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Results",
+          "weight": "Bolder",
+          "size": "Small"
+        },
+        {
+          "type": "Container",
+          "style": "emphasis",
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "${resultSummary}",
+              "wrap": true
+            }
+          ],
+          "padding": "Small"
+        }
+      ],
+      "spacing": "Medium",
+      "$when": "${resultSummary != ''}"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Key Metrics",
+          "weight": "Bolder",
+          "size": "Small"
+        },
+        {
+          "type": "ColumnSet",
+          "columns": [
+            {
+              "$data": "${metrics}",
+              "type": "Column",
+              "width": "stretch",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "${value}",
+                  "weight": "Bolder",
+                  "size": "ExtraLarge",
+                  "horizontalAlignment": "Center"
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "${label}",
+                  "size": "Small",
+                  "horizontalAlignment": "Center",
+                  "isSubtle": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "spacing": "Medium",
+      "$when": "${length(metrics) > 0}"
+    },
+    {
+      "type": "ActionSet",
+      "actions": [
+        {
+          "type": "Action.Submit",
+          "title": "Continue",
+          "style": "positive",
+          "data": {
+            "action": "continue",
+            "workflowId": "${workflowId}",
+            "nodeId": "${nodeId}",
+            "sessionId": "${sessionId}"
+          },
+          "$when": "${status == 'completed'}"
+        },
+        {
+          "type": "Action.Submit",
+          "title": "View Full Report",
+          "data": {
+            "action": "viewReport",
+            "workflowId": "${workflowId}",
+            "nodeId": "${nodeId}",
+            "sessionId": "${sessionId}",
+            "reportId": "${reportId}"
+          },
+          "$when": "${reportId != ''}"
+        },
+        {
+          "type": "Action.Submit",
+          "title": "Retry Action",
+          "data": {
+            "action": "retry",
+            "workflowId": "${workflowId}",
+            "nodeId": "${nodeId}",
+            "sessionId": "${sessionId}"
+          },
+          "$when": "${status == 'failed'}"
+        },
+        {
+          "type": "Action.Submit",
+          "title": "Check Status",
+          "data": {
+            "action": "checkStatus",
+            "workflowId": "${workflowId}",
+            "nodeId": "${nodeId}",
+            "sessionId": "${sessionId}"
+          },
+          "$when": "${status == 'in_progress'}"
+        }
+      ],
+      "spacing": "Large"
+    }
+  ],
+  "metadata": {
+    "webUrl": "${webAppUrl}",
+    "templateId": "kdap-action-node"
+  }
+}

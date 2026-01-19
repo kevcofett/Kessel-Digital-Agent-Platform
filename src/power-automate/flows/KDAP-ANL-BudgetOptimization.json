@@ -1,0 +1,412 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowName": "KDAP-ANL-BudgetOptimization",
+    "description": "Budget optimization ML flow for ANL agent - calls Azure Function and formats response for Copilot Studio",
+    "author": "KDAP",
+    "version": "1.0.0",
+    "tags": ["KDAP", "ML", "ANL", "Budget", "Optimization"]
+  },
+  "parameters": {
+    "$connections": {
+      "defaultValue": {},
+      "type": "Object"
+    },
+    "KDAP_ML_FUNCTION_URL": {
+      "defaultValue": "https://kdap-ml-functions.azurewebsites.net",
+      "type": "String"
+    },
+    "KDAP_ML_API_KEY": {
+      "defaultValue": "",
+      "type": "SecureString"
+    },
+    "KDAP_RETRY_MAX_ATTEMPTS": {
+      "defaultValue": 3,
+      "type": "Int"
+    },
+    "KDAP_RETRY_DELAY_SECONDS": {
+      "defaultValue": 30,
+      "type": "Int"
+    }
+  },
+  "triggers": {
+    "manual": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "Session ID from Copilot Studio"
+            },
+            "channels": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "channelId": { "type": "string" },
+                  "currentSpend": { "type": "number" },
+                  "historicalROI": { "type": "number" },
+                  "audienceSize": { "type": "number" },
+                  "competitiveIntensity": { "type": "number" },
+                  "seasonalityIndex": { "type": "number" }
+                },
+                "required": ["channelId", "currentSpend", "historicalROI"]
+              }
+            }
+          },
+          "required": ["sessionId", "channels"]
+        }
+      }
+    }
+  },
+  "actions": {
+    "Initialize_retryCount": {
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "retryCount",
+            "type": "integer",
+            "value": 0
+          }
+        ]
+      },
+      "runAfter": {}
+    },
+    "Initialize_success": {
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "success",
+            "type": "boolean",
+            "value": false
+          }
+        ]
+      },
+      "runAfter": {
+        "Initialize_retryCount": ["Succeeded"]
+      }
+    },
+    "Initialize_mlResponse": {
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "mlResponse",
+            "type": "object",
+            "value": {}
+          }
+        ]
+      },
+      "runAfter": {
+        "Initialize_success": ["Succeeded"]
+      }
+    },
+    "Initialize_startTime": {
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "startTime",
+            "type": "string",
+            "value": "@{utcNow()}"
+          }
+        ]
+      },
+      "runAfter": {
+        "Initialize_mlResponse": ["Succeeded"]
+      }
+    },
+    "Retry_Loop": {
+      "type": "Until",
+      "expression": "@or(equals(variables('success'), true), greaterOrEquals(variables('retryCount'), parameters('KDAP_RETRY_MAX_ATTEMPTS')))",
+      "limit": {
+        "count": 10,
+        "timeout": "PT5M"
+      },
+      "actions": {
+        "Try_ML_Endpoint": {
+          "type": "Scope",
+          "actions": {
+            "HTTP_POST_BudgetOptimization": {
+              "type": "Http",
+              "inputs": {
+                "method": "POST",
+                "uri": "@{parameters('KDAP_ML_FUNCTION_URL')}/api/budgetOptimization",
+                "headers": {
+                  "Content-Type": "application/json",
+                  "x-functions-key": "@{parameters('KDAP_ML_API_KEY')}",
+                  "x-session-id": "@{triggerBody()?['sessionId']}"
+                },
+                "body": {
+                  "channels": "@triggerBody()?['channels']",
+                  "optimizationGoal": "maximize_roi",
+                  "constraints": {
+                    "maxBudgetChange": 0.5,
+                    "minChannelSpend": 0
+                  }
+                }
+              },
+              "runAfter": {}
+            },
+            "Check_Response_Status": {
+              "type": "Switch",
+              "expression": "@outputs('HTTP_POST_BudgetOptimization')['statusCode']",
+              "cases": {
+                "Success_200": {
+                  "case": 200,
+                  "actions": {
+                    "Parse_Success_Response": {
+                      "type": "ParseJson",
+                      "inputs": {
+                        "content": "@body('HTTP_POST_BudgetOptimization')",
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "success": { "type": "boolean" },
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "recommendations": { "type": "array" },
+                                "totalOptimalBudget": { "type": "number" },
+                                "expectedTotalReturn": { "type": "number" }
+                              }
+                            },
+                            "latencyMs": { "type": "number" }
+                          }
+                        }
+                      },
+                      "runAfter": {}
+                    },
+                    "Set_mlResponse": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "mlResponse",
+                        "value": "@body('Parse_Success_Response')"
+                      },
+                      "runAfter": {
+                        "Parse_Success_Response": ["Succeeded"]
+                      }
+                    },
+                    "Set_success_true": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "success",
+                        "value": true
+                      },
+                      "runAfter": {
+                        "Set_mlResponse": ["Succeeded"]
+                      }
+                    }
+                  }
+                },
+                "Rate_Limited_429": {
+                  "case": 429,
+                  "actions": {
+                    "Delay_for_rate_limit": {
+                      "type": "Wait",
+                      "inputs": {
+                        "interval": {
+                          "count": "@parameters('KDAP_RETRY_DELAY_SECONDS')",
+                          "unit": "Second"
+                        }
+                      },
+                      "runAfter": {}
+                    },
+                    "Increment_retryCount_429": {
+                      "type": "IncrementVariable",
+                      "inputs": {
+                        "name": "retryCount",
+                        "value": 1
+                      },
+                      "runAfter": {
+                        "Delay_for_rate_limit": ["Succeeded"]
+                      }
+                    }
+                  }
+                }
+              },
+              "default": {
+                "actions": {
+                  "Delay_for_error": {
+                    "type": "Wait",
+                    "inputs": {
+                      "interval": {
+                        "count": 10,
+                        "unit": "Second"
+                      }
+                    },
+                    "runAfter": {}
+                  },
+                  "Increment_retryCount_error": {
+                    "type": "IncrementVariable",
+                    "inputs": {
+                      "name": "retryCount",
+                      "value": 1
+                    },
+                    "runAfter": {
+                      "Delay_for_error": ["Succeeded"]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "HTTP_POST_BudgetOptimization": ["Succeeded"]
+              }
+            }
+          },
+          "runAfter": {}
+        },
+        "Catch_Error": {
+          "type": "Scope",
+          "actions": {
+            "Increment_retryCount_catch": {
+              "type": "IncrementVariable",
+              "inputs": {
+                "name": "retryCount",
+                "value": 1
+              },
+              "runAfter": {}
+            }
+          },
+          "runAfter": {
+            "Try_ML_Endpoint": ["Failed", "TimedOut"]
+          }
+        }
+      },
+      "runAfter": {
+        "Initialize_startTime": ["Succeeded"]
+      }
+    },
+    "Check_Final_Success": {
+      "type": "Condition",
+      "expression": {
+        "and": [
+          {
+            "equals": ["@variables('success')", true]
+          }
+        ]
+      },
+      "actions": {
+        "Format_Recommendations": {
+          "type": "Select",
+          "inputs": {
+            "from": "@variables('mlResponse')?['data']?['recommendations']",
+            "select": {
+              "channelId": "@item()?['channelId']",
+              "optimalSpend": "@item()?['optimalSpend']",
+              "expectedReturn": "@item()?['expectedReturn']",
+              "confidenceLower": "@item()?['confidenceInterval']?['lower']",
+              "confidenceUpper": "@item()?['confidenceInterval']?['upper']",
+              "marginalReturn": "@item()?['marginalReturn']",
+              "recommendation": "@if(greater(item()?['optimalSpend'], mul(item()?['currentSpend'], 1.2)), concat('Increase budget by ', string(mul(div(sub(item()?['optimalSpend'], item()?['currentSpend']), item()?['currentSpend']), 100)), '%'), if(less(item()?['optimalSpend'], mul(item()?['currentSpend'], 0.8)), concat('Reduce budget by ', string(mul(div(sub(item()?['currentSpend'], item()?['optimalSpend']), item()?['currentSpend']), 100)), '%'), 'Maintain current budget'))"
+            }
+          },
+          "runAfter": {}
+        },
+        "Generate_Summary": {
+          "type": "Compose",
+          "inputs": "@concat('Recommended total budget: $', string(variables('mlResponse')?['data']?['totalOptimalBudget']), '. Expected overall return: $', string(variables('mlResponse')?['data']?['expectedTotalReturn']), '.')",
+          "runAfter": {
+            "Format_Recommendations": ["Succeeded"]
+          }
+        },
+        "Create_Dataverse_Prediction_Record": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": {
+              "connection": {
+                "name": "@parameters('$connections')['commondataserviceforapps']['connectionId']"
+              }
+            },
+            "method": "post",
+            "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default.cds'))}/tables/@{encodeURIComponent(encodeURIComponent('kdap_ml_predictions'))}/items",
+            "body": {
+              "kdap_predictionid": "@{guid()}",
+              "kdap_sessionid": "@{triggerBody()?['sessionId']}",
+              "kdap_modeltype": 1,
+              "kdap_inputpayload": "@{string(triggerBody())}",
+              "kdap_outputpayload": "@{string(variables('mlResponse'))}",
+              "kdap_latencyms": "@{variables('mlResponse')?['latencyMs']}",
+              "kdap_status": 1
+            }
+          },
+          "runAfter": {
+            "Generate_Summary": ["Succeeded"]
+          }
+        },
+        "Success_Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "success": true,
+              "recommendations": "@body('Format_Recommendations')",
+              "summary": "@outputs('Generate_Summary')",
+              "predictionId": "@{body('Create_Dataverse_Prediction_Record')?['kdap_predictionid']}"
+            }
+          },
+          "runAfter": {
+            "Create_Dataverse_Prediction_Record": ["Succeeded"]
+          }
+        }
+      },
+      "else": {
+        "actions": {
+          "Log_Error_to_Dataverse": {
+            "type": "ApiConnection",
+            "inputs": {
+              "host": {
+                "connection": {
+                  "name": "@parameters('$connections')['commondataserviceforapps']['connectionId']"
+                }
+              },
+              "method": "post",
+              "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default.cds'))}/tables/@{encodeURIComponent(encodeURIComponent('kdap_error_logs'))}/items",
+              "body": {
+                "kdap_logid": "@{guid()}",
+                "kdap_flowname": "KDAP-ANL-BudgetOptimization",
+                "kdap_errorcode": "ML_ENDPOINT_FAILED",
+                "kdap_errormessage": "Failed to get response from ML endpoint after maximum retries",
+                "kdap_inputpayload": "@{string(triggerBody())}"
+              }
+            },
+            "runAfter": {}
+          },
+          "Fallback_Response": {
+            "type": "Response",
+            "kind": "Http",
+            "inputs": {
+              "statusCode": 200,
+              "headers": {
+                "Content-Type": "application/json"
+              },
+              "body": {
+                "success": false,
+                "recommendations": [],
+                "summary": "I was unable to complete the budget optimization analysis at this time. Please try again in a few minutes or contact support if the issue persists.",
+                "predictionId": null
+              }
+            },
+            "runAfter": {
+              "Log_Error_to_Dataverse": ["Succeeded"]
+            }
+          }
+        }
+      },
+      "runAfter": {
+        "Retry_Loop": ["Succeeded"]
+      }
+    }
+  },
+  "outputs": {}
+}

@@ -1,0 +1,207 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body": [
+    {
+      "type": "Container",
+      "style": "accent",
+      "bleed": true,
+      "items": [
+        {
+          "type": "ColumnSet",
+          "columns": [
+            {
+              "type": "Column",
+              "width": "auto",
+              "items": [
+                {
+                  "type": "Image",
+                  "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTkgMThsNi02LTYtNiIvPjwvc3ZnPg==",
+                  "size": "Small"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "stretch",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "Decision Point",
+                  "weight": "Bolder",
+                  "size": "Small",
+                  "color": "Light"
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "${workflowName}",
+                  "size": "Small",
+                  "color": "Light",
+                  "spacing": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "padding": "Default"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "${decisionLabel}",
+          "weight": "Bolder",
+          "size": "Large",
+          "wrap": true
+        },
+        {
+          "type": "TextBlock",
+          "text": "${decisionDescription}",
+          "wrap": true,
+          "spacing": "Small"
+        }
+      ],
+      "spacing": "Medium"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Select an option to continue:",
+          "weight": "Bolder",
+          "size": "Small",
+          "spacing": "Medium"
+        },
+        {
+          "type": "Input.ChoiceSet",
+          "id": "selectedOption",
+          "style": "expanded",
+          "isRequired": true,
+          "errorMessage": "Please select an option",
+          "choices": [
+            {
+              "$data": "${options}",
+              "title": "${label}",
+              "value": "${value}"
+            }
+          ]
+        }
+      ],
+      "separator": true,
+      "spacing": "Medium"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "ColumnSet",
+          "columns": [
+            {
+              "$data": "${options}",
+              "type": "Column",
+              "width": "stretch",
+              "items": [
+                {
+                  "type": "Container",
+                  "style": "emphasis",
+                  "items": [
+                    {
+                      "type": "TextBlock",
+                      "text": "${label}",
+                      "weight": "Bolder",
+                      "size": "Small"
+                    },
+                    {
+                      "type": "TextBlock",
+                      "text": "${description}",
+                      "size": "Small",
+                      "wrap": true,
+                      "isSubtle": true
+                    }
+                  ],
+                  "padding": "Small",
+                  "selectAction": {
+                    "type": "Action.Submit",
+                    "data": {
+                      "action": "selectOption",
+                      "workflowId": "${workflowId}",
+                      "nodeId": "${nodeId}",
+                      "sessionId": "${sessionId}",
+                      "selectedOption": "${value}"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "spacing": "Medium",
+      "$when": "${showOptionCards}"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "FactSet",
+          "facts": [
+            {
+              "title": "Context",
+              "value": "${contextSummary}"
+            },
+            {
+              "title": "Impact",
+              "value": "${impactSummary}"
+            }
+          ]
+        }
+      ],
+      "spacing": "Medium",
+      "$when": "${contextSummary != ''}"
+    },
+    {
+      "type": "ActionSet",
+      "actions": [
+        {
+          "type": "Action.Submit",
+          "title": "Confirm Selection",
+          "style": "positive",
+          "data": {
+            "action": "confirmDecision",
+            "workflowId": "${workflowId}",
+            "nodeId": "${nodeId}",
+            "sessionId": "${sessionId}"
+          }
+        },
+        {
+          "type": "Action.Submit",
+          "title": "Need More Info",
+          "data": {
+            "action": "requestInfo",
+            "workflowId": "${workflowId}",
+            "nodeId": "${nodeId}",
+            "sessionId": "${sessionId}"
+          }
+        },
+        {
+          "type": "Action.Submit",
+          "title": "Go Back",
+          "data": {
+            "action": "goBack",
+            "workflowId": "${workflowId}",
+            "sessionId": "${sessionId}"
+          }
+        }
+      ],
+      "spacing": "Large"
+    }
+  ],
+  "metadata": {
+    "webUrl": "${webAppUrl}",
+    "templateId": "kdap-decision-node"
+  }
+}

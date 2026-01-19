@@ -1,0 +1,184 @@
+# Response Curve Model Configuration
+# ANL Agent - Diminishing Returns and Saturation Modeling
+
+model:
+  name: response_curve
+  type: regression
+  algorithm: nonlinear_regression
+  task: saturation_modeling
+
+curve_types:
+  hill:
+    formula: "y = K * x^n / (EC50^n + x^n)"
+    parameters:
+      K: max_response
+      EC50: half_saturation_point
+      n: hill_coefficient
+    bounds:
+      K: [0, null]
+      EC50: [0, null]
+      n: [0.1, 10]
+      
+  adbudg:
+    formula: "y = a + (b - a) * x^c / (d + x^c)"
+    parameters:
+      a: baseline
+      b: saturation_level
+      c: shape_parameter
+      d: inflection_point
+    bounds:
+      a: [0, null]
+      c: [0.1, 5]
+      d: [0, null]
+      
+  logistic:
+    formula: "y = L / (1 + exp(-k*(x - x0)))"
+    parameters:
+      L: max_value
+      k: steepness
+      x0: midpoint
+    bounds:
+      L: [0, null]
+      k: [0, null]
+      
+  logarithmic:
+    formula: "y = a * log(1 + b*x)"
+    parameters:
+      a: scale
+      b: shape
+    bounds:
+      a: [0, null]
+      b: [0, null]
+      
+  power:
+    formula: "y = a * x^b"
+    parameters:
+      a: scale
+      b: elasticity
+    bounds:
+      a: [0, null]
+      b: [0, 1]
+
+features:
+  spend_metrics:
+    - daily_spend
+    - weekly_spend
+    - cumulative_spend
+    - spend_velocity
+    
+  response_metrics:
+    - impressions
+    - clicks
+    - conversions
+    - revenue
+    
+  context:
+    - channel_id
+    - campaign_type
+    - audience_segment
+    - creative_type
+    - seasonality_factor
+
+preprocessing:
+  spend:
+    transformation: none
+    outlier_removal: true
+    outlier_method: iqr
+    iqr_multiplier: 3
+    
+  response:
+    transformation: optional_log
+    smoothing: rolling_mean
+    smoothing_window: 7
+
+fitting:
+  method: scipy_curve_fit
+  algorithm: trust_region_reflective
+  max_iterations: 10000
+  tolerance: 1e-8
+  
+  initialization:
+    method: grid_search
+    n_initial_points: 100
+    
+  bounds_estimation:
+    method: data_driven
+    percentile_range: [1, 99]
+
+model_selection:
+  method: information_criterion
+  criteria:
+    - aic
+    - bic
+    - adjusted_r2
+  cross_validation:
+    method: time_series_split
+    n_splits: 5
+
+confidence_intervals:
+  method: bootstrap
+  n_bootstrap: 1000
+  confidence_level: 0.95
+  
+marginal_analysis:
+  compute: true
+  granularity: 100
+  
+saturation_detection:
+  method: marginal_return_threshold
+  threshold: 0.1
+  
+inflection_points:
+  detect: true
+  method: second_derivative
+  
+optimal_spend:
+  method: marginal_roi_target
+  target_mroi: 1.0
+  constraints:
+    min_spend: 0
+    max_spend: null
+
+evaluation:
+  primary_metric: adjusted_r2
+  metrics:
+    - r2
+    - adjusted_r2
+    - rmse
+    - mape
+    - aic
+    - bic
+  threshold_metrics:
+    adjusted_r2: 0.80
+    mape: 20
+
+output:
+  curve_parameters:
+    - curve_type
+    - parameters
+    - standard_errors
+    - confidence_intervals
+    - goodness_of_fit
+    
+  analysis:
+    - saturation_point
+    - inflection_point
+    - optimal_spend
+    - marginal_return_curve
+    - elasticity_at_current_spend
+    
+  predictions:
+    - spend_level
+    - predicted_response
+    - confidence_interval
+    - marginal_return
+    - cumulative_return
+
+visualization:
+  generate_plots: true
+  plots:
+    - response_curve
+    - marginal_return
+    - confidence_bands
+    - residuals
+    - qq_plot

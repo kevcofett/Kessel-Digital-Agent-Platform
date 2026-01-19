@@ -1,0 +1,119 @@
+{
+  "agent": "MKT",
+  "version": "1.0",
+  "test_scenarios": [
+    {
+      "id": "MKT-001",
+      "category": "Campaign Strategy",
+      "input": "Help me develop a campaign strategy for launching our new loyalty program to existing customers",
+      "expected_behaviors": [
+        "Clarifies business objectives and success metrics",
+        "Asks about target customer segments",
+        "Inquires about budget and timeline constraints",
+        "References campaign strategy framework"
+      ],
+      "routing_trigger": "campaign strategy development"
+    },
+    {
+      "id": "MKT-002",
+      "category": "Creative Brief",
+      "input": "I need to create a creative brief for our Q2 brand awareness campaign targeting millennials",
+      "expected_behaviors": [
+        "Applies creative brief structure",
+        "Asks for business context and objectives",
+        "Requests target audience insight",
+        "Guides toward single-minded proposition"
+      ],
+      "routing_trigger": "creative brief creation"
+    },
+    {
+      "id": "MKT-003",
+      "category": "Brand Positioning",
+      "input": "How should we position our fintech app against established banking apps?",
+      "expected_behaviors": [
+        "Applies positioning framework",
+        "Explores frame of reference options",
+        "Identifies point of difference opportunities",
+        "Develops reasons to believe"
+      ],
+      "routing_trigger": "brand positioning strategy"
+    },
+    {
+      "id": "MKT-004",
+      "category": "GTM Planning",
+      "input": "We are launching a new SaaS product in Q3. Help me build a go-to-market plan",
+      "expected_behaviors": [
+        "Applies GTM planning framework",
+        "Covers market analysis requirements",
+        "Addresses channel strategy",
+        "Includes launch execution planning"
+      ],
+      "routing_trigger": "go-to-market planning"
+    },
+    {
+      "id": "MKT-005",
+      "category": "Competitive Analysis",
+      "input": "Analyze our competitive landscape in the meal delivery market",
+      "expected_behaviors": [
+        "Applies competitive analysis framework",
+        "Identifies competitive set definition",
+        "Uses appropriate analysis frameworks",
+        "Provides strategic recommendations"
+      ],
+      "routing_trigger": "competitive analysis"
+    },
+    {
+      "id": "MKT-006",
+      "category": "Cross-Agent Routing",
+      "input": "I need a campaign strategy that includes detailed audience segmentation and channel allocation",
+      "expected_behaviors": [
+        "Handles campaign strategy portion",
+        "Routes to AUD for detailed segmentation",
+        "Routes to CHA for channel allocation",
+        "Coordinates multi-agent response"
+      ],
+      "routing_trigger": "multi-domain marketing request"
+    },
+    {
+      "id": "MKT-007",
+      "category": "Message Architecture",
+      "input": "Help me build a messaging hierarchy for our B2B software platform",
+      "expected_behaviors": [
+        "Applies message architecture framework",
+        "Develops brand message level",
+        "Creates campaign message level",
+        "Addresses audience adaptation"
+      ],
+      "routing_trigger": "messaging strategy"
+    },
+    {
+      "id": "MKT-008",
+      "category": "Launch Planning",
+      "input": "What should our pre-launch and post-launch marketing activities include?",
+      "expected_behaviors": [
+        "Covers pre-launch readiness",
+        "Details launch activities",
+        "Addresses post-launch optimization",
+        "Includes success metrics"
+      ],
+      "routing_trigger": "launch execution"
+    }
+  ],
+  "edge_cases": [
+    {
+      "id": "MKT-E01",
+      "scenario": "Insufficient context for strategy development",
+      "expected_behavior": "Request specific missing information before proceeding"
+    },
+    {
+      "id": "MKT-E02",
+      "scenario": "Conflicting objectives provided by user",
+      "expected_behavior": "Surface conflict explicitly and present tradeoff options"
+    },
+    {
+      "id": "MKT-E03",
+      "scenario": "Request for quantitative analysis",
+      "expected_behavior": "Route to ANL for detailed financial modeling"
+    }
+  ]
+}

@@ -6,7 +6,7 @@ This knowledge base provides detailed routing logic for the Orchestrator Agent t
 
 MPA DOMAIN ROUTING
 
-The Media Planning Agent domain encompasses analytics, audience, channel, supply path, document, and performance specialists. These agents support the complete media planning workflow from strategy through execution and measurement.
+The Media Planning Agent domain encompasses analytics, audience, channel, supply path, document, performance, and marketing strategy specialists. These agents support the complete media planning workflow from strategy through execution and measurement.
 
 ANL AGENT TRIGGERS
 
@@ -82,6 +82,30 @@ Route to Performance Agent when:
 
 Keywords: performance, results, metrics, optimization, pacing, variance, post-mortem, analysis, learnings, anomaly, alert, in-flight
 
+MKT AGENT TRIGGERS
+
+Route to Marketing Strategy Agent when:
+- User asks about campaign strategy development
+- User needs creative brief creation or guidance
+- User requests brand positioning framework
+- User asks about go-to-market planning
+- User needs competitive analysis or landscape assessment
+- User asks about messaging architecture or hierarchy
+- User needs launch strategy or execution planning
+- User requests marketing planning frameworks
+
+Keywords: campaign strategy, creative brief, brand positioning, go-to-market, GTM, competitive analysis, messaging, message architecture, launch strategy, marketing plan, value proposition, positioning statement
+
+Intent Patterns for MKT:
+- Help me develop a campaign strategy for...
+- Create a creative brief for...
+- How should we position our brand against...
+- Build a go-to-market plan for...
+- Analyze our competitive landscape...
+- Develop messaging for...
+- What should our launch strategy include...
+- Help me with marketing planning for...
+
 CA DOMAIN ROUTING
 
 The Consulting Agent domain encompasses consulting strategy and change management specialists. These agents support strategic consulting engagements from assessment through implementation.
@@ -137,8 +161,14 @@ Some user requests require coordination across multiple agents. The Orchestrator
 MPA Multi-Agent Patterns:
 - Budget optimization: ANL for projections then CHA for allocation
 - Audience strategy: AUD for segments then CHA for targeting tactics
-- Campaign planning: Multiple agents then DOC for final document
+- Campaign planning: MKT for strategy then CHA for channels then DOC for document
 - Performance review: PRF for analysis then ANL for projections
+- Full campaign development: MKT then AUD then CHA then ANL then DOC
+
+MKT Multi-Agent Patterns:
+- Campaign strategy with audience: MKT for strategy then AUD for segmentation
+- Campaign strategy with channels: MKT for strategy then CHA for channel mix
+- Full marketing plan: MKT for strategy then AUD plus CHA plus ANL then DOC
 
 CA Multi-Agent Patterns:
 - Business case: CST for framework then ANL for financials then DOC for document
@@ -146,21 +176,24 @@ CA Multi-Agent Patterns:
 - Strategy implementation: CST for prioritization then CHG for adoption then DOC for brief
 
 Cross-Domain Patterns:
-- Marketing transformation: CST plus CHG plus MPA agents
-- Campaign strategy: CST for framework plus MPA for execution planning
+- Marketing transformation: CST plus CHG plus MKT plus MPA agents
+- Campaign strategy: MKT for marketing strategy plus AUD plus CHA for execution
 - Measurement strategy: CST for approach plus ANL for methodology
+- Product launch: MKT for GTM plus CST for strategic framework plus CHG for adoption
 
 ROUTING DECISION LOGIC
 
 Step 1 - Domain Classification
 - Media planning, campaigns, advertising - MPA domain
-- Consulting, strategy, change - CA domain
+- Marketing strategy, creative briefs, positioning - MKT agent
+- Consulting, strategy frameworks, change - CA domain
 - General questions, workflow - Handle as ORC
 
 Step 2 - Agent Selection
 - Match keywords and intent patterns
 - Consider conversation context
 - Default to most specific match
+- MKT handles strategic marketing; CHA handles channel tactics
 
 Step 3 - Context Preparation
 - Gather relevant session state
@@ -182,9 +215,23 @@ When intent is unclear:
 
 Common Ambiguities:
 - Analysis could mean ANL calculations or CST strategic analysis
-- Planning could mean media planning or change planning
-- Strategy could mean channel strategy or consulting strategy
+- Planning could mean media planning or change planning or marketing planning
+- Strategy could mean channel strategy or consulting strategy or marketing strategy
+- Campaign could mean MKT strategy or CHA channel tactics
 - Resolution: Use surrounding context and keywords
+- MKT handles why and what; CHA handles where and how much
+
+MKT vs CHA Distinction:
+- Campaign strategy and positioning - route to MKT
+- Channel selection and budget allocation - route to CHA
+- Creative brief and messaging - route to MKT
+- Platform tactics and benchmarks - route to CHA
+
+MKT vs CST Distinction:
+- Marketing-specific strategy - route to MKT
+- General business or consulting frameworks - route to CST
+- Brand positioning and creative - route to MKT
+- Strategic prioritization and assessment - route to CST
 
 FALLBACK BEHAVIOR
 

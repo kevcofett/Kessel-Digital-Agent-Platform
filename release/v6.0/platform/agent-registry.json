@@ -1,6 +1,6 @@
 {
-  "version": "6.0",
-  "updated": "2026-01-18",
+  "version": "6.0.1",
+  "updated": "2026-01-19",
   "agents": [
     {
       "code": "ORC",
@@ -72,6 +72,36 @@
       "flows": ["AnalyzePerformance", "DetectAnomalies", "ExtractLearnings"],
       "isRouter": false,
       "status": "active"
+    },
+    {
+      "code": "CHG",
+      "name": "ChangeManagement",
+      "description": "Change readiness assessment, stakeholder mapping, adoption planning",
+      "instructionsFile": "CHG_Copilot_Instructions_v1.txt",
+      "kbFiles": ["CHG_KB_Change_Core_v1.txt", "CHG_KB_Stakeholder_Methods_v1.txt", "CHG_KB_Adoption_Planning_v1.txt"],
+      "flows": ["AssessReadiness", "MapStakeholders", "PlanAdoption"],
+      "isRouter": false,
+      "status": "active"
+    },
+    {
+      "code": "CST",
+      "name": "ConsultingStrategy",
+      "description": "Strategic framework selection, analysis, initiative prioritization",
+      "instructionsFile": "CST_Copilot_Instructions_v1.txt",
+      "kbFiles": ["CST_KB_Consulting_Core_v1.txt", "CST_KB_Strategic_Frameworks_v1.txt", "CST_KB_Prioritization_Methods_v1.txt", "CST_KB_Industry_Context_v1.txt"],
+      "flows": ["SelectFramework", "ApplyAnalysis", "PrioritizeInitiatives"],
+      "isRouter": false,
+      "status": "active"
+    },
+    {
+      "code": "MKT",
+      "name": "MarketingStrategy",
+      "description": "Campaign strategy, creative briefs, brand positioning, GTM planning",
+      "instructionsFile": "MKT_Copilot_Instructions_v1.txt",
+      "kbFiles": ["MKT_KB_Campaign_Strategy_v1.txt", "MKT_KB_Creative_Briefs_v1.txt", "MKT_KB_Brand_Positioning_v1.txt", "MKT_KB_GTM_Planning_v1.txt", "MKT_KB_Competitive_Analysis_v1.txt"],
+      "flows": ["DevelopStrategy", "CreateBrief", "AnalyzeCompetitive"],
+      "isRouter": false,
+      "status": "active"
     }
   ],
   "routingKeywords": {
@@ -80,13 +110,19 @@
     "CHA": ["channel", "allocation", "budget", "mix", "platform", "cpm", "cpc", "benchmark", "funnel", "awareness", "conversion"],
     "SPO": ["nbi", "supply path", "fee", "dsp", "ssp", "programmatic", "exchange", "partner", "working media", "tech tax"],
     "DOC": ["document", "export", "generate", "pdf", "word", "excel", "report", "summary", "template", "presentation"],
-    "PRF": ["performance", "analyze", "anomaly", "learning", "optimize", "trend", "variance", "kpi", "benchmark", "reallocation"]
+    "PRF": ["performance", "analyze", "anomaly", "learning", "optimize", "trend", "variance", "kpi", "benchmark", "reallocation"],
+    "CHG": ["change", "readiness", "stakeholder", "adoption", "rollout", "transformation", "resistance", "communication plan"],
+    "CST": ["framework", "strategic", "prioritize", "initiative", "consulting", "swot", "porter", "pestel", "roadmap", "business case"],
+    "MKT": ["campaign", "creative", "brief", "positioning", "gtm", "launch", "brand", "messaging", "value proposition", "competitive analysis"]
   },
   "handoffPatterns": {
     "ANL_to_CHA": "After calculations complete, user needs channel recommendations",
     "AUD_to_CHA": "After segmentation, user needs channel targeting strategy",
     "CHA_to_SPO": "After channel selection, user needs supply path optimization",
     "PRF_to_CHA": "After performance analysis, user needs budget reallocation",
-    "ANY_to_DOC": "User requests document, export, or report generation"
+    "ANY_to_DOC": "User requests document, export, or report generation",
+    "CST_to_CHG": "After strategic planning, user needs change management support",
+    "MKT_to_CHA": "After campaign strategy, user needs channel allocation",
+    "CST_to_MKT": "After strategic framework, user needs marketing strategy development"
   }
 }

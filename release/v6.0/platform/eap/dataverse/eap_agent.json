@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "EAP Agent Registry Table",
-  "description": "Dataverse table definition for the multi-agent registry. Stores configuration and status for all 7 agents in the MPA architecture.",
+  "description": "Dataverse table definition for the multi-agent registry. Stores configuration and status for all 10 agents in the MPA architecture.",
   "table_name": "eap_agent",
   "display_name": "Agent",
   "plural_name": "Agents",
@@ -271,6 +271,42 @@
       "eap_agent_fallback_agent": "ORC",
       "eap_agent_request_types": "[\"ANALYZE_PERFORMANCE\", \"DETECT_ANOMALIES\", \"EXTRACT_LEARNINGS\", \"RECOMMEND_OPTIMIZATION\", \"FORECAST_PERFORMANCE\"]",
       "eap_agent_capabilities": "[\"performance_analysis\", \"anomaly_detection\", \"learning_extraction\", \"optimization_recommendation\", \"trend_analysis\"]"
+    },
+    {
+      "eap_agent_code": "CHG",
+      "eap_agent_name": "Change Management Agent",
+      "eap_agent_description": "Assesses organizational readiness for change, maps stakeholders with power-interest analysis, and creates adoption plans for transformation initiatives.",
+      "eap_agent_status": 1,
+      "eap_agent_version": "1.0.0",
+      "eap_agent_routing_priority": 25,
+      "eap_agent_timeout_ms": 30000,
+      "eap_agent_fallback_agent": "ORC",
+      "eap_agent_request_types": "[\"ASSESS_READINESS\", \"MAP_STAKEHOLDERS\", \"PLAN_ADOPTION\", \"MEASURE_ADOPTION\", \"IDENTIFY_RESISTANCE\"]",
+      "eap_agent_capabilities": "[\"change_readiness\", \"stakeholder_analysis\", \"adoption_planning\", \"resistance_management\", \"communication_planning\"]"
+    },
+    {
+      "eap_agent_code": "CST",
+      "eap_agent_name": "Consulting Strategy Agent",
+      "eap_agent_description": "Selects and applies strategic frameworks, conducts analysis using proven methodologies, and prioritizes initiatives using RICE, weighted matrices, and MoSCoW methods.",
+      "eap_agent_status": 1,
+      "eap_agent_version": "1.0.0",
+      "eap_agent_routing_priority": 20,
+      "eap_agent_timeout_ms": 45000,
+      "eap_agent_fallback_agent": "ORC",
+      "eap_agent_request_types": "[\"SELECT_FRAMEWORK\", \"APPLY_ANALYSIS\", \"PRIORITIZE_INITIATIVES\", \"GUIDE_ENGAGEMENT\", \"SYNTHESIZE_INSIGHTS\"]",
+      "eap_agent_capabilities": "[\"framework_selection\", \"strategic_analysis\", \"initiative_prioritization\", \"engagement_guidance\", \"insight_synthesis\"]"
+    },
+    {
+      "eap_agent_code": "MKT",
+      "eap_agent_name": "Marketing Strategy Agent",
+      "eap_agent_description": "Develops comprehensive campaign strategies, creates structured creative briefs, defines brand positioning frameworks, and builds go-to-market plans.",
+      "eap_agent_status": 1,
+      "eap_agent_version": "1.0.0",
+      "eap_agent_routing_priority": 20,
+      "eap_agent_timeout_ms": 45000,
+      "eap_agent_fallback_agent": "ORC",
+      "eap_agent_request_types": "[\"DEVELOP_STRATEGY\", \"CREATE_BRIEF\", \"DEFINE_POSITIONING\", \"PLAN_GTM\", \"ANALYZE_COMPETITIVE\"]",
+      "eap_agent_capabilities": "[\"campaign_strategy\", \"creative_brief\", \"brand_positioning\", \"gtm_planning\", \"competitive_analysis\"]"
     }
   ]
 }

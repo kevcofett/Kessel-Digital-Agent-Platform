@@ -1,114 +1,121 @@
 /**
  * Azure Function: Anomaly Detection
- * HTTP Trigger for PRF Agent ML capability
+ * HTTP trigger for PRF agent anomaly detection
  */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { createMLServicesFromEnv } from '../index';
-import { AnomalyInput } from '../models/anomaly-detection';
+import { createMLServices } from '../index';
 
-interface RequestBody {
-  metrics: AnomalyInput[];
+interface DetectionRequest {
+  metrics: { timestamp: string; value: number; dimensions?: object }[];
+  metricName: string;
+  sensitivity?: number;
+  lookbackPeriod?: number;
+  seasonality?: string;
 }
 
-interface RealtimeRequestBody {
+interface MonitorRequest {
   metricName: string;
-  value: number;
-  historicalValues: number[];
-  historicalTimestamps: string[];
+  currentValue: number;
+  recentHistory: { timestamp: string; value: number }[];
+}
+
+interface HealthScoreRequest {
+  metrics: { name: string; data: { timestamp: string; value: number }[] }[];
+}
+
+export async function anomalyDetection(
+  request: HttpRequest,
+  context: InvocationContext
+): Promise<HttpResponseInit> {
+  context.log('Anomaly detection function triggered');
+
+  try {
+    const action = request.query.get('action') || 'detect';
+    const body = await request.json();
+
+    const services = createMLServices();
+
+    if (action === 'monitor') {
+      const monitorBody = body as MonitorRequest;
+      if (!monitorBody.metricName || monitorBody.currentValue === undefined) {
+        return {
+          status: 400,
+          jsonBody: { error: 'Missing required fields: metricName and currentValue' },
+        };
+      }
+
+      const result = await services.anomalyDetection.monitorMetric(
+        monitorBody.metricName,
+        monitorBody.currentValue,
+        monitorBody.recentHistory || []
+      );
+
+      return {
+        status: result.success ? 200 : 500,
+        jsonBody: result.success ? result.data : { error: result.error },
+      };
+    }
+
+    if (action === 'healthScore') {
+      const healthBody = body as HealthScoreRequest;
+      if (!healthBody.metrics || healthBody.metrics.length === 0) {
+        return {
+          status: 400,
+          jsonBody: { error: 'Missing required field: metrics' },
+        };
+      }
+
+      const result = await services.anomalyDetection.getHealthScore(healthBody.metrics);
+
+      return {
+        status: result.success ? 200 : 500,
+        jsonBody: result.success ? result.data : { error: result.error },
+      };
+    }
+
+    // Default: detect anomalies
+    const detectBody = body as DetectionRequest;
+    if (!detectBody.metrics || detectBody.metrics.length === 0 || !detectBody.metricName) {
+      return {
+        status: 400,
+        jsonBody: { error: 'Missing required fields: metrics and metricName' },
+      };
+    }
+
+    const result = await services.anomalyDetection.detectAnomalies({
+      metrics: detectBody.metrics,
+      metricName: detectBody.metricName,
+      sensitivity: detectBody.sensitivity || 0.8,
+      lookbackPeriod: detectBody.lookbackPeriod,
+      seasonality: detectBody.seasonality as any,
+    });
+
+    if (!result.success) {
+      return {
+        status: 500,
+        jsonBody: { error: result.error, latencyMs: result.latencyMs },
+      };
+    }
+
+    return {
+      status: 200,
+      jsonBody: {
+        ...result.data,
+        metadata: { latencyMs: result.latencyMs, endpoint: result.endpointName },
+      },
+    };
+  } catch (error) {
+    context.error('Anomaly detection error:', error);
+    return {
+      status: 500,
+      jsonBody: { error: 'Internal server error' },
+    };
+  }
 }
 
 app.http('anomalyDetection', {
   methods: ['POST'],
   authLevel: 'function',
-  handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-    context.log('Anomaly detection request received');
-
-    try {
-      const body = await request.json() as RequestBody;
-
-      if (!body.metrics || !Array.isArray(body.metrics)) {
-        return {
-          status: 400,
-          jsonBody: {
-            error: 'Invalid request body. Expected { metrics: AnomalyInput[] }',
-          },
-        };
-      }
-
-      const services = createMLServicesFromEnv();
-      const result = await services.anomalyDetection.detect(body.metrics);
-
-      context.log(`Anomaly detection completed: ${result.results.length} metrics in ${result.latencyMs}ms`);
-
-      return {
-        status: 200,
-        jsonBody: {
-          success: true,
-          data: result,
-        },
-      };
-    } catch (error) {
-      context.error('Anomaly detection failed:', error);
-
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      const statusCode = message.includes('validation') ? 400 : 500;
-
-      return {
-        status: statusCode,
-        jsonBody: {
-          success: false,
-          error: message,
-        },
-      };
-    }
-  },
-});
-
-app.http('anomalyDetectionRealtime', {
-  methods: ['POST'],
-  authLevel: 'function',
-  route: 'anomalyDetection/realtime',
-  handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-    context.log('Real-time anomaly detection request received');
-
-    try {
-      const body = await request.json() as RealtimeRequestBody;
-
-      if (!body.metricName || body.value === undefined || !body.historicalValues || !body.historicalTimestamps) {
-        return {
-          status: 400,
-          jsonBody: {
-            error: 'Invalid request body for realtime detection',
-          },
-        };
-      }
-
-      const services = createMLServicesFromEnv();
-      const result = await services.anomalyDetection.detectRealtime(
-        body.metricName,
-        body.value,
-        body.historicalValues,
-        body.historicalTimestamps
-      );
-
-      return {
-        status: 200,
-        jsonBody: {
-          success: true,
-          data: result,
-        },
-      };
-    } catch (error) {
-      context.error('Real-time anomaly detection failed:', error);
-
-      return {
-        status: 500,
-        jsonBody: {
-          success: false,
-          error: error instanceof Error ? error.message : 'Unknown error',
-        },
-      };
-    }
-  },
+  handler: anomalyDetection,
 });

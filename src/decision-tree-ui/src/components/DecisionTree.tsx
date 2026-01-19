@@ -1,271 +1,183 @@
 /**
- * Decision Tree Component
- * Main visualization component using React Flow
+ * Main Decision Tree View Component
  */
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import ReactFlow, {
-  Background,
-  Controls,
-  MiniMap,
   Node,
   Edge,
+  Controls,
+  MiniMap,
+  Background,
   useNodesState,
   useEdgesState,
-  Connection,
-  addEdge,
-  MarkerType,
-  Panel,
+  NodeTypes,
+  BackgroundVariant,
 } from 'reactflow';
-import { motion, AnimatePresence } from 'framer-motion';
-import clsx from 'clsx';
 import 'reactflow/dist/style.css';
-
-import { nodeTypes } from './TreeNodes';
+import { DecisionTree, TreeSession, TreeViewConfig, TreeNode as TreeNodeType } from '../types';
+import TreeNodes from './TreeNodes';
 import { DetailPanel } from './DetailPanel';
 import { ProgressBar } from './ProgressBar';
-import type { 
-  DecisionTree, 
-  DecisionTreeProps, 
-  TreeNode, 
-  TreeEdge,
-  TreeConfig,
-  TreeEvent,
-  NodeStatus,
-} from '../types';
 
-const defaultConfig: TreeConfig = {
-  allowSkip: false,
-  showTimeEstimates: true,
-  keyboardNavigation: true,
-  animationDuration: 300,
-  theme: 'light',
-  minZoom: 0.5,
-  maxZoom: 2,
-  defaultZoom: 1,
-  showMinimap: true,
-  showProgress: true,
+interface DecisionTreeViewProps {
+  tree: DecisionTree;
+  session?: TreeSession;
+  config?: TreeViewConfig;
+  onNodeClick?: (node: TreeNodeType) => void;
+  onDecision?: (nodeId: string, optionId: string) => void;
+  onNavigate?: (nodeId: string) => void;
+}
+
+const nodeTypes: NodeTypes = {
+  start: TreeNodes.start,
+  decision: TreeNodes.decision,
+  action: TreeNodes.action,
+  gate: TreeNodes.gate,
+  merge: TreeNodes.merge,
+  end: TreeNodes.end,
 };
 
-/**
- * Convert tree nodes to React Flow nodes
- */
-function toFlowNodes(nodes: TreeNode[], currentNodeId?: string): Node[] {
-  return nodes.map(node => ({
+function convertToFlowNodes(
+  treeNodes: TreeNodeType[],
+  session?: TreeSession
+): Node[] {
+  return treeNodes.map((node, index) => ({
     id: node.id,
     type: node.type,
-    position: node.position,
+    position: { x: 250, y: index * 120 },
     data: {
-      ...node.data,
-      label: node.label,
-      description: node.description,
-      status: node.id === currentNodeId ? 'active' : node.status,
-      type: node.type,
+      ...node,
+      isActive: session?.currentNodeId === node.id,
+      isVisited: session?.visitedNodes.includes(node.id),
     },
-    draggable: false,
   }));
 }
 
-/**
- * Convert tree edges to React Flow edges
- */
-function toFlowEdges(edges: TreeEdge[]): Edge[] {
-  return edges.map(edge => ({
+function convertToFlowEdges(tree: DecisionTree): Edge[] {
+  return tree.edges.map((edge) => ({
     id: edge.id,
     source: edge.source,
     target: edge.target,
-    type: edge.type === 'conditional' ? 'smoothstep' : 'default',
-    animated: edge.animated || edge.type === 'loop',
     label: edge.label,
-    labelStyle: { fill: '#666', fontSize: 12 },
-    markerEnd: {
-      type: MarkerType.ArrowClosed,
-      color: '#999',
-    },
-    style: {
-      stroke: edge.type === 'optional' ? '#999' : '#666',
-      strokeDasharray: edge.type === 'optional' ? '5,5' : undefined,
-    },
+    animated: edge.animated,
+    style: { strokeWidth: 2 },
+    labelStyle: { fontSize: 12 },
   }));
 }
 
-/**
- * Calculate progress percentage
- */
-function calculateProgress(nodes: TreeNode[], completedNodes: string[]): number {
-  const actionNodes = nodes.filter(n => n.type === 'action' || n.type === 'decision');
-  if (actionNodes.length === 0) return 0;
-  const completed = actionNodes.filter(n => completedNodes.includes(n.id)).length;
-  return Math.round((completed / actionNodes.length) * 100);
-}
-
-/**
- * Decision Tree Component
- */
-export function DecisionTreeView({
+export const DecisionTreeView: React.FC<DecisionTreeViewProps> = ({
   tree,
   session,
-  config: userConfig,
+  config = {},
   onNodeClick,
   onDecision,
   onNavigate,
-  onEvent,
-  className,
-}: DecisionTreeProps) {
-  const config = { ...defaultConfig, ...userConfig };
-  const [selectedNode, setSelectedNode] = useState<TreeNode | null>(null);
-  const [showDetailPanel, setShowDetailPanel] = useState(false);
+}) => {
+  const {
+    showProgress = true,
+    showMinimap = true,
+    showDetailPanel = true,
+    theme = 'light',
+    fitView = true,
+  } = config;
 
-  // Convert tree data to React Flow format
-  const flowNodes = useMemo(
-    () => toFlowNodes(tree.nodes, session?.currentNodeId),
-    [tree.nodes, session?.currentNodeId]
+  const initialNodes = useMemo(
+    () => convertToFlowNodes(tree.nodes, session),
+    [tree.nodes, session]
   );
-  const flowEdges = useMemo(() => toFlowEdges(tree.edges), [tree.edges]);
+  const initialEdges = useMemo(() => convertToFlowEdges(tree), [tree]);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(flowNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(flowEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  // Calculate progress
-  const progress = useMemo(
-    () => calculateProgress(tree.nodes, session?.completedNodes || []),
-    [tree.nodes, session?.completedNodes]
-  );
+  const [selectedNode, setSelectedNode] = React.useState<TreeNodeType | null>(null);
 
-  // Handle node click
   const handleNodeClick = useCallback(
     (_: React.MouseEvent, node: Node) => {
-      const treeNode = tree.nodes.find(n => n.id === node.id);
-      if (!treeNode) return;
-
-      setSelectedNode(treeNode);
-      setShowDetailPanel(true);
-
-      onNodeClick?.(treeNode);
-      onEvent?.({
-        type: 'nodeSelect',
-        nodeId: node.id,
-        timestamp: new Date().toISOString(),
-      });
-    },
-    [tree.nodes, onNodeClick, onEvent]
-  );
-
-  // Handle decision selection
-  const handleDecision = useCallback(
-    (nodeId: string, optionId: string) => {
-      onDecision?.(nodeId, optionId);
-      onEvent?.({
-        type: 'decisionMade',
-        nodeId,
-        data: { optionId },
-        timestamp: new Date().toISOString(),
-      });
-      setShowDetailPanel(false);
-    },
-    [onDecision, onEvent]
-  );
-
-  // Keyboard navigation
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent) => {
-      if (!config.keyboardNavigation) return;
-
-      switch (event.key) {
-        case 'Escape':
-          setShowDetailPanel(false);
-          setSelectedNode(null);
-          break;
-        case 'Enter':
-          if (selectedNode?.type === 'action') {
-            onNavigate?.({ type: 'next' });
-          }
-          break;
+      const treeNode = tree.nodes.find((n) => n.id === node.id);
+      if (treeNode) {
+        setSelectedNode(treeNode);
+        onNodeClick?.(treeNode);
       }
     },
-    [config.keyboardNavigation, selectedNode, onNavigate]
+    [tree.nodes, onNodeClick]
   );
+
+  const handleDecision = useCallback(
+    (optionId: string) => {
+      if (selectedNode && onDecision) {
+        onDecision(selectedNode.id, optionId);
+      }
+    },
+    [selectedNode, onDecision]
+  );
+
+  const progress = useMemo(() => {
+    if (!session) return null;
+    const visited = session.visitedNodes.length;
+    const total = tree.nodes.length;
+    return {
+      totalNodes: total,
+      visitedNodes: visited,
+      percentage: Math.round((visited / total) * 100),
+      remainingNodes: total - visited,
+    };
+  }, [session, tree.nodes]);
+
+  const isDark = theme === 'dark';
+  const bgColor = isDark ? '#1f2937' : '#f9fafb';
+  const textColor = isDark ? '#f9fafb' : '#1f2937';
 
   return (
-    <div 
-      className={clsx(
-        'relative w-full h-full',
-        config.theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50',
-        className
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      {showProgress && progress && (
+        <ProgressBar progress={progress} theme={theme} />
       )}
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
-    >
-      {/* Progress Bar */}
-      {config.showProgress && (
-        <Panel position="top-center" className="!m-0 !p-0 w-full">
-          <ProgressBar 
-            progress={progress} 
-            currentStage={selectedNode?.label || tree.name}
-            theme={config.theme}
-          />
-        </Panel>
-      )}
-
-      {/* React Flow Canvas */}
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onNodeClick={handleNodeClick}
-        nodeTypes={nodeTypes}
-        fitView
-        minZoom={config.minZoom}
-        maxZoom={config.maxZoom}
-        defaultViewport={{ x: 0, y: 0, zoom: config.defaultZoom! }}
-        attributionPosition="bottom-left"
-      >
-        <Background 
-          color={config.theme === 'dark' ? '#374151' : '#e5e7eb'} 
-          gap={20} 
-        />
-        <Controls 
-          showInteractive={false}
-          className={config.theme === 'dark' ? 'bg-gray-800' : ''}
-        />
-        {config.showMinimap && (
-          <MiniMap 
-            nodeColor={(node) => {
-              switch (node.data?.status) {
-                case 'completed': return '#22c55e';
-                case 'active': return '#3b82f6';
-                case 'blocked': return '#ef4444';
-                default: return '#9ca3af';
-              }
-            }}
-            maskColor={config.theme === 'dark' ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.8)'}
-          />
-        )}
-      </ReactFlow>
-
-      {/* Detail Panel */}
-      <AnimatePresence>
-        {showDetailPanel && selectedNode && (
-          <motion.div
-            initial={{ x: 300, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 300, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="absolute top-0 right-0 h-full w-80 z-10"
+      
+      <div style={{ flex: 1, display: 'flex' }}>
+        <div style={{ flex: 1 }}>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onNodeClick={handleNodeClick}
+            nodeTypes={nodeTypes}
+            fitView={fitView}
+            style={{ backgroundColor: bgColor }}
           >
-            <DetailPanel
-              node={selectedNode}
-              onClose={() => setShowDetailPanel(false)}
-              onDecision={handleDecision}
-              onNavigate={onNavigate}
-              theme={config.theme}
+            <Controls />
+            {showMinimap && (
+              <MiniMap
+                nodeStrokeWidth={3}
+                zoomable
+                pannable
+                style={{
+                  backgroundColor: isDark ? '#374151' : '#e5e7eb',
+                }}
+              />
+            )}
+            <Background
+              variant={BackgroundVariant.Dots}
+              gap={16}
+              size={1}
+              color={isDark ? '#4b5563' : '#d1d5db'}
             />
-          </motion.div>
+          </ReactFlow>
+        </div>
+
+        {showDetailPanel && selectedNode && (
+          <DetailPanel
+            node={selectedNode}
+            theme={theme}
+            onDecision={handleDecision}
+            onClose={() => setSelectedNode(null)}
+          />
         )}
-      </AnimatePresence>
+      </div>
     </div>
   );
-}
+};
 
 export default DecisionTreeView;

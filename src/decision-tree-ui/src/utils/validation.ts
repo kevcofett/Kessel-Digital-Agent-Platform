@@ -2,160 +2,107 @@
  * Tree Validation Utilities
  */
 
-import type { DecisionTree, TreeNode, TreeEdge } from '../types';
+import { DecisionTree, TreeNode, TreeSession, TreeEdge } from '../types';
+
+interface ValidationError {
+  code: string;
+  message: string;
+  nodeId?: string;
+  edgeId?: string;
+  field?: string;
+}
 
 interface ValidationResult {
   valid: boolean;
   errors: ValidationError[];
-  warnings: ValidationWarning[];
+  warnings: ValidationError[];
 }
 
-interface ValidationError {
-  type: 'error';
-  code: string;
-  message: string;
-  nodeId?: string;
-  edgeId?: string;
-}
-
-interface ValidationWarning {
-  type: 'warning';
-  code: string;
-  message: string;
-  nodeId?: string;
-  edgeId?: string;
-}
-
-/**
- * Validate a decision tree structure
- */
 export function validateTree(tree: DecisionTree): ValidationResult {
   const errors: ValidationError[] = [];
-  const warnings: ValidationWarning[] = [];
+  const warnings: ValidationError[] = [];
 
-  // Check for required fields
   if (!tree.id) {
-    errors.push({ type: 'error', code: 'MISSING_ID', message: 'Tree must have an id' });
+    errors.push({ code: 'MISSING_ID', message: 'Tree must have an id' });
   }
+
   if (!tree.name) {
-    errors.push({ type: 'error', code: 'MISSING_NAME', message: 'Tree must have a name' });
+    errors.push({ code: 'MISSING_NAME', message: 'Tree must have a name' });
   }
+
   if (!tree.nodes || tree.nodes.length === 0) {
-    errors.push({ type: 'error', code: 'NO_NODES', message: 'Tree must have at least one node' });
-    return { valid: false, errors, warnings };
+    errors.push({ code: 'NO_NODES', message: 'Tree must have at least one node' });
   }
 
-  // Build node lookup
-  const nodeMap = new Map(tree.nodes.map(n => [n.id, n]));
-  const nodeIds = new Set(tree.nodes.map(n => n.id));
-
-  // Check for start node
-  const startNodes = tree.nodes.filter(n => n.type === 'start');
-  if (startNodes.length === 0) {
-    errors.push({ type: 'error', code: 'NO_START', message: 'Tree must have a start node' });
-  } else if (startNodes.length > 1) {
-    warnings.push({ type: 'warning', code: 'MULTIPLE_STARTS', message: 'Tree has multiple start nodes' });
+  if (!tree.startNodeId) {
+    errors.push({ code: 'MISSING_START', message: 'Tree must have a startNodeId' });
   }
 
-  // Check for end node
-  const endNodes = tree.nodes.filter(n => n.type === 'end');
-  if (endNodes.length === 0) {
-    warnings.push({ type: 'warning', code: 'NO_END', message: 'Tree has no end node' });
+  const nodeIds = new Set(tree.nodes.map((n) => n.id));
+
+  if (tree.startNodeId && !nodeIds.has(tree.startNodeId)) {
+    errors.push({
+      code: 'INVALID_START',
+      message: 'startNodeId does not reference a valid node',
+      nodeId: tree.startNodeId,
+    });
   }
 
-  // Check node IDs are unique
-  const idSet = new Set<string>();
-  tree.nodes.forEach(node => {
-    if (idSet.has(node.id)) {
-      errors.push({
-        type: 'error',
-        code: 'DUPLICATE_NODE_ID',
-        message: `Duplicate node id: ${node.id}`,
-        nodeId: node.id,
-      });
-    }
-    idSet.add(node.id);
+  const duplicateIds = tree.nodes
+    .map((n) => n.id)
+    .filter((id, index, arr) => arr.indexOf(id) !== index);
+
+  duplicateIds.forEach((id) => {
+    errors.push({
+      code: 'DUPLICATE_NODE_ID',
+      message: 'Duplicate node id: ' + id,
+      nodeId: id,
+    });
   });
 
-  // Validate edges
-  tree.edges.forEach(edge => {
+  tree.nodes.forEach((node) => {
+    const nodeErrors = validateNode(node);
+    errors.push(...nodeErrors.errors);
+    warnings.push(...nodeErrors.warnings);
+  });
+
+  tree.edges.forEach((edge) => {
     if (!nodeIds.has(edge.source)) {
       errors.push({
-        type: 'error',
-        code: 'INVALID_SOURCE',
-        message: `Edge source not found: ${edge.source}`,
+        code: 'INVALID_EDGE_SOURCE',
+        message: 'Edge source does not reference a valid node',
         edgeId: edge.id,
+        nodeId: edge.source,
       });
     }
     if (!nodeIds.has(edge.target)) {
       errors.push({
-        type: 'error',
-        code: 'INVALID_TARGET',
-        message: `Edge target not found: ${edge.target}`,
+        code: 'INVALID_EDGE_TARGET',
+        message: 'Edge target does not reference a valid node',
         edgeId: edge.id,
-      });
-    }
-    if (edge.source === edge.target) {
-      warnings.push({
-        type: 'warning',
-        code: 'SELF_LOOP',
-        message: `Edge connects node to itself: ${edge.source}`,
-        edgeId: edge.id,
+        nodeId: edge.target,
       });
     }
   });
 
-  // Check connectivity
-  const reachable = new Set<string>();
-  const startNode = startNodes[0];
-  if (startNode) {
-    const queue = [startNode.id];
-    while (queue.length > 0) {
-      const current = queue.shift()!;
-      if (reachable.has(current)) continue;
-      reachable.add(current);
-
-      tree.edges
-        .filter(e => e.source === current)
-        .forEach(e => queue.push(e.target));
+  const reachable = findReachableNodes(tree);
+  tree.nodes.forEach((node) => {
+    if (!reachable.has(node.id)) {
+      warnings.push({
+        code: 'UNREACHABLE_NODE',
+        message: 'Node is not reachable from start',
+        nodeId: node.id,
+      });
     }
+  });
 
-    // Check for unreachable nodes
-    tree.nodes.forEach(node => {
-      if (!reachable.has(node.id) && node.type !== 'start') {
-        warnings.push({
-          type: 'warning',
-          code: 'UNREACHABLE',
-          message: `Node is unreachable from start: ${node.id}`,
-          nodeId: node.id,
-        });
-      }
+  const hasEnd = tree.nodes.some((n) => n.type === 'end');
+  if (!hasEnd) {
+    warnings.push({
+      code: 'NO_END_NODE',
+      message: 'Tree has no end node',
     });
   }
-
-  // Validate decision nodes have options
-  tree.nodes.filter(n => n.type === 'decision').forEach(node => {
-    if (!node.data.options || node.data.options.length === 0) {
-      errors.push({
-        type: 'error',
-        code: 'NO_OPTIONS',
-        message: `Decision node has no options: ${node.id}`,
-        nodeId: node.id,
-      });
-    }
-  });
-
-  // Validate gate nodes have validation rules
-  tree.nodes.filter(n => n.type === 'gate').forEach(node => {
-    if (!node.data.validationRules || node.data.validationRules.length === 0) {
-      warnings.push({
-        type: 'warning',
-        code: 'NO_RULES',
-        message: `Gate node has no validation rules: ${node.id}`,
-        nodeId: node.id,
-      });
-    }
-  });
 
   return {
     valid: errors.length === 0,
@@ -164,4 +111,111 @@ export function validateTree(tree: DecisionTree): ValidationResult {
   };
 }
 
-export default validateTree;
+export function validateNode(node: TreeNode): ValidationResult {
+  const errors: ValidationError[] = [];
+  const warnings: ValidationError[] = [];
+
+  if (!node.id) {
+    errors.push({ code: 'MISSING_NODE_ID', message: 'Node must have an id', nodeId: node.id });
+  }
+
+  if (!node.type) {
+    errors.push({ code: 'MISSING_NODE_TYPE', message: 'Node must have a type', nodeId: node.id });
+  }
+
+  if (!node.label) {
+    errors.push({ code: 'MISSING_NODE_LABEL', message: 'Node must have a label', nodeId: node.id });
+  }
+
+  if (node.type === 'decision') {
+    if (!node.options || node.options.length === 0) {
+      errors.push({
+        code: 'DECISION_NO_OPTIONS',
+        message: 'Decision node must have options',
+        nodeId: node.id,
+      });
+    } else {
+      node.options.forEach((option, index) => {
+        if (!option.id) {
+          errors.push({
+            code: 'OPTION_MISSING_ID',
+            message: 'Option ' + index + ' missing id',
+            nodeId: node.id,
+          });
+        }
+        if (!option.nextNodeId) {
+          errors.push({
+            code: 'OPTION_MISSING_NEXT',
+            message: 'Option ' + option.id + ' missing nextNodeId',
+            nodeId: node.id,
+          });
+        }
+      });
+    }
+  }
+
+  if (node.type === 'action' && !node.agent) {
+    warnings.push({
+      code: 'ACTION_NO_AGENT',
+      message: 'Action node has no agent specified',
+      nodeId: node.id,
+    });
+  }
+
+  return { valid: errors.length === 0, errors, warnings };
+}
+
+export function validateSession(session: TreeSession, tree: DecisionTree): ValidationResult {
+  const errors: ValidationError[] = [];
+  const warnings: ValidationError[] = [];
+
+  if (!session.id) {
+    errors.push({ code: 'MISSING_SESSION_ID', message: 'Session must have an id' });
+  }
+
+  if (session.treeId !== tree.id) {
+    errors.push({
+      code: 'TREE_MISMATCH',
+      message: 'Session treeId does not match tree id',
+    });
+  }
+
+  const nodeIds = new Set(tree.nodes.map((n) => n.id));
+
+  if (!nodeIds.has(session.currentNodeId)) {
+    errors.push({
+      code: 'INVALID_CURRENT_NODE',
+      message: 'currentNodeId does not reference a valid node',
+      nodeId: session.currentNodeId,
+    });
+  }
+
+  session.visitedNodes.forEach((nodeId) => {
+    if (!nodeIds.has(nodeId)) {
+      warnings.push({
+        code: 'INVALID_VISITED_NODE',
+        message: 'Visited node does not exist in tree',
+        nodeId,
+      });
+    }
+  });
+
+  return { valid: errors.length === 0, errors, warnings };
+}
+
+function findReachableNodes(tree: DecisionTree): Set<string> {
+  const reachable = new Set<string>();
+  const queue = [tree.startNodeId];
+
+  while (queue.length > 0) {
+    const nodeId = queue.shift()!;
+    if (reachable.has(nodeId)) continue;
+    reachable.add(nodeId);
+
+    tree.edges
+      .filter((e) => e.source === nodeId)
+      .forEach((e) => queue.push(e.target));
+  }
+
+  return reachable;
+}

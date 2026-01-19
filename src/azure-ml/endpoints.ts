@@ -1,157 +1,239 @@
 /**
- * Model Endpoint Definitions
- * Kessel Digital Agent Platform
+ * Azure ML Endpoint Definitions for KDAP
+ * Maps agent capabilities to ML model endpoints
  */
 
-import { EndpointConfig } from './client';
-
-// Environment-based configuration
-const ENV = process.env.KDAP_ENV || 'dev';
-const ENDPOINT_SUFFIX = ENV === 'prod' ? '' : `-${ENV}`;
-
-/**
- * ANL Agent Model Endpoints
- */
-export const ANL_ENDPOINTS = {
-  BUDGET_OPTIMIZER: {
-    name: `kdap-budget-optimizer${ENDPOINT_SUFFIX}`,
-    deploymentName: 'budget-optimizer-v1',
-    apiVersion: '2023-10-01',
-  } as EndpointConfig,
-
-  RESPONSE_CURVE: {
-    name: `kdap-response-curve${ENDPOINT_SUFFIX}`,
-    deploymentName: 'response-curve-v1',
-    apiVersion: '2023-10-01',
-  } as EndpointConfig,
-
-  MONTE_CARLO: {
-    name: `kdap-monte-carlo${ENDPOINT_SUFFIX}`,
-    deploymentName: 'monte-carlo-v1',
-    apiVersion: '2023-10-01',
-  } as EndpointConfig,
-
-  FORECASTING: {
-    name: `kdap-forecasting${ENDPOINT_SUFFIX}`,
-    deploymentName: 'prophet-forecast-v1',
-    apiVersion: '2023-10-01',
-  } as EndpointConfig,
-};
-
-/**
- * AUD Agent Model Endpoints
- */
-export const AUD_ENDPOINTS = {
-  PROPENSITY: {
-    name: `kdap-propensity${ENDPOINT_SUFFIX}`,
-    deploymentName: 'propensity-v1',
-    apiVersion: '2023-10-01',
-  } as EndpointConfig,
-
-  LOOKALIKE: {
-    name: `kdap-lookalike${ENDPOINT_SUFFIX}`,
-    deploymentName: 'lookalike-v1',
-    apiVersion: '2023-10-01',
-  } as EndpointConfig,
-
-  CHURN_PREDICTOR: {
-    name: `kdap-churn-predictor${ENDPOINT_SUFFIX}`,
-    deploymentName: 'churn-predictor-v1',
-    apiVersion: '2023-10-01',
-  } as EndpointConfig,
-
-  SEGMENTATION: {
-    name: `kdap-segmentation${ENDPOINT_SUFFIX}`,
-    deploymentName: 'kmeans-segmentation-v1',
-    apiVersion: '2023-10-01',
-  } as EndpointConfig,
-};
-
-/**
- * PRF Agent Model Endpoints
- */
-export const PRF_ENDPOINTS = {
-  ANOMALY_DETECTOR: {
-    name: `kdap-anomaly-detector${ENDPOINT_SUFFIX}`,
-    deploymentName: 'anomaly-detector-v1',
-    apiVersion: '2023-10-01',
-  } as EndpointConfig,
-
-  ATTRIBUTION: {
-    name: `kdap-attribution${ENDPOINT_SUFFIX}`,
-    deploymentName: 'shapley-attribution-v1',
-    apiVersion: '2023-10-01',
-  } as EndpointConfig,
-};
-
-/**
- * CHA Agent Model Endpoints
- */
-export const CHA_ENDPOINTS = {
-  MEDIA_MIX: {
-    name: `kdap-media-mix${ENDPOINT_SUFFIX}`,
-    deploymentName: 'media-mix-v1',
-    apiVersion: '2023-10-01',
-  } as EndpointConfig,
-
-  REACH_FREQUENCY: {
-    name: `kdap-reach-freq${ENDPOINT_SUFFIX}`,
-    deploymentName: 'reach-freq-v1',
-    apiVersion: '2023-10-01',
-  } as EndpointConfig,
-};
-
-/**
- * CST Agent Model Endpoints
- */
-export const CST_ENDPOINTS = {
-  PRIORITIZER: {
-    name: `kdap-prioritizer${ENDPOINT_SUFFIX}`,
-    deploymentName: 'rice-prioritizer-v1',
-    apiVersion: '2023-10-01',
-  } as EndpointConfig,
-};
-
-/**
- * All endpoints by agent
- */
-export const ALL_ENDPOINTS = {
-  ANL: ANL_ENDPOINTS,
-  AUD: AUD_ENDPOINTS,
-  PRF: PRF_ENDPOINTS,
-  CHA: CHA_ENDPOINTS,
-  CST: CST_ENDPOINTS,
-};
-
-/**
- * Get endpoint by agent and model name
- */
-export function getEndpoint(agent: string, model: string): EndpointConfig | undefined {
-  const agentEndpoints = ALL_ENDPOINTS[agent as keyof typeof ALL_ENDPOINTS];
-  if (!agentEndpoints) return undefined;
-  return agentEndpoints[model as keyof typeof agentEndpoints];
+export interface EndpointDefinition {
+  name: string;
+  displayName: string;
+  description: string;
+  agent: 'ANL' | 'AUD' | 'CHA' | 'PRF' | 'CST';
+  capability: string;
+  inputSchema: Record<string, string>;
+  outputSchema: Record<string, string>;
+  version: string;
+  timeout?: number;
 }
 
-/**
- * List all endpoints for an agent
- */
-export function listAgentEndpoints(agent: string): EndpointConfig[] {
-  const agentEndpoints = ALL_ENDPOINTS[agent as keyof typeof ALL_ENDPOINTS];
-  if (!agentEndpoints) return [];
-  return Object.values(agentEndpoints);
+export const KDAP_ENDPOINTS: Record<string, EndpointDefinition> = {
+  // ANL Agent Endpoints
+  'kdap-budget-optimizer': {
+    name: 'kdap-budget-optimizer',
+    displayName: 'Budget Optimization',
+    description: 'Optimizes budget allocation across channels using ML',
+    agent: 'ANL',
+    capability: 'ANL_BUDGET_OPTIMIZE',
+    inputSchema: {
+      total_budget: 'number',
+      channels: 'array<string>',
+      constraints: 'object',
+      objective: 'string',
+    },
+    outputSchema: {
+      allocations: 'array<{channel: string, amount: number}>',
+      expected_roi: 'number',
+      confidence: 'number',
+    },
+    version: '1.0.0',
+    timeout: 30000,
+  },
+
+  'kdap-response-curve': {
+    name: 'kdap-response-curve',
+    displayName: 'Response Curve Fitting',
+    description: 'Fits diminishing returns curves to historical data',
+    agent: 'ANL',
+    capability: 'ANL_RESPONSE_CURVE',
+    inputSchema: {
+      spend_history: 'array<number>',
+      outcome_history: 'array<number>',
+      curve_type: 'string',
+    },
+    outputSchema: {
+      curve_params: 'object',
+      saturation_point: 'number',
+      optimal_spend: 'number',
+    },
+    version: '1.0.0',
+  },
+
+  'kdap-monte-carlo': {
+    name: 'kdap-monte-carlo',
+    displayName: 'Monte Carlo Simulation',
+    description: 'Runs Monte Carlo simulations for uncertainty quantification',
+    agent: 'ANL',
+    capability: 'ANL_MONTECARLO',
+    inputSchema: {
+      variables: 'array<{name: string, distribution: string, params: object}>',
+      model: 'string',
+      iterations: 'number',
+    },
+    outputSchema: {
+      mean: 'number',
+      std_dev: 'number',
+      percentiles: 'object',
+      histogram: 'array<number>',
+    },
+    version: '1.0.0',
+    timeout: 60000,
+  },
+
+  'kdap-forecasting': {
+    name: 'kdap-forecasting',
+    displayName: 'Time Series Forecasting',
+    description: 'Forecasts metrics using time series models',
+    agent: 'ANL',
+    capability: 'ANL_FORECAST',
+    inputSchema: {
+      historical_data: 'array<{date: string, value: number}>',
+      forecast_horizon: 'number',
+      seasonality: 'string',
+    },
+    outputSchema: {
+      forecast: 'array<{date: string, value: number, lower: number, upper: number}>',
+      model_type: 'string',
+      accuracy_metrics: 'object',
+    },
+    version: '1.0.0',
+  },
+
+  // AUD Agent Endpoints
+  'kdap-propensity': {
+    name: 'kdap-propensity',
+    displayName: 'Propensity Scoring',
+    description: 'Scores audience members by conversion propensity',
+    agent: 'AUD',
+    capability: 'AUD_PROPENSITY',
+    inputSchema: {
+      audience_features: 'array<object>',
+      target_action: 'string',
+      model_version: 'string',
+    },
+    outputSchema: {
+      scores: 'array<{id: string, score: number, tier: string}>',
+      feature_importance: 'object',
+    },
+    version: '1.0.0',
+  },
+
+  'kdap-lookalike': {
+    name: 'kdap-lookalike',
+    displayName: 'Lookalike Modeling',
+    description: 'Builds lookalike audiences from seed audiences',
+    agent: 'AUD',
+    capability: 'AUD_LOOKALIKE',
+    inputSchema: {
+      seed_audience: 'array<object>',
+      expansion_factor: 'number',
+      similarity_threshold: 'number',
+    },
+    outputSchema: {
+      lookalike_ids: 'array<string>',
+      similarity_scores: 'array<number>',
+      segment_profile: 'object',
+    },
+    version: '1.0.0',
+  },
+
+  'kdap-churn-predictor': {
+    name: 'kdap-churn-predictor',
+    displayName: 'Churn Prediction',
+    description: 'Predicts customer churn probability',
+    agent: 'AUD',
+    capability: 'AUD_CHURN',
+    inputSchema: {
+      customer_features: 'array<object>',
+      lookback_window: 'number',
+    },
+    outputSchema: {
+      churn_probabilities: 'array<{id: string, probability: number, risk_tier: string}>',
+      drivers: 'array<string>',
+    },
+    version: '1.0.0',
+  },
+
+  // PRF Agent Endpoints
+  'kdap-anomaly-detector': {
+    name: 'kdap-anomaly-detector',
+    displayName: 'Anomaly Detection',
+    description: 'Detects anomalies in performance metrics',
+    agent: 'PRF',
+    capability: 'PRF_ANOMALY',
+    inputSchema: {
+      metrics: 'array<{timestamp: string, value: number}>',
+      sensitivity: 'number',
+      metric_name: 'string',
+    },
+    outputSchema: {
+      anomalies: 'array<{timestamp: string, value: number, severity: string, expected: number}>',
+      baseline: 'object',
+    },
+    version: '1.0.0',
+  },
+
+  'kdap-attribution': {
+    name: 'kdap-attribution',
+    displayName: 'Shapley Attribution',
+    description: 'Calculates Shapley values for channel attribution',
+    agent: 'PRF',
+    capability: 'PRF_ATTRIBUTION',
+    inputSchema: {
+      conversion_paths: 'array<array<string>>',
+      channel_costs: 'object',
+    },
+    outputSchema: {
+      shapley_values: 'object',
+      incremental_revenue: 'object',
+      marginal_roas: 'object',
+    },
+    version: '1.0.0',
+    timeout: 45000,
+  },
+
+  // CHA Agent Endpoints
+  'kdap-media-mix': {
+    name: 'kdap-media-mix',
+    displayName: 'Media Mix Modeling',
+    description: 'Optimizes media mix using Bayesian MMM',
+    agent: 'CHA',
+    capability: 'CHA_MEDIA_MIX',
+    inputSchema: {
+      spend_data: 'object',
+      outcome_data: 'array<number>',
+      external_factors: 'object',
+    },
+    outputSchema: {
+      channel_contributions: 'object',
+      optimal_mix: 'object',
+      incrementality: 'object',
+    },
+    version: '1.0.0',
+    timeout: 120000,
+  },
+
+  // CST Agent Endpoints
+  'kdap-prioritizer': {
+    name: 'kdap-prioritizer',
+    displayName: 'RICE Prioritization',
+    description: 'ML-enhanced RICE scoring for initiative prioritization',
+    agent: 'CST',
+    capability: 'CST_PRIORITIZE',
+    inputSchema: {
+      initiatives: 'array<{name: string, reach: number, impact: number, confidence: number, effort: number}>',
+      weights: 'object',
+    },
+    outputSchema: {
+      ranked_initiatives: 'array<{name: string, rice_score: number, rank: number}>',
+      sensitivity_analysis: 'object',
+    },
+    version: '1.0.0',
+  },
+};
+
+export function getEndpointsByAgent(agent: string): EndpointDefinition[] {
+  return Object.values(KDAP_ENDPOINTS).filter(e => e.agent === agent);
 }
 
-/**
- * List all endpoints across all agents
- */
-export function listAllEndpoints(): { agent: string; model: string; config: EndpointConfig }[] {
-  const result: { agent: string; model: string; config: EndpointConfig }[] = [];
-
-  for (const [agent, endpoints] of Object.entries(ALL_ENDPOINTS)) {
-    for (const [model, config] of Object.entries(endpoints)) {
-      result.push({ agent, model, config });
-    }
-  }
-
-  return result;
+export function getEndpointByCapability(capability: string): EndpointDefinition | undefined {
+  return Object.values(KDAP_ENDPOINTS).find(e => e.capability === capability);
 }

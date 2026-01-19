@@ -1,45 +1,45 @@
 /**
- * Azure ML Client Configuration
- * Kessel Digital Agent Platform
+ * Azure ML Client for KDAP
+ * Handles authentication and endpoint communication with Azure ML managed endpoints
  */
 
-import { DefaultAzureCredential } from '@azure/identity';
-import axios, { AxiosInstance } from 'axios';
+import { DefaultAzureCredential, TokenCredential } from '@azure/identity';
+import axios, { AxiosInstance, AxiosError } from 'axios';
 
 export interface AzureMLConfig {
   subscriptionId: string;
   resourceGroup: string;
   workspaceName: string;
-  region: string;
+  region?: string;
+  credential?: TokenCredential;
 }
 
-export interface EndpointConfig {
-  name: string;
-  deploymentName: string;
-  apiVersion: string;
-}
-
-export interface ScoringRequest {
-  data: Record<string, unknown>[];
-  parameters?: Record<string, unknown>;
-}
-
-export interface ScoringResponse {
-  predictions: unknown[];
-  modelVersion: string;
-  requestId: string;
+export interface EndpointResponse<T = unknown> {
+  success: boolean;
+  data?: T;
+  error?: string;
   latencyMs: number;
+  endpointName: string;
+}
+
+export interface ModelPrediction {
+  predictions: number[] | number[][];
+  probabilities?: number[][];
+  metadata?: Record<string, unknown>;
 }
 
 export class AzureMLClient {
   private config: AzureMLConfig;
-  private credential: DefaultAzureCredential;
+  private credential: TokenCredential;
   private httpClient: AxiosInstance;
   private tokenCache: { token: string; expiresAt: number } | null = null;
 
   constructor(config: AzureMLConfig) {
-    this.config = config;
-    this.credential = new DefaultAzureCredential();
+    this.config = {
+      region: 'eastus',
+      ...config,
+    };
+    this.credential = config.credential || new DefaultAzureCredential();
     this.httpClient = axios.create({
       timeout: 30000,
       headers: {
@@ -70,66 +70,52 @@ export class AzureMLClient {
     return tokenResponse.token;
   }
 
-  private getEndpointUrl(endpointName: string, deploymentName: string): string {
-    return `https://${endpointName}.${this.config.region}.inference.ml.azure.com/score`;
+  private getEndpointUrl(endpointName: string): string {
+    const { workspaceName, region } = this.config;
+    return `https://${endpointName}.${region}.inference.ml.azure.com/score`;
   }
 
-  async score(
-    endpoint: EndpointConfig,
-    request: ScoringRequest
-  ): Promise<ScoringResponse> {
+  async invokeEndpoint<T = ModelPrediction>(
+    endpointName: string,
+    payload: Record<string, unknown>
+  ): Promise<EndpointResponse<T>> {
     const startTime = Date.now();
-    const requestId = crypto.randomUUID();
-
+    
     try {
       const token = await this.getAccessToken();
-      const url = this.getEndpointUrl(endpoint.name, endpoint.deploymentName);
+      const url = this.getEndpointUrl(endpointName);
 
-      const response = await this.httpClient.post(url, request, {
+      const response = await this.httpClient.post(url, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'azureml-model-deployment': endpoint.deploymentName,
-          'x-request-id': requestId,
+          'azureml-model-deployment': 'default',
         },
       });
 
-      const latencyMs = Date.now() - startTime;
-
       return {
-        predictions: response.data,
-        modelVersion: response.headers['x-ms-model-version'] || 'unknown',
-        requestId,
-        latencyMs,
+        success: true,
+        data: response.data as T,
+        latencyMs: Date.now() - startTime,
+        endpointName,
       };
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const status = error.response?.status;
-        const message = error.response?.data?.error || error.message;
-
-        if (status === 429) {
-          throw new RateLimitError(message, requestId);
-        } else if (status === 401 || status === 403) {
-          throw new AuthenticationError(message, requestId);
-        } else if (status === 400) {
-          throw new ValidationError(message, requestId);
-        }
-      }
-      throw new MLEndpointError(
-        `Scoring failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        requestId
-      );
+      const axiosError = error as AxiosError;
+      return {
+        success: false,
+        error: axiosError.message || 'Unknown error invoking endpoint',
+        latencyMs: Date.now() - startTime,
+        endpointName,
+      };
     }
   }
 
-  async healthCheck(endpoint: EndpointConfig): Promise<boolean> {
+  async healthCheck(endpointName: string): Promise<boolean> {
     try {
       const token = await this.getAccessToken();
-      const url = this.getEndpointUrl(endpoint.name, endpoint.deploymentName);
-
-      const response = await this.httpClient.get(url.replace('/score', '/health'), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const baseUrl = this.getEndpointUrl(endpointName).replace('/score', '');
+      
+      const response = await this.httpClient.get(`${baseUrl}/`, {
+        headers: { Authorization: `Bearer ${token}` },
         timeout: 5000,
       });
 
@@ -138,37 +124,42 @@ export class AzureMLClient {
       return false;
     }
   }
-}
 
-export class MLEndpointError extends Error {
-  requestId: string;
+  async batchInvoke<T = ModelPrediction>(
+    endpointName: string,
+    payloads: Record<string, unknown>[],
+    concurrency: number = 5
+  ): Promise<EndpointResponse<T>[]> {
+    const results: EndpointResponse<T>[] = [];
+    
+    for (let i = 0; i < payloads.length; i += concurrency) {
+      const batch = payloads.slice(i, i + concurrency);
+      const batchResults = await Promise.all(
+        batch.map(payload => this.invokeEndpoint<T>(endpointName, payload))
+      );
+      results.push(...batchResults);
+    }
 
-  constructor(message: string, requestId: string) {
-    super(message);
-    this.name = 'MLEndpointError';
-    this.requestId = requestId;
+    return results;
+  }
+
+  getConfig(): Readonly<AzureMLConfig> {
+    return { ...this.config };
   }
 }
 
-export class RateLimitError extends MLEndpointError {
-  constructor(message: string, requestId: string) {
-    super(message, requestId);
-    this.name = 'RateLimitError';
-  }
-}
+export function createClient(config?: Partial<AzureMLConfig>): AzureMLClient {
+  const envConfig: AzureMLConfig = {
+    subscriptionId: process.env.AZURE_SUBSCRIPTION_ID || '',
+    resourceGroup: process.env.AZURE_RESOURCE_GROUP || '',
+    workspaceName: process.env.AZURE_ML_WORKSPACE || 'kdap-ml-workspace',
+    region: process.env.AZURE_REGION || 'eastus',
+    ...config,
+  };
 
-export class AuthenticationError extends MLEndpointError {
-  constructor(message: string, requestId: string) {
-    super(message, requestId);
-    this.name = 'AuthenticationError';
+  if (!envConfig.subscriptionId || !envConfig.resourceGroup) {
+    throw new Error('Azure ML configuration incomplete. Set AZURE_SUBSCRIPTION_ID and AZURE_RESOURCE_GROUP');
   }
-}
 
-export class ValidationError extends MLEndpointError {
-  constructor(message: string, requestId: string) {
-    super(message, requestId);
-    this.name = 'ValidationError';
-  }
+  return new AzureMLClient(envConfig);
 }
-
-export default AzureMLClient;

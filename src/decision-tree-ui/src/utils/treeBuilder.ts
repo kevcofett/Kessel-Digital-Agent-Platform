@@ -1,200 +1,223 @@
 /**
  * Tree Builder Utilities
- * Helper functions for creating decision trees
  */
 
-import type { DecisionTree, TreeNode, TreeEdge, NodeType, EdgeType, DecisionOption, ValidationRule } from '../types';
+import { DecisionTree, TreeNode, TreeEdge, NodeType, DecisionOption, ValidationRule } from '../types';
 
-let nodeIdCounter = 0;
-let edgeIdCounter = 0;
+interface CreateNodeOptions {
+  id: string;
+  type: NodeType;
+  label: string;
+  description?: string;
+  agent?: string;
+  capability?: string;
+  options?: DecisionOption[];
+  validation?: ValidationRule[];
+  metadata?: Record<string, unknown>;
+}
 
-/**
- * Create a new tree node
- */
-export function createNode(
-  type: NodeType,
-  label: string,
-  options?: Partial<Omit<TreeNode, 'id' | 'type' | 'label'>>
-): TreeNode {
-  const id = options?.id || `node_${++nodeIdCounter}`;
-  return {
-    id,
-    type,
-    label,
-    description: options?.description,
-    status: options?.status || 'pending',
-    position: options?.position || { x: 0, y: 0 },
-    data: options?.data || {},
+interface CreateEdgeOptions {
+  id?: string;
+  source: string;
+  target: string;
+  label?: string;
+  condition?: string;
+  animated?: boolean;
+}
+
+interface CreateTreeOptions {
+  id: string;
+  name: string;
+  description: string;
+  version?: string;
+  domain: 'MPA' | 'CA';
+  nodes: TreeNode[];
+  edges: TreeEdge[];
+  startNodeId: string;
+  metadata?: {
+    author?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    tags?: string[];
   };
 }
 
-/**
- * Create a new tree edge
- */
-export function createEdge(
-  source: string,
-  target: string,
-  options?: Partial<Omit<TreeEdge, 'id' | 'source' | 'target'>>
-): TreeEdge {
-  const id = options?.id || `edge_${++edgeIdCounter}`;
+let edgeCounter = 0;
+
+export function createNode(options: CreateNodeOptions): TreeNode {
   return {
-    id,
-    source,
-    target,
-    type: options?.type || 'default',
-    label: options?.label,
-    animated: options?.animated,
-    data: options?.data,
+    id: options.id,
+    type: options.type,
+    label: options.label,
+    description: options.description,
+    agent: options.agent,
+    capability: options.capability,
+    options: options.options,
+    validation: options.validation,
+    metadata: options.metadata,
   };
 }
 
-/**
- * Create a complete decision tree
- */
-export function createTree(
-  name: string,
-  agent: string,
-  workflow: string,
-  nodes: TreeNode[],
-  edges: TreeEdge[],
-  options?: Partial<Omit<DecisionTree, 'nodes' | 'edges' | 'name' | 'agent' | 'workflow'>>
-): DecisionTree {
+export function createEdge(options: CreateEdgeOptions): TreeEdge {
+  const id = options.id || 'edge_' + (++edgeCounter);
   return {
-    id: options?.id || crypto.randomUUID(),
-    name,
-    description: options?.description,
-    version: options?.version || '1.0.0',
-    agent,
-    workflow,
-    nodes,
-    edges,
+    id,
+    source: options.source,
+    target: options.target,
+    label: options.label,
+    condition: options.condition,
+    animated: options.animated,
+  };
+}
+
+export function createTree(options: CreateTreeOptions): DecisionTree {
+  const now = new Date().toISOString();
+  return {
+    id: options.id,
+    name: options.name,
+    description: options.description,
+    version: options.version || '1.0.0',
+    domain: options.domain,
+    nodes: options.nodes,
+    edges: options.edges,
+    startNodeId: options.startNodeId,
     metadata: {
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      ...options?.metadata,
+      author: options.metadata?.author,
+      createdAt: options.metadata?.createdAt || now,
+      updatedAt: options.metadata?.updatedAt || now,
+      tags: options.metadata?.tags,
     },
   };
 }
 
-/**
- * Create a decision option
- */
-export function createOption(
+interface LayoutOptions {
+  direction?: 'TB' | 'LR';
+  nodeWidth?: number;
+  nodeHeight?: number;
+  horizontalSpacing?: number;
+  verticalSpacing?: number;
+}
+
+interface NodePosition {
+  id: string;
+  x: number;
+  y: number;
+}
+
+export function autoLayout(tree: DecisionTree, options: LayoutOptions = {}): NodePosition[] {
+  const {
+    direction = 'TB',
+    nodeWidth = 200,
+    nodeHeight = 60,
+    horizontalSpacing = 80,
+    verticalSpacing = 100,
+  } = options;
+
+  const nodeMap = new Map<string, TreeNode>();
+  tree.nodes.forEach((node) => nodeMap.set(node.id, node));
+
+  const childrenMap = new Map<string, string[]>();
+  const parentMap = new Map<string, string[]>();
+
+  tree.nodes.forEach((node) => {
+    childrenMap.set(node.id, []);
+    parentMap.set(node.id, []);
+  });
+
+  tree.edges.forEach((edge) => {
+    const children = childrenMap.get(edge.source) || [];
+    children.push(edge.target);
+    childrenMap.set(edge.source, children);
+
+    const parents = parentMap.get(edge.target) || [];
+    parents.push(edge.source);
+    parentMap.set(edge.target, parents);
+  });
+
+  const levels = new Map<string, number>();
+  const visited = new Set<string>();
+
+  function assignLevel(nodeId: string, level: number) {
+    if (visited.has(nodeId)) {
+      const existingLevel = levels.get(nodeId) || 0;
+      if (level > existingLevel) {
+        levels.set(nodeId, level);
+      }
+      return;
+    }
+    visited.add(nodeId);
+    levels.set(nodeId, level);
+
+    const children = childrenMap.get(nodeId) || [];
+    children.forEach((childId) => {
+      assignLevel(childId, level + 1);
+    });
+  }
+
+  assignLevel(tree.startNodeId, 0);
+
+  const levelNodes = new Map<number, string[]>();
+  levels.forEach((level, nodeId) => {
+    const nodes = levelNodes.get(level) || [];
+    nodes.push(nodeId);
+    levelNodes.set(level, nodes);
+  });
+
+  const positions: NodePosition[] = [];
+
+  levelNodes.forEach((nodeIds, level) => {
+    const totalWidth = nodeIds.length * nodeWidth + (nodeIds.length - 1) * horizontalSpacing;
+    const startX = -totalWidth / 2 + nodeWidth / 2;
+
+    nodeIds.forEach((nodeId, index) => {
+      if (direction === 'TB') {
+        positions.push({
+          id: nodeId,
+          x: startX + index * (nodeWidth + horizontalSpacing),
+          y: level * (nodeHeight + verticalSpacing),
+        });
+      } else {
+        positions.push({
+          id: nodeId,
+          x: level * (nodeWidth + horizontalSpacing),
+          y: startX + index * (nodeHeight + verticalSpacing),
+        });
+      }
+    });
+  });
+
+  return positions;
+}
+
+export function connectNodes(sourceId: string, targetId: string, label?: string): TreeEdge {
+  return createEdge({
+    source: sourceId,
+    target: targetId,
+    label,
+  });
+}
+
+export function createDecisionOption(
+  id: string,
   label: string,
-  targetNodeId: string,
-  options?: Partial<Omit<DecisionOption, 'id' | 'label' | 'targetNodeId'>>
+  nextNodeId: string,
+  options?: { description?: string; condition?: string; isDefault?: boolean }
 ): DecisionOption {
   return {
-    id: crypto.randomUUID(),
+    id,
     label,
-    targetNodeId,
+    nextNodeId,
     description: options?.description,
     condition: options?.condition,
     isDefault: options?.isDefault,
   };
 }
 
-/**
- * Create a validation rule
- */
 export function createValidationRule(
   field: string,
-  operator: ValidationRule['operator'],
-  value: unknown,
-  message: string
+  rule: ValidationRule['rule'],
+  message: string,
+  value?: string | number
 ): ValidationRule {
-  return {
-    id: crypto.randomUUID(),
-    field,
-    operator,
-    value,
-    message,
-  };
-}
-
-/**
- * Auto-layout nodes in a tree structure
- */
-export function autoLayout(
-  nodes: TreeNode[],
-  edges: TreeEdge[],
-  options: {
-    horizontalSpacing?: number;
-    verticalSpacing?: number;
-    startX?: number;
-    startY?: number;
-  } = {}
-): TreeNode[] {
-  const {
-    horizontalSpacing = 200,
-    verticalSpacing = 100,
-    startX = 400,
-    startY = 50,
-  } = options;
-
-  // Build adjacency list
-  const children: Map<string, string[]> = new Map();
-  const parents: Map<string, string[]> = new Map();
-
-  edges.forEach(edge => {
-    if (!children.has(edge.source)) children.set(edge.source, []);
-    children.get(edge.source)!.push(edge.target);
-
-    if (!parents.has(edge.target)) parents.set(edge.target, []);
-    parents.get(edge.target)!.push(edge.source);
-  });
-
-  // Find root nodes (no parents)
-  const roots = nodes.filter(n => !parents.has(n.id) || parents.get(n.id)!.length === 0);
-
-  // BFS to assign levels
-  const levels: Map<string, number> = new Map();
-  const queue: Array<{ id: string; level: number }> = roots.map(r => ({ id: r.id, level: 0 }));
-  const visited = new Set<string>();
-
-  while (queue.length > 0) {
-    const { id, level } = queue.shift()!;
-    if (visited.has(id)) continue;
-    visited.add(id);
-    levels.set(id, level);
-
-    const nodeChildren = children.get(id) || [];
-    nodeChildren.forEach(childId => {
-      if (!visited.has(childId)) {
-        queue.push({ id: childId, level: level + 1 });
-      }
-    });
-  }
-
-  // Group nodes by level
-  const levelGroups: Map<number, TreeNode[]> = new Map();
-  nodes.forEach(node => {
-    const level = levels.get(node.id) || 0;
-    if (!levelGroups.has(level)) levelGroups.set(level, []);
-    levelGroups.get(level)!.push(node);
-  });
-
-  // Assign positions
-  return nodes.map(node => {
-    const level = levels.get(node.id) || 0;
-    const levelNodes = levelGroups.get(level) || [node];
-    const indexInLevel = levelNodes.indexOf(node);
-    const totalInLevel = levelNodes.length;
-
-    const x = startX + (indexInLevel - (totalInLevel - 1) / 2) * horizontalSpacing;
-    const y = startY + level * verticalSpacing;
-
-    return {
-      ...node,
-      position: { x, y },
-    };
-  });
-}
-
-/**
- * Reset ID counters (useful for testing)
- */
-export function resetCounters(): void {
-  nodeIdCounter = 0;
-  edgeIdCounter = 0;
+  return { field, rule, value, message };
 }

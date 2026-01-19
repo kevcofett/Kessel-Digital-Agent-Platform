@@ -1,48 +1,20 @@
 /**
- * Azure ML Integration Module
- * Kessel Digital Agent Platform
- * 
- * Provides ML model integration for all KDAP agents:
- * - ANL: Budget Optimization, Response Curves, Monte Carlo, Forecasting
- * - AUD: Propensity Scoring, Lookalike, Churn Prediction, Segmentation
- * - PRF: Anomaly Detection, Attribution
- * - CHA: Media Mix, Reach/Frequency
- * - CST: Prioritization
+ * KDAP Azure ML Integration
+ * Main module exports
  */
 
-// Client
-export { default as AzureMLClient } from './client';
-export type {
-  AzureMLConfig,
-  EndpointConfig,
-  ScoringRequest,
-  ScoringResponse,
-} from './client';
-export {
-  MLEndpointError,
-  RateLimitError,
-  AuthenticationError,
-  ValidationError,
-} from './client';
+export { AzureMLClient, createClient } from './client';
+export type { AzureMLConfig, EndpointResponse, ModelPrediction } from './client';
 
-// Endpoints
-export {
-  ANL_ENDPOINTS,
-  AUD_ENDPOINTS,
-  PRF_ENDPOINTS,
-  CHA_ENDPOINTS,
-  CST_ENDPOINTS,
-  ALL_ENDPOINTS,
-  getEndpoint,
-  listAgentEndpoints,
-  listAllEndpoints,
-} from './endpoints';
+export { KDAP_ENDPOINTS, getEndpointsByAgent, getEndpointByCapability } from './endpoints';
+export type { EndpointDefinition } from './endpoints';
 
-// Model Services
-export * from './models';
+export { BudgetOptimizationService } from './models/budget-optimization';
+export { PropensityScoringService } from './models/propensity-scoring';
+export { AnomalyDetectionService } from './models/anomaly-detection';
 
-// Factory function for creating configured client
-import AzureMLClient, { AzureMLConfig } from './client';
+// Factory function for creating agent-specific ML services
+import { AzureMLClient, createClient, AzureMLConfig } from './client';
 import { BudgetOptimizationService } from './models/budget-optimization';
 import { PropensityScoringService } from './models/propensity-scoring';
 import { AnomalyDetectionService } from './models/anomaly-detection';
@@ -54,9 +26,9 @@ export interface KDAPMLServices {
   anomalyDetection: AnomalyDetectionService;
 }
 
-export function createMLServices(config: AzureMLConfig): KDAPMLServices {
-  const client = new AzureMLClient(config);
-
+export function createMLServices(config?: Partial<AzureMLConfig>): KDAPMLServices {
+  const client = createClient(config);
+  
   return {
     client,
     budgetOptimization: new BudgetOptimizationService(client),
@@ -65,20 +37,17 @@ export function createMLServices(config: AzureMLConfig): KDAPMLServices {
   };
 }
 
-// Default configuration from environment
-export function createMLServicesFromEnv(): KDAPMLServices {
-  const config: AzureMLConfig = {
-    subscriptionId: process.env.AZURE_SUBSCRIPTION_ID || '',
-    resourceGroup: process.env.AZURE_RESOURCE_GROUP || '',
-    workspaceName: process.env.AZURE_ML_WORKSPACE || '',
-    region: process.env.AZURE_REGION || 'eastus',
-  };
-
-  if (!config.subscriptionId || !config.resourceGroup || !config.workspaceName) {
-    throw new Error(
-      'Missing required environment variables: AZURE_SUBSCRIPTION_ID, AZURE_RESOURCE_GROUP, AZURE_ML_WORKSPACE'
-    );
+// Environment detection
+export function getEnvironment(): 'dev' | 'staging' | 'prod' {
+  const env = process.env.KDAP_ENV || 'dev';
+  if (['dev', 'staging', 'prod'].includes(env)) {
+    return env as 'dev' | 'staging' | 'prod';
   }
+  return 'dev';
+}
 
-  return createMLServices(config);
+// Endpoint URL helper
+export function getEndpointUrl(endpointName: string): string {
+  const region = process.env.AZURE_REGION || 'eastus';
+  return `https://${endpointName}.${region}.inference.ml.azure.com`;
 }

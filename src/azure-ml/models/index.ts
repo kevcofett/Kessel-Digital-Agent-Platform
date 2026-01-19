@@ -1,25 +1,26 @@
 /**
- * Model Services Index
- * Export all model service classes
+ * KDAP ML Models - Index
  */
 
 export { BudgetOptimizationService } from './budget-optimization';
-export type {
-  BudgetOptimizationInput,
-  BudgetOptimizationOutput,
-  BudgetOptimizationResult,
+export type { 
+  BudgetOptimizationInput, 
+  BudgetOptimizationOutput, 
+  BudgetAllocation 
 } from './budget-optimization';
 
 export { PropensityScoringService } from './propensity-scoring';
-export type {
-  PropensityInput,
-  PropensityOutput,
-  PropensityResult,
+export type { 
+  PropensityScoringInput, 
+  PropensityScoringOutput, 
+  PropensityScore,
+  AudienceMember 
 } from './propensity-scoring';
 
 export { AnomalyDetectionService } from './anomaly-detection';
-export type {
-  AnomalyInput,
-  AnomalyOutput,
-  AnomalyResult,
+export type { 
+  AnomalyDetectionInput, 
+  AnomalyDetectionOutput, 
+  Anomaly,
+  MetricDataPoint 
 } from './anomaly-detection';

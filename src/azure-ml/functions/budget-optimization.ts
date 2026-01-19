@@ -1,59 +1,69 @@
 /**
  * Azure Function: Budget Optimization
- * HTTP Trigger for ANL Agent ML capability
+ * HTTP trigger for ANL agent budget optimization
  */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { createMLServicesFromEnv } from '../index';
-import { BudgetOptimizationInput } from '../models/budget-optimization';
+import { createMLServices } from '../index';
 
-interface RequestBody {
-  channels: BudgetOptimizationInput[];
+interface OptimizationRequest {
+  totalBudget: number;
+  channels: string[];
+  constraints?: object;
+  objective?: string;
+  historicalData?: object[];
+}
+
+export async function budgetOptimization(
+  request: HttpRequest,
+  context: InvocationContext
+): Promise<HttpResponseInit> {
+  context.log('Budget optimization function triggered');
+
+  try {
+    const body = await request.json() as OptimizationRequest;
+
+    if (!body.totalBudget || !body.channels || body.channels.length === 0) {
+      return {
+        status: 400,
+        jsonBody: { error: 'Missing required fields: totalBudget and channels' },
+      };
+    }
+
+    const services = createMLServices();
+    const result = await services.budgetOptimization.optimize({
+      totalBudget: body.totalBudget,
+      channels: body.channels,
+      constraints: body.constraints as any,
+      objective: (body.objective as any) || 'maximize_conversions',
+      historicalData: body.historicalData as any,
+    });
+
+    if (!result.success) {
+      return {
+        status: 500,
+        jsonBody: { error: result.error, latencyMs: result.latencyMs },
+      };
+    }
+
+    return {
+      status: 200,
+      jsonBody: {
+        ...result.data,
+        metadata: { latencyMs: result.latencyMs, endpoint: result.endpointName },
+      },
+    };
+  } catch (error) {
+    context.error('Budget optimization error:', error);
+    return {
+      status: 500,
+      jsonBody: { error: 'Internal server error' },
+    };
+  }
 }
 
 app.http('budgetOptimization', {
   methods: ['POST'],
   authLevel: 'function',
-  handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-    context.log('Budget optimization request received');
-
-    try {
-      const body = await request.json() as RequestBody;
-
-      if (!body.channels || !Array.isArray(body.channels)) {
-        return {
-          status: 400,
-          jsonBody: {
-            error: 'Invalid request body. Expected { channels: BudgetOptimizationInput[] }',
-          },
-        };
-      }
-
-      const services = createMLServicesFromEnv();
-      const result = await services.budgetOptimization.optimize(body.channels);
-
-      context.log(`Budget optimization completed in ${result.latencyMs}ms`);
-
-      return {
-        status: 200,
-        jsonBody: {
-          success: true,
-          data: result,
-        },
-      };
-    } catch (error) {
-      context.error('Budget optimization failed:', error);
-
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      const statusCode = message.includes('validation') ? 400 : 500;
-
-      return {
-        status: statusCode,
-        jsonBody: {
-          success: false,
-          error: message,
-        },
-      };
-    }
-  },
+  handler: budgetOptimization,
 });

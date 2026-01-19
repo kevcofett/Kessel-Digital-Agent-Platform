@@ -1,0 +1,166 @@
+# Propensity Scoring Model Configuration
+# AUD Agent - Customer Conversion/Engagement Propensity
+
+model:
+  name: propensity
+  type: classification
+  algorithm: xgboost
+  task: binary_classification
+  
+features:
+  numerical:
+    - recency_days
+    - frequency_count
+    - monetary_value
+    - tenure_months
+    - engagement_score
+    - page_views_30d
+    - session_duration_avg
+    - email_open_rate
+    - email_click_rate
+    - purchase_count_lifetime
+    - avg_order_value
+    - days_since_last_purchase
+    - support_tickets_count
+    - nps_score
+    
+  categorical:
+    - customer_segment
+    - acquisition_channel
+    - preferred_channel
+    - product_category_primary
+    - geo_region
+    - device_type
+    - subscription_tier
+    
+  list_features:
+    - channel_preferences
+    - product_interests
+    - content_topics_engaged
+    
+  derived:
+    - rfm_score
+    - clv_predicted
+    - engagement_trend
+    - churn_risk_score
+    - loyalty_index
+
+target:
+  name: converted
+  type: binary
+  positive_class: 1
+  class_weight: balanced
+
+preprocessing:
+  numerical:
+    imputer: median
+    scaler: standard
+    outlier_treatment: clip
+    clip_percentiles: [1, 99]
+    
+  categorical:
+    encoder: woe
+    handle_unknown: value
+    min_frequency: 0.005
+    
+  list_features:
+    encoder: multi_hot
+    max_categories: 50
+
+hyperparameters:
+  xgboost:
+    objective: binary:logistic
+    eval_metric: auc
+    booster: gbtree
+    n_estimators: 1000
+    max_depth: 6
+    learning_rate: 0.05
+    min_child_weight: 1
+    subsample: 0.8
+    colsample_bytree: 0.8
+    gamma: 0
+    reg_alpha: 0.1
+    reg_lambda: 1.0
+    scale_pos_weight: 1
+    random_state: 42
+    n_jobs: -1
+    tree_method: hist
+    
+tuning:
+  method: optuna
+  n_trials: 100
+  timeout: 3600
+  metric: auc_roc
+  direction: maximize
+  search_space:
+    max_depth:
+      type: int
+      low: 3
+      high: 12
+    learning_rate:
+      type: float
+      low: 0.01
+      high: 0.3
+      log: true
+    n_estimators:
+      type: int
+      low: 100
+      high: 2000
+    min_child_weight:
+      type: int
+      low: 1
+      high: 10
+    subsample:
+      type: float
+      low: 0.5
+      high: 1.0
+    colsample_bytree:
+      type: float
+      low: 0.5
+      high: 1.0
+    gamma:
+      type: float
+      low: 0.0
+      high: 5.0
+    reg_alpha:
+      type: float
+      low: 0.0001
+      high: 10.0
+      log: true
+    reg_lambda:
+      type: float
+      low: 0.0001
+      high: 10.0
+      log: true
+
+training:
+  cv_folds: 5
+  early_stopping_rounds: 50
+  stratify: true
+  
+calibration:
+  method: isotonic
+  cv_folds: 5
+  
+evaluation:
+  primary_metric: auc_roc
+  threshold_selection: f1_optimal
+  threshold_metrics:
+    auc_roc: 0.75
+    auc_pr: 0.50
+    f1: 0.60
+    
+inference:
+  batch_size: 5000
+  timeout_ms: 200
+  return_probabilities: true
+  
+output:
+  predictions:
+    - propensity_score
+    - confidence
+    - percentile_rank
+    - segment_assignment
+  explanations:
+    - shap_values
+    - top_features

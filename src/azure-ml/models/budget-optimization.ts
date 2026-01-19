@@ -1,116 +1,92 @@
 /**
- * Budget Optimization Model Service
- * ANL Agent - Azure ML Integration
+ * Budget Optimization Service
+ * ML-powered budget allocation for ANL agent
  */
 
-import AzureMLClient, { ScoringRequest, ScoringResponse } from '../client';
-import { ANL_ENDPOINTS } from '../endpoints';
+import { AzureMLClient, EndpointResponse } from '../client';
 
 export interface BudgetOptimizationInput {
-  channelId: string;
-  currentSpend: number;
-  historicalPerformance: number[];
-  seasonalityIndex: number;
-  competitiveIntensity: number;
-  audienceSize: number;
+  totalBudget: number;
+  channels: string[];
+  constraints?: {
+    minSpend?: Record<string, number>;
+    maxSpend?: Record<string, number>;
+    fixedAllocations?: Record<string, number>;
+  };
+  objective: 'maximize_conversions' | 'maximize_revenue' | 'maximize_reach' | 'minimize_cpa';
+  historicalData?: {
+    channel: string;
+    spend: number;
+    outcome: number;
+  }[];
+}
+
+export interface BudgetAllocation {
+  channel: string;
+  amount: number;
+  percentage: number;
+  expectedOutcome: number;
+  marginalROI: number;
 }
 
 export interface BudgetOptimizationOutput {
-  optimalSpend: number;
-  expectedReturn: number;
-  confidenceIntervalLower: number;
-  confidenceIntervalUpper: number;
-  marginalReturn: number;
-  channelId: string;
-}
-
-export interface BudgetOptimizationResult {
-  results: BudgetOptimizationOutput[];
-  modelVersion: string;
-  requestId: string;
-  latencyMs: number;
+  allocations: BudgetAllocation[];
+  totalExpectedOutcome: number;
+  expectedROI: number;
+  confidence: number;
+  recommendations: string[];
 }
 
 export class BudgetOptimizationService {
   private client: AzureMLClient;
+  private endpointName = 'kdap-budget-optimizer';
 
   constructor(client: AzureMLClient) {
     this.client = client;
   }
 
-  private validateInput(input: BudgetOptimizationInput): void {
-    if (!input.channelId || typeof input.channelId !== 'string') {
-      throw new Error('channelId is required and must be a string');
-    }
-    if (typeof input.currentSpend !== 'number' || input.currentSpend < 0) {
-      throw new Error('currentSpend must be a non-negative number');
-    }
-    if (!Array.isArray(input.historicalPerformance) || input.historicalPerformance.length < 3) {
-      throw new Error('historicalPerformance must be an array with at least 3 data points');
-    }
-    if (typeof input.seasonalityIndex !== 'number' || input.seasonalityIndex < 0 || input.seasonalityIndex > 2) {
-      throw new Error('seasonalityIndex must be a number between 0 and 2');
-    }
-    if (typeof input.competitiveIntensity !== 'number' || input.competitiveIntensity < 0 || input.competitiveIntensity > 1) {
-      throw new Error('competitiveIntensity must be a number between 0 and 1');
-    }
-    if (typeof input.audienceSize !== 'number' || input.audienceSize < 0) {
-      throw new Error('audienceSize must be a non-negative integer');
-    }
-  }
-
-  private transformInput(inputs: BudgetOptimizationInput[]): ScoringRequest {
-    return {
-      data: inputs.map(input => ({
-        channel_id: input.channelId,
-        current_spend: input.currentSpend,
-        historical_performance: input.historicalPerformance,
-        seasonality_index: input.seasonalityIndex,
-        competitive_intensity: input.competitiveIntensity,
-        audience_size: input.audienceSize,
-      })),
+  async optimize(input: BudgetOptimizationInput): Promise<EndpointResponse<BudgetOptimizationOutput>> {
+    const payload = {
+      total_budget: input.totalBudget,
+      channels: input.channels,
+      constraints: input.constraints || {},
+      objective: input.objective,
+      historical_data: input.historicalData || [],
     };
+
+    return this.client.invokeEndpoint<BudgetOptimizationOutput>(
+      this.endpointName,
+      payload
+    );
   }
 
-  private transformOutput(response: ScoringResponse, inputs: BudgetOptimizationInput[]): BudgetOptimizationResult {
-    const predictions = response.predictions as Array<{
-      optimal_spend: number;
-      expected_return: number;
-      confidence_interval_lower: number;
-      confidence_interval_upper: number;
-      marginal_return: number;
-    }>;
-
-    return {
-      results: predictions.map((pred, index) => ({
-        optimalSpend: pred.optimal_spend,
-        expectedReturn: pred.expected_return,
-        confidenceIntervalLower: pred.confidence_interval_lower,
-        confidenceIntervalUpper: pred.confidence_interval_upper,
-        marginalReturn: pred.marginal_return,
-        channelId: inputs[index].channelId,
-      })),
-      modelVersion: response.modelVersion,
-      requestId: response.requestId,
-      latencyMs: response.latencyMs,
+  async getRecommendations(
+    currentAllocations: Record<string, number>,
+    performanceData: { channel: string; spend: number; conversions: number }[]
+  ): Promise<EndpointResponse<{ recommendations: string[]; potentialLift: number }>> {
+    const payload = {
+      current_allocations: currentAllocations,
+      performance_data: performanceData,
+      request_type: 'recommendations',
     };
+
+    return this.client.invokeEndpoint(this.endpointName, payload);
   }
 
-  async optimize(inputs: BudgetOptimizationInput[]): Promise<BudgetOptimizationResult> {
-    inputs.forEach(input => this.validateInput(input));
-    const request = this.transformInput(inputs);
-    const response = await this.client.score(ANL_ENDPOINTS.BUDGET_OPTIMIZER, request);
-    return this.transformOutput(response, inputs);
-  }
+  async simulateScenario(
+    baseAllocations: Record<string, number>,
+    adjustments: Record<string, number>
+  ): Promise<EndpointResponse<{ projectedOutcome: number; comparison: object }>> {
+    const payload = {
+      base_allocations: baseAllocations,
+      adjustments,
+      request_type: 'simulation',
+    };
 
-  async optimizeSingle(input: BudgetOptimizationInput): Promise<BudgetOptimizationOutput> {
-    const result = await this.optimize([input]);
-    return result.results[0];
+    return this.client.invokeEndpoint(this.endpointName, payload);
   }
 
   async healthCheck(): Promise<boolean> {
-    return this.client.healthCheck(ANL_ENDPOINTS.BUDGET_OPTIMIZER);
+    return this.client.healthCheck(this.endpointName);
   }
 }
-
-export default BudgetOptimizationService;

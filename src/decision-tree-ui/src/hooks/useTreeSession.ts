@@ -1,242 +1,235 @@
 /**
- * useTreeSession Hook
- * Manages decision tree session state
+ * Tree Session State Management Hook
  */
 
-import { useState, useCallback, useEffect } from 'react';
-import type { TreeSession, DecisionTree, NavigationAction } from '../types';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import {
+  DecisionTree,
+  TreeSession,
+  SessionDecision,
+  TreeEvent,
+  TreeEventHandler,
+  TreeEventType,
+} from '../types';
 
 interface UseTreeSessionOptions {
   tree: DecisionTree;
   userId: string;
-  initialSession?: TreeSession;
-  onSessionChange?: (session: TreeSession) => void;
-  persistKey?: string;
+  initialContext?: Record<string, unknown>;
+  onEvent?: TreeEventHandler;
+  autoSave?: boolean;
+  storageKey?: string;
 }
 
 interface UseTreeSessionReturn {
   session: TreeSession;
-  currentNode: string;
-  visitedNodes: string[];
-  completedNodes: string[];
-  decisions: Record<string, string>;
-  data: Record<string, unknown>;
-  progress: number;
+  currentNode: ReturnType<typeof findCurrentNode>;
+  makeDecision: (optionId: string) => void;
+  goToNode: (nodeId: string) => void;
+  resetSession: () => void;
+  completeSession: () => void;
+  abandonSession: () => void;
+  updateContext: (updates: Record<string, unknown>) => void;
   isComplete: boolean;
-  navigate: (action: NavigationAction) => void;
-  makeDecision: (nodeId: string, optionId: string) => void;
-  completeNode: (nodeId: string, data?: Record<string, unknown>) => void;
-  setData: (key: string, value: unknown) => void;
-  reset: () => void;
+  canNavigateTo: (nodeId: string) => boolean;
 }
 
-function createInitialSession(tree: DecisionTree, userId: string): TreeSession {
-  const startNode = tree.nodes.find(n => n.type === 'start');
+function generateSessionId(): string {
+  return 'session_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+}
+
+function findCurrentNode(tree: DecisionTree, nodeId: string) {
+  return tree.nodes.find((n) => n.id === nodeId);
+}
+
+function createInitialSession(
+  tree: DecisionTree,
+  userId: string,
+  context: Record<string, unknown> = {}
+): TreeSession {
+  const now = new Date().toISOString();
   return {
-    id: crypto.randomUUID(),
+    id: generateSessionId(),
     treeId: tree.id,
     userId,
-    currentNodeId: startNode?.id || tree.nodes[0].id,
-    visitedNodes: [startNode?.id || tree.nodes[0].id],
-    completedNodes: [],
-    decisions: {},
-    data: {},
-    startedAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    currentNodeId: tree.startNodeId,
+    visitedNodes: [tree.startNodeId],
+    decisions: [],
+    startedAt: now,
+    lastActivityAt: now,
+    status: 'active',
+    context,
   };
 }
 
-export function useTreeSession({
-  tree,
-  userId,
-  initialSession,
-  onSessionChange,
-  persistKey,
-}: UseTreeSessionOptions): UseTreeSessionReturn {
-  // Load from localStorage if persistKey provided
-  const loadPersistedSession = (): TreeSession | null => {
-    if (!persistKey) return null;
-    try {
-      const stored = localStorage.getItem(persistKey);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed.treeId === tree.id && parsed.userId === userId) {
-          return parsed;
-        }
-      }
-    } catch {
-      // Ignore parse errors
-    }
-    return null;
-  };
+export function useTreeSession(options: UseTreeSessionOptions): UseTreeSessionReturn {
+  const { tree, userId, initialContext = {}, onEvent, autoSave = false, storageKey } = options;
 
   const [session, setSession] = useState<TreeSession>(() => {
-    return initialSession || loadPersistedSession() || createInitialSession(tree, userId);
+    if (autoSave && storageKey) {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved) as TreeSession;
+          if (parsed.treeId === tree.id && parsed.status === 'active') {
+            return parsed;
+          }
+        } catch {
+          // Ignore parse errors
+        }
+      }
+    }
+    return createInitialSession(tree, userId, initialContext);
   });
 
-  // Persist session changes
-  useEffect(() => {
-    if (persistKey) {
-      localStorage.setItem(persistKey, JSON.stringify(session));
+  const eventHandlerRef = useRef(onEvent);
+  eventHandlerRef.current = onEvent;
+
+  const emitEvent = useCallback((type: TreeEventType, nodeId?: string, optionId?: string) => {
+    if (eventHandlerRef.current) {
+      const event: TreeEvent = {
+        type,
+        nodeId,
+        optionId,
+        timestamp: new Date().toISOString(),
+      };
+      eventHandlerRef.current(event);
     }
-    onSessionChange?.(session);
-  }, [session, persistKey, onSessionChange]);
+  }, []);
 
-  // Find next node based on edges
-  const findNextNode = useCallback(
-    (fromNodeId: string, optionId?: string): string | null => {
-      const edges = tree.edges.filter(e => e.source === fromNodeId);
-      if (edges.length === 0) return null;
+  useEffect(() => {
+    if (autoSave && storageKey) {
+      localStorage.setItem(storageKey, JSON.stringify(session));
+    }
+  }, [session, autoSave, storageKey]);
 
-      if (optionId) {
-        const targetEdge = edges.find(e => e.data?.condition === optionId);
-        if (targetEdge) return targetEdge.target;
+  const currentNode = findCurrentNode(tree, session.currentNodeId);
+
+  const isComplete = session.status === 'completed' || currentNode?.type === 'end';
+
+  const makeDecision = useCallback(
+    (optionId: string) => {
+      if (!currentNode || session.status !== 'active') return;
+
+      const option = currentNode.options?.find((o) => o.id === optionId);
+      if (!option) return;
+
+      const decision: SessionDecision = {
+        nodeId: currentNode.id,
+        optionId,
+        timestamp: new Date().toISOString(),
+      };
+
+      emitEvent('decision:made', currentNode.id, optionId);
+      emitEvent('node:exit', currentNode.id);
+
+      setSession((prev) => {
+        const nextNodeId = option.nextNodeId;
+        const visitedNodes = prev.visitedNodes.includes(nextNodeId)
+          ? prev.visitedNodes
+          : [...prev.visitedNodes, nextNodeId];
+
+        const nextNode = findCurrentNode(tree, nextNodeId);
+        const newStatus = nextNode?.type === 'end' ? 'completed' : prev.status;
+
+        return {
+          ...prev,
+          currentNodeId: nextNodeId,
+          visitedNodes,
+          decisions: [...prev.decisions, decision],
+          lastActivityAt: new Date().toISOString(),
+          status: newStatus,
+        };
+      });
+
+      emitEvent('node:enter', option.nextNodeId);
+
+      const nextNode = findCurrentNode(tree, option.nextNodeId);
+      if (nextNode?.type === 'end') {
+        emitEvent('tree:completed');
       }
-
-      // Return default edge
-      const defaultEdge = edges.find(e => !e.data?.condition) || edges[0];
-      return defaultEdge?.target || null;
     },
-    [tree.edges]
+    [currentNode, session.status, tree, emitEvent]
   );
 
-  // Find previous node
-  const findPreviousNode = useCallback(
-    (fromNodeId: string): string | null => {
-      const visitedIndex = session.visitedNodes.indexOf(fromNodeId);
-      if (visitedIndex <= 0) return null;
-      return session.visitedNodes[visitedIndex - 1];
+  const goToNode = useCallback(
+    (nodeId: string) => {
+      if (session.status !== 'active') return;
+
+      const targetNode = findCurrentNode(tree, nodeId);
+      if (!targetNode) return;
+
+      emitEvent('node:exit', session.currentNodeId);
+
+      setSession((prev) => {
+        const visitedNodes = prev.visitedNodes.includes(nodeId)
+          ? prev.visitedNodes
+          : [...prev.visitedNodes, nodeId];
+
+        return {
+          ...prev,
+          currentNodeId: nodeId,
+          visitedNodes,
+          lastActivityAt: new Date().toISOString(),
+        };
+      });
+
+      emitEvent('node:enter', nodeId);
+    },
+    [session.status, session.currentNodeId, tree, emitEvent]
+  );
+
+  const resetSession = useCallback(() => {
+    emitEvent('tree:abandoned', session.currentNodeId);
+    const newSession = createInitialSession(tree, userId, initialContext);
+    setSession(newSession);
+    emitEvent('tree:started', tree.startNodeId);
+  }, [tree, userId, initialContext, session.currentNodeId, emitEvent]);
+
+  const completeSession = useCallback(() => {
+    setSession((prev) => ({
+      ...prev,
+      status: 'completed',
+      lastActivityAt: new Date().toISOString(),
+    }));
+    emitEvent('tree:completed', session.currentNodeId);
+  }, [session.currentNodeId, emitEvent]);
+
+  const abandonSession = useCallback(() => {
+    setSession((prev) => ({
+      ...prev,
+      status: 'abandoned',
+      lastActivityAt: new Date().toISOString(),
+    }));
+    emitEvent('tree:abandoned', session.currentNodeId);
+  }, [session.currentNodeId, emitEvent]);
+
+  const updateContext = useCallback((updates: Record<string, unknown>) => {
+    setSession((prev) => ({
+      ...prev,
+      context: { ...prev.context, ...updates },
+      lastActivityAt: new Date().toISOString(),
+    }));
+  }, []);
+
+  const canNavigateTo = useCallback(
+    (nodeId: string) => {
+      return session.visitedNodes.includes(nodeId);
     },
     [session.visitedNodes]
   );
 
-  // Navigate between nodes
-  const navigate = useCallback(
-    (action: NavigationAction) => {
-      setSession(prev => {
-        let newCurrentNodeId = prev.currentNodeId;
-        let newVisitedNodes = [...prev.visitedNodes];
-
-        switch (action.type) {
-          case 'next': {
-            const nextNode = findNextNode(prev.currentNodeId);
-            if (nextNode) {
-              newCurrentNodeId = nextNode;
-              if (!newVisitedNodes.includes(nextNode)) {
-                newVisitedNodes.push(nextNode);
-              }
-            }
-            break;
-          }
-          case 'back': {
-            const prevNode = findPreviousNode(prev.currentNodeId);
-            if (prevNode) {
-              newCurrentNodeId = prevNode;
-            }
-            break;
-          }
-          case 'jump': {
-            if (action.targetNodeId) {
-              newCurrentNodeId = action.targetNodeId;
-              if (!newVisitedNodes.includes(action.targetNodeId)) {
-                newVisitedNodes.push(action.targetNodeId);
-              }
-            }
-            break;
-          }
-          case 'reset': {
-            return createInitialSession(tree, userId);
-          }
-        }
-
-        return {
-          ...prev,
-          currentNodeId: newCurrentNodeId,
-          visitedNodes: newVisitedNodes,
-          data: action.data ? { ...prev.data, ...action.data } : prev.data,
-          updatedAt: new Date().toISOString(),
-        };
-      });
-    },
-    [findNextNode, findPreviousNode, tree, userId]
-  );
-
-  // Make a decision at a decision node
-  const makeDecision = useCallback(
-    (nodeId: string, optionId: string) => {
-      setSession(prev => {
-        const nextNode = findNextNode(nodeId, optionId);
-        const newVisitedNodes = [...prev.visitedNodes];
-        if (nextNode && !newVisitedNodes.includes(nextNode)) {
-          newVisitedNodes.push(nextNode);
-        }
-
-        return {
-          ...prev,
-          currentNodeId: nextNode || prev.currentNodeId,
-          visitedNodes: newVisitedNodes,
-          completedNodes: [...prev.completedNodes, nodeId],
-          decisions: { ...prev.decisions, [nodeId]: optionId },
-          updatedAt: new Date().toISOString(),
-        };
-      });
-    },
-    [findNextNode]
-  );
-
-  // Mark a node as completed
-  const completeNode = useCallback(
-    (nodeId: string, data?: Record<string, unknown>) => {
-      setSession(prev => ({
-        ...prev,
-        completedNodes: prev.completedNodes.includes(nodeId)
-          ? prev.completedNodes
-          : [...prev.completedNodes, nodeId],
-        data: data ? { ...prev.data, ...data } : prev.data,
-        updatedAt: new Date().toISOString(),
-      }));
-    },
-    []
-  );
-
-  // Set session data
-  const setData = useCallback((key: string, value: unknown) => {
-    setSession(prev => ({
-      ...prev,
-      data: { ...prev.data, [key]: value },
-      updatedAt: new Date().toISOString(),
-    }));
-  }, []);
-
-  // Reset session
-  const reset = useCallback(() => {
-    setSession(createInitialSession(tree, userId));
-  }, [tree, userId]);
-
-  // Calculate progress
-  const actionNodes = tree.nodes.filter(n => n.type === 'action' || n.type === 'decision');
-  const progress = actionNodes.length > 0
-    ? Math.round((session.completedNodes.length / actionNodes.length) * 100)
-    : 0;
-
-  // Check if tree is complete
-  const endNode = tree.nodes.find(n => n.type === 'end');
-  const isComplete = endNode ? session.completedNodes.includes(endNode.id) : false;
-
   return {
     session,
-    currentNode: session.currentNodeId,
-    visitedNodes: session.visitedNodes,
-    completedNodes: session.completedNodes,
-    decisions: session.decisions,
-    data: session.data,
-    progress,
-    isComplete,
-    navigate,
+    currentNode,
     makeDecision,
-    completeNode,
-    setData,
-    reset,
+    goToNode,
+    resetSession,
+    completeSession,
+    abandonSession,
+    updateContext,
+    isComplete,
+    canNavigateTo,
   };
 }
 

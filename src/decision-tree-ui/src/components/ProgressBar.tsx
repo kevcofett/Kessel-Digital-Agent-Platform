@@ -1,64 +1,67 @@
 /**
- * Progress Bar Component
- * Shows workflow completion progress
+ * Tree Progress Bar Component
  */
 
 import React from 'react';
-import { motion } from 'framer-motion';
-import clsx from 'clsx';
+import { TreeProgress } from '../types';
 
 interface ProgressBarProps {
-  progress: number;
-  currentStage?: string;
-  theme?: 'light' | 'dark' | 'system';
+  progress: TreeProgress;
+  theme?: 'light' | 'dark';
+  showDetails?: boolean;
 }
 
-export function ProgressBar({ progress, currentStage, theme = 'light' }: ProgressBarProps) {
+export const ProgressBar: React.FC<ProgressBarProps> = ({
+  progress,
+  theme = 'light',
+  showDetails = true,
+}) => {
   const isDark = theme === 'dark';
 
+  const containerStyle: React.CSSProperties = {
+    padding: '12px 16px',
+    backgroundColor: isDark ? '#1f2937' : '#ffffff',
+    borderBottom: isDark ? '1px solid #374151' : '1px solid #e5e7eb',
+  };
+
+  const barContainerStyle: React.CSSProperties = {
+    height: '8px',
+    backgroundColor: isDark ? '#374151' : '#e5e7eb',
+    borderRadius: '4px',
+    overflow: 'hidden',
+  };
+
+  const barFillStyle: React.CSSProperties = {
+    height: '100%',
+    width: `${progress.percentage}%`,
+    backgroundColor: progress.percentage === 100 ? '#10b981' : '#3b82f6',
+    borderRadius: '4px',
+    transition: 'width 0.3s ease',
+  };
+
+  const detailsStyle: React.CSSProperties = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: '8px',
+    fontSize: '12px',
+    color: isDark ? '#9ca3af' : '#6b7280',
+  };
+
   return (
-    <div
-      className={clsx(
-        'w-full px-4 py-3 border-b',
-        isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+    <div style={containerStyle}>
+      <div style={barContainerStyle}>
+        <div style={barFillStyle} />
+      </div>
+      {showDetails && (
+        <div style={detailsStyle}>
+          <span>
+            {progress.visitedNodes} of {progress.totalNodes} nodes visited
+          </span>
+          <span>{progress.percentage}% complete</span>
+        </div>
       )}
-    >
-      <div className="flex items-center justify-between mb-2">
-        <span
-          className={clsx(
-            'text-sm font-medium',
-            isDark ? 'text-gray-200' : 'text-gray-700'
-          )}
-        >
-          {currentStage || 'Progress'}
-        </span>
-        <span
-          className={clsx(
-            'text-sm font-semibold',
-            isDark ? 'text-blue-400' : 'text-blue-600'
-          )}
-        >
-          {progress}%
-        </span>
-      </div>
-      <div
-        className={clsx(
-          'h-2 rounded-full overflow-hidden',
-          isDark ? 'bg-gray-700' : 'bg-gray-200'
-        )}
-      >
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          className={clsx(
-            'h-full rounded-full',
-            progress === 100 ? 'bg-green-500' : 'bg-blue-500'
-          )}
-        />
-      </div>
     </div>
   );
-}
+};
 
 export default ProgressBar;

@@ -1,17 +1,8 @@
 /**
- * Components Index
- * Export all UI components
+ * Decision Tree UI Components
  */
 
-export { DecisionTreeView, default as DecisionTree } from './DecisionTree';
+export { TreeNodes, StartNode, DecisionNode, ActionNode, GateNode, MergeNode, EndNode } from './TreeNodes';
+export { DecisionTreeView } from './DecisionTree';
 export { DetailPanel } from './DetailPanel';
 export { ProgressBar } from './ProgressBar';
-export { nodeTypes } from './TreeNodes';
-export { 
-  StartNode, 
-  DecisionNode, 
-  ActionNode, 
-  GateNode, 
-  MergeNode, 
-  EndNode 
-} from './TreeNodes';

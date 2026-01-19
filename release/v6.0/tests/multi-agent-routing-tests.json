@@ -1,16 +1,20 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Multi-agent routing test scenarios for Copilot Studio deployment validation",
   "created": "2026-01-18",
-  "total_scenarios": 35,
+  "updated": "2026-01-19",
+  "total_scenarios": 47,
   "categories": {
-    "orc_routing": 8,
+    "orc_routing": 11,
     "anl_specific": 3,
     "aud_specific": 3,
     "cha_specific": 3,
     "spo_specific": 3,
     "doc_specific": 3,
     "prf_specific": 3,
+    "chg_specific": 3,
+    "cst_specific": 3,
+    "mkt_specific": 3,
     "cross_agent": 5,
     "edge_cases": 4
   },
@@ -94,6 +98,36 @@
       "expected_behavior": "Report current step and gate status",
       "priority": "P1",
       "tags": ["routing", "state"]
+    },
+    {
+      "id": "RT-045",
+      "category": "orc_routing",
+      "name": "Route to CHG",
+      "input": "Assess our organization's change readiness",
+      "expected_agent": "CHG",
+      "expected_behavior": "ADKAR assessment with dimension scores",
+      "priority": "P0",
+      "tags": ["routing", "chg"]
+    },
+    {
+      "id": "RT-046",
+      "category": "orc_routing",
+      "name": "Route to CST",
+      "input": "Help me select a strategic framework for market analysis",
+      "expected_agent": "CST",
+      "expected_behavior": "Framework recommendation with rationale",
+      "priority": "P0",
+      "tags": ["routing", "cst"]
+    },
+    {
+      "id": "RT-047",
+      "category": "orc_routing",
+      "name": "Route to MKT",
+      "input": "Develop a marketing campaign strategy",
+      "expected_agent": "MKT",
+      "expected_behavior": "Campaign strategy with channels and messaging",
+      "priority": "P0",
+      "tags": ["routing", "mkt"]
     },
     {
       "id": "RT-009",
@@ -276,6 +310,96 @@
       "tags": ["prf", "learnings"]
     },
     {
+      "id": "RT-036",
+      "category": "chg_specific",
+      "name": "Change Readiness Assessment",
+      "input": "Assess our organization's readiness for implementing the new ERP system",
+      "expected_agent": "CHG",
+      "expected_behavior": "ADKAR-based assessment with dimension scores and recommendations",
+      "priority": "P0",
+      "tags": ["chg", "readiness"]
+    },
+    {
+      "id": "RT-037",
+      "category": "chg_specific",
+      "name": "Stakeholder Mapping",
+      "input": "Map stakeholders for the digital transformation initiative using power-interest grid",
+      "expected_agent": "CHG",
+      "expected_behavior": "Stakeholder grid with engagement strategies",
+      "priority": "P0",
+      "tags": ["chg", "stakeholder"]
+    },
+    {
+      "id": "RT-038",
+      "category": "chg_specific",
+      "name": "Adoption Planning",
+      "input": "Create a phased adoption plan for rolling out the new CRM system",
+      "expected_agent": "CHG",
+      "expected_behavior": "Phased plan with milestones, training, and metrics",
+      "priority": "P1",
+      "tags": ["chg", "adoption"]
+    },
+    {
+      "id": "RT-039",
+      "category": "cst_specific",
+      "name": "Strategic Framework Selection",
+      "input": "What strategic framework should I use to analyze our competitive position?",
+      "expected_agent": "CST",
+      "expected_behavior": "Framework recommendation with rationale and application guidance",
+      "priority": "P0",
+      "tags": ["cst", "framework"]
+    },
+    {
+      "id": "RT-040",
+      "category": "cst_specific",
+      "name": "SWOT Analysis",
+      "input": "Conduct a SWOT analysis for our product division",
+      "expected_agent": "CST",
+      "expected_behavior": "Complete SWOT with strategic implications",
+      "priority": "P0",
+      "tags": ["cst", "swot"]
+    },
+    {
+      "id": "RT-041",
+      "category": "cst_specific",
+      "name": "Initiative Prioritization",
+      "input": "Prioritize our strategic initiatives using ICE framework",
+      "expected_agent": "CST",
+      "expected_behavior": "Scored and ranked initiatives with recommendations",
+      "priority": "P1",
+      "tags": ["cst", "prioritization"]
+    },
+    {
+      "id": "RT-042",
+      "category": "mkt_specific",
+      "name": "Campaign Strategy",
+      "input": "Develop a marketing campaign strategy for our Q3 product launch",
+      "expected_agent": "MKT",
+      "expected_behavior": "Strategy framework with channels, messaging, and measurement",
+      "priority": "P0",
+      "tags": ["mkt", "strategy"]
+    },
+    {
+      "id": "RT-043",
+      "category": "mkt_specific",
+      "name": "Creative Brief",
+      "input": "Generate a creative brief for our brand awareness campaign",
+      "expected_agent": "MKT",
+      "expected_behavior": "Complete brief with audience, creative direction, deliverables",
+      "priority": "P0",
+      "tags": ["mkt", "brief"]
+    },
+    {
+      "id": "RT-044",
+      "category": "mkt_specific",
+      "name": "Competitive Analysis",
+      "input": "Analyze our competitive positioning and identify messaging opportunities",
+      "expected_agent": "MKT",
+      "expected_behavior": "Competitive matrix with gaps and opportunities",
+      "priority": "P1",
+      "tags": ["mkt", "competitive"]
+    },
+    {
       "id": "RT-027",
       "category": "cross_agent",
       "name": "AUD to ANL Handoff",
@@ -378,7 +502,7 @@
   "execution_instructions": {
     "environment": "Copilot Studio test environment",
     "prerequisites": [
-      "All 7 agents deployed",
+      "All 10 agents deployed (ORC, ANL, AUD, CHA, SPO, DOC, PRF, CHG, CST, MKT)",
       "All flows connected",
       "KB files indexed"
     ],

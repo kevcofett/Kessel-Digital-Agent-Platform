@@ -1,0 +1,151 @@
+# KDAP ML Training - Docker Compose Configuration
+# Local development and testing environment
+
+version: '3.8'
+
+services:
+  # ==========================================================================
+  # ML Training Service
+  # ==========================================================================
+  ml-training:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: kdap-ml-training:latest
+    container_name: kdap-ml-training
+    volumes:
+      - ./data:/data:ro
+      - ./models:/models
+      - ./logs:/logs
+      - ./kdap_ml:/app/kdap_ml:ro
+      - ./config:/app/config:ro
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - MLFLOW_EXPERIMENT_NAME=kdap-ml-local
+      - MODEL_OUTPUT_DIR=/models
+      - DATA_DIR=/data
+      - LOG_LEVEL=INFO
+    depends_on:
+      - mlflow
+      - redis
+    networks:
+      - kdap-ml-network
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 4G
+
+  # ==========================================================================
+  # MLflow Tracking Server
+  # ==========================================================================
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.9.2
+    container_name: kdap-mlflow
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow-data:/mlflow
+    environment:
+      - MLFLOW_BACKEND_STORE_URI=sqlite:///mlflow/mlflow.db
+      - MLFLOW_DEFAULT_ARTIFACT_ROOT=/mlflow/artifacts
+    command: >
+      mlflow server
+      --backend-store-uri sqlite:///mlflow/mlflow.db
+      --default-artifact-root /mlflow/artifacts
+      --host 0.0.0.0
+      --port 5000
+    networks:
+      - kdap-ml-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ==========================================================================
+  # Redis Cache (for benchmark API and feature store)
+  # ==========================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: kdap-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - kdap-ml-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ==========================================================================
+  # Jupyter Lab (for interactive development)
+  # ==========================================================================
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile.jupyter
+    image: kdap-ml-jupyter:latest
+    container_name: kdap-jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./:/workspace
+      - ./data:/data:ro
+      - ./models:/models
+      - ./notebooks:/notebooks
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    depends_on:
+      - mlflow
+      - redis
+    networks:
+      - kdap-ml-network
+    profiles:
+      - dev
+
+  # ==========================================================================
+  # Model Serving (for local testing)
+  # ==========================================================================
+  model-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.serving
+    image: kdap-ml-serving:latest
+    container_name: kdap-model-server
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./models:/models:ro
+    environment:
+      - MODEL_PATH=/models
+      - PORT=8080
+      - WORKERS=2
+    depends_on:
+      - ml-training
+    networks:
+      - kdap-ml-network
+    profiles:
+      - serve
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  kdap-ml-network:
+    driver: bridge
+
+volumes:
+  mlflow-data:
+  redis-data:

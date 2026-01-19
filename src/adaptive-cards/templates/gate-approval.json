@@ -1,0 +1,259 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body": [
+    {
+      "type": "Container",
+      "style": "attention",
+      "bleed": true,
+      "items": [
+        {
+          "type": "ColumnSet",
+          "columns": [
+            {
+              "type": "Column",
+              "width": "auto",
+              "items": [
+                {
+                  "type": "Image",
+                  "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNMTIgOHY0bTAgNGguMDEiLz48L3N2Zz4=",
+                  "size": "Small"
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "stretch",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "Approval Required",
+                  "weight": "Bolder",
+                  "color": "Light"
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "Human review gate",
+                  "size": "Small",
+                  "color": "Light",
+                  "spacing": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "padding": "Default"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "${gateLabel}",
+          "weight": "Bolder",
+          "size": "Large",
+          "wrap": true
+        },
+        {
+          "type": "TextBlock",
+          "text": "${gateDescription}",
+          "wrap": true,
+          "spacing": "Small"
+        }
+      ],
+      "spacing": "Medium"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Recommendation Summary",
+          "weight": "Bolder",
+          "size": "Small"
+        },
+        {
+          "type": "Container",
+          "style": "emphasis",
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "${recommendationSummary}",
+              "wrap": true
+            }
+          ],
+          "padding": "Small"
+        }
+      ],
+      "separator": true,
+      "spacing": "Medium"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Impact Analysis",
+          "weight": "Bolder",
+          "size": "Small"
+        },
+        {
+          "type": "FactSet",
+          "facts": [
+            {
+              "title": "Estimated Impact",
+              "value": "${estimatedImpact}"
+            },
+            {
+              "title": "Confidence Level",
+              "value": "${confidenceLevel}"
+            },
+            {
+              "title": "Risk Assessment",
+              "value": "${riskLevel}"
+            },
+            {
+              "title": "Budget Impact",
+              "value": "${budgetImpact}"
+            }
+          ]
+        }
+      ],
+      "spacing": "Medium"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Key Changes",
+          "weight": "Bolder",
+          "size": "Small"
+        },
+        {
+          "type": "Container",
+          "items": [
+            {
+              "$data": "${changes}",
+              "type": "ColumnSet",
+              "columns": [
+                {
+                  "type": "Column",
+                  "width": "stretch",
+                  "items": [
+                    {
+                      "type": "TextBlock",
+                      "text": "${description}",
+                      "wrap": true
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "width": "auto",
+                  "items": [
+                    {
+                      "type": "TextBlock",
+                      "text": "${impact}",
+                      "weight": "Bolder",
+                      "color": "${impactColor}"
+                    }
+                  ]
+                }
+              ],
+              "separator": true
+            }
+          ]
+        }
+      ],
+      "spacing": "Medium",
+      "$when": "${length(changes) > 0}"
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Add Comments (Optional)",
+          "weight": "Bolder",
+          "size": "Small"
+        },
+        {
+          "type": "Input.Text",
+          "id": "approvalComments",
+          "placeholder": "Enter any notes or conditions for approval...",
+          "isMultiline": true,
+          "maxLength": 500
+        }
+      ],
+      "separator": true,
+      "spacing": "Medium"
+    },
+    {
+      "type": "ActionSet",
+      "actions": [
+        {
+          "type": "Action.Submit",
+          "title": "Approve",
+          "style": "positive",
+          "data": {
+            "action": "approve",
+            "workflowId": "${workflowId}",
+            "nodeId": "${nodeId}",
+            "sessionId": "${sessionId}",
+            "gateId": "${gateId}"
+          }
+        },
+        {
+          "type": "Action.Submit",
+          "title": "Reject",
+          "style": "destructive",
+          "data": {
+            "action": "reject",
+            "workflowId": "${workflowId}",
+            "nodeId": "${nodeId}",
+            "sessionId": "${sessionId}",
+            "gateId": "${gateId}"
+          }
+        },
+        {
+          "type": "Action.Submit",
+          "title": "Request Changes",
+          "data": {
+            "action": "requestChanges",
+            "workflowId": "${workflowId}",
+            "nodeId": "${nodeId}",
+            "sessionId": "${sessionId}",
+            "gateId": "${gateId}"
+          }
+        },
+        {
+          "type": "Action.ShowCard",
+          "title": "View Full Details",
+          "card": {
+            "type": "AdaptiveCard",
+            "body": [
+              {
+                "type": "TextBlock",
+                "text": "Full Recommendation Details",
+                "weight": "Bolder"
+              },
+              {
+                "type": "TextBlock",
+                "text": "${fullDetails}",
+                "wrap": true
+              }
+            ]
+          }
+        }
+      ],
+      "spacing": "Large"
+    }
+  ],
+  "metadata": {
+    "webUrl": "${webAppUrl}",
+    "templateId": "kdap-gate-approval"
+  }
+}

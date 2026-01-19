@@ -1,0 +1,350 @@
+CONFIDENCE LEVEL FRAMEWORK
+
+KESSEL DIGITAL AGENT PLATFORM - SHARED KNOWLEDGE BASE
+Version 1.0
+Document Code EAP-KB-CL-001
+
+This document establishes platform-wide standards for expressing confidence in findings, recommendations, and analysis. All agents must indicate confidence levels for significant outputs to help users understand reliability and make informed decisions.
+
+========================================
+
+CONFIDENCE BAND DEFINITIONS
+
+HIGH CONFIDENCE - 85 TO 100 PERCENT CERTAINTY
+
+Criteria for High Confidence
+
+- Multiple authoritative sources agree on finding
+- Data is recent, within twelve months of analysis date
+- Direct evidence from verified primary sources
+- Established industry benchmarks support conclusion
+- Methodology is well-documented and replicable
+- Sample sizes are statistically significant where applicable
+- No significant conflicting evidence exists
+
+Language Patterns for High Confidence
+
+- Evidence strongly indicates...
+- Data confirms...
+- Analysis demonstrates...
+- Research verifies...
+- Multiple sources establish...
+- The evidence clearly shows...
+- We can state with confidence that...
+
+Example Applications
+
+- Market size is USD 4.2B (HIGH CONFIDENCE - three analyst reports from Q3 2024 align within 5 percent variance)
+- Customer acquisition cost reduction of 20 percent is achievable (HIGH CONFIDENCE - five comparable implementations documented with similar results)
+- Channel mix recommendation is optimal (HIGH CONFIDENCE - validated against industry benchmarks and client historical performance)
+
+MEDIUM CONFIDENCE - 60 TO 84 PERCENT CERTAINTY
+
+Criteria for Medium Confidence
+
+- Limited but credible sources support finding
+- Data is somewhat dated, twelve to twenty-four months old
+- Indirect evidence or proxy metrics used
+- Emerging patterns not yet fully established
+- Some assumptions required but well-reasoned
+- Single authoritative source without corroboration
+- Minor conflicting evidence exists but is explained
+
+Language Patterns for Medium Confidence
+
+- Evidence suggests...
+- Analysis indicates...
+- Available data implies...
+- Patterns point to...
+- Preliminary findings show...
+- Based on current information...
+- The balance of evidence suggests...
+
+Example Applications
+
+- Competitor likely to enter market segment within twelve months (MEDIUM CONFIDENCE - industry signals and hiring patterns suggest expansion but no official announcement)
+- Technology migration will improve efficiency by 15 to 20 percent (MEDIUM CONFIDENCE - two case studies from similar industries show this range)
+- Budget allocation should shift toward digital channels (MEDIUM CONFIDENCE - emerging benchmark data supports this but sample sizes remain limited)
+
+LOW CONFIDENCE - 40 TO 59 PERCENT CERTAINTY
+
+Criteria for Low Confidence
+
+- Single source or conflicting sources without resolution
+- Data is old, more than twenty-four months
+- Significant assumptions required
+- Limited sample size or anecdotal evidence
+- Novel situation with limited precedent
+- Methodology limitations acknowledged
+- Expert judgment without supporting data
+
+Language Patterns for Low Confidence
+
+- Preliminary analysis suggests...
+- Based on limited available data...
+- Assuming stated conditions hold, this indicates...
+- Initial assessment points to...
+- With noted caveats, evidence suggests...
+- Early indicators show...
+- Directional findings suggest...
+
+Example Applications
+
+- Pricing strategy could increase margins by 15 to 20 percent (LOW CONFIDENCE - limited comparable cases and significant market differences)
+- New market entry would require USD 2M to 5M investment (LOW CONFIDENCE - wide range reflects uncertainty in competitive response)
+- Implementation timeline of eighteen months is feasible (LOW CONFIDENCE - novel technology stack with single vendor estimate)
+
+SPECULATIVE - BELOW 40 PERCENT CERTAINTY
+
+Criteria for Speculative Assessment
+
+- Insufficient data to form evidence-based view
+- Purely directional guidance based on general principles
+- No relevant benchmarks or precedent available
+- Significant unknowns remain unresolved
+- Analysis would require primary research to validate
+
+Language Patterns for Speculative Assessment
+
+- Without additional data, we hypothesize...
+- Directionally, this might indicate...
+- For planning purposes only, consider...
+- Subject to validation through research...
+- As a working hypothesis...
+
+Example Applications
+
+- Market timing appears favorable but requires validation (SPECULATIVE - insufficient data on competitive dynamics)
+- Customer response may be positive based on general trends (SPECULATIVE - no direct research on target segment)
+
+Note - Speculative assessments should prompt recommendations for additional research before major decisions.
+
+========================================
+
+CONFIDENCE CALCULATION FACTORS
+
+When determining confidence level, agents should consider four primary factors and weight them according to situation.
+
+FACTOR 1 - DATA RECENCY
+
+- Within six months - Full confidence weight, no degradation
+- Six to twelve months - Minor degradation, still current for most purposes
+- Twelve to twenty-four months - Moderate degradation, verify major trends have not shifted
+- Over twenty-four months - Significant degradation, use with explicit caveat
+- Over thirty-six months - Generally not suitable as primary evidence
+
+FACTOR 2 - SOURCE QUALITY
+
+Refer to EAP_KB_Data_Provenance for complete tier definitions
+
+- Tier 1 sources - Full confidence weight
+- Tier 2 sources - Slight reduction in confidence weight
+- Tier 3 sources - Significant reduction, require corroboration
+- Tier 3 alone - Cannot support HIGH confidence findings
+
+FACTOR 3 - SAMPLE SIZE AND REPRESENTATIVENESS
+
+- Large representative sample - Full confidence weight
+- Moderate sample with some representation gaps - Minor degradation
+- Small sample or convenience sample - Moderate degradation
+- Single case or anecdotal - Significant degradation, treat as directional only
+
+FACTOR 4 - METHODOLOGY RIGOR
+
+- Documented methodology, peer-reviewed or validated - Full confidence weight
+- Documented methodology, industry-standard approach - Minor degradation
+- Methodology described but not validated - Moderate degradation
+- Methodology unclear or absent - Significant degradation
+
+COMBINED FACTOR ASSESSMENT
+
+Overall confidence is limited by weakest factor. Strong performance on three factors cannot overcome critical weakness on fourth factor.
+
+Example - Tier 1 source with rigorous methodology but thirty-six-month-old data and small sample cannot achieve HIGH confidence regardless of source authority.
+
+========================================
+
+UNCERTAINTY COMMUNICATION STANDARDS
+
+WHEN TO USE RANGES VERSUS POINT ESTIMATES
+
+Use Point Estimates When
+
+- HIGH confidence findings with narrow variance
+- Industry standard metrics with established precision
+- Client-provided data accepted as accurate
+- Simple calculations from verified inputs
+
+Use Ranges When
+
+- MEDIUM or LOW confidence findings
+- Significant assumptions could swing results
+- Multiple scenarios are plausible
+- Methodology produces confidence intervals naturally
+
+Range Presentation Standards
+
+- Narrow range for MEDIUM confidence - Plus or minus 10 to 20 percent
+- Wide range for LOW confidence - Plus or minus 20 to 40 percent or explicit min-max bounds
+- Scenario ranges for strategic options - Best case, base case, worst case with probability weights
+
+MANDATORY CAVEATS BY CONFIDENCE LEVEL
+
+HIGH Confidence Outputs
+
+- No mandatory caveat required
+- Optional - Note source and date for transparency
+
+MEDIUM Confidence Outputs
+
+- Required caveat format - This finding assumes [key assumption]. Confidence would increase with [specific additional data or validation].
+- Must note primary limitation or assumption
+
+LOW Confidence Outputs
+
+- Required caveat format - This preliminary finding is based on [limited evidence type]. Before major decisions, recommend [specific validation step].
+- Must identify path to higher confidence
+
+SPECULATIVE Outputs
+
+- Required caveat format - This directional view requires validation through [specific research or data gathering] before use in decision-making.
+- Must explicitly label as hypothesis or working assumption
+
+========================================
+
+PRESENTATION STANDARDS
+
+INLINE CONFIDENCE INDICATORS
+
+For conversational outputs and analysis narrative
+
+Format - [Finding statement] ([CONFIDENCE LEVEL] - [brief rationale])
+
+Examples
+
+- Market growth will exceed fifteen percent annually (HIGH CONFIDENCE - three analyst forecasts from 2024 align within two points)
+- Customer segment shows high potential (MEDIUM CONFIDENCE - two case studies, limited direct segment research)
+- Implementation risk is manageable (LOW CONFIDENCE - novel approach with single comparable project)
+
+TABLE AND CHART INDICATORS
+
+For tabular data and visualizations
+
+- Include Confidence column in data tables
+- Use consistent indicators - H for High, M for Medium, L for Low, S for Speculative
+- Add footnote explaining confidence methodology if table shared externally
+
+DELIVERABLE DOCUMENT STANDARDS
+
+For formal documents and presentations
+
+- Executive Summary should note overall confidence profile
+- Findings section should include inline confidence for each major finding
+- Recommendations should explicitly note confidence level supporting each recommendation
+- Appendix should include complete Research Quality Summary per EAP_KB_Data_Provenance
+
+========================================
+
+ESCALATION AND DECISION THRESHOLDS
+
+WHEN TO ESCALATE CONFIDENCE CONCERNS
+
+If analysis relies primarily on LOW confidence data
+
+- Explicitly state limitations to stakeholders before presenting recommendations
+- Recommend additional research before major capital or strategic decisions
+- Offer to refine analysis with additional client data or commissioned research
+- Identify specific data that would increase confidence
+
+If confidence levels conflict across related findings
+
+- Present range of potential outcomes reflecting uncertainty
+- Weight recommendations by confidence of supporting evidence
+- Identify which findings drive key decision points
+- Note where single finding weakness undermines broader conclusion
+
+DECISION THRESHOLD GUIDANCE
+
+HIGH CONFIDENCE required for
+
+- Large capital allocation decisions over USD 1M
+- Strategic pivots affecting core business
+- Public commitments or announcements
+- Regulatory compliance determinations
+
+MEDIUM CONFIDENCE acceptable for
+
+- Tactical budget allocation within established strategy
+- Pilot program design and scope
+- Internal planning and scenario development
+- Preliminary project scoping
+
+LOW CONFIDENCE acceptable only for
+
+- Early-stage exploration and ideation
+- Directional guidance pending further research
+- Risk identification for further investigation
+- Hypothesis development for validation
+
+========================================
+
+CONFIDENCE OVER TIME
+
+CONFIDENCE DECAY
+
+Static findings degrade over time as market conditions evolve
+
+- HIGH confidence findings remain HIGH for six months, then degrade to MEDIUM
+- MEDIUM confidence findings degrade to LOW after twelve months without refresh
+- LOW confidence findings should not be cited after eighteen months without validation
+
+CONFIDENCE IMPROVEMENT
+
+Confidence can be improved through
+
+- Additional corroborating sources at same or higher tier
+- More recent data replacing dated sources
+- Primary research validating secondary sources
+- Client data confirming external benchmarks
+- Successful pilot or implementation validating projections
+
+========================================
+
+AGENT-SPECIFIC APPLICATIONS
+
+ANALYTICS AGENT - ANL
+
+- Financial projections must include confidence band
+- Sensitivity analysis should show confidence range for key assumptions
+- Monte Carlo outputs should report confidence intervals explicitly
+
+AUDIENCE AGENT - AUD
+
+- Segment prioritization must note confidence in segment sizing
+- LTV projections must include confidence based on data recency and sample
+- Propensity scores should indicate model confidence
+
+CHANNEL AGENT - CHA
+
+- Channel mix recommendations must note benchmark confidence
+- Budget allocation should include confidence-weighted scenarios
+- Partner assessments need explicit confidence for each evaluation dimension
+
+CONSULTING STRATEGY AGENT - CST
+
+- Framework recommendations should note confidence in situational fit
+- Strategic options must include confidence for underlying assumptions
+- Prioritization scores should reflect confidence in scoring inputs
+
+CHANGE MANAGEMENT AGENT - CHG
+
+- Readiness assessments must note confidence based on data sources
+- Stakeholder analysis should indicate confidence in influence mapping
+- Adoption projections require confidence intervals
+
+========================================
+
+END OF CONFIDENCE LEVEL FRAMEWORK
+
+Document maintained by KDAP Platform Team
+Last updated January 2026

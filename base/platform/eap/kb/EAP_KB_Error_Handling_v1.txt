@@ -1,0 +1,389 @@
+ERROR HANDLING AND GRACEFUL DEGRADATION
+
+KESSEL DIGITAL AGENT PLATFORM - SHARED KNOWLEDGE BASE
+Version 1.0
+Document Code EAP-KB-EH-001
+
+This document establishes platform-wide standards for handling errors, managing failures gracefully, and communicating issues to users constructively. All agents must follow these patterns to ensure consistent, professional user experience even when problems occur.
+
+========================================
+
+ERROR CATEGORIES
+
+CATEGORY 1 - DATA ERRORS
+
+Data errors occur when required information is missing, invalid, malformed, or stale.
+
+Missing Data Errors
+
+- Required input field not provided by user
+- Expected data source returns empty result
+- Referenced document or record does not exist
+- Linked data relationship broken or orphaned
+
+Invalid Data Errors
+
+- Input fails format validation such as date, currency, percentage
+- Value falls outside acceptable range for parameter
+- Data type mismatch between expected and received
+- Conflicting values that cannot be reconciled
+
+Malformed Data Errors
+
+- Corrupted file or document structure
+- Truncated or incomplete data transmission
+- Character encoding issues in text content
+- Schema violation in structured data
+
+Stale Data Errors
+
+- Cached data exceeds freshness threshold
+- Referenced benchmark or metric is outdated
+- Source document has been superseded
+- Time-sensitive information has expired
+
+CATEGORY 2 - CAPABILITY ERRORS
+
+Capability errors occur when agent functions or external services fail to execute properly.
+
+Timeout Errors
+
+- Operation exceeds maximum allowed duration
+- External API call does not respond within limit
+- Long-running calculation interrupted
+- Connection timeout to external service
+
+Unavailability Errors
+
+- Required capability is disabled or not deployed
+- External service is down for maintenance
+- Rate limit exceeded on external API
+- Resource quota exhausted
+
+Execution Errors
+
+- Calculation produces invalid result such as division by zero
+- Logic error in capability implementation
+- Memory or resource constraint prevents completion
+- Unexpected exception during processing
+
+Dependency Errors
+
+- Required upstream capability failed
+- Prerequisite data from another agent unavailable
+- External service dependency unresolvable
+- Chain of capabilities broken at intermediate step
+
+CATEGORY 3 - ROUTING ERRORS
+
+Routing errors occur when the orchestrator cannot properly direct user requests.
+
+Unknown Intent Errors
+
+- User request does not match any known intent pattern
+- Request is too vague to classify with confidence
+- Multiple conflicting intents detected in single request
+- Domain of request falls outside platform scope
+
+Ambiguous Routing Errors
+
+- Request could be handled by multiple agents equally
+- User context suggests different routing than request content
+- Prior conversation context conflicts with current request
+- Routing confidence below threshold for all candidates
+
+Handoff Errors
+
+- Target agent rejects handoff request
+- Context transfer fails between agents
+- Session continuity breaks during routing
+- Return path from specialized agent unclear
+
+CATEGORY 4 - USER ERRORS
+
+User errors occur when input from the user prevents successful completion.
+
+Insufficient Input Errors
+
+- Required parameters not provided
+- Context needed for request is missing
+- Ambiguous request requires clarification
+- Multi-part request missing key component
+
+Invalid Request Errors
+
+- Request violates platform policies
+- Requested action is not permitted
+- Request requires capabilities not available to user
+- Request conflicts with session constraints
+
+Misunderstanding Errors
+
+- User expectation differs from platform capability
+- Terminology confusion between user and platform
+- Scope of request exceeds what can be delivered
+- Format expectation does not match platform output
+
+========================================
+
+GRACEFUL DEGRADATION PATTERNS
+
+PATTERN 1 - PRIMARY TO FALLBACK CAPABILITY
+
+When primary capability fails, attempt fallback before reporting failure.
+
+Degradation Sequence
+
+- Attempt primary capability with full parameters
+- If primary fails, log error and reason
+- Attempt fallback capability with adjusted parameters
+- If fallback succeeds, note degradation in response
+- If fallback fails, proceed to user notification
+
+Fallback Disclosure Format
+
+- Note original capability attempted and reason for fallback
+- Explain any difference in result quality or scope
+- Offer path to retry primary if appropriate
+
+Example - Full financial projection unavailable due to API timeout. Providing simplified estimate based on historical averages. For detailed projection, please retry in a few minutes.
+
+PATTERN 2 - PARTIAL RESULTS WITH DISCLOSURE
+
+When complete results cannot be obtained, provide partial results with clear disclosure.
+
+Partial Result Standards
+
+- Clearly indicate which portions are complete versus incomplete
+- Explain what prevented complete results
+- Note confidence impact on overall findings
+- Suggest how to obtain missing portions
+
+Partial Result Format
+
+PARTIAL RESULTS NOTE
+Complete: [list of complete components]
+Incomplete: [list of incomplete components]
+Reason: [explanation of limitation]
+Impact: [how this affects overall analysis]
+Next steps: [how user can address gaps]
+
+Example Application
+
+PARTIAL RESULTS NOTE
+Complete: Market size, growth rate, top 5 competitors
+Incomplete: Competitor market share breakdown
+Reason: Third-party data source returned incomplete response
+Impact: Competitive positioning analysis is directional only
+Next steps: Client-provided competitive intelligence could fill this gap
+
+PATTERN 3 - ESTIMATION WHEN EXACT UNAVAILABLE
+
+When exact data is unavailable, provide reasoned estimates with clear labeling.
+
+Estimation Standards
+
+- Label all estimates explicitly
+- Explain estimation methodology
+- Provide confidence range around estimate
+- Note what data would improve estimate
+
+Estimation Disclosure Format
+
+This value is ESTIMATED based on [methodology]. Estimated range is [low] to [high]. Confidence would improve with [specific data or validation].
+
+PATTERN 4 - ALTERNATIVE APPROACH SUGGESTION
+
+When requested approach cannot be executed, suggest viable alternatives.
+
+Alternative Suggestion Standards
+
+- Acknowledge original request and limitation
+- Explain why original approach is not available
+- Offer one to three specific alternatives
+- Help user choose among alternatives if needed
+
+Alternative Format
+
+I cannot [original request] because [reason]. However, I can offer these alternatives:
+
+Option 1: [alternative approach] - [brief description of what this achieves]
+Option 2: [alternative approach] - [brief description of what this achieves]
+
+Which would be most helpful for your needs?
+
+========================================
+
+USER-FACING ERROR MESSAGES
+
+ERROR MESSAGE PRINCIPLES
+
+All error messages must follow these principles
+
+- Never blame the user - Frame as system limitation or clarification need
+- Be specific - Explain what happened in plain language
+- Be actionable - Tell user what they can do next
+- Be concise - Keep error messages to two to three sentences maximum
+- Maintain tone - Stay professional and helpful even when reporting problems
+
+ERROR MESSAGE STRUCTURE
+
+Standard error message structure
+
+What happened: [Brief, clear description of the issue]
+What you can do: [Specific action user can take]
+What I will try: [What agent will attempt as alternative, if applicable]
+
+ERROR MESSAGE EXAMPLES BY CATEGORY
+
+Data Error Messages
+
+Missing data - I need additional information to complete this analysis. Could you provide [specific missing data]? This will help me [what the data enables].
+
+Invalid data - The [specific field] format does not match what I expected. Could you provide it as [expected format]? For example: [example of correct format].
+
+Stale data - The benchmark data I have for [topic] is from [date], which may not reflect current conditions. Would you like me to proceed with this data, or would you prefer I search for more recent information?
+
+Capability Error Messages
+
+Timeout - The calculation is taking longer than expected. I can either continue waiting, provide a simplified estimate now, or we can try again with a smaller scope. What would you prefer?
+
+Unavailable - The detailed [capability name] feature is temporarily unavailable. I can provide [alternative approach] instead. Would that be helpful?
+
+Routing Error Messages
+
+Unknown intent - I want to make sure I help you with the right thing. Could you tell me a bit more about what you are trying to accomplish? Are you looking to [option 1], [option 2], or something else?
+
+Ambiguous - I could approach this from a few angles. Are you most interested in [interpretation 1] or [interpretation 2]? This will help me give you the most relevant analysis.
+
+User Error Messages
+
+Insufficient input - To provide [requested output], I need to understand [missing context]. Could you share [specific question]?
+
+Scope mismatch - That request involves [scope element] which is outside what I can help with. I can help you with [in-scope alternative]. Would that be useful?
+
+========================================
+
+ESCALATION RULES
+
+WHEN TO ASK FOR CLARIFICATION
+
+Ask for clarification when
+
+- Request intent is genuinely ambiguous among two or more options
+- Critical parameter is missing and cannot be reasonably assumed
+- User statement contradicts earlier information in session
+- Request scope is unclear and different scopes lead to very different work
+
+Do not ask for clarification when
+
+- Reasonable default can be assumed
+- Question would be pedantic or obvious
+- Clarification would not materially change response
+- User has already provided sufficient context in session
+
+Clarification Request Format
+
+Ask one specific question at a time. Explain why the clarification helps.
+
+Example - Are you looking for this analysis at the company level or the business unit level? The company view would include [X], while business unit would focus on [Y].
+
+WHEN TO OFFER ALTERNATIVES
+
+Offer alternatives when
+
+- Primary requested approach is not available
+- User may not be aware of better approaches
+- Request has obvious limitations that alternatives would address
+- Multiple valid approaches exist and user preference matters
+
+Alternative Offer Format
+
+Present two to three alternatives maximum. Briefly explain trade-offs. Ask which user prefers rather than choosing for them.
+
+WHEN TO ACKNOWLEDGE LIMITATION
+
+Acknowledge limitation when
+
+- Request is fundamentally outside platform scope
+- No reasonable alternative exists
+- Quality of possible output would be unacceptably low
+- Proceeding would waste user time or create confusion
+
+Limitation Acknowledgment Format
+
+Be direct but helpful. Explain what the platform can and cannot do. Suggest external resources if appropriate.
+
+Example - I am not able to provide legal advice on this contract question. This is an area where you would need to consult with a qualified attorney. I can help you prepare questions to discuss with legal counsel, or provide general business context around [related topic].
+
+========================================
+
+RECOVERY STRATEGIES
+
+AUTOMATIC RETRY LOGIC
+
+Agents should implement automatic retry for transient failures
+
+- Retry up to three times with exponential backoff
+- Log each retry attempt and result
+- Only retry for transient failures such as timeouts and temporary unavailability
+- Do not retry for permanent failures such as invalid input or authorization failure
+
+CONTEXT PRESERVATION
+
+When errors interrupt multi-step processes
+
+- Save completed work to session state
+- Inform user what was completed before error
+- Offer to resume from last successful point
+- Do not require user to re-enter previously provided information
+
+FEEDBACK LOOP
+
+For persistent or unusual errors
+
+- Log error details for platform team review
+- Note error category and context for analysis
+- Track error frequency to identify systemic issues
+- Use error patterns to improve agent behavior
+
+========================================
+
+AGENT-SPECIFIC ERROR HANDLING
+
+ORCHESTRATOR - ORC
+
+- When intent unclear, present top two to three routing options
+- When multiple agents needed, coordinate error handling across handoffs
+- Maintain session continuity even when individual agent calls fail
+
+ANALYTICS AGENT - ANL
+
+- When calculation fails, provide simplified estimate with caveat
+- When external data unavailable, use most recent cached data with disclosure
+- When projection assumptions invalid, explain constraints and ask for adjustment
+
+CONSULTING STRATEGY AGENT - CST
+
+- When framework selection unclear, present options with trade-offs
+- When industry data missing, proceed with general frameworks and note limitation
+- When prioritization data incomplete, provide partial ranking with gaps noted
+
+CHANGE MANAGEMENT AGENT - CHG
+
+- When stakeholder data missing, provide template for client to complete
+- When readiness assessment incomplete, note which dimensions need more input
+- When adoption metrics unavailable, suggest proxy measures
+
+DOCUMENT AGENT - DOC
+
+- When template not available, use closest match with customization
+- When content exceeds limits, split into sections with clear navigation
+- When formatting fails, provide plain text alternative
+
+========================================
+
+END OF ERROR HANDLING AND GRACEFUL DEGRADATION
+
+Document maintained by KDAP Platform Team
+Last updated January 2026

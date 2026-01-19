@@ -1,0 +1,91 @@
+{
+  "table_name": "ca_deliverable",
+  "display_name": "CA Deliverable",
+  "description": "Consulting deliverable tracking",
+  "columns": [
+    {
+      "name": "ca_deliverableid",
+      "display_name": "Deliverable ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "deliverable_code",
+      "display_name": "Deliverable Code",
+      "type": "nvarchar",
+      "max_length": 30,
+      "required": true
+    },
+    {
+      "name": "deliverable_name",
+      "display_name": "Deliverable Name",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": true
+    },
+    {
+      "name": "project_id",
+      "display_name": "Project",
+      "type": "lookup",
+      "lookup_table": "ca_project",
+      "required": true
+    },
+    {
+      "name": "deliverable_type",
+      "display_name": "Deliverable Type",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "Analysis"},
+        {"value": 2, "label": "Business Case"},
+        {"value": 3, "label": "Roadmap"},
+        {"value": 4, "label": "Presentation"},
+        {"value": 5, "label": "Report"},
+        {"value": 6, "label": "Workshop"}
+      ]
+    },
+    {
+      "name": "framework_code",
+      "display_name": "Framework Used",
+      "type": "nvarchar",
+      "max_length": 20,
+      "required": false
+    },
+    {
+      "name": "deliverable_status",
+      "display_name": "Status",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "Draft"},
+        {"value": 2, "label": "In Review"},
+        {"value": 3, "label": "Approved"},
+        {"value": 4, "label": "Final"},
+        {"value": 5, "label": "Archived"}
+      ]
+    },
+    {
+      "name": "file_url",
+      "display_name": "File URL",
+      "type": "nvarchar",
+      "max_length": 500,
+      "required": false
+    },
+    {
+      "name": "created_at",
+      "display_name": "Created At",
+      "type": "datetime",
+      "required": true,
+      "auto_generated": true
+    },
+    {
+      "name": "modified_at",
+      "display_name": "Modified At",
+      "type": "datetime",
+      "required": false,
+      "auto_generated": true
+    }
+  ]
+}

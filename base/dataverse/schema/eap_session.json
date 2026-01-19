@@ -1,0 +1,125 @@
+{
+  "table_name": "eap_session",
+  "display_name": "EAP Session",
+  "description": "Platform-level session tracking for all agents",
+  "columns": [
+    {
+      "name": "eap_sessionid",
+      "display_name": "Session ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "session_code",
+      "display_name": "Session Code",
+      "type": "nvarchar",
+      "max_length": 50,
+      "required": true
+    },
+    {
+      "name": "user_id",
+      "display_name": "User ID",
+      "type": "nvarchar",
+      "max_length": 100,
+      "required": true
+    },
+    {
+      "name": "agent_code",
+      "display_name": "Primary Agent",
+      "type": "nvarchar",
+      "max_length": 10,
+      "required": true
+    },
+    {
+      "name": "session_status",
+      "display_name": "Status",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "ACTIVE"},
+        {"value": 2, "label": "PAUSED"},
+        {"value": 3, "label": "COMPLETED"},
+        {"value": 4, "label": "ABANDONED"},
+        {"value": 5, "label": "ERROR"}
+      ]
+    },
+    {
+      "name": "environment_code",
+      "display_name": "Environment",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "MASTERCARD"},
+        {"value": 2, "label": "PERSONAL"}
+      ]
+    },
+    {
+      "name": "current_step",
+      "display_name": "Current Step",
+      "type": "int",
+      "required": false,
+      "default": 1
+    },
+    {
+      "name": "pathway_code",
+      "display_name": "Pathway",
+      "type": "choice",
+      "required": false,
+      "choices": [
+        {"value": 1, "label": "EXPRESS"},
+        {"value": 2, "label": "STANDARD"},
+        {"value": 3, "label": "GUIDED"},
+        {"value": 4, "label": "AUDIT"}
+      ]
+    },
+    {
+      "name": "session_data_json",
+      "display_name": "Session Data",
+      "type": "nvarchar",
+      "max_length": 32000,
+      "required": false
+    },
+    {
+      "name": "context_json",
+      "display_name": "Context",
+      "type": "nvarchar",
+      "max_length": 16000,
+      "required": false
+    },
+    {
+      "name": "started_at",
+      "display_name": "Started At",
+      "type": "datetime",
+      "required": true,
+      "auto_generated": true
+    },
+    {
+      "name": "last_activity_at",
+      "display_name": "Last Activity",
+      "type": "datetime",
+      "required": false
+    },
+    {
+      "name": "completed_at",
+      "display_name": "Completed At",
+      "type": "datetime",
+      "required": false
+    },
+    {
+      "name": "total_interactions",
+      "display_name": "Total Interactions",
+      "type": "int",
+      "required": false,
+      "default": 0
+    },
+    {
+      "name": "total_tokens_used",
+      "display_name": "Total Tokens Used",
+      "type": "int",
+      "required": false,
+      "default": 0
+    }
+  ]
+}

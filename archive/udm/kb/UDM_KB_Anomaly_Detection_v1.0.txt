@@ -1,0 +1,448 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 13895
+
+PURPOSE
+
+This knowledge base provides the Unstructured Data Mining Agent with methodologies for detecting anomalies in unstructured data streams including unusual text patterns, visual content deviations, and behavioral signals requiring investigation.
+
+ANOMALY DETECTION FUNDAMENTALS
+
+Identifying observations that deviate significantly from expected patterns.
+
+ANOMALY TYPES
+
+Categories of anomalous patterns in marketing data.
+
+Point anomalies
+- Individual observations differing from norm
+- Single event outliers
+- Isolated metric spikes or drops
+- One-time unusual occurrences
+
+Contextual anomalies
+- Normal values in abnormal context
+- Seasonal expectation violations
+- Location or segment specific deviations
+- Time-dependent anomalies
+
+Collective anomalies
+- Groups of related unusual observations
+- Pattern sequences that are abnormal together
+- Correlated metric deviations
+- System-wide unusual behavior
+
+DETECTION APPROACHES
+
+Methodological categories for anomaly detection.
+
+Supervised detection
+- Labeled anomaly training data
+- Classification model training
+- Known anomaly pattern matching
+- Historical incident learning
+
+Unsupervised detection
+- No labeled data required
+- Statistical distribution modeling
+- Clustering-based approaches
+- Density estimation methods
+
+Semi-supervised detection
+- Normal class only training
+- One-class classification
+- Autoencoder reconstruction
+- Hybrid labeled and unlabeled approaches
+
+THRESHOLD SETTING
+
+Determining anomaly decision boundaries.
+
+Static thresholds
+- Fixed deviation limits
+- Absolute value boundaries
+- Percentage-based limits
+- Expert-defined cutoffs
+
+Dynamic thresholds
+- Rolling baseline calculation
+- Adaptive limit adjustment
+- Seasonal threshold variation
+- Volume-weighted boundaries
+
+Statistical thresholds
+- Standard deviation multiples
+- Percentile-based limits
+- Confidence interval boundaries
+- Probability-based cutoffs
+
+TEXT ANOMALY DETECTION
+
+Identifying unusual patterns in text data.
+
+CONTENT ANOMALIES
+
+Unusual text content patterns.
+
+Topic deviation detection
+- Expected topic distribution modeling
+- New topic emergence identification
+- Topic proportion shift detection
+- Off-topic content flagging
+
+Sentiment anomalies
+- Baseline sentiment modeling
+- Sudden sentiment shift detection
+- Extreme sentiment identification
+- Sentiment volatility spikes
+
+Language pattern changes
+- Writing style deviation
+- Vocabulary shift detection
+- Formality level changes
+- Tone inconsistency identification
+
+VOLUME ANOMALIES
+
+Unusual text volume patterns.
+
+Mention volume anomalies
+- Expected volume modeling
+- Spike detection algorithms
+- Unusual silence detection
+- Velocity change identification
+
+Source distribution anomalies
+- Expected source proportions
+- New source emergence
+- Source dropout detection
+- Platform shift identification
+
+Author pattern anomalies
+- Normal author distribution
+- Bot activity indicators
+- Coordinated posting patterns
+- Unusual author concentration
+
+SEMANTIC ANOMALIES
+
+Meaning and context-based anomalies.
+
+Entity anomalies
+- Unexpected entity mentions
+- Entity co-occurrence violations
+- Missing expected entities
+- Entity sentiment mismatches
+
+Relationship anomalies
+- Unexpected topic connections
+- New association emergence
+- Broken expected relationships
+- Contextual misalignment
+
+Narrative anomalies
+- Story arc disruption
+- Messaging inconsistency
+- Claim contradiction detection
+- Timeline inconsistencies
+
+VISUAL ANOMALY DETECTION
+
+Identifying unusual patterns in image and video content.
+
+IMAGE CONTENT ANOMALIES
+
+Unusual visual content detection.
+
+Object anomalies
+- Unexpected object presence
+- Missing expected elements
+- Object proportion violations
+- Unusual object combinations
+
+Composition anomalies
+- Layout deviation from norms
+- Unexpected framing patterns
+- Brand guideline violations
+- Quality degradation detection
+
+Style anomalies
+- Color palette deviations
+- Filter or effect changes
+- Lighting inconsistencies
+- Brand identity divergence
+
+VIDEO TEMPORAL ANOMALIES
+
+Time-based video irregularities.
+
+Pacing anomalies
+- Unusual cut frequency
+- Scene duration deviations
+- Rhythm pattern breaks
+- Energy level inconsistencies
+
+Content flow anomalies
+- Narrative structure violations
+- Missing expected segments
+- Unexpected content insertion
+- Sequence order disruption
+
+Quality anomalies
+- Resolution degradation
+- Audio sync issues
+- Frame drop detection
+- Encoding artifacts
+
+CREATIVE PERFORMANCE ANOMALIES
+
+Creative asset effectiveness deviations.
+
+Performance metric anomalies
+- CTR deviation from baseline
+- Engagement rate drops
+- Conversion rate spikes
+- Cost metric irregularities
+
+Fatigue indicators
+- Performance decline patterns
+- Audience saturation signals
+- Frequency cap violations
+- Diminishing returns detection
+
+BEHAVIORAL ANOMALY DETECTION
+
+Identifying unusual user and system behaviors.
+
+USER BEHAVIOR ANOMALIES
+
+Individual and aggregate user pattern deviations.
+
+Session anomalies
+- Unusual session duration
+- Abnormal page depth
+- Strange navigation patterns
+- Unexpected conversion paths
+
+Engagement anomalies
+- Interaction rate deviations
+- Click pattern irregularities
+- Scroll behavior changes
+- Form interaction anomalies
+
+Conversion anomalies
+- Unusual conversion timing
+- Abnormal order values
+- Strange product combinations
+- Checkout flow irregularities
+
+TRAFFIC ANOMALIES
+
+Website and campaign traffic irregularities.
+
+Volume anomalies
+- Traffic spike detection
+- Unexpected traffic drops
+- Source distribution shifts
+- Geographic pattern changes
+
+Quality anomalies
+- Bounce rate deviations
+- Bot traffic indicators
+- Invalid traffic patterns
+- Engagement quality drops
+
+Attribution anomalies
+- Source tracking breaks
+- Campaign parameter issues
+- Referrer inconsistencies
+- UTM pattern violations
+
+SYSTEM BEHAVIOR ANOMALIES
+
+Technical system irregularities.
+
+Performance anomalies
+- Response time deviations
+- Error rate increases
+- Timeout frequency spikes
+- Processing delay patterns
+
+Data anomalies
+- Missing data patterns
+- Data freshness issues
+- Schema violations
+- Integration failures
+
+Configuration anomalies
+- Setting change impacts
+- Tag firing irregularities
+- Pixel tracking issues
+- API response changes
+
+DETECTION ALGORITHMS
+
+Technical approaches for anomaly identification.
+
+STATISTICAL METHODS
+
+Distribution-based anomaly detection.
+
+Z-score detection
+- Standard deviation calculation
+- Threshold multiple selection
+- Rolling window application
+- Seasonal adjustment
+
+Interquartile range method
+- Quartile calculation
+- IQR multiplier selection
+- Outlier boundary definition
+- Robust to extreme values
+
+Grubbs test
+- Single outlier testing
+- Sequential application
+- Statistical significance
+- Assumption requirements
+
+MACHINE LEARNING METHODS
+
+Model-based anomaly detection.
+
+Isolation forest
+- Random partitioning approach
+- Anomaly score calculation
+- Contamination parameter
+- Feature importance analysis
+
+One-class SVM
+- Normal class boundary learning
+- Kernel selection options
+- Nu parameter tuning
+- Support vector identification
+
+Autoencoder reconstruction
+- Normal pattern encoding
+- Reconstruction error thresholding
+- Architecture design choices
+- Training data requirements
+
+CLUSTERING METHODS
+
+Density and distance-based detection.
+
+DBSCAN outliers
+- Density-based clustering
+- Noise point identification
+- Parameter selection epsilon and minPts
+- Cluster-based anomaly scoring
+
+Local outlier factor
+- Local density comparison
+- K-neighbor selection
+- LOF score interpretation
+- Contextual anomaly detection
+
+K-means distance
+- Cluster centroid distances
+- Distance threshold setting
+- Cluster assignment confidence
+- Iterative refinement
+
+ALERT AND RESPONSE
+
+Operationalizing anomaly detection.
+
+ALERT PRIORITIZATION
+
+Ranking anomalies for attention.
+
+Severity scoring
+- Impact magnitude assessment
+- Business criticality weighting
+- Historical severity patterns
+- Confidence level incorporation
+
+Priority factors
+- Detection confidence level
+- Business impact potential
+- Response urgency requirements
+- Dependency and cascading effects
+
+Alert routing
+- Team assignment rules
+- Escalation pathways
+- On-call rotation integration
+- Multi-channel notification
+
+INVESTIGATION WORKFLOW
+
+Structured anomaly investigation.
+
+Initial assessment
+- Anomaly context gathering
+- Related metric review
+- Historical pattern checking
+- Quick impact estimation
+
+Root cause analysis
+- Hypothesis generation
+- Data exploration steps
+- Correlation investigation
+- Cause confirmation
+
+Resolution tracking
+- Issue documentation
+- Resolution action logging
+- Prevention measure identification
+- Knowledge base updates
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for anomaly detection operations.
+
+DETECTION PIPELINES
+
+Standard workflows for anomaly monitoring.
+
+Real-time detection pipeline
+- Streaming data ingestion
+- Online anomaly scoring
+- Immediate alert generation
+- Dashboard status updates
+
+Batch detection pipeline
+- Periodic data collection
+- Comprehensive analysis
+- Report generation
+- Trend anomaly identification
+
+CROSS-AGENT INTEGRATION
+
+Anomaly outputs for downstream agents.
+
+Outputs to PRF Agent
+- Performance anomaly alerts
+- Severity and priority scores
+- Investigation context data
+- Recommended response actions
+
+Outputs to ANL Agent
+- Anomaly-cleaned datasets
+- Outlier flagging for models
+- Data quality indicators
+- Baseline adjustment signals
+
+Outputs to ORC Agent
+- Workflow disruption alerts
+- System health indicators
+- Process anomaly flags
+- Resource anomaly warnings
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive anomaly detection methodology for unstructured data

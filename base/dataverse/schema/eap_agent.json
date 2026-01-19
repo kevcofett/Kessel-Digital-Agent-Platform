@@ -1,0 +1,117 @@
+{
+  "table_name": "eap_agent",
+  "display_name": "EAP Agent",
+  "description": "Registry of all agents in the system with their capabilities and routing metadata",
+  "columns": [
+    {
+      "name": "eap_agentid",
+      "display_name": "Agent ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "agent_code",
+      "display_name": "Agent Code",
+      "type": "nvarchar",
+      "max_length": 10,
+      "required": true
+    },
+    {
+      "name": "agent_name",
+      "display_name": "Agent Name",
+      "type": "nvarchar",
+      "max_length": 100,
+      "required": true
+    },
+    {
+      "name": "description",
+      "display_name": "Description",
+      "type": "nvarchar",
+      "max_length": 2000,
+      "required": false
+    },
+    {
+      "name": "capability_tags",
+      "display_name": "Capability Tags",
+      "type": "nvarchar",
+      "max_length": 4000,
+      "required": false
+    },
+    {
+      "name": "required_inputs",
+      "display_name": "Required Inputs",
+      "type": "nvarchar",
+      "max_length": 2000,
+      "required": false
+    },
+    {
+      "name": "instruction_char_count",
+      "display_name": "Instruction Char Count",
+      "type": "int",
+      "required": false
+    },
+    {
+      "name": "kb_file_count",
+      "display_name": "KB File Count",
+      "type": "int",
+      "required": false
+    },
+    {
+      "name": "confidence_threshold",
+      "display_name": "Confidence Threshold",
+      "type": "decimal",
+      "precision": 5,
+      "scale": 2,
+      "required": false
+    },
+    {
+      "name": "fallback_agent_code",
+      "display_name": "Fallback Agent",
+      "type": "nvarchar",
+      "max_length": 10,
+      "required": false
+    },
+    {
+      "name": "max_tokens",
+      "display_name": "Max Tokens",
+      "type": "int",
+      "required": false
+    },
+    {
+      "name": "temperature",
+      "display_name": "Temperature",
+      "type": "decimal",
+      "precision": 3,
+      "scale": 2,
+      "required": false
+    },
+    {
+      "name": "is_active",
+      "display_name": "Is Active",
+      "type": "bit",
+      "required": true,
+      "default": true
+    },
+    {
+      "name": "version",
+      "display_name": "Version",
+      "type": "nvarchar",
+      "max_length": 20,
+      "required": true
+    },
+    {
+      "name": "effective_from",
+      "display_name": "Effective From",
+      "type": "datetime",
+      "required": false
+    },
+    {
+      "name": "effective_to",
+      "display_name": "Effective To",
+      "type": "datetime",
+      "required": false
+    }
+  ]
+}

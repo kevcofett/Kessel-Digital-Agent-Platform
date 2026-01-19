@@ -1,0 +1,70 @@
+{
+  "agent_code": "DOC",
+  "agent_name": "Document Agent",
+  "prompt_category": "Consulting Deliverables",
+  "prompts": [
+    {
+      "prompt_code": "DOC_BUSINESSCASE",
+      "prompt_name": "Generate Business Case",
+      "description": "Generate consulting business case documents",
+      "has_azure_function": false,
+      "input_parameters": [
+        {"name": "project_name", "type": "text", "required": true, "description": "Name of the project or initiative"},
+        {"name": "problem_statement", "type": "text", "required": true, "description": "Clear statement of the problem being solved"},
+        {"name": "proposed_solution", "type": "text", "required": true, "description": "Description of the proposed solution"},
+        {"name": "financial_analysis", "type": "object", "required": false, "description": "Financial analysis results (NPV, IRR, payback)"},
+        {"name": "risks", "type": "array", "required": false, "description": "Identified risks and mitigations"},
+        {"name": "alternatives_considered", "type": "array", "required": false, "description": "Alternative solutions that were evaluated"},
+        {"name": "output_format", "type": "choice", "required": false, "options": ["Full Document", "Executive Summary Only", "Presentation Deck"], "default": "Full Document"}
+      ],
+      "output_format": {
+        "executive_summary": "1-page executive summary",
+        "problem_statement_section": "detailed problem statement with impact",
+        "solution_section": "proposed solution with approach",
+        "financial_section": "financial analysis with key metrics",
+        "risk_section": "risk assessment and mitigation",
+        "implementation_section": "high-level implementation approach",
+        "recommendation": "clear recommendation with rationale",
+        "appendices": "supporting data and analysis"
+      },
+      "kb_retrieval": ["DOC_KB_Consulting_Templates"],
+      "routing_to": {
+        "financial_analysis": "ANL (if financial calculations needed)",
+        "risk_assessment": "CST (if framework-based risk analysis needed)"
+      }
+    },
+    {
+      "prompt_code": "DOC_ROADMAP",
+      "prompt_name": "Generate Roadmap",
+      "description": "Generate implementation roadmap documents",
+      "has_azure_function": false,
+      "input_parameters": [
+        {"name": "initiative_name", "type": "text", "required": true, "description": "Name of the initiative"},
+        {"name": "current_state", "type": "text", "required": true, "description": "Summary of current state"},
+        {"name": "future_state", "type": "text", "required": true, "description": "Vision of desired future state"},
+        {"name": "workstreams", "type": "array", "required": false, "description": "Major workstreams or tracks"},
+        {"name": "milestones", "type": "array", "required": false, "description": "Key milestones with target dates"},
+        {"name": "dependencies", "type": "array", "required": false, "description": "Dependencies between activities"},
+        {"name": "timeline_horizon", "type": "choice", "required": false, "options": ["90 Days", "6 Months", "1 Year", "Multi-Year"], "default": "1 Year"},
+        {"name": "output_format", "type": "choice", "required": false, "options": ["Full Document", "Executive Summary", "Visual Roadmap Only"], "default": "Full Document"}
+      ],
+      "output_format": {
+        "executive_overview": "high-level roadmap summary",
+        "current_state_section": "documented current state",
+        "future_state_section": "future state vision with benefits",
+        "phased_approach": "phases with activities, owners, timing",
+        "milestone_schedule": "key milestones with dates",
+        "dependency_map": "visual or tabular dependency mapping",
+        "resource_requirements": "resource needs by phase",
+        "risk_mitigation": "risks and mitigation by phase",
+        "success_metrics": "how success will be measured",
+        "governance_model": "governance and decision-making structure"
+      },
+      "kb_retrieval": ["DOC_KB_Consulting_Templates"],
+      "routing_to": {
+        "change_planning": "CHG (if adoption planning needed)",
+        "prioritization": "CST (if initiative prioritization needed)"
+      }
+    }
+  ]
+}

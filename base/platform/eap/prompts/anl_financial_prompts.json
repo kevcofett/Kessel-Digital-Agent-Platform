@@ -1,0 +1,129 @@
+{
+  "agent_code": "ANL",
+  "agent_name": "Analytics Agent",
+  "prompt_category": "Financial Investment Analysis",
+  "prompts": [
+    {
+      "prompt_code": "ANL_NPV",
+      "prompt_name": "NPV Calculate",
+      "description": "Calculate Net Present Value for investment analysis",
+      "has_azure_function": true,
+      "input_parameters": [
+        {"name": "initial_investment", "type": "number", "required": true, "description": "Initial investment amount (negative value)"},
+        {"name": "cash_flows", "type": "array", "required": true, "description": "Array of projected cash flows by period"},
+        {"name": "discount_rate", "type": "number", "required": true, "description": "Discount rate as decimal (e.g., 0.10 for 10%)"},
+        {"name": "terminal_value", "type": "number", "required": false, "description": "Terminal value at end of projection period"},
+        {"name": "sensitivity_rates", "type": "array", "required": false, "description": "Additional discount rates for sensitivity analysis"}
+      ],
+      "output_format": {
+        "npv": "calculated NPV at base discount rate",
+        "npv_sensitivity": "NPV values at different discount rates if provided",
+        "present_value_breakdown": "PV of each cash flow period",
+        "interpretation": "interpretation of results and investment recommendation"
+      },
+      "kb_retrieval": ["ANL_KB_Financial_Investment"]
+    },
+    {
+      "prompt_code": "ANL_IRR",
+      "prompt_name": "IRR Calculate",
+      "description": "Calculate Internal Rate of Return for investment comparison",
+      "has_azure_function": true,
+      "input_parameters": [
+        {"name": "initial_investment", "type": "number", "required": true, "description": "Initial investment amount (negative value)"},
+        {"name": "cash_flows", "type": "array", "required": true, "description": "Array of projected cash flows by period"},
+        {"name": "reinvestment_rate", "type": "number", "required": false, "description": "Reinvestment rate for MIRR calculation"},
+        {"name": "hurdle_rate", "type": "number", "required": false, "description": "Minimum acceptable rate of return for comparison"}
+      ],
+      "output_format": {
+        "irr": "calculated Internal Rate of Return",
+        "mirr": "Modified IRR if reinvestment rate provided",
+        "multiple_irr_warning": "warning if multiple IRRs exist",
+        "hurdle_comparison": "comparison to hurdle rate if provided",
+        "interpretation": "interpretation and recommendation"
+      },
+      "kb_retrieval": ["ANL_KB_Financial_Investment"]
+    },
+    {
+      "prompt_code": "ANL_TCO",
+      "prompt_name": "TCO Calculate",
+      "description": "Calculate Total Cost of Ownership across lifecycle",
+      "has_azure_function": false,
+      "input_parameters": [
+        {"name": "acquisition_costs", "type": "object", "required": true, "description": "Initial acquisition costs breakdown"},
+        {"name": "operating_costs", "type": "object", "required": true, "description": "Annual operating costs by category"},
+        {"name": "lifecycle_years", "type": "number", "required": true, "description": "Expected lifecycle in years"},
+        {"name": "disposal_value", "type": "number", "required": false, "description": "Expected disposal or salvage value"},
+        {"name": "opportunity_costs", "type": "object", "required": false, "description": "Opportunity costs to include"}
+      ],
+      "output_format": {
+        "total_tco": "total cost of ownership over lifecycle",
+        "annual_tco": "annualized TCO for comparison",
+        "cost_breakdown": "breakdown by category and phase",
+        "hidden_costs_identified": "hidden costs that were surfaced",
+        "comparison_metrics": "metrics for comparing alternatives"
+      },
+      "kb_retrieval": ["ANL_KB_Financial_Investment"]
+    },
+    {
+      "prompt_code": "ANL_MONTECARLO",
+      "prompt_name": "Monte Carlo Simulation",
+      "description": "Run Monte Carlo simulations for risk analysis",
+      "has_azure_function": true,
+      "input_parameters": [
+        {"name": "model_type", "type": "choice", "required": true, "options": ["NPV", "IRR", "Revenue", "Cost", "Custom"], "description": "Type of model to simulate"},
+        {"name": "variables", "type": "array", "required": true, "description": "Array of variable definitions with distributions"},
+        {"name": "iterations", "type": "number", "required": false, "default": 10000, "description": "Number of simulation iterations"},
+        {"name": "confidence_levels", "type": "array", "required": false, "default": [0.10, 0.50, 0.90], "description": "Confidence levels for percentile outputs"}
+      ],
+      "output_format": {
+        "mean": "mean outcome across iterations",
+        "std_dev": "standard deviation of outcomes",
+        "percentiles": "outcomes at specified confidence levels",
+        "probability_positive": "probability of positive outcome",
+        "sensitivity_ranking": "variables ranked by impact on variance",
+        "distribution_data": "data for histogram visualization"
+      },
+      "kb_retrieval": ["ANL_KB_Financial_Investment"]
+    },
+    {
+      "prompt_code": "ANL_SENSITIVITY",
+      "prompt_name": "Sensitivity Analysis",
+      "description": "Perform sensitivity analysis on key variables",
+      "has_azure_function": true,
+      "input_parameters": [
+        {"name": "base_case", "type": "object", "required": true, "description": "Base case values and calculated outcome"},
+        {"name": "variables", "type": "array", "required": true, "description": "Variables to test with min/max ranges"},
+        {"name": "analysis_type", "type": "choice", "required": false, "options": ["Tornado", "Spider", "Both"], "default": "Both", "description": "Type of sensitivity visualization"}
+      ],
+      "output_format": {
+        "tornado_data": "data for tornado diagram showing variable impact",
+        "spider_data": "data for spider diagram showing outcome curves",
+        "critical_variables": "variables with highest impact on outcome",
+        "breakeven_points": "values where outcome crosses key thresholds",
+        "scenario_table": "base, optimistic, pessimistic scenarios"
+      },
+      "kb_retrieval": ["ANL_KB_Financial_Investment"]
+    },
+    {
+      "prompt_code": "ANL_PAYBACK",
+      "prompt_name": "Payback Period",
+      "description": "Calculate simple and discounted payback periods",
+      "has_azure_function": false,
+      "input_parameters": [
+        {"name": "initial_investment", "type": "number", "required": true, "description": "Initial investment amount"},
+        {"name": "cash_flows", "type": "array", "required": true, "description": "Array of projected cash flows by period"},
+        {"name": "discount_rate", "type": "number", "required": false, "description": "Discount rate for discounted payback"},
+        {"name": "max_acceptable_payback", "type": "number", "required": false, "description": "Maximum acceptable payback period"}
+      ],
+      "output_format": {
+        "simple_payback": "simple payback period in years/periods",
+        "discounted_payback": "discounted payback period if rate provided",
+        "cumulative_cash_flow": "cumulative cash flow by period",
+        "breakeven_period": "exact period when investment is recovered",
+        "meets_threshold": "whether payback meets acceptable threshold",
+        "interpretation": "interpretation and limitations caveat"
+      },
+      "kb_retrieval": ["ANL_KB_Financial_Investment"]
+    }
+  ]
+}

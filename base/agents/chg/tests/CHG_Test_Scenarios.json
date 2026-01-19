@@ -1,0 +1,77 @@
+{
+  "agent": "CHG",
+  "version": "1.0",
+  "test_scenarios": [
+    {
+      "id": "CHG-001",
+      "name": "Change Readiness Assessment",
+      "input": "Assess our organization's readiness to implement a new CRM system. We have 500 employees, previous IT projects have had mixed success, and leadership is supportive but middle management is skeptical.",
+      "expected_capability": "CHG_READINESS",
+      "validation": "Response includes readiness score, identifies leadership support as strength, middle management as gap, provides recommendations"
+    },
+    {
+      "id": "CHG-002",
+      "name": "Stakeholder Mapping",
+      "input": "Map stakeholders for our ERP implementation: CEO (sponsor), CFO (budget owner), IT Director (implementer), Department Heads (users), Front-line staff (end users)",
+      "expected_capability": "CHG_STAKEHOLDER",
+      "validation": "Response uses Power/Interest grid, provides engagement strategy for each stakeholder"
+    },
+    {
+      "id": "CHG-003",
+      "name": "Adoption Planning",
+      "input": "Create an adoption plan for rolling out Microsoft Teams to replace Slack across our 1,000 person organization over 6 months",
+      "expected_capability": "CHG_ADOPTION",
+      "validation": "Response includes phased rollout, training approach, communication plan, success metrics"
+    },
+    {
+      "id": "CHG-004",
+      "name": "Route to CST",
+      "input": "What frameworks should I use to analyze this organizational change?",
+      "expected_routing": "CST",
+      "expected_capability": "CST_FRAMEWORK_SELECT",
+      "validation": "Framework selection routed to CST, not handled by CHG"
+    },
+    {
+      "id": "CHG-005",
+      "name": "Kotter 8-Step Application",
+      "input": "Guide me through using Kotter's 8-step model for our digital transformation initiative",
+      "expected_capability": "CHG_READINESS",
+      "validation": "Response references all 8 steps with specific guidance for digital transformation context"
+    },
+    {
+      "id": "CHG-006",
+      "name": "Resistance Management",
+      "input": "Our sales team is resisting the new CRM. How do we address this resistance?",
+      "expected_capability": "CHG_STAKEHOLDER",
+      "validation": "Response identifies resistance sources and provides mitigation strategies"
+    },
+    {
+      "id": "CHG-007",
+      "name": "ADKAR Assessment",
+      "input": "Use the ADKAR model to assess where our employees are stuck in adopting the new expense system",
+      "expected_capability": "CHG_READINESS",
+      "validation": "Response assesses each ADKAR element and identifies the blocker stage"
+    },
+    {
+      "id": "CHG-008",
+      "name": "Training Plan Development",
+      "input": "Design a training approach for our new data analytics platform rollout to 200 marketing analysts",
+      "expected_capability": "CHG_ADOPTION",
+      "validation": "Response includes learning objectives, delivery methods, schedule, and assessment approach"
+    },
+    {
+      "id": "CHG-009",
+      "name": "Communication Planning",
+      "input": "Help me create a change communication plan for announcing our office relocation",
+      "expected_capability": "CHG_ADOPTION",
+      "validation": "Response includes messaging framework, channels, timing, and audience segmentation"
+    },
+    {
+      "id": "CHG-010",
+      "name": "Change Sustainment",
+      "input": "Our new process was implemented 3 months ago but people are reverting to old ways. How do we sustain the change?",
+      "expected_capability": "CHG_ADOPTION",
+      "validation": "Response includes reinforcement strategies, metrics monitoring, and continuous improvement"
+    }
+  ]
+}

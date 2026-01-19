@@ -1,0 +1,85 @@
+{
+  "table_name": "mpa_vertical",
+  "display_name": "MPA Vertical",
+  "description": "Industry vertical classifications for benchmarking",
+  "columns": [
+    {
+      "name": "mpa_verticalid",
+      "display_name": "Vertical ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "vertical_code",
+      "display_name": "Vertical Code",
+      "type": "nvarchar",
+      "max_length": 20,
+      "required": true
+    },
+    {
+      "name": "vertical_name",
+      "display_name": "Vertical Name",
+      "type": "nvarchar",
+      "max_length": 100,
+      "required": true
+    },
+    {
+      "name": "parent_vertical_code",
+      "display_name": "Parent Vertical",
+      "type": "nvarchar",
+      "max_length": 20,
+      "required": false
+    },
+    {
+      "name": "typical_sales_cycle_days",
+      "display_name": "Typical Sales Cycle (Days)",
+      "type": "int",
+      "required": false
+    },
+    {
+      "name": "typical_aov_low",
+      "display_name": "Typical AOV Low",
+      "type": "decimal",
+      "precision": 12,
+      "scale": 2,
+      "required": false
+    },
+    {
+      "name": "typical_aov_high",
+      "display_name": "Typical AOV High",
+      "type": "decimal",
+      "precision": 12,
+      "scale": 2,
+      "required": false
+    },
+    {
+      "name": "seasonality_pattern",
+      "display_name": "Seasonality Pattern",
+      "type": "choice",
+      "required": false,
+      "choices": [
+        {"value": 1, "label": "NONE"},
+        {"value": 2, "label": "Q4_HEAVY"},
+        {"value": 3, "label": "SUMMER_PEAK"},
+        {"value": 4, "label": "BACK_TO_SCHOOL"},
+        {"value": 5, "label": "CUSTOM"}
+      ]
+    },
+    {
+      "name": "description",
+      "display_name": "Description",
+      "type": "nvarchar",
+      "max_length": 2000,
+      "required": false
+    },
+    {
+      "name": "is_active",
+      "display_name": "Is Active",
+      "type": "bit",
+      "required": true,
+      "default": true
+    }
+  ]
+}

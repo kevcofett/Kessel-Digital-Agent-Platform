@@ -1,0 +1,402 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 14456
+
+PURPOSE
+
+This knowledge base provides the Neural Data Science Agent with comprehensive incrementality measurement fundamentals including causal inference principles, experimental design foundations, and best practices for measuring true marketing lift.
+
+INCREMENTALITY CONCEPT
+
+Understanding true marketing contribution.
+
+CAUSAL INFERENCE FUNDAMENTALS
+
+Distinguishing causation from correlation.
+
+Counterfactual question
+- What would happen without marketing
+- Unobservable alternative outcome
+- Fundamental problem of causal inference
+- Estimation approaches
+
+Incremental definition
+- Additional conversions from marketing
+- Above baseline conversion rate
+- Causal contribution
+- True marketing value
+
+Correlation versus causation
+- Marketing-conversion correlation
+- Selection effects
+- Confounding factors
+- Causal isolation challenge
+
+INCREMENTALITY VERSUS ATTRIBUTION
+
+Distinguishing measurement approaches.
+
+Attribution measures
+- Credit allocation among touchpoints
+- Relative contribution assessment
+- Does not assess necessity
+- Correlational foundation
+
+Incrementality measures
+- Causal contribution assessment
+- Would conversion happen anyway
+- Experimental foundation
+- True lift quantification
+
+Complementary roles
+- Attribution for optimization
+- Incrementality for valuation
+- Calibration relationship
+- Integrated measurement
+
+SELECTION BIAS
+
+Understanding key confound.
+
+Targeting bias
+- Marketing reaches interested users
+- Pre-existing purchase intent
+- Correlation without causation
+- Over-attribution risk
+
+Self-selection
+- Engaged users see more ads
+- High intent users click
+- Correlation with conversion
+- Inflated effectiveness
+
+Timing selection
+- Marketing during peak periods
+- Seasonal correlation
+- Event-driven marketing
+- Temporal confounding
+
+EXPERIMENTAL DESIGN FOUNDATIONS
+
+Principles for valid incrementality measurement.
+
+RANDOMIZATION PRINCIPLES
+
+Foundation of causal inference.
+
+Random assignment
+- Equal probability treatment assignment
+- Eliminates selection bias
+- Balances observed confounders
+- Balances unobserved confounders
+
+Randomization benefits
+- Causal identification
+- Unbiased estimation
+- Statistical inference validity
+- Simple interpretation
+
+Randomization requirements
+- True random mechanism
+- Implementation fidelity
+- Assignment concealment
+- Post-randomization balance
+
+CONTROL GROUP DESIGN
+
+Creating valid comparison groups.
+
+Holdout design
+- Subset excluded from treatment
+- Matched to treatment group
+- Observed for outcomes
+- Comparison basis
+
+Control types
+- No-exposure control
+- Placebo control
+- Standard treatment control
+- Waitlist control
+
+Control quality
+- Balance verification
+- Contamination prevention
+- Sufficient sample size
+- Representative selection
+
+EXPERIMENT VALIDITY
+
+Ensuring trustworthy results.
+
+Internal validity
+- Causal inference confidence
+- Confound elimination
+- Design execution fidelity
+- Analysis appropriateness
+
+External validity
+- Generalizability of results
+- Population representativeness
+- Context transferability
+- Time stability
+
+Statistical validity
+- Proper hypothesis testing
+- Power adequacy
+- Multiple comparison handling
+- Assumption verification
+
+LIFT CALCULATION
+
+Quantifying incremental impact.
+
+LIFT METRICS
+
+Measuring experimental outcomes.
+
+Absolute lift
+- Treatment minus control rate
+- Incremental conversion rate
+- Easy interpretation
+- Scale dependent
+
+Relative lift
+- Treatment divided by control
+- Percentage improvement
+- Scale independent
+- Baseline sensitive
+
+Lift ratio
+- Relative lift expression
+- Multiplier interpretation
+- Common reporting format
+- Comparison across experiments
+
+LIFT ESTIMATION
+
+Statistical calculation of lift.
+
+Point estimate
+- Observed rate difference
+- Best single estimate
+- Uncertainty not captured
+- Decision input
+
+Confidence interval
+- Range of plausible values
+- Uncertainty quantification
+- Statistical significance
+- Decision confidence
+
+Bayesian credible interval
+- Posterior probability interval
+- Prior incorporation
+- Intuitive interpretation
+- Decision probability
+
+STATISTICAL SIGNIFICANCE
+
+Evaluating result reliability.
+
+Hypothesis testing
+- Null hypothesis specification
+- P-value calculation
+- Significance threshold
+- Conclusion drawing
+
+Power consideration
+- Type II error probability
+- Sample size relationship
+- Effect size sensitivity
+- Experiment planning
+
+Multiple testing
+- Family-wise error rate
+- False discovery rate
+- Correction methods
+- Segmented analysis handling
+
+INCREMENTALITY RATIO
+
+Calibrating attributed conversions.
+
+RATIO CALCULATION
+
+Computing incrementality factor.
+
+Incrementality ratio definition
+- Incremental conversions over attributed
+- True lift proportion
+- Calibration factor
+- Range zero to infinity
+
+Calculation process
+- Experimental lift measurement
+- Attributed conversion count
+- Ratio computation
+- Confidence estimation
+
+Interpretation
+- Ratio of one means accurate attribution
+- Below one means over-attribution
+- Above one means under-attribution
+- Calibration application
+
+APPLICATION TO ATTRIBUTION
+
+Using ratio for adjustment.
+
+Attribution calibration
+- Multiply attributed by ratio
+- Incremental-only credit
+- Conservative estimation
+- Accurate valuation
+
+Channel-specific ratios
+- Different channels different ratios
+- Display often lowest
+- Search often highest
+- Video moderate typically
+
+Ongoing calibration
+- Regular ratio updates
+- Trend monitoring
+- Confidence weighting
+- Model refinement
+
+EXPERIMENT TYPES
+
+Categories of incrementality tests.
+
+RANDOMIZED CONTROLLED TRIALS
+
+User-level randomization.
+
+User-level RCT
+- Individual randomization
+- Highest internal validity
+- Implementation complexity
+- Cookie and identity challenges
+
+Implementation approaches
+- Platform-native experiments
+- DSP experiment features
+- CDP-based randomization
+- Custom implementation
+
+Advantages and challenges
+- Clean causal inference
+- Identity fragmentation
+- Scale limitations
+- Treatment contamination
+
+GEO-BASED EXPERIMENTS
+
+Geographic randomization.
+
+Matched market design
+- Geographic unit selection
+- Treatment and control matching
+- Regional holdout
+- Aggregate outcome measurement
+
+Synthetic control
+- Weighted control construction
+- Pre-period matching
+- Post-period comparison
+- Flexible implementation
+
+Advantages and challenges
+- Avoids identity issues
+- Lower precision
+- Larger budget required
+- External factor exposure
+
+TIME-BASED EXPERIMENTS
+
+Temporal variation designs.
+
+On-off testing
+- Marketing on and off periods
+- Before-after comparison
+- Trend adjustment
+- Carryover handling
+
+Pulse testing
+- Varying intensity periods
+- Dose-response estimation
+- Continuous marketing context
+- Sophisticated analysis
+
+Regression discontinuity
+- Threshold-based assignment
+- Local randomization
+- Causal identification
+- Specific applications
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for incrementality measurement.
+
+EXPERIMENT WORKFLOW
+
+Standard incrementality process.
+
+Design phase
+- Objective definition
+- Experiment type selection
+- Sample size calculation
+- Duration planning
+
+Implementation phase
+- Randomization execution
+- Treatment application
+- Control protection
+- Monitoring setup
+
+Analysis phase
+- Data collection
+- Lift calculation
+- Significance testing
+- Result interpretation
+
+Application phase
+- Calibration factor derivation
+- Model adjustment
+- Report generation
+- Recommendation development
+
+CROSS-AGENT INTEGRATION
+
+Incrementality outputs for downstream agents.
+
+Outputs to ANL Agent
+- Incrementality ratios
+- Calibration factors
+- Confidence estimates
+- Model inputs
+
+Outputs to CHA Agent
+- Channel incrementality
+- Budget efficiency data
+- Optimization inputs
+- Reallocation recommendations
+
+Outputs to NDS Agent
+- Experiment results
+- MMM calibration data
+- MTA adjustment factors
+- Unified measurement inputs
+
+Outputs to PRF Agent
+- True lift metrics
+- Performance benchmarks
+- Validation data
+- Trend context
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive incrementality measurement fundamentals

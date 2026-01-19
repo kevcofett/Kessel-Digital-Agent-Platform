@@ -1,0 +1,85 @@
+{
+  "agent": "CST",
+  "version": "1.0",
+  "test_scenarios": [
+    {
+      "id": "CST-001",
+      "name": "Framework Selection - Market Entry",
+      "input": "We're considering entering the European market with our SaaS product. What frameworks should we use?",
+      "expected_capability": "CST_FRAMEWORK_SELECT",
+      "expected_frameworks": ["PESTEL", "Porter Five Forces", "TAM/SAM/SOM"],
+      "validation": "Response includes at least 2 of expected frameworks with rationale"
+    },
+    {
+      "id": "CST-002",
+      "name": "Prioritization - RICE Scoring",
+      "input": "Help me prioritize these 5 product features using RICE: Feature A (10K users, high impact), Feature B (50K users, low impact), Feature C (5K users, massive impact), Feature D (20K users, medium impact), Feature E (100K users, minimal impact)",
+      "expected_capability": "CST_PRIORITIZE",
+      "expected_method": "RICE",
+      "validation": "Response shows RICE calculation for each feature and provides ranked list"
+    },
+    {
+      "id": "CST-003",
+      "name": "Strategic Analysis - SWOT",
+      "input": "Perform a SWOT analysis for our digital marketing agency competing against larger holding companies",
+      "expected_capability": "CST_STRATEGIC_ANALYZE",
+      "expected_framework": "SWOT",
+      "validation": "Response has all 4 quadrants populated with relevant insights"
+    },
+    {
+      "id": "CST-004",
+      "name": "Engagement Guide - Discovery Phase",
+      "input": "I'm starting a consulting engagement to assess a client's martech stack. What should I focus on in the discovery phase?",
+      "expected_capability": "CST_ENGAGEMENT_GUIDE",
+      "expected_phase": "Discovery",
+      "validation": "Response includes discovery questions, stakeholder identification, scope definition"
+    },
+    {
+      "id": "CST-005",
+      "name": "Route to ANL",
+      "input": "Calculate the NPV of this investment with $100K initial cost and $30K annual returns for 5 years",
+      "expected_routing": "ANL",
+      "expected_capability": "ANL_NPV",
+      "validation": "Request is routed to ANL agent, not handled by CST"
+    },
+    {
+      "id": "CST-006",
+      "name": "Framework Selection - Competitive Analysis",
+      "input": "We need to understand our competitive position in the CDP market. Which frameworks should I use?",
+      "expected_capability": "CST_FRAMEWORK_SELECT",
+      "expected_frameworks": ["Porter Five Forces", "Competitor Profiling", "Strategic Group Analysis"],
+      "validation": "Response recommends competitive analysis frameworks with fit scores"
+    },
+    {
+      "id": "CST-007",
+      "name": "Prioritization - MoSCoW",
+      "input": "Use MoSCoW to categorize these requirements for our MVP: User login, Admin dashboard, Reporting, Mobile app, Email notifications, SSO integration",
+      "expected_capability": "CST_PRIORITIZE",
+      "expected_method": "MoSCoW",
+      "validation": "Response categorizes each requirement into Must/Should/Could/Won't with rationale"
+    },
+    {
+      "id": "CST-008",
+      "name": "Strategic Analysis - Porter Five Forces",
+      "input": "Apply Porter's Five Forces to analyze the streaming video market",
+      "expected_capability": "CST_STRATEGIC_ANALYZE",
+      "expected_framework": "Porter Five Forces",
+      "validation": "Response analyzes all 5 forces with industry-specific insights"
+    },
+    {
+      "id": "CST-009",
+      "name": "Engagement Guide - Recommendations Phase",
+      "input": "We've completed discovery and assessment. How do I structure the recommendations phase?",
+      "expected_capability": "CST_ENGAGEMENT_GUIDE",
+      "expected_phase": "Recommendations",
+      "validation": "Response includes prioritization approach, presentation structure, stakeholder alignment"
+    },
+    {
+      "id": "CST-010",
+      "name": "Multi-Framework Analysis",
+      "input": "I need a comprehensive analysis of whether to build vs buy our customer data platform. What's the best approach?",
+      "expected_capability": "CST_FRAMEWORK_SELECT",
+      "validation": "Response recommends combination of frameworks (e.g., TCO, SWOT, decision matrix)"
+    }
+  ]
+}

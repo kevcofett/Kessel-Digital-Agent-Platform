@@ -1,0 +1,146 @@
+{
+  "table_name": "eap_test_case",
+  "display_name": "EAP Test Case",
+  "description": "Golden test scenarios for regression testing and validation",
+  "columns": [
+    {
+      "name": "eap_test_caseid",
+      "display_name": "Test Case ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "scenario_name",
+      "display_name": "Scenario Name",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": true
+    },
+    {
+      "name": "scenario_category",
+      "display_name": "Category",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "ROUTING"},
+        {"value": 2, "label": "CALCULATION"},
+        {"value": 3, "label": "INTEGRATION"},
+        {"value": 4, "label": "E2E"},
+        {"value": 5, "label": "REGRESSION"}
+      ]
+    },
+    {
+      "name": "agent_code",
+      "display_name": "Target Agent",
+      "type": "nvarchar",
+      "max_length": 10,
+      "required": false
+    },
+    {
+      "name": "capability_code",
+      "display_name": "Target Capability",
+      "type": "nvarchar",
+      "max_length": 50,
+      "required": false
+    },
+    {
+      "name": "input_message",
+      "display_name": "Input Message",
+      "type": "nvarchar",
+      "max_length": 8000,
+      "required": true
+    },
+    {
+      "name": "input_context_json",
+      "display_name": "Input Context",
+      "type": "nvarchar",
+      "max_length": 8000,
+      "required": false
+    },
+    {
+      "name": "expected_agent_code",
+      "display_name": "Expected Agent",
+      "type": "nvarchar",
+      "max_length": 10,
+      "required": false
+    },
+    {
+      "name": "expected_capability_code",
+      "display_name": "Expected Capability",
+      "type": "nvarchar",
+      "max_length": 50,
+      "required": false
+    },
+    {
+      "name": "expected_output_json",
+      "display_name": "Expected Output",
+      "type": "nvarchar",
+      "max_length": 8000,
+      "required": false
+    },
+    {
+      "name": "validation_rules_json",
+      "display_name": "Validation Rules",
+      "type": "nvarchar",
+      "max_length": 4000,
+      "required": false
+    },
+    {
+      "name": "environment_scope",
+      "display_name": "Environment Scope",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "BOTH"},
+        {"value": 2, "label": "MASTERCARD"},
+        {"value": 3, "label": "PERSONAL"}
+      ]
+    },
+    {
+      "name": "priority",
+      "display_name": "Priority",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "CRITICAL"},
+        {"value": 2, "label": "HIGH"},
+        {"value": 3, "label": "MEDIUM"},
+        {"value": 4, "label": "LOW"}
+      ]
+    },
+    {
+      "name": "is_active",
+      "display_name": "Is Active",
+      "type": "bit",
+      "required": true,
+      "default": true
+    },
+    {
+      "name": "last_run_date",
+      "display_name": "Last Run Date",
+      "type": "datetime",
+      "required": false
+    },
+    {
+      "name": "last_run_result",
+      "display_name": "Last Run Result",
+      "type": "choice",
+      "required": false,
+      "choices": [
+        {"value": 1, "label": "PASSED"},
+        {"value": 2, "label": "FAILED"},
+        {"value": 3, "label": "SKIPPED"},
+        {"value": 4, "label": "ERROR"}
+      ]
+    },
+    {
+      "name": "last_run_notes",
+      "display_name": "Last Run Notes",
+      "type": "nvarchar",
+      "max_length": 4000,
+      "required": false
+    }
+  ]
+}

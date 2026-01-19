@@ -1,0 +1,392 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 14345
+
+PURPOSE
+
+This knowledge base provides the Neural Data Science Agent with detailed specifications for advanced attribution models including Markov chains, Shapley values, and machine learning approaches for accurate marketing credit allocation.
+
+MARKOV CHAIN ATTRIBUTION
+
+Probabilistic sequence-based attribution modeling.
+
+MARKOV MODEL SPECIFICATION
+
+Defining the Markov chain structure.
+
+State space definition
+- Channel states as nodes
+- Start state for journey begin
+- Conversion state as absorber
+- Null state for non-conversion
+
+Transition matrix
+- Probability between states
+- Row normalization
+- Estimated from data
+- Stationarity assumption
+
+Order selection
+- First-order standard
+- Higher-order for memory
+- Computational tradeoff
+- Data requirement increase
+
+State aggregation
+- Channel-level states
+- Channel-campaign states
+- Fine versus coarse tradeoff
+- Sparsity management
+
+REMOVAL EFFECT CALCULATION
+
+Computing channel contribution.
+
+Removal methodology
+- Remove channel from model
+- Recalculate conversion probability
+- Compute probability difference
+- Attribute proportional credit
+
+Calculation process
+- Original conversion probability
+- Remove channel edges
+- Null remaining probability
+- Credit equals probability drop
+
+Normalization
+- Sum of removal effects
+- Normalize to total conversions
+- Handle negative effects
+- Consistent credit total
+
+IMPLEMENTATION DETAILS
+
+Technical implementation considerations.
+
+Matrix construction
+- State enumeration
+- Transition counting
+- Probability estimation
+- Sparse matrix handling
+
+Absorption probability
+- Fundamental matrix calculation
+- Inversion requirements
+- Numerical stability
+- Efficient algorithms
+
+Channel removal
+- Matrix modification approach
+- Edge zeroing method
+- Probability redistribution
+- Consistent methodology
+
+SHAPLEY VALUE ATTRIBUTION
+
+Game-theoretic fair credit allocation.
+
+SHAPLEY VALUE THEORY
+
+Mathematical foundations.
+
+Cooperative game definition
+- Player set as channels
+- Characteristic function
+- Coalition value definition
+- Conversion as game value
+
+Shapley value formula
+- Average marginal contribution
+- All permutation consideration
+- Weighting by coalition size
+- Unique fair allocation
+
+Axiomatic properties
+- Efficiency property
+- Symmetry property
+- Null player property
+- Additivity property
+
+SHAPLEY CALCULATION
+
+Computing Shapley values for attribution.
+
+Exact calculation
+- All coalition enumeration
+- Marginal contribution computation
+- Weighted averaging
+- Factorial complexity
+
+Coalition value estimation
+- Conversion probability by coalition
+- Model-based estimation
+- Empirical frequency approach
+- Hybrid methods
+
+Approximation methods
+- Monte Carlo sampling
+- Permutation sampling
+- Stratified sampling
+- Convergence assessment
+
+PRACTICAL IMPLEMENTATION
+
+Deployment considerations.
+
+Computational efficiency
+- Sampling requirements
+- Parallelization opportunities
+- Caching strategies
+- Incremental updates
+
+Interpretation
+- Channel contribution shares
+- Marginal value communication
+- Benchmark comparison
+- Stakeholder explanation
+
+Validation
+- Sum to total verification
+- Reasonableness checking
+- Alternative model comparison
+- Sensitivity analysis
+
+MACHINE LEARNING ATTRIBUTION
+
+Predictive modeling approaches.
+
+LOGISTIC REGRESSION ATTRIBUTION
+
+Linear probabilistic modeling.
+
+Feature engineering
+- Touchpoint presence indicators
+- Touchpoint count features
+- Position features
+- Time-based features
+
+Model specification
+- Binary conversion outcome
+- Logistic link function
+- Regularization options
+- Interaction terms
+
+Coefficient interpretation
+- Log-odds contribution
+- Probability impact
+- Relative importance
+- Credit proxy usage
+
+Limitations
+- Linearity assumption
+- Interaction complexity
+- Position representation
+- Sequence information loss
+
+DEEP LEARNING ATTRIBUTION
+
+Neural network approaches.
+
+LSTM models
+- Sequential processing
+- Memory cell utilization
+- Variable length paths
+- Temporal pattern capture
+
+Attention mechanisms
+- Touchpoint importance weights
+- Interpretable attention
+- Position-invariant learning
+- Multi-head attention
+
+Architecture design
+- Input encoding
+- Hidden layer sizing
+- Output layer specification
+- Regularization approaches
+
+Training considerations
+- Class imbalance handling
+- Overfitting prevention
+- Validation strategy
+- Hyperparameter tuning
+
+SURVIVAL ANALYSIS ATTRIBUTION
+
+Time-to-event modeling.
+
+Hazard rate modeling
+- Instantaneous conversion rate
+- Touchpoint effect on hazard
+- Time-varying covariates
+- Baseline hazard estimation
+
+Cox proportional hazards
+- Semi-parametric approach
+- Channel hazard ratios
+- Proportionality assumption
+- Interpretation clarity
+
+Competing risks
+- Multiple conversion outcomes
+- Cause-specific attribution
+- Sub-distribution hazards
+- Comprehensive modeling
+
+CAUSAL ATTRIBUTION
+
+Causal inference integration.
+
+CAUSAL FRAMEWORK
+
+Potential outcomes approach.
+
+Counterfactual definition
+- Outcome without touchpoint
+- Treatment effect concept
+- Individual treatment effect
+- Average treatment effect
+
+Identification challenges
+- Selection bias
+- Confounding factors
+- Unmeasured variables
+- Positivity requirements
+
+Assumptions
+- Ignorability condition
+- Stable unit treatment value
+- Overlap assumption
+- Causal graph specification
+
+PROPENSITY METHODS
+
+Controlling for selection.
+
+Propensity score
+- Treatment probability modeling
+- Covariate summarization
+- Balancing score property
+- Estimation approaches
+
+Propensity weighting
+- Inverse probability weights
+- Doubly robust estimation
+- Weight truncation
+- Variance considerations
+
+Matching methods
+- Propensity score matching
+- Covariate matching
+- Matching quality assessment
+- Effect estimation
+
+MODEL COMPARISON
+
+Selecting and validating attribution models.
+
+COMPARISON FRAMEWORK
+
+Evaluating attribution approaches.
+
+Accuracy metrics
+- Conversion prediction accuracy
+- Out-of-sample performance
+- Cross-validation results
+- Benchmark comparison
+
+Business validity
+- Credit reasonableness
+- Channel contribution plausibility
+- ROI consistency
+- Stakeholder acceptance
+
+Practical factors
+- Computational requirements
+- Implementation complexity
+- Maintenance burden
+- Interpretability needs
+
+VALIDATION APPROACHES
+
+Testing attribution accuracy.
+
+Holdout testing
+- Time-based holdout
+- Prediction evaluation
+- Credit stability assessment
+- Performance degradation
+
+Incrementality calibration
+- Experiment comparison
+- Credit adjustment
+- Model refinement
+- Ongoing calibration
+
+Sensitivity analysis
+- Parameter sensitivity
+- Model choice sensitivity
+- Window sensitivity
+- Data quality sensitivity
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for attribution modeling.
+
+MODELING WORKFLOW
+
+Standard attribution model process.
+
+Model selection
+- Use case requirements
+- Data availability assessment
+- Complexity tolerance
+- Resource constraints
+
+Implementation
+- Data preparation
+- Model configuration
+- Execution and monitoring
+- Result extraction
+
+Validation
+- Accuracy evaluation
+- Business validation
+- Stakeholder review
+- Approval process
+
+Deployment
+- Production integration
+- Monitoring setup
+- Update procedures
+- Documentation
+
+CROSS-AGENT INTEGRATION
+
+Attribution model outputs for downstream agents.
+
+Outputs to ANL Agent
+- Channel credit allocations
+- Model confidence measures
+- Optimization recommendations
+- Scenario impact estimates
+
+Outputs to CHA Agent
+- Attribution-based ROI
+- Channel effectiveness ranking
+- Budget optimization inputs
+- Path efficiency metrics
+
+Outputs to PRF Agent
+- Attribution trend data
+- Model performance metrics
+- Anomaly detection inputs
+- Learning extraction
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive attribution model specifications for marketing credit allocation

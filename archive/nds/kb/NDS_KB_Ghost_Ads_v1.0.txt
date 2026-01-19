@@ -1,0 +1,426 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 13654
+
+PURPOSE
+
+This knowledge base provides the Neural Data Science Agent with comprehensive methodology for ghost ad experiments including intent-to-treat design, implementation approaches, and best practices for measuring true advertising incrementality without control group exposure.
+
+GHOST AD CONCEPT
+
+Understanding ghost ad methodology.
+
+GHOST AD DEFINITION
+
+What ghost ads represent.
+
+Counterfactual exposure
+- Ad that would have served
+- Auction participation without delivery
+- Intent-to-treat recording
+- Clean control creation
+
+Control group treatment
+- No actual ad exposure
+- Logging of would-be exposure
+- Matched to treatment group
+- Outcome comparison basis
+
+Methodological advantage
+- Addresses selection bias
+- True randomization proxy
+- Platform-native solution
+- Scalable implementation
+
+GHOST AD RATIONALE
+
+Why ghost ads improve measurement.
+
+Selection bias elimination
+- Randomization at auction
+- Equal targeting conditions
+- Matched user characteristics
+- Clean causal comparison
+
+PSA alternative
+- No need for placebo creative
+- Cost efficiency
+- Simpler implementation
+- Clean holdout
+
+Practical benefits
+- Platform integration
+- Minimal additional cost
+- Real auction conditions
+- Scalable execution
+
+GHOST AD METHODOLOGY
+
+Technical implementation approaches.
+
+AUCTION-BASED IMPLEMENTATION
+
+Ghost ads in programmatic environments.
+
+Bid suppression approach
+- Submit bid for eligibility
+- Suppress delivery to control
+- Log impression opportunity
+- Track outcomes
+
+Random suppression
+- Randomization at bid time
+- Percentage-based holdout
+- Consistent user assignment
+- Balance verification
+
+Technical requirements
+- DSP support
+- Logging infrastructure
+- Outcome tracking
+- Data integration
+
+PLATFORM-NATIVE GHOST ADS
+
+Walled garden implementations.
+
+Meta ghost ads
+- Conversion lift methodology
+- Native implementation
+- User-level randomization
+- Integrated outcome tracking
+
+Google implementation
+- Brand lift control groups
+- YouTube ghosting
+- Display ghost impressions
+- Cross-device tracking
+
+Other platforms
+- Limited availability
+- Custom implementations
+- API-based approaches
+- Partnership requirements
+
+EXPERIMENTAL DESIGN
+
+Ghost ad experiment structure.
+
+RANDOMIZATION DESIGN
+
+Allocation to treatment and control.
+
+User-level randomization
+- Individual assignment
+- Cookie or ID based
+- Consistent across sessions
+- Cross-device consideration
+
+Randomization timing
+- Pre-auction assignment
+- Just-in-time randomization
+- Session-level versus persistent
+- Tradeoff considerations
+
+Allocation ratio
+- Treatment versus control split
+- Ten percent control typical
+- Power considerations
+- Opportunity cost balance
+
+MATCHING VERIFICATION
+
+Ensuring valid comparison groups.
+
+Balance checking
+- Covariate comparison
+- Targeting criteria match
+- Demographic balance
+- Behavioral similarity
+
+Quality metrics
+- Standardized differences
+- Variance ratio
+- Visual inspection
+- Statistical tests
+
+Remediation
+- Reweighting approaches
+- Stratified analysis
+- Covariate adjustment
+- Design refinement
+
+OUTCOME TRACKING
+
+Measuring conversion outcomes.
+
+Conversion events
+- Purchase tracking
+- Lead generation
+- App installs
+- Site actions
+
+Attribution alignment
+- Consistent windows
+- Same methodology
+- Treatment and control parity
+- Apples to apples comparison
+
+Data integration
+- Cross-platform tracking
+- Offline conversion
+- CRM integration
+- Unified measurement
+
+ANALYSIS METHODOLOGY
+
+Statistical analysis of ghost ad experiments.
+
+LIFT CALCULATION
+
+Computing incremental effect.
+
+Intent-to-treat analysis
+- Analyze as randomized
+- Treatment assignment basis
+- Conservative estimate
+- Avoids selection bias
+
+Conversion rate comparison
+- Treatment conversion rate
+- Control conversion rate
+- Difference calculation
+- Ratio computation
+
+Confidence interval
+- Standard error estimation
+- Interval construction
+- Significance assessment
+- Uncertainty quantification
+
+STATISTICAL CONSIDERATIONS
+
+Ensuring valid inference.
+
+Sample size requirements
+- Power calculation
+- Effect size assumptions
+- Variance estimation
+- Duration implications
+
+Multiple testing
+- Segment analysis handling
+- Correction methods
+- Primary versus secondary
+- Pre-specification
+
+Subgroup analysis
+- Heterogeneous treatment effects
+- Segment-level lift
+- Interaction testing
+- Interpretation caution
+
+IMPLEMENTATION CHALLENGES
+
+Practical obstacles and solutions.
+
+TECHNICAL CHALLENGES
+
+Implementation difficulties.
+
+Platform support
+- Limited DSP support
+- Custom development needs
+- API limitations
+- Integration complexity
+
+Logging infrastructure
+- Ghost impression capture
+- Storage requirements
+- Processing pipeline
+- Data quality assurance
+
+Cross-device tracking
+- Identity fragmentation
+- User matching
+- Consistent assignment
+- Outcome attribution
+
+OPERATIONAL CHALLENGES
+
+Execution obstacles.
+
+Cost considerations
+- Opportunity cost of control
+- Implementation investment
+- Ongoing maintenance
+- ROI of measurement
+
+Stakeholder alignment
+- Holdout acceptance
+- Measurement value communication
+- Timeline expectations
+- Result interpretation
+
+Scale requirements
+- Minimum sample sizes
+- Budget thresholds
+- Duration needs
+- Statistical power
+
+COMPARISON TO ALTERNATIVES
+
+Ghost ads versus other approaches.
+
+GHOST ADS VERSUS PSA
+
+Comparing to public service announcements.
+
+PSA approach
+- Neutral ad to control
+- Attention equivalence
+- Creative development needed
+- Placebo effect concerns
+
+Ghost ad advantages
+- No placebo creative
+- Lower cost
+- Simpler execution
+- Cleaner control
+
+Ghost ad limitations
+- Attention not controlled
+- No brand exposure control
+- Some platform limitations
+- Implementation complexity
+
+GHOST ADS VERSUS GEO TESTS
+
+Comparing to geographic experiments.
+
+Geo test approach
+- Market-level holdout
+- Aggregate measurement
+- Identity independent
+- Lower granularity
+
+Ghost ad advantages
+- User-level precision
+- Segment-level analysis
+- Lower total cost
+- Faster results
+
+Ghost ad limitations
+- Identity requirements
+- Platform dependencies
+- Cross-device challenges
+- Privacy constraints
+
+APPLICATION SCENARIOS
+
+When to use ghost ads.
+
+APPROPRIATE USE CASES
+
+Ideal ghost ad applications.
+
+Channel incrementality
+- Display advertising measurement
+- Video campaign lift
+- Social advertising impact
+- Programmatic valuation
+
+Campaign optimization
+- Creative testing
+- Audience validation
+- Frequency optimization
+- Placement comparison
+
+Budget justification
+- Incremental value demonstration
+- ROI validation
+- Investment case support
+- Stakeholder communication
+
+LESS SUITABLE SCENARIOS
+
+When alternatives may be better.
+
+Search advertising
+- Intent-based selection
+- Keyword-level variation
+- Lower applicability
+- Consider other methods
+
+Brand building
+- Long-term effects
+- Survey measurement better
+- Immediate conversion focus
+- Consider brand lift
+
+Cross-channel measurement
+- Single channel scope
+- Full journey measurement
+- Consider unified approaches
+- Integration challenges
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for ghost ad experiments.
+
+EXPERIMENT WORKFLOW
+
+Standard ghost ad process.
+
+Design phase
+- Objective setting
+- Platform selection
+- Sample size planning
+- Duration estimation
+
+Implementation phase
+- Technical setup
+- Randomization activation
+- Logging verification
+- Monitoring establishment
+
+Analysis phase
+- Data collection
+- Lift calculation
+- Significance testing
+- Segment analysis
+
+Application phase
+- Result interpretation
+- Calibration derivation
+- Report generation
+- Recommendation development
+
+CROSS-AGENT INTEGRATION
+
+Ghost ad outputs for downstream agents.
+
+Outputs to ANL Agent
+- Incrementality estimates
+- Calibration factors
+- Segment-level lifts
+- Projection inputs
+
+Outputs to CHA Agent
+- Channel effectiveness data
+- Budget efficiency metrics
+- Optimization recommendations
+- Allocation guidance
+
+Outputs to PRF Agent
+- Performance validation
+- Benchmark data
+- Trend context
+- Anomaly investigation
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive ghost ad methodology for incrementality measurement

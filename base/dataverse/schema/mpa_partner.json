@@ -1,0 +1,129 @@
+{
+  "table_name": "mpa_partner",
+  "display_name": "MPA Partner",
+  "description": "Partner/vendor registry with fees and capabilities",
+  "columns": [
+    {
+      "name": "mpa_partnerid",
+      "display_name": "Partner ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "partner_code",
+      "display_name": "Partner Code",
+      "type": "nvarchar",
+      "max_length": 30,
+      "required": true
+    },
+    {
+      "name": "partner_name",
+      "display_name": "Partner Name",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": true
+    },
+    {
+      "name": "partner_type",
+      "display_name": "Partner Type",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "DSP"},
+        {"value": 2, "label": "SSP"},
+        {"value": 3, "label": "DMP"},
+        {"value": 4, "label": "MEASUREMENT"},
+        {"value": 5, "label": "VERIFICATION"},
+        {"value": 6, "label": "CREATIVE"},
+        {"value": 7, "label": "RETAIL_MEDIA"},
+        {"value": 8, "label": "PUBLISHER"},
+        {"value": 9, "label": "PLATFORM"}
+      ]
+    },
+    {
+      "name": "platform_fee_percent",
+      "display_name": "Platform Fee %",
+      "type": "decimal",
+      "precision": 5,
+      "scale": 2,
+      "required": false
+    },
+    {
+      "name": "tech_fee_cpm",
+      "display_name": "Tech Fee CPM",
+      "type": "decimal",
+      "precision": 10,
+      "scale": 4,
+      "required": false
+    },
+    {
+      "name": "data_fee_cpm",
+      "display_name": "Data Fee CPM",
+      "type": "decimal",
+      "precision": 10,
+      "scale": 4,
+      "required": false
+    },
+    {
+      "name": "minimum_spend",
+      "display_name": "Minimum Spend",
+      "type": "decimal",
+      "precision": 12,
+      "scale": 2,
+      "required": false
+    },
+    {
+      "name": "supported_channels",
+      "display_name": "Supported Channels",
+      "type": "nvarchar",
+      "max_length": 2000,
+      "required": false
+    },
+    {
+      "name": "nbi_score",
+      "display_name": "NBI Score",
+      "type": "decimal",
+      "precision": 5,
+      "scale": 2,
+      "required": false
+    },
+    {
+      "name": "brand_safety_certified",
+      "display_name": "Brand Safety Certified",
+      "type": "bit",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "viewability_guarantee",
+      "display_name": "Viewability Guarantee",
+      "type": "decimal",
+      "precision": 5,
+      "scale": 2,
+      "required": false
+    },
+    {
+      "name": "description",
+      "display_name": "Description",
+      "type": "nvarchar",
+      "max_length": 2000,
+      "required": false
+    },
+    {
+      "name": "is_preferred",
+      "display_name": "Is Preferred",
+      "type": "bit",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "is_active",
+      "display_name": "Is Active",
+      "type": "bit",
+      "required": true,
+      "default": true
+    }
+  ]
+}

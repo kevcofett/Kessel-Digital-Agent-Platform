@@ -1,0 +1,423 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 14012
+
+PURPOSE
+
+This knowledge base provides the Neural Data Science Agent with methodologies for cross-device attribution including identity resolution, device graph approaches, and probabilistic matching techniques for complete customer journey measurement.
+
+CROSS-DEVICE CHALLENGE
+
+Understanding the multi-device attribution problem.
+
+DEVICE FRAGMENTATION
+
+User journey across multiple devices.
+
+Device proliferation
+- Mobile phone primary
+- Tablet secondary
+- Desktop for research
+- Connected TV emerging
+- Smart speakers growing
+
+Journey fragmentation
+- Research on mobile
+- Compare on desktop
+- Purchase on any device
+- Post-purchase on mobile
+
+Measurement impact
+- Incomplete journey view
+- Incorrect attribution
+- Channel undervaluation
+- Optimization errors
+
+IDENTITY FRAGMENTATION
+
+User identification challenges.
+
+Cookie limitations
+- Browser-specific cookies
+- Third-party deprecation
+- Private browsing modes
+- Cookie blocking
+
+Device identifiers
+- Mobile advertising IDs
+- iOS ATT limitations
+- Android restrictions
+- Identifier reset behavior
+
+Login gaps
+- Anonymous browsing
+- Infrequent login
+- Multiple accounts
+- Shared devices
+
+IDENTITY RESOLUTION
+
+Methods for connecting user identities.
+
+DETERMINISTIC MATCHING
+
+Known identity linkage.
+
+Login-based matching
+- Authenticated user sessions
+- Email address linking
+- Account identifier matching
+- High confidence matches
+
+First-party data
+- CRM identity matching
+- Transaction linking
+- Loyalty program data
+- Registration information
+
+Deterministic advantages
+- High accuracy
+- Auditable matches
+- Privacy compliant
+- User consent clarity
+
+Coverage limitations
+- Logged-in sessions only
+- Subset of interactions
+- Coverage gaps
+- Scale constraints
+
+PROBABILISTIC MATCHING
+
+Statistical identity inference.
+
+Signal collection
+- IP address patterns
+- Browser fingerprinting
+- Device characteristics
+- Behavioral patterns
+
+Matching algorithms
+- Similarity scoring
+- Clustering approaches
+- Machine learning models
+- Threshold optimization
+
+Confidence scoring
+- Match probability estimation
+- Confidence thresholds
+- Uncertainty quantification
+- False positive management
+
+Accuracy considerations
+- Match precision rates
+- Recall tradeoffs
+- Error rate monitoring
+- Validation approaches
+
+HYBRID APPROACHES
+
+Combining deterministic and probabilistic.
+
+Truth set seeding
+- Deterministic as ground truth
+- Model training on known matches
+- Probability calibration
+- Confidence anchoring
+
+Progressive matching
+- Start with deterministic
+- Extend with probabilistic
+- Confidence-weighted integration
+- Coverage expansion
+
+DEVICE GRAPHS
+
+Relationship networks for identity.
+
+GRAPH CONSTRUCTION
+
+Building device relationship networks.
+
+Node representation
+- Devices as nodes
+- Users as nodes
+- Events as edges
+- Attribute nodes
+
+Edge definition
+- Login events as edges
+- IP co-occurrence
+- Behavioral similarity
+- Temporal proximity
+
+Graph properties
+- Weighted edges
+- Directed relationships
+- Temporal evolution
+- Multi-graph layers
+
+GRAPH-BASED MATCHING
+
+Using graph structure for identity.
+
+Connected component analysis
+- Cluster identification
+- User household detection
+- Over-clustering prevention
+- Cluster quality metrics
+
+Graph algorithms
+- Community detection
+- Link prediction
+- Graph neural networks
+- Embedding methods
+
+Scale considerations
+- Large graph handling
+- Distributed computation
+- Incremental updates
+- Query efficiency
+
+GRAPH QUALITY
+
+Ensuring graph accuracy.
+
+Validation methods
+- Ground truth comparison
+- Cross-validation
+- A/B testing
+- Manual review sampling
+
+Quality metrics
+- Cluster purity
+- Match precision
+- Match recall
+- False link rates
+
+Maintenance
+- Graph decay handling
+- New device integration
+- Stale link removal
+- Continuous validation
+
+CROSS-DEVICE ATTRIBUTION
+
+Applying identity to attribution.
+
+JOURNEY STITCHING
+
+Connecting touchpoints across devices.
+
+Stitching logic
+- Identity-based connection
+- Temporal ordering
+- Gap handling
+- Duplicate resolution
+
+Journey reconstruction
+- Complete path building
+- Cross-device transitions
+- Session connection
+- Attribution window alignment
+
+Quality considerations
+- Stitching confidence
+- Partial journey handling
+- Uncertainty propagation
+- Validation checks
+
+CREDIT DISTRIBUTION
+
+Allocating credit across device paths.
+
+Attribution models
+- Cross-device adaptations
+- Position reconsideration
+- Device role weighting
+- Complete path models
+
+Device contribution
+- Device type credit
+- Cross-device synergy
+- Device sequence value
+- Multi-device boost
+
+Reporting considerations
+- Device-level reporting
+- User-level aggregation
+- Journey-level metrics
+- Confidence-weighted reporting
+
+IMPLEMENTATION CONSIDERATIONS
+
+Practical cross-device deployment.
+
+DATA INTEGRATION
+
+Combining data sources.
+
+Data collection
+- Event data standardization
+- Identifier collection
+- Timestamp alignment
+- Metadata capture
+
+Identity data
+- Deterministic signal capture
+- Probabilistic feature collection
+- Graph relationship storage
+- Historical identity tracking
+
+Platform integration
+- Ad platform data
+- Analytics platform data
+- CRM data
+- DMP and CDP data
+
+PRIVACY COMPLIANCE
+
+Respecting user privacy.
+
+Consent management
+- Explicit consent tracking
+- Purpose specification
+- Withdrawal handling
+- Preference management
+
+Data minimization
+- Necessary data only
+- Retention limits
+- Anonymization options
+- Aggregation approaches
+
+Regulatory compliance
+- GDPR requirements
+- CCPA considerations
+- Platform policies
+- Industry standards
+
+MEASUREMENT ACCURACY
+
+Assessing cross-device quality.
+
+Accuracy metrics
+- Match accuracy rates
+- Journey completeness
+- Attribution accuracy
+- Coverage measurement
+
+Validation approaches
+- Holdout testing
+- Ground truth comparison
+- Incrementality calibration
+- Expert review
+
+Error handling
+- False positive impact
+- False negative impact
+- Confidence thresholds
+- Conservative defaults
+
+PRIVACY-FIRST APPROACHES
+
+Modern cross-device methods.
+
+AGGREGATED MEASUREMENT
+
+Privacy-preserving techniques.
+
+Cohort-based approaches
+- User cohort matching
+- Aggregated statistics
+- Differential privacy
+- K-anonymity principles
+
+Modeled conversions
+- Statistical estimation
+- Aggregate calibration
+- Confidence intervals
+- Transparent methodology
+
+Platform APIs
+- Aggregated Reporting API
+- Attribution Reporting API
+- Topics API integration
+- Privacy sandbox compliance
+
+CONSENT-BASED IDENTITY
+
+User-controlled identity.
+
+Authenticated identity
+- Login-based only
+- User-controlled sharing
+- Value exchange clarity
+- Trust building
+
+First-party focus
+- Direct relationship data
+- Customer data platforms
+- Owned identity resolution
+- Data partnership
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for cross-device attribution.
+
+IMPLEMENTATION WORKFLOW
+
+Standard cross-device process.
+
+Identity resolution phase
+- Signal collection
+- Match processing
+- Graph construction
+- Quality validation
+
+Attribution phase
+- Journey stitching
+- Model application
+- Credit calculation
+- Confidence weighting
+
+Reporting phase
+- User-level aggregation
+- Device contribution analysis
+- Cross-device insights
+- Optimization recommendations
+
+CROSS-AGENT INTEGRATION
+
+Cross-device outputs for downstream agents.
+
+Outputs to ANL Agent
+- Complete journey data
+- Cross-device patterns
+- User-level attribution
+- Coverage statistics
+
+Outputs to AUD Agent
+- Cross-device behavior
+- Device preference segments
+- Journey type clustering
+- Multi-device user profiles
+
+Outputs to CHA Agent
+- Device channel synergies
+- Cross-device paths
+- Device role by channel
+- Optimization inputs
+
+Outputs to PRF Agent
+- Cross-device performance
+- Journey completeness trends
+- Match quality metrics
+- Measurement accuracy
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive cross-device attribution methodology

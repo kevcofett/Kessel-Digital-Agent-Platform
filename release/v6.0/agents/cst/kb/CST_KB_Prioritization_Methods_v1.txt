@@ -1,0 +1,619 @@
+PRIORITIZATION METHODS AND DECISION FRAMEWORKS
+
+CONSULTING STRATEGY AGENT - KNOWLEDGE BASE
+Version 1.0
+Document Code CST-KB-PM-001
+
+This document provides detailed guidance for applying prioritization methods to rank initiatives, allocate resources, and make trade-off decisions. It covers RICE scoring, weighted decision matrices, MoSCoW, effort-impact analysis, and dependency mapping.
+
+========================================
+
+RICE SCORING METHODOLOGY
+
+OVERVIEW
+
+RICE provides a quantitative approach to prioritizing initiatives by scoring Reach, Impact, Confidence, and Effort. The resulting score enables objective comparison across diverse initiatives.
+
+RICE FORMULA
+
+RICE Score equals (Reach times Impact times Confidence) divided by Effort
+
+Higher RICE scores indicate higher priority. The formula balances value creation against resource investment while accounting for uncertainty.
+
+COMPONENT DEFINITIONS
+
+REACH
+
+Definition
+The number of people, customers, transactions, or units affected by the initiative within a defined time period.
+
+Measurement Guidance
+
+- Specify the metric being counted (customers, users, transactions)
+- Define the time period (per quarter, per year)
+- Use data to estimate where possible
+- Be consistent across initiatives being compared
+
+Examples
+
+- Marketing campaign reaching 50,000 customers per quarter
+- Process improvement affecting 200 employees
+- Product feature used by 10,000 monthly active users
+
+Reach Estimation Best Practices
+
+- Use historical data when available
+- Start with total addressable population
+- Apply adoption or usage rates
+- Document assumptions clearly
+
+IMPACT
+
+Definition
+The degree of effect on each person or unit reached. Impact measures intensity not breadth.
+
+Scoring Scale
+
+- 3 equals Massive impact - Significant positive change in behavior or outcome
+- 2 equals High impact - Notable improvement in experience or efficiency
+- 1 equals Medium impact - Moderate positive effect
+- 0.5 equals Low impact - Minor improvement
+- 0.25 equals Minimal impact - Barely noticeable effect
+
+Impact Assessment Guidance
+
+- Consider the magnitude of change for affected users
+- Think about before and after states
+- Use evidence from similar initiatives
+- Avoid inflating impact without justification
+
+Examples
+
+- Massive (3): Feature that enables entirely new capability
+- High (2): Improvement that saves significant time or frustration
+- Medium (1): Enhancement that provides incremental benefit
+- Low (0.5): Polish that improves experience marginally
+- Minimal (0.25): Fix that addresses rare edge case
+
+CONFIDENCE
+
+Definition
+The certainty level in Reach and Impact estimates expressed as a percentage.
+
+Scoring Scale
+
+- 100 percent for High confidence with strong data support
+- 80 percent for Medium confidence with some data and reasonable assumptions
+- 50 percent for Low confidence with limited data and significant assumptions
+- 30 percent or below for Very low confidence with mostly guesswork
+
+Confidence Determination Factors
+
+- Quality and recency of supporting data
+- Track record with similar initiatives
+- Number and magnitude of assumptions
+- Expert validation of estimates
+
+Confidence Application
+
+Confidence acts as a discount factor. Lower confidence reduces the score, deprioritizing initiatives where success is uncertain. This encourages gathering more data before committing to uncertain initiatives.
+
+EFFORT
+
+Definition
+The total person-months or person-weeks required to complete the initiative.
+
+Effort Estimation Guidance
+
+- Include all roles required (design, development, testing, deployment)
+- Account for coordination overhead
+- Include ramp-up and knowledge transfer time
+- Be realistic about interruptions and delays
+
+Effort Categories
+
+- Under 1 person-month: Quick wins
+- 1 to 3 person-months: Small initiatives
+- 3 to 6 person-months: Medium initiatives
+- 6 to 12 person-months: Large initiatives
+- Over 12 person-months: Major programs
+
+Effort Best Practices
+
+- Break down by phase or component for large initiatives
+- Include contingency for unknowns
+- Validate with those who will do the work
+- Use historical actuals for calibration
+
+RICE CALCULATION EXAMPLE
+
+Initiative: Implement customer self-service portal
+
+Reach: 15,000 customers per quarter will use the portal
+Impact: 2 (High - significant reduction in support wait times)
+Confidence: 80 percent (based on customer research and similar implementations)
+Effort: 4 person-months
+
+RICE Score equals (15,000 times 2 times 0.8) divided by 4
+RICE Score equals 24,000 divided by 4
+RICE Score equals 6,000
+
+INTERPRETING RICE SCORES
+
+Score Comparison
+
+- Compare scores across initiatives to determine priority
+- Higher score indicates higher priority
+- Large score differences are meaningful
+- Small score differences may not be significant
+
+Score Categories
+
+- Scores over 10,000: High priority, pursue immediately
+- Scores 1,000 to 10,000: Medium priority, schedule for execution
+- Scores 100 to 1,000: Low priority, consider carefully
+- Scores under 100: Very low priority, defer or decline
+
+RICE LIMITATIONS AND ADJUSTMENTS
+
+Limitations
+
+- Does not account for dependencies
+- Does not consider strategic alignment
+- Assumes linear value relationship
+- May disadvantage long-term investments
+
+Adjustments
+
+- Apply strategic multiplier for alignment with key objectives
+- Group dependent initiatives together
+- Use minimum Effort threshold for small improvements
+- Separate scoring for different initiative types
+
+========================================
+
+WEIGHTED DECISION MATRIX
+
+OVERVIEW
+
+Weighted decision matrix provides systematic evaluation of options against multiple criteria with adjustable importance weights.
+
+WHEN TO USE
+
+- Comparing alternatives with multiple evaluation dimensions
+- Decisions requiring stakeholder input on priorities
+- Complex trade-offs without clear dominant option
+- Documenting decision rationale for stakeholders
+
+CONSTRUCTION PROCESS
+
+STEP 1 - DEFINE OPTIONS
+
+- List all options being evaluated
+- Ensure options are distinct alternatives
+- Include status quo or do nothing option
+- Limit to manageable number (typically 3 to 7)
+
+STEP 2 - IDENTIFY CRITERIA
+
+Criteria Selection Guidance
+
+- Include all factors important to decision
+- Ensure criteria are measurable or assessable
+- Avoid redundant criteria measuring same thing
+- Include both benefits and risks
+
+Common Criteria Categories
+
+Strategic Fit
+- Alignment with strategy and priorities
+- Support for long-term objectives
+- Competitive differentiation
+
+Financial
+- Investment required
+- Expected return or savings
+- Payback period
+- Risk-adjusted value
+
+Operational
+- Implementation complexity
+- Resource availability
+- Timeline to value
+- Scalability
+
+Risk
+- Technical risk
+- Market risk
+- Execution risk
+- Regulatory or compliance risk
+
+STEP 3 - ASSIGN WEIGHTS
+
+Weight Assignment Process
+
+- Distribute 100 points across all criteria
+- More important criteria get higher weights
+- Engage stakeholders in weight setting
+- Document rationale for weights
+
+Weight Validation
+
+- Review weights for face validity
+- Test with extreme cases
+- Adjust if weights produce counterintuitive results
+- Confirm stakeholder agreement on weights
+
+STEP 4 - SCORE OPTIONS
+
+Scoring Process
+
+- Rate each option on each criterion
+- Use consistent scale (typically 1 to 5 or 1 to 10)
+- Higher score indicates better performance
+- Document evidence for each score
+
+Scoring Scale Example (1 to 5)
+
+- 5 equals Excellent - Fully meets criterion
+- 4 equals Good - Mostly meets criterion
+- 3 equals Adequate - Partially meets criterion
+- 2 equals Poor - Minimally meets criterion
+- 1 equals Very Poor - Fails to meet criterion
+
+STEP 5 - CALCULATE WEIGHTED SCORES
+
+Calculation
+
+For each option, weighted score equals sum of (criterion score times criterion weight) for all criteria
+
+Normalization
+
+- Divide total weighted score by sum of weights
+- Results in score on original scale
+- Enables comparison across different weight totals
+
+STEP 6 - ANALYZE RESULTS
+
+Analysis Steps
+
+- Rank options by total weighted score
+- Examine scores on individual criteria
+- Identify where options differentiate
+- Test sensitivity to weight changes
+
+EXAMPLE WEIGHTED DECISION MATRIX
+
+Options: Option A, Option B, Option C
+Criteria with Weights:
+- Strategic Fit (30)
+- Financial Return (25)
+- Implementation Risk (20)
+- Time to Value (15)
+- Scalability (10)
+
+Scores (1 to 5):
+Option A: Strategic 4, Financial 5, Risk 3, Time 4, Scale 4
+Option B: Strategic 5, Financial 3, Risk 4, Time 3, Scale 5
+Option C: Strategic 3, Financial 4, Risk 5, Time 5, Scale 3
+
+Weighted Scores:
+Option A: (4x30)+(5x25)+(3x20)+(4x15)+(4x10) = 120+125+60+60+40 = 405
+Option B: (5x30)+(3x25)+(4x20)+(3x15)+(5x10) = 150+75+80+45+50 = 400
+Option C: (3x30)+(4x25)+(5x20)+(5x15)+(3x10) = 90+100+100+75+30 = 395
+
+Normalized: Option A (4.05), Option B (4.00), Option C (3.95)
+Recommendation: Option A with slight preference based on financial return
+
+SENSITIVITY ANALYSIS
+
+Purpose
+
+Test how results change with different weight assumptions.
+
+Process
+
+- Identify criteria with most uncertainty about weight
+- Vary weights within reasonable range
+- Observe if ranking changes
+- Document sensitivity findings
+
+Interpretation
+
+- Robust result: Ranking stable across weight variations
+- Sensitive result: Small weight changes flip ranking
+- Report sensitivity to decision makers
+
+========================================
+
+MOSCOW PRIORITIZATION
+
+OVERVIEW
+
+MoSCoW categorizes requirements or initiatives into Must Have, Should Have, Could Have, and Will Not Have.
+
+WHEN TO USE
+
+- Scope management for projects
+- Release planning for products
+- Requirements prioritization with stakeholders
+- Resource-constrained planning
+
+CATEGORY DEFINITIONS
+
+MUST HAVE
+
+Definition: Non-negotiable requirements without which delivery would fail
+
+Characteristics
+- Critical to minimum viable solution
+- No workaround exists
+- Legal or compliance requirements
+- Failure to include would make release pointless
+
+Questions to Determine
+- Would we launch without this?
+- Is there any workaround?
+- What happens if we defer this?
+
+SHOULD HAVE
+
+Definition: Important requirements that are not critical for launch but needed soon
+
+Characteristics
+- High priority but not essential
+- Painful to omit but workaround exists
+- Expected by most stakeholders
+- Significant business value
+
+Questions to Determine
+- Can we launch without this and add later?
+- How much value do we lose by deferring?
+- Is there acceptable workaround?
+
+COULD HAVE
+
+Definition: Desirable requirements that would be nice to have if resources permit
+
+Characteristics
+- Lower priority than Should Have
+- Minor impact if omitted
+- Easy to include if time available
+- Enhancement rather than core capability
+
+Questions to Determine
+- Would anyone really miss this?
+- Does this affect core use case?
+- Is this truly needed now?
+
+WILL NOT HAVE (THIS TIME)
+
+Definition: Requirements explicitly excluded from current scope
+
+Characteristics
+- Out of scope for this release
+- May be included in future
+- Explicitly acknowledged not forgotten
+- Manages stakeholder expectations
+
+Questions to Determine
+- Why is this being requested?
+- When might this be appropriate?
+- How do we communicate exclusion?
+
+MOSCOW APPLICATION PROCESS
+
+Step 1 - List All Items
+Gather complete list of requirements or initiatives. Include items from all stakeholders. Avoid filtering at this stage.
+
+Step 2 - Initial Categorization
+Have stakeholders independently categorize. Compare categorizations across stakeholders. Identify disagreements.
+
+Step 3 - Facilitated Discussion
+Discuss items with disagreement. Apply category definitions consistently. Reach consensus on each item.
+
+Step 4 - Validate Against Constraints
+Check Must Have fits within constraints. If not, something is miscategorized. Iterate until Must Have is achievable.
+
+Step 5 - Document and Communicate
+Record final categorization with rationale. Share with all stakeholders. Set expectations clearly.
+
+MOSCOW BEST PRACTICES
+
+- Be strict about Must Have category
+- Must Have should be minority of items
+- Will Not Have is explicit communication
+- Revisit categorization if constraints change
+- Use time-boxing to prevent Must Have bloat
+
+========================================
+
+EFFORT-IMPACT MATRIX
+
+OVERVIEW
+
+The effort-impact matrix categorizes initiatives into four quadrants based on effort required and impact expected.
+
+QUADRANT DEFINITIONS
+
+QUICK WINS (Low Effort, High Impact)
+
+Characteristics
+- Immediate priority
+- High value with minimal investment
+- No reason to delay
+- Build momentum and credibility
+
+Strategy: Execute immediately
+
+MAJOR PROJECTS (High Effort, High Impact)
+
+Characteristics
+- Strategic importance
+- Requires significant investment
+- Worth the effort given impact
+- Needs careful planning
+
+Strategy: Plan and resource carefully
+
+FILL-INS (Low Effort, Low Impact)
+
+Characteristics
+- Minor improvements
+- Easy to accomplish
+- Limited value individually
+- May accumulate value
+
+Strategy: Do when convenient or bundle together
+
+THANKLESS TASKS (High Effort, Low Impact)
+
+Characteristics
+- Poor return on investment
+- Drains resources from better options
+- Should be questioned
+- Often legacy commitments
+
+Strategy: Avoid, defer, or redesign
+
+APPLICATION PROCESS
+
+Step 1 - List Initiatives
+Compile complete list of candidates. Include current backlog and new ideas. Remove duplicates and combine related items.
+
+Step 2 - Estimate Effort
+Use consistent effort scale. Common scales include days, weeks, or t-shirt sizes. Validate with those who will execute.
+
+Step 3 - Estimate Impact
+Use consistent impact scale. Consider business value or customer value. Base on evidence where possible.
+
+Step 4 - Plot on Matrix
+Place each initiative in appropriate quadrant. Items near boundaries need careful consideration. Discuss borderline cases.
+
+Step 5 - Develop Strategy
+Prioritize Quick Wins first. Plan Major Projects with milestones. Schedule Fill-Ins opportunistically. Challenge or eliminate Thankless Tasks.
+
+USING EFFORT-IMPACT WITH OTHER METHODS
+
+- Use Effort-Impact for initial triage
+- Apply RICE for detailed prioritization of candidates
+- Use Weighted Matrix for strategic selection among major projects
+- Apply MoSCoW for scope management within selected initiatives
+
+========================================
+
+DEPENDENCY MAPPING
+
+OVERVIEW
+
+Dependency mapping identifies relationships between initiatives that affect sequencing and priority.
+
+DEPENDENCY TYPES
+
+FINISH-TO-START
+
+Most common dependency. Predecessor must finish before successor can start.
+
+Example: Data platform must be implemented before analytics capabilities.
+
+START-TO-START
+
+Activities can proceed in parallel after predecessor starts.
+
+Example: Testing can start after development starts but not before.
+
+FINISH-TO-FINISH
+
+Activities finish together or successor finishes after predecessor.
+
+Example: Documentation finishes when development finishes.
+
+EXTERNAL DEPENDENCIES
+
+Dependencies on factors outside project control.
+
+Example: Regulatory approval, vendor delivery, market conditions.
+
+DEPENDENCY ANALYSIS PROCESS
+
+Step 1 - Identify Dependencies
+Review each initiative for prerequisites. Note what must be done before. Note what depends on this initiative.
+
+Step 2 - Document Dependencies
+Create dependency matrix or diagram. Specify dependency type. Note strength of dependency.
+
+Step 3 - Identify Critical Path
+Trace longest dependency chain. Calculate total duration on critical path. Identify slack on other paths.
+
+Step 4 - Optimize Sequence
+Look for parallelization opportunities. Identify dependencies that can be broken. Find early starts for long-lead items.
+
+Step 5 - Incorporate into Priority
+
+Dependency-Informed Prioritization Rules
+- Enablers should be prioritized even if lower standalone value
+- Dependent initiatives cannot start until prerequisites complete
+- Critical path items need resource priority
+- External dependencies need early attention
+
+DEPENDENCY VISUALIZATION
+
+Network Diagram
+- Nodes represent initiatives
+- Arrows show dependencies
+- Critical path highlighted
+- Duration and slack noted
+
+Dependency Matrix
+- Rows and columns are initiatives
+- Cells indicate dependency relationship
+- Easy to see all relationships
+- Good for identifying clusters
+
+========================================
+
+INTEGRATING PRIORITIZATION METHODS
+
+RECOMMENDED APPROACH
+
+Stage 1 - Triage
+Use Effort-Impact for initial categorization. Eliminate obvious Thankless Tasks. Identify Quick Wins for immediate action.
+
+Stage 2 - Detailed Scoring
+Apply RICE to Major Projects and high-value Fill-Ins. Calculate scores with documented assumptions. Rank by score.
+
+Stage 3 - Strategic Selection
+Use Weighted Matrix for top candidates. Engage stakeholders in criteria weighting. Select initiatives for execution.
+
+Stage 4 - Scope Management
+Apply MoSCoW to scope within selected initiatives. Define minimum viable delivery. Set expectations with stakeholders.
+
+Stage 5 - Sequence Planning
+Map dependencies among selected initiatives. Identify critical path. Optimize sequence for value delivery.
+
+COMMUNICATING PRIORITIZATION
+
+For Executives
+- Lead with strategic rationale
+- Show alignment with objectives
+- Present trade-offs clearly
+- Request decisions on conflicts
+
+For Teams
+- Explain methodology used
+- Share scores and rankings
+- Connect to business value
+- Set clear expectations
+
+For Stakeholders
+- Address their priorities explicitly
+- Explain categorization decisions
+- Set timing expectations
+- Provide path for reconsideration
+
+========================================
+
+END OF PRIORITIZATION METHODS AND DECISION FRAMEWORKS
+
+Document maintained by KDAP Platform Team
+Last updated January 2026

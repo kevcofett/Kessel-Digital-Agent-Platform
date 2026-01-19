@@ -1,0 +1,489 @@
+INTER-AGENT COMMUNICATION CONTRACT
+
+KESSEL DIGITAL AGENT PLATFORM - SHARED KNOWLEDGE BASE
+Version 1.0
+Document Code EAP-KB-CC-001
+
+This document establishes the communication protocol between agents within the platform. All agents must follow this contract when requesting services from other agents, responding to requests, and handing off work.
+
+========================================
+
+INTER-AGENT REQUEST FORMAT
+
+When one agent needs to invoke capabilities from another agent, the request must follow this standardized format.
+
+REQUIRED REQUEST FIELDS
+
+source_agent
+
+- The agent code initiating the request
+- Valid values: ORC, ANL, AUD, CHA, SPO, DOC, PRF, CST, CHG
+- Example: source_agent: ANL
+
+target_agent
+
+- The agent code that should handle the request
+- Valid values: ORC, ANL, AUD, CHA, SPO, DOC, PRF, CST, CHG
+- Example: target_agent: DOC
+
+capability_code
+
+- The specific capability being requested
+- Must match a registered capability in eap_capability table
+- Example: capability_code: DOC_GENERATE
+
+request_id
+
+- Unique identifier for this request
+- Format: UUID or session_id plus timestamp
+- Used for tracking and correlation
+- Example: request_id: abc123-20250118-143022
+
+inputs_json
+
+- JSON object containing all required inputs for the capability
+- Schema depends on specific capability
+- Must include all required parameters
+- Example: inputs_json: {template_type: business_case, title: Market Entry Analysis}
+
+OPTIONAL REQUEST FIELDS
+
+priority
+
+- Request priority level
+- Values: HIGH, NORMAL, LOW
+- Default: NORMAL
+- HIGH triggers faster processing if available
+
+timeout_ms
+
+- Maximum time to wait for response
+- Specified in milliseconds
+- Default: 30000 (30 seconds)
+- Long-running capabilities may need higher values
+
+context
+
+- Session context object passed to target agent
+- Contains user information, session state, conversation history reference
+- Allows target agent to maintain continuity
+
+correlation_id
+
+- Links related requests in multi-step workflows
+- Same correlation_id across all requests in a workflow
+- Used for debugging and audit
+
+REQUEST FORMAT EXAMPLE
+
+---
+REQUEST
+
+source_agent: CST
+target_agent: ANL
+capability_code: ANL_NPV
+request_id: sess-789-20250118-143022
+priority: NORMAL
+timeout_ms: 15000
+inputs_json: {
+  cash_flows: [-100000, 25000, 35000, 45000, 55000],
+  discount_rate: 0.12,
+  periods: annual
+}
+context: {
+  session_id: sess-789,
+  user_id: user-456,
+  engagement_type: business_case
+}
+---
+
+========================================
+
+INTER-AGENT RESPONSE FORMAT
+
+When an agent completes a request from another agent, the response must follow this standardized format.
+
+REQUIRED RESPONSE FIELDS
+
+request_id
+
+- Echo back the request_id from the original request
+- Enables correlation of response to request
+- Example: request_id: abc123-20250118-143022
+
+status
+
+- Outcome status of the request
+- Values: SUCCESS, PARTIAL, ERROR, TIMEOUT
+- SUCCESS: Request completed fully
+- PARTIAL: Request partially completed with limitations
+- ERROR: Request failed
+- TIMEOUT: Request exceeded time limit
+
+result_json
+
+- JSON object containing capability output
+- Schema depends on specific capability
+- Empty or null for ERROR status
+
+confidence_level
+
+- Confidence in the result per platform confidence standards
+- Values: HIGH, MEDIUM, LOW, SPECULATIVE
+- Required for SUCCESS and PARTIAL status
+
+OPTIONAL RESPONSE FIELDS
+
+error_code
+
+- Specific error identifier for ERROR status
+- Enables programmatic error handling
+- Format: CATEGORY_SPECIFIC_ERROR
+- Example: DATA_MISSING_REQUIRED_INPUT
+
+error_message
+
+- Human-readable error description
+- Required when status is ERROR
+- Should follow error messaging guidelines from EAP_KB_Error_Handling
+
+warnings
+
+- Array of warning messages for PARTIAL status
+- Notes what was limited or degraded
+- Example: warnings: [Benchmark data from 2023, may not reflect current conditions]
+
+metadata
+
+- Additional information about response
+- May include processing_time_ms, source_version, cache_status
+
+RESPONSE FORMAT EXAMPLES
+
+Success Response
+
+---
+RESPONSE
+
+request_id: sess-789-20250118-143022
+status: SUCCESS
+confidence_level: HIGH
+result_json: {
+  npv: 24156.72,
+  currency: USD,
+  discount_rate: 0.12,
+  periods: 5
+}
+metadata: {
+  processing_time_ms: 245,
+  capability_version: 1.0
+}
+---
+
+Partial Response
+
+---
+RESPONSE
+
+request_id: sess-789-20250118-143044
+status: PARTIAL
+confidence_level: MEDIUM
+result_json: {
+  market_size: 4200000000,
+  growth_rate: 0.15,
+  top_competitors: [Competitor A, Competitor B, Competitor C],
+  market_share: null
+}
+warnings: [
+  Market share data unavailable from primary source,
+  Growth rate based on 2023 data
+]
+---
+
+Error Response
+
+---
+RESPONSE
+
+request_id: sess-789-20250118-143105
+status: ERROR
+error_code: INPUT_VALIDATION_FAILED
+error_message: Cash flows array must contain at least two values (initial investment and one return period)
+result_json: null
+---
+
+========================================
+
+HANDOFF RULES
+
+When one agent routes work to another agent, specific handoff protocols apply.
+
+WHEN TO ROUTE VERSUS HANDLE LOCALLY
+
+Route When
+
+- Request requires capability registered to another agent
+- User intent clearly maps to different agent domain
+- Specialized expertise would produce better result
+- Current agent lacks data or context other agent has
+
+Handle Locally When
+
+- Request is within agent primary scope
+- Routing would introduce unnecessary latency
+- Request is simple enough to handle without specialization
+- Local handling would produce equivalent result
+
+CONTEXT PRESERVATION REQUIREMENTS
+
+When routing to another agent, preserve
+
+Session Context
+
+- Session identifier must pass through
+- User identifier must pass through
+- Conversation history reference must be available
+
+Request Context
+
+- Original user request language
+- Prior agent responses in this workflow
+- Decisions already made
+- Constraints established
+
+Domain Context
+
+- Relevant findings from current agent
+- Applicable data gathered
+- Assumptions in effect
+
+Context Handoff Format
+
+---
+HANDOFF CONTEXT
+
+session_id: sess-789
+original_request: Help me build a business case for market entry
+workflow_position: Step 3 of 5 (Financial Analysis)
+prior_agents: [ORC, CST]
+prior_outputs: {
+  cst_framework: market_entry_assessment,
+  cst_scenarios: [conservative, base, aggressive]
+}
+constraints: {
+  budget_range: [1000000, 5000000],
+  timeline: 18_months,
+  risk_tolerance: moderate
+}
+---
+
+USER TRANSPARENCY DURING HANDOFFS
+
+Users should understand when work is being handed off between agents.
+
+Disclosure Standards
+
+- Do not expose internal agent architecture unnecessarily
+- Do describe what specialized analysis is being performed
+- Explain what additional perspective the handoff provides
+- Maintain conversational continuity across handoffs
+
+Appropriate Handoff Language
+
+- Let me analyze the financial implications of these scenarios...
+- Now I will assess the competitive positioning in detail...
+- To provide specific channel recommendations, I will examine...
+
+Inappropriate Handoff Language
+
+- Routing to ANL agent for NPV calculation...
+- CST handoff complete, initiating DOC workflow...
+- Agent capability ANL_MONTECARLO invoked...
+
+========================================
+
+ORCHESTRATOR PROTOCOL
+
+The Orchestrator (ORC) has special responsibilities for routing and coordination.
+
+INTENT CLASSIFICATION CONTRACT
+
+When ORC receives a user request, it must
+
+Classify Intent
+
+- Identify primary intent from user message
+- Identify secondary intents if multi-part request
+- Assess confidence in classification
+
+Route to Agent
+
+- Select appropriate agent based on intent
+- Pass full context to target agent
+- Monitor for routing errors
+
+Handle Ambiguity
+
+- If classification confidence below threshold, ask clarifying question
+- If multiple valid routings, present options to user
+- If no valid routing, acknowledge limitation
+
+Intent Classification Response Format
+
+---
+INTENT CLASSIFICATION
+
+primary_intent: financial_projection
+intent_confidence: 0.85
+target_agent: ANL
+target_capability: ANL_PROJECTION
+secondary_intents: [document_generation]
+secondary_targets: [{agent: DOC, capability: DOC_GENERATE}]
+---
+
+MULTI-AGENT COORDINATION
+
+When user request requires multiple agents
+
+Sequential Workflow
+
+- ORC routes to first agent
+- First agent completes and returns to ORC
+- ORC routes to next agent with accumulated context
+- Continue until workflow complete
+- ORC assembles final response
+
+Parallel Workflow
+
+- ORC identifies independent sub-tasks
+- Routes to multiple agents simultaneously
+- Waits for all responses
+- Assembles combined response
+
+Workflow Tracking
+
+- ORC maintains workflow state
+- Tracks which steps complete
+- Handles partial failures gracefully
+- Provides unified response to user
+
+RESPONSE AGGREGATION RULES
+
+When ORC aggregates responses from multiple agents
+
+Aggregation Standards
+
+- Present results in logical order not agent order
+- Unify formatting and terminology
+- Resolve any conflicts between agent outputs
+- Present confidence levels for each component
+- Create coherent narrative from components
+
+Conflict Resolution
+
+- If agents provide conflicting information, note discrepancy
+- Prefer higher-confidence source
+- Do not hide conflicts from user
+- May need to ask user for guidance on which to prioritize
+
+========================================
+
+ERROR HANDLING IN COMMUNICATION
+
+FAILED REQUEST HANDLING
+
+When inter-agent request fails
+
+Immediate Response
+
+- Return ERROR status with code and message
+- Do not hang waiting for impossible completion
+- Log error for debugging
+
+Calling Agent Responsibility
+
+- Check response status before using result
+- Implement fallback if available
+- Inform user appropriately if no fallback
+- Do not fail silently
+
+TIMEOUT HANDLING
+
+When request exceeds timeout
+
+Timeout Response
+
+- Return TIMEOUT status
+- Include partial results if any available
+- Note what was not completed
+
+Calling Agent Options
+
+- Retry with longer timeout if appropriate
+- Proceed with partial results
+- Fall back to alternative approach
+- Inform user of limitation
+
+CASCADE FAILURE PREVENTION
+
+Prevent one agent failure from cascading
+
+Circuit Breaker Pattern
+
+- Track failure rate per agent
+- After threshold failures, stop routing to failed agent
+- Return graceful degradation response instead
+- Periodically test if agent recovered
+
+Isolation Requirements
+
+- One agent failure should not crash entire platform
+- Other agents continue operating
+- User receives helpful error rather than system failure
+
+========================================
+
+SESSION CONTINUITY
+
+MAINTAINING STATE ACROSS AGENTS
+
+All agents must support session continuity
+
+Session State Contents
+
+- Session identifier
+- User identifier
+- Conversation history reference
+- Workflow state
+- Agent-specific state per agent that has participated
+
+State Synchronization
+
+- Orchestrator is source of truth for session state
+- Agents report state changes back to Orchestrator
+- State persists across agent boundaries
+
+CONVERSATION CONTEXT
+
+Agents must maintain awareness of conversation
+
+Context Awareness
+
+- What has user already told us?
+- What have we already told user?
+- What decisions have been made?
+- What constraints have been established?
+
+Context Usage
+
+- Do not ask for information already provided
+- Do not repeat analysis already presented
+- Build on prior findings rather than starting over
+- Reference previous points when relevant
+
+========================================
+
+END OF INTER-AGENT COMMUNICATION CONTRACT
+
+Document maintained by KDAP Platform Team
+Last updated January 2026

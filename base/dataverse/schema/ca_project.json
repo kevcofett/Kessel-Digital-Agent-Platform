@@ -1,0 +1,103 @@
+{
+  "table_name": "ca_project",
+  "display_name": "CA Project",
+  "description": "Consulting engagement tracking",
+  "columns": [
+    {
+      "name": "ca_projectid",
+      "display_name": "Project ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "project_code",
+      "display_name": "Project Code",
+      "type": "nvarchar",
+      "max_length": 30,
+      "required": true
+    },
+    {
+      "name": "project_name",
+      "display_name": "Project Name",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": true
+    },
+    {
+      "name": "client_name",
+      "display_name": "Client Name",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": true
+    },
+    {
+      "name": "vertical_code",
+      "display_name": "Industry",
+      "type": "nvarchar",
+      "max_length": 20,
+      "required": false
+    },
+    {
+      "name": "engagement_type",
+      "display_name": "Engagement Type",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "Assessment"},
+        {"value": 2, "label": "Strategy"},
+        {"value": 3, "label": "Transformation"},
+        {"value": 4, "label": "Due Diligence"},
+        {"value": 5, "label": "Advisory"}
+      ]
+    },
+    {
+      "name": "project_status",
+      "display_name": "Status",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "Discovery"},
+        {"value": 2, "label": "Analysis"},
+        {"value": 3, "label": "Recommendations"},
+        {"value": 4, "label": "Roadmap"},
+        {"value": 5, "label": "Complete"},
+        {"value": 6, "label": "On Hold"}
+      ]
+    },
+    {
+      "name": "session_id",
+      "display_name": "Session",
+      "type": "lookup",
+      "lookup_table": "eap_session",
+      "required": false
+    },
+    {
+      "name": "start_date",
+      "display_name": "Start Date",
+      "type": "datetime",
+      "required": false
+    },
+    {
+      "name": "target_end_date",
+      "display_name": "Target End Date",
+      "type": "datetime",
+      "required": false
+    },
+    {
+      "name": "created_at",
+      "display_name": "Created At",
+      "type": "datetime",
+      "required": true,
+      "auto_generated": true
+    },
+    {
+      "name": "modified_at",
+      "display_name": "Modified At",
+      "type": "datetime",
+      "required": false,
+      "auto_generated": true
+    }
+  ]
+}

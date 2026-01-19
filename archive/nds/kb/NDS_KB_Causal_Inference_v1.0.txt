@@ -1,0 +1,414 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 14234
+
+PURPOSE
+
+This knowledge base provides the Neural Data Science Agent with comprehensive causal inference methodology including potential outcomes framework, identification strategies, and best practices for establishing causation in marketing measurement.
+
+CAUSAL INFERENCE FUNDAMENTALS
+
+Understanding causation versus correlation.
+
+CAUSATION CONCEPT
+
+Defining causal relationships.
+
+Causal definition
+- Intervention changes outcome
+- Manipulation concept
+- Counterfactual reasoning
+- Cause precedes effect
+
+Causal versus correlation
+- Association not causation
+- Third variable problem
+- Reverse causation
+- Spurious relationships
+
+Causal inference goal
+- Isolate treatment effect
+- Eliminate confounding
+- Establish causation
+- Support decision-making
+
+FUNDAMENTAL PROBLEM
+
+Core causal inference challenge.
+
+Counterfactual impossibility
+- Cannot observe both outcomes
+- Missing potential outcome
+- Single realization observed
+- Inference required
+
+Identification strategies
+- Randomization solution
+- Design-based approaches
+- Model-based approaches
+- Assumption requirements
+
+Assumption importance
+- All methods require assumptions
+- Untestable assumptions often
+- Transparency critical
+- Sensitivity analysis needed
+
+POTENTIAL OUTCOMES FRAMEWORK
+
+Rubin causal model foundations.
+
+FRAMEWORK COMPONENTS
+
+Potential outcomes elements.
+
+Potential outcomes definition
+- Outcome under treatment
+- Outcome under control
+- Defined for each unit
+- Only one observed
+
+Treatment effect definition
+- Individual treatment effect
+- Difference of potential outcomes
+- Generally unobservable
+- Target of estimation
+
+Average treatment effect
+- Population average of effects
+- Estimable under assumptions
+- Primary estimand often
+- Policy relevant
+
+CAUSAL ESTIMANDS
+
+Target quantities for estimation.
+
+Average treatment effect
+- Population-wide average
+- General effectiveness
+- Policy consideration
+- Randomization target
+
+Average effect on treated
+- Effect among treated only
+- Selection considerations
+- Practical interpretation
+- Common target
+
+Conditional average effect
+- Effect within subgroups
+- Heterogeneity exploration
+- Targeting implications
+- Personalization basis
+
+IDENTIFICATION STRATEGIES
+
+Methods for causal identification.
+
+RANDOMIZATION
+
+Experimental identification.
+
+Randomization mechanism
+- Random treatment assignment
+- Balance in expectation
+- Eliminates selection bias
+- Unconfounded comparison
+
+Randomization benefits
+- Identifies causal effect
+- Simple analysis
+- Clear interpretation
+- Gold standard
+
+Practical considerations
+- Feasibility constraints
+- Ethical considerations
+- External validity
+- Compliance issues
+
+SELECTION ON OBSERVABLES
+
+Controlling for confounders.
+
+Conditional independence
+- Treatment independent of outcomes
+- Given observed covariates
+- Ignorability assumption
+- Strong requirement
+
+Implementation methods
+- Regression adjustment
+- Matching methods
+- Weighting methods
+- Doubly robust approaches
+
+Limitation acknowledgment
+- Unobserved confounders
+- Assumption untestable
+- Sensitivity required
+- Cautious interpretation
+
+INSTRUMENTAL VARIABLES
+
+Exploiting exogenous variation.
+
+Instrument concept
+- Affects treatment only
+- No direct outcome effect
+- Exogenous variation
+- Natural experiments
+
+IV assumptions
+- Relevance condition
+- Exclusion restriction
+- Unconfounded instrument
+- Monotonicity often
+
+IV estimation
+- Two-stage least squares
+- Limited information ML
+- Local average treatment effect
+- Complier interpretation
+
+REGRESSION DISCONTINUITY
+
+Threshold-based identification.
+
+RD concept
+- Treatment at threshold
+- Local randomization
+- Continuous relationship
+- Sharp discontinuity
+
+RD design types
+- Sharp RD at cutoff
+- Fuzzy RD near cutoff
+- Kink RD slope changes
+- Geographic RD borders
+
+RD implementation
+- Bandwidth selection
+- Polynomial specification
+- Sensitivity analysis
+- Validity assessment
+
+DIFFERENCE-IN-DIFFERENCES
+
+Panel data identification.
+
+DID concept
+- Before-after comparison
+- Treatment-control comparison
+- Double differencing
+- Trend elimination
+
+Parallel trends
+- Key identifying assumption
+- Pre-treatment verification
+- Trend alignment
+- Violation consequences
+
+DID extensions
+- Multiple periods
+- Staggered adoption
+- Heterogeneous effects
+- Synthetic control
+
+PROPENSITY SCORE METHODS
+
+Treatment probability adjustment.
+
+PROPENSITY SCORE CONCEPT
+
+Probability of treatment.
+
+Score definition
+- Probability of treatment
+- Given covariates
+- Balancing score
+- Dimension reduction
+
+Balancing property
+- Covariate balance within strata
+- Conditional independence
+- Confounding control
+- Comparison groups
+
+PROPENSITY SCORE METHODS
+
+Implementation approaches.
+
+Matching on propensity
+- Find similar control units
+- Propensity-based similarity
+- Various matching algorithms
+- Balance assessment
+
+Weighting by propensity
+- Inverse probability weights
+- Population reweighting
+- Variance considerations
+- Extreme weight handling
+
+Stratification
+- Propensity score strata
+- Within-strata comparison
+- Effect averaging
+- Assumption checking
+
+DOUBLY ROBUST ESTIMATION
+
+Combined approach benefits.
+
+Doubly robust concept
+- Outcome model and propensity
+- Consistent if either correct
+- Protection against misspecification
+- Efficiency gains
+
+AIPW estimator
+- Augmented IPW
+- Outcome model augmentation
+- Variance reduction
+- Robustness improvement
+
+SENSITIVITY ANALYSIS
+
+Assessing robustness.
+
+SENSITIVITY FRAMEWORK
+
+Unobserved confounding assessment.
+
+Sensitivity rationale
+- Assumptions untestable
+- Robustness exploration
+- Confidence assessment
+- Transparent uncertainty
+
+Sensitivity parameters
+- Confounding strength
+- Treatment association
+- Outcome association
+- Bias magnitude
+
+SENSITIVITY METHODS
+
+Technical approaches.
+
+Rosenbaum bounds
+- Matched study sensitivity
+- Gamma parameter
+- Critical value finding
+- Interpretation guidance
+
+E-value approach
+- Minimum confounding required
+- Null result explanation
+- Simple calculation
+- Wide applicability
+
+Partial R-squared
+- Regression coefficient sensitivity
+- Omitted variable bias
+- Coefficient stability
+- Intuitive interpretation
+
+MARKETING APPLICATIONS
+
+Causal inference in marketing.
+
+ADVERTISING EFFECTIVENESS
+
+Causal measurement challenges.
+
+Selection problem
+- Ads reach interested users
+- Pre-existing intent
+- Non-random exposure
+- Confounding by intent
+
+Identification approaches
+- Randomized experiments
+- Geographic experiments
+- Instrument-based approaches
+- Design-based identification
+
+Application guidance
+- Method selection criteria
+- Assumption evaluation
+- Triangulation approach
+- Confidence assessment
+
+CHANNEL ATTRIBUTION
+
+Causal credit assignment.
+
+Attribution challenge
+- Multiple touchpoints
+- Selection into channels
+- Confounded paths
+- Causal isolation
+
+Causal attribution approaches
+- Experimental calibration
+- Instrumental variables
+- Matching methods
+- Structural models
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for causal inference.
+
+ANALYSIS WORKFLOW
+
+Standard causal analysis process.
+
+Design phase
+- Estimand definition
+- Identification strategy
+- Assumption articulation
+- Data requirement
+
+Analysis phase
+- Method implementation
+- Estimate computation
+- Uncertainty quantification
+- Sensitivity analysis
+
+Interpretation phase
+- Result translation
+- Assumption discussion
+- Limitation acknowledgment
+- Recommendation formulation
+
+CROSS-AGENT INTEGRATION
+
+Causal inference outputs for downstream agents.
+
+Outputs to ANL Agent
+- Causal effect estimates
+- Uncertainty quantification
+- Projection inputs
+- Model calibration
+
+Outputs to NDS Agent
+- Attribution calibration
+- MMM validation
+- Incrementality estimates
+- Unified measurement
+
+Outputs to PRF Agent
+- Performance causation
+- Optimization effects
+- Intervention impacts
+- Decision evaluation
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive causal inference methodology

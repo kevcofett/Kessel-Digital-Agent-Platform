@@ -1,0 +1,77 @@
+{
+  "table_name": "ca_framework",
+  "display_name": "CA Framework",
+  "description": "Reference data for 60+ consulting frameworks",
+  "columns": [
+    {
+      "name": "ca_frameworkid",
+      "display_name": "Framework ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "framework_code",
+      "display_name": "Framework Code",
+      "type": "nvarchar",
+      "max_length": 20,
+      "required": true
+    },
+    {
+      "name": "framework_name",
+      "display_name": "Framework Name",
+      "type": "nvarchar",
+      "max_length": 100,
+      "required": true
+    },
+    {
+      "name": "category_code",
+      "display_name": "Category",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "Strategic"},
+        {"value": 2, "label": "Competitive"},
+        {"value": 3, "label": "Operational"},
+        {"value": 4, "label": "Customer"},
+        {"value": 5, "label": "Financial"},
+        {"value": 6, "label": "Change"},
+        {"value": 7, "label": "Planning"},
+        {"value": 8, "label": "Problem"}
+      ]
+    },
+    {
+      "name": "complexity_level",
+      "display_name": "Complexity Level",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "Standard"},
+        {"value": 2, "label": "Advanced"},
+        {"value": 3, "label": "Expert"}
+      ]
+    },
+    {
+      "name": "description",
+      "display_name": "Description",
+      "type": "nvarchar",
+      "max_length": 500,
+      "required": false
+    },
+    {
+      "name": "when_to_use",
+      "display_name": "When to Use",
+      "type": "nvarchar",
+      "max_length": 1000,
+      "required": false
+    },
+    {
+      "name": "is_active",
+      "display_name": "Is Active",
+      "type": "bit",
+      "required": true,
+      "default": true
+    }
+  ]
+}

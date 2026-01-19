@@ -1,0 +1,304 @@
+DATA PROVENANCE AND SOURCE MANAGEMENT
+
+KESSEL DIGITAL AGENT PLATFORM - SHARED KNOWLEDGE BASE
+Version 1.0
+Document Code EAP-KB-DP-001
+
+This document establishes platform-wide standards for data sourcing, citation, quality assessment, and provenance tracking. All agents must follow these standards when gathering, presenting, and citing information.
+
+========================================
+
+DATA SOURCE HIERARCHY
+
+All agents must attempt to obtain research data from sources in priority order. Every data point, statistic, benchmark, or fact used in analysis must include appropriate citation.
+
+PRIORITY 1 - PLATFORM KNOWLEDGE BASE
+
+- Description - Agent-specific KB files, REGISTRY files, REFERENCE files, Dataverse tables
+- Confidence Level - VERIFIED
+- When to use - Always search platform KB first for methodology, benchmarks, frameworks, industry data
+- Citation format - Source: [Document Name], KDAP Knowledge Base
+- Example - Source: ANL_KB_Budget_Optimization_v1, KDAP Knowledge Base
+
+PRIORITY 2 - LIVE WEB SEARCH
+
+- Description - Current industry data, market reports, competitive intelligence, news
+- Confidence Level - RESEARCHED
+- When to use - KB lacks current data, specific competitive information needed, or validation required
+
+Acceptable sources for web search include the following categories
+
+- Industry analyst firms - Gartner, Forrester, McKinsey, BCG, Bain, Deloitte, Accenture, Nielsen, Kantar
+- Company official sources - Press releases, investor relations, SEC filings, annual reports
+- Trade publications - Relevant industry journals, AdAge, AdWeek, Marketing Week, eMarketer
+- Government data - Census, BLS, Federal Reserve, regulatory filings, FTC reports
+- Academic sources - Peer-reviewed journals, university research centers
+
+Citation format - Source: [Publication], [URL], accessed [YYYY-MM-DD]
+Example - Source: Gartner Magic Quadrant for CDPs 2024, https://gartner.com/doc/123, accessed 2025-01-15
+
+PRIORITY 3 - USER-PROVIDED DATA
+
+- Description - Client-specific information shared during conversation or session
+- Confidence Level - CLIENT-PROVIDED
+- When to use - Client shares proprietary data, internal metrics, strategic context, organizational details
+- Citation format - Source: Client-provided data, [brief description]
+- Example - Source: Client-provided data, Q3 2024 customer survey results
+
+PRIORITY 4 - ANALYST ESTIMATION
+
+- Description - Professional judgment based on patterns, industry experience, and logical inference
+- Confidence Level - ESTIMATED
+- When to use - No authoritative source available but reasonable inference possible based on available evidence
+- Citation format - Source: Analyst estimate based on [rationale]
+- Example - Source: Analyst estimate based on industry average growth rates and comparable company performance
+
+Agents must explicitly distinguish estimates from verified data in all outputs.
+
+========================================
+
+SOURCE QUALITY TIERS
+
+All sources cited in analysis should include a quality tier indicator. This helps users understand the reliability and authority of information being presented.
+
+TIER 1 - AUTHORITATIVE
+
+Indicator - T1
+Definition - Primary sources with high credibility and methodological rigor
+
+Tier 1 sources include
+
+- Analyst firms - Gartner, Forrester, McKinsey, BCG, Bain, Deloitte, Accenture
+- Official company sources - SEC filings, investor relations materials, official press releases
+- Government data - Census Bureau, Bureau of Labor Statistics, Federal Reserve, regulatory filings
+- Academic - Peer-reviewed journals, university research with disclosed methodology
+- Industry bodies - IAB, MMA, ANA official publications and research
+
+Citation format with tier - Market size is USD 4.2B (T1 Gartner, Q3 2024)
+
+TIER 2 - CREDIBLE
+
+Indicator - T2
+Definition - Reputable secondary sources with established editorial standards
+
+Tier 2 sources include
+
+- Trade publications - AdAge, AdWeek, Marketing Week, eMarketer, Digiday
+- Business media - Wall Street Journal, Bloomberg, Reuters, Financial Times
+- Industry reports from recognized research firms
+- Well-sourced news articles with named sources and verification
+
+Citation format with tier - Growth rate estimated at 12 percent YoY (T2 eMarketer, Dec 2024)
+
+TIER 3 - GENERAL
+
+Indicator - T3
+Definition - General sources that may require additional verification
+
+Tier 3 sources include
+
+- General news outlets without specialized industry focus
+- Blog posts from industry practitioners and thought leaders
+- Conference presentations and webinars
+- Social media from verified professional accounts
+- Wikipedia and similar reference sites for background context only
+
+Citation format with tier - Competitor launched new product in Q4 (T3 TechCrunch, Nov 2024)
+
+TIER USAGE REQUIREMENTS
+
+- HIGH CONFIDENCE findings - Must cite at least one Tier 1 source
+- MEDIUM CONFIDENCE findings - Must cite at least one Tier 1 or Tier 2 source
+- LOW CONFIDENCE findings - Tier 3 acceptable with explicit caveat about limitations
+
+========================================
+
+RESEARCH QUALITY ASSESSMENT
+
+At the conclusion of significant analysis, agents should provide a Research Quality Summary. This transparency helps users understand overall reliability of findings.
+
+QUALITY DIMENSIONS
+
+Source Diversity Assessment
+
+- Excellent - Five or more unique sources across multiple tiers
+- Good - Three to four unique sources
+- Limited - One to two sources only
+
+Data Recency Assessment
+
+- Current - All data within six months
+- Recent - Most data within twelve months
+- Dated - Some data older than twelve months
+
+Source Authority Assessment
+
+- High - Majority of sources are Tier 1
+- Medium - Mix of Tier 1 and Tier 2 sources
+- Low - Primarily Tier 3 sources
+
+Coverage Completeness Assessment
+
+- Complete - All analysis dimensions have supporting data
+- Partial - Some dimensions lack specific data support
+- Gaps - Significant dimensions remain unsupported by data
+
+RESEARCH QUALITY SUMMARY FORMAT
+
+Include this summary at the end of significant analysis before presenting recommendations
+
+---
+RESEARCH QUALITY SUMMARY
+
+Source Diversity: [Excellent/Good/Limited] - [X] unique sources cited
+Data Recency: [Current/Recent/Dated] - Most recent [date], oldest [date]
+Source Authority: [High/Medium/Low] - [X] percent T1, [Y] percent T2, [Z] percent T3
+Coverage: [Complete/Partial/Gaps] - [description of any gaps]
+
+Overall Research Confidence: [HIGH/MEDIUM/LOW]
+---
+
+If gaps exist, add the following note
+
+Note: This analysis would benefit from additional data on [gap areas]. Consider requesting client data or commissioning primary research for these areas.
+
+OVERALL CONFIDENCE DETERMINATION
+
+HIGH overall confidence requires
+
+- Source Diversity at Excellent or Good level
+- Data Recency at Current or Recent level
+- Source Authority at High or Medium level
+- Coverage at Complete level
+
+MEDIUM overall confidence applies when
+
+- Any dimension at middle level
+- No dimension at lowest level
+
+LOW overall confidence applies when
+
+- Any dimension at lowest level
+- Multiple dimensions at middle level simultaneously
+
+========================================
+
+CITATION REQUIREMENTS
+
+MANDATORY CITATION SITUATIONS
+
+- Every significant quantitative claim requires citation
+- Tables and comparisons must cite data sources for each data point
+- Recommendations based on external data must reference the source
+- Framework applications should reference the framework source
+- Benchmark comparisons must cite benchmark source and date
+
+CITATION FORMAT STANDARDS
+
+Inline citation - According to [Source] (T[tier]), [finding]...
+Parenthetical citation - [Finding] ([Tier] [Source], [Date])
+Table citation - Include source row or column in all data tables
+
+HANDLING SOURCE CONFLICTS
+
+When sources provide conflicting information
+
+- Present both sources with their respective tiers
+- Example - Gartner estimates USD 4.2B (T1) while eMarketer reports USD 3.8B (T2)
+- Provide a range if appropriate given the conflict
+- Note which source agent considers more reliable and why
+- Prefer higher tier source when resolution required
+
+========================================
+
+WEB SEARCH PROTECTION RULES
+
+NEVER INCLUDE IN SEARCH QUERIES
+
+- Client company names or identifiers
+- Client employee names or contact information
+- Confidential project names or codes
+- Internal budget figures or financial details
+- Proprietary strategy information
+- Competitive intelligence shared by client
+
+SAFE SEARCH PRACTICES
+
+- Use generic industry terms rather than client-specific identifiers
+- Search for public benchmarks without revealing client performance
+- Research competitors using only publicly available information
+- Frame searches around methodology rather than specific client situations
+
+========================================
+
+PROVENANCE TRACKING
+
+DATA LINEAGE DOCUMENTATION
+
+All derived calculations and transformed data must document
+
+- Original source data and its citation
+- Transformation or calculation applied
+- Any assumptions made during transformation
+- Date of transformation
+
+Example format - Derived metric: [result]. Calculated from [source data] using [method]. Assumes [assumptions]. Calculated [date].
+
+CONFIDENCE DEGRADATION RULES
+
+Confidence levels degrade through transformation
+
+- Tier 1 source through simple calculation remains Tier 1 effective
+- Tier 1 source combined with assumptions becomes Tier 2 effective
+- Any Tier 2 or lower source combined with assumptions becomes Tier 3 effective
+- Multiple uncertain sources combined always results in LOW confidence regardless of calculation rigor
+
+AUDIT TRAIL REQUIREMENTS
+
+For regulated or high-stakes analyses, maintain
+
+- Complete list of all sources consulted
+- Methodology documentation
+- Assumptions log with rationale
+- Version history of findings if analysis iterated
+
+========================================
+
+AGENT-SPECIFIC APPLICATIONS
+
+ANALYTICS AGENT - ANL
+
+- Financial calculations must cite input data sources
+- Projections must document assumptions and confidence intervals
+- Benchmark comparisons require source and date for each benchmark
+
+AUDIENCE AGENT - AUD
+
+- Segment definitions should cite behavioral research
+- LTV calculations must document methodology and data sources
+- Journey mapping should cite customer research or client data
+
+CHANNEL AGENT - CHA
+
+- Channel benchmarks require industry source and date
+- Mix recommendations should cite supporting evidence
+- Partner assessments need documented evaluation criteria
+
+CONSULTING STRATEGY AGENT - CST
+
+- Framework applications must cite framework source
+- Industry analysis requires multiple authoritative sources
+- Strategic recommendations need evidence-based support
+
+DOCUMENT AGENT - DOC
+
+- Generated documents must include source appendix
+- Executive summaries should note confidence levels
+- Recommendations sections must cite supporting analysis
+
+========================================
+
+END OF DATA PROVENANCE AND SOURCE MANAGEMENT
+
+Document maintained by KDAP Platform Team
+Last updated January 2026

@@ -1,0 +1,471 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 14234
+
+PURPOSE
+
+This knowledge base provides the Unstructured Data Mining Agent with methodologies for engineering features from unstructured data sources to create model-ready inputs for downstream predictive analytics and machine learning applications.
+
+FEATURE ENGINEERING FUNDAMENTALS
+
+Transforming raw unstructured data into structured features for model consumption.
+
+FEATURE TYPES
+
+Categories of features derived from unstructured sources.
+
+Numerical features
+- Count-based metrics
+- Ratio and proportion calculations
+- Statistical aggregations
+- Continuous measurements
+
+Categorical features
+- Classification labels
+- Binned continuous values
+- Hierarchical categories
+- Multi-label assignments
+
+Text-derived features
+- Word frequency vectors
+- Embedding representations
+- Topic distributions
+- Sentiment scores
+
+Temporal features
+- Time-based aggregations
+- Recency calculations
+- Frequency metrics
+- Sequence position indicators
+
+FEATURE QUALITY PRINCIPLES
+
+Standards for production-ready features.
+
+Relevance criteria
+- Theoretical connection to target
+- Empirical correlation validation
+- Business logic alignment
+- Domain expert validation
+
+Technical requirements
+- Reproducible computation
+- Consistent data types
+- Defined missing value handling
+- Documented transformation logic
+
+Operational constraints
+- Compute efficiency considerations
+- Storage footprint awareness
+- Real-time availability requirements
+- Dependency management
+
+TEXT FEATURE ENGINEERING
+
+Extracting structured features from text content.
+
+BAG OF WORDS FEATURES
+
+Frequency-based text representation.
+
+Term frequency features
+- Raw count vectors
+- Log-scaled frequencies
+- Boolean presence indicators
+- Relative frequency ratios
+
+TF-IDF transformation
+- Inverse document frequency weighting
+- Sublinear TF scaling options
+- Smoothing parameter selection
+- Normalization approaches
+
+N-gram features
+- Unigram baseline features
+- Bigram phrase capture
+- Trigram for context
+- Character n-grams for robustness
+
+Vocabulary management
+- Minimum frequency thresholds
+- Maximum vocabulary limits
+- Stopword filtering
+- Domain vocabulary inclusion
+
+EMBEDDING FEATURES
+
+Dense vector representations from text.
+
+Pre-trained embedding usage
+- Word embedding aggregation methods
+- Mean pooling for documents
+- Weighted averaging by IDF
+- Max pooling for salient features
+
+Sentence embedding features
+- Full document embedding
+- Paragraph-level embeddings
+- Sliding window embeddings
+- Hierarchical document representation
+
+Embedding dimension reduction
+- PCA for compression
+- UMAP for non-linear reduction
+- Feature selection from dimensions
+- Task-specific dimension tuning
+
+LINGUISTIC FEATURES
+
+Language structure-based features.
+
+Syntactic features
+- Part-of-speech tag distributions
+- Dependency parse patterns
+- Sentence complexity metrics
+- Grammatical structure indicators
+
+Readability features
+- Flesch-Kincaid scores
+- Sentence length distributions
+- Word complexity measures
+- Grade level estimations
+
+Stylistic features
+- Voice active versus passive ratios
+- Question frequency
+- Exclamation usage
+- First person pronoun rates
+
+ENTITY-BASED FEATURES
+
+Named entity derived features.
+
+Entity extraction features
+- Entity type counts
+- Entity diversity metrics
+- Prominent entity identification
+- Entity relationship features
+
+Entity normalization
+- Entity resolution to canonical forms
+- Entity linking to knowledge bases
+- Coreference resolution
+- Entity disambiguation
+
+Marketing entity features
+- Brand mention features
+- Product entity features
+- Competitor reference features
+- Location entity features
+
+IMAGE FEATURE ENGINEERING
+
+Extracting structured features from visual content.
+
+LOW-LEVEL VISUAL FEATURES
+
+Basic image characteristics.
+
+Color features
+- Color histogram vectors
+- Dominant color extraction
+- Color moment statistics
+- Color coherence vectors
+
+Texture features
+- Gabor filter responses
+- Local binary patterns
+- Gray-level co-occurrence matrices
+- Texture energy measures
+
+Shape features
+- Edge histogram descriptors
+- Contour-based features
+- Moment invariants
+- Aspect ratio and proportions
+
+CNN-BASED FEATURES
+
+Deep learning derived visual features.
+
+Transfer learning features
+- Pre-trained model layer outputs
+- Bottleneck feature extraction
+- Multi-layer feature concatenation
+- Fine-tuned representation features
+
+Model selection
+- ImageNet pre-trained models
+- Domain-specific pre-trained models
+- Model architecture considerations
+- Layer selection strategies
+
+Feature processing
+- Feature normalization methods
+- Dimension reduction approaches
+- Feature selection techniques
+- Ensemble feature combination
+
+OBJECT AND SCENE FEATURES
+
+Semantic content features.
+
+Object detection features
+- Object presence binary features
+- Object count features
+- Object size and position features
+- Object relationship features
+
+Scene classification features
+- Scene category distributions
+- Indoor versus outdoor classification
+- Environment type features
+- Atmosphere and mood features
+
+Composition features
+- Rule of thirds alignment scores
+- Symmetry measurements
+- Balance and visual weight
+- Focal point position features
+
+TEMPORAL FEATURE ENGINEERING
+
+Time-based feature construction.
+
+RECENCY FEATURES
+
+How recently events occurred.
+
+Time since calculations
+- Days since last event
+- Hours since last interaction
+- Seconds since last action
+- Decay-weighted recency scores
+
+Recency buckets
+- Very recent within hours
+- Recent within days
+- Moderate within weeks
+- Historical beyond months
+
+Relative recency
+- Recency versus cohort average
+- Recency percentile position
+- Trend in recency patterns
+- Recency acceleration or deceleration
+
+FREQUENCY FEATURES
+
+How often events occur.
+
+Count-based frequency
+- Events per time period
+- Rolling window counts
+- Cumulative event counts
+- Unique event type counts
+
+Rate-based frequency
+- Events per session
+- Actions per visit
+- Conversions per exposure
+- Engagement events per impression
+
+Frequency patterns
+- Regularity of activity
+- Burst versus steady patterns
+- Periodicity detection
+- Frequency trend features
+
+SEQUENCE FEATURES
+
+Order and pattern in event sequences.
+
+Position features
+- Sequence position indicators
+- First and last in sequence flags
+- Position relative to conversion
+- Gap between sequence events
+
+Pattern features
+- Common subsequence membership
+- Transition probability features
+- Path complexity metrics
+- Branching factor features
+
+Lag features
+- Previous event type
+- Previous event value
+- Time between events
+- Rolling statistics over history
+
+AGGREGATION METHODS
+
+Combining multiple observations into features.
+
+STATISTICAL AGGREGATIONS
+
+Summary statistics across observations.
+
+Central tendency
+- Mean values
+- Median values
+- Mode for categorical
+- Trimmed means for robustness
+
+Dispersion measures
+- Standard deviation
+- Interquartile range
+- Range and span
+- Coefficient of variation
+
+Distribution characteristics
+- Skewness measures
+- Kurtosis calculations
+- Percentile values
+- Histogram bin counts
+
+WINDOW-BASED AGGREGATIONS
+
+Time-windowed feature computation.
+
+Fixed windows
+- Daily aggregations
+- Weekly summaries
+- Monthly rollups
+- Quarterly calculations
+
+Rolling windows
+- Seven-day rolling averages
+- Thirty-day rolling sums
+- Ninety-day rolling trends
+- Expanding window calculations
+
+Sliding windows
+- Session-based windows
+- Campaign period windows
+- Custom event-based windows
+- Overlapping window strategies
+
+HIERARCHICAL AGGREGATIONS
+
+Multi-level aggregation features.
+
+Entity hierarchies
+- User level to account level
+- Creative level to campaign level
+- Placement level to channel level
+- Product level to category level
+
+Aggregation patterns
+- Roll-up aggregations
+- Drill-down features
+- Cross-level ratios
+- Hierarchical averages
+
+FEATURE SELECTION AND VALIDATION
+
+Ensuring feature quality and relevance.
+
+FEATURE SELECTION METHODS
+
+Identifying most valuable features.
+
+Filter methods
+- Correlation with target
+- Mutual information scores
+- Chi-square tests for categorical
+- Variance thresholds
+
+Wrapper methods
+- Recursive feature elimination
+- Forward selection
+- Backward elimination
+- Exhaustive search for small sets
+
+Embedded methods
+- L1 regularization selection
+- Tree-based importance
+- Gradient-based selection
+- Attention weight analysis
+
+FEATURE VALIDATION
+
+Verifying feature quality.
+
+Statistical validation
+- Distribution analysis
+- Correlation checking
+- Multicollinearity detection
+- Target leakage identification
+
+Temporal validation
+- Feature stability over time
+- Concept drift detection
+- Seasonal pattern verification
+- Future data leakage prevention
+
+Business validation
+- Domain expert review
+- Logical consistency checking
+- Edge case verification
+- Interpretability assessment
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for feature engineering operations.
+
+FEATURE PIPELINES
+
+Standard workflows for feature production.
+
+Batch feature pipeline
+- Source data extraction
+- Transformation processing
+- Aggregation computation
+- Feature store population
+- Validation and monitoring
+
+Real-time feature pipeline
+- Streaming data ingestion
+- Incremental feature updates
+- Low-latency computation
+- Feature serving infrastructure
+
+CROSS-AGENT INTEGRATION
+
+Feature outputs for downstream agents.
+
+Outputs to ANL Agent
+- MMM model features
+- Attribution model inputs
+- Forecasting feature sets
+- Scenario modeling variables
+
+Outputs to AUD Agent
+- Segmentation features
+- LTV prediction inputs
+- Propensity model features
+- Lookalike seed features
+
+Outputs to PRF Agent
+- Performance prediction features
+- Anomaly detection inputs
+- Optimization model features
+- Forecasting accuracy inputs
+
+FEATURE DOCUMENTATION
+
+Maintaining feature knowledge.
+
+Feature catalog
+- Feature name and description
+- Computation logic documentation
+- Source data lineage
+- Update frequency and freshness
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive feature engineering methodology for unstructured data

@@ -3,9 +3,10 @@ KDAP ML Data Pipelines
 Unified data generation and ingestion infrastructure for ML training
 """
 
-from .base import DataPipeline, PipelineConfig, PipelineResult
+from .base import DataPipeline, PipelineConfig, PipelineResult, DataConnector
 from .synthetic import (
     SyntheticDataGenerator,
+    GeneratorConfig,
     BudgetOptimizerDataGenerator,
     PropensityDataGenerator,
     ChurnDataGenerator,
@@ -16,18 +17,43 @@ from .synthetic import (
 )
 from .ingestion import (
     DataIngestionPipeline,
+    IncrementalIngestionPipeline,
+    BatchIngestionPipeline,
     DataverseConnector,
     AzureBlobConnector,
     AzureSQLConnector,
     FileIngestionConnector,
     APIConnector,
 )
-from .validation import DataValidator, ValidationResult, SchemaValidator
+from .validation import (
+    DataValidator,
+    SchemaValidator,
+    QualityValidator,
+    StatisticalValidator,
+    ValidationResult,
+    ValidationSeverity,
+    ValidationRule,
+    RuleSet,
+    DataProfiler,
+    DataProfile,
+)
 from .transforms import (
-    DataTransformer,
-    FeatureEncoder,
-    TimeSeriesTransformer,
-    AggregationTransformer,
+    Transform,
+    TransformPipeline,
+    TransformResult,
+    StandardScaler,
+    MinMaxScaler,
+    RobustScaler,
+    LogTransform,
+    LabelEncoder,
+    OneHotEncoder,
+    TargetEncoder,
+    DatetimeFeatures,
+    CyclicalEncoder,
+    LagFeatures,
+    RollingFeatures,
+    TextCleaner,
+    TextVectorizer,
 )
 
 __all__ = [
@@ -35,8 +61,10 @@ __all__ = [
     'DataPipeline',
     'PipelineConfig',
     'PipelineResult',
+    'DataConnector',
     # Synthetic generators
     'SyntheticDataGenerator',
+    'GeneratorConfig',
     'BudgetOptimizerDataGenerator',
     'PropensityDataGenerator',
     'ChurnDataGenerator',
@@ -46,6 +74,8 @@ __all__ = [
     'ResponseCurveDataGenerator',
     # Ingestion
     'DataIngestionPipeline',
+    'IncrementalIngestionPipeline',
+    'BatchIngestionPipeline',
     'DataverseConnector',
     'AzureBlobConnector',
     'AzureSQLConnector',
@@ -53,11 +83,30 @@ __all__ = [
     'APIConnector',
     # Validation
     'DataValidator',
-    'ValidationResult',
     'SchemaValidator',
+    'QualityValidator',
+    'StatisticalValidator',
+    'ValidationResult',
+    'ValidationSeverity',
+    'ValidationRule',
+    'RuleSet',
+    'DataProfiler',
+    'DataProfile',
     # Transforms
-    'DataTransformer',
-    'FeatureEncoder',
-    'TimeSeriesTransformer',
-    'AggregationTransformer',
+    'Transform',
+    'TransformPipeline',
+    'TransformResult',
+    'StandardScaler',
+    'MinMaxScaler',
+    'RobustScaler',
+    'LogTransform',
+    'LabelEncoder',
+    'OneHotEncoder',
+    'TargetEncoder',
+    'DatetimeFeatures',
+    'CyclicalEncoder',
+    'LagFeatures',
+    'RollingFeatures',
+    'TextCleaner',
+    'TextVectorizer',
 ]

@@ -1,0 +1,26 @@
+{
+  "name": "kdap-azure-ml",
+  "version": "1.0.0",
+  "description": "Azure ML endpoint implementations for Kessel Digital Agent Platform",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "deploy:dev": "func azure functionapp publish kdap-ml-dev",
+    "deploy:prod": "func azure functionapp publish kdap-ml-prod"
+  },
+  "dependencies": {
+    "@azure/identity": "^4.0.0",
+    "@azure/ai-ml": "^1.0.0",
+    "@azure/functions": "^4.0.0",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.0",
+    "ts-jest": "^29.1.0"
+  }
+}

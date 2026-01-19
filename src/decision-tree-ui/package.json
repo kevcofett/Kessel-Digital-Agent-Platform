@@ -1,0 +1,42 @@
+{
+  "name": "@kdap/decision-tree-ui",
+  "version": "1.0.0",
+  "description": "Visual Decision Tree UI components for Kessel Digital Agent Platform",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "jest",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "dependencies": {
+    "@reactflow/core": "^11.10.0",
+    "reactflow": "^11.10.0",
+    "framer-motion": "^10.16.0",
+    "lucide-react": "^0.294.0",
+    "clsx": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.3.0",
+    "rollup": "^4.9.0",
+    "@rollup/plugin-typescript": "^11.1.0",
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.2.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.0",
+    "autoprefixer": "^10.4.0",
+    "@storybook/react": "^7.6.0",
+    "jest": "^29.7.0",
+    "@testing-library/react": "^14.1.0"
+  }
+}

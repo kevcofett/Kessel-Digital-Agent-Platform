@@ -1,0 +1,516 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {},
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "method": "POST",
+            "schema": {
+              "type": "object",
+              "required": [
+                "user_message",
+                "session_id"
+              ],
+              "properties": {
+                "user_message": {
+                  "type": "string",
+                  "description": "The user's message to process"
+                },
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "Current session identifier"
+                },
+                "current_step": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10,
+                  "description": "Current workflow step (defaults to session's current step)"
+                },
+                "conversation_context": {
+                  "type": "string",
+                  "description": "Summary of recent conversation for context"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "589C29C1-5594-48D3-9BDF-E29BEC1F7295"
+          },
+          "inputs": {
+            "user_message": "@triggerBody()?['user_message']",
+            "session_id": "@triggerBody()?['session_id']",
+            "current_step": "@coalesce(triggerBody()?['current_step'], 1)",
+            "conversation_context": "@triggerBody()?['conversation_context']",
+            "request_id": "@guid()",
+            "timestamp": "@utcNow()"
+          }
+        },
+        "check_feature_flag": {
+          "type": "HTTP",
+          "metadata": {
+            "operationMetadataId": "9095FB34-170A-410C-B2F5-F753081CAD19"
+          },
+          "inputs": {
+            "method": "GET",
+            "uri": "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_feature_flags?$filter=eap_flag_key eq '@{variables('MULTI_AGENT_FEATURE_FLAG')}'",
+            "headers": {
+              "Authorization": "Bearer @{body('Get_Access_Token')?['access_token']}",
+              "Content-Type": "application/json"
+            }
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "feature_flag_check": {
+          "type": "Condition",
+          "metadata": {
+            "operationMetadataId": "47527415-51A3-4986-8F75-0BFC165FFC74"
+          },
+          "expression": {
+            "equals": [
+              "@first(body('check_feature_flag')?['value'])?['eap_flag_value']",
+              "true"
+            ]
+          },
+          "actions": {},
+          "runAfter": {
+            "check_feature_flag": [
+              "Succeeded"
+            ]
+          }
+        },
+        "get_session_state": {
+          "type": "HTTP",
+          "metadata": {
+            "operationMetadataId": "46D47277-982A-494E-AA74-678768518AEF"
+          },
+          "inputs": {
+            "method": "GET",
+            "uri": "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_sessions(@{outputs('parse_input')?['session_id']})",
+            "headers": {
+              "Authorization": "Bearer @{body('Get_Access_Token')?['access_token']}",
+              "Content-Type": "application/json"
+            }
+          },
+          "runAfter": {
+            "feature_flag_check": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "build_orc_request": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "BADCBEFA-9D90-47D6-B7AC-DD2C32F2213B"
+          },
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@outputs('parse_input')?['timestamp']",
+            "source_agent": "ORC",
+            "target_agent": "ORC",
+            "request_type": "ROUTE_REQUEST",
+            "session_context": {
+              "session_id": "@outputs('parse_input')?['session_id']",
+              "workflow_step": "@coalesce(body('get_session_state')?['eap_workflow_step'], outputs('parse_input')?['current_step'])",
+              "workflow_gate": "@coalesce(body('get_session_state')?['eap_workflow_gate'], 0)",
+              "session_type": "@coalesce(body('get_session_state')?['eap_session_type'], 'Planning')",
+              "plan_state": "@json(coalesce(body('get_session_state')?['eap_plan_state'], '{}'))",
+              "created_at": "@body('get_session_state')?['createdon']",
+              "updated_at": "@utcNow()",
+              "conversation_history_summary": "@outputs('parse_input')?['conversation_context']"
+            },
+            "parameters": {
+              "user_message": "@outputs('parse_input')?['user_message']",
+              "classify_intent": true
+            }
+          },
+          "runAfter": {
+            "get_session_state": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "call_orc_classify": {
+          "type": "HTTP",
+          "metadata": {
+            "operationMetadataId": "351B7BF1-B9D7-42BE-A188-8F7C152003C2"
+          },
+          "inputs": {
+            "method": "POST",
+            "uri": "@{variables('ORC_COPILOT_ENDPOINT')}/api/messages",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "text": "@outputs('parse_input')?['user_message']",
+              "context": {
+                "request": "@outputs('build_orc_request')",
+                "instruction": "Classify the user intent and determine which specialist agent should handle this request. Return a routing decision."
+              }
+            }
+          },
+          "runAfter": {
+            "build_orc_request": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "parse_routing": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "12129158-471C-4056-BDDC-601938D75E2C"
+          },
+          "inputs": {
+            "target_agent": "@body('call_orc_classify')?['routing_decision']?['target_agent']",
+            "request_type": "@body('call_orc_classify')?['routing_decision']?['request_type']",
+            "confidence": "@body('call_orc_classify')?['routing_decision']?['confidence']",
+            "rationale": "@body('call_orc_classify')?['routing_decision']?['rationale']",
+            "requires_specialist": "@not(equals(body('call_orc_classify')?['routing_decision']?['target_agent'], 'ORC'))"
+          },
+          "runAfter": {
+            "call_orc_classify": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "log_routing": {
+          "type": "HTTP",
+          "metadata": {
+            "operationMetadataId": "7FC971E1-338D-40FC-892F-A7BDB2FF497E"
+          },
+          "inputs": {
+            "method": "POST",
+            "uri": "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_routing_logs",
+            "headers": {
+              "Authorization": "Bearer @{body('Get_Access_Token')?['access_token']}",
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "eap_entry_id": "@guid()",
+              "eap_session_id": "@outputs('parse_input')?['session_id']",
+              "eap_request_id": "@outputs('parse_input')?['request_id']",
+              "eap_source_agent": "ORC",
+              "eap_target_agent": "@outputs('parse_routing')?['target_agent']",
+              "eap_request_type": "@outputs('parse_routing')?['request_type']",
+              "eap_routing_confidence": "@outputs('parse_routing')?['confidence']",
+              "eap_routing_rationale": "@outputs('parse_routing')?['rationale']",
+              "eap_workflow_step": "@outputs('build_orc_request')?['session_context']?['workflow_step']",
+              "eap_workflow_gate": "@outputs('build_orc_request')?['session_context']?['workflow_gate']"
+            }
+          },
+          "runAfter": {
+            "parse_routing": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "check_needs_specialist": {
+          "type": "Condition",
+          "metadata": {
+            "operationMetadataId": "566F9343-9AE2-4F59-B258-E90B2623EB9F"
+          },
+          "expression": {
+            "equals": [
+              "@outputs('parse_routing')?['requires_specialist']",
+              true
+            ]
+          },
+          "actions": {},
+          "runAfter": {
+            "log_routing": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "get_specialist_endpoint": {
+          "type": "HTTP",
+          "metadata": {
+            "operationMetadataId": "368A914C-7F3C-4DA6-8DF2-D3D7754846B1"
+          },
+          "inputs": {
+            "method": "GET",
+            "uri": "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_agents?$filter=eap_agent_code eq '@{outputs('parse_routing')?['target_agent']}' and eap_agent_status eq 1",
+            "headers": {
+              "Authorization": "Bearer @{body('Get_Access_Token')?['access_token']}",
+              "Content-Type": "application/json"
+            }
+          },
+          "runAfter": {
+            "check_needs_specialist": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "build_specialist_request": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "A211B877-3D42-4F10-A8C3-F174F9DB43BC"
+          },
+          "inputs": {
+            "request_id": "@guid()",
+            "timestamp": "@utcNow()",
+            "source_agent": "ORC",
+            "target_agent": "@outputs('parse_routing')?['target_agent']",
+            "request_type": "@outputs('parse_routing')?['request_type']",
+            "session_context": "@outputs('build_orc_request')?['session_context']",
+            "parameters": {
+              "user_message": "@outputs('parse_input')?['user_message']",
+              "orc_context": "@body('call_orc_classify')?['context_for_specialist']"
+            }
+          },
+          "runAfter": {
+            "get_specialist_endpoint": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "call_specialist": {
+          "type": "HTTP",
+          "metadata": {
+            "operationMetadataId": "CB8FADC2-6613-4A96-939D-9BDE390FE503"
+          },
+          "inputs": {
+            "method": "POST",
+            "uri": "@{first(body('get_specialist_endpoint')?['value'])?['eap_agent_endpoint']}/api/messages",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "text": "@outputs('parse_input')?['user_message']",
+              "context": {
+                "request": "@outputs('build_specialist_request')"
+              }
+            }
+          },
+          "runAfter": {
+            "build_specialist_request": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "log_specialist_response": {
+          "type": "HTTP",
+          "metadata": {
+            "operationMetadataId": "0AF00AFA-4FB3-4071-8634-A4079F034DA6"
+          },
+          "inputs": {
+            "method": "POST",
+            "uri": "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_response_logs",
+            "headers": {
+              "Authorization": "Bearer @{body('Get_Access_Token')?['access_token']}",
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "eap_entry_id": "@guid()",
+              "eap_session_id": "@outputs('parse_input')?['session_id']",
+              "eap_request_id": "@outputs('build_specialist_request')?['request_id']",
+              "eap_agent": "@outputs('parse_routing')?['target_agent']",
+              "eap_status": "@coalesce(body('call_specialist')?['status'], 'success')",
+              "eap_confidence": "@coalesce(body('call_specialist')?['confidence'], 'MEDIUM')",
+              "eap_processing_time_ms": "@sub(ticks(utcNow()), ticks(outputs('build_specialist_request')?['timestamp']))"
+            }
+          },
+          "runAfter": {
+            "call_specialist": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "synthesize_response": {
+          "type": "HTTP",
+          "metadata": {
+            "operationMetadataId": "D472A287-7D1D-48C1-BE72-F047CFB7DF4A"
+          },
+          "inputs": {
+            "method": "POST",
+            "uri": "@{variables('ORC_COPILOT_ENDPOINT')}/api/messages",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "text": "Synthesize response for user",
+              "context": {
+                "instruction": "Synthesize the specialist response into a user-friendly format",
+                "specialist_response": "@body('call_specialist')",
+                "original_request": "@outputs('parse_input')?['user_message']",
+                "session_context": "@outputs('build_orc_request')?['session_context']"
+              }
+            }
+          },
+          "runAfter": {
+            "log_specialist_response": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "update_session": {
+          "type": "HTTP",
+          "metadata": {
+            "operationMetadataId": "E232FE82-D48C-4D03-BBB7-D4B05915069E"
+          },
+          "inputs": {
+            "method": "PATCH",
+            "uri": "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_sessions(@{outputs('parse_input')?['session_id']})",
+            "headers": {
+              "Authorization": "Bearer @{body('Get_Access_Token')?['access_token']}",
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "eap_plan_state": "@string(coalesce(body('synthesize_response')?['updated_plan_state'], body('call_orc_classify')?['updated_plan_state'], json('{}')))",
+              "modifiedon": "@utcNow()"
+            }
+          },
+          "runAfter": {
+            "synthesize_response": [
+              "Succeeded"
+            ],
+            "call_orc_classify": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "01FB78F7-5CD5-478C-B73D-4C9E679B2530"
+          },
+          "inputs": {
+            "response_text": "@coalesce(body('synthesize_response')?['text'], body('call_orc_classify')?['text'])",
+            "confidence": "@coalesce(body('synthesize_response')?['confidence'], body('call_orc_classify')?['confidence'])",
+            "sources": "@coalesce(body('synthesize_response')?['sources'], body('call_orc_classify')?['sources'])",
+            "next_step_suggestion": "@coalesce(body('synthesize_response')?['next_step'], body('call_orc_classify')?['next_step'])",
+            "routing_path": [
+              {
+                "agent": "ORC",
+                "action": "classify"
+              },
+              {
+                "agent": "@outputs('parse_routing')?['target_agent']",
+                "action": "@outputs('parse_routing')?['request_type']",
+                "condition": "@outputs('parse_routing')?['requires_specialist']"
+              }
+            ],
+            "metadata": {
+              "request_id": "@outputs('parse_input')?['request_id']",
+              "session_id": "@outputs('parse_input')?['session_id']",
+              "total_processing_time_ms": "@sub(ticks(utcNow()), ticks(outputs('parse_input')?['timestamp']))"
+            }
+          },
+          "runAfter": {
+            "update_session": [
+              "Succeeded"
+            ]
+          }
+        },
+        "fallback_to_mpa": {
+          "type": "HTTP",
+          "metadata": {
+            "operationMetadataId": "1D43459C-3349-4370-A7E1-6CC8FD65528E"
+          },
+          "inputs": {
+            "method": "POST",
+            "uri": "@{variables('MPA_V55_ENDPOINT')}/api/messages",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "text": "@outputs('parse_input')?['user_message']",
+              "session_id": "@outputs('parse_input')?['session_id']"
+            }
+          },
+          "runAfter": {
+            "feature_flag_check": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "return_response": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "9F1ACF59-BC97-4FD7-8569-D56BA50789AC"
+          },
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@coalesce(outputs('build_response'), body('fallback_to_mpa'))"
+          },
+          "kind": "Http"
+        },
+        "log_error": {
+          "type": "HTTP",
+          "metadata": {
+            "operationMetadataId": "9D6F0897-CE27-464D-9AB1-CA5807DFBB94"
+          },
+          "inputs": {
+            "method": "POST",
+            "uri": "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_error_logs",
+            "headers": {
+              "Authorization": "Bearer @{body('Get_Access_Token')?['access_token']}",
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "eap_error_id": "@guid()",
+              "eap_session_id": "@outputs('parse_input')?['session_id']",
+              "eap_request_id": "@outputs('parse_input')?['request_id']",
+              "eap_error_message": "@actions('failed_action')?['error']?['message']",
+              "eap_error_code": "@actions('failed_action')?['error']?['code']",
+              "eap_failed_step": "@actions('failed_action')?['name']"
+            }
+          },
+          "operationOptions": "OnError"
+        },
+        "return_error_response": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "D1E1518A-650F-429E-BBDF-6CF54A03FE6D"
+          },
+          "inputs": {
+            "statusCode": 500,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "error": true,
+              "message": "An error occurred processing your request",
+              "request_id": "@outputs('parse_input')?['request_id']",
+              "fallback_available": true
+            }
+          },
+          "kind": "Http",
+          "operationOptions": "OnError"
+        }
+      }
+    },
+    "state": "Activated"
+  },
+  "schemaVersion": "1.0.0.0"
+}

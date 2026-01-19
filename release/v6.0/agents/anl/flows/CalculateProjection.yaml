@@ -222,7 +222,68 @@ steps:
       methodology: "Monte Carlo simulation with 10,000 iterations"
     run_after: calculate_roas
 
-  # Step 8: Build response
+  # Step 8: Calculate diminishing returns (when requested)
+  - id: calculate_diminishing_returns
+    type: Compose
+    name: Calculate Diminishing Returns
+    condition: "@or(contains(toLower(triggerBody()?['query']), 'diminishing returns'), contains(toLower(triggerBody()?['query']), 'inflection point'), contains(toLower(triggerBody()?['query']), 'optimal budget'))"
+    inputs:
+      diminishing_returns_analysis:
+        model_type: "log_linear"
+        saturation_coefficient: 0.85
+        baseline_efficiency: "channel_benchmark_p50"
+        inflection_point:
+          budget_level: "@mul(outputs('parse_input')?['budget'], 1.35)"
+          efficiency_at_inflection: 0.72
+          description: "Point where marginal returns begin declining significantly"
+        efficiency_curve:
+          data_points:
+            - budget_percent: 25
+              marginal_efficiency: 0.95
+            - budget_percent: 50
+              marginal_efficiency: 0.88
+            - budget_percent: 75
+              marginal_efficiency: 0.78
+            - budget_percent: 100
+              marginal_efficiency: 0.65
+            - budget_percent: 125
+              marginal_efficiency: 0.52
+            - budget_percent: 150
+              marginal_efficiency: 0.41
+          x_axis: "budget_percent_of_current"
+          y_axis: "marginal_efficiency"
+        optimal_budget:
+          recommended_budget: "@mul(outputs('parse_input')?['budget'], 1.15)"
+          expected_efficiency: 0.75
+          rationale: "Budget level where marginal efficiency remains above minimum acceptable threshold of 0.70"
+    run_after: calculate_confidence
+
+  # Step 8b: Handle PRF handoff for projection updates
+  - id: handle_prf_handoff
+    type: Compose
+    name: Handle PRF Projection Update Handoff
+    condition: "@not(empty(triggerBody()?['handoff_context']))"
+    inputs:
+      projection_update_mode:
+        enabled: true
+        original_projection_id: "@triggerBody()?['handoff_context']?['original_projection_id']"
+        actuals_provided: "@triggerBody()?['actual_performance']"
+        update_reason: "@triggerBody()?['handoff_context']?['update_reason']"
+      variance_analysis:
+        actual_vs_original:
+          impressions_variance: "@sub(triggerBody()?['actual_performance']?['metrics']?['impressions'], outputs('calculate_confidence')?['point_estimates']?['impressions'])"
+          conversions_variance: "@sub(triggerBody()?['actual_performance']?['metrics']?['conversions'], outputs('calculate_confidence')?['point_estimates']?['conversions'])"
+        updated_vs_original:
+          confidence_adjustment: "@triggerBody()?['handoff_context']?['confidence_adjustment']"
+        key_drivers: "@triggerBody()?['performance_insights']?['contributing_factors']"
+      updated_projection:
+        projection_id: "@guid()"
+        updated_metrics: "@outputs('calculate_confidence')?['point_estimates']"
+        confidence_intervals: "@outputs('calculate_confidence')?['confidence_intervals']"
+        adjustment_notes: "Projection updated based on actual performance data from PRF agent"
+    run_after: calculate_confidence
+
+  # Step 9: Build response
   - id: build_response
     type: Compose
     name: Build Response
@@ -249,6 +310,8 @@ steps:
         confidence_intervals: "@outputs('calculate_confidence')?['confidence_intervals']"
         channel_breakdown: "@outputs('calculate_impressions')?['impressions_by_channel']"
         roas_by_channel: "@outputs('calculate_roas')?['roas_by_channel']"
+        diminishing_returns: "@coalesce(outputs('calculate_diminishing_returns')?['diminishing_returns_analysis'], null)"
+        projection_update: "@coalesce(outputs('handle_prf_handoff'), null)"
       confidence: "HIGH"
       sources:
         - "CALCULATION"
@@ -265,9 +328,12 @@ steps:
       metadata:
         processing_time_ms: "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
         projection_methodology: "@outputs('calculate_confidence')?['methodology']"
-    run_after: calculate_confidence
+    run_after:
+      - calculate_confidence
+      - calculate_diminishing_returns
+      - handle_prf_handoff
 
-  # Step 9: Return response
+  # Step 10: Return response
   - id: return_response
     type: Response
     name: Return Response

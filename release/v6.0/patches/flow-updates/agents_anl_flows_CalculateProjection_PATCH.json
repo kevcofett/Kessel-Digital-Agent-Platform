@@ -1,0 +1,44 @@
+{
+  "target_file": "agents/anl/flows/CalculateProjection.yaml",
+  "section": "update_mode",
+  "content": {
+    "projection_update_mode": {
+      "enabled": true,
+      "trigger": "input contains handoff_context from PRF",
+      "processing_steps": [
+        {
+          "step": 1,
+          "name": "Load original projection",
+          "action": "retrieve projection by projection_id"
+        },
+        {
+          "step": 2,
+          "name": "Calculate variance",
+          "action": "compare actuals to original projection"
+        },
+        {
+          "step": 3,
+          "name": "Adjust model parameters",
+          "action": "update coefficients based on actual performance"
+        },
+        {
+          "step": 4,
+          "name": "Generate updated projection",
+          "action": "recalculate forward projection with new parameters"
+        },
+        {
+          "step": 5,
+          "name": "Adjust confidence intervals",
+          "action": "narrow or widen based on prediction accuracy"
+        }
+      ],
+      "output_includes": [
+        "updated_projection",
+        "variance_analysis",
+        "model_adjustments"
+      ]
+    }
+  },
+  "description": "Add projection update mode to handle PRF handoff",
+  "patch_source": "PATCH-007"
+}

@@ -1,0 +1,99 @@
+{
+  "patch_id": "PATCH-004",
+  "version": "6.0.2",
+  "date": "2026-01-19",
+  "description": "Fix ANL-012 Diminishing Returns Analysis capability test",
+  "affected_tests": ["ANL-012"],
+  "priority": "P1",
+  "type": "capability_fix",
+
+  "root_cause_analysis": {
+    "test_id": "ANL-012",
+    "test_name": "Diminishing Returns Analysis",
+    "input": "At what budget level do we hit diminishing returns?",
+    "expected_flow": "CalculateProjection",
+    "expected_output_contains": ["inflection_point", "efficiency_curve", "optimal_budget"],
+    "failure_reason": "CalculateProjection flow missing diminishing returns calculation module - only handles linear projections",
+    "actual_behavior": "Returns standard projection without inflection point analysis"
+  },
+
+  "changes": [
+    {
+      "file": "agents/anl/flows/CalculateProjection.yaml",
+      "section": "calculation_modules",
+      "change_type": "add",
+      "description": "Add diminishing returns calculation module",
+      "content": {
+        "diminishing_returns_module": {
+          "trigger_patterns": ["diminishing returns", "inflection point", "optimal budget", "efficiency curve", "saturation point"],
+          "calculation_method": "log_response_curve",
+          "parameters": {
+            "model_type": "log_linear",
+            "saturation_coefficient": 0.85,
+            "baseline_efficiency": "channel_benchmark_p50"
+          },
+          "calculation_steps": [
+            {
+              "step": 1,
+              "name": "Build efficiency curve",
+              "formula": "efficiency(budget) = baseline * (1 - e^(-k * budget / saturation_point))",
+              "output": "efficiency_curve_data"
+            },
+            {
+              "step": 2,
+              "name": "Calculate inflection point",
+              "formula": "inflection = saturation_point * ln(2) / k",
+              "output": "inflection_point_budget"
+            },
+            {
+              "step": 3,
+              "name": "Determine optimal budget",
+              "formula": "optimal = budget where marginal_efficiency >= min_acceptable_efficiency",
+              "output": "optimal_budget_recommendation"
+            }
+          ],
+          "output_schema": {
+            "inflection_point": {
+              "budget_level": "number",
+              "efficiency_at_inflection": "percentage",
+              "description": "string"
+            },
+            "efficiency_curve": {
+              "data_points": "array",
+              "x_axis": "budget",
+              "y_axis": "marginal_efficiency"
+            },
+            "optimal_budget": {
+              "recommended_budget": "number",
+              "expected_efficiency": "percentage",
+              "rationale": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "file": "agents/anl/kb/ANL_KB_Projection_Methods_v1.txt",
+      "section": "DIMINISHING RETURNS ANALYSIS",
+      "change_type": "add",
+      "description": "Add KB documentation for diminishing returns",
+      "content": "DIMINISHING RETURNS ANALYSIS\n\nDiminishing returns analysis identifies the budget inflection point where additional investment yields progressively smaller returns.\n\nKey outputs:\n- inflection_point: The budget level where efficiency begins declining significantly\n- efficiency_curve: Visualization data showing efficiency vs budget relationship\n- optimal_budget: Recommended budget level balancing reach and efficiency\n\nCalculation uses log-linear response curves with channel-specific saturation coefficients derived from historical benchmark data.\n\nAlways include confidence intervals and note that actual inflection points vary by campaign type, vertical, and market conditions."
+    }
+  ],
+
+  "test_validation": {
+    "ANL-012": {
+      "name": "Diminishing Returns Analysis",
+      "input": "At what budget level do we hit diminishing returns?",
+      "expected_flow": "CalculateProjection",
+      "expected_output_contains": ["inflection_point", "efficiency_curve", "optimal_budget"],
+      "fix_rationale": "Added diminishing returns calculation module with proper output schema"
+    }
+  },
+
+  "implementation_instructions": [
+    "1. Add diminishing_returns_module to CalculateProjection flow",
+    "2. Add KB documentation for diminishing returns analysis",
+    "3. Re-run test ANL-012 to validate fix"
+  ]
+}

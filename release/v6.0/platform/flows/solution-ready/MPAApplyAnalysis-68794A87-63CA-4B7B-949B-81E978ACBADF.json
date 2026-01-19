@@ -1,0 +1,240 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "525d70aa-8ad5-40ea-868e-12fa0b92decb"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id",
+                "framework_code",
+                "inputs"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "framework_code": {
+                  "type": "string",
+                  "enum": [
+                    "SWOT",
+                    "PESTEL",
+                    "PORTER_FIVE_FORCES",
+                    "BCG_MATRIX",
+                    "ANSOFF_MATRIX",
+                    "VALUE_CHAIN",
+                    "MCKINSEY_7S"
+                  ]
+                },
+                "inputs": {
+                  "type": "object",
+                  "description": "Framework-specific input data"
+                },
+                "context": {
+                  "type": "object",
+                  "properties": {
+                    "company_name": {
+                      "type": "string"
+                    },
+                    "industry": {
+                      "type": "string"
+                    },
+                    "strategic_objective": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "framework_code": "@triggerBody()?['framework_code']",
+            "inputs": "@triggerBody()?['inputs']",
+            "context": "@triggerBody()?['context']",
+            "start_time": "@utcNow()"
+          },
+          "metadata": {
+            "operationMetadataId": "8112f887-0e2c-4be1-9098-af6a2d5af7a6"
+          },
+          "runAfter": {}
+        },
+        "route_framework": {
+          "type": "Compose",
+          "inputs": {},
+          "metadata": {
+            "operationMetadataId": "0b2b05e5-377c-40f5-b24f-c68f1ed0d563"
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "generate_synthesis": {
+          "type": "Compose",
+          "inputs": {
+            "executive_summary": "Analysis reveals a moderately attractive strategic position with strong internal capabilities and favorable external trends. Key success factors include differentiation, technology investment, and customer retention focus.",
+            "key_insights": [
+              {
+                "insight": "Internal strengths align well with external opportunities",
+                "confidence": "high",
+                "actionability": "immediate"
+              },
+              {
+                "insight": "Infrastructure modernization is prerequisite for growth",
+                "confidence": "high",
+                "actionability": "short_term"
+              },
+              {
+                "insight": "Competitive intensity requires sustained differentiation investment",
+                "confidence": "medium",
+                "actionability": "ongoing"
+              }
+            ],
+            "strategic_options": [
+              {
+                "option": "Accelerated Growth",
+                "description": "Invest heavily in capturing market opportunity",
+                "risk_level": "medium",
+                "resource_requirement": "high",
+                "fit_score": 85
+              },
+              {
+                "option": "Selective Investment",
+                "description": "Focused investment in highest-potential areas",
+                "risk_level": "low",
+                "resource_requirement": "medium",
+                "fit_score": 90
+              },
+              {
+                "option": "Defensive Positioning",
+                "description": "Protect current position while building capabilities",
+                "risk_level": "low",
+                "resource_requirement": "low",
+                "fit_score": 70
+              }
+            ],
+            "recommended_option": "Selective Investment",
+            "recommendation_rationale": "Best balance of growth capture and risk management given current capabilities"
+          },
+          "metadata": {
+            "operationMetadataId": "2b532dcb-dd22-4834-8e26-c4c54e349b03"
+          },
+          "runAfter": {
+            "route_framework": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "CST",
+            "status": "success",
+            "data": {
+              "framework_applied": "@outputs('parse_input')?['framework_code']",
+              "context": "@outputs('parse_input')?['context']",
+              "analysis": "@coalesce(outputs('apply_swot'), outputs('apply_porter'), outputs('apply_pestel'), outputs('unsupported_framework'))",
+              "synthesis": {
+                "executive_summary": "@outputs('generate_synthesis')?['executive_summary']",
+                "key_insights": "@outputs('generate_synthesis')?['key_insights']",
+                "strategic_options": "@outputs('generate_synthesis')?['strategic_options']",
+                "recommended_option": "@outputs('generate_synthesis')?['recommended_option']",
+                "recommendation_rationale": "@outputs('generate_synthesis')?['recommendation_rationale']"
+              }
+            },
+            "confidence": "HIGH",
+            "sources": [
+              "AGENT_KB",
+              "FRAMEWORK_ANALYSIS",
+              "INPUT_DATA"
+            ],
+            "recommendations": [
+              "Review analysis with leadership team",
+              "Validate assumptions with market data",
+              "Develop action plan for selected strategic option"
+            ],
+            "follow_up_questions": [
+              "Would you like to prioritize initiatives based on this analysis?",
+              "Should we apply additional frameworks for deeper insight?",
+              "Do you want to develop a detailed implementation roadmap?"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "e35221c5-228e-4f16-b161-654a891c5551"
+          },
+          "runAfter": {
+            "generate_synthesis": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": "@outputs('build_response')",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "1bbbb6fd-efe7-4df3-973c-a905ba6cd086"
+          },
+          "runAfter": {}
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

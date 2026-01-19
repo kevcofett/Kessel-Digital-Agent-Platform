@@ -172,6 +172,22 @@ steps:
         eap_workflow_gate: 4
     run_after: check_completion
 
+  # Step 10b: Validate Gate 3 execution readiness (when checking gate 3)
+  - id: validate_gate3_execution
+    type: Compose
+    name: Validate Gate 3 Execution Readiness
+    condition: "@and(equals(outputs('calculate_new_progress')?['new_gate'], 3), contains(outputs('parse_input')?['action'], 'complete_gate'))"
+    inputs:
+      gate3_validation:
+        channels_selected: "@not(empty(outputs('parse_current_state')?['current_plan_state']?['channels']))"
+        budget_allocated: "@and(not(empty(outputs('parse_current_state')?['current_plan_state']?['budget'])), greater(coalesce(outputs('parse_current_state')?['current_plan_state']?['budget']?['total_budget'], 0), 0))"
+        partners_identified: "@or(not(empty(outputs('parse_current_state')?['current_plan_state']?['partners'])), equals(outputs('parse_current_state')?['current_plan_state']?['supply_path_defined'], true))"
+        projections_complete: "@not(empty(outputs('parse_current_state')?['current_plan_state']?['anl_projections']))"
+        gate_status: "@if(and(variables('channels_selected'), variables('budget_allocated')), if(and(variables('partners_identified'), variables('projections_complete')), 'pass', 'partial'), 'fail')"
+        missing_requirements: "@createArray(if(not(variables('channels_selected')), 'No channels have been selected. Please complete channel strategy first.', null), if(not(variables('budget_allocated')), 'Budget has not been allocated. Please define budget distribution.', null), if(not(variables('partners_identified')), 'Supply path partners have not been identified. Consider running SPO analysis.', null), if(not(variables('projections_complete')), 'Projections have not been calculated. Run analytics before proceeding.', null))"
+        recommendations: "@createArray(if(not(variables('channels_selected')), 'Route to CHA agent for channel selection', null), if(not(variables('budget_allocated')), 'Define total budget and allocation percentages', null), if(not(variables('partners_identified')), 'Route to SPO agent for supply path optimization', null), if(not(variables('projections_complete')), 'Route to ANL agent for projections', null))"
+    run_after: check_completion
+
   # Step 11: Build response
   - id: build_response
     type: Compose
@@ -188,11 +204,13 @@ steps:
         gate: "@outputs('calculate_new_progress')?['new_gate']"
         gate_name: "@if(equals(outputs('calculate_new_progress')?['new_gate'], 0), 'Initialization', if(equals(outputs('calculate_new_progress')?['new_gate'], 1), 'Foundation', if(equals(outputs('calculate_new_progress')?['new_gate'], 2), 'Strategy', if(equals(outputs('calculate_new_progress')?['new_gate'], 3), 'Execution', 'Documentation'))))"
       gate_changed: "@outputs('calculate_new_progress')?['gate_changed']"
+      gate3_validation: "@coalesce(outputs('validate_gate3_execution')?['gate3_validation'], null)"
       workflow_complete: "@equals(outputs('calculate_new_progress')?['new_step'], 10)"
       updated_at: "@utcNow()"
     run_after:
       - log_session_event
       - log_completion
+      - validate_gate3_execution
 
   # Step 12: Return response
   - id: return_response

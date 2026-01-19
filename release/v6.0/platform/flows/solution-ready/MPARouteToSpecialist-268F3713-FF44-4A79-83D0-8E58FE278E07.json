@@ -1,0 +1,454 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "aa60bdc6-f434-4140-b743-4d5b882c0337"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "user_message",
+                "session_id"
+              ],
+              "properties": {
+                "user_message": {
+                  "type": "string",
+                  "description": "The user's message to process"
+                },
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "Current session identifier"
+                },
+                "current_step": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10,
+                  "description": "Current workflow step (defaults to session's current step)"
+                },
+                "conversation_context": {
+                  "type": "string",
+                  "description": "Summary of recent conversation for context"
+                }
+              }
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "inputs": {
+            "user_message": "@triggerBody()?['user_message']",
+            "session_id": "@triggerBody()?['session_id']",
+            "current_step": "@coalesce(triggerBody()?['current_step'], 1)",
+            "conversation_context": "@triggerBody()?['conversation_context']",
+            "request_id": "@guid()",
+            "timestamp": "@utcNow()"
+          },
+          "metadata": {
+            "operationMetadataId": "e3e057ae-cb0a-416a-b43b-c3f9d8640249"
+          },
+          "runAfter": {}
+        },
+        "check_feature_flag": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {},
+            "authentication": "@parameters('$authentication')"
+          },
+          "metadata": {
+            "operationMetadataId": "3d389ce9-5193-44ae-8650-b6bffbc8e77f"
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "feature_flag_check": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@first(body('check_feature_flag')?['value'])?['eap_flag_value']",
+                  "true"
+                ]
+              }
+            ]
+          },
+          "actions": {},
+          "else": {
+            "actions": {}
+          },
+          "metadata": {
+            "operationMetadataId": "b0608a12-8a3d-4b0e-be0a-9e4125920f49"
+          },
+          "runAfter": {
+            "check_feature_flag": [
+              "Succeeded"
+            ]
+          }
+        },
+        "get_session_state": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {},
+            "authentication": "@parameters('$authentication')"
+          },
+          "metadata": {
+            "operationMetadataId": "1a182d6b-10d5-416f-8757-77cd7c1bf799"
+          },
+          "runAfter": {
+            "feature_flag_check": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_orc_request": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@outputs('parse_input')?['timestamp']",
+            "source_agent": "ORC",
+            "target_agent": "ORC",
+            "request_type": "ROUTE_REQUEST",
+            "session_context": {
+              "session_id": "@outputs('parse_input')?['session_id']",
+              "workflow_step": "@coalesce(body('get_session_state')?['eap_workflow_step'], outputs('parse_input')?['current_step'])",
+              "workflow_gate": "@coalesce(body('get_session_state')?['eap_workflow_gate'], 0)",
+              "session_type": "@coalesce(body('get_session_state')?['eap_session_type'], 'Planning')",
+              "plan_state": "@json(coalesce(body('get_session_state')?['eap_plan_state'], '{}'))",
+              "created_at": "@body('get_session_state')?['createdon']",
+              "updated_at": "@utcNow()",
+              "conversation_history_summary": "@outputs('parse_input')?['conversation_context']"
+            },
+            "parameters": {
+              "user_message": "@outputs('parse_input')?['user_message']",
+              "classify_intent": true
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "6a80a535-e22b-4370-bee5-9156bc5feaa2"
+          },
+          "runAfter": {
+            "get_session_state": [
+              "Succeeded"
+            ]
+          }
+        },
+        "call_orc_classify": {
+          "type": "Http",
+          "inputs": {
+            "method": "POST",
+            "uri": "@{variables('ORC_COPILOT_ENDPOINT')}/api/messages",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "6af0a087-5e34-4e63-920e-40ad8d256bea"
+          },
+          "runAfter": {
+            "build_orc_request": [
+              "Succeeded"
+            ]
+          }
+        },
+        "parse_routing": {
+          "type": "Compose",
+          "inputs": {
+            "target_agent": "@body('call_orc_classify')?['routing_decision']?['target_agent']",
+            "request_type": "@body('call_orc_classify')?['routing_decision']?['request_type']",
+            "confidence": "@body('call_orc_classify')?['routing_decision']?['confidence']",
+            "rationale": "@body('call_orc_classify')?['routing_decision']?['rationale']",
+            "requires_specialist": "@not(equals(body('call_orc_classify')?['routing_decision']?['target_agent'], 'ORC'))"
+          },
+          "metadata": {
+            "operationMetadataId": "00825619-240f-458b-8e42-86c4cf7c25e7"
+          },
+          "runAfter": {
+            "call_orc_classify": [
+              "Succeeded"
+            ]
+          }
+        },
+        "log_routing": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {},
+            "authentication": "@parameters('$authentication')"
+          },
+          "metadata": {
+            "operationMetadataId": "a2f980ef-3d1f-422a-9bef-104a7ee6fd95"
+          },
+          "runAfter": {
+            "parse_routing": [
+              "Succeeded"
+            ]
+          }
+        },
+        "check_needs_specialist": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@outputs('parse_routing')?['requires_specialist']",
+                  true
+                ]
+              }
+            ]
+          },
+          "actions": {},
+          "else": {
+            "actions": {}
+          },
+          "metadata": {
+            "operationMetadataId": "ed03411c-87eb-48a9-9619-f00688a06268"
+          },
+          "runAfter": {
+            "log_routing": [
+              "Succeeded"
+            ]
+          }
+        },
+        "get_specialist_endpoint": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {},
+            "authentication": "@parameters('$authentication')"
+          },
+          "metadata": {
+            "operationMetadataId": "c24a22c3-b933-4200-a530-8a646119073b"
+          },
+          "runAfter": {
+            "check_needs_specialist": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_specialist_request": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@guid()",
+            "timestamp": "@utcNow()",
+            "source_agent": "ORC",
+            "target_agent": "@outputs('parse_routing')?['target_agent']",
+            "request_type": "@outputs('parse_routing')?['request_type']",
+            "session_context": "@outputs('build_orc_request')?['session_context']",
+            "parameters": {
+              "user_message": "@outputs('parse_input')?['user_message']",
+              "orc_context": "@body('call_orc_classify')?['context_for_specialist']"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "7b9e2414-b2a3-4b89-84a2-fcec7583fac6"
+          },
+          "runAfter": {
+            "get_specialist_endpoint": [
+              "Succeeded"
+            ]
+          }
+        },
+        "call_specialist": {
+          "type": "Http",
+          "inputs": {
+            "method": "POST",
+            "uri": "@{first(body('get_specialist_endpoint')?['value'])?['eap_agent_endpoint']}/api/messages",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "6d7cf0f8-3452-4457-b76f-32f6f0dd00b1"
+          },
+          "runAfter": {
+            "build_specialist_request": [
+              "Succeeded"
+            ]
+          }
+        },
+        "log_specialist_response": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {},
+            "authentication": "@parameters('$authentication')"
+          },
+          "metadata": {
+            "operationMetadataId": "26bc66ee-dbc6-40f5-94dd-692794678b9b"
+          },
+          "runAfter": {
+            "call_specialist": [
+              "Succeeded"
+            ]
+          }
+        },
+        "synthesize_response": {
+          "type": "Http",
+          "inputs": {
+            "method": "POST",
+            "uri": "@{variables('ORC_COPILOT_ENDPOINT')}/api/messages",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "aaeb19f6-e6a9-4b3d-90fe-6b1eb14c9288"
+          },
+          "runAfter": {
+            "log_specialist_response": [
+              "Succeeded"
+            ]
+          }
+        },
+        "update_session": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "UpdateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {},
+            "authentication": "@parameters('$authentication')"
+          },
+          "metadata": {
+            "operationMetadataId": "9f52e2f4-6c4e-4fdc-8a9f-752d802f2c03"
+          },
+          "runAfter": {
+            "synthesize_response": [
+              "Succeeded"
+            ],
+            "call_orc_classify": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "inputs": {
+            "response_text": "@coalesce(body('synthesize_response')?['text'], body('call_orc_classify')?['text'])",
+            "confidence": "@coalesce(body('synthesize_response')?['confidence'], body('call_orc_classify')?['confidence'])",
+            "sources": "@coalesce(body('synthesize_response')?['sources'], body('call_orc_classify')?['sources'])",
+            "next_step_suggestion": "@coalesce(body('synthesize_response')?['next_step'], body('call_orc_classify')?['next_step'])",
+            "routing_path": [
+              {
+                "agent": "ORC",
+                "action": "classify"
+              },
+              {
+                "agent": "@outputs('parse_routing')?['target_agent']",
+                "action": "@outputs('parse_routing')?['request_type']",
+                "condition": "@outputs('parse_routing')?['requires_specialist']"
+              }
+            ],
+            "metadata": {
+              "request_id": "@outputs('parse_input')?['request_id']",
+              "session_id": "@outputs('parse_input')?['session_id']",
+              "total_processing_time_ms": "@sub(ticks(utcNow()), ticks(outputs('parse_input')?['timestamp']))"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "93ab9beb-950d-4b09-9c0b-5365e5408ac0"
+          },
+          "runAfter": {
+            "update_session": [
+              "Succeeded"
+            ]
+          }
+        },
+        "fallback_to_mpa": {
+          "type": "Http",
+          "inputs": {
+            "method": "POST",
+            "uri": "@{variables('MPA_V55_ENDPOINT')}/api/messages",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "7509a66d-8810-470c-97f3-83ce23b0eff2"
+          },
+          "runAfter": {
+            "feature_flag_check": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": "@coalesce(outputs('build_response'), body('fallback_to_mpa'))",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "0ea53c2f-1976-44dc-92d0-3f0cd3d59979"
+          },
+          "runAfter": {}
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

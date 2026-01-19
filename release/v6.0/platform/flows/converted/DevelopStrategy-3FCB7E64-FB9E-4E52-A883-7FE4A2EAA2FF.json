@@ -1,0 +1,616 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {},
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "method": "POST",
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id",
+                "objectives"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "objectives": {
+                  "type": "object",
+                  "properties": {
+                    "primary": {
+                      "type": "string",
+                      "enum": [
+                        "awareness",
+                        "consideration",
+                        "conversion",
+                        "retention",
+                        "advocacy"
+                      ]
+                    },
+                    "secondary": {
+                      "type": "string"
+                    },
+                    "kpis": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "audience": {
+                  "type": "object",
+                  "properties": {
+                    "target_segments": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "demographics": {
+                      "type": "object"
+                    },
+                    "psychographics": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "budget": {
+                  "type": "number",
+                  "description": "Campaign budget"
+                },
+                "timeline": {
+                  "type": "object",
+                  "properties": {
+                    "start_date": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "end_date": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "duration_weeks": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "brand_context": {
+                  "type": "object",
+                  "properties": {
+                    "brand_name": {
+                      "type": "string"
+                    },
+                    "industry": {
+                      "type": "string"
+                    },
+                    "positioning": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "F4CE3A01-4347-4E8E-AE11-3199AD7D01D3"
+          },
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "objectives": "@triggerBody()?['objectives']",
+            "audience": "@triggerBody()?['audience']",
+            "budget": "@triggerBody()?['budget']",
+            "timeline": "@triggerBody()?['timeline']",
+            "brand_context": "@triggerBody()?['brand_context']",
+            "start_time": "@utcNow()"
+          }
+        },
+        "define_framework": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "7E539998-0174-4D1C-A759-1A05E1D0FC55"
+          },
+          "inputs": {
+            "strategy_approach": {
+              "objective_alignment": {
+                "primary_objective": "@outputs('parse_input')?['objectives']?['primary']",
+                "funnel_stage": "consideration",
+                "key_outcome": "Increase qualified leads and brand preference"
+              },
+              "strategic_pillars": [
+                {
+                  "pillar": "Audience Understanding",
+                  "description": "Deep insight into target audience needs and behaviors",
+                  "importance": "critical"
+                },
+                {
+                  "pillar": "Value Proposition",
+                  "description": "Clear articulation of unique value",
+                  "importance": "critical"
+                },
+                {
+                  "pillar": "Channel Excellence",
+                  "description": "Right message in right place at right time",
+                  "importance": "high"
+                },
+                {
+                  "pillar": "Measurement Rigor",
+                  "description": "Data-driven optimization and accountability",
+                  "importance": "high"
+                }
+              ]
+            },
+            "campaign_positioning": {
+              "big_idea": "Empowering success through innovative solutions",
+              "key_message": "Transform your business with proven expertise",
+              "tone": "confident, approachable, expert",
+              "differentiation": "Unique combination of technology and human insight"
+            }
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "develop_channels": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "263FB0DE-28B6-49D9-B3C8-24147BB0855B"
+          },
+          "inputs": {
+            "channel_recommendations": {
+              "primary_channels": [
+                {
+                  "channel": "Paid Search",
+                  "role": "Capture demand, drive conversions",
+                  "budget_allocation": 30,
+                  "rationale": "High intent audience, measurable ROI",
+                  "tactics": [
+                    "Brand keywords protection",
+                    "Non-brand category targeting",
+                    "Competitor conquesting"
+                  ],
+                  "kpis": [
+                    {
+                      "metric": "CTR",
+                      "target": 4.5
+                    },
+                    {
+                      "metric": "CPA",
+                      "target": 75
+                    }
+                  ]
+                },
+                {
+                  "channel": "Paid Social",
+                  "role": "Build awareness, drive consideration",
+                  "budget_allocation": 25,
+                  "rationale": "Reach and targeting precision",
+                  "platforms": [
+                    {
+                      "name": "LinkedIn",
+                      "allocation": 60,
+                      "use_case": "B2B targeting, thought leadership"
+                    },
+                    {
+                      "name": "Meta",
+                      "allocation": 40,
+                      "use_case": "Broad reach, retargeting"
+                    }
+                  ],
+                  "kpis": [
+                    {
+                      "metric": "CPM",
+                      "target": 15
+                    },
+                    {
+                      "metric": "Engagement Rate",
+                      "target": 2.5
+                    }
+                  ]
+                },
+                {
+                  "channel": "Content Marketing",
+                  "role": "Educate, build authority",
+                  "budget_allocation": 15,
+                  "rationale": "Long-term value, SEO benefits",
+                  "content_types": [
+                    "Thought leadership articles",
+                    "Case studies",
+                    "Webinars",
+                    "Infographics"
+                  ]
+                }
+              ],
+              "secondary_channels": [
+                {
+                  "channel": "Display/Programmatic",
+                  "role": "Retargeting, awareness",
+                  "budget_allocation": 15
+                },
+                {
+                  "channel": "Email Marketing",
+                  "role": "Nurture, conversion",
+                  "budget_allocation": 10
+                },
+                {
+                  "channel": "PR/Earned Media",
+                  "role": "Credibility, amplification",
+                  "budget_allocation": 5
+                }
+              ]
+            },
+            "channel_integration": {
+              "customer_journey_mapping": {
+                "awareness": {
+                  "channels": [
+                    "Paid Social",
+                    "Display",
+                    "Content"
+                  ],
+                  "messaging": "Introduce brand and value proposition"
+                },
+                "consideration": {
+                  "channels": [
+                    "Paid Search",
+                    "Content",
+                    "Email"
+                  ],
+                  "messaging": "Demonstrate expertise and differentiation"
+                },
+                "decision": {
+                  "channels": [
+                    "Paid Search",
+                    "Email",
+                    "Retargeting"
+                  ],
+                  "messaging": "Drive action with compelling offers"
+                }
+              },
+              "cross_channel_tactics": [
+                "Unified audience targeting across platforms",
+                "Sequential messaging through funnel",
+                "Attribution-based budget optimization"
+              ]
+            }
+          },
+          "runAfter": {
+            "define_framework": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_messaging": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "78554ADC-2BF1-4CE5-892E-64DF82A91F2F"
+          },
+          "inputs": {
+            "messaging_hierarchy": {
+              "brand_promise": "Delivering success through innovation",
+              "value_proposition": "The only solution that combines cutting-edge technology with proven expertise",
+              "key_messages": [
+                {
+                  "message": "Transform your business",
+                  "audience_relevance": "Decision makers seeking growth",
+                  "proof_points": [
+                    "500+ successful implementations",
+                    "95% customer satisfaction"
+                  ]
+                },
+                {
+                  "message": "Expert guidance at every step",
+                  "audience_relevance": "Risk-averse buyers",
+                  "proof_points": [
+                    "Dedicated success team",
+                    "24/7 support"
+                  ]
+                },
+                {
+                  "message": "Results you can measure",
+                  "audience_relevance": "ROI-focused stakeholders",
+                  "proof_points": [
+                    "Average 3x ROI",
+                    "Transparent reporting"
+                  ]
+                }
+              ],
+              "call_to_action": {
+                "primary": "Schedule a consultation",
+                "secondary": "Download the guide",
+                "tertiary": "Watch the demo"
+              }
+            },
+            "content_themes": [
+              {
+                "theme": "Industry Leadership",
+                "content_ideas": [
+                  "State of the industry report",
+                  "Expert interviews",
+                  "Trend analysis"
+                ]
+              },
+              {
+                "theme": "Customer Success",
+                "content_ideas": [
+                  "Case studies",
+                  "Testimonials",
+                  "ROI calculators"
+                ]
+              },
+              {
+                "theme": "Product Excellence",
+                "content_ideas": [
+                  "Feature deep-dives",
+                  "Comparison guides",
+                  "Demo videos"
+                ]
+              }
+            ]
+          },
+          "runAfter": {
+            "develop_channels": [
+              "Succeeded"
+            ]
+          }
+        },
+        "define_measurement": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "D9013F8B-2596-49D7-99B9-78F2319E0AA7"
+          },
+          "inputs": {
+            "measurement_approach": {
+              "primary_kpis": [
+                {
+                  "kpi": "Marketing Qualified Leads (MQLs)",
+                  "target": 500,
+                  "measurement": "CRM tracking",
+                  "frequency": "Weekly"
+                },
+                {
+                  "kpi": "Cost Per Lead (CPL)",
+                  "target": 150,
+                  "measurement": "Platform + CRM",
+                  "frequency": "Weekly"
+                },
+                {
+                  "kpi": "Marketing Sourced Pipeline",
+                  "target": 2500000,
+                  "measurement": "CRM attribution",
+                  "frequency": "Monthly"
+                }
+              ],
+              "secondary_kpis": [
+                {
+                  "kpi": "Brand Awareness Lift",
+                  "target": 15,
+                  "measurement": "Brand study"
+                },
+                {
+                  "kpi": "Website Traffic",
+                  "target": 50000,
+                  "measurement": "Analytics"
+                },
+                {
+                  "kpi": "Engagement Rate",
+                  "target": 3,
+                  "measurement": "Platform analytics"
+                }
+              ],
+              "attribution_model": {
+                "model": "Data-driven attribution",
+                "lookback_window": 90,
+                "touchpoints_tracked": [
+                  "First touch",
+                  "Lead creation",
+                  "Opportunity creation"
+                ]
+              },
+              "reporting_cadence": [
+                {
+                  "frequency": "Weekly",
+                  "content": "Performance dashboard, optimization recommendations"
+                },
+                {
+                  "frequency": "Monthly",
+                  "content": "Full funnel analysis, budget recommendations"
+                },
+                {
+                  "frequency": "Quarterly",
+                  "content": "Strategic review, benchmark comparison"
+                }
+              ]
+            }
+          },
+          "runAfter": {
+            "build_messaging": [
+              "Succeeded"
+            ]
+          }
+        },
+        "create_roadmap": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "36C28634-3DF5-4577-B8D5-A2B02D54FC66"
+          },
+          "inputs": {
+            "campaign_phases": [
+              {
+                "phase": "Launch",
+                "duration_weeks": 4,
+                "focus": "Awareness and reach building",
+                "key_activities": [
+                  "Campaign creative launch",
+                  "Paid media activation",
+                  "Content publishing"
+                ],
+                "success_criteria": [
+                  "Reach target audience",
+                  "Establish baseline metrics"
+                ]
+              },
+              {
+                "phase": "Optimize",
+                "duration_weeks": 8,
+                "focus": "Performance optimization",
+                "key_activities": [
+                  "A/B testing",
+                  "Audience refinement",
+                  "Budget reallocation"
+                ],
+                "success_criteria": [
+                  "Improve key metrics 15%+",
+                  "Identify top performers"
+                ]
+              },
+              {
+                "phase": "Scale",
+                "duration_weeks": 4,
+                "focus": "Maximize impact",
+                "key_activities": [
+                  "Scale winning tactics",
+                  "Expand reach",
+                  "Drive conversions"
+                ],
+                "success_criteria": [
+                  "Achieve campaign targets",
+                  "Maximize ROI"
+                ]
+              }
+            ],
+            "budget_phasing": {
+              "launch": 20,
+              "optimize": 50,
+              "scale": 30
+            },
+            "risk_mitigation": [
+              {
+                "risk": "Underperformance",
+                "mitigation": "Weekly optimization reviews, 20% holdback for reallocation"
+              },
+              {
+                "risk": "Competitive response",
+                "mitigation": "Monitor competitive activity, maintain message differentiation"
+              }
+            ]
+          },
+          "runAfter": {
+            "define_measurement": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "7B3B2EA1-981F-4E9C-954C-75E8A19BD723"
+          },
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "MKT",
+            "status": "success",
+            "data": {
+              "campaign_context": {
+                "objectives": "@outputs('parse_input')?['objectives']",
+                "budget": "@outputs('parse_input')?['budget']",
+                "timeline": "@outputs('parse_input')?['timeline']"
+              },
+              "strategy_framework": "@outputs('define_framework')?['strategy_approach']",
+              "campaign_positioning": "@outputs('define_framework')?['campaign_positioning']",
+              "channel_strategy": "@outputs('develop_channels')?['channel_recommendations']",
+              "channel_integration": "@outputs('develop_channels')?['channel_integration']",
+              "messaging_framework": "@outputs('build_messaging')?['messaging_hierarchy']",
+              "content_themes": "@outputs('build_messaging')?['content_themes']",
+              "measurement_framework": "@outputs('define_measurement')?['measurement_approach']",
+              "execution_roadmap": "@outputs('create_roadmap')?['campaign_phases']",
+              "budget_phasing": "@outputs('create_roadmap')?['budget_phasing']"
+            },
+            "confidence": "HIGH",
+            "sources": [
+              "AGENT_KB",
+              "CAMPAIGN_STRATEGY",
+              "BEST_PRACTICES"
+            ],
+            "recommendations": [
+              "Finalize creative brief before campaign launch",
+              "Ensure tracking infrastructure is in place",
+              "Schedule weekly optimization reviews"
+            ],
+            "follow_up_questions": [
+              "Would you like me to create a creative brief?",
+              "Should we conduct competitive analysis?",
+              "Do you want detailed channel activation plans?"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "create_roadmap": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "A46751AD-43EF-48D3-8F14-4BD30694004F"
+          },
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('build_response')"
+          },
+          "kind": "Http"
+        },
+        "return_error": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "4E86F8A6-91CF-4424-8A17-231B853DDEAE"
+          },
+          "inputs": {
+            "statusCode": 500,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "request_id": "@outputs('parse_input')?['request_id']",
+              "source_agent": "MKT",
+              "error": true,
+              "code": "STRATEGY_ERROR",
+              "message": "Failed to develop campaign strategy"
+            }
+          },
+          "kind": "Http",
+          "operationOptions": "OnError"
+        }
+      }
+    },
+    "state": "Activated"
+  },
+  "schemaVersion": "1.0.0.0"
+}

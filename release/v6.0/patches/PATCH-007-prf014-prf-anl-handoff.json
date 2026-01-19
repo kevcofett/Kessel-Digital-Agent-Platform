@@ -1,0 +1,167 @@
+{
+  "patch_id": "PATCH-007",
+  "version": "6.0.2",
+  "date": "2026-01-19",
+  "description": "Fix PRF-014 PRF to ANL Handoff integration test",
+  "affected_tests": ["PRF-014"],
+  "priority": "P1",
+  "type": "integration_fix",
+
+  "root_cause_analysis": {
+    "test_id": "PRF-014",
+    "test_name": "PRF to ANL Handoff",
+    "input": "Update projections based on actual performance data",
+    "expected_flow": "AnalyzePerformance",
+    "expected_behavior": "PRF provides actuals, ANL updates forecasts",
+    "secondary_agent": "ANL",
+    "failure_reason": "Missing handoff contract between PRF and ANL - PRF output schema doesn't match ANL input requirements for projection updates",
+    "actual_behavior": "PRF returns performance data but handoff to ANL fails due to schema mismatch"
+  },
+
+  "changes": [
+    {
+      "file": "contracts/INTER_AGENT_CONTRACT_v1.json",
+      "section": "handoff_contracts",
+      "change_type": "add",
+      "description": "Add PRF to ANL handoff contract specification",
+      "content": {
+        "PRF_to_ANL": {
+          "contract_id": "PRF_ANL_001",
+          "name": "Performance to Projection Update",
+          "description": "PRF provides actual performance data for ANL to update forecasts",
+          "trigger_patterns": [
+            "update projections based on",
+            "revise forecast with actuals",
+            "compare projections to actual",
+            "adjust forecast"
+          ],
+          "prf_output_schema": {
+            "actual_performance": {
+              "period": "date_range",
+              "metrics": {
+                "impressions": "number",
+                "reach": "number",
+                "frequency": "number",
+                "clicks": "number",
+                "conversions": "number",
+                "spend": "number"
+              },
+              "channel_breakdown": "object",
+              "variance_from_projection": "object"
+            },
+            "performance_insights": {
+              "trends": "array",
+              "anomalies": "array",
+              "contributing_factors": "array"
+            },
+            "handoff_context": {
+              "original_projection_id": "string",
+              "update_reason": "string",
+              "confidence_adjustment": "number"
+            }
+          },
+          "anl_input_requirements": {
+            "required": ["actual_performance", "handoff_context"],
+            "optional": ["performance_insights"],
+            "mapping": {
+              "actual_performance.metrics": "anl_input.actuals",
+              "actual_performance.variance_from_projection": "anl_input.variance_data",
+              "handoff_context.original_projection_id": "anl_input.projection_to_update"
+            }
+          },
+          "anl_expected_output": {
+            "updated_projection": {
+              "projection_id": "string",
+              "updated_metrics": "object",
+              "confidence_intervals": "object",
+              "adjustment_notes": "string"
+            },
+            "variance_analysis": {
+              "actual_vs_original": "object",
+              "updated_vs_original": "object",
+              "key_drivers": "array"
+            }
+          }
+        }
+      }
+    },
+    {
+      "file": "agents/prf/flows/AnalyzePerformance.yaml",
+      "section": "handoff_support",
+      "change_type": "add",
+      "description": "Add ANL handoff support to AnalyzePerformance flow",
+      "content": {
+        "handoff_configurations": {
+          "ANL": {
+            "enabled": true,
+            "trigger_detection": "detect intent to update/revise projections",
+            "output_transformation": {
+              "wrap_in_handoff_context": true,
+              "include_original_projection_reference": true,
+              "format_for_anl_input": true
+            },
+            "handoff_message": "Transferring performance actuals to Analytics for projection update..."
+          }
+        }
+      }
+    },
+    {
+      "file": "agents/anl/flows/CalculateProjection.yaml",
+      "section": "update_mode",
+      "change_type": "add",
+      "description": "Add projection update mode to handle PRF handoff",
+      "content": {
+        "projection_update_mode": {
+          "enabled": true,
+          "trigger": "input contains handoff_context from PRF",
+          "processing_steps": [
+            {
+              "step": 1,
+              "name": "Load original projection",
+              "action": "retrieve projection by projection_id"
+            },
+            {
+              "step": 2,
+              "name": "Calculate variance",
+              "action": "compare actuals to original projection"
+            },
+            {
+              "step": 3,
+              "name": "Adjust model parameters",
+              "action": "update coefficients based on actual performance"
+            },
+            {
+              "step": 4,
+              "name": "Generate updated projection",
+              "action": "recalculate forward projection with new parameters"
+            },
+            {
+              "step": 5,
+              "name": "Adjust confidence intervals",
+              "action": "narrow or widen based on prediction accuracy"
+            }
+          ],
+          "output_includes": ["updated_projection", "variance_analysis", "model_adjustments"]
+        }
+      }
+    }
+  ],
+
+  "test_validation": {
+    "PRF-014": {
+      "name": "PRF to ANL Handoff",
+      "input": "Update projections based on actual performance data",
+      "expected_flow": "AnalyzePerformance",
+      "expected_behavior": "PRF provides actuals, ANL updates forecasts",
+      "secondary_agent": "ANL",
+      "fix_rationale": "Added handoff contract with schema mapping and update mode in ANL"
+    }
+  },
+
+  "implementation_instructions": [
+    "1. Add PRF_to_ANL contract to INTER_AGENT_CONTRACT_v1.json",
+    "2. Add handoff support to AnalyzePerformance flow",
+    "3. Add projection update mode to CalculateProjection flow",
+    "4. Re-run test PRF-014 to validate fix"
+  ]
+}

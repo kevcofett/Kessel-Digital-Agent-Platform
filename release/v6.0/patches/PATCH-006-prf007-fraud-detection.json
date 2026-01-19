@@ -1,0 +1,140 @@
+{
+  "patch_id": "PATCH-006",
+  "version": "6.0.2",
+  "date": "2026-01-19",
+  "description": "Fix PRF-007 Fraud Detection Signals capability test",
+  "affected_tests": ["PRF-007"],
+  "priority": "P1",
+  "type": "capability_fix",
+
+  "root_cause_analysis": {
+    "test_id": "PRF-007",
+    "test_name": "Fraud Detection Signals",
+    "input": "Check for potential fraud signals in our traffic",
+    "expected_flow": "DetectAnomalies",
+    "expected_output_contains": ["fraud_indicators", "risk_score", "affected_sources"],
+    "failure_reason": "DetectAnomalies flow handles performance anomalies but lacks fraud-specific detection logic and output schema",
+    "actual_behavior": "Returns generic anomaly detection without fraud-specific indicators"
+  },
+
+  "changes": [
+    {
+      "file": "agents/prf/flows/DetectAnomalies.yaml",
+      "section": "detection_modules",
+      "change_type": "add",
+      "description": "Add fraud detection module to DetectAnomalies flow",
+      "content": {
+        "fraud_detection_module": {
+          "trigger_patterns": ["fraud", "bot traffic", "invalid traffic", "ivt", "suspicious", "fake clicks", "click fraud"],
+          "detection_rules": [
+            {
+              "rule_id": "FRAUD_001",
+              "name": "Abnormal CTR Pattern",
+              "description": "CTR significantly above channel benchmark",
+              "threshold": "ctr > benchmark_p95 * 1.5",
+              "severity": "high",
+              "indicator_type": "click_fraud"
+            },
+            {
+              "rule_id": "FRAUD_002",
+              "name": "Geographic Mismatch",
+              "description": "Traffic from unexpected geos",
+              "threshold": "geo_distribution differs > 30% from target",
+              "severity": "medium",
+              "indicator_type": "bot_traffic"
+            },
+            {
+              "rule_id": "FRAUD_003",
+              "name": "Session Duration Anomaly",
+              "description": "Extremely short or uniform session durations",
+              "threshold": "avg_session_duration < 2s OR stddev_session < 0.5s",
+              "severity": "high",
+              "indicator_type": "bot_traffic"
+            },
+            {
+              "rule_id": "FRAUD_004",
+              "name": "Conversion Rate Collapse",
+              "description": "High traffic with near-zero conversions",
+              "threshold": "impressions > 10000 AND conversion_rate < 0.001%",
+              "severity": "critical",
+              "indicator_type": "invalid_traffic"
+            },
+            {
+              "rule_id": "FRAUD_005",
+              "name": "Source Concentration",
+              "description": "Disproportionate traffic from single source",
+              "threshold": "single_source_percent > 50%",
+              "severity": "medium",
+              "indicator_type": "suspicious_source"
+            }
+          ],
+          "risk_scoring": {
+            "method": "weighted_sum",
+            "weights": {
+              "critical": 40,
+              "high": 25,
+              "medium": 15,
+              "low": 5
+            },
+            "thresholds": {
+              "low_risk": "0-25",
+              "moderate_risk": "26-50",
+              "high_risk": "51-75",
+              "critical_risk": "76-100"
+            }
+          },
+          "output_schema": {
+            "fraud_indicators": {
+              "type": "array",
+              "items": {
+                "indicator_type": "string",
+                "rule_triggered": "string",
+                "severity": "string",
+                "evidence": "object",
+                "recommendation": "string"
+              }
+            },
+            "risk_score": {
+              "overall_score": "number",
+              "risk_level": "string",
+              "confidence": "percentage"
+            },
+            "affected_sources": {
+              "type": "array",
+              "items": {
+                "source_name": "string",
+                "source_type": "string",
+                "traffic_volume": "number",
+                "fraud_probability": "percentage",
+                "recommended_action": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "file": "agents/prf/kb/PRF_KB_Anomaly_Detection_v1.txt",
+      "section": "FRAUD DETECTION",
+      "change_type": "add",
+      "description": "Add KB documentation for fraud detection",
+      "content": "FRAUD DETECTION SIGNALS\n\nFraud detection identifies potential invalid traffic (IVT) and suspicious patterns that may indicate ad fraud.\n\nKey indicators checked:\n- fraud_indicators: Specific patterns suggesting fraudulent activity\n- risk_score: Composite score from 0-100 indicating fraud likelihood\n- affected_sources: Traffic sources with elevated fraud signals\n\nDetection rules include CTR anomalies, geographic mismatches, session duration patterns, conversion rate collapses, and source concentration.\n\nRecommendations should include immediate actions (block sources), short-term (adjust targeting), and long-term (partner evaluation).\n\nAlways note that fraud detection is probabilistic and should be validated with verification partners like IAS, DoubleVerify, or MOAT before taking action."
+    }
+  ],
+
+  "test_validation": {
+    "PRF-007": {
+      "name": "Fraud Detection Signals",
+      "input": "Check for potential fraud signals in our traffic",
+      "expected_flow": "DetectAnomalies",
+      "expected_output_contains": ["fraud_indicators", "risk_score", "affected_sources"],
+      "fix_rationale": "Added fraud detection module with proper detection rules and output schema"
+    }
+  },
+
+  "implementation_instructions": [
+    "1. Add fraud_detection_module to DetectAnomalies flow",
+    "2. Add fraud detection documentation to PRF KB",
+    "3. Re-run test PRF-007 to validate fix"
+  ]
+}

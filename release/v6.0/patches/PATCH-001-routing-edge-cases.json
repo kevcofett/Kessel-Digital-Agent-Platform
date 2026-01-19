@@ -1,0 +1,103 @@
+{
+  "patch_id": "PATCH-001",
+  "version": "6.0.2",
+  "date": "2026-01-19",
+  "description": "Fix routing edge cases RT-032 to RT-035",
+  "affected_tests": ["RT-032", "RT-033", "RT-034", "RT-035"],
+  "priority": "P2",
+  "type": "routing_enhancement",
+
+  "changes": [
+    {
+      "file": "platform/agent-registry.json",
+      "section": "routingKeywords",
+      "change_type": "add",
+      "description": "Add edge case routing keywords",
+      "before": {
+        "AUD": ["segment", "audience", "rfm", "ltv", "lifetime value", "customer", "targeting", "cohort", "cdp", "clean room", "first-party"]
+      },
+      "after": {
+        "AUD": ["segment", "audience", "rfm", "ltv", "lifetime value", "customer", "targeting", "cohort", "cdp", "clean room", "first-party", "millennials", "gen z", "demographic", "reach"]
+      }
+    },
+    {
+      "file": "platform/agent-registry.json",
+      "section": "edgeCaseHandling",
+      "change_type": "add_new_section",
+      "description": "Add edge case handling rules",
+      "content": {
+        "edgeCaseHandling": {
+          "ambiguous_routing": {
+            "description": "Handle requests that could route to multiple agents",
+            "strategy": "primary_with_fallback",
+            "rules": [
+              {
+                "pattern": "reach.*millennials|millennials.*reach|best way to reach",
+                "primary_agent": "AUD",
+                "fallback_agent": "CHA",
+                "rationale": "Audience targeting question routes to AUD first"
+              },
+              {
+                "pattern": "what.*benchmarks.*ltv|ltv.*benchmarks|benchmarks.*projection",
+                "primary_agent": "AUD",
+                "secondary_agents": ["CHA", "ANL"],
+                "rationale": "Multi-topic questions start with first topic agent"
+              }
+            ]
+          },
+          "minimal_input": {
+            "description": "Handle incomplete or minimal user input",
+            "strategy": "clarification_request",
+            "rules": [
+              {
+                "pattern": "^\\w{1,15}\\??$",
+                "action": "request_clarification",
+                "response_template": "I'd be happy to help with that. Could you please provide more details about what you'd like to know about {{topic}}?"
+              }
+            ]
+          },
+          "unsupported_request": {
+            "description": "Handle requests outside agent capabilities",
+            "strategy": "polite_decline",
+            "keywords": ["book", "purchase", "buy", "order", "reserve", "schedule meeting", "send email"],
+            "response_template": "I specialize in media planning strategy, analysis, and optimization. While I can't {{action}} directly, I can help you with planning and analysis. What aspect of your media strategy would you like to explore?"
+          }
+        }
+      }
+    }
+  ],
+
+  "test_validation": {
+    "RT-032": {
+      "name": "Ambiguous Routing",
+      "input": "What's the best way to reach millennials?",
+      "expected_result": "Route to AUD with fallback acknowledgment to CHA",
+      "fix_rationale": "Added 'millennials' and 'reach' to AUD keywords, created ambiguous routing rules"
+    },
+    "RT-033": {
+      "name": "Minimal Input",
+      "input": "Budget?",
+      "expected_result": "ORC requests clarification",
+      "fix_rationale": "Added minimal input detection with clarification templates"
+    },
+    "RT-034": {
+      "name": "Multiple Questions",
+      "input": "What's our LTV, what are the benchmarks, and can you project Q3?",
+      "expected_result": "Sequential routing: AUD -> CHA -> ANL",
+      "fix_rationale": "Added multi-topic routing rules with sequential handling"
+    },
+    "RT-035": {
+      "name": "Unsupported Request",
+      "input": "Book the media directly with publishers",
+      "expected_result": "ORC politely explains limitation",
+      "fix_rationale": "Added unsupported request detection with polite decline"
+    }
+  },
+
+  "implementation_instructions": [
+    "1. Update agent-registry.json with new routing keywords",
+    "2. Add edgeCaseHandling section to agent-registry.json",
+    "3. Update ORC agent instructions to reference edge case rules",
+    "4. Re-run tests RT-032 through RT-035 to validate"
+  ]
+}

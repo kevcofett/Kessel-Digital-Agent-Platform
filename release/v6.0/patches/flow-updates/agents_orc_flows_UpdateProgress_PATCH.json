@@ -1,0 +1,45 @@
+{
+  "target_file": "agents/orc/flows/UpdateProgress.yaml",
+  "section": "gate_validations.gate_3",
+  "content": {
+    "gate_3_execution": {
+      "name": "Execution Gate",
+      "description": "Validates readiness for campaign execution phase",
+      "required_completions": [
+        {
+          "field": "channels_selected",
+          "check": "session.channel_allocation != null && session.channel_allocation.length > 0",
+          "error_message": "No channels have been selected. Please complete channel strategy first."
+        },
+        {
+          "field": "budget_allocated",
+          "check": "session.budget_allocation != null && session.total_budget > 0",
+          "error_message": "Budget has not been allocated. Please define budget distribution."
+        },
+        {
+          "field": "partners_identified",
+          "check": "session.partner_selections != null || session.supply_path_defined == true",
+          "error_message": "Supply path partners have not been identified. Consider running SPO analysis.",
+          "optional": true,
+          "warning_if_missing": true
+        },
+        {
+          "field": "projections_complete",
+          "check": "session.anl_projections != null",
+          "error_message": "Projections have not been calculated. Run analytics before proceeding.",
+          "optional": true
+        }
+      ],
+      "output_format": {
+        "gate_status": "pass|fail|partial",
+        "channels_selected": "boolean",
+        "budget_allocated": "boolean",
+        "partners_identified": "boolean",
+        "missing_requirements": "array",
+        "recommendations": "array"
+      }
+    }
+  },
+  "description": "Complete Gate 3 execution phase validation logic",
+  "patch_source": "PATCH-003"
+}

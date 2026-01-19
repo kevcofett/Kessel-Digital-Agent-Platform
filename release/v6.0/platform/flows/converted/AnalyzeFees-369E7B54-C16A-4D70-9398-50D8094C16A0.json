@@ -1,0 +1,377 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {},
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "method": "POST",
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id",
+                "total_spend"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "total_spend": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Total programmatic spend"
+                },
+                "dsp_fee_percent": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100,
+                  "default": 15
+                },
+                "data_fee_cpm": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 1.5
+                },
+                "verification_fee_cpm": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 0.05
+                },
+                "ssp_fee_percent": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100,
+                  "default": 15
+                },
+                "impressions": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "channel_type": {
+                  "type": "string",
+                  "enum": [
+                    "display",
+                    "video",
+                    "ctv",
+                    "audio",
+                    "native"
+                  ],
+                  "default": "display"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "8A9AFDB5-F2ED-40C6-9AC7-541B8BCADD68"
+          },
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "total_spend": "@triggerBody()?['total_spend']",
+            "dsp_fee_percent": "@coalesce(triggerBody()?['dsp_fee_percent'], 15)",
+            "data_fee_cpm": "@coalesce(triggerBody()?['data_fee_cpm'], 1.50)",
+            "verification_fee_cpm": "@coalesce(triggerBody()?['verification_fee_cpm'], 0.05)",
+            "ssp_fee_percent": "@coalesce(triggerBody()?['ssp_fee_percent'], 15)",
+            "impressions": "@coalesce(triggerBody()?['impressions'], div(mul(triggerBody()?['total_spend'], 1000), 5))",
+            "channel_type": "@coalesce(triggerBody()?['channel_type'], 'display')",
+            "start_time": "@utcNow()"
+          }
+        },
+        "load_benchmarks": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "B40AC537-B7A4-4B7A-88E9-757233ADDE4C"
+          },
+          "inputs": {
+            "benchmarks": {
+              "display": {
+                "target_working_media": 55,
+                "excellent_working_media": 65,
+                "typical_dsp_fee": 15,
+                "typical_ssp_fee": 15,
+                "typical_data_cpm": 1.5
+              },
+              "video": {
+                "target_working_media": 50,
+                "excellent_working_media": 60,
+                "typical_dsp_fee": 15,
+                "typical_ssp_fee": 18,
+                "typical_data_cpm": 2.0
+              },
+              "ctv": {
+                "target_working_media": 45,
+                "excellent_working_media": 55,
+                "typical_dsp_fee": 12,
+                "typical_ssp_fee": 20,
+                "typical_data_cpm": 2.5
+              },
+              "audio": {
+                "target_working_media": 55,
+                "excellent_working_media": 65,
+                "typical_dsp_fee": 15,
+                "typical_ssp_fee": 15,
+                "typical_data_cpm": 1.0
+              },
+              "native": {
+                "target_working_media": 50,
+                "excellent_working_media": 60,
+                "typical_dsp_fee": 15,
+                "typical_ssp_fee": 18,
+                "typical_data_cpm": 1.75
+              }
+            }
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_dsp_layer": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "4A5B2ECF-1D22-427C-979E-6901D587DB6B"
+          },
+          "inputs": {
+            "gross_spend": "@outputs('parse_input')?['total_spend']",
+            "dsp_fee_percent": "@outputs('parse_input')?['dsp_fee_percent']",
+            "dsp_fee_amount": "@mul(outputs('parse_input')?['total_spend'], div(outputs('parse_input')?['dsp_fee_percent'], 100))",
+            "post_dsp": "@sub(outputs('parse_input')?['total_spend'], mul(outputs('parse_input')?['total_spend'], div(outputs('parse_input')?['dsp_fee_percent'], 100)))"
+          },
+          "runAfter": {
+            "load_benchmarks": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_data_layer": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "98271861-D2E7-49C0-A129-26F5F46E13D0"
+          },
+          "inputs": {
+            "impressions": "@outputs('parse_input')?['impressions']",
+            "data_fee_cpm": "@outputs('parse_input')?['data_fee_cpm']",
+            "data_fee_amount": "@mul(div(outputs('parse_input')?['impressions'], 1000), outputs('parse_input')?['data_fee_cpm'])",
+            "post_data": "@sub(outputs('calculate_dsp_layer')?['post_dsp'], mul(div(outputs('parse_input')?['impressions'], 1000), outputs('parse_input')?['data_fee_cpm']))"
+          },
+          "runAfter": {
+            "calculate_dsp_layer": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_verification_layer": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "3E1A3CB0-861E-4346-AF02-8E15E549D614"
+          },
+          "inputs": {
+            "verification_fee_cpm": "@outputs('parse_input')?['verification_fee_cpm']",
+            "verification_fee_amount": "@mul(div(outputs('parse_input')?['impressions'], 1000), outputs('parse_input')?['verification_fee_cpm'])",
+            "post_verification": "@sub(outputs('calculate_data_layer')?['post_data'], mul(div(outputs('parse_input')?['impressions'], 1000), outputs('parse_input')?['verification_fee_cpm']))"
+          },
+          "runAfter": {
+            "calculate_data_layer": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_ssp_layer": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "557A26D3-60E1-46FA-97AC-4CCF43372F5F"
+          },
+          "inputs": {
+            "ssp_fee_percent": "@outputs('parse_input')?['ssp_fee_percent']",
+            "ssp_fee_amount": "@mul(outputs('calculate_verification_layer')?['post_verification'], div(outputs('parse_input')?['ssp_fee_percent'], 100))",
+            "publisher_payment": "@sub(outputs('calculate_verification_layer')?['post_verification'], mul(outputs('calculate_verification_layer')?['post_verification'], div(outputs('parse_input')?['ssp_fee_percent'], 100)))"
+          },
+          "runAfter": {
+            "calculate_verification_layer": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_totals": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "8429F7D8-AFE7-404D-A35E-97A1813FD1A9"
+          },
+          "inputs": {
+            "total_spend": "@outputs('parse_input')?['total_spend']",
+            "publisher_payment": "@outputs('calculate_ssp_layer')?['publisher_payment']",
+            "total_fees": "@sub(outputs('parse_input')?['total_spend'], outputs('calculate_ssp_layer')?['publisher_payment'])",
+            "working_media_ratio": "@mul(div(outputs('calculate_ssp_layer')?['publisher_payment'], outputs('parse_input')?['total_spend']), 100)",
+            "fee_stack_percent": "@mul(div(sub(outputs('parse_input')?['total_spend'], outputs('calculate_ssp_layer')?['publisher_payment']), outputs('parse_input')?['total_spend']), 100)"
+          },
+          "runAfter": {
+            "calculate_ssp_layer": [
+              "Succeeded"
+            ]
+          }
+        },
+        "evaluate_benchmarks": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "DE957F46-649A-4639-BD38-77FB425C21DB"
+          },
+          "inputs": {
+            "channel_type": "@outputs('parse_input')?['channel_type']",
+            "working_media_ratio": "@outputs('calculate_totals')?['working_media_ratio']",
+            "target": "@outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['target_working_media']",
+            "excellent": "@outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['excellent_working_media']",
+            "rating": "@if(greaterOrEquals(outputs('calculate_totals')?['working_media_ratio'], outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['excellent_working_media']), 'EXCELLENT', if(greaterOrEquals(outputs('calculate_totals')?['working_media_ratio'], outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['target_working_media']), 'GOOD', if(greaterOrEquals(outputs('calculate_totals')?['working_media_ratio'], sub(outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['target_working_media'], 10)), 'BELOW_TARGET', 'POOR')))",
+            "gap_to_target": "@sub(outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['target_working_media'], outputs('calculate_totals')?['working_media_ratio'])",
+            "potential_savings": "@if(greater(sub(outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['target_working_media'], outputs('calculate_totals')?['working_media_ratio']), 0), mul(outputs('parse_input')?['total_spend'], div(sub(outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['target_working_media'], outputs('calculate_totals')?['working_media_ratio']), 100)), 0)"
+          },
+          "runAfter": {
+            "calculate_totals": [
+              "Succeeded"
+            ]
+          }
+        },
+        "generate_recommendations": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "54D5730D-2E60-4BC2-A574-DB313704A8C7"
+          },
+          "inputs": {
+            "recommendations": [
+              "@if(greater(outputs('parse_input')?['dsp_fee_percent'], outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['typical_dsp_fee']), 'Negotiate DSP fees - currently above market rate', 'DSP fees are competitive')",
+              "@if(greater(outputs('parse_input')?['ssp_fee_percent'], outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['typical_ssp_fee']), 'Explore alternative SSPs or direct publisher deals', 'SSP fees are competitive')",
+              "@if(greater(outputs('parse_input')?['data_fee_cpm'], outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['typical_data_cpm']), 'Review data targeting necessity - fees above benchmark', 'Data fees are within benchmark')"
+            ],
+            "priority_actions": [
+              {
+                "action": "Audit supply path for unnecessary intermediaries",
+                "impact": "HIGH",
+                "effort": "MEDIUM"
+              },
+              {
+                "action": "Negotiate volume-based fee reductions",
+                "impact": "MEDIUM",
+                "effort": "LOW"
+              },
+              {
+                "action": "Consider SPO consolidation to fewer partners",
+                "impact": "HIGH",
+                "effort": "HIGH"
+              }
+            ]
+          },
+          "runAfter": {
+            "evaluate_benchmarks": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "103FCE85-D630-4464-BB75-DEEF47838A99"
+          },
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "SPO",
+            "status": "success",
+            "data": {
+              "fee_breakdown": {
+                "total_spend": "@outputs('parse_input')?['total_spend']",
+                "dsp_fees": "@outputs('calculate_dsp_layer')?['dsp_fee_amount']",
+                "data_fees": "@outputs('calculate_data_layer')?['data_fee_amount']",
+                "verification_fees": "@outputs('calculate_verification_layer')?['verification_fee_amount']",
+                "ssp_fees": "@outputs('calculate_ssp_layer')?['ssp_fee_amount']",
+                "publisher_payment": "@outputs('calculate_ssp_layer')?['publisher_payment']",
+                "total_fees": "@outputs('calculate_totals')?['total_fees']"
+              },
+              "working_media": {
+                "ratio_percent": "@outputs('calculate_totals')?['working_media_ratio']",
+                "fee_stack_percent": "@outputs('calculate_totals')?['fee_stack_percent']",
+                "rating": "@outputs('evaluate_benchmarks')?['rating']"
+              },
+              "benchmarks": {
+                "channel_type": "@outputs('parse_input')?['channel_type']",
+                "target_working_media": "@outputs('evaluate_benchmarks')?['target']",
+                "excellent_working_media": "@outputs('evaluate_benchmarks')?['excellent']",
+                "gap_to_target": "@outputs('evaluate_benchmarks')?['gap_to_target']",
+                "potential_savings": "@outputs('evaluate_benchmarks')?['potential_savings']"
+              },
+              "recommendations": "@outputs('generate_recommendations')?['recommendations']",
+              "priority_actions": "@outputs('generate_recommendations')?['priority_actions']"
+            },
+            "confidence": "@if(equals(outputs('evaluate_benchmarks')?['rating'], 'EXCELLENT'), 'HIGH', if(equals(outputs('evaluate_benchmarks')?['rating'], 'GOOD'), 'HIGH', 'MEDIUM'))",
+            "sources": [
+              "CALCULATION",
+              "BENCHMARK_DATA",
+              "AGENT_KB"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)",
+              "impressions_analyzed": "@outputs('parse_input')?['impressions']"
+            }
+          },
+          "runAfter": {
+            "generate_recommendations": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "80C5E849-D15C-45F6-AB61-A0FB119A6F23"
+          },
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('build_response')"
+          },
+          "kind": "Http"
+        },
+        "return_error": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "7924186D-AD39-4AA9-AAC8-F08A90372D33"
+          },
+          "inputs": {
+            "statusCode": 500,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "request_id": "@outputs('parse_input')?['request_id']",
+              "source_agent": "SPO",
+              "error": true,
+              "code": "FEE_ANALYSIS_ERROR",
+              "message": "Failed to analyze fee stack"
+            }
+          },
+          "kind": "Http",
+          "operationOptions": "OnError"
+        }
+      }
+    },
+    "state": "Activated"
+  },
+  "schemaVersion": "1.0.0.0"
+}

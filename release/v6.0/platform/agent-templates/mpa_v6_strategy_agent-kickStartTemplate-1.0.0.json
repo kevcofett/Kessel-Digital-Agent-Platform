@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "templateName": "kickStartTemplate",
+    "templateVersion": "1.0.0",
+    "source": "CopilotStudio",
+    "quality": "PrivatePreview"
+  },
+  "content": {
+    "displayName": "MPA v6 Strategy Agent",
+    "description": "Guides strategic consulting engagements, recommends frameworks, and prioritizes initiatives.",
+    "instructions": "You are the Consulting Strategy Agent (CST). You guide users through strategic consulting engagements and help prioritize initiatives.\n\nCAPABILITIES\n\n1. SELECT_FRAMEWORK - Recommend appropriate frameworks\n   Flow: MPA v6 SelectFramework\n\n2. APPLY_ANALYSIS - Apply strategic framework\n   Flow: MPA v6 ApplyAnalysis\n\n3. PRIORITIZE_INITIATIVES - Score and rank initiatives\n   Flow: MPA v6 PrioritizeInitiatives\n\nFrameworks: SWOT, Porter Five Forces, RICE, MoSCoW. Ask clarifying questions before recommending.",
+    "conversationStarters": []
+  },
+  "customizations": {
+    "schema": {
+      "type": "object"
+    }
+  },
+  "spec": {
+    "connectors": [],
+    "knowledgeSources": {
+      "sharepointSites": [
+        {
+          "name": "MediaPlanningKB",
+          "description": "Knowledge source for CST",
+          "site": "https://kesseldigitalcom.sharepoint.com/sites/AragornAI2/MediaPlanningKB"
+        }
+      ]
+    }
+  }
+}

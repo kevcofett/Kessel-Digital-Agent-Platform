@@ -180,7 +180,59 @@ steps:
         - "External Event Impact"
     run_after: calculate_deviation
 
-  # Step 8: Build response
+  # Step 8: Detect fraud signals (when requested)
+  - id: detect_fraud_signals
+    type: Compose
+    name: Detect Fraud Signals
+    condition: "@or(contains(toLower(coalesce(triggerBody()?['query'], '')), 'fraud'), contains(toLower(coalesce(triggerBody()?['query'], '')), 'bot'), contains(toLower(coalesce(triggerBody()?['query'], '')), 'invalid traffic'), contains(toLower(coalesce(triggerBody()?['query'], '')), 'ivt'))"
+    inputs:
+      fraud_detection:
+        detection_rules:
+          - rule_id: "FRAUD_001"
+            name: "Abnormal CTR Pattern"
+            threshold: "CTR > benchmark_p95 * 1.5"
+            severity: "HIGH"
+            indicator_type: "click_fraud"
+          - rule_id: "FRAUD_002"
+            name: "Geographic Mismatch"
+            threshold: "geo_distribution differs > 30% from target"
+            severity: "MEDIUM"
+            indicator_type: "bot_traffic"
+          - rule_id: "FRAUD_003"
+            name: "Session Duration Anomaly"
+            threshold: "avg_session_duration < 2s OR stddev_session < 0.5s"
+            severity: "HIGH"
+            indicator_type: "bot_traffic"
+          - rule_id: "FRAUD_004"
+            name: "Conversion Rate Collapse"
+            threshold: "impressions > 10000 AND conversion_rate < 0.001%"
+            severity: "CRITICAL"
+            indicator_type: "invalid_traffic"
+          - rule_id: "FRAUD_005"
+            name: "Source Concentration"
+            threshold: "single_source_percent > 50%"
+            severity: "MEDIUM"
+            indicator_type: "suspicious_source"
+        fraud_indicators: []
+        risk_score:
+          overall_score: 0
+          risk_level: "low"
+          confidence: 85
+        affected_sources: []
+        risk_scoring:
+          weights:
+            critical: 40
+            high: 25
+            medium: 15
+            low: 5
+          thresholds:
+            low_risk: "0-25"
+            moderate_risk: "26-50"
+            high_risk: "51-75"
+            critical_risk: "76-100"
+    run_after: generate_guidance
+
+  # Step 9: Build response
   - id: build_response
     type: Compose
     name: Build Response
@@ -195,6 +247,7 @@ steps:
           anomaly_type: "@outputs('detect_anomaly')?['anomaly_type']"
           confidence: "@outputs('detect_anomaly')?['confidence']"
           recommendation: "@outputs('generate_guidance')?['recommendation']"
+        fraud_detection: "@coalesce(outputs('detect_fraud_signals')?['fraud_detection'], null)"
         statistical_analysis:
           current_value: "@outputs('parse_input')?['current_value']"
           historical_mean: "@outputs('calculate_statistics')?['mean']"
@@ -227,9 +280,11 @@ steps:
       metadata:
         processing_time_ms: "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
         methodology: "Z-score based outlier detection"
-    run_after: generate_guidance
+    run_after:
+      - generate_guidance
+      - detect_fraud_signals
 
-  # Step 9: Return response
+  # Step 10: Return response
   - id: return_response
     type: Response
     name: Return Response

@@ -1,0 +1,103 @@
+{
+  "target_file": "agents/prf/flows/DetectAnomalies.yaml",
+  "section": "detection_modules",
+  "content": {
+    "fraud_detection_module": {
+      "trigger_patterns": [
+        "fraud",
+        "bot traffic",
+        "invalid traffic",
+        "ivt",
+        "suspicious",
+        "fake clicks",
+        "click fraud"
+      ],
+      "detection_rules": [
+        {
+          "rule_id": "FRAUD_001",
+          "name": "Abnormal CTR Pattern",
+          "description": "CTR significantly above channel benchmark",
+          "threshold": "ctr > benchmark_p95 * 1.5",
+          "severity": "high",
+          "indicator_type": "click_fraud"
+        },
+        {
+          "rule_id": "FRAUD_002",
+          "name": "Geographic Mismatch",
+          "description": "Traffic from unexpected geos",
+          "threshold": "geo_distribution differs > 30% from target",
+          "severity": "medium",
+          "indicator_type": "bot_traffic"
+        },
+        {
+          "rule_id": "FRAUD_003",
+          "name": "Session Duration Anomaly",
+          "description": "Extremely short or uniform session durations",
+          "threshold": "avg_session_duration < 2s OR stddev_session < 0.5s",
+          "severity": "high",
+          "indicator_type": "bot_traffic"
+        },
+        {
+          "rule_id": "FRAUD_004",
+          "name": "Conversion Rate Collapse",
+          "description": "High traffic with near-zero conversions",
+          "threshold": "impressions > 10000 AND conversion_rate < 0.001%",
+          "severity": "critical",
+          "indicator_type": "invalid_traffic"
+        },
+        {
+          "rule_id": "FRAUD_005",
+          "name": "Source Concentration",
+          "description": "Disproportionate traffic from single source",
+          "threshold": "single_source_percent > 50%",
+          "severity": "medium",
+          "indicator_type": "suspicious_source"
+        }
+      ],
+      "risk_scoring": {
+        "method": "weighted_sum",
+        "weights": {
+          "critical": 40,
+          "high": 25,
+          "medium": 15,
+          "low": 5
+        },
+        "thresholds": {
+          "low_risk": "0-25",
+          "moderate_risk": "26-50",
+          "high_risk": "51-75",
+          "critical_risk": "76-100"
+        }
+      },
+      "output_schema": {
+        "fraud_indicators": {
+          "type": "array",
+          "items": {
+            "indicator_type": "string",
+            "rule_triggered": "string",
+            "severity": "string",
+            "evidence": "object",
+            "recommendation": "string"
+          }
+        },
+        "risk_score": {
+          "overall_score": "number",
+          "risk_level": "string",
+          "confidence": "percentage"
+        },
+        "affected_sources": {
+          "type": "array",
+          "items": {
+            "source_name": "string",
+            "source_type": "string",
+            "traffic_volume": "number",
+            "fraud_probability": "percentage",
+            "recommended_action": "string"
+          }
+        }
+      }
+    }
+  },
+  "description": "Add fraud detection module to DetectAnomalies flow",
+  "patch_source": "PATCH-006"
+}

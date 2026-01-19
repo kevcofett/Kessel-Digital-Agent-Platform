@@ -55,6 +55,39 @@ trigger:
         items:
           type: string
 
+# Intent patterns that should trigger this flow
+intent_patterns:
+  primary_triggers:
+    - "create.*adoption plan"
+    - "phased.*rollout"
+    - "rollout.*plan"
+    - "implementation.*plan"
+    - "adoption.*strategy"
+    - "user.*training"
+    - "change.*rollout"
+    - "rolling out.*system"
+    - "deploy.*to users"
+  keyword_triggers:
+    - "phased"
+    - "adoption plan"
+    - "rollout plan"
+    - "implementation plan"
+    - "training program"
+    - "user adoption"
+    - "change initiative"
+    - "system rollout"
+  system_keywords:
+    - "CRM"
+    - "ERP"
+    - "HR system"
+    - "collaboration tools"
+    - "new software"
+    - "new process"
+  entity_extraction:
+    system_name: "Extract the system or tool being rolled out"
+    timeline: "Extract desired timeline if specified"
+    scope: "Extract organizational scope (department, division, company-wide)"
+
 environment_variables:
   EAP_DATAVERSE_URL:
     description: EAP Dataverse environment URL

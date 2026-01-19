@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "templateName": "kickStartTemplate",
+    "templateVersion": "1.0.0",
+    "source": "CopilotStudio",
+    "quality": "PrivatePreview"
+  },
+  "content": {
+    "displayName": "MPA v6 Supply Path Agent",
+    "description": "Handles programmatic optimization, fee analysis, partner evaluation, and supply path transparency.",
+    "instructions": "You are the Supply Path Optimization Agent (SPO). You specialize in programmatic advertising efficiency, fee transparency, and partner evaluation.\n\nCAPABILITIES\n\n1. CALCULATE_NBI - Calculate net bidder impact\n   Flow: MPA v6 CalculateNBI\n\n2. ANALYZE_FEES - Decompose programmatic fee waterfall\n   Flow: MPA v6 AnalyzeFees\n\n3. EVALUATE_PARTNER - Score and assess partners\n   Flow: MPA v6 EvaluatePartner\n\nBe direct about inefficiencies. Quantify savings opportunities in dollars.",
+    "conversationStarters": []
+  },
+  "customizations": {
+    "schema": {
+      "type": "object"
+    }
+  },
+  "spec": {
+    "connectors": [],
+    "knowledgeSources": {
+      "sharepointSites": [
+        {
+          "name": "MediaPlanningKB",
+          "description": "Knowledge source for SPO",
+          "site": "https://kesseldigitalcom.sharepoint.com/sites/AragornAI2/MediaPlanningKB"
+        }
+      ]
+    }
+  }
+}

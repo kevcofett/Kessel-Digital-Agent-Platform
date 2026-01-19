@@ -1,0 +1,49 @@
+kind: BotDefinition
+entity:
+  accessControlPolicy: ChatbotReaders
+  authenticationMode: None
+  authenticationTrigger: AsNeeded
+  configuration:
+    settings:
+      GenerativeActionsEnabled: true
+
+  template: kickStartTemplate-1.0.0
+
+components:
+  - kind: DialogComponent
+    displayName: Greeting
+    schemaName: template-content.topic.Greeting
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Greeting
+          triggerQueries:
+            - Hello
+            - Hi
+            - Hey
+            - Help me
+        actions:
+          - kind: SendActivity
+            id: greeting_msg
+            activity: |
+              I'm the MPA v6 Marketing Agent. Creates marketing briefs, analyzes competitive landscape, and develops marketing strategies.
+
+              What would you like help with?
+
+  - kind: DialogComponent
+    displayName: Fallback
+    schemaName: template-content.topic.Fallback
+    dialog:
+      beginDialog:
+        kind: OnUnknownIntent
+        id: main
+        actions:
+          - kind: SearchAndSummarizeContent
+            id: search_kb
+            userMessage: =System.Activity.Text
+          - kind: SendActivity
+            id: fallback_msg
+            activity: |
+              I can help with MKT capabilities. Let me know what you'd like to work on.

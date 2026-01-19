@@ -1,0 +1,370 @@
+AZURE ML MODEL SPECIFICATIONS
+
+PURPOSE
+
+This document provides detailed specifications for all machine learning models deployed via Azure ML for the Kessel Digital Agent Platform. Each model includes input/output schemas, performance requirements, and deployment configurations.
+
+ANALYTICS AGENT MODELS
+
+BUDGET OPTIMIZATION MODEL
+
+Model Identifier
+- Name: kdap-budget-optimizer-v1
+- Type: Regression ensemble
+- Framework: XGBoost with custom objective
+
+Input Schema
+- channel_id: string - Channel identifier
+- current_spend: float - Current budget allocation
+- historical_performance: array - Past 12 months performance
+- seasonality_index: float - Seasonal adjustment factor
+- competitive_intensity: float - Market competition score
+- audience_size: integer - Target audience reach
+
+Output Schema
+- optimal_spend: float - Recommended budget
+- expected_return: float - Projected return
+- confidence_interval_lower: float - 95 percent CI lower bound
+- confidence_interval_upper: float - 95 percent CI upper bound
+- marginal_return: float - Incremental return per dollar
+
+Performance Requirements
+- Latency p99 under 200 milliseconds
+- Throughput minimum 100 requests per second
+- Availability 99.9 percent uptime
+
+Deployment Configuration
+- Instance type: Standard_DS3_v2
+- Minimum instances: 2
+- Maximum instances: 10
+- Scale threshold: 70 percent CPU
+
+RESPONSE CURVE MODEL
+
+Model Identifier
+- Name: kdap-response-curve-v1
+- Type: Nonlinear regression
+- Framework: Custom scipy optimization
+
+Input Schema
+- spend_levels: array - Budget points for curve fitting
+- response_values: array - Observed outcomes at each level
+- curve_type: string - hill, logarithmic, or s-curve
+- constraints: object - Floor, ceiling, diminishing point
+
+Output Schema
+- curve_parameters: object - Fitted curve coefficients
+- saturation_point: float - Diminishing returns threshold
+- optimal_spend: float - Maximum efficiency point
+- r_squared: float - Model fit quality
+- prediction_intervals: array - Confidence bands
+
+Performance Requirements
+- Latency p99 under 500 milliseconds
+- Batch size up to 50 curves per request
+- Availability 99.5 percent uptime
+
+MONTE CARLO SIMULATION MODEL
+
+Model Identifier
+- Name: kdap-monte-carlo-v1
+- Type: Simulation engine
+- Framework: NumPy with multiprocessing
+
+Input Schema
+- base_scenario: object - Central estimate parameters
+- distributions: array - Parameter distribution definitions
+- correlations: matrix - Parameter correlation structure
+- num_simulations: integer - Iteration count default 10000
+- output_percentiles: array - Percentiles to return
+
+Output Schema
+- percentile_results: object - Values at requested percentiles
+- mean_outcome: float - Average simulation result
+- std_deviation: float - Standard deviation of results
+- var_95: float - Value at risk 95 percent
+- cvar_95: float - Conditional value at risk
+- distribution_histogram: array - Binned results
+
+Performance Requirements
+- Latency p99 under 2000 milliseconds for 10000 sims
+- Batch processing for larger simulation counts
+- Availability 99.0 percent uptime
+
+AUDIENCE AGENT MODELS
+
+PROPENSITY SCORING MODEL
+
+Model Identifier
+- Name: kdap-propensity-v1
+- Type: Binary classification
+- Framework: LightGBM with calibration
+
+Input Schema
+- customer_id: string - Customer identifier
+- recency_days: integer - Days since last interaction
+- frequency_count: integer - Interactions in period
+- monetary_value: float - Total customer value
+- tenure_months: integer - Customer age
+- engagement_score: float - Engagement index
+- channel_preferences: array - Preferred channels
+- demographic_features: object - Age, income, location
+
+Output Schema
+- propensity_score: float - Calibrated probability 0 to 1
+- confidence: float - Model confidence in prediction
+- percentile_rank: integer - Score percentile
+- key_drivers: array - Top contributing features
+- segment_assignment: string - Propensity segment
+
+Performance Requirements
+- Latency p99 under 50 milliseconds
+- Throughput minimum 500 requests per second
+- Batch scoring up to 10000 records
+
+LOOKALIKE MODEL
+
+Model Identifier
+- Name: kdap-lookalike-v1
+- Type: Similarity scoring
+- Framework: Approximate nearest neighbors
+
+Input Schema
+- seed_audience: array - Customer IDs for seed
+- candidate_pool: string - Pool identifier
+- similarity_threshold: float - Minimum similarity score
+- max_results: integer - Maximum matches to return
+- feature_weights: object - Custom feature importance
+
+Output Schema
+- matches: array - Matched customer records
+- similarity_scores: array - Match quality scores
+- feature_overlap: object - Shared characteristics
+- expansion_factor: float - Seed to match ratio
+- quality_metrics: object - Match quality indicators
+
+Performance Requirements
+- Latency p99 under 1000 milliseconds
+- Seed audience up to 100000 customers
+- Availability 99.5 percent uptime
+
+CHURN PREDICTION MODEL
+
+Model Identifier
+- Name: kdap-churn-predictor-v1
+- Type: Survival analysis
+- Framework: Cox proportional hazards
+
+Input Schema
+- customer_id: string - Customer identifier
+- tenure_days: integer - Days as customer
+- activity_history: array - Recent activity events
+- support_interactions: integer - Support contact count
+- payment_issues: integer - Payment problem count
+- feature_usage: object - Product feature adoption
+- satisfaction_scores: array - Survey responses
+
+Output Schema
+- churn_probability: float - Probability of churn
+- time_to_churn: integer - Expected days to churn
+- hazard_ratio: float - Relative risk score
+- survival_curve: array - Probability over time
+- risk_factors: array - Key churn drivers
+- intervention_priority: string - high, medium, low
+
+Performance Requirements
+- Latency p99 under 100 milliseconds
+- Throughput minimum 200 requests per second
+- Daily batch scoring capability
+
+PERFORMANCE AGENT MODELS
+
+ANOMALY DETECTION MODEL
+
+Model Identifier
+- Name: kdap-anomaly-detector-v1
+- Type: Unsupervised detection
+- Framework: Isolation forest with LSTM
+
+Input Schema
+- metric_name: string - Metric identifier
+- metric_values: array - Time series values
+- timestamps: array - Corresponding timestamps
+- seasonality_period: integer - Expected cycle length
+- sensitivity: float - Detection threshold
+- context_features: object - External factors
+
+Output Schema
+- anomalies: array - Detected anomaly timestamps
+- anomaly_scores: array - Severity scores
+- expected_values: array - Baseline predictions
+- deviation_magnitude: array - Absolute deviations
+- anomaly_type: array - spike, dip, trend, pattern
+- root_cause_hints: array - Possible explanations
+
+Performance Requirements
+- Latency p99 under 100 milliseconds
+- Real-time streaming capability
+- Availability 99.9 percent uptime
+
+ATTRIBUTION MODEL
+
+Model Identifier
+- Name: kdap-attribution-v1
+- Type: Multi-touch attribution
+- Framework: Shapley value calculation
+
+Input Schema
+- conversion_paths: array - Customer journey touchpoints
+- conversion_value: float - Outcome value
+- attribution_model: string - shapley, markov, linear
+- channel_costs: object - Cost per channel
+- lookback_window: integer - Days to consider
+- position_weights: object - Position importance
+
+Output Schema
+- channel_attribution: object - Credit per channel
+- contribution_percentages: array - Percentage allocation
+- cost_effectiveness: object - Return per channel
+- incremental_contribution: object - Marginal attribution
+- path_analysis: object - Common conversion paths
+- model_diagnostics: object - Fit quality metrics
+
+Performance Requirements
+- Latency p99 under 500 milliseconds
+- Batch processing for historical analysis
+- Daily refresh capability
+
+CHANNEL AGENT MODELS
+
+MEDIA MIX MODEL
+
+Model Identifier
+- Name: kdap-media-mix-v1
+- Type: Bayesian regression
+- Framework: PyMC with custom priors
+
+Input Schema
+- channel_spend: object - Historical spend by channel
+- outcome_metrics: array - Response variable history
+- external_factors: object - Seasonality, competition
+- adstock_parameters: object - Decay and saturation
+- prior_beliefs: object - Expert input on effects
+- holdout_periods: array - Validation periods
+
+Output Schema
+- channel_effects: object - Coefficient estimates
+- posterior_distributions: object - Full uncertainty
+- optimal_allocation: object - Recommended mix
+- scenario_results: array - What-if analyses
+- model_fit: object - Diagnostics and R-squared
+- incremental_revenue: object - Attributed outcomes
+
+Performance Requirements
+- Latency p99 under 5000 milliseconds for fitting
+- Scenario scoring under 200 milliseconds
+- Weekly model refresh
+
+REACH FREQUENCY MODEL
+
+Model Identifier
+- Name: kdap-reach-freq-v1
+- Type: Coverage optimization
+- Framework: Integer programming
+
+Input Schema
+- target_audience: integer - Total addressable audience
+- channel_reach: object - Reach curves by channel
+- frequency_goals: object - Target frequency by segment
+- budget_constraint: float - Total available budget
+- channel_constraints: object - Min max by channel
+- overlap_matrix: matrix - Cross-channel overlap
+
+Output Schema
+- optimal_allocation: object - Budget by channel
+- expected_reach: float - Total unique reach
+- average_frequency: float - Mean exposures
+- frequency_distribution: array - Exposure histogram
+- marginal_reach: object - Incremental reach per dollar
+- efficiency_score: float - Overall plan efficiency
+
+Performance Requirements
+- Latency p99 under 1000 milliseconds
+- Constraint handling up to 20 channels
+- Real-time optimization capability
+
+CONSULTING AGENT MODELS
+
+PRIORITIZATION MODEL
+
+Model Identifier
+- Name: kdap-prioritizer-v1
+- Type: Multi-criteria decision
+- Framework: Custom RICE implementation
+
+Input Schema
+- initiatives: array - Initiative descriptions
+- reach_estimates: array - Affected population
+- impact_scores: array - Expected impact 1-10
+- confidence_levels: array - Certainty 0-100
+- effort_estimates: array - Implementation effort
+- dependencies: matrix - Initiative dependencies
+- constraints: object - Resource and timing limits
+
+Output Schema
+- priority_scores: array - RICE scores
+- ranked_initiatives: array - Sorted by priority
+- resource_allocation: object - Recommended sequencing
+- dependency_graph: object - Prerequisite mapping
+- sensitivity_analysis: object - Score sensitivity
+- recommendation: string - Implementation guidance
+
+Performance Requirements
+- Latency p99 under 200 milliseconds
+- Up to 100 initiatives per request
+- Interactive optimization support
+
+DEPLOYMENT SPECIFICATIONS
+
+COMPUTE TARGETS
+
+Online Endpoints
+- Standard_DS3_v2 for lightweight models
+- Standard_NC6 for GPU-accelerated models
+- Standard_E4s_v3 for memory-intensive models
+
+Batch Compute
+- Standard_D4s_v3 for general batch
+- Standard_NC12 for GPU batch processing
+- Spark cluster for large-scale data
+
+ENVIRONMENT CONFIGURATIONS
+
+Python Environment
+- Python version 3.9
+- scikit-learn 1.2.0
+- xgboost 1.7.0
+- lightgbm 3.3.0
+- numpy 1.24.0
+- pandas 2.0.0
+- scipy 1.10.0
+
+Deep Learning Environment
+- Python version 3.9
+- tensorflow 2.12.0
+- pytorch 2.0.0
+- transformers 4.28.0
+- cuda 11.8
+
+VERSIONING STRATEGY
+
+Model Versions
+- Major version for architecture changes
+- Minor version for retraining improvements
+- Patch version for bug fixes
+- Format: v{major}.{minor}.{patch}
+
+Deployment Tags
+- Environment: dev, staging, prod
+- Purpose: primary, challenger, shadow
+- Status: active, deprecated, archived

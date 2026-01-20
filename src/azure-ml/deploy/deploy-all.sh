@@ -99,74 +99,105 @@ create_ml_workspace() {
 
 deploy_endpoint() {
     local endpoint_name=$1
-    
+
     log_info "Deploying endpoint: $endpoint_name"
-    
+
     # Check if endpoint exists
     if az ml online-endpoint show \
         --name "$endpoint_name" \
         --resource-group "$RESOURCE_GROUP" \
         --workspace-name "$ML_WORKSPACE" &> /dev/null; then
-        log_info "Endpoint $endpoint_name already exists, updating..."
+        log_info "Endpoint $endpoint_name already exists, skipping creation..."
     else
         log_info "Creating new endpoint: $endpoint_name"
-        
-        # Create endpoint
+
+        # Create endpoint YAML
+        local endpoint_yaml="$SCRIPT_DIR/tmp-endpoint-${endpoint_name}.yaml"
+        cat > "$endpoint_yaml" << EOF
+\$schema: https://azuremlschemas.azureedge.net/latest/managedOnlineEndpoint.schema.json
+name: $endpoint_name
+auth_mode: key
+EOF
+
+        # Create endpoint using YAML file
         az ml online-endpoint create \
-            --name "$endpoint_name" \
+            --file "$endpoint_yaml" \
             --resource-group "$RESOURCE_GROUP" \
-            --workspace-name "$ML_WORKSPACE" \
-            --auth-mode key
+            --workspace-name "$ML_WORKSPACE"
+
+        # Cleanup temp file
+        rm -f "$endpoint_yaml"
     fi
-    
+
     log_success "Endpoint $endpoint_name deployed"
 }
 
 deploy_model() {
     local endpoint_name=$1
     local deployment_name="blue"
-    
+
     log_info "Deploying model to: $endpoint_name"
-    
-    # Map endpoint to scoring script
+
+    # Map endpoint to scoring script and environment
     local scoring_script=""
+    local env_file=""
     case $endpoint_name in
         "kdap-budget-optimizer")
             scoring_script="score_budget_optimization.py"
+            env_file="budget-optimization-env.yaml"
             ;;
         "kdap-propensity")
             scoring_script="score_propensity.py"
+            env_file="propensity-env.yaml"
             ;;
         "kdap-anomaly-detector")
             scoring_script="score_anomaly.py"
+            env_file="anomaly-env.yaml"
             ;;
         "kdap-monte-carlo")
             scoring_script="score_monte_carlo.py"
+            env_file="monte-carlo-env.yaml"
             ;;
         "kdap-media-mix")
             scoring_script="score_media_mix.py"
+            env_file="media-mix-env.yaml"
             ;;
         "kdap-attribution")
             scoring_script="score_attribution.py"
+            env_file="attribution-env.yaml"
             ;;
         "kdap-prioritizer")
             scoring_script="score_prioritization.py"
+            env_file="prioritization-env.yaml"
             ;;
     esac
-    
-    # Deploy the model
+
+    # Create temporary deployment YAML
+    local deploy_yaml="$SCRIPT_DIR/tmp-deployment-${endpoint_name}.yaml"
+    cat > "$deploy_yaml" << EOF
+\$schema: https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json
+name: $deployment_name
+endpoint_name: $endpoint_name
+code_configuration:
+  code: $SCRIPT_DIR/scoring
+  scoring_script: $scoring_script
+environment:
+  conda_file: $SCRIPT_DIR/environments/$env_file
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu22.04:latest
+instance_type: Standard_DS2_v2
+instance_count: 1
+EOF
+
+    # Deploy the model using YAML file
     az ml online-deployment create \
-        --name "$deployment_name" \
-        --endpoint-name "$endpoint_name" \
+        --file "$deploy_yaml" \
         --resource-group "$RESOURCE_GROUP" \
         --workspace-name "$ML_WORKSPACE" \
-        --code-path "$SCRIPT_DIR/scoring" \
-        --scoring-script "$scoring_script" \
-        --environment "azureml:AzureML-sklearn-1.0-ubuntu20.04-py38-cpu@latest" \
-        --instance-type "Standard_DS3_v2" \
-        --instance-count 1 \
         --all-traffic
-    
+
+    # Cleanup temp file
+    rm -f "$deploy_yaml"
+
     log_success "Model deployed to $endpoint_name"
 }
 

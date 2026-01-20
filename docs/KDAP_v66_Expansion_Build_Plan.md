@@ -1,1073 +1,1566 @@
 # KDAP v6.6 EXPANSION BUILD PLAN
 
-**Version:** 1.0
-**Date:** January 20, 2026
-**Status:** APPROVED - READY FOR EXECUTION
-**Scope:** Expansions 10-15 (24 new capabilities across 6 agents)
+**Version:** 1.0  
+**Date:** January 20, 2026  
+**Status:** APPROVED - EXECUTION READY  
+**Scope:** 6 Capability Expansions (24 New Capabilities)  
+**Owners:** Desktop Claude (Content), VS Code Claude (Infrastructure)
 
 ---
 
-## EXECUTION ORDER
+## EXECUTIVE SUMMARY
 
-| Phase | Expansion | Agent(s) | Capabilities | Owner |
-|-------|-----------|----------|--------------|-------|
-| 1 | 14: Learning Extraction | PRF | 4 | Desktop |
-| 2 | 10: Competitive Intelligence | ANL, MKT | 4 | Desktop |
-| 3 | 11: Budget Pacing | ANL | 4 | Desktop |
-| 4 | 12: Audience Lifecycle | AUD | 4 | Desktop |
-| 5 | 13: Flighting Optimization | CHA | 4 | Desktop |
-| 6 | 15: Document Automation | DOC | 4 | Desktop |
+This document defines the complete build plan for KDAP v6.6, adding 24 new capabilities across 6 agents through 6 strategic expansions. The expansions address critical functional gaps identified in competitive intelligence, learning extraction, budget pacing, audience lifecycle, flighting optimization, and document automation.
 
-**VS Code Responsibilities:**
-- Azure Function deployment
-- Power Automate flow creation
-- Dataverse table updates
-- Copilot Studio capability registration
+**Total Deliverables:**
+- 6 KB Files (120,000+ characters)
+- 24 AI Builder Prompt JSONs
+- 24 Azure Function Specifications
+- 24 Capability Registrations
+- 48 Test Scenarios
+- 6 Power Automate Flow Definitions
 
 ---
 
-## PHASE 1: LEARNING EXTRACTION AND INSIGHT SYNTHESIS (PRF)
+## EXPANSION EXECUTION ORDER
+
+| Order | Expansion | Agent(s) | Capabilities | Priority |
+|-------|-----------|----------|--------------|----------|
+| 1 | Learning Extraction & Insight Synthesis | PRF | 4 | Critical |
+| 2 | Competitive Intelligence Suite | ANL, MKT | 4 | Critical |
+| 3 | Budget Pacing & Scenario Engine | ANL | 4 | High |
+| 4 | Audience Lifecycle Management | AUD | 4 | High |
+| 5 | Flighting & Timing Optimization | CHA | 4 | High |
+| 6 | Document Automation Suite | DOC | 4 | Medium |
+
+---
+
+## EXPANSION 14: LEARNING EXTRACTION & INSIGHT SYNTHESIS
+
+**Agent:** PRF (Performance)  
+**Owner:** Desktop Claude  
+**VS Code:** Azure Functions, Power Automate Flow
 
 ### Capabilities
 
-| Code | Name | Implementation |
-|------|------|----------------|
-| PRF_LEARNING_EXTRACT | Learning Extractor | AI Builder + Azure Function |
-| PRF_INSIGHT_CROSS | Cross-Campaign Insights | AI Builder + Azure Function |
-| PRF_PATTERN_DETECT | Pattern Detection | Azure Function |
-| PRF_PLAYBOOK_GEN | Playbook Generator | AI Builder |
+| Code | Name | Implementation | Timeout |
+|------|------|----------------|---------|
+| PRF_LEARNING_EXTRACT | Learning Extractor | Azure Function | 60s |
+| PRF_INSIGHT_CROSS | Cross-Campaign Insights | Azure Function | 45s |
+| PRF_PATTERN_DETECT | Pattern Detector | Azure Function | 45s |
+| PRF_PLAYBOOK_GEN | Playbook Generator | AI Builder | 30s |
 
-### Desktop Deliverables
+### KB File Specification
 
-**KB File:** PRF_KB_Learning_Extraction_v2.txt (expand existing)
-- Target: 25,000 characters
-- Location: release/v6.0/agents/prf/kb/
+**File:** `release/v6.0/agents/prf/kb/PRF_KB_Learning_Extraction_v1.txt`  
+**Target Size:** 22,000 characters  
+**6-Rule Compliance:** Required
 
-Content requirements:
-- Learning extraction methodology from campaign data
-- Success and failure pattern categorization taxonomy
-- Cross-campaign insight aggregation rules
-- Playbook generation templates and structure
-- Confidence scoring for extracted learnings
-- Temporal relevance decay for historical insights
-- Contradictory learning resolution logic
-- Integration with PRF attribution and anomaly detection
+**Content Structure:**
 
-**AI Builder Prompts:** 4 JSON files
-- PRF_LEARNING_EXTRACT_PROMPT.json
-- PRF_INSIGHT_CROSS_PROMPT.json
-- PRF_PATTERN_DETECT_PROMPT.json
-- PRF_PLAYBOOK_GEN_PROMPT.json
+```
+LEARNING EXTRACTION METHODOLOGY
+- What constitutes a "learning" vs observation
+- Confidence thresholds for actionable insights
+- Attribution of learning to specific variables
+- Temporal validity of learnings
 
-Location: base/platform/eap/prompts/ai_builder/
+CROSS-CAMPAIGN INSIGHT AGGREGATION
+- Normalization across campaign types
+- Statistical significance for pattern claims
+- Weighting by recency and sample size
+- Conflicting insight resolution
 
-**Capability Seed Data:**
-- File: base/dataverse/seed/eap_capability_learning_seed.csv
-- 4 records with full schema
+PATTERN DETECTION ALGORITHMS
+- Success pattern identification criteria
+- Failure pattern warning thresholds
+- Recurring vs one-time pattern classification
+- Pattern persistence scoring
 
-**Test Scenarios:**
-- File: base/tests/prf/learning_extraction_tests.json
-- 8 test cases
+PLAYBOOK GENERATION FRAMEWORK
+- Playbook structure and sections
+- Condition-action rule extraction
+- Confidence scoring for recommendations
+- Version control for playbook updates
 
-### VS Code Deliverables
+INTEGRATION WITH PERFORMANCE DATA
+- Required data inputs and schemas
+- Minimum data requirements
+- Data quality validation
+- Historical lookback windows
+```
 
-**Azure Functions:** 2 functions
-- Location: src/azure-functions/prf/learning/
+### AI Builder Prompts
 
-1. prf-learning-extractor
-   - Input: Campaign performance data, historical learnings
-   - Output: Extracted learnings with confidence scores
-   - Logic: NLP pattern matching, statistical significance filtering
+**PRF_LEARNING_EXTRACT_PROMPT.json:**
+```json
+{
+  "prompt_code": "PRF_LEARNING_EXTRACT",
+  "prompt_name": "Extract Campaign Learnings",
+  "model": "gpt-4",
+  "system_message": "You are a marketing analytics expert specializing in extracting actionable learnings from campaign performance data. Analyze the provided data to identify what worked, what did not work, and why. Focus on statistically significant findings with clear causation, not just correlation.",
+  "user_template": "Campaign Data: {{campaign_data_json}}\nPerformance Metrics: {{metrics_json}}\nBenchmarks: {{benchmarks_json}}\n\nExtract key learnings with confidence scores.",
+  "output_format": "json",
+  "output_schema": {
+    "learnings": [
+      {
+        "learning_id": "string",
+        "category": "string",
+        "finding": "string",
+        "evidence": "string",
+        "confidence": "number",
+        "actionability": "string",
+        "applicable_contexts": ["string"]
+      }
+    ],
+    "summary": "string",
+    "data_quality_score": "number"
+  },
+  "max_tokens": 3000,
+  "temperature": 0.2
+}
+```
 
-2. prf-pattern-detector
-   - Input: Multiple campaign datasets
-   - Output: Recurring patterns with frequency and impact scores
-   - Logic: Time-series pattern recognition, clustering
+**PRF_INSIGHT_CROSS_PROMPT.json:**
+```json
+{
+  "prompt_code": "PRF_INSIGHT_CROSS",
+  "prompt_name": "Cross-Campaign Insight Aggregation",
+  "model": "gpt-4",
+  "system_message": "You are a marketing strategist who synthesizes insights across multiple campaigns to identify overarching patterns and strategic implications. Weight recent campaigns more heavily and flag conflicting findings.",
+  "user_template": "Campaign Learnings Array: {{learnings_array_json}}\nTime Range: {{time_range}}\nBusiness Context: {{context}}\n\nSynthesize cross-campaign insights.",
+  "output_format": "json",
+  "output_schema": {
+    "cross_campaign_insights": [
+      {
+        "insight_id": "string",
+        "insight": "string",
+        "supporting_campaigns": ["string"],
+        "confidence": "number",
+        "strategic_implication": "string"
+      }
+    ],
+    "conflicts": [
+      {
+        "finding_a": "string",
+        "finding_b": "string",
+        "resolution_recommendation": "string"
+      }
+    ],
+    "meta_patterns": ["string"]
+  },
+  "max_tokens": 2500,
+  "temperature": 0.2
+}
+```
 
-**Power Automate Flow:** 1 flow
-- Name: PRF-Learning-Aggregation-Flow
-- Trigger: Scheduled (weekly) or manual
-- Actions:
-  - Query recent campaign data from Dataverse
-  - Call prf-learning-extractor function
-  - Store learnings in mpa_learning table
-  - Trigger PRF_PLAYBOOK_GEN if threshold met
+**PRF_PATTERN_DETECT_PROMPT.json:**
+```json
+{
+  "prompt_code": "PRF_PATTERN_DETECT",
+  "prompt_name": "Detect Performance Patterns",
+  "model": "gpt-4",
+  "system_message": "You are a data scientist specializing in pattern recognition for marketing performance. Identify recurring success patterns and failure patterns across the provided data. Distinguish between persistent patterns and anomalies.",
+  "user_template": "Historical Performance Data: {{historical_data_json}}\nPattern Detection Parameters: {{parameters}}\n\nDetect and classify patterns.",
+  "output_format": "json",
+  "output_schema": {
+    "success_patterns": [
+      {
+        "pattern_id": "string",
+        "pattern_description": "string",
+        "occurrence_count": "number",
+        "persistence_score": "number",
+        "conditions": ["string"],
+        "expected_outcome": "string"
+      }
+    ],
+    "failure_patterns": [
+      {
+        "pattern_id": "string",
+        "pattern_description": "string",
+        "occurrence_count": "number",
+        "warning_indicators": ["string"],
+        "mitigation_actions": ["string"]
+      }
+    ],
+    "anomalies": ["string"]
+  },
+  "max_tokens": 2500,
+  "temperature": 0.1
+}
+```
 
-**Dataverse Updates:**
-- New table: mpa_learning
-  - mpa_learning_id (PK, GUID)
-  - campaign_id (Lookup)
-  - learning_type (OptionSet: Success, Failure, Insight, Pattern)
-  - learning_text (Text, 2000)
-  - confidence_score (Decimal)
-  - source_metrics (Text, 1000)
-  - created_on (DateTime)
-  - is_active (Boolean)
+**PRF_PLAYBOOK_GEN_PROMPT.json:**
+```json
+{
+  "prompt_code": "PRF_PLAYBOOK_GEN",
+  "prompt_name": "Generate Optimization Playbook",
+  "model": "gpt-4",
+  "system_message": "You are a marketing operations expert who creates actionable playbooks from performance data and learnings. Generate clear condition-action rules that practitioners can follow. Include confidence levels and exceptions.",
+  "user_template": "Learnings: {{learnings_json}}\nPatterns: {{patterns_json}}\nBusiness Rules: {{rules_json}}\n\nGenerate optimization playbook.",
+  "output_format": "json",
+  "output_schema": {
+    "playbook_name": "string",
+    "playbook_version": "string",
+    "rules": [
+      {
+        "rule_id": "string",
+        "condition": "string",
+        "action": "string",
+        "confidence": "number",
+        "exceptions": ["string"],
+        "source_learnings": ["string"]
+      }
+    ],
+    "decision_tree": "string",
+    "review_cadence": "string"
+  },
+  "max_tokens": 3000,
+  "temperature": 0.2
+}
+```
+
+### Azure Function Specifications
+
+**Location:** `src/azure-functions/prf/learning/`
+
+| Function | Runtime | Memory | Timeout |
+|----------|---------|--------|---------|
+| prf-learning-extract | Python 3.11 | 512MB | 60s |
+| prf-insight-cross | Python 3.11 | 512MB | 45s |
+| prf-pattern-detect | Python 3.11 | 1GB | 45s |
+
+**Dependencies:**
+- pandas >= 2.0
+- numpy >= 1.24
+- scikit-learn >= 1.3
+- scipy >= 1.11
+
+### Test Scenarios
+
+| ID | Scenario | Expected Outcome |
+|----|----------|------------------|
+| PRF-L-01 | Extract learnings from successful campaign | 3+ learnings with confidence > 0.7 |
+| PRF-L-02 | Extract learnings from failed campaign | Failure patterns identified |
+| PRF-L-03 | Cross-campaign with conflicting data | Conflicts surfaced with resolution |
+| PRF-L-04 | Pattern detection with sparse data | Graceful handling, minimum patterns |
+| PRF-L-05 | Playbook generation from mixed learnings | Valid playbook with confidence scores |
+| PRF-L-06 | Learning extraction with missing metrics | Data quality warning, partial results |
+| PRF-L-07 | Cross-campaign with 10+ campaigns | Aggregation completes under timeout |
+| PRF-L-08 | Pattern persistence over 12 months | Persistence scores calculated correctly |
+
+### VS Code Tasks
+
+1. Create Azure Function scaffolding in `src/azure-functions/prf/learning/`
+2. Implement `prf-learning-extract` function with pandas aggregation
+3. Implement `prf-insight-cross` function with weighting logic
+4. Implement `prf-pattern-detect` function with scikit-learn clustering
+5. Create Power Automate flow `PRF_Learning_Extraction_Flow` to orchestrate
+6. Register capabilities in eap_capability table
+7. Deploy functions to Azure (personal environment)
 
 ---
 
-## PHASE 2: COMPETITIVE INTELLIGENCE SUITE (ANL + MKT)
+## EXPANSION 10: COMPETITIVE INTELLIGENCE SUITE
+
+**Agents:** ANL (Analytics), MKT (Marketing)  
+**Owner:** Desktop Claude  
+**VS Code:** Azure Functions, Power Automate Flows
 
 ### Capabilities
 
-| Code | Name | Agent | Implementation |
-|------|------|-------|----------------|
-| ANL_SOV_ANALYZE | Share of Voice Analysis | ANL | AI Builder + Azure Function |
-| ANL_COMP_SPEND | Competitive Spend Estimation | ANL | Azure Function |
-| MKT_COMP_MESSAGING | Competitive Messaging Map | MKT | AI Builder |
-| MKT_COMP_GAPS | White Space Identification | MKT | AI Builder |
+| Code | Name | Agent | Implementation | Timeout |
+|------|------|-------|----------------|---------|
+| ANL_SOV_ANALYZE | Share of Voice Analyzer | ANL | Azure Function | 45s |
+| ANL_COMP_SPEND | Competitive Spend Estimator | ANL | Azure Function | 60s |
+| MKT_COMP_MESSAGING | Competitive Messaging Map | MKT | AI Builder | 30s |
+| MKT_COMP_GAPS | White Space Identifier | MKT | AI Builder | 30s |
 
-### Desktop Deliverables
+### KB File Specifications
 
-**KB Files:** 2 files
+**File 1:** `release/v6.0/agents/anl/kb/ANL_KB_Competitive_Intelligence_v1.txt`  
+**Target Size:** 20,000 characters
 
-1. ANL_KB_Competitive_Analysis_v1.txt (NEW)
-   - Target: 22,000 characters
-   - Location: release/v6.0/agents/anl/kb/
+**Content Structure:**
 
-   Content requirements:
-   - Share of Voice calculation methodologies
-   - Competitive spend estimation from public signals
-   - SOV to SOM correlation analysis
-   - Competitive benchmarking frameworks
-   - Data source quality assessment
-   - Confidence intervals for estimates
-   - Trend detection in competitive positioning
-   - Integration with budget optimization
+```
+SHARE OF VOICE METHODOLOGY
+- SOV calculation formulas by channel
+- Impression-based vs spend-based SOV
+- Category definition and boundary setting
+- Temporal aggregation windows
+- Data source reliability weighting
 
-2. MKT_KB_Competitive_Intelligence_v1.txt (NEW)
-   - Target: 20,000 characters
-   - Location: release/v6.0/agents/mkt/kb/
+COMPETITIVE SPEND ESTIMATION
+- Signal-based spend inference methods
+- Impression-to-spend conversion models
+- Seasonality adjustment factors
+- Confidence intervals for estimates
+- Validation against known benchmarks
 
-   Content requirements:
-   - Competitive messaging analysis framework
-   - Positioning map methodology (perceptual mapping)
-   - White space identification process
-   - Message differentiation scoring
-   - Competitive content audit structure
-   - Gap analysis between brand and competitors
-   - Opportunity prioritization matrix
-   - Integration with brand positioning
+COMPETITIVE SET DEFINITION
+- Direct vs indirect competitor classification
+- Market share correlation analysis
+- Competitive intensity scoring
+- Dynamic competitor set updates
 
-**AI Builder Prompts:** 4 JSON files
-- ANL_SOV_ANALYZE_PROMPT.json
-- ANL_COMP_SPEND_PROMPT.json
-- MKT_COMP_MESSAGING_PROMPT.json
-- MKT_COMP_GAPS_PROMPT.json
+DATA INTEGRATION
+- Third-party data source specifications
+- Data freshness requirements
+- Cross-source reconciliation
+- Missing data imputation methods
+```
 
-Location: base/platform/eap/prompts/ai_builder/
+**File 2:** `release/v6.0/agents/mkt/kb/MKT_KB_Competitive_Positioning_v1.txt`  
+**Target Size:** 18,000 characters
 
-**Capability Seed Data:**
-- File: base/dataverse/seed/eap_capability_competitive_seed.csv
-- 4 records
+**Content Structure:**
 
-**Test Scenarios:**
-- File: base/tests/competitive/competitive_intelligence_tests.json
-- 8 test cases
+```
+COMPETITIVE MESSAGING ANALYSIS
+- Message taxonomy and classification
+- Positioning dimension mapping
+- Tone and voice characterization
+- Claims and proof point cataloging
+- Message frequency tracking
 
-### VS Code Deliverables
+WHITE SPACE IDENTIFICATION
+- Uncontested positioning opportunities
+- Underserved audience segments
+- Messaging gap analysis
+- Timing and seasonal gaps
+- Channel presence gaps
 
-**Azure Functions:** 2 functions
-- Location: src/azure-functions/anl/competitive/
+POSITIONING MAP CONSTRUCTION
+- Dimension selection methodology
+- Competitor placement criteria
+- Perceptual vs actual positioning
+- Dynamic map updates
 
-1. anl-sov-calculator
-   - Input: Brand mention data, category data, time period
-   - Output: SOV percentages, trend direction, confidence
-   - Logic: Volume aggregation, normalization, trend analysis
+STRATEGIC RECOMMENDATIONS
+- Differentiation opportunity scoring
+- Risk assessment for positioning moves
+- Resource requirements estimation
+- Competitive response anticipation
+```
 
-2. anl-comp-spend-estimator
-   - Input: Competitive signals (ad impressions, placements, frequency)
-   - Output: Estimated spend ranges with confidence intervals
-   - Logic: Regression from known benchmarks, range estimation
+### AI Builder Prompts
 
-**Power Automate Flow:** 1 flow
-- Name: ANL-Competitive-Monitor-Flow
-- Trigger: Scheduled (daily)
-- Actions:
-  - Fetch competitive data from configured sources
-  - Call anl-sov-calculator
-  - Store results in mpa_competitive_intel table
-  - Alert if significant SOV change detected
+**ANL_SOV_ANALYZE_PROMPT.json:**
+```json
+{
+  "prompt_code": "ANL_SOV_ANALYZE",
+  "prompt_name": "Analyze Share of Voice",
+  "model": "gpt-4",
+  "system_message": "You are a competitive intelligence analyst specializing in share of voice measurement. Calculate and interpret SOV metrics across channels, identifying trends and competitive dynamics.",
+  "user_template": "Your Brand Data: {{brand_data_json}}\nCompetitor Data: {{competitor_data_json}}\nCategory Definition: {{category}}\nTime Period: {{time_period}}\n\nCalculate SOV and provide competitive analysis.",
+  "output_format": "json",
+  "output_schema": {
+    "sov_summary": {
+      "your_sov_pct": "number",
+      "sov_trend": "string",
+      "sov_by_channel": "object"
+    },
+    "competitor_breakdown": [
+      {
+        "competitor": "string",
+        "sov_pct": "number",
+        "trend": "string",
+        "key_channels": ["string"]
+      }
+    ],
+    "insights": ["string"],
+    "recommendations": ["string"]
+  },
+  "max_tokens": 2000,
+  "temperature": 0.1
+}
+```
 
-**Dataverse Updates:**
-- New table: mpa_competitive_intel
-  - mpa_competitive_intel_id (PK, GUID)
-  - competitor_name (Text, 200)
-  - metric_type (OptionSet: SOV, SpendEstimate, Messaging, Position)
-  - metric_value (Decimal)
-  - confidence_level (OptionSet: High, Medium, Low)
-  - period_start (DateTime)
-  - period_end (DateTime)
-  - data_source (Text, 500)
-  - created_on (DateTime)
+**ANL_COMP_SPEND_PROMPT.json:**
+```json
+{
+  "prompt_code": "ANL_COMP_SPEND",
+  "prompt_name": "Estimate Competitive Spend",
+  "model": "gpt-4",
+  "system_message": "You are a media investment analyst who estimates competitor advertising spend from available signals. Provide estimates with confidence intervals and methodology transparency.",
+  "user_template": "Competitor: {{competitor}}\nAvailable Signals: {{signals_json}}\nIndustry Benchmarks: {{benchmarks_json}}\nTime Period: {{time_period}}\n\nEstimate advertising spend.",
+  "output_format": "json",
+  "output_schema": {
+    "competitor": "string",
+    "estimated_total_spend": "number",
+    "confidence_interval": {
+      "low": "number",
+      "high": "number"
+    },
+    "spend_by_channel": "object",
+    "methodology_notes": "string",
+    "data_quality_score": "number"
+  },
+  "max_tokens": 1500,
+  "temperature": 0.1
+}
+```
+
+**MKT_COMP_MESSAGING_PROMPT.json:**
+```json
+{
+  "prompt_code": "MKT_COMP_MESSAGING",
+  "prompt_name": "Map Competitive Messaging",
+  "model": "gpt-4",
+  "system_message": "You are a brand strategist who analyzes competitive messaging to create positioning maps. Identify key dimensions, plot competitors, and surface differentiation opportunities.",
+  "user_template": "Your Brand Messaging: {{brand_messaging}}\nCompetitor Messaging: {{competitor_messaging_json}}\nCategory Context: {{category}}\n\nCreate competitive messaging map.",
+  "output_format": "json",
+  "output_schema": {
+    "positioning_dimensions": [
+      {
+        "dimension": "string",
+        "your_position": "number",
+        "competitor_positions": "object"
+      }
+    ],
+    "messaging_themes": [
+      {
+        "theme": "string",
+        "your_usage": "string",
+        "competitor_usage": "object"
+      }
+    ],
+    "differentiation_score": "number",
+    "positioning_recommendations": ["string"]
+  },
+  "max_tokens": 2500,
+  "temperature": 0.3
+}
+```
+
+**MKT_COMP_GAPS_PROMPT.json:**
+```json
+{
+  "prompt_code": "MKT_COMP_GAPS",
+  "prompt_name": "Identify White Space Opportunities",
+  "model": "gpt-4",
+  "system_message": "You are a strategic planner who identifies uncontested market positions and messaging gaps. Analyze the competitive landscape to find white space opportunities.",
+  "user_template": "Competitive Landscape: {{landscape_json}}\nYour Capabilities: {{capabilities}}\nTarget Audiences: {{audiences_json}}\n\nIdentify white space opportunities.",
+  "output_format": "json",
+  "output_schema": {
+    "white_space_opportunities": [
+      {
+        "opportunity_id": "string",
+        "description": "string",
+        "gap_type": "string",
+        "opportunity_score": "number",
+        "resource_requirement": "string",
+        "competitive_risk": "string"
+      }
+    ],
+    "underserved_audiences": ["string"],
+    "messaging_gaps": ["string"],
+    "channel_gaps": ["string"],
+    "priority_ranking": ["string"]
+  },
+  "max_tokens": 2500,
+  "temperature": 0.3
+}
+```
+
+### Azure Function Specifications
+
+**Location:** `src/azure-functions/anl/competitive/`
+
+| Function | Runtime | Memory | Timeout |
+|----------|---------|--------|---------|
+| anl-sov-analyze | Python 3.11 | 512MB | 45s |
+| anl-comp-spend | Python 3.11 | 512MB | 60s |
+
+**Dependencies:**
+- pandas >= 2.0
+- numpy >= 1.24
+- requests >= 2.31
+
+### Test Scenarios
+
+| ID | Scenario | Expected Outcome |
+|----|----------|------------------|
+| CI-01 | SOV analysis with 5 competitors | SOV percentages sum to ~100% |
+| CI-02 | SOV with missing competitor data | Graceful handling, confidence adjusted |
+| CI-03 | Spend estimation with strong signals | Narrow confidence interval |
+| CI-04 | Spend estimation with weak signals | Wide interval, methodology noted |
+| CI-05 | Messaging map with 3 competitors | Valid positioning dimensions |
+| CI-06 | White space with saturated market | Niche opportunities identified |
+| CI-07 | White space with clear gaps | High-confidence opportunities |
+| CI-08 | Cross-channel SOV aggregation | Weighted composite calculated |
+
+### VS Code Tasks
+
+1. Create Azure Function scaffolding in `src/azure-functions/anl/competitive/`
+2. Implement `anl-sov-analyze` with multi-channel aggregation
+3. Implement `anl-comp-spend` with confidence interval calculation
+4. Create Power Automate flow `ANL_Competitive_Intel_Flow`
+5. Register capabilities in eap_capability table
+6. Deploy functions to Azure (personal environment)
 
 ---
 
-## PHASE 3: BUDGET PACING AND SCENARIO ENGINE (ANL)
+## EXPANSION 11: BUDGET PACING & SCENARIO ENGINE
+
+**Agent:** ANL (Analytics)  
+**Owner:** Desktop Claude  
+**VS Code:** Azure Functions
 
 ### Capabilities
 
-| Code | Name | Implementation |
-|------|------|----------------|
-| ANL_PACE_RECOMMEND | Pacing Recommendations | AI Builder + Azure Function |
-| ANL_PACE_FORECAST | Spend Trajectory Forecast | Azure Function |
-| ANL_SCENARIO_COMPARE | Scenario Comparison | AI Builder + Azure Function |
-| ANL_BREAKEVEN_CALC | Break-Even Calculator | Azure Function |
+| Code | Name | Implementation | Timeout |
+|------|------|----------------|---------|
+| ANL_PACE_RECOMMEND | Pacing Recommender | Azure Function | 30s |
+| ANL_PACE_FORECAST | Pacing Forecaster | Azure Function | 45s |
+| ANL_SCENARIO_COMPARE | Scenario Comparator | Azure Function | 60s |
+| ANL_BREAKEVEN_CALC | Break-Even Calculator | AI Builder | 20s |
 
-### Desktop Deliverables
+### KB File Specification
 
-**KB File:** ANL_KB_Budget_Pacing_v1.txt (NEW)
-- Target: 24,000 characters
-- Location: release/v6.0/agents/anl/kb/
+**File:** `release/v6.0/agents/anl/kb/ANL_KB_Budget_Pacing_v1.txt`  
+**Target Size:** 20,000 characters
 
-Content requirements:
-- Pacing strategy fundamentals (linear, front-loaded, back-loaded, S-curve)
-- Pacing recommendation logic based on objectives
-- Spend trajectory forecasting methodology
-- Variance detection and correction recommendations
-- Scenario modeling framework (base, optimistic, pessimistic)
-- Multi-scenario comparison with trade-off analysis
-- Break-even analysis formulas and interpretation
-- Payback period calculations
-- Sensitivity analysis for key assumptions
-- Integration with budget allocation and forecasting
+**Content Structure:**
 
-**AI Builder Prompts:** 4 JSON files
-- ANL_PACE_RECOMMEND_PROMPT.json
-- ANL_PACE_FORECAST_PROMPT.json
-- ANL_SCENARIO_COMPARE_PROMPT.json
-- ANL_BREAKEVEN_CALC_PROMPT.json
+```
+PACING STRATEGY FUNDAMENTALS
+- Front-loaded vs back-loaded vs even pacing
+- Pacing curve shapes and formulas
+- Seasonal adjustment factors
+- Event-driven pacing modifications
+- Budget reserve strategies
 
-Location: base/platform/eap/prompts/ai_builder/
+PACING RECOMMENDATION LOGIC
+- Objective-to-pacing mapping
+- Competitive timing considerations
+- Inventory availability factors
+- Performance feedback loops
+- Risk tolerance calibration
 
-**Capability Seed Data:**
-- File: base/dataverse/seed/eap_capability_pacing_seed.csv
-- 4 records
+SPEND TRAJECTORY FORECASTING
+- Current pace calculation
+- Projected end-of-period spend
+- Variance from plan detection
+- Course correction recommendations
+- Confidence intervals for forecasts
 
-**Test Scenarios:**
-- File: base/tests/anl/budget_pacing_tests.json
-- 8 test cases
+SCENARIO COMPARISON FRAMEWORK
+- Scenario definition standards
+- Comparison metrics selection
+- Trade-off visualization
+- Sensitivity analysis
+- Decision criteria weighting
 
-### VS Code Deliverables
+BREAK-EVEN ANALYSIS
+- Break-even formula derivations
+- Fixed vs variable cost allocation
+- Time-to-break-even calculation
+- Risk-adjusted break-even
+- Scenario-specific break-even
+```
 
-**Azure Functions:** 3 functions
-- Location: src/azure-functions/anl/pacing/
+### AI Builder Prompts
 
-1. anl-pace-forecaster
-   - Input: Budget, start date, end date, pacing strategy, current spend
-   - Output: Daily/weekly projected spend, variance from plan
-   - Logic: Time-series projection with strategy curves
+**ANL_PACE_RECOMMEND_PROMPT.json:**
+```json
+{
+  "prompt_code": "ANL_PACE_RECOMMEND",
+  "prompt_name": "Recommend Budget Pacing",
+  "model": "gpt-4",
+  "system_message": "You are a media investment strategist who recommends optimal budget pacing strategies. Consider objectives, seasonality, competitive dynamics, and inventory factors.",
+  "user_template": "Total Budget: {{budget}}\nTime Period: {{period}}\nObjectives: {{objectives_json}}\nSeasonality Data: {{seasonality}}\nConstraints: {{constraints}}\n\nRecommend pacing strategy.",
+  "output_format": "json",
+  "output_schema": {
+    "recommended_pacing": "string",
+    "pacing_curve": [
+      {
+        "period": "string",
+        "pct_of_budget": "number",
+        "rationale": "string"
+      }
+    ],
+    "alternative_options": ["string"],
+    "risk_factors": ["string"],
+    "monitoring_triggers": ["string"]
+  },
+  "max_tokens": 2000,
+  "temperature": 0.2
+}
+```
 
-2. anl-scenario-engine
-   - Input: Base assumptions, variation ranges, metrics to compare
-   - Output: Scenario matrix with outcomes and trade-offs
-   - Logic: Monte Carlo simulation, sensitivity tables
+**ANL_PACE_FORECAST_PROMPT.json:**
+```json
+{
+  "prompt_code": "ANL_PACE_FORECAST",
+  "prompt_name": "Forecast Budget Pacing",
+  "model": "gpt-4",
+  "system_message": "You are a financial analyst who forecasts budget spend trajectories. Analyze current spending patterns and project end-of-period outcomes with variance analysis.",
+  "user_template": "Budget Plan: {{plan_json}}\nActual Spend to Date: {{actual_json}}\nDays Elapsed: {{days_elapsed}}\nDays Remaining: {{days_remaining}}\n\nForecast spend trajectory.",
+  "output_format": "json",
+  "output_schema": {
+    "current_pace_pct": "number",
+    "projected_end_spend": "number",
+    "projected_variance_pct": "number",
+    "trajectory": "string",
+    "forecast_by_period": "array",
+    "correction_recommendations": ["string"],
+    "confidence": "number"
+  },
+  "max_tokens": 1500,
+  "temperature": 0.1
+}
+```
 
-3. anl-breakeven-calculator
-   - Input: Fixed costs, variable costs, revenue assumptions
-   - Output: Break-even point, payback period, sensitivity
-   - Logic: Financial modeling formulas
+**ANL_SCENARIO_COMPARE_PROMPT.json:**
+```json
+{
+  "prompt_code": "ANL_SCENARIO_COMPARE",
+  "prompt_name": "Compare Budget Scenarios",
+  "model": "gpt-4",
+  "system_message": "You are a strategic planner who compares multiple budget scenarios. Analyze trade-offs, highlight key differences, and provide decision support.",
+  "user_template": "Scenarios: {{scenarios_json}}\nEvaluation Criteria: {{criteria_json}}\nWeights: {{weights}}\n\nCompare scenarios and recommend.",
+  "output_format": "json",
+  "output_schema": {
+    "scenario_scores": [
+      {
+        "scenario_name": "string",
+        "weighted_score": "number",
+        "scores_by_criterion": "object"
+      }
+    ],
+    "trade_off_analysis": "string",
+    "recommended_scenario": "string",
+    "recommendation_rationale": "string",
+    "sensitivity_notes": ["string"]
+  },
+  "max_tokens": 2500,
+  "temperature": 0.2
+}
+```
 
-**Power Automate Flow:** 1 flow
-- Name: ANL-Pacing-Monitor-Flow
-- Trigger: Scheduled (daily)
-- Actions:
-  - Query current spend vs plan from Dataverse
-  - Call anl-pace-forecaster
-  - Calculate variance percentage
-  - Alert if variance exceeds threshold
-  - Store pacing snapshot
+**ANL_BREAKEVEN_CALC_PROMPT.json:**
+```json
+{
+  "prompt_code": "ANL_BREAKEVEN_CALC",
+  "prompt_name": "Calculate Break-Even",
+  "model": "gpt-4",
+  "system_message": "You are a financial analyst who calculates break-even points for marketing investments. Provide clear break-even analysis with assumptions documented.",
+  "user_template": "Investment Amount: {{investment}}\nExpected Revenue per Conversion: {{revenue}}\nConversion Rate: {{conv_rate}}\nFixed Costs: {{fixed}}\nVariable Costs: {{variable}}\n\nCalculate break-even.",
+  "output_format": "json",
+  "output_schema": {
+    "break_even_units": "number",
+    "break_even_revenue": "number",
+    "time_to_break_even": "string",
+    "margin_of_safety": "number",
+    "assumptions": ["string"],
+    "sensitivity": {
+      "if_conv_rate_drops_10pct": "object",
+      "if_revenue_drops_10pct": "object"
+    }
+  },
+  "max_tokens": 1500,
+  "temperature": 0.1
+}
+```
 
-**Dataverse Updates:**
-- New table: mpa_pacing_snapshot
-  - mpa_pacing_snapshot_id (PK, GUID)
-  - campaign_id (Lookup)
-  - snapshot_date (DateTime)
-  - planned_spend_to_date (Currency)
-  - actual_spend_to_date (Currency)
-  - variance_pct (Decimal)
-  - forecast_end_spend (Currency)
-  - pacing_status (OptionSet: OnTrack, Underpacing, Overpacing)
-  - recommendation (Text, 1000)
+### Azure Function Specifications
+
+**Location:** `src/azure-functions/anl/pacing/`
+
+| Function | Runtime | Memory | Timeout |
+|----------|---------|--------|---------|
+| anl-pace-recommend | Python 3.11 | 256MB | 30s |
+| anl-pace-forecast | Python 3.11 | 512MB | 45s |
+| anl-scenario-compare | Python 3.11 | 512MB | 60s |
+
+### Test Scenarios
+
+| ID | Scenario | Expected Outcome |
+|----|----------|------------------|
+| BP-01 | Pacing for brand awareness objective | Front-loaded recommended |
+| BP-02 | Pacing for performance objective | Even/back-loaded recommended |
+| BP-03 | Forecast with overspend trajectory | Correction recommendations |
+| BP-04 | Forecast with underspend trajectory | Acceleration recommendations |
+| BP-05 | Compare 3 budget scenarios | Ranked with trade-offs |
+| BP-06 | Break-even with high fixed costs | Longer time-to-break-even |
+| BP-07 | Pacing with seasonal peak | Budget concentrated at peak |
+| BP-08 | Scenario compare with equal scores | Tie-breaker logic applied |
+
+### VS Code Tasks
+
+1. Create Azure Function scaffolding in `src/azure-functions/anl/pacing/`
+2. Implement `anl-pace-recommend` with curve generation
+3. Implement `anl-pace-forecast` with trajectory projection
+4. Implement `anl-scenario-compare` with weighted scoring
+5. Create Power Automate flow `ANL_Budget_Pacing_Flow`
+6. Register capabilities in eap_capability table
+7. Deploy functions to Azure (personal environment)
 
 ---
 
-## PHASE 4: AUDIENCE LIFECYCLE MANAGEMENT (AUD)
+## EXPANSION 12: AUDIENCE LIFECYCLE MANAGEMENT
+
+**Agent:** AUD (Audience)  
+**Owner:** Desktop Claude  
+**VS Code:** Azure Functions
 
 ### Capabilities
 
-| Code | Name | Implementation |
-|------|------|----------------|
-| AUD_COHORT_MIGRATE | Cohort Migration Analysis | Azure Function |
-| AUD_DECAY_PREDICT | Audience Decay Prediction | Azure Function |
-| AUD_REFRESH_RECOMMEND | Refresh Frequency Optimizer | AI Builder |
-| AUD_LOOKALIKE_SCORE | Lookalike Quality Scorer | Azure Function |
+| Code | Name | Implementation | Timeout |
+|------|------|----------------|---------|
+| AUD_COHORT_MIGRATE | Cohort Migration Analyzer | Azure Function | 45s |
+| AUD_DECAY_PREDICT | Audience Decay Predictor | Azure Function | 45s |
+| AUD_REFRESH_RECOMMEND | Refresh Recommender | AI Builder | 30s |
+| AUD_LOOKALIKE_SCORE | Lookalike Quality Scorer | Azure Function | 30s |
 
-### Desktop Deliverables
+### KB File Specification
 
-**KB File:** AUD_KB_Lifecycle_Management_v1.txt (NEW)
-- Target: 23,000 characters
-- Location: release/v6.0/agents/aud/kb/
+**File:** `release/v6.0/agents/aud/kb/AUD_KB_Audience_Lifecycle_v1.txt`  
+**Target Size:** 22,000 characters
 
-Content requirements:
-- Audience lifecycle stages and transitions
-- Cohort migration analysis methodology
-- Audience decay curves and half-life estimation
-- Freshness scoring framework
-- Optimal refresh frequency determination
-- Lookalike model quality validation metrics
-- Seed audience health assessment
-- Match rate degradation patterns
-- Reactivation vs acquisition trade-offs
-- Integration with propensity and segmentation
+**Content Structure:**
 
-**AI Builder Prompts:** 4 JSON files
-- AUD_COHORT_MIGRATE_PROMPT.json
-- AUD_DECAY_PREDICT_PROMPT.json
-- AUD_REFRESH_RECOMMEND_PROMPT.json
-- AUD_LOOKALIKE_SCORE_PROMPT.json
+```
+AUDIENCE LIFECYCLE STAGES
+- Acquisition stage characteristics
+- Engagement stage indicators
+- Maturation stage signals
+- Decline stage warning signs
+- Reactivation potential scoring
 
-Location: base/platform/eap/prompts/ai_builder/
+COHORT MIGRATION ANALYSIS
+- Cohort definition methodology
+- Migration tracking metrics
+- Graduation criteria by stage
+- Churn prediction integration
+- Migration velocity measurement
 
-**Capability Seed Data:**
-- File: base/dataverse/seed/eap_capability_lifecycle_seed.csv
-- 4 records
+AUDIENCE DECAY MODELING
+- Decay curve formulations
+- Half-life estimation methods
+- Decay rate by audience type
+- External factor adjustments
+- Decay acceleration triggers
 
-**Test Scenarios:**
-- File: base/tests/aud/lifecycle_management_tests.json
-- 8 test cases
+REFRESH STRATEGY OPTIMIZATION
+- Refresh frequency determination
+- Cost-benefit of refresh cycles
+- Partial vs full refresh decisions
+- Refresh timing optimization
+- Quality maintenance thresholds
 
-### VS Code Deliverables
+LOOKALIKE MODEL VALIDATION
+- Overlap analysis methodology
+- Performance correlation scoring
+- Model drift detection
+- Seed quality assessment
+- Expansion rate optimization
+```
 
-**Azure Functions:** 3 functions
-- Location: src/azure-functions/aud/lifecycle/
+### AI Builder Prompts
 
-1. aud-cohort-analyzer
-   - Input: Cohort definitions, time periods, transition events
-   - Output: Migration matrix, graduation rates, churn rates
-   - Logic: State transition analysis, survival curves
+**AUD_COHORT_MIGRATE_PROMPT.json:**
+```json
+{
+  "prompt_code": "AUD_COHORT_MIGRATE",
+  "prompt_name": "Analyze Cohort Migration",
+  "model": "gpt-4",
+  "system_message": "You are an audience analytics expert who analyzes how user cohorts move through lifecycle stages. Track migration patterns and identify acceleration or deceleration factors.",
+  "user_template": "Cohort Data: {{cohort_data_json}}\nStage Definitions: {{stages}}\nTime Period: {{period}}\n\nAnalyze cohort migration patterns.",
+  "output_format": "json",
+  "output_schema": {
+    "migration_matrix": "object",
+    "stage_distribution": "object",
+    "migration_velocity": "number",
+    "acceleration_factors": ["string"],
+    "deceleration_factors": ["string"],
+    "at_risk_cohorts": ["string"],
+    "recommendations": ["string"]
+  },
+  "max_tokens": 2000,
+  "temperature": 0.2
+}
+```
 
-2. aud-decay-predictor
-   - Input: Audience creation date, historical match rates, segment type
-   - Output: Decay curve, half-life estimate, refresh urgency score
-   - Logic: Exponential decay fitting, segment-specific parameters
+**AUD_DECAY_PREDICT_PROMPT.json:**
+```json
+{
+  "prompt_code": "AUD_DECAY_PREDICT",
+  "prompt_name": "Predict Audience Decay",
+  "model": "gpt-4",
+  "system_message": "You are an audience scientist who models audience decay over time. Predict when audience quality will fall below actionable thresholds.",
+  "user_template": "Audience Profile: {{audience_json}}\nHistorical Decay Data: {{decay_history}}\nCurrent Quality Score: {{quality_score}}\n\nPredict decay trajectory.",
+  "output_format": "json",
+  "output_schema": {
+    "current_half_life_days": "number",
+    "predicted_quality_by_week": "array",
+    "threshold_breach_date": "string",
+    "decay_rate": "number",
+    "decay_drivers": ["string"],
+    "mitigation_options": ["string"]
+  },
+  "max_tokens": 1500,
+  "temperature": 0.1
+}
+```
 
-3. aud-lookalike-validator
-   - Input: Seed audience profile, lookalike audience profile, performance data
-   - Output: Quality score, drift metrics, expansion recommendations
-   - Logic: Distribution comparison, performance correlation
+**AUD_REFRESH_RECOMMEND_PROMPT.json:**
+```json
+{
+  "prompt_code": "AUD_REFRESH_RECOMMEND",
+  "prompt_name": "Recommend Audience Refresh",
+  "model": "gpt-4",
+  "system_message": "You are an audience operations strategist who optimizes audience refresh cycles. Balance freshness against cost and operational complexity.",
+  "user_template": "Audience Inventory: {{inventory_json}}\nDecay Predictions: {{decay_json}}\nRefresh Costs: {{costs}}\nPerformance Requirements: {{requirements}}\n\nRecommend refresh strategy.",
+  "output_format": "json",
+  "output_schema": {
+    "refresh_schedule": [
+      {
+        "audience_id": "string",
+        "recommended_refresh_date": "string",
+        "refresh_type": "string",
+        "urgency": "string",
+        "cost_estimate": "number"
+      }
+    ],
+    "priority_ranking": ["string"],
+    "cost_summary": "object",
+    "quality_impact": "string"
+  },
+  "max_tokens": 2000,
+  "temperature": 0.2
+}
+```
 
-**Power Automate Flow:** 1 flow
-- Name: AUD-Lifecycle-Monitor-Flow
-- Trigger: Scheduled (weekly)
-- Actions:
-  - Query all active audiences from Dataverse
-  - Call aud-decay-predictor for each
-  - Flag audiences below freshness threshold
-  - Generate refresh recommendations
-  - Store lifecycle snapshots
+**AUD_LOOKALIKE_SCORE_PROMPT.json:**
+```json
+{
+  "prompt_code": "AUD_LOOKALIKE_SCORE",
+  "prompt_name": "Score Lookalike Quality",
+  "model": "gpt-4",
+  "system_message": "You are a data scientist who validates lookalike model quality. Assess overlap, performance correlation, and recommend optimization actions.",
+  "user_template": "Seed Audience: {{seed_json}}\nLookalike Audience: {{lookalike_json}}\nPerformance Data: {{performance}}\nExpansion Rate: {{expansion_rate}}\n\nScore lookalike quality.",
+  "output_format": "json",
+  "output_schema": {
+    "quality_score": "number",
+    "overlap_pct": "number",
+    "performance_correlation": "number",
+    "seed_quality_assessment": "string",
+    "expansion_recommendation": "string",
+    "drift_detected": "boolean",
+    "optimization_actions": ["string"]
+  },
+  "max_tokens": 1500,
+  "temperature": 0.1
+}
+```
 
-**Dataverse Updates:**
-- New table: mpa_audience_lifecycle
-  - mpa_audience_lifecycle_id (PK, GUID)
-  - audience_id (Lookup)
-  - snapshot_date (DateTime)
-  - freshness_score (Decimal)
-  - estimated_decay_pct (Decimal)
-  - days_until_refresh (Integer)
-  - quality_trend (OptionSet: Improving, Stable, Declining)
-  - recommendation (Text, 500)
+### Azure Function Specifications
+
+**Location:** `src/azure-functions/aud/lifecycle/`
+
+| Function | Runtime | Memory | Timeout |
+|----------|---------|--------|---------|
+| aud-cohort-migrate | Python 3.11 | 512MB | 45s |
+| aud-decay-predict | Python 3.11 | 512MB | 45s |
+| aud-lookalike-score | Python 3.11 | 256MB | 30s |
+
+### Test Scenarios
+
+| ID | Scenario | Expected Outcome |
+|----|----------|------------------|
+| AL-01 | Cohort migration with clear progression | Migration matrix populated |
+| AL-02 | Cohort with high churn rate | At-risk cohorts identified |
+| AL-03 | Decay prediction for fresh audience | Long half-life predicted |
+| AL-04 | Decay prediction for stale audience | Short half-life, urgent refresh |
+| AL-05 | Refresh recommendation with budget | Prioritized within budget |
+| AL-06 | Lookalike with high overlap | Quality warning, narrow recommendation |
+| AL-07 | Lookalike with drift | Drift detected, retraining recommended |
+| AL-08 | Refresh for 20+ audiences | Batch processing completes |
+
+### VS Code Tasks
+
+1. Create Azure Function scaffolding in `src/azure-functions/aud/lifecycle/`
+2. Implement `aud-cohort-migrate` with transition matrix
+3. Implement `aud-decay-predict` with exponential decay model
+4. Implement `aud-lookalike-score` with overlap calculation
+5. Create Power Automate flow `AUD_Lifecycle_Management_Flow`
+6. Register capabilities in eap_capability table
+7. Deploy functions to Azure (personal environment)
 
 ---
 
-## PHASE 5: FLIGHTING AND TIMING OPTIMIZATION (CHA)
+## EXPANSION 13: FLIGHTING & TIMING OPTIMIZATION
+
+**Agent:** CHA (Channel)  
+**Owner:** Desktop Claude  
+**VS Code:** Azure Functions
 
 ### Capabilities
 
-| Code | Name | Implementation |
-|------|------|----------------|
-| CHA_FLIGHT_OPTIMIZE | Flighting Pattern Optimizer | AI Builder + Azure Function |
-| CHA_DAYPART_ANALYZE | Daypart Performance Analyzer | Azure Function |
-| CHA_SEASONALITY_ADJUST | Seasonality Adjuster | Azure Function |
-| CHA_FREQ_CROSS | Cross-Channel Frequency Manager | AI Builder |
+| Code | Name | Implementation | Timeout |
+|------|------|----------------|---------|
+| CHA_FLIGHT_OPTIMIZE | Flight Pattern Optimizer | Azure Function | 45s |
+| CHA_DAYPART_ANALYZE | Daypart Analyzer | Azure Function | 30s |
+| CHA_SEASON_ADJUST | Seasonality Adjuster | Azure Function | 30s |
+| CHA_FREQ_CROSS | Cross-Channel Frequency Manager | Azure Function | 45s |
 
-### Desktop Deliverables
+### KB File Specification
 
-**KB File:** CHA_KB_Flighting_Optimization_v1.txt (NEW)
-- Target: 22,000 characters
-- Location: release/v6.0/agents/cha/kb/
+**File:** `release/v6.0/agents/cha/kb/CHA_KB_Flighting_Optimization_v1.txt`  
+**Target Size:** 20,000 characters
 
-Content requirements:
-- Flighting pattern types and when to use each
-- Continuous vs pulsing vs bursting strategies
-- Daypart optimization methodology
-- Day-of-week performance patterns by channel
-- Seasonality detection and adjustment
-- Holiday and event planning considerations
-- Cross-channel frequency capping logic
-- Recency and frequency trade-offs
-- Wear-out detection and mitigation
-- Integration with response curves and budget allocation
+**Content Structure:**
 
-**AI Builder Prompts:** 4 JSON files
-- CHA_FLIGHT_OPTIMIZE_PROMPT.json
-- CHA_DAYPART_ANALYZE_PROMPT.json
-- CHA_SEASONALITY_ADJUST_PROMPT.json
-- CHA_FREQ_CROSS_PROMPT.json
+```
+FLIGHTING PATTERN FUNDAMENTALS
+- Continuous flighting definition
+- Pulsing pattern strategies
+- Burst/heavy-up timing
+- Dark period management
+- Competitive flighting response
 
-Location: base/platform/eap/prompts/ai_builder/
+FLIGHTING OPTIMIZATION METHODOLOGY
+- Objective-to-pattern mapping
+- Reach/frequency trade-offs by pattern
+- Budget efficiency by flighting type
+- Decay rate considerations
+- Momentum maintenance strategies
 
-**Capability Seed Data:**
-- File: base/dataverse/seed/eap_capability_flighting_seed.csv
-- 4 records
+DAYPART ANALYSIS
+- Daypart definition standards
+- Performance variation measurement
+- Daypart-by-channel interaction
+- Cost efficiency by daypart
+- Audience availability mapping
 
-**Test Scenarios:**
-- File: base/tests/cha/flighting_optimization_tests.json
-- 8 test cases
+SEASONALITY ADJUSTMENT
+- Seasonal index calculation
+- Category-specific patterns
+- Event overlay methodology
+- Weather and external factors
+- Year-over-year normalization
 
-### VS Code Deliverables
+CROSS-CHANNEL FREQUENCY MANAGEMENT
+- Unified frequency measurement
+- Overlap estimation methods
+- Frequency cap optimization
+- Diminishing returns by frequency
+- Channel-specific tolerance levels
+```
 
-**Azure Functions:** 3 functions
-- Location: src/azure-functions/cha/flighting/
+### AI Builder Prompts
 
-1. cha-flight-optimizer
-   - Input: Campaign duration, budget, objectives, historical patterns
-   - Output: Recommended flight schedule, spend by period
-   - Logic: Optimization against objective function with constraints
+**CHA_FLIGHT_OPTIMIZE_PROMPT.json:**
+```json
+{
+  "prompt_code": "CHA_FLIGHT_OPTIMIZE",
+  "prompt_name": "Optimize Flight Pattern",
+  "model": "gpt-4",
+  "system_message": "You are a media planning expert who optimizes flighting patterns. Recommend the optimal timing pattern based on objectives, budget, and competitive context.",
+  "user_template": "Campaign Objectives: {{objectives}}\nBudget: {{budget}}\nDuration: {{duration}}\nChannel Mix: {{channels}}\nCompetitive Activity: {{competitive}}\n\nOptimize flighting pattern.",
+  "output_format": "json",
+  "output_schema": {
+    "recommended_pattern": "string",
+    "flight_schedule": [
+      {
+        "period": "string",
+        "intensity": "string",
+        "budget_pct": "number",
+        "channels_active": ["string"]
+      }
+    ],
+    "rationale": "string",
+    "expected_reach_curve": "array",
+    "alternative_patterns": ["string"]
+  },
+  "max_tokens": 2000,
+  "temperature": 0.2
+}
+```
 
-2. cha-daypart-analyzer
-   - Input: Performance data by hour/day, channel
-   - Output: Heatmap scores, optimal windows, avoid windows
-   - Logic: Statistical analysis, index calculations
+**CHA_DAYPART_ANALYZE_PROMPT.json:**
+```json
+{
+  "prompt_code": "CHA_DAYPART_ANALYZE",
+  "prompt_name": "Analyze Daypart Performance",
+  "model": "gpt-4",
+  "system_message": "You are a media analytics expert who analyzes performance variation by time of day and day of week. Identify optimal timing windows.",
+  "user_template": "Performance Data by Daypart: {{daypart_data}}\nChannel: {{channel}}\nObjective: {{objective}}\n\nAnalyze daypart performance.",
+  "output_format": "json",
+  "output_schema": {
+    "best_dayparts": ["string"],
+    "worst_dayparts": ["string"],
+    "performance_index_by_daypart": "object",
+    "cost_efficiency_by_daypart": "object",
+    "recommendations": ["string"],
+    "budget_reallocation_opportunity": "number"
+  },
+  "max_tokens": 1500,
+  "temperature": 0.1
+}
+```
 
-3. cha-seasonality-adjuster
-   - Input: Historical performance, forecast period, baseline
-   - Output: Seasonal adjustment factors, adjusted forecasts
-   - Logic: Decomposition, index application
+**CHA_SEASON_ADJUST_PROMPT.json:**
+```json
+{
+  "prompt_code": "CHA_SEASON_ADJUST",
+  "prompt_name": "Calculate Seasonality Adjustments",
+  "model": "gpt-4",
+  "system_message": "You are a forecasting analyst who calculates seasonal adjustment factors. Provide indices for budget allocation and performance expectations.",
+  "user_template": "Historical Data: {{historical}}\nCategory: {{category}}\nPlanning Period: {{period}}\nKey Events: {{events}}\n\nCalculate seasonal adjustments.",
+  "output_format": "json",
+  "output_schema": {
+    "seasonal_indices": [
+      {
+        "period": "string",
+        "index": "number",
+        "driver": "string"
+      }
+    ],
+    "peak_periods": ["string"],
+    "trough_periods": ["string"],
+    "event_overlays": "object",
+    "budget_allocation_recommendation": "object"
+  },
+  "max_tokens": 1500,
+  "temperature": 0.1
+}
+```
 
-**Power Automate Flow:** 1 flow
-- Name: CHA-Flighting-Recommendation-Flow
-- Trigger: On campaign creation
-- Actions:
-  - Get campaign parameters
-  - Retrieve historical seasonality data
-  - Call cha-flight-optimizer
-  - Store recommended schedule
-  - Notify planner
+**CHA_FREQ_CROSS_PROMPT.json:**
+```json
+{
+  "prompt_code": "CHA_FREQ_CROSS",
+  "prompt_name": "Manage Cross-Channel Frequency",
+  "model": "gpt-4",
+  "system_message": "You are a media strategist who manages frequency across channels. Optimize total exposure while avoiding fatigue.",
+  "user_template": "Channel Reach Data: {{reach_data}}\nCurrent Frequency Caps: {{caps}}\nOverlap Estimates: {{overlap}}\nPerformance by Frequency: {{perf_by_freq}}\n\nOptimize cross-channel frequency.",
+  "output_format": "json",
+  "output_schema": {
+    "unified_frequency_estimate": "number",
+    "optimal_frequency_target": "number",
+    "recommended_caps_by_channel": "object",
+    "overlap_adjusted_reach": "number",
+    "fatigue_risk_assessment": "string",
+    "rebalancing_recommendations": ["string"]
+  },
+  "max_tokens": 2000,
+  "temperature": 0.2
+}
+```
 
-**Dataverse Updates:**
-- New table: mpa_flight_schedule
-  - mpa_flight_schedule_id (PK, GUID)
-  - campaign_id (Lookup)
-  - channel_code (Text, 50)
-  - period_start (DateTime)
-  - period_end (DateTime)
-  - period_budget (Currency)
-  - period_weight (Decimal)
-  - flight_type (OptionSet: Continuous, Pulse, Burst, Dark)
-  - daypart_preference (Text, 200)
+### Azure Function Specifications
+
+**Location:** `src/azure-functions/cha/flighting/`
+
+| Function | Runtime | Memory | Timeout |
+|----------|---------|--------|---------|
+| cha-flight-optimize | Python 3.11 | 512MB | 45s |
+| cha-daypart-analyze | Python 3.11 | 256MB | 30s |
+| cha-season-adjust | Python 3.11 | 256MB | 30s |
+| cha-freq-cross | Python 3.11 | 512MB | 45s |
+
+### Test Scenarios
+
+| ID | Scenario | Expected Outcome |
+|----|----------|------------------|
+| FT-01 | Flight optimization for awareness | Continuous/pulsing recommended |
+| FT-02 | Flight optimization for promo | Burst around event recommended |
+| FT-03 | Daypart analysis with clear winner | Reallocation opportunity identified |
+| FT-04 | Daypart analysis with flat performance | No reallocation recommended |
+| FT-05 | Seasonality with holiday peak | High index for Q4 |
+| FT-06 | Cross-channel frequency high overlap | Cap reductions recommended |
+| FT-07 | Cross-channel frequency low overlap | Current caps validated |
+| FT-08 | Flighting with competitive burst | Counter-programming suggested |
+
+### VS Code Tasks
+
+1. Create Azure Function scaffolding in `src/azure-functions/cha/flighting/`
+2. Implement `cha-flight-optimize` with pattern generation
+3. Implement `cha-daypart-analyze` with index calculation
+4. Implement `cha-season-adjust` with decomposition
+5. Implement `cha-freq-cross` with overlap adjustment
+6. Create Power Automate flow `CHA_Flighting_Optimization_Flow`
+7. Register capabilities in eap_capability table
+8. Deploy functions to Azure (personal environment)
 
 ---
 
-## PHASE 6: DOCUMENT AUTOMATION SUITE (DOC)
+## EXPANSION 15: DOCUMENT AUTOMATION SUITE
+
+**Agent:** DOC (Document)  
+**Owner:** Desktop Claude  
+**VS Code:** Power Automate Flows, SharePoint Templates
 
 ### Capabilities
 
-| Code | Name | Implementation |
-|------|------|----------------|
-| DOC_QBR_GENERATE | QBR Generator | AI Builder |
-| DOC_RFP_RESPOND | RFP Response Assistant | AI Builder |
-| DOC_COMP_REPORT | Competitive Report Generator | AI Builder |
-| DOC_DECK_CREATE | Presentation Deck Creator | AI Builder + Power Automate |
+| Code | Name | Implementation | Timeout |
+|------|------|----------------|---------|
+| DOC_QBR_GENERATE | QBR Generator | AI Builder + Flow | 90s |
+| DOC_RFP_RESPOND | RFP Response Assistant | AI Builder | 60s |
+| DOC_COMP_REPORT | Competitive Report Generator | AI Builder + Flow | 60s |
+| DOC_DECK_CREATE | Presentation Deck Creator | AI Builder + Flow | 90s |
 
-### Desktop Deliverables
+### KB File Specification
 
-**KB File:** DOC_KB_Document_Automation_v1.txt (NEW)
-- Target: 25,000 characters
-- Location: release/v6.0/agents/doc/kb/
+**File:** `release/v6.0/agents/doc/kb/DOC_KB_Document_Automation_v1.txt`  
+**Target Size:** 22,000 characters
 
-Content requirements:
-- QBR structure and content requirements
-- QBR data aggregation logic
-- RFP response best practices
-- RFP content library organization
-- Competitive report structure
-- Data visualization selection rules
-- Presentation deck architecture
-- Slide type templates and when to use
-- Executive summary generation rules
-- Appendix and supporting materials organization
-- Brand compliance for documents
-- Integration with session data and learnings
+**Content Structure:**
 
-**AI Builder Prompts:** 4 JSON files
-- DOC_QBR_GENERATE_PROMPT.json
-- DOC_RFP_RESPOND_PROMPT.json
-- DOC_COMP_REPORT_PROMPT.json
-- DOC_DECK_CREATE_PROMPT.json
+```
+QUARTERLY BUSINESS REVIEW STRUCTURE
+- Executive summary requirements
+- Performance scorecard layout
+- Trend analysis sections
+- Strategic recommendations format
+- Next quarter planning framework
 
-Location: base/platform/eap/prompts/ai_builder/
+QBR GENERATION METHODOLOGY
+- Data aggregation requirements
+- Narrative generation rules
+- Visualization selection logic
+- Insight prioritization criteria
+- Action item extraction
 
-**Capability Seed Data:**
-- File: base/dataverse/seed/eap_capability_document_seed.csv
-- 4 records
+RFP RESPONSE FRAMEWORK
+- Response structure templates
+- Capability mapping methodology
+- Proof point selection
+- Differentiation highlighting
+- Compliance checklist integration
 
-**Test Scenarios:**
-- File: base/tests/doc/document_automation_tests.json
-- 8 test cases
+COMPETITIVE REPORT STANDARDS
+- Report structure by audience
+- Data visualization guidelines
+- Insight density targets
+- Recommendation formatting
+- Confidentiality handling
 
-### VS Code Deliverables
+PRESENTATION DECK AUTOMATION
+- Slide structure templates
+- Content-to-slide mapping
+- Visual hierarchy rules
+- Narrative flow patterns
+- Appendix organization
+```
 
-**Power Automate Flows:** 3 flows
+### AI Builder Prompts
 
-1. DOC-QBR-Generation-Flow
-   - Trigger: Manual or scheduled (quarterly)
-   - Actions:
-     - Aggregate performance data for period
-     - Call DOC_QBR_GENERATE prompt
-     - Generate Word document
-     - Store in SharePoint
-     - Notify stakeholders
+**DOC_QBR_GENERATE_PROMPT.json:**
+```json
+{
+  "prompt_code": "DOC_QBR_GENERATE",
+  "prompt_name": "Generate QBR Document",
+  "model": "gpt-4",
+  "system_message": "You are a strategic account manager who creates compelling Quarterly Business Reviews. Generate executive-ready content that highlights performance, insights, and strategic recommendations.",
+  "user_template": "Performance Data: {{performance_json}}\nPrevious Quarter Goals: {{goals}}\nClient Context: {{context}}\nKey Initiatives: {{initiatives}}\n\nGenerate QBR content.",
+  "output_format": "json",
+  "output_schema": {
+    "executive_summary": "string",
+    "performance_scorecard": "object",
+    "key_wins": ["string"],
+    "challenges": ["string"],
+    "trend_analysis": "string",
+    "strategic_recommendations": [
+      {
+        "recommendation": "string",
+        "rationale": "string",
+        "expected_impact": "string",
+        "priority": "string"
+      }
+    ],
+    "next_quarter_priorities": ["string"],
+    "action_items": ["string"]
+  },
+  "max_tokens": 4000,
+  "temperature": 0.3
+}
+```
 
-2. DOC-RFP-Response-Flow
-   - Trigger: Manual with RFP document upload
-   - Actions:
-     - Parse RFP requirements
-     - Match to content library
-     - Call DOC_RFP_RESPOND prompt for gaps
-     - Assemble response document
-     - Route for review
+**DOC_RFP_RESPOND_PROMPT.json:**
+```json
+{
+  "prompt_code": "DOC_RFP_RESPOND",
+  "prompt_name": "Assist RFP Response",
+  "model": "gpt-4",
+  "system_message": "You are a proposal writer who crafts winning RFP responses. Map capabilities to requirements, highlight differentiators, and ensure compliance.",
+  "user_template": "RFP Requirements: {{requirements_json}}\nOur Capabilities: {{capabilities_json}}\nPast Performance: {{past_perf}}\nDifferentiators: {{differentiators}}\n\nGenerate RFP response sections.",
+  "output_format": "json",
+  "output_schema": {
+    "requirement_responses": [
+      {
+        "requirement_id": "string",
+        "requirement_text": "string",
+        "response": "string",
+        "compliance_status": "string",
+        "proof_points": ["string"]
+      }
+    ],
+    "executive_summary_draft": "string",
+    "differentiator_highlights": ["string"],
+    "compliance_checklist": "object",
+    "gaps_identified": ["string"]
+  },
+  "max_tokens": 4000,
+  "temperature": 0.3
+}
+```
 
-3. DOC-Deck-Creation-Flow
-   - Trigger: Manual with parameters
-   - Actions:
-     - Gather session data and learnings
-     - Call DOC_DECK_CREATE prompt
-     - Generate PowerPoint structure
-     - Populate with data and charts
-     - Store and notify
+**DOC_COMP_REPORT_PROMPT.json:**
+```json
+{
+  "prompt_code": "DOC_COMP_REPORT",
+  "prompt_name": "Generate Competitive Report",
+  "model": "gpt-4",
+  "system_message": "You are a competitive intelligence analyst who creates actionable competitive reports. Structure insights for strategic decision-making.",
+  "user_template": "Competitive Data: {{comp_data_json}}\nFocus Areas: {{focus}}\nAudience: {{audience}}\nTime Period: {{period}}\n\nGenerate competitive report.",
+  "output_format": "json",
+  "output_schema": {
+    "executive_summary": "string",
+    "competitive_landscape": "string",
+    "competitor_profiles": [
+      {
+        "competitor": "string",
+        "positioning": "string",
+        "strengths": ["string"],
+        "weaknesses": ["string"],
+        "recent_moves": ["string"]
+      }
+    ],
+    "strategic_implications": ["string"],
+    "recommended_responses": ["string"],
+    "monitoring_priorities": ["string"]
+  },
+  "max_tokens": 3500,
+  "temperature": 0.3
+}
+```
 
-**Dataverse Updates:**
-- New table: mpa_document_template
-  - mpa_document_template_id (PK, GUID)
-  - template_name (Text, 200)
-  - template_type (OptionSet: QBR, RFP, CompReport, Deck, Brief)
-  - template_url (Text, 500)
-  - required_data_fields (Text, 2000)
-  - is_active (Boolean)
+**DOC_DECK_CREATE_PROMPT.json:**
+```json
+{
+  "prompt_code": "DOC_DECK_CREATE",
+  "prompt_name": "Create Presentation Deck",
+  "model": "gpt-4",
+  "system_message": "You are a presentation designer who structures compelling slide decks. Create slide outlines with clear narrative flow and visual recommendations.",
+  "user_template": "Content Brief: {{brief}}\nKey Messages: {{messages}}\nAudience: {{audience}}\nDeck Length: {{length}}\n\nCreate deck structure.",
+  "output_format": "json",
+  "output_schema": {
+    "deck_title": "string",
+    "narrative_arc": "string",
+    "slides": [
+      {
+        "slide_number": "number",
+        "slide_title": "string",
+        "slide_type": "string",
+        "key_message": "string",
+        "content_bullets": ["string"],
+        "visual_recommendation": "string",
+        "speaker_notes": "string"
+      }
+    ],
+    "appendix_slides": ["string"]
+  },
+  "max_tokens": 4000,
+  "temperature": 0.3
+}
+```
 
-- New table: mpa_document_generated
-  - mpa_document_generated_id (PK, GUID)
-  - template_id (Lookup)
-  - session_id (Lookup)
-  - document_url (Text, 500)
-  - generated_on (DateTime)
-  - generated_by (Lookup to user)
-  - status (OptionSet: Draft, Review, Final)
+### Power Automate Flow Specifications
+
+| Flow | Trigger | Actions |
+|------|---------|---------|
+| DOC_QBR_Generation_Flow | Manual/Scheduled | Aggregate data → AI Builder → Generate Word → Save to SharePoint |
+| DOC_Competitive_Report_Flow | Manual | Fetch competitive data → AI Builder → Generate Word → Save |
+| DOC_Deck_Creation_Flow | Manual | Get brief → AI Builder → Generate PowerPoint outline → Save |
+
+### Test Scenarios
+
+| ID | Scenario | Expected Outcome |
+|----|----------|------------------|
+| DA-01 | QBR with strong performance | Wins highlighted, recommendations focused |
+| DA-02 | QBR with weak performance | Challenges addressed, recovery plan |
+| DA-03 | RFP with full compliance | All requirements mapped |
+| DA-04 | RFP with gaps | Gaps identified, mitigation suggested |
+| DA-05 | Competitive report 5 competitors | All profiles complete |
+| DA-06 | Deck creation 10 slides | Narrative flow coherent |
+| DA-07 | QBR generation under 90s | Performance requirement met |
+| DA-08 | RFP response with 20 requirements | All responses generated |
+
+### VS Code Tasks
+
+1. Create Power Automate flows for document generation
+2. Create SharePoint document templates (QBR, Competitive Report)
+3. Create PowerPoint template for deck generation
+4. Register capabilities in eap_capability table
+5. Configure flow connections to AI Builder
+6. Test document generation end-to-end
 
 ---
 
-## FILE LOCATIONS SUMMARY
+## CAPABILITY REGISTRATION SEED DATA
 
-### KB Files (6 new)
+**File:** `base/dataverse/seed/eap_capability_v66_seed.csv`
 
-```
-release/v6.0/agents/prf/kb/PRF_KB_Learning_Extraction_v2.txt
-release/v6.0/agents/anl/kb/ANL_KB_Competitive_Analysis_v1.txt
-release/v6.0/agents/mkt/kb/MKT_KB_Competitive_Intelligence_v1.txt
-release/v6.0/agents/anl/kb/ANL_KB_Budget_Pacing_v1.txt
-release/v6.0/agents/aud/kb/AUD_KB_Lifecycle_Management_v1.txt
-release/v6.0/agents/cha/kb/CHA_KB_Flighting_Optimization_v1.txt
-release/v6.0/agents/doc/kb/DOC_KB_Document_Automation_v1.txt
-```
-
-### AI Builder Prompts (24 new)
-
-```
-base/platform/eap/prompts/ai_builder/PRF_LEARNING_EXTRACT_PROMPT.json
-base/platform/eap/prompts/ai_builder/PRF_INSIGHT_CROSS_PROMPT.json
-base/platform/eap/prompts/ai_builder/PRF_PATTERN_DETECT_PROMPT.json
-base/platform/eap/prompts/ai_builder/PRF_PLAYBOOK_GEN_PROMPT.json
-base/platform/eap/prompts/ai_builder/ANL_SOV_ANALYZE_PROMPT.json
-base/platform/eap/prompts/ai_builder/ANL_COMP_SPEND_PROMPT.json
-base/platform/eap/prompts/ai_builder/MKT_COMP_MESSAGING_PROMPT.json
-base/platform/eap/prompts/ai_builder/MKT_COMP_GAPS_PROMPT.json
-base/platform/eap/prompts/ai_builder/ANL_PACE_RECOMMEND_PROMPT.json
-base/platform/eap/prompts/ai_builder/ANL_PACE_FORECAST_PROMPT.json
-base/platform/eap/prompts/ai_builder/ANL_SCENARIO_COMPARE_PROMPT.json
-base/platform/eap/prompts/ai_builder/ANL_BREAKEVEN_CALC_PROMPT.json
-base/platform/eap/prompts/ai_builder/AUD_COHORT_MIGRATE_PROMPT.json
-base/platform/eap/prompts/ai_builder/AUD_DECAY_PREDICT_PROMPT.json
-base/platform/eap/prompts/ai_builder/AUD_REFRESH_RECOMMEND_PROMPT.json
-base/platform/eap/prompts/ai_builder/AUD_LOOKALIKE_SCORE_PROMPT.json
-base/platform/eap/prompts/ai_builder/CHA_FLIGHT_OPTIMIZE_PROMPT.json
-base/platform/eap/prompts/ai_builder/CHA_DAYPART_ANALYZE_PROMPT.json
-base/platform/eap/prompts/ai_builder/CHA_SEASONALITY_ADJUST_PROMPT.json
-base/platform/eap/prompts/ai_builder/CHA_FREQ_CROSS_PROMPT.json
-base/platform/eap/prompts/ai_builder/DOC_QBR_GENERATE_PROMPT.json
-base/platform/eap/prompts/ai_builder/DOC_RFP_RESPOND_PROMPT.json
-base/platform/eap/prompts/ai_builder/DOC_COMP_REPORT_PROMPT.json
-base/platform/eap/prompts/ai_builder/DOC_DECK_CREATE_PROMPT.json
-```
-
-### Capability Seed Files (6 new)
-
-```
-base/dataverse/seed/eap_capability_learning_seed.csv
-base/dataverse/seed/eap_capability_competitive_seed.csv
-base/dataverse/seed/eap_capability_pacing_seed.csv
-base/dataverse/seed/eap_capability_lifecycle_seed.csv
-base/dataverse/seed/eap_capability_flighting_seed.csv
-base/dataverse/seed/eap_capability_document_seed.csv
-```
-
-### Azure Functions (14 new)
-
-```
-src/azure-functions/prf/learning/prf-learning-extractor/
-src/azure-functions/prf/learning/prf-pattern-detector/
-src/azure-functions/anl/competitive/anl-sov-calculator/
-src/azure-functions/anl/competitive/anl-comp-spend-estimator/
-src/azure-functions/anl/pacing/anl-pace-forecaster/
-src/azure-functions/anl/pacing/anl-scenario-engine/
-src/azure-functions/anl/pacing/anl-breakeven-calculator/
-src/azure-functions/aud/lifecycle/aud-cohort-analyzer/
-src/azure-functions/aud/lifecycle/aud-decay-predictor/
-src/azure-functions/aud/lifecycle/aud-lookalike-validator/
-src/azure-functions/cha/flighting/cha-flight-optimizer/
-src/azure-functions/cha/flighting/cha-daypart-analyzer/
-src/azure-functions/cha/flighting/cha-seasonality-adjuster/
-```
-
-### Power Automate Flows (8 new)
-
-```
-PRF-Learning-Aggregation-Flow
-ANL-Competitive-Monitor-Flow
-ANL-Pacing-Monitor-Flow
-AUD-Lifecycle-Monitor-Flow
-CHA-Flighting-Recommendation-Flow
-DOC-QBR-Generation-Flow
-DOC-RFP-Response-Flow
-DOC-Deck-Creation-Flow
-```
-
-### Dataverse Tables (8 new)
-
-```
-mpa_learning
-mpa_competitive_intel
-mpa_pacing_snapshot
-mpa_audience_lifecycle
-mpa_flight_schedule
-mpa_document_template
-mpa_document_generated
-```
-
-### Test Files (6 new)
-
-```
-base/tests/prf/learning_extraction_tests.json
-base/tests/competitive/competitive_intelligence_tests.json
-base/tests/anl/budget_pacing_tests.json
-base/tests/aud/lifecycle_management_tests.json
-base/tests/cha/flighting_optimization_tests.json
-base/tests/doc/document_automation_tests.json
-```
-
----
-
-## 6-RULE COMPLIANCE CHECKLIST
-
-All KB files MUST pass:
-
-1. ALL-CAPS HEADERS - Section headers uppercase
-2. HYPHENS-ONLY LISTS - No bullets or numbers
-3. ASCII CHARACTERS ONLY - No smart quotes or special characters
-4. ZERO VISUAL DEPENDENCIES - No tables or diagrams
-5. MANDATORY LANGUAGE - Use must, always, never
-6. PROFESSIONAL TONE - Direct, no hedging
-
-Validation command:
-```bash
-grep -P '[–�—""'']' filename.txt  # Should return nothing
+```csv
+capability_code,capability_name,description,agent_code,input_schema,output_schema,is_active,version,timeout_default_seconds
+PRF_LEARNING_EXTRACT,Extract Campaign Learnings,Extract actionable learnings from campaign performance data,PRF,"{""campaign_data"":""object"",""metrics"":""object""}","{""learnings"":""array"",""summary"":""string""}",true,1.0,60
+PRF_INSIGHT_CROSS,Cross-Campaign Insights,Aggregate insights across multiple campaigns,PRF,"{""learnings_array"":""array"",""time_range"":""string""}","{""insights"":""array"",""conflicts"":""array""}",true,1.0,45
+PRF_PATTERN_DETECT,Detect Performance Patterns,Identify recurring success and failure patterns,PRF,"{""historical_data"":""object"",""parameters"":""object""}","{""success_patterns"":""array"",""failure_patterns"":""array""}",true,1.0,45
+PRF_PLAYBOOK_GEN,Generate Optimization Playbook,Create actionable playbooks from learnings,PRF,"{""learnings"":""array"",""patterns"":""array""}","{""playbook"":""object"",""rules"":""array""}",true,1.0,30
+ANL_SOV_ANALYZE,Analyze Share of Voice,Calculate and analyze share of voice metrics,ANL,"{""brand_data"":""object"",""competitor_data"":""object""}","{""sov_summary"":""object"",""insights"":""array""}",true,1.0,45
+ANL_COMP_SPEND,Estimate Competitive Spend,Estimate competitor advertising spend from signals,ANL,"{""competitor"":""string"",""signals"":""object""}","{""estimated_spend"":""number"",""confidence"":""object""}",true,1.0,60
+MKT_COMP_MESSAGING,Map Competitive Messaging,Create competitive messaging positioning map,MKT,"{""brand_messaging"":""string"",""competitor_messaging"":""object""}","{""positioning_map"":""object"",""recommendations"":""array""}",true,1.0,30
+MKT_COMP_GAPS,Identify White Space,Identify uncontested positioning opportunities,MKT,"{""landscape"":""object"",""capabilities"":""object""}","{""opportunities"":""array"",""gaps"":""array""}",true,1.0,30
+ANL_PACE_RECOMMEND,Recommend Budget Pacing,Recommend optimal budget pacing strategy,ANL,"{""budget"":""number"",""period"":""string"",""objectives"":""array""}","{""pacing_curve"":""array"",""rationale"":""string""}",true,1.0,30
+ANL_PACE_FORECAST,Forecast Budget Pacing,Forecast spend trajectory and variance,ANL,"{""plan"":""object"",""actual"":""object""}","{""trajectory"":""string"",""variance"":""number""}",true,1.0,45
+ANL_SCENARIO_COMPARE,Compare Budget Scenarios,Compare multiple budget scenarios with trade-offs,ANL,"{""scenarios"":""array"",""criteria"":""object""}","{""scores"":""array"",""recommendation"":""string""}",true,1.0,60
+ANL_BREAKEVEN_CALC,Calculate Break-Even,Calculate break-even point for investments,ANL,"{""investment"":""number"",""revenue"":""number"",""costs"":""object""}","{""break_even"":""object"",""sensitivity"":""object""}",true,1.0,20
+AUD_COHORT_MIGRATE,Analyze Cohort Migration,Analyze how cohorts move through lifecycle stages,AUD,"{""cohort_data"":""object"",""stages"":""array""}","{""migration_matrix"":""object"",""at_risk"":""array""}",true,1.0,45
+AUD_DECAY_PREDICT,Predict Audience Decay,Model audience quality decay over time,AUD,"{""audience"":""object"",""history"":""object""}","{""half_life"":""number"",""trajectory"":""array""}",true,1.0,45
+AUD_REFRESH_RECOMMEND,Recommend Audience Refresh,Recommend optimal refresh strategy,AUD,"{""inventory"":""array"",""costs"":""object""}","{""schedule"":""array"",""cost_summary"":""object""}",true,1.0,30
+AUD_LOOKALIKE_SCORE,Score Lookalike Quality,Validate lookalike model quality,AUD,"{""seed"":""object"",""lookalike"":""object""}","{""quality_score"":""number"",""drift"":""boolean""}",true,1.0,30
+CHA_FLIGHT_OPTIMIZE,Optimize Flight Pattern,Recommend optimal flighting pattern,CHA,"{""objectives"":""array"",""budget"":""number"",""duration"":""string""}","{""pattern"":""string"",""schedule"":""array""}",true,1.0,45
+CHA_DAYPART_ANALYZE,Analyze Daypart Performance,Analyze performance by time of day,CHA,"{""daypart_data"":""object"",""channel"":""string""}","{""best_dayparts"":""array"",""reallocation"":""number""}",true,1.0,30
+CHA_SEASON_ADJUST,Calculate Seasonality Adjustments,Calculate seasonal adjustment factors,CHA,"{""historical"":""object"",""category"":""string""}","{""indices"":""array"",""peaks"":""array""}",true,1.0,30
+CHA_FREQ_CROSS,Manage Cross-Channel Frequency,Optimize frequency across channels,CHA,"{""reach_data"":""object"",""caps"":""object""}","{""unified_freq"":""number"",""recommended_caps"":""object""}",true,1.0,45
+DOC_QBR_GENERATE,Generate QBR Document,Generate Quarterly Business Review,DOC,"{""performance"":""object"",""goals"":""object""}","{""document_url"":""string"",""summary"":""string""}",true,1.0,90
+DOC_RFP_RESPOND,Assist RFP Response,Generate RFP response sections,DOC,"{""requirements"":""array"",""capabilities"":""object""}","{""responses"":""array"",""gaps"":""array""}",true,1.0,60
+DOC_COMP_REPORT,Generate Competitive Report,Generate competitive analysis report,DOC,"{""comp_data"":""object"",""focus"":""array""}","{""document_url"":""string"",""profiles"":""array""}",true,1.0,60
+DOC_DECK_CREATE,Create Presentation Deck,Create presentation deck structure,DOC,"{""brief"":""object"",""messages"":""array""}","{""slides"":""array"",""narrative"":""string""}",true,1.0,90
 ```
 
 ---
 
 ## EXECUTION TIMELINE
 
-| Phase | Start | Desktop Complete | VS Code Complete |
-|-------|-------|------------------|------------------|
-| 1 | Immediate | +2 hours | +4 hours |
-| 2 | Phase 1 done | +2 hours | +4 hours |
-| 3 | Phase 2 done | +2 hours | +3 hours |
-| 4 | Phase 3 done | +2 hours | +4 hours |
-| 5 | Phase 4 done | +2 hours | +3 hours |
-| 6 | Phase 5 done | +2 hours | +4 hours |
-
-**Total Estimated Time:** 12 hours Desktop, 22 hours VS Code
-
----
-
-## SUCCESS METRICS
-
-| Metric | Target |
-|--------|--------|
-| KB Files Created | 7 |
-| AI Builder Prompts | 24 |
-| Azure Functions | 14 |
-| Power Automate Flows | 8 |
-| Dataverse Tables | 8 |
-| Capabilities Registered | 24 |
-| Test Scenarios | 48 |
-| 6-Rule Compliance | 100% |
-
----
-
-## DESKTOP EXECUTION INSTRUCTIONS
-
-For each phase:
-
-1. Create KB file with full content (no placeholders)
-2. Validate 6-Rule compliance
-3. Create all AI Builder prompt JSON files
-4. Create capability seed CSV
-5. Create test scenarios JSON
-6. Commit all files to git
-7. Push to deploy/mastercard
-8. Provide download link
-9. Move to next phase
-
-Commit message format:
-```
-feat(agent): Add Expansion N - Description
-```
+| Day | Desktop Claude | VS Code Claude |
+|-----|----------------|----------------|
+| 1 | Expansion 14: PRF KB + 4 Prompts | Azure Function scaffolding (PRF learning) |
+| 2 | Expansion 10: ANL KB + MKT KB + 4 Prompts | Azure Functions (PRF) + Deploy |
+| 3 | Expansion 11: ANL Pacing KB + 4 Prompts | Azure Functions (ANL competitive) |
+| 4 | Expansion 12: AUD Lifecycle KB + 4 Prompts | Azure Functions (ANL pacing) |
+| 5 | Expansion 13: CHA Flighting KB + 4 Prompts | Azure Functions (AUD lifecycle) |
+| 6 | Expansion 15: DOC Automation KB + 4 Prompts | Azure Functions (CHA flighting) |
+| 7 | Test scenario creation + validation | Power Automate flows (DOC) |
+| 8 | Agent instruction updates | Capability registration + E2E testing |
 
 ---
 
 ## VS CODE EXECUTION INSTRUCTIONS
 
-### PHASE 1: Learning Extraction (PRF)
+### PHASE 1: AZURE FUNCTION SCAFFOLDING
 
 ```bash
-# 1. Create Azure Function directories
-mkdir -p src/azure-functions/prf/learning/prf-learning-extractor
-mkdir -p src/azure-functions/prf/learning/prf-pattern-detector
+# Navigate to repository
+cd /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform
 
-# 2. Create function files for prf-learning-extractor
-# - function.json (HTTP trigger, POST)
-# - __init__.py (Python handler)
-# - requirements.txt (dependencies)
+# Create directory structure for all expansions
+mkdir -p src/azure-functions/prf/learning
+mkdir -p src/azure-functions/anl/competitive
+mkdir -p src/azure-functions/anl/pacing
+mkdir -p src/azure-functions/aud/lifecycle
+mkdir -p src/azure-functions/cha/flighting
 
-# 3. Create function files for prf-pattern-detector
-# - function.json
-# - __init__.py
-# - requirements.txt
-
-# 4. Create Dataverse table: mpa_learning
-# Use pac CLI or manual creation in make.powerapps.com
-# Schema:
-#   mpa_learning_id: GUID (PK)
-#   campaign_id: Lookup (mpa_campaign)
-#   learning_type: OptionSet (Success=1, Failure=2, Insight=3, Pattern=4)
-#   learning_text: Text (2000)
-#   confidence_score: Decimal (0-1)
-#   source_metrics: Text (1000)
-#   created_on: DateTime
-#   is_active: Boolean
-
-# 5. Create Power Automate flow: PRF-Learning-Aggregation-Flow
-# Trigger: Recurrence (Weekly, Monday 6AM)
-# Actions:
-#   - List rows from mpa_campaign (filter: status = Complete, modified > 7 days ago)
-#   - For each campaign:
-#     - HTTP POST to prf-learning-extractor with campaign data
-#     - Parse JSON response
-#     - Create row in mpa_learning for each extracted learning
-#   - Condition: If learnings count > 5
-#     - HTTP POST to PRF_PLAYBOOK_GEN AI Builder prompt
-#     - Store playbook result
-
-# 6. Register capabilities in eap_capability table
-# Import from: base/dataverse/seed/eap_capability_learning_seed.csv
-
-# 7. Deploy functions to Azure
+# Initialize each function app
 cd src/azure-functions/prf/learning
-func azure functionapp publish kdap-functions --python
+func init --python
+func new --name prf-learning-extract --template "HTTP trigger"
+func new --name prf-insight-cross --template "HTTP trigger"
+func new --name prf-pattern-detect --template "HTTP trigger"
 
-# 8. Test endpoint
-curl -X POST https://kdap-functions.azurewebsites.net/api/prf-learning-extractor \
+cd ../../../anl/competitive
+func init --python
+func new --name anl-sov-analyze --template "HTTP trigger"
+func new --name anl-comp-spend --template "HTTP trigger"
+
+cd ../pacing
+func init --python
+func new --name anl-pace-recommend --template "HTTP trigger"
+func new --name anl-pace-forecast --template "HTTP trigger"
+func new --name anl-scenario-compare --template "HTTP trigger"
+
+cd ../../aud/lifecycle
+func init --python
+func new --name aud-cohort-migrate --template "HTTP trigger"
+func new --name aud-decay-predict --template "HTTP trigger"
+func new --name aud-lookalike-score --template "HTTP trigger"
+
+cd ../../cha/flighting
+func init --python
+func new --name cha-flight-optimize --template "HTTP trigger"
+func new --name cha-daypart-analyze --template "HTTP trigger"
+func new --name cha-season-adjust --template "HTTP trigger"
+func new --name cha-freq-cross --template "HTTP trigger"
+```
+
+### PHASE 2: FUNCTION IMPLEMENTATION REQUIREMENTS
+
+Each function must implement:
+
+1. **Input validation** - Validate JSON schema matches capability definition
+2. **Core logic** - Implement calculation/analysis as specified
+3. **Output formatting** - Return JSON matching output schema
+4. **Error handling** - Return structured error responses
+5. **Logging** - Log to Application Insights
+6. **Timeout handling** - Respect timeout limits
+
+**Standard function structure:**
+
+```python
+import logging
+import json
+import azure.functions as func
+from datetime import datetime
+
+def main(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Function triggered')
+    
+    try:
+        req_body = req.get_json()
+        # Validate input
+        # Execute logic
+        # Format output
+        result = {"status": "success", "data": output}
+        return func.HttpResponse(
+            json.dumps(result),
+            status_code=200,
+            mimetype="application/json"
+        )
+    except Exception as e:
+        logging.error(f"Error: {str(e)}")
+        return func.HttpResponse(
+            json.dumps({"status": "error", "message": str(e)}),
+            status_code=500,
+            mimetype="application/json"
+        )
+```
+
+### PHASE 3: POWER AUTOMATE FLOWS
+
+Create these flows in Power Automate:
+
+| Flow Name | Trigger | Key Actions |
+|-----------|---------|-------------|
+| PRF_Learning_Extraction_Flow | HTTP Request | Call Azure Function → Log to Dataverse |
+| ANL_Competitive_Intel_Flow | HTTP Request | Call Azure Function → Cache results |
+| ANL_Budget_Pacing_Flow | HTTP Request | Call Azure Function → Update session |
+| AUD_Lifecycle_Management_Flow | HTTP Request | Call Azure Function → Trigger alerts |
+| CHA_Flighting_Optimization_Flow | HTTP Request | Call Azure Function → Update plan |
+| DOC_QBR_Generation_Flow | Manual | Aggregate data → AI Builder → Generate Word |
+| DOC_Competitive_Report_Flow | Manual | Fetch data → AI Builder → Generate Word |
+| DOC_Deck_Creation_Flow | Manual | Get brief → AI Builder → Generate outline |
+
+### PHASE 4: CAPABILITY REGISTRATION
+
+```bash
+# After Desktop Claude creates the seed CSV, load to Dataverse
+cd /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform
+
+# Verify seed file exists
+cat base/dataverse/seed/eap_capability_v66_seed.csv
+
+# Use Power Platform CLI to import
+pac data import --file base/dataverse/seed/eap_capability_v66_seed.csv --table eap_capability
+```
+
+### PHASE 5: DEPLOYMENT
+
+```bash
+# Deploy all function apps to Azure
+cd src/azure-functions/prf/learning
+func azure functionapp publish kdap-prf-learning --python
+
+cd ../../../anl/competitive
+func azure functionapp publish kdap-anl-competitive --python
+
+cd ../pacing
+func azure functionapp publish kdap-anl-pacing --python
+
+cd ../../aud/lifecycle
+func azure functionapp publish kdap-aud-lifecycle --python
+
+cd ../../cha/flighting
+func azure functionapp publish kdap-cha-flighting --python
+```
+
+### PHASE 6: VALIDATION
+
+```bash
+# Test each endpoint
+curl -X POST https://kdap-prf-learning.azurewebsites.net/api/prf-learning-extract \
   -H "Content-Type: application/json" \
-  -d '{"campaign_id": "test", "performance_data": {}}'
-```
+  -d '{"campaign_data": {...}, "metrics": {...}}'
 
-### PHASE 2: Competitive Intelligence (ANL + MKT)
-
-```bash
-# 1. Create Azure Function directories
-mkdir -p src/azure-functions/anl/competitive/anl-sov-calculator
-mkdir -p src/azure-functions/anl/competitive/anl-comp-spend-estimator
-
-# 2. Create function files for anl-sov-calculator
-# Input schema:
-#   brand_mentions: array of {source, count, date}
-#   category_mentions: array of {source, count, date}
-#   time_period: {start, end}
-# Output schema:
-#   sov_percentage: decimal
-#   trend: string (up/down/stable)
-#   confidence: decimal
-#   breakdown_by_source: array
-
-# 3. Create function files for anl-comp-spend-estimator
-# Input schema:
-#   competitor: string
-#   signals: array of {channel, impressions, placements, frequency}
-#   benchmarks: object of CPM ranges by channel
-# Output schema:
-#   spend_estimate_low: currency
-#   spend_estimate_mid: currency
-#   spend_estimate_high: currency
-#   confidence: decimal
-#   methodology: string
-
-# 4. Create Dataverse table: mpa_competitive_intel
-# Schema:
-#   mpa_competitive_intel_id: GUID (PK)
-#   competitor_name: Text (200)
-#   metric_type: OptionSet (SOV=1, SpendEstimate=2, Messaging=3, Position=4)
-#   metric_value: Decimal
-#   confidence_level: OptionSet (High=1, Medium=2, Low=3)
-#   period_start: DateTime
-#   period_end: DateTime
-#   data_source: Text (500)
-#   created_on: DateTime
-
-# 5. Create Power Automate flow: ANL-Competitive-Monitor-Flow
-# Trigger: Recurrence (Daily, 7AM)
-# Actions:
-#   - Get competitive data sources from configuration
-#   - For each competitor:
-#     - HTTP POST to anl-sov-calculator
-#     - Create/update row in mpa_competitive_intel
-#   - Condition: If SOV change > 5%
-#     - Send Teams notification to configured channel
-
-# 6. Register capabilities
-# Import from: base/dataverse/seed/eap_capability_competitive_seed.csv
-
-# 7. Deploy and test
-func azure functionapp publish kdap-functions --python
-```
-
-### PHASE 3: Budget Pacing (ANL)
-
-```bash
-# 1. Create Azure Function directories
-mkdir -p src/azure-functions/anl/pacing/anl-pace-forecaster
-mkdir -p src/azure-functions/anl/pacing/anl-scenario-engine
-mkdir -p src/azure-functions/anl/pacing/anl-breakeven-calculator
-
-# 2. Create anl-pace-forecaster
-# Input: budget, start_date, end_date, pacing_strategy, current_spend, current_date
-# Output: daily_forecast[], cumulative_forecast[], variance_from_plan, recommendation
-
-# 3. Create anl-scenario-engine
-# Input: base_assumptions{}, variations[], metrics_to_compare[]
-# Output: scenarios[], comparison_matrix, sensitivity_analysis
-
-# 4. Create anl-breakeven-calculator
-# Input: fixed_costs, variable_cost_per_unit, revenue_per_unit, investment_amount
-# Output: breakeven_units, breakeven_revenue, payback_periods, sensitivity{}
-
-# 5. Create Dataverse table: mpa_pacing_snapshot
-# Schema per build plan above
-
-# 6. Create Power Automate flow: ANL-Pacing-Monitor-Flow
-# Trigger: Recurrence (Daily)
-# Monitor all active campaigns for pacing variance
-
-# 7. Register capabilities and deploy
-```
-
-### PHASE 4: Audience Lifecycle (AUD)
-
-```bash
-# 1. Create Azure Function directories
-mkdir -p src/azure-functions/aud/lifecycle/aud-cohort-analyzer
-mkdir -p src/azure-functions/aud/lifecycle/aud-decay-predictor
-mkdir -p src/azure-functions/aud/lifecycle/aud-lookalike-validator
-
-# 2. Create aud-cohort-analyzer
-# Input: cohort_definitions[], time_periods[], transition_events[]
-# Output: migration_matrix, graduation_rates, churn_rates, survival_curve
-
-# 3. Create aud-decay-predictor
-# Input: audience_id, creation_date, historical_match_rates[], segment_type
-# Output: decay_curve[], half_life_days, current_freshness_score, refresh_urgency
-
-# 4. Create aud-lookalike-validator
-# Input: seed_profile{}, lookalike_profile{}, performance_data{}
-# Output: quality_score, drift_metrics{}, expansion_recommendation
-
-# 5. Create Dataverse table: mpa_audience_lifecycle
-# Schema per build plan above
-
-# 6. Create Power Automate flow: AUD-Lifecycle-Monitor-Flow
-# Trigger: Recurrence (Weekly)
-# Scan all audiences, flag those needing refresh
-
-# 7. Register capabilities and deploy
-```
-
-### PHASE 5: Flighting Optimization (CHA)
-
-```bash
-# 1. Create Azure Function directories
-mkdir -p src/azure-functions/cha/flighting/cha-flight-optimizer
-mkdir -p src/azure-functions/cha/flighting/cha-daypart-analyzer
-mkdir -p src/azure-functions/cha/flighting/cha-seasonality-adjuster
-
-# 2. Create cha-flight-optimizer
-# Input: duration_days, total_budget, objective, historical_patterns[]
-# Output: flight_schedule[], period_budgets[], rationale
-
-# 3. Create cha-daypart-analyzer
-# Input: performance_by_hour[], channel
-# Output: heatmap_scores[][], optimal_windows[], avoid_windows[]
-
-# 4. Create cha-seasonality-adjuster
-# Input: historical_data[], forecast_period, baseline
-# Output: seasonal_factors[], adjusted_forecast[]
-
-# 5. Create Dataverse table: mpa_flight_schedule
-# Schema per build plan above
-
-# 6. Create Power Automate flow: CHA-Flighting-Recommendation-Flow
-# Trigger: When campaign created
-# Auto-generate recommended flight schedule
-
-# 7. Register capabilities and deploy
-```
-
-### PHASE 6: Document Automation (DOC)
-
-```bash
-# 1. No new Azure Functions needed (all AI Builder)
-
-# 2. Create Dataverse tables:
-#    - mpa_document_template
-#    - mpa_document_generated
-# Schemas per build plan above
-
-# 3. Create Power Automate flows:
-
-# DOC-QBR-Generation-Flow
-# Trigger: Manual or Scheduled (Quarterly)
-# Actions:
-#   - Get date range parameters
-#   - Query performance data aggregates
-#   - Query learnings from mpa_learning
-#   - Call DOC_QBR_GENERATE AI Builder prompt
-#   - Create Word document using Word Online connector
-#   - Save to SharePoint
-#   - Create row in mpa_document_generated
-#   - Send notification
-
-# DOC-RFP-Response-Flow
-# Trigger: Manual with file upload
-# Actions:
-#   - Parse uploaded RFP (PDF/Word)
-#   - Extract requirements
-#   - Query content library for matches
-#   - Call DOC_RFP_RESPOND for gaps
-#   - Assemble response document
-#   - Save draft for review
-
-# DOC-Deck-Creation-Flow
-# Trigger: Manual with parameters
-# Actions:
-#   - Get session_id parameter
-#   - Query session data
-#   - Query related learnings
-#   - Call DOC_DECK_CREATE prompt
-#   - Create PowerPoint using Office connector
-#   - Populate slides
-#   - Save and notify
-
-# 4. Register capabilities
-# Import from: base/dataverse/seed/eap_capability_document_seed.csv
-
-# 5. Upload document templates to SharePoint
-# Location: /sites/KDAP/DocumentTemplates/
-# Templates needed:
-#   - QBR_Template_v1.docx
-#   - RFP_Response_Template_v1.docx
-#   - Competitive_Report_Template_v1.docx
-#   - Presentation_Deck_Template_v1.pptx
+# Verify Dataverse capabilities
+pac data export --table eap_capability --output capabilities_verify.csv
 ```
 
 ---
 
-## VALIDATION CHECKLIST
+## DELIVERABLE CHECKLIST
 
-After all phases complete:
+### Desktop Claude Deliverables
 
-```bash
-# 1. Verify KB files exist and pass compliance
-for f in release/v6.0/agents/*/kb/*_v1.txt; do
-  echo "Checking $f"
-  wc -c "$f"
-  grep -P '[–—""'']' "$f" && echo "FAIL: Non-ASCII" || echo "PASS"
-done
+| # | Deliverable | Location | Status |
+|---|-------------|----------|--------|
+| 1 | PRF_KB_Learning_Extraction_v1.txt | release/v6.0/agents/prf/kb/ | Pending |
+| 2 | ANL_KB_Competitive_Intelligence_v1.txt | release/v6.0/agents/anl/kb/ | Pending |
+| 3 | MKT_KB_Competitive_Positioning_v1.txt | release/v6.0/agents/mkt/kb/ | Pending |
+| 4 | ANL_KB_Budget_Pacing_v1.txt | release/v6.0/agents/anl/kb/ | Pending |
+| 5 | AUD_KB_Audience_Lifecycle_v1.txt | release/v6.0/agents/aud/kb/ | Pending |
+| 6 | CHA_KB_Flighting_Optimization_v1.txt | release/v6.0/agents/cha/kb/ | Pending |
+| 7 | DOC_KB_Document_Automation_v1.txt | release/v6.0/agents/doc/kb/ | Pending |
+| 8 | 24 AI Builder Prompt JSONs | base/platform/eap/prompts/ai_builder/ | Pending |
+| 9 | eap_capability_v66_seed.csv | base/dataverse/seed/ | Pending |
+| 10 | 48 Test Scenarios | base/tests/ | Pending |
 
-# 2. Verify AI Builder prompts
-ls -la base/platform/eap/prompts/ai_builder/*.json | wc -l
-# Should be 69 (45 existing + 24 new)
+### VS Code Claude Deliverables
 
-# 3. Verify capability seeds
-cat base/dataverse/seed/eap_capability_*_seed.csv | grep -v "^eap_capabilityid" | wc -l
-# Should show all new capabilities
-
-# 4. Verify Azure Functions deployed
-az functionapp function list --name kdap-functions --resource-group kdap-resource-group
-
-# 5. Verify Power Automate flows
-# Manual check in make.powerapps.com
-
-# 6. Run test suites
-# Execute tests from base/tests/
-```
-
----
-
-## COMMIT STRATEGY
-
-Desktop commits after each phase:
-```
-feat(prf): Add Expansion 14 - Learning Extraction capabilities
-feat(anl,mkt): Add Expansion 10 - Competitive Intelligence capabilities
-feat(anl): Add Expansion 11 - Budget Pacing capabilities
-feat(aud): Add Expansion 12 - Audience Lifecycle capabilities
-feat(cha): Add Expansion 13 - Flighting Optimization capabilities
-feat(doc): Add Expansion 15 - Document Automation capabilities
-```
-
-VS Code commits after infrastructure:
-```
-feat(azure): Add Learning Extraction Azure Functions
-feat(azure): Add Competitive Intelligence Azure Functions
-feat(azure): Add Budget Pacing Azure Functions
-feat(azure): Add Audience Lifecycle Azure Functions
-feat(azure): Add Flighting Optimization Azure Functions
-feat(dataverse): Add v6.6 Dataverse tables
-feat(flows): Add v6.6 Power Automate flows
-```
+| # | Deliverable | Location | Status |
+|---|-------------|----------|--------|
+| 1 | prf-learning-extract function | src/azure-functions/prf/learning/ | Pending |
+| 2 | prf-insight-cross function | src/azure-functions/prf/learning/ | Pending |
+| 3 | prf-pattern-detect function | src/azure-functions/prf/learning/ | Pending |
+| 4 | anl-sov-analyze function | src/azure-functions/anl/competitive/ | Pending |
+| 5 | anl-comp-spend function | src/azure-functions/anl/competitive/ | Pending |
+| 6 | anl-pace-recommend function | src/azure-functions/anl/pacing/ | Pending |
+| 7 | anl-pace-forecast function | src/azure-functions/anl/pacing/ | Pending |
+| 8 | anl-scenario-compare function | src/azure-functions/anl/pacing/ | Pending |
+| 9 | aud-cohort-migrate function | src/azure-functions/aud/lifecycle/ | Pending |
+| 10 | aud-decay-predict function | src/azure-functions/aud/lifecycle/ | Pending |
+| 11 | aud-lookalike-score function | src/azure-functions/aud/lifecycle/ | Pending |
+| 12 | cha-flight-optimize function | src/azure-functions/cha/flighting/ | Pending |
+| 13 | cha-daypart-analyze function | src/azure-functions/cha/flighting/ | Pending |
+| 14 | cha-season-adjust function | src/azure-functions/cha/flighting/ | Pending |
+| 15 | cha-freq-cross function | src/azure-functions/cha/flighting/ | Pending |
+| 16 | 8 Power Automate Flows | Power Platform | Pending |
+| 17 | Capability registrations | Dataverse | Pending |
+| 18 | Azure deployments | Azure | Pending |
 
 ---
 
-**Document Version:** 1.0
-**Created:** January 20, 2026
-**Branch:** deploy/mastercard
-**Next Action:** Desktop begins Phase 1 - Learning Extraction
+## SUCCESS CRITERIA
+
+| Metric | Target |
+|--------|--------|
+| KB Files Created | 7 |
+| AI Builder Prompts | 24 |
+| Azure Functions | 15 |
+| Power Automate Flows | 8 |
+| Capabilities Registered | 24 |
+| Test Scenarios | 48 |
+| 6-Rule Compliance | 100% |
+| Function Response Time | < specified timeout |
+| E2E Test Pass Rate | 95%+ |
+
+---
+
+**Document Version:** 1.0  
+**Created:** January 20, 2026  
+**Branch:** deploy/mastercard  
+**Next Action:** Desktop Claude begins Expansion 14 KB file

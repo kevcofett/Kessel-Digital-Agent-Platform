@@ -1,36 +1,71 @@
 {
   "prompt_code": "MKT_COMP_GAPS",
-  "prompt_name": "White Space Identifier",
-  "description": "Identify unoccupied positioning opportunities in the competitive landscape",
+  "prompt_name": "Identify White Space Opportunities",
+  "prompt_version": "1.0",
   "model": "gpt-4",
-  "system_message": "You are a brand strategist specializing in identifying white space positioning opportunities. Your task is to find unoccupied positions in the competitive landscape where meaningful customer needs exist. Analyze positioning gaps, audience white space, occasion white space, and message white space. Evaluate each opportunity for market size, brand fit, sustainability, and risk. Prioritize opportunities based on strategic attractiveness and feasibility. Be specific about what makes each white space opportunity viable or risky.",
-  "user_template": "Competitive Positioning Map:\n{{positioning_map_json}}\n\nCustomer Needs Data:\n{{customer_needs_json}}\n\nBrand Capabilities:\n{{brand_capabilities_json}}\n\nCategory: {{category}}\nTarget Segments: {{segments}}\n\nIdentify and evaluate white space opportunities for positioning differentiation.",
+  "system_message": "You are a strategic planner who identifies uncontested market positions and messaging gaps. Your role is to analyze the competitive landscape to find white space opportunities where your brand can differentiate. Consider positioning dimensions, audience segments, messaging themes, timing windows, and channel presence. Evaluate each opportunity for attractiveness, achievability, and risk. Provide actionable recommendations with clear prioritization.",
+  "user_template": "Competitive Landscape:\n{{landscape_json}}\n\nYour Brand Capabilities:\n{{capabilities}}\n\nTarget Audiences:\n{{audiences_json}}\n\nCurrent Positioning:\n{{current_positioning}}\n\nIdentify white space opportunities. Find uncontested positions, underserved segments, and messaging gaps that represent differentiation opportunities.",
   "output_format": "json",
   "output_schema": {
     "white_space_opportunities": [
       {
-        "opportunity_id": "string",
-        "white_space_type": "string (Positioning|Audience|Occasion|Message)",
-        "description": "string",
-        "unmet_need": "string",
-        "market_size_estimate": "string (Large|Medium|Small)",
-        "brand_fit_score": "number (1-10)",
-        "sustainability_score": "number (1-10)",
-        "risk_factors": ["string"],
-        "overall_attractiveness": "string (High|Medium|Low)",
-        "recommended_action": "string"
+        "opportunity_id": "string - unique identifier",
+        "opportunity_name": "string - short descriptive name",
+        "description": "string - detailed description of the opportunity",
+        "gap_type": "string - positioning|audience|message|timing|channel",
+        "opportunity_score": "number - 0-100 overall attractiveness",
+        "scoring_breakdown": {
+          "market_size": "number - 0-100",
+          "competitive_vacancy": "number - 0-100",
+          "brand_fit": "number - 0-100",
+          "sustainability": "number - 0-100"
+        },
+        "resource_requirement": "string - low|medium|high",
+        "time_to_establish": "string - estimated time to own position",
+        "competitive_risk": "string - low|medium|high",
+        "risk_factors": ["string - specific risks to consider"],
+        "recommended_approach": "string - how to pursue this opportunity"
       }
     ],
-    "prioritized_opportunities": [
+    "underserved_audiences": [
+      {
+        "audience_description": "string - description of underserved segment",
+        "size_estimate": "string - relative size assessment",
+        "current_competitive_attention": "string - none|low|moderate",
+        "opportunity_rationale": "string - why this is an opportunity",
+        "fit_assessment": "string - how well brand can serve this audience"
+      }
+    ],
+    "messaging_gaps": [
+      {
+        "gap_description": "string - messaging territory not claimed",
+        "gap_type": "string - benefit|emotional|proof|tone",
+        "competitors_absent": ["string - competitors not using this"],
+        "consumer_relevance": "string - high|medium|low",
+        "brand_credibility": "string - high|medium|low"
+      }
+    ],
+    "channel_gaps": [
+      {
+        "channel": "string - channel with competitive gap",
+        "competitive_presence": "string - description of gap",
+        "audience_availability": "string - high|medium|low",
+        "investment_requirement": "string - low|medium|high"
+      }
+    ],
+    "priority_ranking": [
       {
         "rank": "number",
         "opportunity_id": "string",
-        "rationale": "string"
+        "rationale": "string - why ranked at this position"
       }
     ],
-    "competitive_response_risks": ["string"],
-    "implementation_considerations": ["string"]
+    "strategic_summary": "string - overall assessment of white space landscape",
+    "recommended_focus_areas": ["string - top 3 areas to pursue"]
   },
   "max_tokens": 2500,
-  "temperature": 0.2
+  "temperature": 0.3,
+  "capability_code": "MKT_COMP_GAPS",
+  "agent_code": "MKT",
+  "timeout_seconds": 30
 }

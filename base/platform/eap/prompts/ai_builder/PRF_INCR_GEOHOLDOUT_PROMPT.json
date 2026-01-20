@@ -1,0 +1,48 @@
+{
+  "prompt_code": "PRF_INCR_GEOHOLDOUT",
+  "prompt_name": "Geo Holdout Incrementality Analysis",
+  "description": "Analyze geographic holdout experiment results to measure incremental lift from marketing campaigns",
+  "model": "gpt-4",
+  "system_message": "You are a marketing measurement expert specializing in incrementality testing through geographic experiments. Your task is to analyze geo holdout experiment results and calculate incremental lift.\n\nGEO HOLDOUT METHODOLOGY:\n1. Compare conversion rates between treatment regions (received marketing) and control regions (no marketing)\n2. Calculate lift as percentage difference in conversion rates\n3. Apply cluster-robust standard errors to account for regional correlation\n4. Test statistical significance at alpha = 0.05\n\nANALYSIS REQUIREMENTS:\n- Verify pre-experiment balance between treatment and control regions\n- Calculate weighted averages if regions differ in population size\n- Report confidence intervals using delta method or bootstrap\n- Flag any contamination concerns or balance issues\n\nVALIDATION CHECKS:\n- Treatment and control regions should have similar pre-period metrics\n- Minimum observations per region for reliable estimates\n- Check for cross-regional shopping contamination\n- Assess parallel trends in pre-period data\n\nOUTPUT REQUIREMENTS:\n- Return valid JSON only\n- Include point estimate and confidence interval for lift\n- Provide statistical significance determination\n- Report incremental conversions and revenue\n- Include diagnostic metrics for experiment validity",
+  "user_template": "Analyze this geo holdout experiment:\n\nTREATMENT REGIONS:\n{{treatment_regions_json}}\n\nCONTROL REGIONS:\n{{control_regions_json}}\n\nEXPERIMENT DURATION: {{duration_days}} days\nTOTAL SPEND: {{total_spend}}\n\nPRE-PERIOD DATA (for balance check):\n{{pre_period_json}}\n\nCalculate incremental lift with statistical significance.",
+  "output_format": "json",
+  "output_schema": {
+    "experiment_type": "geo_holdout",
+    "duration_days": "number",
+    "treatment_summary": {
+      "region_count": "number",
+      "total_population": "number",
+      "total_conversions": "number",
+      "conversion_rate": "number"
+    },
+    "control_summary": {
+      "region_count": "number",
+      "total_population": "number",
+      "total_conversions": "number",
+      "conversion_rate": "number"
+    },
+    "lift_analysis": {
+      "lift_pct": "number",
+      "lift_absolute": "number",
+      "confidence_interval_low": "number",
+      "confidence_interval_high": "number",
+      "p_value": "number",
+      "is_significant": "boolean"
+    },
+    "incremental_metrics": {
+      "incremental_conversions": "number",
+      "incremental_revenue": "number",
+      "incremental_cpa": "number",
+      "incremental_roas": "number"
+    },
+    "validity_checks": {
+      "pre_period_balance": "boolean",
+      "sufficient_sample_size": "boolean",
+      "contamination_risk": "string",
+      "parallel_trends": "boolean"
+    },
+    "confidence": "number"
+  },
+  "max_tokens": 2000,
+  "temperature": 0.1
+}

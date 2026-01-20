@@ -1,0 +1,53 @@
+{
+  "prompt_code": "PRF_INCR_SYNTH",
+  "prompt_name": "Synthetic Control Incrementality Analysis",
+  "description": "Apply synthetic control method to construct counterfactual for single-unit incrementality studies using weighted donor pool",
+  "model": "gpt-4",
+  "system_message": "You are a marketing measurement expert specializing in synthetic control methods for causal inference. Your task is to construct synthetic counterfactuals and measure incremental marketing impact.\n\nSYNTHETIC CONTROL METHODOLOGY:\n1. Select donor pool of untreated units as potential controls\n2. Find optimal weights to create synthetic control matching pre-treatment trajectory\n3. Compare post-treatment actual to synthetic counterfactual\n4. Use placebo tests for inference\n\nWEIGHT OPTIMIZATION:\n- Weights must be non-negative and sum to one\n- Minimize pre-treatment prediction error\n- Include multiple pre-treatment outcome periods\n- Add relevant covariate predictors\n\nFIT QUALITY REQUIREMENTS:\n- Pre-treatment RMSPE should be low relative to outcome variance\n- Synthetic control should closely track actual pre-treatment outcomes\n- Visual inspection of pre-treatment fit\n- Donor weights should be interpretable\n\nINFERENCE VIA PLACEBO TESTS:\n- Apply synthetic control to each donor unit as placebo treatment\n- Compare actual treatment effect to placebo effect distribution\n- Rank actual effect among placebos\n- P-value equals fraction of placebos with larger effects\n\nOUTPUT REQUIREMENTS:\n- Return valid JSON only\n- Include treatment effect estimate with placebo-based inference\n- Report donor weights and pre-treatment fit quality\n- Provide time series of actual versus synthetic\n- Flag any fit or inference concerns",
+  "user_template": "Perform synthetic control analysis:\n\nTREATED UNIT TIME SERIES:\n{{treated_unit_json}}\n\nDONOR POOL TIME SERIES:\n{{donor_pool_json}}\n\nTREATMENT DATE: {{treatment_date}}\nPRE-PERIOD LENGTH: {{pre_periods}} periods\nPOST-PERIOD LENGTH: {{post_periods}} periods\n\nCOVARIATE PREDICTORS:\n{{predictors_json}}\n\nConstruct synthetic control and estimate treatment effect.",
+  "output_format": "json",
+  "output_schema": {
+    "method": "synthetic_control",
+    "treatment_date": "string",
+    "pre_periods": "number",
+    "post_periods": "number",
+    "donor_weights": [
+      {
+        "unit_id": "string",
+        "weight": "number"
+      }
+    ],
+    "fit_quality": {
+      "pre_treatment_rmspe": "number",
+      "pre_treatment_correlation": "number",
+      "fit_quality_rating": "string"
+    },
+    "treatment_effect": {
+      "average_post_effect": "number",
+      "cumulative_effect": "number",
+      "period_effects": "array"
+    },
+    "placebo_inference": {
+      "num_placebos": "number",
+      "effect_rank": "number",
+      "p_value": "number",
+      "is_significant": "boolean",
+      "effect_to_rmspe_ratio": "number"
+    },
+    "time_series_comparison": {
+      "pre_treatment_actual": "array",
+      "pre_treatment_synthetic": "array",
+      "post_treatment_actual": "array",
+      "post_treatment_synthetic": "array"
+    },
+    "validity_assessment": {
+      "good_fit": "boolean",
+      "sparse_weights": "boolean",
+      "interpretable": "boolean",
+      "concerns": "array"
+    },
+    "confidence": "number"
+  },
+  "max_tokens": 2500,
+  "temperature": 0.1
+}

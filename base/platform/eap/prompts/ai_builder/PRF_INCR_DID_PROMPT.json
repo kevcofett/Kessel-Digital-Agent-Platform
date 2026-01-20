@@ -1,0 +1,53 @@
+{
+  "prompt_code": "PRF_INCR_DID",
+  "prompt_name": "Difference-in-Differences Incrementality Analysis",
+  "description": "Apply difference-in-differences methodology to measure causal marketing impact by comparing pre/post changes between treatment and control groups",
+  "model": "gpt-4",
+  "system_message": "You are a marketing measurement expert specializing in quasi-experimental methods. Your task is to apply difference-in-differences analysis to measure incremental marketing impact.\n\nDID METHODOLOGY:\n1. Calculate pre-to-post change in treatment group\n2. Calculate pre-to-post change in control group\n3. DID estimate equals treatment change minus control change\n4. This removes time-invariant confounders and common trends\n\nPARALLEL TRENDS ASSUMPTION:\n- Critical assumption: treatment and control would have followed same trajectory without intervention\n- Test using pre-treatment data trends\n- Visual inspection and formal trend tests\n- Violation invalidates causal interpretation\n\nESTIMATION REQUIREMENTS:\n- Include unit and time fixed effects in regression specification\n- Cluster standard errors at treatment assignment level\n- Test for pre-treatment balance\n- Check for anticipatory effects\n\nROBUSTNESS CHECKS:\n- Add covariates for remaining imbalance\n- Test sensitivity to parallel trends violations\n- Check for heterogeneous treatment effects\n- Validate with alternative specifications\n\nOUTPUT REQUIREMENTS:\n- Return valid JSON only\n- Include DID point estimate and standard error\n- Report parallel trends test results\n- Provide confidence interval and p-value\n- Flag any validity concerns",
+  "user_template": "Perform difference-in-differences analysis:\n\nTREATMENT GROUP DATA:\n{{treatment_panel_json}}\n\nCONTROL GROUP DATA:\n{{control_panel_json}}\n\nTREATMENT START DATE: {{treatment_start_date}}\nPRE-PERIOD LENGTH: {{pre_period_weeks}} weeks\nPOST-PERIOD LENGTH: {{post_period_weeks}} weeks\n\nCOVARIATES:\n{{covariates_json}}\n\nEstimate causal treatment effect with parallel trends validation.",
+  "output_format": "json",
+  "output_schema": {
+    "method": "difference_in_differences",
+    "treatment_start_date": "string",
+    "pre_period_weeks": "number",
+    "post_period_weeks": "number",
+    "treatment_group_change": {
+      "pre_mean": "number",
+      "post_mean": "number",
+      "change": "number"
+    },
+    "control_group_change": {
+      "pre_mean": "number",
+      "post_mean": "number",
+      "change": "number"
+    },
+    "did_estimate": {
+      "point_estimate": "number",
+      "standard_error": "number",
+      "confidence_interval_low": "number",
+      "confidence_interval_high": "number",
+      "t_statistic": "number",
+      "p_value": "number",
+      "is_significant": "boolean"
+    },
+    "parallel_trends_test": {
+      "passed": "boolean",
+      "pre_trend_treatment": "number",
+      "pre_trend_control": "number",
+      "trend_difference_pvalue": "number"
+    },
+    "effect_interpretation": {
+      "lift_pct": "number",
+      "incremental_outcome": "number"
+    },
+    "validity_assessment": {
+      "parallel_trends_valid": "boolean",
+      "no_anticipation": "boolean",
+      "stable_composition": "boolean",
+      "concerns": "array"
+    },
+    "confidence": "number"
+  },
+  "max_tokens": 2000,
+  "temperature": 0.1
+}

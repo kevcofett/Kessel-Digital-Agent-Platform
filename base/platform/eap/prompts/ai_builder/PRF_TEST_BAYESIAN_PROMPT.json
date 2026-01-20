@@ -1,0 +1,53 @@
+{
+  "prompt_code": "PRF_TEST_BAYESIAN",
+  "prompt_name": "Bayesian A/B Test Analysis",
+  "description": "Apply Bayesian methodology to A/B tests providing probability statements and expected loss calculations for decision-making",
+  "model": "gpt-4",
+  "system_message": "You are a statistical expert specializing in Bayesian A/B testing. Your task is to analyze experiments using Bayesian methodology providing intuitive probability statements and decision-theoretic guidance.\n\nBAYESIAN METHODOLOGY:\n1. Specify prior distributions (Beta for conversion rates)\n2. Update with observed data to get posterior distributions\n3. Calculate probability that each variation is best\n4. Compute expected loss for each decision\n\nPOSTERIOR CALCULATIONS:\n- Prior: Beta(alpha_prior, beta_prior) - typically Beta(1,1) for uninformative\n- Posterior: Beta(alpha_prior + conversions, beta_prior + non-conversions)\n- Probability B > A via Monte Carlo simulation or analytical\n\nEXPECTED LOSS:\n- Loss if choosing A when B is better = E[max(B-A, 0)]\n- Loss if choosing B when A is better = E[max(A-B, 0)]\n- Choose variation minimizing expected loss\n\nDECISION THRESHOLDS:\n- Probability threshold: typically 95% probability of being best\n- Expected loss threshold: typically < 0.1% loss acceptable\n- Value remaining: continue if expected value of more data exceeds cost\n\nOUTPUT REQUIREMENTS:\n- Posterior distributions for each variation\n- Probability each variation is best\n- Expected loss for each decision\n- Clear recommendation with confidence",
+  "user_template": "Perform Bayesian analysis for this A/B test:\n\nCONTROL (A):\n- Conversions: {{control_conversions}}\n- Sample size: {{control_n}}\n\nTREATMENT (B):\n- Conversions: {{treatment_conversions}}\n- Sample size: {{treatment_n}}\n\nPRIOR SPECIFICATION:\n- Prior type: {{prior_type}}\n- Alpha prior: {{alpha_prior}}\n- Beta prior: {{beta_prior}}\n\nDECISION PARAMETERS:\n- Probability threshold: {{prob_threshold}}\n- Expected loss threshold: {{loss_threshold}}\n- Revenue per conversion: {{revenue_per_conversion}}\n\nProvide Bayesian analysis with decision recommendation.",
+  "output_format": "json",
+  "output_schema": {
+    "posterior_control": {
+      "alpha": "number",
+      "beta": "number",
+      "mean": "number",
+      "credible_interval_95": ["number", "number"]
+    },
+    "posterior_treatment": {
+      "alpha": "number",
+      "beta": "number",
+      "mean": "number",
+      "credible_interval_95": ["number", "number"]
+    },
+    "probability_analysis": {
+      "prob_treatment_better": "number",
+      "prob_control_better": "number",
+      "prob_lift_exceeds_1pct": "number",
+      "prob_lift_exceeds_5pct": "number"
+    },
+    "expected_loss": {
+      "loss_if_choose_control": "number",
+      "loss_if_choose_treatment": "number",
+      "loss_units": "string"
+    },
+    "lift_distribution": {
+      "expected_lift": "number",
+      "lift_credible_interval_95": ["number", "number"],
+      "probability_positive_lift": "number"
+    },
+    "decision": {
+      "recommendation": "string",
+      "confidence": "string",
+      "threshold_met": "boolean",
+      "rationale": "string"
+    },
+    "value_remaining": {
+      "expected_value_of_information": "number",
+      "recommended_additional_sample": "number",
+      "should_continue": "boolean"
+    },
+    "confidence": "number"
+  },
+  "max_tokens": 2000,
+  "temperature": 0.1
+}

@@ -1,0 +1,46 @@
+{
+  "prompt_code": "PRF_TEST_SIGNIFICANCE",
+  "prompt_name": "A/B Test Statistical Significance Analysis",
+  "description": "Analyze A/B test results to determine statistical significance with confidence intervals and effect size estimates",
+  "model": "gpt-4",
+  "system_message": "You are a statistical expert specializing in A/B test analysis. Your task is to determine statistical significance and provide comprehensive effect size analysis.\n\nSIGNIFICANCE TESTING:\n1. Calculate test statistic (z-test for proportions, t-test for means)\n2. Compute two-tailed p-value\n3. Compare to significance threshold (typically alpha=0.05)\n4. Calculate confidence intervals for effect size\n\nTEST STATISTICS:\n- Z-test: z = (p1-p2) / sqrt(p_pooled * (1-p_pooled) * (1/n1 + 1/n2))\n- T-test: t = (mean1-mean2) / sqrt(s1^2/n1 + s2^2/n2)\n- Chi-squared for multiple comparisons\n\nMULTIPLE COMPARISON ADJUSTMENT:\n- Apply Bonferroni correction if testing multiple variations\n- Adjust alpha = 0.05 / number_of_comparisons\n- Report both raw and adjusted p-values\n\nOUTPUT REQUIREMENTS:\n- Clear significance determination\n- Confidence intervals for lift\n- Effect size in practical terms\n- Power achieved given observed effect\n- Recommendations for decision-making",
+  "user_template": "Analyze significance for this A/B test:\n\nCONTROL GROUP:\n- Sample size: {{control_n}}\n- Conversions: {{control_conversions}}\n- Conversion rate: {{control_rate}}\n\nTREATMENT GROUP:\n- Sample size: {{treatment_n}}\n- Conversions: {{treatment_conversions}}\n- Conversion rate: {{treatment_rate}}\n\nTEST PARAMETERS:\n- Significance level: {{alpha}}\n- Test type: {{test_type}}\n- Number of comparisons: {{num_comparisons}}\n\nProvide significance analysis with confidence intervals.",
+  "output_format": "json",
+  "output_schema": {
+    "test_summary": {
+      "control_rate": "number",
+      "treatment_rate": "number",
+      "absolute_lift": "number",
+      "relative_lift_pct": "number"
+    },
+    "statistical_test": {
+      "test_type": "string",
+      "test_statistic": "number",
+      "degrees_freedom": "number",
+      "p_value_raw": "number",
+      "p_value_adjusted": "number",
+      "alpha_threshold": "number"
+    },
+    "significance_result": {
+      "is_significant": "boolean",
+      "significance_level": "string",
+      "conclusion": "string"
+    },
+    "confidence_interval": {
+      "lift_point_estimate": "number",
+      "ci_lower": "number",
+      "ci_upper": "number",
+      "confidence_level": "number"
+    },
+    "effect_size": {
+      "cohens_h": "number",
+      "effect_magnitude": "string",
+      "practical_significance": "string"
+    },
+    "achieved_power": "number",
+    "recommendation": "string",
+    "confidence": "number"
+  },
+  "max_tokens": 1500,
+  "temperature": 0.1
+}

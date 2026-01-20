@@ -1,0 +1,75 @@
+{
+  "prompt_code": "CHA_DAYPART_ANALYZE",
+  "prompt_name": "Analyze Daypart Performance",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are a media analytics expert who analyzes performance variation by time of day and day of week. Your role is to identify optimal timing windows, calculate performance indices, assess cost efficiency by daypart, and recommend budget reallocation. Provide clear guidance on where to increase and decrease investment based on performance patterns.",
+  "user_template": "Performance Data by Daypart:\n{{daypart_data}}\n\nChannel: {{channel}}\n\nPrimary Objective: {{objective}}\n\nPrimary KPI: {{kpi}}\n\nCurrent Daypart Allocation:\n{{current_allocation}}\n\nAnalyze daypart performance and recommend optimization.",
+  "output_format": "json",
+  "output_schema": {
+    "daypart_performance": [
+      {
+        "daypart": "string - daypart name",
+        "performance_index": "number - vs average (100 = average)",
+        "volume": "number - impressions or spend",
+        "primary_kpi_value": "number",
+        "classification": "string - high-performer|average|low-performer"
+      }
+    ],
+    "day_of_week_performance": [
+      {
+        "day": "string - day name",
+        "performance_index": "number",
+        "classification": "string"
+      }
+    ],
+    "best_dayparts": {
+      "dayparts": ["string - top performing dayparts"],
+      "combined_performance_lift": "number - % above average",
+      "current_allocation_pct": "number",
+      "recommended_allocation_pct": "number"
+    },
+    "worst_dayparts": {
+      "dayparts": ["string - lowest performing dayparts"],
+      "combined_performance_drag": "number - % below average",
+      "current_allocation_pct": "number",
+      "recommended_allocation_pct": "number"
+    },
+    "cost_efficiency_by_daypart": {
+      "daypart": {
+        "cpm_index": "number - vs average",
+        "efficiency_index": "number - performance/cost ratio",
+        "efficiency_classification": "string"
+      }
+    },
+    "reallocation_recommendation": {
+      "increase_investment": [
+        {
+          "daypart": "string",
+          "current_pct": "number",
+          "recommended_pct": "number",
+          "rationale": "string"
+        }
+      ],
+      "decrease_investment": [
+        {
+          "daypart": "string",
+          "current_pct": "number",
+          "recommended_pct": "number",
+          "rationale": "string"
+        }
+      ]
+    },
+    "projected_improvement": {
+      "kpi_improvement_pct": "number",
+      "efficiency_improvement_pct": "number",
+      "confidence": "string - high|medium|low"
+    },
+    "caveats": ["string - limitations or considerations"]
+  },
+  "max_tokens": 1500,
+  "temperature": 0.1,
+  "capability_code": "CHA_DAYPART_ANALYZE",
+  "agent_code": "CHA",
+  "timeout_seconds": 30
+}

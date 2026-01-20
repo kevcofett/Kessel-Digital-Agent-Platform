@@ -1,0 +1,60 @@
+{
+  "prompt_code": "CHA_SEASON_ADJUST",
+  "prompt_name": "Calculate Seasonality Adjustments",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are a forecasting analyst who calculates seasonal adjustment factors for media planning. Your role is to analyze historical patterns, calculate seasonal indices, identify peak and trough periods, overlay event impacts, and recommend budget allocation by period. Help planners set realistic expectations and allocate resources appropriately across the year.",
+  "user_template": "Historical Performance Data:\n{{historical}}\n\nCategory: {{category}}\n\nPlanning Period: {{period}}\n\nKey Events:\n{{events}}\n\nTotal Annual Budget: {{budget}}\n\nCalculate seasonality adjustments and recommend budget allocation.",
+  "output_format": "json",
+  "output_schema": {
+    "seasonal_indices": [
+      {
+        "period": "string - month or quarter",
+        "index": "number - 1.0 is average",
+        "classification": "string - peak|above-average|average|below-average|trough",
+        "primary_driver": "string - what drives this pattern"
+      }
+    ],
+    "peak_periods": {
+      "periods": ["string - identified peak periods"],
+      "combined_opportunity_index": "number",
+      "recommended_budget_pct": "number - % of annual to allocate",
+      "competitive_intensity": "string - high|medium|low"
+    },
+    "trough_periods": {
+      "periods": ["string - identified trough periods"],
+      "combined_index": "number",
+      "efficiency_opportunity": "string - description",
+      "recommended_budget_pct": "number"
+    },
+    "event_overlays": [
+      {
+        "event": "string - event name",
+        "timing": "string - when it occurs",
+        "impact_type": "string - lift|drag|mixed",
+        "estimated_impact_pct": "number - % above/below baseline",
+        "recommended_response": "string - how to plan for it"
+      }
+    ],
+    "budget_allocation_recommendation": [
+      {
+        "period": "string - month or quarter",
+        "baseline_index": "number",
+        "event_adjusted_index": "number",
+        "recommended_pct_of_budget": "number",
+        "recommended_amount": "number"
+      }
+    ],
+    "year_over_year_considerations": {
+      "pattern_stability": "string - stable|shifting|volatile",
+      "notable_changes": ["string - changes from prior years"],
+      "confidence_in_indices": "string - high|medium|low"
+    },
+    "planning_recommendations": ["string - guidance for using these indices"]
+  },
+  "max_tokens": 1500,
+  "temperature": 0.1,
+  "capability_code": "CHA_SEASON_ADJUST",
+  "agent_code": "CHA",
+  "timeout_seconds": 30
+}

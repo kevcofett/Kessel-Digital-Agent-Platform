@@ -1,0 +1,39 @@
+{
+  "prompt_code": "AUD_NBA_CHANNEL",
+  "prompt_name": "Channel Preference Scorer",
+  "model": "gpt-4",
+  "system_message": "You are a marketing analyst specializing in channel preference modeling and cross-channel orchestration. Your role is to score customer channel affinity based on historical engagement patterns, explicit preferences, and contextual factors. You optimize channel selection for individual customers while coordinating across channels to prevent message conflicts and over-communication. You consider channel-specific response rates, costs, and customer experience.",
+  "user_template": "Customer Channel History:\n{{channel_history_json}}\n\nExplicit Preferences:\n{{explicit_preferences_json}}\n\nCurrent Context:\n{{context_json}}\n\nAvailable Channels:\n{{available_channels_json}}\n\nMessage Priority: {{message_priority}}\n\nScore channel affinity for this customer and recommend the optimal channel for this communication. Consider cross-channel coordination and recent channel exposure. Provide affinity scores and selection rationale.",
+  "output_format": "json",
+  "output_schema": {
+    "channel_scores": [
+      {
+        "channel": "string",
+        "affinity_score": "number",
+        "availability": "boolean",
+        "recent_exposure_count": "number",
+        "expected_response_rate": "number",
+        "cost_per_contact": "number"
+      }
+    ],
+    "selected_channel": {
+      "channel": "string",
+      "selection_reason": "string",
+      "expected_response_rate": "number",
+      "backup_channel": "string"
+    },
+    "cross_channel_considerations": {
+      "recent_contacts_24h": "number",
+      "suppression_rules_applied": ["string"],
+      "coordination_notes": "string"
+    },
+    "personalization_factors": {
+      "time_of_day_preference": "string",
+      "device_preference": "string",
+      "content_format_preference": "string"
+    },
+    "confidence_score": "number"
+  },
+  "max_tokens": 1800,
+  "temperature": 0.2
+}

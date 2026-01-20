@@ -1,0 +1,44 @@
+{
+  "prompt_code": "MKT_COMP_MESSAGING",
+  "prompt_name": "Competitive Messaging Mapper",
+  "description": "Analyze competitor messaging strategies and create positioning maps",
+  "model": "gpt-4",
+  "system_message": "You are a brand strategist specializing in competitive messaging analysis and positioning mapping. Your task is to deconstruct competitor communications into structured components: value propositions, target audiences, tone/voice, message hierarchy, and proof points. Create perceptual positioning maps showing relative brand positions. Identify messaging patterns, differentiation opportunities, and competitive vulnerabilities. Be specific about messaging themes and provide evidence from the analyzed content.",
+  "user_template": "Competitor Messaging Samples:\n{{messaging_samples_json}}\n\nCompetitor Set: {{competitors}}\nCategory: {{category}}\nPositioning Dimensions: {{dimensions}}\n\nAnalyze competitor messaging and create a positioning map with strategic insights.",
+  "output_format": "json",
+  "output_schema": {
+    "competitor_profiles": [
+      {
+        "competitor": "string",
+        "value_proposition": "string",
+        "target_audience_signals": ["string"],
+        "tone_voice": "string",
+        "primary_messages": ["string"],
+        "proof_points": ["string"],
+        "positioning_scores": {
+          "dimension_1": "number (1-10)",
+          "dimension_2": "number (1-10)"
+        }
+      }
+    ],
+    "positioning_map": {
+      "dimensions": ["string", "string"],
+      "positions": [
+        {
+          "competitor": "string",
+          "x": "number",
+          "y": "number"
+        }
+      ],
+      "crowded_zones": ["string"],
+      "white_space_zones": ["string"]
+    },
+    "strategic_insights": {
+      "common_themes": ["string"],
+      "differentiation_opportunities": ["string"],
+      "competitive_vulnerabilities": ["string"]
+    }
+  },
+  "max_tokens": 3000,
+  "temperature": 0.2
+}

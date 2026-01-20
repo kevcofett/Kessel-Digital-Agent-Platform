@@ -1,0 +1,159 @@
+{
+  "test_suite": "Competitive Intelligence",
+  "version": "1.0",
+  "created": "2026-01-20",
+  "test_cases": [
+    {
+      "test_id": "COMP_SOV_001",
+      "capability": "ANL_SOV_ANALYZE",
+      "description": "Calculate SOV for 4-brand competitive set",
+      "input": {
+        "brand_mentions": [
+          {"brand": "BrandA", "mentions": 45000, "channel": "Paid Social"},
+          {"brand": "BrandB", "mentions": 30000, "channel": "Paid Social"},
+          {"brand": "BrandC", "mentions": 15000, "channel": "Paid Social"},
+          {"brand": "BrandD", "mentions": 10000, "channel": "Paid Social"}
+        ],
+        "category_data": {"total_mentions": 100000},
+        "time_period": {"start": "2026-01-01", "end": "2026-01-31"},
+        "competitors": ["BrandA", "BrandB", "BrandC", "BrandD"]
+      },
+      "expected_output": {
+        "brand_a_sov": 45,
+        "brand_b_sov": 30,
+        "must_identify_leader": "BrandA"
+      }
+    },
+    {
+      "test_id": "COMP_SOV_002",
+      "capability": "ANL_SOV_ANALYZE",
+      "description": "Detect SOV trend change",
+      "input": {
+        "brand_mentions": [
+          {"brand": "BrandA", "mentions": 40000, "period": "current"},
+          {"brand": "BrandA", "mentions": 50000, "period": "prior"}
+        ],
+        "category_data": {"total_mentions_current": 100000, "total_mentions_prior": 100000},
+        "time_period": {"current": "2026-01", "prior": "2025-12"}
+      },
+      "expected_output": {
+        "must_detect_decline": true,
+        "change_direction": "Declining"
+      }
+    },
+    {
+      "test_id": "COMP_SPEND_001",
+      "capability": "ANL_COMP_SPEND",
+      "description": "Estimate spend from impression data",
+      "input": {
+        "competitor": "CompetitorX",
+        "signals": [
+          {"channel": "Display", "impressions": 50000000},
+          {"channel": "Video", "impressions": 10000000}
+        ],
+        "cpm_benchmarks": {"Display": 5.0, "Video": 15.0},
+        "category_total": 10000000
+      },
+      "expected_output": {
+        "must_provide_range": true,
+        "display_estimate_mid_approx": 250000,
+        "video_estimate_mid_approx": 150000
+      }
+    },
+    {
+      "test_id": "COMP_SPEND_002",
+      "capability": "ANL_COMP_SPEND",
+      "description": "Handle low confidence data",
+      "input": {
+        "competitor": "CompetitorY",
+        "signals": [
+          {"channel": "TV", "grps": 100, "confidence": "low"}
+        ],
+        "cpm_benchmarks": {},
+        "category_total": null
+      },
+      "expected_output": {
+        "confidence_level": "Low",
+        "must_note_limitations": true
+      }
+    },
+    {
+      "test_id": "COMP_MSG_001",
+      "capability": "MKT_COMP_MESSAGING",
+      "description": "Analyze messaging for 3 competitors",
+      "input": {
+        "messaging_samples": [
+          {"competitor": "Alpha", "headline": "Innovation that moves you forward", "body": "Leading technology for modern enterprises"},
+          {"competitor": "Beta", "headline": "Trusted by millions", "body": "Reliable solutions you can count on"},
+          {"competitor": "Gamma", "headline": "Simple and affordable", "body": "Great value without complexity"}
+        ],
+        "competitors": ["Alpha", "Beta", "Gamma"],
+        "dimensions": ["Innovation vs Traditional", "Premium vs Value"]
+      },
+      "expected_output": {
+        "must_profile_all_competitors": true,
+        "must_create_positioning_map": true,
+        "alpha_position": "Innovation-Premium",
+        "gamma_position": "Traditional-Value"
+      }
+    },
+    {
+      "test_id": "COMP_MSG_002",
+      "capability": "MKT_COMP_MESSAGING",
+      "description": "Identify crowded positioning zone",
+      "input": {
+        "messaging_samples": [
+          {"competitor": "A", "theme": "premium quality"},
+          {"competitor": "B", "theme": "superior quality"},
+          {"competitor": "C", "theme": "highest quality"}
+        ],
+        "competitors": ["A", "B", "C"],
+        "dimensions": ["Quality", "Price"]
+      },
+      "expected_output": {
+        "must_identify_crowded_zone": true,
+        "crowded_theme": "quality"
+      }
+    },
+    {
+      "test_id": "COMP_GAPS_001",
+      "capability": "MKT_COMP_GAPS",
+      "description": "Identify positioning white space",
+      "input": {
+        "positioning_map": {
+          "positions": [
+            {"competitor": "A", "x": 8, "y": 8},
+            {"competitor": "B", "x": 7, "y": 7},
+            {"competitor": "C", "x": 3, "y": 3}
+          ],
+          "dimensions": ["Innovation", "Premium"]
+        },
+        "customer_needs": [
+          {"need": "affordable innovation", "importance": "high", "satisfaction": "low"}
+        ],
+        "brand_capabilities": {"innovation": "strong", "cost_efficiency": "moderate"}
+      },
+      "expected_output": {
+        "must_identify_opportunity": true,
+        "opportunity_zone": "high-innovation, low-premium"
+      }
+    },
+    {
+      "test_id": "COMP_GAPS_002",
+      "capability": "MKT_COMP_GAPS",
+      "description": "Evaluate audience white space",
+      "input": {
+        "positioning_map": {},
+        "customer_needs": [
+          {"segment": "Gen Z", "unmet_needs": ["sustainability", "authenticity"]},
+          {"segment": "Boomers", "unmet_needs": ["simplicity"]}
+        ],
+        "brand_capabilities": {"sustainability": "strong", "digital": "strong"}
+      },
+      "expected_output": {
+        "must_identify_audience_opportunity": true,
+        "recommended_segment": "Gen Z"
+      }
+    }
+  ]
+}

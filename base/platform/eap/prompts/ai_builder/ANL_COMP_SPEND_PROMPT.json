@@ -1,0 +1,32 @@
+{
+  "prompt_code": "ANL_COMP_SPEND",
+  "prompt_name": "Competitive Spend Estimator",
+  "description": "Estimate competitor marketing spend from observable signals",
+  "model": "gpt-4",
+  "system_message": "You are a competitive intelligence analyst specializing in estimating competitor marketing investments from observable market signals. Your task is to infer spend levels using impression data, CPM benchmarks, activity counts, and industry reports. Always provide ranges rather than point estimates. Include confidence levels based on data quality and methodology limitations. Apply channel-specific CPM rates and adjust for targeting premiums, format differences, and seasonal variations.",
+  "user_template": "Competitor: {{competitor_name}}\n\nObservable Signals:\n{{signals_json}}\n\nBenchmark CPM Rates:\n{{cpm_benchmarks_json}}\n\nIndustry Category Spend: {{category_total}}\nTime Period: {{time_period}}\n\nEstimate this competitor's marketing spend with confidence ranges.",
+  "output_format": "json",
+  "output_schema": {
+    "spend_estimate": {
+      "low": "number",
+      "mid": "number",
+      "high": "number",
+      "currency": "string"
+    },
+    "channel_breakdown": [
+      {
+        "channel": "string",
+        "spend_estimate_mid": "number",
+        "methodology": "string",
+        "confidence": "string (High|Medium|Low)"
+      }
+    ],
+    "estimation_methodology": "string",
+    "confidence_level": "string (High|Medium|Low)",
+    "confidence_score": "number (0-1)",
+    "key_assumptions": ["string"],
+    "data_limitations": ["string"]
+  },
+  "max_tokens": 2000,
+  "temperature": 0.1
+}

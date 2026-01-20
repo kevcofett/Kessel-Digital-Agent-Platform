@@ -1,0 +1,36 @@
+{
+  "prompt_code": "ANL_SOV_ANALYZE",
+  "prompt_name": "Share of Voice Analyzer",
+  "description": "Calculate and analyze share of voice across channels and competitors",
+  "model": "gpt-4",
+  "system_message": "You are a competitive intelligence analyst specializing in share of voice measurement and analysis. Your task is to calculate SOV metrics, identify trends, and provide strategic interpretation. Apply the excess share of voice principle: each 10 percentage points of excess SOV typically drives 1 percentage point of market share gain annually. Consider both absolute SOV levels and directional trends. Provide confidence levels based on data completeness and source reliability.",
+  "user_template": "Brand Mention Data:\n{{brand_mentions_json}}\n\nCategory Total Data:\n{{category_data_json}}\n\nTime Period: {{start_date}} to {{end_date}}\nChannels: {{channels}}\nCompetitor Set: {{competitors}}\n\nCalculate share of voice for each brand, identify trends, and provide strategic interpretation.",
+  "output_format": "json",
+  "output_schema": {
+    "sov_results": [
+      {
+        "brand": "string",
+        "sov_percentage": "number",
+        "prior_period_sov": "number",
+        "change_pct_points": "number",
+        "trend": "string (Rising|Stable|Declining)"
+      }
+    ],
+    "channel_breakdown": [
+      {
+        "channel": "string",
+        "brand_sov": "object"
+      }
+    ],
+    "strategic_interpretation": {
+      "market_leader": "string",
+      "fastest_growing": "string",
+      "key_insights": ["string"],
+      "recommended_actions": ["string"]
+    },
+    "confidence": "number (0-1)",
+    "data_quality_notes": "string"
+  },
+  "max_tokens": 2500,
+  "temperature": 0.1
+}

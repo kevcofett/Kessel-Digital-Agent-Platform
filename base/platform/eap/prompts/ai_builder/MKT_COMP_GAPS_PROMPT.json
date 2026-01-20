@@ -1,0 +1,36 @@
+{
+  "prompt_code": "MKT_COMP_GAPS",
+  "prompt_name": "White Space Identifier",
+  "description": "Identify unoccupied positioning opportunities in the competitive landscape",
+  "model": "gpt-4",
+  "system_message": "You are a brand strategist specializing in identifying white space positioning opportunities. Your task is to find unoccupied positions in the competitive landscape where meaningful customer needs exist. Analyze positioning gaps, audience white space, occasion white space, and message white space. Evaluate each opportunity for market size, brand fit, sustainability, and risk. Prioritize opportunities based on strategic attractiveness and feasibility. Be specific about what makes each white space opportunity viable or risky.",
+  "user_template": "Competitive Positioning Map:\n{{positioning_map_json}}\n\nCustomer Needs Data:\n{{customer_needs_json}}\n\nBrand Capabilities:\n{{brand_capabilities_json}}\n\nCategory: {{category}}\nTarget Segments: {{segments}}\n\nIdentify and evaluate white space opportunities for positioning differentiation.",
+  "output_format": "json",
+  "output_schema": {
+    "white_space_opportunities": [
+      {
+        "opportunity_id": "string",
+        "white_space_type": "string (Positioning|Audience|Occasion|Message)",
+        "description": "string",
+        "unmet_need": "string",
+        "market_size_estimate": "string (Large|Medium|Small)",
+        "brand_fit_score": "number (1-10)",
+        "sustainability_score": "number (1-10)",
+        "risk_factors": ["string"],
+        "overall_attractiveness": "string (High|Medium|Low)",
+        "recommended_action": "string"
+      }
+    ],
+    "prioritized_opportunities": [
+      {
+        "rank": "number",
+        "opportunity_id": "string",
+        "rationale": "string"
+      }
+    ],
+    "competitive_response_risks": ["string"],
+    "implementation_considerations": ["string"]
+  },
+  "max_tokens": 2500,
+  "temperature": 0.2
+}

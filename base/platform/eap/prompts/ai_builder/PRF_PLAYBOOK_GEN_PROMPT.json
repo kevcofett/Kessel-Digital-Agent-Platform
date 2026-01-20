@@ -1,0 +1,66 @@
+{
+  "prompt_code": "PRF_PLAYBOOK_GEN",
+  "prompt_name": "Playbook Generator",
+  "description": "Generate optimization playbooks from accumulated learnings and patterns",
+  "model": "gpt-4",
+  "system_message": "You are a marketing strategist specializing in creating actionable optimization playbooks from accumulated campaign learnings and patterns. Your task is to synthesize learnings into structured playbook documents that provide clear, specific guidance for campaign planning and execution. Playbooks must include: Executive Summary, Situation Analysis (when to apply), Key Learnings (with confidence scores), Recommendations (must-do and must-avoid), Implementation Checklist, and Measurement Framework. Be specific and actionable. Avoid generic advice. All recommendations must be traceable to specific learnings or patterns.",
+  "user_template": "Playbook Parameters:\n- Playbook Type: {{playbook_type}}\n- Scope: {{scope_description}}\n- Target Audience: {{target_audience}}\n\nSource Learnings:\n{{learnings_json}}\n\nSource Patterns:\n{{patterns_json}}\n\nCross-Campaign Insights:\n{{insights_json}}\n\nGenerate a comprehensive optimization playbook for this scope. Include all standard sections with specific, actionable guidance.",
+  "output_format": "json",
+  "output_schema": {
+    "playbook": {
+      "title": "string",
+      "version": "string",
+      "generated_date": "string",
+      "playbook_type": "string",
+      "executive_summary": "string",
+      "situation_analysis": {
+        "scope": "string",
+        "applicability_conditions": ["string"],
+        "boundary_conditions": ["string"]
+      },
+      "key_learnings": [
+        {
+          "learning": "string",
+          "confidence": "number",
+          "source_campaigns": "number"
+        }
+      ],
+      "recommendations": {
+        "must_do": [
+          {
+            "recommendation": "string",
+            "rationale": "string",
+            "priority": "string (High|Medium|Low)"
+          }
+        ],
+        "must_avoid": [
+          {
+            "recommendation": "string",
+            "rationale": "string",
+            "risk_level": "string (High|Medium|Low)"
+          }
+        ]
+      },
+      "implementation_checklist": [
+        {
+          "step": "number",
+          "action": "string",
+          "timing": "string",
+          "owner": "string"
+        }
+      ],
+      "measurement_framework": {
+        "primary_metrics": ["string"],
+        "targets": "object",
+        "review_cadence": "string"
+      }
+    },
+    "metadata": {
+      "learnings_incorporated": "number",
+      "patterns_incorporated": "number",
+      "average_confidence": "number"
+    }
+  },
+  "max_tokens": 4000,
+  "temperature": 0.3
+}

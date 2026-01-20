@@ -1,0 +1,219 @@
+{
+  "test_suite": "PRF Learning Extraction",
+  "version": "1.0",
+  "created": "2026-01-20",
+  "test_cases": [
+    {
+      "test_id": "PRF_LEARN_001",
+      "capability": "PRF_LEARNING_EXTRACT",
+      "description": "Extract learnings from high-performing campaign",
+      "input": {
+        "campaign_data": {
+          "campaign_id": "CAMP-2026-001",
+          "channel": "Paid Social",
+          "objective": "Conversions",
+          "duration_days": 30,
+          "budget": 50000
+        },
+        "performance_metrics": {
+          "impressions": 2500000,
+          "clicks": 75000,
+          "conversions": 1500,
+          "ctr": 0.03,
+          "cvr": 0.02,
+          "cpa": 33.33,
+          "roas": 4.5
+        },
+        "benchmarks": {
+          "ctr_benchmark": 0.02,
+          "cvr_benchmark": 0.015,
+          "cpa_benchmark": 45,
+          "roas_benchmark": 3.0
+        }
+      },
+      "expected_output": {
+        "min_learnings": 3,
+        "must_contain_categories": ["Success"],
+        "min_confidence_any": 0.7
+      }
+    },
+    {
+      "test_id": "PRF_LEARN_002",
+      "capability": "PRF_LEARNING_EXTRACT",
+      "description": "Extract learnings from underperforming campaign",
+      "input": {
+        "campaign_data": {
+          "campaign_id": "CAMP-2026-002",
+          "channel": "Display",
+          "objective": "Awareness",
+          "duration_days": 14,
+          "budget": 25000
+        },
+        "performance_metrics": {
+          "impressions": 5000000,
+          "clicks": 25000,
+          "view_through_conversions": 50,
+          "ctr": 0.005,
+          "cpm": 5.0,
+          "viewability": 0.45
+        },
+        "benchmarks": {
+          "ctr_benchmark": 0.008,
+          "cpm_benchmark": 4.0,
+          "viewability_benchmark": 0.70
+        }
+      },
+      "expected_output": {
+        "min_learnings": 2,
+        "must_contain_categories": ["Failure"],
+        "min_confidence_any": 0.6
+      }
+    },
+    {
+      "test_id": "PRF_CROSS_001",
+      "capability": "PRF_INSIGHT_CROSS",
+      "description": "Synthesize insights from 5 campaigns",
+      "input": {
+        "learnings_array": [
+          {"learning_id": "L001", "category": "Success", "context": "Paid Social", "observation": "Video ads 40% higher CTR", "confidence": 0.85},
+          {"learning_id": "L002", "category": "Success", "context": "Paid Social", "observation": "Video ads 35% higher CTR", "confidence": 0.80},
+          {"learning_id": "L003", "category": "Success", "context": "Paid Social", "observation": "Short-form video outperformed", "confidence": 0.75},
+          {"learning_id": "L004", "category": "Failure", "context": "Display", "observation": "Low viewability on programmatic", "confidence": 0.70},
+          {"learning_id": "L005", "category": "Insight", "context": "Search", "observation": "Brand terms cannibalized organic", "confidence": 0.65}
+        ],
+        "campaigns_metadata": [
+          {"campaign_id": "C001", "date": "2025-12-01", "vertical": "Retail"},
+          {"campaign_id": "C002", "date": "2025-12-15", "vertical": "Retail"},
+          {"campaign_id": "C003", "date": "2026-01-01", "vertical": "Retail"},
+          {"campaign_id": "C004", "date": "2026-01-10", "vertical": "Finance"},
+          {"campaign_id": "C005", "date": "2026-01-15", "vertical": "Retail"}
+        ],
+        "min_campaigns": 3
+      },
+      "expected_output": {
+        "min_insights": 2,
+        "must_synthesize_video_pattern": true
+      }
+    },
+    {
+      "test_id": "PRF_CROSS_002",
+      "capability": "PRF_INSIGHT_CROSS",
+      "description": "Handle contradictory learnings",
+      "input": {
+        "learnings_array": [
+          {"learning_id": "L010", "category": "Success", "context": "Email", "observation": "Morning sends higher open rate", "confidence": 0.80},
+          {"learning_id": "L011", "category": "Success", "context": "Email", "observation": "Evening sends higher open rate", "confidence": 0.75}
+        ],
+        "campaigns_metadata": [
+          {"campaign_id": "C010", "date": "2025-11-01", "vertical": "B2B"},
+          {"campaign_id": "C011", "date": "2025-12-01", "vertical": "B2C"}
+        ],
+        "min_campaigns": 2
+      },
+      "expected_output": {
+        "must_flag_contradiction": true,
+        "must_note_contextual_difference": true
+      }
+    },
+    {
+      "test_id": "PRF_PATTERN_001",
+      "capability": "PRF_PATTERN_DETECT",
+      "description": "Detect seasonal pattern in 12-month data",
+      "input": {
+        "historical_data": {
+          "monthly_performance": [
+            {"month": "2025-01", "conversions": 1000},
+            {"month": "2025-02", "conversions": 950},
+            {"month": "2025-03", "conversions": 1100},
+            {"month": "2025-04", "conversions": 1050},
+            {"month": "2025-05", "conversions": 1200},
+            {"month": "2025-06", "conversions": 900},
+            {"month": "2025-07", "conversions": 850},
+            {"month": "2025-08", "conversions": 950},
+            {"month": "2025-09", "conversions": 1100},
+            {"month": "2025-10", "conversions": 1300},
+            {"month": "2025-11", "conversions": 1800},
+            {"month": "2025-12", "conversions": 2200}
+          ]
+        },
+        "start_date": "2025-01-01",
+        "end_date": "2025-12-31",
+        "min_occurrences": 2
+      },
+      "expected_output": {
+        "must_detect_pattern_type": "Seasonal",
+        "must_identify_holiday_peak": true
+      }
+    },
+    {
+      "test_id": "PRF_PATTERN_002",
+      "capability": "PRF_PATTERN_DETECT",
+      "description": "Detect performance pattern - diminishing returns",
+      "input": {
+        "historical_data": {
+          "spend_response": [
+            {"spend": 10000, "conversions": 100},
+            {"spend": 20000, "conversions": 180},
+            {"spend": 30000, "conversions": 240},
+            {"spend": 40000, "conversions": 280},
+            {"spend": 50000, "conversions": 300},
+            {"spend": 60000, "conversions": 310},
+            {"spend": 70000, "conversions": 315}
+          ]
+        },
+        "start_date": "2025-06-01",
+        "end_date": "2025-12-31",
+        "min_occurrences": 3
+      },
+      "expected_output": {
+        "must_detect_pattern_type": "Performance",
+        "must_identify_saturation": true
+      }
+    },
+    {
+      "test_id": "PRF_PLAYBOOK_001",
+      "capability": "PRF_PLAYBOOK_GEN",
+      "description": "Generate channel playbook from learnings",
+      "input": {
+        "playbook_type": "Channel",
+        "scope_description": "Paid Social optimization playbook for Retail vertical",
+        "learnings": [
+          {"learning": "Video ads outperform static by 40% CTR", "confidence": 0.85, "source_campaigns": 5},
+          {"learning": "Lookalike audiences drive 25% lower CPA", "confidence": 0.80, "source_campaigns": 4},
+          {"learning": "Weekend targeting underperforms weekday", "confidence": 0.75, "source_campaigns": 3}
+        ],
+        "patterns": [
+          {"pattern": "Creative fatigue after 2 weeks", "confidence": 0.80}
+        ],
+        "insights": [
+          {"insight": "Retargeting most effective days 3-7 post-visit", "confidence": 0.85}
+        ]
+      },
+      "expected_output": {
+        "must_have_sections": ["executive_summary", "recommendations", "implementation_checklist"],
+        "min_recommendations": 3,
+        "must_reference_learnings": true
+      }
+    },
+    {
+      "test_id": "PRF_PLAYBOOK_002",
+      "capability": "PRF_PLAYBOOK_GEN",
+      "description": "Generate troubleshooting playbook",
+      "input": {
+        "playbook_type": "Troubleshooting",
+        "scope_description": "CPA spike diagnosis and remediation",
+        "learnings": [
+          {"learning": "Audience fatigue causes 30% CPA increase after 4 weeks", "confidence": 0.85, "source_campaigns": 6},
+          {"learning": "Bid strategy changes cause temporary CPA volatility", "confidence": 0.70, "source_campaigns": 3},
+          {"learning": "Creative refresh reduces CPA by 15% average", "confidence": 0.80, "source_campaigns": 5}
+        ],
+        "patterns": [],
+        "insights": []
+      },
+      "expected_output": {
+        "must_have_diagnostic_steps": true,
+        "must_have_remediation_options": true
+      }
+    }
+  ]
+}

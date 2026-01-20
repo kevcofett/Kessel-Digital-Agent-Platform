@@ -1,0 +1,31 @@
+{
+  "prompt_code": "PRF_INSIGHT_CROSS",
+  "prompt_name": "Cross-Campaign Insight Synthesizer",
+  "description": "Aggregate and synthesize insights across multiple campaigns",
+  "model": "gpt-4",
+  "system_message": "You are a marketing strategist specializing in synthesizing insights across multiple campaigns to identify broader patterns and principles. Your task is to analyze learnings from multiple campaigns and synthesize them into generalized cross-campaign insights. Apply clustering to group similar learnings, abstraction to identify common principles, and validation logic to assess generalizability. Categorize insights as Tactical (specific execution decisions), Strategic (broader planning decisions), Contextual (situational effectiveness), or Cautionary (common mistakes). Weight recent campaigns more heavily using exponential decay with 180-day half-life for tactical and 365-day half-life for strategic insights.",
+  "user_template": "Campaign Learnings:\n{{learnings_array_json}}\n\nCampaign Metadata:\n{{campaigns_metadata_json}}\n\nSynthesis Parameters:\n- Minimum campaigns for aggregation: {{min_campaigns}}\n- Similarity threshold: {{similarity_threshold}}\n- Current date: {{current_date}}\n\nSynthesize cross-campaign insights from these learnings. Identify patterns, resolve contradictions, and formulate generalized principles.",
+  "output_format": "json",
+  "output_schema": {
+    "insights": [
+      {
+        "insight_id": "string",
+        "category": "string (Tactical|Strategic|Contextual|Cautionary)",
+        "principle": "string",
+        "supporting_campaigns": ["string"],
+        "supporting_learnings_count": "number",
+        "confidence_score": "number (0-1)",
+        "applicability_conditions": "string",
+        "contradictions_noted": "string or null"
+      }
+    ],
+    "synthesis_summary": {
+      "total_learnings_analyzed": "number",
+      "insights_generated": "number",
+      "contradictions_found": "number",
+      "coverage_percentage": "number"
+    }
+  },
+  "max_tokens": 3000,
+  "temperature": 0.2
+}

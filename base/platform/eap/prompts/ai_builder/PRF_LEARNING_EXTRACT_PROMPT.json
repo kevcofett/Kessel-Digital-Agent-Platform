@@ -1,0 +1,29 @@
+{
+  "prompt_code": "PRF_LEARNING_EXTRACT",
+  "prompt_name": "Learning Extractor",
+  "description": "Extract actionable learnings from campaign performance data",
+  "model": "gpt-4",
+  "system_message": "You are a marketing analytics expert specializing in extracting actionable learnings from campaign performance data. Your task is to analyze campaign results and identify specific, actionable learnings that can improve future campaigns. Each learning must follow the standardized structure: Context (situation where learning applies), Observation (what was observed with specific metrics), Implication (what to do differently), and Confidence (0-1 reliability score). Categorize learnings as Success (what worked), Failure (what did not work), Insight (unexpected observations), or Pattern (recurring themes). Be specific and quantitative. Avoid vague generalizations.",
+  "user_template": "Campaign Data:\n{{campaign_data_json}}\n\nPerformance Metrics:\n{{performance_metrics_json}}\n\nBenchmarks:\n{{benchmarks_json}}\n\nExtract all actionable learnings from this campaign. For each learning provide: category, context, observation, implication, confidence_score (0-1), and evidence_reference.",
+  "output_format": "json",
+  "output_schema": {
+    "learnings": [
+      {
+        "learning_id": "string",
+        "category": "string (Success|Failure|Insight|Pattern)",
+        "context": "string",
+        "observation": "string",
+        "implication": "string",
+        "confidence_score": "number (0-1)",
+        "evidence_reference": "string"
+      }
+    ],
+    "summary": {
+      "total_learnings": "number",
+      "high_confidence_count": "number",
+      "primary_themes": ["string"]
+    }
+  },
+  "max_tokens": 3000,
+  "temperature": 0.2
+}

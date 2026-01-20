@@ -1,0 +1,195 @@
+PROACTIVE INTELLIGENCE SYSTEM
+
+Proactive Intelligence enables agents to surface relevant insights and suggestions without being explicitly asked. This transforms agents from reactive responders to proactive advisors.
+
+PROACTIVE TRIGGER FRAMEWORK
+
+Triggers are conditions that when met generate proactive suggestions:
+
+TRIGGER CATEGORIES
+
+ALERTS - Something needs immediate attention
+- Budget allocation exceeds saturation threshold
+- Performance metric dropped significantly
+- Data quality issue detected
+- Constraint violation identified
+
+OPPORTUNITIES - Potential improvements identified
+- Underutilized channel shows strong benchmark
+- Audience segment has high untapped potential
+- Emerging channel matches objectives well
+- Cost efficiency opportunity detected
+
+RECOMMENDATIONS - Suggested actions based on analysis
+- Consider reallocation based on marginal returns
+- Measurement approach could be improved
+- Additional data would improve confidence
+- Alternative approach may yield better results
+
+WARNINGS - Potential problems ahead
+- Current trajectory misses objectives
+- Assumption may not hold
+- External factor could impact results
+- Timeline risk identified
+
+TRIGGER EVALUATION PROTOCOL
+
+Triggers are evaluated at key moments:
+
+EVALUATION POINTS
+- Session initialization after context loaded
+- After each major input from user
+- After each capability execution
+- Before presenting final recommendations
+
+EVALUATION PROCESS
+1. Load applicable triggers for current agent and context
+2. Evaluate each trigger condition against current state
+3. Filter by cooldown period to avoid repetition
+4. Sort by severity and priority
+5. Present top relevant triggers naturally
+
+TRIGGER CONDITION TYPES
+
+THRESHOLD CONDITIONS
+- Field exceeds or falls below specified value
+- Example - channel_allocation greater than 40 percent triggers saturation warning
+
+Configuration format:
+{
+  "field": "channel_allocation_pct",
+  "operator": "greater_than",
+  "value": 40,
+  "context_filter": {"channel_category": "single_channel"}
+}
+
+COMPARISON CONDITIONS
+- Field compared to benchmark or reference
+- Example - CPM more than 20 percent above vertical benchmark
+
+Configuration format:
+{
+  "field": "cpm",
+  "compare_to": "benchmark.cpm",
+  "operator": "exceeds_by_pct",
+  "threshold_pct": 20
+}
+
+PATTERN CONDITIONS
+- Detected behavioral or data pattern
+- Example - User consistently ignores measurement setup
+
+Configuration format:
+{
+  "pattern_type": "repeated_skip",
+  "pattern_target": "measurement_step",
+  "min_occurrences": 3
+}
+
+ABSENCE CONDITIONS
+- Expected element is missing
+- Example - No attribution model specified for large budget
+
+Configuration format:
+{
+  "required_field": "attribution_model",
+  "when": {"budget": {"greater_than": 100000}},
+  "message": "Large budgets benefit from explicit attribution planning"
+}
+
+MESSAGE PRESENTATION
+
+Proactive messages should feel natural not intrusive:
+
+TIMING
+- Present after completing current response
+- Do not interrupt user mid-thought
+- Group related triggers together
+
+TONE
+- Helpful not alarming unless critical
+- Curious not judgmental
+- Suggestive not demanding
+
+FORMAT
+- Lead with the insight not the trigger
+- Explain relevance to current context
+- Offer to elaborate if interested
+
+GOOD EXAMPLES
+- By the way I noticed your Paid Search allocation is approaching saturation at 38 percent. Marginal returns typically decline above 35 percent. Would you like me to model alternatives?
+
+- Interesting observation - your target CPM of 12 dollars is about 25 percent above the Retail benchmark of 9.60. This might be intentional for premium inventory but wanted to flag it.
+
+- One thing to consider - with a 500K budget an explicit attribution model helps justify spend. Want me to recommend an approach?
+
+BAD EXAMPLES
+- WARNING - Saturation threshold exceeded
+- Your CPM is wrong
+- You forgot to specify attribution
+
+COOLDOWN AND FREQUENCY
+
+Prevent trigger fatigue:
+
+COOLDOWN RULES
+- Same trigger code cannot fire twice within cooldown_hours
+- Related triggers in same category share partial cooldown
+- User dismissal extends cooldown by 2x
+
+FREQUENCY LIMITS
+- Maximum 3 proactive suggestions per response
+- Maximum 1 critical severity per session unless new critical issue
+- Suggestions decrease as session progresses
+
+PRIORITY RESOLUTION
+- Critical severity always surfaces if within limits
+- Higher priority_order takes precedence
+- More specific triggers beat general triggers
+
+AGENT-SPECIFIC TRIGGERS
+
+Each agent has domain-specific triggers:
+
+ANL ANALYTICS TRIGGERS
+- Budget saturation warnings
+- Confidence level alerts
+- Diminishing returns opportunities
+- Data quality concerns
+
+AUD AUDIENCE TRIGGERS
+- Segment overlap warnings
+- LTV opportunity flags
+- Journey stage mismatches
+- Identity resolution gaps
+
+CHA CHANNEL TRIGGERS
+- Benchmark comparison alerts
+- Emerging channel opportunities
+- Mix optimization suggestions
+- Channel conflict warnings
+
+PRF PERFORMANCE TRIGGERS
+- Attribution model recommendations
+- Anomaly detection alerts
+- Incrementality opportunities
+- Measurement gap warnings
+
+LEARNING FROM DISMISSALS
+
+Track user response to improve relevance:
+
+POSITIVE SIGNALS
+- User asks for elaboration
+- User acts on suggestion
+- User thanks for insight
+
+NEGATIVE SIGNALS
+- User dismisses without reading
+- User expresses annoyance
+- User explicitly asks to stop
+
+ADAPTATION
+- Reduce priority for frequently dismissed trigger types
+- Increase priority for engaged trigger types
+- Personalize thresholds based on user tolerance

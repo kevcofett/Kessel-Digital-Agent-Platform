@@ -1,0 +1,175 @@
+MEMORY SYSTEM OVERVIEW
+
+The Memory System enables agents to remember user preferences and session context across conversations. This creates continuity and reduces repetitive information gathering.
+
+MEMORY ARCHITECTURE
+
+The system operates at two levels:
+
+USER PREFERENCES - Long-term memory persisted across all sessions
+- Default vertical and typical objectives
+- Budget ranges and preferred channels
+- Communication style preferences
+- Measurement philosophy
+- Learned behavioral patterns
+
+SESSION MEMORY - Short-term memory within and across recent sessions
+- Current session context and decisions
+- Recent session summaries for continuity
+- Temporary preferences that may become permanent
+
+MEMORY RETRIEVAL PROTOCOL
+
+When a session begins:
+
+STEP 1 - LOAD USER PREFERENCES
+- Query mpa_user_preferences by user_id
+- If exists - apply defaults to session initialization
+- If not exists - create new record with empty defaults
+
+STEP 2 - LOAD RECENT SESSION CONTEXT
+- Query mpa_session_memory for last 5 sessions
+- Filter by is_persistent equals true OR expires_at greater than now
+- Prioritize by confidence_score descending
+
+STEP 3 - APPLY CONTEXT TO CONVERSATION
+- Pre-populate known values silently
+- Reference learned preferences naturally
+- Do not announce that preferences are being applied
+
+MEMORY STORAGE PROTOCOL
+
+During conversation:
+
+EXPLICIT PREFERENCES - User directly states preference
+- Store immediately with confidence 100
+- Mark as is_persistent true
+- Example - User says I always work on Retail campaigns
+
+IMPLICIT PREFERENCES - Detected from behavior
+- Store with confidence based on frequency
+- First occurrence confidence 40
+- Each repeat adds 15 confidence up to 85 max
+- Example - User consistently selects same KPIs
+
+DECISIONS - Choices made during session
+- Store with session scope
+- Mark is_persistent false unless explicitly confirmed
+- Example - User chose 500K budget for this campaign
+
+MEMORY CONFIDENCE FRAMEWORK
+
+Confidence determines how assertively to apply memory:
+
+HIGH CONFIDENCE 80 TO 100
+- Apply automatically without asking
+- Present as known fact
+- Example - Since you typically work in Retail
+
+MEDIUM CONFIDENCE 50 TO 79
+- Suggest as default but allow override
+- Present as assumption to confirm
+- Example - Based on your past campaigns I assume Retail - is that correct
+
+LOW CONFIDENCE BELOW 50
+- Do not auto-apply
+- May mention as option
+- Example - Some users in similar roles prefer Retail
+
+MEMORY DECAY AND REFRESH
+
+Memories age and lose confidence over time:
+
+DECAY RULES
+- Preferences unused for 30 days lose 10 confidence
+- Preferences unused for 90 days lose 25 confidence
+- Preferences contradicted by new behavior lose 30 confidence immediately
+
+REFRESH RULES
+- Each use adds 5 confidence up to original level
+- Explicit confirmation resets to 100 confidence
+- Contradiction resets to 0 and flags for removal
+
+PRIVACY AND TRANSPARENCY
+
+Users can request memory information:
+
+SUPPORTED QUERIES
+- What do you remember about me
+- Clear my preferences
+- Forget that I said X
+- Show my default settings
+
+RESPONSE PROTOCOL
+- Always honor deletion requests immediately
+- Explain what is remembered when asked
+- Never share one users memory with another
+- Log all memory access in telemetry
+
+AGENT INTEGRATION
+
+Each agent contributes to and reads from memory:
+
+ORC ORCHESTRATOR
+- Loads user preferences at session start
+- Stores session-level decisions
+- Manages memory lifecycle
+
+ANL ANALYTICS
+- Remembers typical budget ranges
+- Stores calculation preferences
+- Learns confidence threshold preferences
+
+AUD AUDIENCE
+- Remembers target audience patterns
+- Stores segmentation preferences
+- Learns prioritization tendencies
+
+CHA CHANNEL
+- Remembers channel preferences and exclusions
+- Stores mix optimization history
+- Learns allocation patterns
+
+PRF PERFORMANCE
+- Remembers measurement preferences
+- Stores attribution model choices
+- Learns KPI priorities
+
+MEMORY STORAGE FORMAT
+
+All memory values are stored as JSON:
+
+PREFERENCE EXAMPLE
+{
+  "type": "channel_preference",
+  "value": ["Paid Search", "Paid Social", "CTV"],
+  "context": "frequently selected channels",
+  "learned_from": "session behavior",
+  "first_observed": "2026-01-15",
+  "observation_count": 7
+}
+
+CONTEXT EXAMPLE
+{
+  "type": "session_context",
+  "vertical": "Retail",
+  "budget": 500000,
+  "objectives": ["brand awareness", "consideration"],
+  "constraints": ["no TikTok", "Q2 timing"]
+}
+
+ERROR HANDLING
+
+When memory operations fail:
+
+RETRIEVAL FAILURE
+- Proceed without preferences
+- Do not mention the failure to user
+- Log error in telemetry
+- Continue with standard information gathering
+
+STORAGE FAILURE
+- Retry once after 2 seconds
+- If still fails log error and continue
+- User experience unaffected
+- Memory will be attempted again next session

@@ -1,0 +1,159 @@
+SESSION MANAGEMENT PROTOCOL
+
+The Orchestrator manages session lifecycle including memory integration and continuity across conversations.
+
+SESSION INITIALIZATION
+
+When a new conversation begins:
+
+STEP 1 - IDENTIFY USER
+- Extract user_id from authentication context
+- Query mpa_user_preferences for existing record
+- Note last_session_id for potential continuity
+
+STEP 2 - CHECK FOR SESSION RESUME
+- If user says continue or resume or where were we
+- Load last_session_id from preferences
+- Query mpa_session for that session
+- Present session summary and offer to continue
+
+STEP 3 - LOAD PREFERENCES
+- Apply defaults from user preferences
+- Set communication_style for response formatting
+- Note any excluded_channels for routing
+
+STEP 4 - CREATE NEW SESSION
+- Generate new session_id
+- Create mpa_session record
+- Update last_session_id in user preferences
+- Increment session_count
+
+SESSION CONTINUITY PHRASES
+
+Recognize these as resume requests:
+- Continue where we left off
+- What were we working on
+- Resume my session
+- Pick up from last time
+- Continue our conversation
+- Where did we stop
+
+Response to resume request:
+- Load previous session summary
+- Present key decisions already made
+- Offer to continue or start fresh
+- Example - Last time we were building a 500K Retail campaign and had selected Paid Search and CTV. Would you like to continue from there
+
+SESSION CONTEXT TRACKING
+
+Throughout the session track:
+
+DECISIONS MADE
+- Store each major decision in mpa_session_memory
+- Include decision rationale
+- Note confidence level
+- Example - User selected 500K budget with HIGH confidence
+
+INFORMATION PROVIDED
+- Track what the user has told us
+- Avoid re-asking known information
+- Store as context type memory
+
+AGENT INTERACTIONS
+- Log which agents were consulted
+- Store key outputs for synthesis
+- Enable cross-agent context
+
+SESSION HANDOFF PROTOCOL
+
+When transferring between agents:
+
+CONTEXT PACKAGE FORMAT
+{
+  "session_id": "sess_12345",
+  "user_id": "user_abc",
+  "user_preferences": {
+    "communication_style": "concise",
+    "default_vertical": "Retail"
+  },
+  "session_context": {
+    "vertical": "Retail",
+    "budget": 500000,
+    "objectives": ["brand awareness"]
+  },
+  "decisions_made": [
+    {"type": "budget", "value": 500000, "confidence": "HIGH"}
+  ],
+  "current_step": 3,
+  "requesting_capability": "OPTIMIZE_CHANNEL_MIX"
+}
+
+RECEIVING AGENT PROTOCOL
+- Parse context package
+- Do not re-ask for provided information
+- Reference decisions naturally
+- Example - With your 500K budget I recommend... not What is your budget
+
+SESSION COMPLETION
+
+When session ends or pauses:
+
+STEP 1 - SUMMARIZE SESSION
+- Generate brief summary of progress
+- Note key decisions and open items
+- Store summary in session record
+
+STEP 2 - EXTRACT LEARNINGS
+- Identify potential new preferences
+- Compare to existing preferences
+- Update confidence scores
+
+STEP 3 - STORE PERSISTENT MEMORY
+- Mark important context as persistent
+- Set expiration for temporary items
+- Update user preference record
+
+STEP 4 - OFFER CONTINUITY
+- Tell user they can resume anytime
+- Mention what will be remembered
+- Example - I have saved your progress. You can say continue where we left off anytime to resume.
+
+MULTI-SESSION PATTERNS
+
+Detect and leverage usage patterns:
+
+TIMING PATTERNS
+- User typically works mornings
+- User often returns within 24 hours
+- User works in weekly planning cycles
+
+WORKFLOW PATTERNS
+- User always starts with audience
+- User prefers to see projections before finalizing
+- User typically requests document at end
+
+PREFERENCE PATTERNS
+- User consistently chooses similar budgets
+- User has stable channel preferences
+- User prefers certain measurement approaches
+
+Apply patterns to improve experience:
+- Suggest next logical step based on patterns
+- Pre-populate likely choices
+- Anticipate follow-up questions
+
+ERROR RECOVERY
+
+When session state is corrupted:
+
+SYMPTOMS
+- Session ID not found
+- User preferences mismatch
+- Memory retrieval returns unexpected data
+
+RECOVERY PROTOCOL
+- Log error details
+- Start fresh session
+- Apologize briefly for loss of context
+- Offer to help rebuild key information
+- Example - I apologize but I could not load your previous session. Let me help you get set up quickly.

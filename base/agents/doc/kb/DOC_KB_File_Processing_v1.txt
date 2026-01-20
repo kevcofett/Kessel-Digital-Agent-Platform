@@ -1,0 +1,192 @@
+FILE PROCESSING SYSTEM
+
+The File Processing System enables users to upload structured data files that are automatically parsed and integrated into the planning session.
+
+SUPPORTED FILE TYPES
+
+CSV FILES
+- Campaign performance data
+- Budget allocation tables
+- Audience segment lists
+- Channel performance exports
+- Custom benchmark data
+
+EXCEL FILES
+- Multi-sheet workbooks
+- Formatted budget templates
+- Performance dashboards
+- Planning templates
+- Partner rate cards
+
+PDF FILES
+- RFP documents
+- Campaign briefs
+- Competitive reports
+- Research summaries
+- Strategy documents
+
+PROCESSING WORKFLOW
+
+STEP 1 - FILE RECEPTION
+- User uploads file via chat or SharePoint
+- System detects file type by extension
+- File is queued for processing
+
+STEP 2 - FILE VALIDATION
+- Check file size within limits
+- Verify file is not corrupted
+- Confirm file type matches extension
+- Scan for malicious content
+
+STEP 3 - CONTENT EXTRACTION
+- CSV - Parse rows and columns detect headers
+- Excel - Extract specified sheets identify data ranges
+- PDF - Extract text identify structure
+
+STEP 4 - CONTENT ANALYSIS
+- Identify data type and purpose
+- Map columns to known fields
+- Detect anomalies or issues
+- Generate extraction summary
+
+STEP 5 - SESSION INTEGRATION
+- Populate relevant session fields
+- Store extracted data in session memory
+- Notify user of what was extracted
+- Offer to clarify ambiguities
+
+CSV PROCESSING RULES
+
+HEADER DETECTION
+- First row assumed headers unless all numeric
+- Common header patterns recognized automatically
+- Unknown headers flagged for user confirmation
+
+COLUMN MAPPING
+Recognized columns and mappings:
+- channel OR media OR platform maps to channel_name
+- spend OR budget OR cost maps to budget_amount
+- impressions OR imps maps to impressions
+- clicks maps to clicks
+- conversions OR conv maps to conversions
+- cpm OR cost_per_mille maps to cpm
+- cpc OR cost_per_click maps to cpc
+- cpa OR cost_per_acquisition maps to cpa
+- roas OR return_on_ad_spend maps to roas
+- date OR period OR month maps to date_period
+
+DATA VALIDATION
+- Numeric columns checked for valid numbers
+- Date columns parsed with common formats
+- Currency symbols stripped from numbers
+- Percentage signs handled appropriately
+
+EXCEL PROCESSING RULES
+
+SHEET SELECTION
+- If single sheet process entire sheet
+- If multiple sheets look for these names first
+  - Summary or Overview or Dashboard
+  - Data or Raw Data or Export
+  - Budget or Spend or Allocation
+- Otherwise process first sheet
+
+DATA RANGE DETECTION
+- Find contiguous data block
+- Identify header row
+- Skip empty rows and columns
+- Handle merged cells by unmerging
+
+FORMULA HANDLING
+- Extract calculated values not formulas
+- Note where formulas exist
+- Flag circular references
+
+PDF PROCESSING RULES
+
+TEXT EXTRACTION
+- Extract all readable text
+- Preserve paragraph structure
+- Identify headers and sections
+- Handle multi-column layouts
+
+TABLE DETECTION
+- Identify tabular data in PDF
+- Extract to structured format
+- Map columns as with CSV
+
+KEY INFORMATION EXTRACTION
+- Campaign objectives
+- Budget figures
+- Timeline dates
+- Target audience descriptions
+- KPI targets
+- Constraints and requirements
+
+EXTRACTION SUMMARY FORMAT
+
+After processing present summary to user:
+
+EXAMPLE SUMMARY
+I extracted the following from your file:
+
+FILE: Q4_Campaign_Performance.csv
+ROWS: 12 channel records
+DATE RANGE: October 2025 to December 2025
+
+EXTRACTED DATA:
+- Total Budget: $450,000
+- Channels: 8 unique channels identified
+- Top Channel by Spend: Paid Search ($125,000)
+- Performance Metrics: Impressions, Clicks, Conversions, ROAS
+
+MAPPED TO SESSION:
+- Historical performance baseline
+- Channel preference signals
+- Budget range reference
+
+NEEDS CLARIFICATION:
+- Column labeled Target unclear - is this target CPA or target audience?
+
+Shall I proceed with this data or would you like to review the details?
+
+ERROR HANDLING
+
+FILE TOO LARGE
+- Maximum 10MB for CSV
+- Maximum 25MB for Excel
+- Maximum 50MB for PDF
+- Suggest splitting or summarizing
+
+PARSING FAILURE
+- Log specific error
+- Provide user-friendly explanation
+- Suggest alternative approaches
+- Offer manual data entry option
+
+AMBIGUOUS DATA
+- Present interpretation to user
+- Ask clarifying questions
+- Do not assume - confirm
+
+MISSING EXPECTED DATA
+- Note what was expected but not found
+- Ask if data exists elsewhere
+- Proceed with available data
+
+SECURITY CONSIDERATIONS
+
+CONTENT SCANNING
+- No executable content allowed
+- Macro-enabled files rejected
+- External links flagged
+
+DATA PRIVACY
+- Extracted data stays in session
+- No permanent storage without consent
+- User can request deletion
+
+AUDIT LOGGING
+- Log file uploads
+- Log extraction results
+- Track data lineage

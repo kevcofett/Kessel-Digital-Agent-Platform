@@ -1,0 +1,231 @@
+EAP KNOWLEDGE BASE - TELEMETRY AND OBSERVABILITY STANDARDS
+
+OVERVIEW
+
+This document defines telemetry standards for the Enterprise Agent Platform. All agents must log interactions to the eap_telemetry table following these specifications. Telemetry enables performance measurement, quality improvement, and operational monitoring across the platform.
+
+TELEMETRY PRINCIPLES
+
+Every capability invocation must be logged regardless of success or failure. Telemetry records provide the foundation for understanding agent behavior, identifying improvement opportunities, and measuring quality over time. Without telemetry, optimization is guesswork.
+
+Logging must not impact user experience. Telemetry operations execute asynchronously after response delivery. Failed telemetry writes must not cause capability failures. The user interaction takes priority over observability.
+
+All telemetry data must be queryable for analysis. Use consistent field names, data types, and value formats across all agents. Standardization enables cross-agent analysis and platform-wide dashboards.
+
+REQUIRED TELEMETRY FIELDS
+
+SESSION IDENTIFICATION
+
+- session_id: Unique identifier for the user session. Format as GUID. Required for every record. Enables grouping all interactions within a single conversation.
+
+- turn_number: Sequential integer starting at 1 for each session. Increment for each user message processed. Enables ordering interactions chronologically within a session.
+
+- timestamp: UTC datetime when the capability execution began. Use ISO 8601 format. Required for every record. Enables time-based analysis and latency calculation.
+
+ROUTING TELEMETRY
+
+- user_intent: Classified intent from the user message. Maximum 500 characters. Use standardized intent codes where applicable. Examples include BUDGET_OPTIMIZATION, AUDIENCE_SEGMENTATION, CHANNEL_RECOMMENDATION, DOCUMENT_GENERATION.
+
+- routed_agent: Agent code that handled the request. Use standard codes ANL, AUD, CHA, SPO, DOC, PRF, CST, CHG, MKT, ORC. Required for every record.
+
+- capability_code: Specific capability invoked. Use registered capability codes from eap_capability table. Examples include ANL_BUDGET_OPTIMIZE, AUD_PROPENSITY_SCORE, PRF_ANOMALY_DETECT.
+
+EXECUTION TELEMETRY
+
+- implementation_type: How the capability was executed. Valid values are ML_ENDPOINT, AI_BUILDER, AZURE_FUNCTION, DATAVERSE_QUERY, POWER_FX. Required for every capability invocation.
+
+- endpoint_url: Full URL called for ML_ENDPOINT or AZURE_FUNCTION types. Null for other implementation types. Enables endpoint-specific performance analysis.
+
+- latency_ms: Total execution time in milliseconds from request received to response ready. Required for every record. Calculate as difference between start and end timestamps.
+
+- status_code: HTTP status code for external calls or internal status indicator. Use 200 for success, 400 for bad request, 500 for internal error. Required for every record.
+
+- error_message: Description of error if status_code indicates failure. Maximum 1000 characters. Null for successful executions. Include actionable detail for debugging.
+
+KNOWLEDGE RETRIEVAL TELEMETRY
+
+- kb_chunks_retrieved: JSON array of KB chunk identifiers retrieved for the request. Format as array of objects with chunk_id and relevance_score. Example format is shown below.
+
+Example kb_chunks_retrieved format:
+- chunk_id: ANL_KB_Budget_Optimization_v1_chunk_003
+- relevance_score: 0.89
+- chunk_id: EAP_KB_Data_Provenance_v1_chunk_012
+- relevance_score: 0.76
+
+- retrieval_latency_ms: Time spent on knowledge base retrieval specifically. Subset of total latency_ms. Enables RAG performance optimization.
+
+TOKEN USAGE TELEMETRY
+
+- input_tokens: Count of tokens in the prompt sent to the model. Required for AI_BUILDER implementation type. Enables cost tracking and prompt optimization.
+
+- output_tokens: Count of tokens in the model response. Required for AI_BUILDER implementation type. Enables cost tracking and response length analysis.
+
+QUALITY TELEMETRY
+
+- confidence_level: Model confidence in the response. Decimal between 0 and 1. Extract from capability response where available. Null if capability does not provide confidence.
+
+- user_feedback: User rating of the response. Valid values are thumbs_up, thumbs_down, none. Default to none. Update when user provides explicit feedback.
+
+TELEMETRY LOGGING PROCEDURE
+
+STEP ONE - CAPTURE START TIME
+
+Before invoking any capability, record the start timestamp. Use UTC time. Store in variable for latency calculation.
+
+STEP TWO - EXECUTE CAPABILITY
+
+Call the capability through the appropriate implementation. Capture the full response including any confidence scores. Catch and log any errors without failing the user request.
+
+STEP THREE - CALCULATE METRICS
+
+After capability returns, calculate latency_ms as the difference between current time and start time. Extract confidence_level from response if available. Determine status_code from response or error state.
+
+STEP FOUR - WRITE TELEMETRY RECORD
+
+Call MPA_Telemetry_Logger flow with all captured fields. Execute asynchronously to avoid blocking response delivery. Do not wait for telemetry write confirmation before returning response to user.
+
+STEP FIVE - HANDLE TELEMETRY FAILURES
+
+If telemetry write fails, log error to application logs but do not impact user experience. Implement retry logic for transient failures. Alert operations team if telemetry failure rate exceeds threshold.
+
+TELEMETRY ANALYSIS QUERIES
+
+AGENT PERFORMANCE SUMMARY
+
+Query eap_telemetry grouped by routed_agent to see volume, average latency, and success rate per agent. Filter by date range for trend analysis. Identify agents with degraded performance.
+
+Key metrics per agent:
+- Total invocations
+- Average latency_ms
+- 95th percentile latency_ms
+- Success rate as percentage with status_code 200
+- Average confidence_level
+
+CAPABILITY PERFORMANCE SUMMARY
+
+Query eap_telemetry grouped by capability_code to see which capabilities are most used and their performance characteristics. Compare ML_ENDPOINT versus AI_BUILDER performance for same capabilities.
+
+Key metrics per capability:
+- Invocation count
+- Average latency_ms by implementation_type
+- Error rate by implementation_type
+- Average confidence_level
+
+RAG RETRIEVAL ANALYSIS
+
+Query kb_chunks_retrieved to identify most frequently retrieved KB chunks. Calculate average relevance_score by chunk. Identify chunks with low relevance scores that may need content improvement.
+
+Key metrics for RAG:
+- Chunk retrieval frequency
+- Average relevance_score per chunk
+- Retrieval latency distribution
+- Correlation between retrieval count and response quality
+
+USER FEEDBACK ANALYSIS
+
+Query user_feedback to understand response quality from user perspective. Correlate thumbs_down with specific agents, capabilities, or KB chunks. Prioritize improvements based on negative feedback patterns.
+
+Key metrics for feedback:
+- Feedback rate as percentage of interactions with feedback
+- Thumbs up ratio
+- Thumbs down by agent
+- Thumbs down by capability
+
+LATENCY ANALYSIS
+
+Query latency_ms distribution to identify performance bottlenecks. Compare latency by implementation_type. Set performance budgets and alert on threshold violations.
+
+Latency targets:
+- ML_ENDPOINT calls should complete under 3000ms
+- AI_BUILDER calls should complete under 5000ms
+- DATAVERSE_QUERY calls should complete under 500ms
+- Total user-facing latency should be under 8000ms
+
+BRAINTRUST INTEGRATION
+
+SCORER DEFINITIONS
+
+The platform uses Braintrust for systematic quality evaluation. Scorers measure specific quality dimensions against golden test cases.
+
+Routing Accuracy Scorer measures whether user requests route to the correct agent. Compare routed_agent against expected_agent from test case. Target is 98 percent accuracy.
+
+RAG Retrieval Scorer measures whether relevant KB chunks are retrieved for requests. Compare kb_chunks_retrieved against expected chunks. Evaluate relevance_score distribution. Target is 95 percent retrieval of expected chunks.
+
+Capability Accuracy Scorer measures whether the correct capability is invoked. Compare capability_code against expected_capability from test case. Target is 97 percent accuracy.
+
+Response Quality Scorer measures whether response contains expected content. Check expected_output_contains fields against actual response. Target is 90 percent content match.
+
+Confidence Calibration Scorer measures whether confidence_level correlates with actual correctness. High confidence should indicate correct responses. Target is positive correlation above 0.7.
+
+Proactive Intelligence Scorer measures whether proactive triggers fire appropriately. Evaluate trigger precision and recall against labeled scenarios. Target is 85 percent F1 score.
+
+EVALUATION CADENCE
+
+Run automated evaluation against golden test cases daily. Execute full test suite of 52 scenarios. Generate scorecard with pass rates per scorer. Alert on degradation below targets.
+
+Weekly analysis reviews trends across evaluation runs. Identify systematic issues requiring attention. Prioritize improvements based on impact and effort.
+
+Monthly calibration updates test cases based on evolving requirements. Add new scenarios for new capabilities. Retire outdated scenarios. Maintain minimum 50 active test cases.
+
+GOLDEN TEST CASE MANAGEMENT
+
+Test cases live in eap_test_case table and eap_test_case_golden_seed.csv file. Each test case specifies input, expected routing, expected capability, and expected output patterns.
+
+Test case categories include:
+- ROUTING tests verify intent classification and agent routing
+- WORKFLOW tests verify multi-agent orchestration
+- ML_ENDPOINT tests verify ML endpoint integration
+- CAPABILITY tests verify individual capability execution
+- MEMORY tests verify preference storage and retrieval
+- PROACTIVE tests verify trigger evaluation
+- MULTIMODAL tests verify file processing
+- CONSENSUS tests verify collaborative workflows
+- EDGE_CASE tests verify graceful handling of unusual inputs
+- FRAMEWORK tests verify consulting framework application
+- DOCUMENT tests verify document generation
+- VERTICAL tests verify industry context application
+- PATHWAY tests verify workflow pathway selection
+
+ALERTING AND MONITORING
+
+PERFORMANCE ALERTS
+
+Configure alerts for latency threshold violations. Alert when 95th percentile latency exceeds target for any agent or capability. Escalate persistent violations to engineering team.
+
+Configure alerts for error rate spikes. Alert when error rate exceeds 5 percent over rolling 1 hour window. Include error_message patterns in alert for diagnosis.
+
+QUALITY ALERTS
+
+Configure alerts for evaluation score degradation. Alert when any scorer drops below target threshold. Include affected test cases in alert for investigation.
+
+Configure alerts for negative feedback spikes. Alert when thumbs_down rate exceeds 10 percent over rolling 24 hours. Group by agent and capability for targeted response.
+
+OPERATIONAL DASHBOARDS
+
+Create Power BI dashboard for telemetry visualization. Include real-time metrics for active monitoring. Include historical trends for capacity planning.
+
+Dashboard sections should include:
+- Platform health summary with current status indicators
+- Agent performance comparison with latency and success rate
+- Capability usage trends with volume over time
+- RAG performance with retrieval metrics
+- User feedback summary with sentiment trends
+- Evaluation scorecard with latest test results
+
+TELEMETRY RETENTION
+
+Retain detailed telemetry for 90 days in Dataverse. Archive older records to Azure Data Lake for long-term analysis. Maintain aggregated metrics indefinitely for trend analysis.
+
+Personally identifiable information must be excluded from telemetry. Do not log user names, email addresses, or conversation content. Log only operational metrics and identifiers.
+
+CONTINUOUS IMPROVEMENT CYCLE
+
+Use telemetry insights to drive systematic improvement. Identify lowest performing capabilities each week. Prioritize improvements based on volume and quality impact. Validate improvements through A/B testing where feasible.
+
+The improvement cycle follows these phases:
+- Measure current performance through telemetry analysis
+- Identify improvement opportunities from quality gaps
+- Implement changes to prompts, KB, or code
+- Validate improvement through evaluation runs
+- Monitor production impact through telemetry
+- Iterate based on results

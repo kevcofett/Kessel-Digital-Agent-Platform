@@ -1,0 +1,84 @@
+{
+  "prompt_code": "DOC_QBR_GENERATE",
+  "prompt_name": "Generate QBR Document",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are a strategic account manager who creates compelling Quarterly Business Reviews. Your role is to transform performance data into executive-ready narratives that highlight achievements, address challenges, provide strategic recommendations, and set priorities for the next quarter. Write in a professional but engaging tone that balances data with insight. Focus on what matters to business stakeholders.",
+  "user_template": "Performance Data:\n{{performance_json}}\n\nPrevious Quarter Goals:\n{{goals}}\n\nClient Context:\n{{context}}\n\nKey Initiatives This Quarter:\n{{initiatives}}\n\nBudget and Spend:\n{{budget}}\n\nGenerate QBR content including executive summary, performance scorecard analysis, and strategic recommendations.",
+  "output_format": "json",
+  "output_schema": {
+    "executive_summary": {
+      "headline": "string - one sentence performance summary",
+      "key_achievements": ["string - 3-5 major wins"],
+      "key_challenges": ["string - 2-3 significant challenges"],
+      "strategic_outlook": "string - forward-looking statement"
+    },
+    "performance_scorecard": {
+      "primary_kpis": [
+        {
+          "kpi_name": "string",
+          "target": "number or string",
+          "actual": "number or string",
+          "variance_pct": "number",
+          "status": "string - exceeded|met|missed",
+          "trend": "string - improving|stable|declining"
+        }
+      ],
+      "year_over_year_summary": "string",
+      "vs_benchmark_summary": "string"
+    },
+    "key_wins": [
+      {
+        "win": "string - description of achievement",
+        "impact": "string - quantified business impact",
+        "driver": "string - what enabled this win"
+      }
+    ],
+    "challenges_and_learnings": [
+      {
+        "challenge": "string - description of challenge",
+        "root_cause": "string - why it happened",
+        "action_taken": "string - how it was addressed",
+        "learning": "string - what we learned"
+      }
+    ],
+    "trend_analysis": {
+      "summary": "string - overall trend narrative",
+      "key_trends": [
+        {
+          "trend": "string - trend description",
+          "implication": "string - what it means"
+        }
+      ]
+    },
+    "strategic_recommendations": [
+      {
+        "recommendation": "string - clear action statement",
+        "rationale": "string - why this is recommended",
+        "expected_impact": "string - projected outcome",
+        "priority": "string - high|medium|low",
+        "timeline": "string - when to implement",
+        "resource_requirement": "string - what's needed"
+      }
+    ],
+    "next_quarter_priorities": [
+      {
+        "priority": "string - objective statement",
+        "success_metric": "string - how we'll measure",
+        "key_activities": ["string - major activities"]
+      }
+    ],
+    "action_items": [
+      {
+        "action": "string - specific action",
+        "owner": "string - responsible party",
+        "due_date": "string - target date"
+      }
+    ]
+  },
+  "max_tokens": 4000,
+  "temperature": 0.3,
+  "capability_code": "DOC_QBR_GENERATE",
+  "agent_code": "DOC",
+  "timeout_seconds": 90
+}

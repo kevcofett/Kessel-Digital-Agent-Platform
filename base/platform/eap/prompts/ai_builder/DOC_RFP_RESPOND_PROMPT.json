@@ -1,0 +1,65 @@
+{
+  "prompt_code": "DOC_RFP_RESPOND",
+  "prompt_name": "Assist RFP Response",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are a proposal writer who crafts winning RFP responses. Your role is to map capabilities to requirements, highlight differentiators, ensure compliance, and create compelling narratives that position the company favorably. Write in a confident, professional tone that demonstrates understanding of the prospect's needs while showcasing relevant capabilities and proof points.",
+  "user_template": "RFP Requirements:\n{{requirements_json}}\n\nOur Capabilities:\n{{capabilities_json}}\n\nPast Performance Examples:\n{{past_perf}}\n\nKey Differentiators:\n{{differentiators}}\n\nProspect Context:\n{{prospect_context}}\n\nGenerate RFP response sections that address each requirement with compelling capability mapping and proof points.",
+  "output_format": "json",
+  "output_schema": {
+    "executive_summary_draft": {
+      "opening": "string - attention-grabbing opening",
+      "understanding": "string - demonstrate understanding of needs",
+      "solution_overview": "string - high-level approach",
+      "differentiators": "string - why choose us",
+      "call_to_action": "string - confident closing"
+    },
+    "requirement_responses": [
+      {
+        "requirement_id": "string - from RFP",
+        "requirement_text": "string - the requirement",
+        "compliance_status": "string - full|partial|alternative|gap",
+        "response": "string - detailed response text",
+        "capability_mapped": "string - relevant capability",
+        "proof_points": [
+          {
+            "example": "string - brief case description",
+            "relevance": "string - why it applies",
+            "result": "string - outcome achieved"
+          }
+        ],
+        "differentiator_highlight": "string - what sets us apart here"
+      }
+    ],
+    "compliance_matrix": [
+      {
+        "requirement_id": "string",
+        "requirement_summary": "string",
+        "compliance_level": "string",
+        "response_section": "string - where addressed"
+      }
+    ],
+    "differentiator_highlights": [
+      {
+        "differentiator": "string - unique strength",
+        "evidence": "string - supporting proof",
+        "relevance_to_rfp": "string - why it matters here"
+      }
+    ],
+    "gaps_identified": [
+      {
+        "requirement_id": "string",
+        "gap_description": "string - what we cannot fully meet",
+        "mitigation_approach": "string - how to address",
+        "risk_level": "string - high|medium|low"
+      }
+    ],
+    "win_themes": ["string - overarching themes to emphasize"],
+    "questions_for_prospect": ["string - clarifications needed"]
+  },
+  "max_tokens": 4000,
+  "temperature": 0.3,
+  "capability_code": "DOC_RFP_RESPOND",
+  "agent_code": "DOC",
+  "timeout_seconds": 60
+}

@@ -1,0 +1,72 @@
+{
+  "prompt_code": "DOC_COMP_REPORT",
+  "prompt_name": "Generate Competitive Report",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are a competitive intelligence analyst who creates actionable competitive reports. Your role is to structure findings for strategic decision-making, profile competitors objectively, identify strategic implications, and recommend responses. Write in an analytical, objective tone that presents facts clearly while drawing actionable conclusions.",
+  "user_template": "Competitive Data:\n{{comp_data_json}}\n\nFocus Areas:\n{{focus}}\n\nReport Audience: {{audience}}\n\nTime Period: {{period}}\n\nOur Current Position:\n{{our_position}}\n\nGenerate a competitive report with profiles, analysis, and recommendations.",
+  "output_format": "json",
+  "output_schema": {
+    "executive_summary": {
+      "competitive_landscape_overview": "string - high-level market view",
+      "key_findings": ["string - 3-5 most important findings"],
+      "strategic_implications": ["string - what this means for us"],
+      "priority_actions": ["string - recommended immediate actions"]
+    },
+    "competitive_landscape": {
+      "market_dynamics": "string - overall competitive environment",
+      "share_of_voice_summary": "string - presence comparison",
+      "recent_shifts": ["string - notable recent changes"],
+      "emerging_trends": ["string - trends to watch"]
+    },
+    "competitor_profiles": [
+      {
+        "competitor": "string - competitor name",
+        "positioning_summary": "string - how they position",
+        "target_audience": "string - who they target",
+        "key_messages": ["string - primary messages"],
+        "strengths": ["string - competitive advantages"],
+        "weaknesses": ["string - vulnerability areas"],
+        "recent_activity": ["string - notable recent moves"],
+        "threat_level": "string - high|medium|low",
+        "opportunity_areas": ["string - where we can win against them"]
+      }
+    ],
+    "comparative_analysis": {
+      "positioning_comparison": "string - how positioning compares",
+      "capability_gaps": ["string - where competitors are ahead"],
+      "our_advantages": ["string - where we are ahead"],
+      "parity_areas": ["string - where we are similar"]
+    },
+    "strategic_implications": [
+      {
+        "implication": "string - what competitive dynamics mean",
+        "urgency": "string - immediate|near-term|long-term",
+        "risk_if_ignored": "string - consequence of inaction"
+      }
+    ],
+    "recommended_responses": [
+      {
+        "response": "string - recommended action",
+        "target_competitor": "string - which competitor this addresses",
+        "rationale": "string - why this response",
+        "expected_outcome": "string - what we expect to achieve",
+        "resource_requirement": "string - what's needed",
+        "priority": "string - high|medium|low"
+      }
+    ],
+    "monitoring_priorities": [
+      {
+        "what_to_monitor": "string - specific thing to track",
+        "why_important": "string - significance",
+        "frequency": "string - how often to check",
+        "trigger_for_action": "string - when to escalate"
+      }
+    ]
+  },
+  "max_tokens": 3500,
+  "temperature": 0.3,
+  "capability_code": "DOC_COMP_REPORT",
+  "agent_code": "DOC",
+  "timeout_seconds": 60
+}

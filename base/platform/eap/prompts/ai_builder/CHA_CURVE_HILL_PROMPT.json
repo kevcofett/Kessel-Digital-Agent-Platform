@@ -1,0 +1,34 @@
+{
+  "prompt_code": "CHA_CURVE_HILL",
+  "prompt_name": "Hill Function Fitter",
+  "model": "gpt-4",
+  "system_message": "You are a marketing scientist specializing in response curve modeling using Hill functions (Emax models). Your role is to fit Hill functions to marketing spend and response data, estimate parameters with confidence intervals, and assess model fit quality. You provide clear interpretation of Emax, EC50, and Hill coefficient parameters. You identify potential fitting issues and recommend data improvements when needed.",
+  "user_template": "Spend and Response Data:\n{{spend_response_data_json}}\n\nChannel: {{channel_name}}\n\nTime Period: {{time_period}}\n\nFit a Hill function to this data. Estimate Emax, EC50, and n parameters. Provide goodness of fit metrics and parameter confidence intervals. Identify any data quality concerns that may affect fit reliability.",
+  "output_format": "json",
+  "output_schema": {
+    "curve_parameters": {
+      "Emax": "number",
+      "Emax_ci_95": ["number", "number"],
+      "EC50": "number",
+      "EC50_ci_95": ["number", "number"],
+      "n": "number",
+      "n_ci_95": ["number", "number"]
+    },
+    "fit_metrics": {
+      "r_squared": "number",
+      "rmse": "number",
+      "mape": "number",
+      "aic": "number"
+    },
+    "interpretation": {
+      "maximum_response": "string",
+      "half_saturation_spend": "string",
+      "curve_steepness": "string",
+      "fit_quality_assessment": "string"
+    },
+    "data_quality_flags": ["string"],
+    "recommendations": ["string"]
+  },
+  "max_tokens": 2000,
+  "temperature": 0.1
+}

@@ -1,929 +1,260 @@
-DOCUMENT: PRF_KB_Advanced_Attribution_v1.txt
-CATEGORY: Performance Knowledge Base
-TOPICS: shapley value, time decay, markov chain, position based, advanced attribution, game theory, multi-touch attribution
-VERSION: 1.0
-DATE: January 2026
-STATUS: Production Ready
-COMPLIANCE: 6-Rule Compliant
-RELATED: PRF_KB_Attribution_Models_v1, ANL_KB_Statistical_Tests_v1, PRF_KB_Incrementality_Methods_v1
+PRF KNOWLEDGE BASE - ADVANCED ATTRIBUTION METHODS
 
-PRF ADVANCED ATTRIBUTION MODELS v1
+OVERVIEW
 
-PURPOSE
+This document provides comprehensive methodology for advanced multi-touch attribution models. These methods go beyond simple last-click or first-click attribution to fairly allocate conversion credit across all touchpoints in the customer journey. Advanced attribution enables data-driven budget optimization by understanding true channel contribution.
 
-This document provides comprehensive guidance on advanced attribution methodologies including Shapley Value, Time-Decay with configurable half-lives, Markov Chain analysis, and Position-Based models with custom weighting schemes. Reference when users need sophisticated multi-touch attribution beyond basic rule-based models.
+ATTRIBUTION FUNDAMENTALS
 
-OVERVIEW OF ADVANCED ATTRIBUTION
+Attribution assigns credit for conversions to marketing touchpoints. A touchpoint is any interaction between customer and brand including ad impressions, clicks, site visits, email opens, and offline contacts. The goal is understanding which touchpoints actually influenced the conversion decision.
 
-EVOLUTION FROM BASIC MODELS
+Single-touch models like last-click or first-click are simple but misleading. They ignore all other touchpoints in the journey. A customer may see 12 ads across 5 channels before converting, but last-click gives 100 percent credit to the final touchpoint. This undervalues awareness-building channels and overvalues closing channels.
 
-Basic attribution models (last-click, first-click, linear) provide simplistic allocation that often misrepresents true channel contribution. Advanced models address these limitations through:
-
-- Game-theoretic fairness (Shapley Value)
-- Temporal influence modeling (Time-Decay)
-- Probabilistic path analysis (Markov Chain)
-- Configurable position weighting (Position-Based variants)
-
-Each advanced model offers unique advantages depending on customer journey complexity, data availability, and analytical objectives.
-
-WHEN TO USE ADVANCED MODELS
-
-Use advanced attribution when:
-- Customer journeys involve 4 or more touchpoints on average
-- Cross-channel interactions are common
-- Budget allocation decisions require defensible methodology
-- Stakeholders question basic model validity
-- Need to quantify channel synergies
-
-Do not use when:
-- Conversion volume is below 100 monthly
-- Path data quality is poor or incomplete
-- Simple single-touch model meets business needs
-- Real-time optimization is the only requirement
-
-
+Multi-touch attribution distributes credit across all touchpoints. The challenge is determining fair distribution. Different models make different assumptions about how touchpoints influence conversions. No model is universally correct. Choose based on business context and available data.
 
 SHAPLEY VALUE ATTRIBUTION
 
 THEORETICAL FOUNDATION
 
-Shapley Value attribution originates from cooperative game theory, developed by Lloyd Shapley in 1953. The method provides mathematically proven fair allocation based on marginal contribution.
+Shapley values come from cooperative game theory. They provide the unique attribution method satisfying four fairness axioms. Lloyd Shapley won the Nobel Prize for this work. Applied to marketing, each channel is a player and the conversion is the prize to be divided fairly.
 
-Core Principle: Each channel receives credit proportional to its average marginal contribution across all possible orderings of channels in the customer journey.
+The four Shapley axioms are:
+- Efficiency: Total credit equals total conversions. No credit is lost or created.
+- Symmetry: Channels with identical contributions receive identical credit.
+- Null player: Channels that contribute nothing receive no credit.
+- Additivity: Credit for combined campaigns equals sum of individual credits.
 
-Fairness Properties:
+No other attribution method satisfies all four axioms. This makes Shapley values the theoretically fairest attribution approach.
 
-- Efficiency: Total credit equals total conversions
-- Symmetry: Channels with identical contributions receive identical credit
-- Linearity: Credit allocation is additive across conversions
-- Null Player: Channels with zero marginal contribution receive zero credit
+CALCULATION METHOD
 
-These properties make Shapley Value the only attribution method satisfying all mathematical fairness axioms.
+Shapley value for channel i equals the weighted average of marginal contributions across all possible orderings. The marginal contribution is how much adding channel i increases the conversion probability given channels already present.
 
-CALCULATION METHODOLOGY
+For n channels, there are n factorial possible orderings. Calculate the marginal contribution of channel i in each ordering. Average these contributions with equal weight per ordering. This is computationally expensive but guaranteed fair.
 
-Step 1 - Identify Coalition Space
-
-List all possible subsets (coalitions) of channels that could contribute to conversion. For n channels, there are 2^n possible coalitions.
-
-Example with 3 channels (Paid Search, Display, Email):
-- Empty set
-- Paid Search alone
-- Display alone
-- Email alone
-- Paid Search plus Display
-- Paid Search plus Email
-- Display plus Email
-- Paid Search plus Display plus Email
-
-Step 2 - Calculate Coalition Values
-
-Determine conversion value for each coalition. This requires either:
-- Historical path data showing conversions by channel combination
-- Counterfactual modeling estimating conversions without specific channels
-
-Coalition values must represent incremental contribution, not correlated outcomes.
-
-Step 3 - Compute Marginal Contributions
-
-For each channel, calculate marginal contribution when added to each coalition not containing it.
-
-Marginal Contribution = V(S union i) minus V(S)
-
-Where:
-- V(S) is value of coalition S without channel i
-- V(S union i) is value of coalition S with channel i
-
-Step 4 - Calculate Shapley Value
-
-Average marginal contributions across all orderings, weighted by coalition size.
-
-Formula:
-phi(i) = sum over all S not containing i of:
-[|S|! times (n minus |S| minus 1)!] divided by n! times [V(S union i) minus V(S)]
-
-Where:
-- phi(i) is Shapley Value for channel i
-- n is total number of channels
-- |S| is size of coalition S
+The formula for Shapley value of channel i is:
+- Sum over all subsets S not containing i
+- Weight each subset by factorial of size of S times factorial of n minus size of S minus 1
+- Divide by factorial of n
+- Multiply by marginal contribution of i to subset S
 
 PRACTICAL IMPLEMENTATION
 
-Exact Calculation Complexity
+Full Shapley calculation is exponential in channel count. With 10 channels there are over 3 million orderings. Use approximation methods for practical implementation.
 
-Computing exact Shapley Values requires evaluating all 2^n coalitions. This becomes computationally infeasible beyond 10-12 channels:
+Sampling approximation randomly samples orderings and averages marginal contributions. With 10000 samples, approximation error is typically under 1 percent. This reduces complexity from exponential to linear in sample count.
 
-- 5 channels: 32 coalitions (trivial)
-- 10 channels: 1,024 coalitions (fast)
-- 15 channels: 32,768 coalitions (slow)
-- 20 channels: 1,048,576 coalitions (impractical)
+Permutation sampling generates random channel orderings. For each ordering, calculate cumulative conversion probability as channels are added. The marginal contribution of channel i is the probability increase when i is added. Average across all sampled orderings.
 
-Approximation Methods
+Convergence monitoring tracks running Shapley estimates across iterations. Stop when estimates stabilize within tolerance threshold. Typically 5000 to 20000 iterations suffice for convergence.
 
-Monte Carlo Sampling: Randomly sample orderings and average marginal contributions. Typically 1,000 to 10,000 samples provide good approximation.
+INTERPRETATION GUIDELINES
 
-Sampling Algorithm:
-1. Generate random permutation of channels
-2. Calculate marginal contribution for each position
-3. Repeat many times
-4. Average contributions per channel
+Shapley values sum to total conversions by the efficiency axiom. Express as percentages for easier interpretation. A channel with 15 percent Shapley share contributed 15 percent of conversion value.
 
-Stratified Sampling: Sample orderings while ensuring representation across coalition sizes. Reduces variance compared to pure Monte Carlo.
+Compare Shapley shares to spend shares to identify efficiency. If a channel has 20 percent Shapley share but only 10 percent spend share, it is underinvested. If Shapley share is 10 percent but spend share is 25 percent, it is overinvested.
 
-Kernel Methods: Use regression-based approximation where coalition values are predicted from channel presence indicators.
+Shapley values reflect contribution given current channel mix. They change if channel presence changes. Removing a channel redistributes its Shapley value to remaining channels. Adding a channel takes share from existing channels.
 
-CALCULATION EXAMPLE
-
-Scenario: 3 channels with following path conversion data
-
-Path Data:
-- Paid Search only: 100 conversions
-- Display only: 30 conversions
-- Email only: 50 conversions
-- Paid Search then Display: 80 conversions
-- Paid Search then Email: 90 conversions
-- Display then Email: 40 conversions
-- All three channels: 110 conversions
-
-Coalition Values (aggregated):
-- V(empty) = 0
-- V(PS) = 100
-- V(D) = 30
-- V(E) = 50
-- V(PS,D) = 180
-- V(PS,E) = 190
-- V(D,E) = 70
-- V(PS,D,E) = 300
-
-Shapley Calculation for Paid Search:
-
-Orderings where PS is first (weight 2 out of 6):
-- Marginal = V(PS) minus V(empty) = 100
-
-Orderings where PS is second (weight 2 out of 6):
-- After D: V(PS,D) minus V(D) = 150
-- After E: V(PS,E) minus V(E) = 140
-- Average = 145
-
-Orderings where PS is third (weight 2 out of 6):
-- After D,E: V(PS,D,E) minus V(D,E) = 230
-
-Shapley(PS) = (1/3) times 100 plus (1/3) times 145 plus (1/3) times 230 = 158.33
-
-Similar calculations yield:
-- Shapley(Display) = 61.67
-- Shapley(Email) = 80.00
-- Total = 300.00 (matches V(all))
-
-ADVANTAGES AND LIMITATIONS
-
-Advantages:
-- Mathematically fair allocation
-- Accounts for channel synergies
-- Handles non-linear interactions
-- Theoretically sound foundation
-
-Limitations:
-- Computationally expensive for many channels
-- Requires complete path data
-- Assumes coalition values are known
-- Does not capture temporal dynamics
-
-
-
-TIME-DECAY ATTRIBUTION
+TIME DECAY ATTRIBUTION
 
 THEORETICAL FOUNDATION
 
-Time-Decay attribution assigns credit based on temporal proximity to conversion. Touchpoints closer to conversion receive more credit, reflecting the intuition that recent interactions more directly influence purchase decisions.
+Time decay attribution weights touchpoints by recency. Recent touchpoints receive more credit than distant touchpoints. The assumption is that recent interactions have stronger influence on conversion decisions.
 
-Core Principle: Credit decays exponentially as time between touchpoint and conversion increases.
+This matches psychological recency bias. Customers remember recent experiences more vividly. Recent touchpoints are more likely to be consciously recalled during purchase decisions. Older touchpoints may have created awareness but faded from active consideration.
 
-Mathematical Model:
+Time decay is appropriate when purchase decisions happen quickly after the final consideration period. It undervalues long awareness-building cycles common in B2B or high-consideration purchases.
 
-Credit(t) = base times 2^(negative t divided by half_life)
+DECAY FUNCTION PARAMETERS
 
-Where:
-- t is time between touchpoint and conversion (in hours or days)
-- half_life is the period over which credit halves
-- base is the normalization factor ensuring total credit equals 100 percent
+The decay function determines how quickly credit diminishes with time. The key parameter is half-life, measured in days. At half-life distance from conversion, a touchpoint receives 50 percent of the credit it would receive at conversion time.
 
-HALF-LIFE SELECTION
+Short half-life values like 3 to 7 days concentrate credit on recent touchpoints. Use for impulse purchases, promotional campaigns, and short consideration cycles.
 
-The half-life parameter determines how quickly credit decays. Selection depends on:
+Medium half-life values like 14 to 30 days balance recency with journey recognition. Use for most consumer purchases and moderate consideration cycles.
 
-- Purchase cycle length
-- Category consideration period
-- Brand versus direct response mix
+Long half-life values like 60 to 90 days give substantial credit to early touchpoints. Use for B2B sales, luxury purchases, and extended consideration cycles.
 
-Half-Life Guidelines by Industry:
+CALCULATION METHOD
 
-Fast-Moving Consumer Goods:
-- Half-life: 12 to 24 hours
-- Rationale: Quick purchase decisions
-- Focus on immediate pre-purchase touchpoints
+For each touchpoint, calculate time distance from conversion in days. Apply decay function to get raw weight. Normalize weights across all touchpoints to sum to 1. Multiply normalized weights by conversion value.
 
-Retail and E-commerce:
-- Half-life: 1 to 3 days
-- Rationale: Short consideration with some comparison shopping
-- Balance recent and early touchpoints
+Exponential decay formula:
+- Weight equals 2 raised to power of negative time distance divided by half-life
+- A touchpoint at conversion time has weight 1
+- A touchpoint at half-life distance has weight 0.5
+- A touchpoint at twice half-life distance has weight 0.25
 
-Travel and Hospitality:
-- Half-life: 3 to 7 days
-- Rationale: Research-intensive purchase
-- Credit earlier touchpoints moderately
+Normalization ensures all credit is assigned:
+- Sum all raw weights across touchpoints
+- Divide each raw weight by the sum
+- Normalized weights sum to 1
 
-B2B Technology:
-- Half-life: 7 to 21 days
-- Rationale: Long sales cycles with multiple decision makers
-- Significant credit to earlier touchpoints
+CALIBRATION APPROACH
 
-Complex B2B Sales:
-- Half-life: 21 to 60 days
-- Rationale: Multi-month sales cycles
-- Near-linear distribution may be more appropriate
+Optimal half-life varies by product and audience. Calibrate using holdout conversion analysis. Test different half-life values against actual conversion outcomes. Select the half-life that best predicts conversion from touchpoint sequences.
 
-CALCULATION METHODOLOGY
+A/B test half-life assumptions where possible. Run budget optimization with different half-life values. Measure actual conversion outcomes. The half-life producing best results is closest to true decay pattern.
 
-Step 1 - Record Touchpoint Timestamps
-
-For each conversion path, capture:
-- Channel of each touchpoint
-- Timestamp of each touchpoint
-- Timestamp of conversion
-
-Step 2 - Calculate Time Differences
-
-Compute elapsed time from each touchpoint to conversion.
-
-Example Path:
-- Touchpoint 1 (Display): 10 days before conversion
-- Touchpoint 2 (Paid Search): 3 days before conversion
-- Touchpoint 3 (Email): 1 day before conversion
-
-Step 3 - Apply Decay Function
-
-With 7-day half-life:
-
-Credit(10 days) = 2^(negative 10 divided by 7) = 0.370
-Credit(3 days) = 2^(negative 3 divided by 7) = 0.743
-Credit(1 day) = 2^(negative 1 divided by 7) = 0.906
-
-Step 4 - Normalize to 100 Percent
-
-Sum = 0.370 plus 0.743 plus 0.906 = 2.019
-
-Display Credit = 0.370 divided by 2.019 = 18.3 percent
-Paid Search Credit = 0.743 divided by 2.019 = 36.8 percent
-Email Credit = 0.906 divided by 2.019 = 44.9 percent
-
-ADVANCED TIME-DECAY VARIANTS
-
-Bi-Exponential Decay
-
-Combines fast and slow decay components for journeys with both impulse and considered touchpoints.
-
-Credit(t) = w1 times 2^(negative t divided by half_life_fast) plus w2 times 2^(negative t divided by half_life_slow)
-
-Where w1 plus w2 equals 1.
-
-Capped Decay
-
-Prevents early touchpoints from receiving negligible credit by applying a minimum floor.
-
-Credit(t) = max(floor, base times 2^(negative t divided by half_life))
-
-Typical floor values range from 5 to 15 percent of maximum credit.
-
-Channel-Specific Decay
-
-Different channels may have different influence persistence:
-- Brand advertising: Slower decay (longer half-life)
-- Direct response: Faster decay (shorter half-life)
-- Retargeting: Very fast decay (immediate influence)
-
-HALF-LIFE OPTIMIZATION
-
-Data-Driven Selection
-
-Optimize half-life using conversion data:
-
-1. Split historical conversions into training and validation sets
-2. Test multiple half-life values (1, 3, 7, 14, 21 days)
-3. For each half-life, calculate predicted channel contribution
-4. Compare predictions against holdout incrementality results
-5. Select half-life minimizing prediction error
-
-Cross-Validation Approach:
-- Use k-fold cross-validation with k equals 5 or 10
-- Evaluate stability of optimal half-life across folds
-- Select median or mode of optimal values
-
-ADVANTAGES AND LIMITATIONS
-
-Advantages:
-- Intuitive temporal weighting
-- Single parameter to configure
-- Computationally simple
-- Works well for short-cycle products
-
-Limitations:
-- Assumes recency equals influence
-- Ignores channel-specific decay rates
-- Half-life selection is somewhat arbitrary
-- Does not capture touchpoint sequence effects
-
-
+Monitor half-life stability over time. Seasonal changes affect consideration cycles. Competitive activity changes decision speed. Recalibrate quarterly or when significant market changes occur.
 
 MARKOV CHAIN ATTRIBUTION
 
 THEORETICAL FOUNDATION
 
-Markov Chain attribution models customer journeys as probabilistic state transitions. Each channel represents a state, and the model captures transition probabilities between states, ultimately measuring each channel contribution to conversion probability.
+Markov chain attribution models the customer journey as a state machine. Each channel is a state. Customers transition between states with measurable probabilities. Conversion and non-conversion are absorbing states.
 
-Core Principle: Attribution is based on the removal effect - how much would conversion probability decrease if a channel were removed from all paths.
+The Markov property assumes transition probability depends only on current state, not history. This simplification enables tractable mathematics. It may not fully capture complex journey patterns but provides robust attribution estimates.
 
-Markov Property: The probability of transitioning to the next state depends only on the current state, not on the sequence of prior states.
+Markov attribution answers a counterfactual question. What would happen if a channel were removed from all journeys? The channel receives credit proportional to conversions lost by its removal.
 
-ORDER OF MARKOV MODELS
+TRANSITION MATRIX CONSTRUCTION
 
-First-Order Markov: Next state depends only on current state.
-- Simpler computation
-- May miss sequence patterns
-- Suitable when path length is short
+Build the transition matrix from observed journey data. Count transitions between all state pairs. Include start state for journey beginning and conversion and null states for journey endings.
 
-Higher-Order Markov: Next state depends on multiple prior states.
-- Second-order: Current and previous state
-- Third-order: Current and two previous states
-- Captures more sequence information
-- Requires more data for stable estimates
+Each matrix cell contains probability of transitioning from row state to column state. Rows sum to 1. The matrix is typically sparse since not all transitions occur in data.
 
-TRANSITION PROBABILITY CALCULATION
+Required data volume depends on channel count. With c channels, the matrix has approximately c squared cells. Need sufficient observations per cell for stable probability estimates. Minimum 30 to 50 observations per transition is recommended.
 
-Step 1 - Define State Space
+REMOVAL EFFECT CALCULATION
 
-States include:
-- Start state (journey beginning)
-- Channel states (one per channel)
-- Conversion state (successful outcome)
-- Null state (drop-off without conversion)
+For each channel, calculate conversion probability with channel present and with channel removed. The removal effect is the difference. This requires solving the Markov chain to find absorption probabilities.
 
-Step 2 - Count Transitions
+With channel present, solve for probability of reaching conversion state from start state. Use matrix algebra to find absorption probabilities. The conversion probability is the absorption probability into conversion state.
 
-From historical path data, count transitions between all state pairs.
+With channel removed, remove all transitions into and out of that channel state. Recalculate absorption probabilities. The difference in conversion probability is the removal effect.
 
-Example Transition Counts:
-- Start to Paid Search: 500
-- Start to Display: 300
-- Paid Search to Email: 200
-- Paid Search to Conversion: 150
-- Paid Search to Null: 150
-- And so forth for all pairs
+Attribution allocation divides conversion credit proportionally to removal effects. If channel A has removal effect 0.2 and channel B has removal effect 0.1, channel A receives twice the credit of channel B.
 
-Step 3 - Calculate Transition Probabilities
+HIGHER ORDER MARKOV MODELS
 
-Divide transition counts by total outgoing transitions from each state.
+First-order Markov assumes only current state matters. Higher-order models consider recent history. Second-order Markov conditions on current and previous state. Third-order conditions on three most recent states.
 
-P(Email | Paid Search) = Transitions(PS to Email) divided by Total(PS outgoing)
-P(Email | Paid Search) = 200 divided by 500 = 0.40
+Higher-order models capture sequence effects like channel synergies. The cost is exponentially more parameters. A second-order model with 10 channels has 1000 transition parameters versus 100 for first-order.
 
-Step 4 - Build Transition Matrix
+Use higher-order models only with sufficient data. Minimum 50 to 100 observations per transition combination. For most applications, first-order models provide adequate accuracy with manageable complexity.
 
-Construct square matrix with rows as origin states and columns as destination states. Each row sums to 1.
-
-REMOVAL EFFECT METHODOLOGY
-
-Step 1 - Calculate Baseline Conversion Probability
-
-Using transition matrix, compute total probability of reaching Conversion from Start.
-
-This requires solving for absorbing state probabilities in the Markov chain.
-
-For chain with absorbing states (Conversion, Null):
-- Partition matrix into transient and absorbing blocks
-- Compute fundamental matrix N = (I minus Q)^negative 1
-- Calculate absorption probabilities R = N times R_block
-
-Baseline conversion probability equals P(Conversion | Start).
-
-Step 2 - Remove Each Channel
-
-For each channel i:
-- Set all transitions to channel i to go to Null instead
-- Recalculate conversion probability
-- Record decreased probability
-
-Step 3 - Calculate Removal Effect
-
-Removal Effect(i) = Baseline minus P(Conversion | Start, channel i removed)
-
-Step 4 - Normalize to Attribution
-
-Attribution(i) = Removal Effect(i) divided by Sum of all Removal Effects
-
-CALCULATION EXAMPLE
-
-Scenario: 3 channels with transition matrix
-
-Transition Probabilities:
-
-From Start:
-- To Paid Search: 0.50
-- To Display: 0.30
-- To Email: 0.20
-
-From Paid Search:
-- To Display: 0.20
-- To Email: 0.25
-- To Conversion: 0.35
-- To Null: 0.20
-
-From Display:
-- To Paid Search: 0.15
-- To Email: 0.30
-- To Conversion: 0.20
-- To Null: 0.35
-
-From Email:
-- To Paid Search: 0.10
-- To Display: 0.15
-- To Conversion: 0.55
-- To Null: 0.20
-
-Baseline Calculation:
-
-Using matrix algebra on transient states, baseline conversion probability equals 0.42 (42 percent of journeys convert).
-
-Removal Effect Calculations:
-
-Remove Paid Search:
-- Redirect Start to PS transitions to Null
-- Recalculate: P(Conversion) = 0.31
-- Removal Effect = 0.42 minus 0.31 = 0.11
-
-Remove Display:
-- Redirect transitions to Display to Null
-- Recalculate: P(Conversion) = 0.35
-- Removal Effect = 0.42 minus 0.35 = 0.07
-
-Remove Email:
-- Redirect transitions to Email to Null
-- Recalculate: P(Conversion) = 0.24
-- Removal Effect = 0.42 minus 0.24 = 0.18
-
-Attribution:
-
-Sum of effects = 0.11 plus 0.07 plus 0.18 = 0.36
-
-Paid Search Attribution = 0.11 divided by 0.36 = 30.6 percent
-Display Attribution = 0.07 divided by 0.36 = 19.4 percent
-Email Attribution = 0.18 divided by 0.36 = 50.0 percent
-
-HIGHER-ORDER MARKOV IMPLEMENTATION
-
-Second-Order Model
-
-States become pairs of consecutive channels:
-- (Start, Paid Search)
-- (Paid Search, Display)
-- (Display, Email)
-- And so forth
-
-Transition matrix grows quadratically with channels but captures:
-- Path dependencies
-- Channel sequence effects
-- Recency-adjusted contributions
-
-Data Requirements
-
-Higher-order models require substantially more data:
-- First-order: Minimum 500 conversions per channel
-- Second-order: Minimum 2,000 conversions total
-- Third-order: Minimum 10,000 conversions total
-
-ADVANTAGES AND LIMITATIONS
-
-Advantages:
-- Captures path structure and sequences
-- Data-driven probability estimation
-- Models channel dependencies
-- Removal effect is intuitive concept
-
-Limitations:
-- Markov assumption may not hold
-- Requires sufficient path data
-- Higher-order models are data-hungry
-- Does not capture temporal dynamics
-
-
-
-POSITION-BASED ATTRIBUTION
+POSITION BASED ATTRIBUTION
 
 THEORETICAL FOUNDATION
 
-Position-Based attribution assigns credit based on touchpoint position within the customer journey. Unlike simple first or last-click models, position-based approaches apply customizable weights that reflect the strategic importance of different journey stages.
+Position-based attribution assigns fixed credit percentages based on touchpoint position. The standard model gives 40 percent to first touch, 40 percent to last touch, and 20 percent distributed among middle touches.
 
-Core Principle: Certain positions in the customer journey have systematically different influence on conversion decisions.
+This model recognizes two critical moments in the journey. The first touch creates initial awareness and consideration. The last touch closes the conversion. Middle touches maintain engagement but are considered less decisive.
 
-Position Types:
-- First Position: Discovery and awareness
-- Middle Positions: Consideration and research
-- Last Position: Decision and conversion trigger
+Position-based is a pragmatic compromise. It acknowledges journey complexity without requiring complex modeling. It works well when awareness-building and closing are both valuable and identifiable.
 
-STANDARD POSITION-BASED MODELS
+ALLOCATION SCHEMES
 
-U-Shaped Model (40-20-40)
+The 40-20-40 model is most common:
+- First touchpoint receives 40 percent
+- Last touchpoint receives 40 percent
+- All middle touchpoints share 20 percent equally
 
-Allocates 40 percent to first touch, 40 percent to last touch, and distributes remaining 20 percent equally across middle touches.
+The 30-40-30 model emphasizes the closer:
+- First touchpoint receives 30 percent
+- Last touchpoint receives 40 percent
+- Middle touchpoints share 30 percent equally
 
-Rationale:
-- First touch creates awareness and enters brand into consideration
-- Last touch triggers final purchase decision
-- Middle touches contribute but less decisively
+The 50-0-50 model ignores middle touchpoints:
+- First touchpoint receives 50 percent
+- Last touchpoint receives 50 percent
+- Middle touchpoints receive 0 percent
 
-Example with 5 touchpoints:
-- Touch 1: 40 percent
-- Touch 2: 6.67 percent (20 divided by 3)
-- Touch 3: 6.67 percent
-- Touch 4: 6.67 percent
-- Touch 5: 40 percent
+Custom schemes adjust percentages based on business knowledge. If awareness is critical, increase first touch weight. If closing is difficult, increase last touch weight. If nurturing is important, increase middle weight.
 
-W-Shaped Model (30-20-30-20)
+HANDLING EDGE CASES
 
-Extends U-shaped to include a key middle position, typically lead creation or consideration trigger.
+Single touchpoint journeys assign 100 percent to that touchpoint regardless of scheme. There is no first versus last distinction.
 
-Allocates 30 percent to first, 30 percent to lead creation, 30 percent to last, and 10 percent to other middle touches.
+Two touchpoint journeys assign first and last percentages to the two touchpoints. Middle percentage is not used since there are no middle touchpoints.
 
-Rationale:
-- First touch drives awareness
-- Lead creation touch indicates serious interest
-- Last touch drives conversion
-- Other touches provide support
+Very long journeys dilute middle touchpoint credit. With 20 middle touchpoints each receives 1 percent. Consider capping journey length for attribution purposes or using time decay within the middle allocation.
 
-Example with 6 touchpoints (touch 3 is lead creation):
-- Touch 1: 30 percent
-- Touch 2: 3.33 percent
-- Touch 3: 30 percent (lead creation)
-- Touch 4: 3.33 percent
-- Touch 5: 3.33 percent
-- Touch 6: 30 percent
+CALCULATION METHOD
 
-Z-Shaped Model (Full Funnel)
+Identify touchpoint positions in chronological order. Assign position labels as first, last, or middle. Apply percentage weights according to chosen scheme. Multiply weights by conversion value for credit allocation.
 
-Extends to four key positions: Awareness, Consideration, Intent, Purchase.
-
-Allocates 22.5 percent to each key position and 10 percent distributed across other touches.
-
-Used For:
-- Complex B2B journeys
-- Multi-stage consideration processes
-- When middle funnel is clearly definable
-
-CUSTOM WEIGHTING SCHEMES
-
-Weight Configuration Parameters
-
-Define custom models using:
-- first_weight: Credit for first touchpoint (0 to 100)
-- last_weight: Credit for last touchpoint (0 to 100)
-- middle_weight: Credit for middle touchpoints (0 to 100)
-- decay_type: How middle credit distributes (equal, linear, exponential)
-
-Constraint: first_weight plus last_weight plus middle_weight must equal 100.
-
-Middle Distribution Options
-
-Equal Distribution:
-- All middle touches receive identical credit
-- Simple and unbiased
-- Appropriate when middle touches are interchangeable
-
-Linear Decay from First:
-- Credit decreases linearly from first position
-- Emphasizes earlier consideration touches
-- Useful for awareness-heavy categories
-
-Linear Decay from Last:
-- Credit increases linearly toward last position
-- Emphasizes later decision touches
-- Useful for conversion-focused optimization
-
-Exponential Decay:
-- Credit decays exponentially from endpoints
-- Creates smooth U or W shape
-- More natural weighting curve
-
-CUSTOM WEIGHT CALCULATION
-
-Example: Custom model with first equals 35, last equals 45, middle equals 20, linear decay from last.
-
-Path with 5 touchpoints:
-
-Step 1 - Assign endpoint weights:
-- Touch 1: 35 percent
-- Touch 5: 45 percent
-
-Step 2 - Calculate middle weights with linear decay from last:
-
-Middle pool: 20 percent for 3 touches
-Linear weights (higher closer to last): 1, 2, 3
-Weight sum: 6
-
-Touch 2: 20 times (1 divided by 6) = 3.33 percent
-Touch 3: 20 times (2 divided by 6) = 6.67 percent
-Touch 4: 20 times (3 divided by 6) = 10.00 percent
-
-Final Distribution:
-- Touch 1: 35.00 percent
-- Touch 2: 3.33 percent
-- Touch 3: 6.67 percent
-- Touch 4: 10.00 percent
-- Touch 5: 45.00 percent
-- Total: 100.00 percent
-
-DYNAMIC POSITION WEIGHTING
-
-Journey Length Adjustment
-
-Long journeys may warrant different weighting than short journeys:
-
-Short Path (2-3 touches):
-- Higher endpoint weights (45-10-45)
-- Middle touches are minimal
-- Near-binary attribution
-
-Medium Path (4-6 touches):
-- Standard U-shaped (40-20-40)
-- Balanced distribution
-- Most common scenario
-
-Long Path (7 plus touches):
-- More middle weight (30-40-30)
-- Middle touches represent significant consideration
-- Avoid over-crediting endpoints
-
-Channel-Type Adjustment
-
-Weight based on channel role in funnel:
-
-If first touch is Display or Social:
-- Increase first weight (awareness channels appropriately credited)
-
-If last touch is Branded Search or Retargeting:
-- Decrease last weight (navigational channels should not capture all credit)
-
-Conditional logic can be applied:
-- If first channel equals awareness type: first_weight plus 10 percent
-- If last channel equals navigational type: last_weight minus 10 percent
-
-DATA-DRIVEN WEIGHT OPTIMIZATION
-
-Weight optimization can be performed using incrementality data:
-
-1. Run incrementality tests for sample of channels
-2. Compare position-based attribution to incremental contribution
-3. Adjust weights to minimize discrepancy
-4. Validate on holdout data
-
-Optimization Objective:
-Minimize sum of squared errors between position-based attribution and incrementality estimates across all channels.
-
-Grid Search Approach:
-- Test combinations of first_weight from 20 to 50 in steps of 5
-- Test last_weight from 20 to 50 in steps of 5
-- Evaluate each combination against ground truth
-- Select weights with lowest error
-
-ADVANTAGES AND LIMITATIONS
-
-Advantages:
-- Intuitive position-based logic
-- Highly configurable
-- Works with any path length
-- Computationally trivial
-
-Limitations:
-- Weights are often arbitrary without validation
-- Ignores actual channel influence
-- All first touches weighted equally regardless of channel
-- Does not capture temporal or sequence effects
-
-
+For middle touchpoints, divide middle percentage equally:
+- Middle touchpoint credit equals middle percentage divided by count of middle touchpoints
+- All middle touchpoints receive identical credit
+- As middle touchpoint count increases, individual credit decreases
 
 MODEL SELECTION GUIDANCE
 
-DECISION FRAMEWORK
+DECISION CRITERIA
 
-Select attribution model based on journey complexity, data availability, and business requirements.
+Choose attribution model based on data availability, business context, and analytical sophistication.
 
-Journey Complexity Assessment
+Data availability requirements:
+- Last-click needs only final touchpoint data
+- Time decay needs touchpoint timestamps
+- Position-based needs complete ordered journeys
+- Markov needs large journey datasets with varied paths
+- Shapley needs conversion outcome data by touchpoint combination
 
-Simple Journeys (1-3 touchpoints, single session):
-- Recommended: Time-Decay or Position-Based
-- Rationale: Limited path complexity does not warrant sophisticated models
-- Computational: Minimal requirements
+Business context considerations:
+- Short consideration cycles favor time decay
+- Brand building emphasis favors position-based with high first touch weight
+- Performance marketing emphasis favors last-click or time decay
+- Complex multi-channel journeys favor Markov or Shapley
 
-Moderate Journeys (3-6 touchpoints, multi-session):
-- Recommended: Markov Chain or Position-Based with optimization
-- Rationale: Sequence patterns emerge, worth capturing
-- Computational: Moderate requirements
+Analytical sophistication tradeoffs:
+- Simple models are easier to explain and implement
+- Complex models may overfit with limited data
+- Stakeholder buy-in often requires interpretability
 
-Complex Journeys (6 plus touchpoints, multi-device):
-- Recommended: Shapley Value or Markov Chain
-- Rationale: Channel interactions are significant
-- Computational: Substantial requirements
+RECOMMENDED APPROACH
 
-Data Availability Assessment
+Start with position-based as baseline. It requires minimal data and provides reasonable estimates. Establish benchmark attribution before testing complex models.
 
-Limited Data (under 500 monthly conversions):
-- Use Position-Based with industry-standard weights
-- Avoid data-driven models that require statistical power
-- Focus on directional insights rather than precise allocation
+Graduate to time decay when timestamp data is reliable. Calibrate half-life through testing. Time decay often outperforms position-based for conversion prediction.
 
-Moderate Data (500 to 5,000 monthly conversions):
-- Time-Decay with optimized half-life
-- First-order Markov Chain
-- Position-Based with cross-validated weights
+Implement Markov when journey data volume is sufficient. Markov captures channel interactions that simpler models miss. Use for strategic channel mix decisions.
 
-Abundant Data (over 5,000 monthly conversions):
-- Shapley Value with Monte Carlo approximation
-- Higher-order Markov Chain
-- Data-driven weight optimization
+Reserve Shapley for high-stakes budget allocation. The theoretical fairness is valuable when large investments depend on attribution. Ensure stakeholders understand the methodology.
 
-Business Requirement Alignment
+MULTI-MODEL ENSEMBLE
 
-Tactical Optimization Focus:
-- Time-Decay provides recency weighting for immediate optimization
-- Quick to compute and easy to explain
+Consider ensemble approaches combining multiple models. Average attributions across models to reduce individual model bias. Weight models by predictive accuracy from holdout testing.
 
-Strategic Allocation Focus:
-- Shapley Value provides fairest long-term view
-- Supports budget reallocation decisions
+Ensemble benefits include:
+- Reduced sensitivity to model assumptions
+- More stable attribution estimates
+- Better handling of journey diversity
 
-Channel Portfolio Management:
-- Markov Chain reveals channel dependencies
-- Identifies optimal path sequences
+Ensemble challenges include:
+- Increased complexity
+- Harder stakeholder explanation
+- Potential for conflicting signals
 
-MODEL COMPARISON MATRIX
+VALIDATION AND QUALITY ASSURANCE
 
-Shapley Value:
-- Fairness: Highest (mathematically proven)
-- Complexity: High (exponential coalitions)
-- Data Required: Moderate to High
-- Temporal Sensitivity: None (position-agnostic)
-- Sequence Capture: Through coalition values only
-- Computation Time: Slow (requires approximation)
-- Interpretability: Moderate (marginal contribution concept)
-- Best For: Fair allocation, budget reallocation
+ATTRIBUTION SANITY CHECKS
 
-Time-Decay:
-- Fairness: Low (recency bias)
-- Complexity: Low (single parameter)
-- Data Required: Low
-- Temporal Sensitivity: Highest (core feature)
-- Sequence Capture: None
-- Computation Time: Fast (direct calculation)
-- Interpretability: High (intuitive decay concept)
-- Best For: Short-cycle products, immediate optimization
+Verify attribution results pass basic sanity checks before use.
 
-Markov Chain:
-- Fairness: Moderate (removal effect based)
-- Complexity: Moderate to High (matrix algebra)
-- Data Required: Moderate to High
-- Temporal Sensitivity: None (probability-based)
-- Sequence Capture: Highest (transition modeling)
-- Computation Time: Moderate (matrix operations)
-- Interpretability: Moderate (probability concept)
-- Best For: Path optimization, sequence analysis
+Sum check: Total attributed credit equals total conversions. Rounding errors should be minimal. Large discrepancies indicate calculation bugs.
 
-Position-Based:
-- Fairness: Low (arbitrary weights)
-- Complexity: Low (weight assignment)
-- Data Required: Low
-- Temporal Sensitivity: None
-- Sequence Capture: Position only
-- Computation Time: Fast (direct assignment)
-- Interpretability: Highest (position concept)
-- Best For: Quick deployment, stakeholder communication
+Non-negative check: No channel receives negative credit. Negative attribution is mathematically possible in some models but practically nonsensical.
 
-HYBRID APPROACHES
+Presence check: Channels with touchpoints receive nonzero credit. A channel appearing in converting journeys should receive some attribution.
 
-Ensemble Attribution
+Proportionality check: Higher touchpoint volume should generally correlate with higher attribution. Dramatic inversions warrant investigation.
 
-Combine multiple models for robust allocation:
+HOLDOUT VALIDATION
 
-Simple Average:
-- Calculate attribution from each model
-- Average results across models
-- Reduces model-specific bias
+Split journey data into training and holdout sets. Fit attribution model on training data. Evaluate on holdout data by predicting conversions from touchpoint sequences.
 
-Weighted Average:
-- Weight models by validation performance
-- Higher weight to models matching incrementality
-- Optimal when ground truth is available
+Compare predicted versus actual conversion rates. Models that better predict conversions from touchpoints are more accurately capturing true influence. Select models maximizing holdout prediction accuracy.
 
-Tiered Approach
+Cross-validation provides more robust estimates. Use k-fold cross-validation with k between 5 and 10. Average accuracy across folds for final model comparison.
 
-Use different models for different purposes:
+INCREMENTALITY CALIBRATION
 
-1. Position-Based for daily reporting (fast, intuitive)
-2. Markov Chain for weekly path analysis (sequence insights)
-3. Shapley Value for quarterly budget allocation (fairness)
+Compare attribution results to incrementality test results. Geo-holdout tests provide ground truth for channel contribution. Attribution should align directionally with incrementality findings.
 
-INTEGRATION WITH EXISTING CAPABILITIES
+Large attribution-incrementality gaps suggest attribution model misspecification. A channel showing high attribution but low incrementality may benefit from correlation with other channels rather than causal contribution.
 
-PRF_ATTRIBUTION ENHANCEMENT
-
-Advanced models extend the existing PRF_ATTRIBUTION capability:
-
-Input Enhancement:
-- Include path timestamp data for Time-Decay
-- Include coalition conversion data for Shapley
-- Include transition counts for Markov
-
-Output Enhancement:
-- Add model-specific attribution alongside basic models
-- Include confidence intervals where applicable
-- Provide model comparison summary
-
-MULTI-MODEL RESPONSE FORMAT
-
-When advanced attribution is requested, response should include:
-
-Standard Models Section:
-- Last-click attribution
-- First-click attribution
-- Linear attribution
-
-Advanced Models Section:
-- Shapley Value attribution (if data sufficient)
-- Time-Decay attribution (with half-life used)
-- Markov Chain attribution (with order used)
-- Position-Based attribution (with weights used)
-
-Comparison Section:
-- Channels most affected by model choice
-- Variance across models
-- Recommended model with rationale
-
-IMPLEMENTATION REQUIREMENTS
-
-Azure Function Integration
-
-Advanced attribution models require Azure Functions for:
-- Shapley Monte Carlo sampling (PRF_ATTRIB_SHAPLEY)
-- Time-Decay optimization (PRF_ATTRIB_TIMEDECAY)
-- Markov matrix operations (PRF_ATTRIB_MARKOV)
-- Position weight calculation (PRF_ATTRIB_POSITION)
-
-AI Builder Fallback
-
-When Azure Functions unavailable:
-- Use simplified calculation in prompts
-- Limit Shapley to 5 or fewer channels
-- Use fixed half-life for Time-Decay
-- Use first-order Markov only
-
-VALIDATION AND CALIBRATION
-
-Incrementality Calibration
-
-Periodically validate attribution against incrementality tests:
-
-1. Run incrementality test for 2-3 channels annually
-2. Compare attributed credit to incremental contribution
-3. Identify systematic over or under-attribution
-4. Apply calibration factors to align models
-
-Calibration Factor Calculation:
-Calibration(i) = Incremental(i) divided by Attributed(i)
-
-Applied Attribution:
-Calibrated Attribution(i) = Attributed(i) times Calibration(i)
-
-Cross-Model Validation
-
-Compare model outputs for consistency:
-
-Flag for investigation when:
-- Single channel varies more than 50 percent across models
-- Model rankings differ significantly
-- Total explained differs from baseline
-
-CROSS-REFERENCES
-
-For basic attribution models: See PRF_KB_Attribution_Models_v1
-For incrementality methods: See PRF_KB_Incrementality_Methods_v1
-For statistical tests: See ANL_KB_Statistical_Tests_v1
-For optimization triggers: See PRF_KB_Optimization_Triggers_v1
-
-VERSION HISTORY
-
-Version 1.0 - January 2026 - Initial creation
-- Shapley Value methodology and calculation
-- Time-Decay with configurable half-life
-- Markov Chain transition analysis
-- Position-Based custom weighting
-- Model selection framework
-- Comparison matrix
-- Integration guidance
+Use incrementality to calibrate attribution weights. Adjust model parameters until attribution estimates match incrementality results. This hybrid approach combines attribution granularity with incrementality validity.

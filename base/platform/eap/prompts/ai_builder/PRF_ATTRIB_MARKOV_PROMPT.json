@@ -1,0 +1,47 @@
+{
+  "prompt_code": "PRF_ATTRIB_MARKOV",
+  "prompt_name": "Markov Chain Attribution",
+  "description": "Calculate attribution using Markov chain transition probabilities and removal effect methodology",
+  "model": "gpt-4",
+  "system_message": "You are a marketing measurement expert specializing in multi-touch attribution. Your task is to calculate Markov chain attribution for marketing touchpoints.\n\nMARKOV CHAIN METHODOLOGY:\n1. Model customer journey as state machine with channels as states\n2. Build transition matrix from observed journey sequences\n3. Include START state for journey beginning\n4. Include CONVERSION and NULL as absorbing states\n5. Calculate removal effect: conversion rate drop if channel removed\n6. Attribute credit proportional to removal effects\n\nTRANSITION MATRIX:\n- Each cell = probability of moving from row state to column state\n- Rows must sum to 1.0\n- Require minimum 30-50 observations per transition for stability\n\nREMOVAL EFFECT CALCULATION:\n- Baseline: solve chain for conversion probability with all channels\n- Remove channel: eliminate all transitions into/out of that state\n- Removal effect = baseline_conv_rate - removed_conv_rate\n- Higher removal effect = higher attribution\n\nOUTPUT REQUIREMENTS:\n- Return valid JSON only\n- Include transition matrix summary\n- Show removal effects per channel\n- Provide attribution allocation",
+  "user_template": "Calculate Markov chain attribution:\n\nJOURNEY SEQUENCES:\n{{journey_sequences_json}}\n\nCHANNELS: {{channel_list}}\nTOTAL JOURNEYS: {{total_journeys}}\nCONVERSIONS: {{total_conversions}}\nCONVERSION VALUE: {{total_value}}\n\nBuild transition matrix and calculate removal effects.",
+  "output_format": "json",
+  "output_schema": {
+    "attribution_model": "markov_chain",
+    "model_order": "number",
+    "total_journeys": "number",
+    "total_conversions": "number",
+    "baseline_conversion_rate": "number",
+    "transition_matrix_summary": {
+      "states": ["string"],
+      "total_transitions": "number",
+      "sparsity_pct": "number"
+    },
+    "channel_attributions": [
+      {
+        "channel": "string",
+        "removal_effect": "number",
+        "removal_conversion_rate": "number",
+        "attributed_conversions": "number",
+        "attributed_value": "number",
+        "contribution_pct": "number"
+      }
+    ],
+    "key_transitions": [
+      {
+        "from_state": "string",
+        "to_state": "string",
+        "probability": "number",
+        "observation_count": "number"
+      }
+    ],
+    "data_quality": {
+      "min_transitions_per_path": "number",
+      "paths_below_threshold": "number",
+      "recommendation": "string"
+    },
+    "confidence": "number"
+  },
+  "max_tokens": 3000,
+  "temperature": 0.1
+}

@@ -1,0 +1,48 @@
+{
+  "prompt_code": "PRF_ATTRIB_POSITION",
+  "prompt_name": "Position-Based Attribution",
+  "description": "Calculate attribution with fixed position weights for first touch, last touch, and middle touchpoints",
+  "model": "gpt-4",
+  "system_message": "You are a marketing measurement expert specializing in multi-touch attribution. Your task is to calculate position-based attribution for marketing touchpoints.\n\nPOSITION-BASED METHODOLOGY:\n1. Assign fixed credit percentages based on touchpoint position in journey\n2. First touchpoint creates awareness - receives first_touch_weight\n3. Last touchpoint closes conversion - receives last_touch_weight  \n4. Middle touchpoints maintain engagement - share middle_weight equally\n5. Weights must sum to 100%\n\nSTANDARD SCHEMES:\n- 40-20-40: First=40%, Last=40%, Middle=20% (default, balanced)\n- 30-40-30: First=30%, Last=40%, Middle=30% (closer emphasis)\n- 50-0-50: First=50%, Last=50%, Middle=0% (endpoints only)\n\nEDGE CASES:\n- Single touchpoint: receives 100%\n- Two touchpoints: first and last weights only, no middle\n- Long journeys: middle credit diluted across many touchpoints\n\nOUTPUT REQUIREMENTS:\n- Return valid JSON only\n- Include position assignments\n- Show channel-level aggregation\n- Validate weights sum correctly",
+  "user_template": "Calculate position-based attribution:\n\nTOUCHPOINT DATA:\n{{touchpoint_data_json}}\n\nWEIGHT SCHEME:\n- First Touch: {{first_touch_weight}}%\n- Last Touch: {{last_touch_weight}}%\n- Middle: {{middle_weight}}%\n\nTOTAL CONVERSIONS: {{total_conversions}}\nTOTAL VALUE: {{total_value}}\n\nAssign position weights and calculate attribution.",
+  "output_format": "json",
+  "output_schema": {
+    "attribution_model": "position_based",
+    "weight_scheme": {
+      "first_touch_pct": "number",
+      "last_touch_pct": "number",
+      "middle_pct": "number"
+    },
+    "total_conversions": "number",
+    "total_value": "number",
+    "channel_attributions": [
+      {
+        "channel": "string",
+        "first_touch_count": "number",
+        "last_touch_count": "number",
+        "middle_touch_count": "number",
+        "attributed_conversions": "number",
+        "attributed_value": "number",
+        "contribution_pct": "number"
+      }
+    ],
+    "journey_distribution": {
+      "single_touchpoint_journeys": "number",
+      "two_touchpoint_journeys": "number",
+      "multi_touchpoint_journeys": "number",
+      "avg_journey_length": "number"
+    },
+    "position_summary": {
+      "total_first_touches": "number",
+      "total_last_touches": "number",
+      "total_middle_touches": "number"
+    },
+    "validation": {
+      "weights_sum_to_100": "boolean",
+      "attribution_matches_total": "boolean"
+    },
+    "confidence": "number"
+  },
+  "max_tokens": 2000,
+  "temperature": 0.1
+}

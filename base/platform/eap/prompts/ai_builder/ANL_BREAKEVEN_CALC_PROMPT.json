@@ -1,0 +1,72 @@
+{
+  "prompt_code": "ANL_BREAKEVEN_CALC",
+  "prompt_name": "Calculate Break-Even",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are a financial analyst who calculates break-even points for marketing investments. Your role is to determine the volume, revenue, or time required to recover investment, accounting for contribution margins, fixed and variable costs, and realistic performance assumptions. Provide sensitivity analysis showing how break-even changes with key assumptions. Be conservative in assumptions and clear about what is required for the investment to pay back.",
+  "user_template": "Investment Amount: {{investment}}\n\nExpected Revenue per Conversion: {{revenue_per_conversion}}\n\nExpected Conversion Rate: {{conv_rate}}\n\nContribution Margin: {{margin}}\n\nFixed Costs: {{fixed_costs}}\n\nVariable Costs per Unit: {{variable_costs}}\n\nExpected Timeframe: {{timeframe}}\n\nCalculate break-even for this marketing investment. Include sensitivity analysis and time-to-break-even estimate.",
+  "output_format": "json",
+  "output_schema": {
+    "break_even_summary": {
+      "break_even_units": "number - conversions or units needed",
+      "break_even_revenue": "number - gross revenue needed",
+      "break_even_impressions": "number - impressions needed at given conv rate",
+      "calculation_method": "string - methodology used"
+    },
+    "time_to_break_even": {
+      "estimated_days": "number - days to reach break-even",
+      "estimated_weeks": "number - weeks to reach break-even",
+      "confidence": "string - high|medium|low",
+      "assumptions": ["string - key assumptions for timing estimate"]
+    },
+    "margin_of_safety": {
+      "units_above_break_even": "number - buffer if targets met",
+      "pct_above_break_even": "number - percentage buffer",
+      "interpretation": "string - what margin of safety means"
+    },
+    "assumptions_used": {
+      "conversion_rate": "number",
+      "revenue_per_conversion": "number",
+      "contribution_margin_pct": "number",
+      "fixed_costs": "number",
+      "variable_cost_per_unit": "number"
+    },
+    "sensitivity_analysis": {
+      "if_conv_rate_drops_10pct": {
+        "new_break_even_units": "number",
+        "pct_increase": "number"
+      },
+      "if_conv_rate_drops_25pct": {
+        "new_break_even_units": "number",
+        "pct_increase": "number"
+      },
+      "if_revenue_drops_10pct": {
+        "new_break_even_units": "number",
+        "pct_increase": "number"
+      },
+      "if_costs_increase_10pct": {
+        "new_break_even_units": "number",
+        "pct_increase": "number"
+      }
+    },
+    "critical_assumptions": [
+      {
+        "assumption": "string - assumption name",
+        "current_value": "number or string",
+        "break_even_sensitivity": "string - high|medium|low",
+        "monitoring_recommendation": "string - how to track"
+      }
+    ],
+    "risk_assessment": {
+      "overall_risk": "string - low|moderate|high",
+      "key_risks": ["string - main risks to break-even"],
+      "mitigation_suggestions": ["string - how to reduce risk"]
+    },
+    "recommendation": "string - overall assessment and guidance"
+  },
+  "max_tokens": 1500,
+  "temperature": 0.1,
+  "capability_code": "ANL_BREAKEVEN_CALC",
+  "agent_code": "ANL",
+  "timeout_seconds": 20
+}

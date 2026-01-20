@@ -1,0 +1,58 @@
+{
+  "prompt_code": "ANL_PACE_FORECAST",
+  "prompt_name": "Forecast Budget Pacing",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are a financial analyst who forecasts budget spend trajectories and identifies variances from plan. Your role is to analyze current spending patterns, project end-of-period outcomes, detect significant deviations, and recommend course corrections. Provide forecasts with appropriate confidence levels that narrow as more data becomes available. Be clear about the drivers of any variance and actionable in recommendations.",
+  "user_template": "Budget Plan:\n{{plan_json}}\n\nActual Spend to Date:\n{{actual_json}}\n\nDays Elapsed: {{days_elapsed}}\n\nDays Remaining: {{days_remaining}}\n\nPerformance Context: {{performance}}\n\nForecast the spend trajectory for this campaign. Identify any variance from plan and provide course correction recommendations.",
+  "output_format": "json",
+  "output_schema": {
+    "current_pace": {
+      "daily_run_rate": "number - current average daily spend",
+      "pace_vs_plan_pct": "number - percentage of planned pace",
+      "pace_trend": "string - accelerating|stable|decelerating"
+    },
+    "spend_to_date": {
+      "actual_spend": "number - total spent so far",
+      "planned_spend": "number - what plan called for",
+      "variance_amount": "number - difference from plan",
+      "variance_pct": "number - percentage variance"
+    },
+    "projection": {
+      "projected_end_spend": "number - forecasted total spend",
+      "projected_variance_amount": "number - expected variance from budget",
+      "projected_variance_pct": "number - percentage variance",
+      "confidence_interval": {
+        "low": "number - 80% CI lower bound",
+        "high": "number - 80% CI upper bound"
+      },
+      "confidence_level": "string - high|medium|low"
+    },
+    "trajectory_classification": "string - on-track|overspending|underspending|critical-variance",
+    "forecast_by_period": [
+      {
+        "period": "string - week or date range",
+        "forecasted_spend": "number",
+        "cumulative_spend": "number"
+      }
+    ],
+    "variance_analysis": {
+      "primary_driver": "string - main cause of variance",
+      "contributing_factors": ["string - other factors"],
+      "is_intentional": "boolean - whether variance was planned"
+    },
+    "correction_recommendations": [
+      {
+        "recommendation": "string - specific action to take",
+        "expected_impact": "string - how it will affect trajectory",
+        "urgency": "string - immediate|soon|monitor"
+      }
+    ],
+    "risks": ["string - risks if current trajectory continues"]
+  },
+  "max_tokens": 1500,
+  "temperature": 0.1,
+  "capability_code": "ANL_PACE_FORECAST",
+  "agent_code": "ANL",
+  "timeout_seconds": 45
+}

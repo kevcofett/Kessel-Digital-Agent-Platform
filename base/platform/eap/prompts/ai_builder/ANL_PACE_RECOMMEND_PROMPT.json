@@ -1,0 +1,52 @@
+{
+  "prompt_code": "ANL_PACE_RECOMMEND",
+  "prompt_name": "Recommend Budget Pacing",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are a media investment strategist who recommends optimal budget pacing strategies. Your role is to analyze campaign objectives, timeline, competitive context, and inventory factors to recommend the best pacing pattern. Consider front-loaded, back-loaded, even, pulsing, and burst patterns. Provide specific weekly or period allocations with rationale. Include risk factors and monitoring triggers for pacing adjustment.",
+  "user_template": "Total Budget: {{budget}}\n\nTime Period: {{period}}\n\nCampaign Objectives: {{objectives_json}}\n\nSeasonality Data: {{seasonality}}\n\nCompetitive Context: {{competitive}}\n\nInventory Constraints: {{inventory}}\n\nRisk Tolerance: {{risk_tolerance}}\n\nRecommend the optimal pacing strategy for this campaign. Provide specific period-by-period allocations and explain the rationale.",
+  "output_format": "json",
+  "output_schema": {
+    "recommended_pacing": {
+      "pattern_name": "string - even|front-loaded|back-loaded|pulsing|burst|custom",
+      "pattern_description": "string - description of the pattern"
+    },
+    "pacing_curve": [
+      {
+        "period": "string - week or date range",
+        "budget_amount": "number - currency amount",
+        "pct_of_total": "number - percentage of budget",
+        "intensity": "string - high|medium|low",
+        "rationale": "string - why this allocation for this period"
+      }
+    ],
+    "pacing_rationale": {
+      "primary_driver": "string - main reason for pattern choice",
+      "objective_alignment": "string - how pattern supports objectives",
+      "competitive_consideration": "string - competitive timing factors",
+      "seasonal_adjustment": "string - how seasonality affected recommendation"
+    },
+    "alternative_patterns": [
+      {
+        "pattern_name": "string",
+        "trade_off": "string - what you gain and lose vs recommended"
+      }
+    ],
+    "risk_factors": ["string - risks with recommended pacing"],
+    "monitoring_triggers": [
+      {
+        "trigger": "string - condition to watch for",
+        "response": "string - recommended action if triggered"
+      }
+    ],
+    "reserve_recommendation": {
+      "reserve_pct": "number - percentage to hold back",
+      "reserve_purpose": "string - intended use of reserve"
+    }
+  },
+  "max_tokens": 2000,
+  "temperature": 0.2,
+  "capability_code": "ANL_PACE_RECOMMEND",
+  "agent_code": "ANL",
+  "timeout_seconds": 30
+}

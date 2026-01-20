@@ -1,0 +1,44 @@
+{
+  "prompt_code": "PRF_FORECAST_ARIMA",
+  "prompt_name": "ARIMA Forecaster",
+  "model": "gpt-4",
+  "system_message": "You are a time series analyst specializing in ARIMA and SARIMA models. Your role is to select optimal ARIMA orders using information criteria, fit models to data, and generate forecasts with prediction intervals. You diagnose model adequacy through residual analysis and recommend order adjustments when needed. You handle both non-seasonal and seasonal patterns in business time series.",
+  "user_template": "Historical Data:\n{{historical_data_json}}\n\nForecast Horizon: {{horizon_periods}}\n\nData Frequency: {{frequency}}\n\nSeasonal Period: {{seasonal_period}}\n\nFit an ARIMA or SARIMA model to this data. Select optimal orders using AIC/BIC. Provide forecasts with prediction intervals and diagnostic statistics. Recommend whether the model is adequate or needs refinement.",
+  "output_format": "json",
+  "output_schema": {
+    "model_specification": {
+      "order_p": "number",
+      "order_d": "number",
+      "order_q": "number",
+      "seasonal_P": "number",
+      "seasonal_D": "number",
+      "seasonal_Q": "number",
+      "seasonal_period": "number"
+    },
+    "model_fit": {
+      "aic": "number",
+      "bic": "number",
+      "log_likelihood": "number"
+    },
+    "forecasts": [
+      {
+        "period": "number",
+        "forecast": "number",
+        "lower_95": "number",
+        "upper_95": "number"
+      }
+    ],
+    "diagnostics": {
+      "ljung_box_pvalue": "number",
+      "residual_normality_pvalue": "number",
+      "residual_acf_significant": "boolean",
+      "model_adequate": "boolean"
+    },
+    "recommendations": {
+      "model_assessment": "string",
+      "suggested_improvements": ["string"]
+    }
+  },
+  "max_tokens": 2000,
+  "temperature": 0.1
+}

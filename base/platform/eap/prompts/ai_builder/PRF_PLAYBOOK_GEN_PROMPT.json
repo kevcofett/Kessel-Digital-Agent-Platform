@@ -1,66 +1,44 @@
 {
   "prompt_code": "PRF_PLAYBOOK_GEN",
-  "prompt_name": "Playbook Generator",
-  "description": "Generate optimization playbooks from accumulated learnings and patterns",
+  "prompt_name": "Generate Optimization Playbook",
+  "prompt_version": "1.0",
   "model": "gpt-4",
-  "system_message": "You are a marketing strategist specializing in creating actionable optimization playbooks from accumulated campaign learnings and patterns. Your task is to synthesize learnings into structured playbook documents that provide clear, specific guidance for campaign planning and execution. Playbooks must include: Executive Summary, Situation Analysis (when to apply), Key Learnings (with confidence scores), Recommendations (must-do and must-avoid), Implementation Checklist, and Measurement Framework. Be specific and actionable. Avoid generic advice. All recommendations must be traceable to specific learnings or patterns.",
-  "user_template": "Playbook Parameters:\n- Playbook Type: {{playbook_type}}\n- Scope: {{scope_description}}\n- Target Audience: {{target_audience}}\n\nSource Learnings:\n{{learnings_json}}\n\nSource Patterns:\n{{patterns_json}}\n\nCross-Campaign Insights:\n{{insights_json}}\n\nGenerate a comprehensive optimization playbook for this scope. Include all standard sections with specific, actionable guidance.",
+  "system_message": "You are a marketing operations expert who creates actionable playbooks from performance data and learnings. Your role is to transform learnings and patterns into clear condition-action rules that practitioners can follow during campaign execution. Generate rules with explicit conditions that can be monitored, specific actions to take, confidence levels based on supporting evidence, and exceptions where rules may not apply. Structure playbooks for practical use with decision logic, sequencing guidance, and review cadence. Ensure rules are simple enough to execute but specific enough to be useful.",
+  "user_template": "Learnings:\n{{learnings_json}}\n\nPatterns:\n{{patterns_json}}\n\nBusiness Rules and Constraints:\n{{rules_json}}\n\nPlaybook Scope: {{scope}}\n\nTarget Audience: {{audience}}\n\nGenerate an optimization playbook from these learnings and patterns. Create condition-action rules that can be applied during campaign planning and execution. Include confidence scores, exceptions, and link each rule to its source learnings.",
   "output_format": "json",
   "output_schema": {
-    "playbook": {
-      "title": "string",
-      "version": "string",
-      "generated_date": "string",
-      "playbook_type": "string",
-      "executive_summary": "string",
-      "situation_analysis": {
-        "scope": "string",
-        "applicability_conditions": ["string"],
-        "boundary_conditions": ["string"]
-      },
-      "key_learnings": [
-        {
-          "learning": "string",
-          "confidence": "number",
-          "source_campaigns": "number"
-        }
-      ],
-      "recommendations": {
-        "must_do": [
-          {
-            "recommendation": "string",
-            "rationale": "string",
-            "priority": "string (High|Medium|Low)"
-          }
-        ],
-        "must_avoid": [
-          {
-            "recommendation": "string",
-            "rationale": "string",
-            "risk_level": "string (High|Medium|Low)"
-          }
-        ]
-      },
-      "implementation_checklist": [
-        {
-          "step": "number",
-          "action": "string",
-          "timing": "string",
-          "owner": "string"
-        }
-      ],
-      "measurement_framework": {
-        "primary_metrics": ["string"],
-        "targets": "object",
-        "review_cadence": "string"
+    "playbook_name": "string - descriptive title",
+    "playbook_version": "string - semantic version number",
+    "applicable_scope": "string - where this playbook applies",
+    "target_audience": "string - who should use this playbook",
+    "rules": [
+      {
+        "rule_id": "string - unique identifier",
+        "rule_name": "string - short descriptive name",
+        "condition": "string - WHEN this condition is observed",
+        "context_requirements": ["string - AND these context factors apply"],
+        "action": "string - THEN take this action",
+        "expected_outcome": "string - EXPECT this result",
+        "confidence": "number - 0-100 based on evidence strength",
+        "priority": "string - critical|high|medium|low",
+        "exceptions": ["string - UNLESS these conditions present"],
+        "source_learnings": ["string - learning IDs that inform this rule"],
+        "monitoring_guidance": "string - how to check if condition applies"
       }
+    ],
+    "decision_tree": {
+      "description": "string - overview of decision logic",
+      "entry_point": "string - where to start",
+      "branches": ["string - key decision branches"]
     },
-    "metadata": {
-      "learnings_incorporated": "number",
-      "patterns_incorporated": "number",
-      "average_confidence": "number"
-    }
+    "implementation_notes": ["string - practical guidance for using playbook"],
+    "review_cadence": "string - how often to review and update",
+    "expiration_guidance": "string - when playbook may need refresh",
+    "metrics_to_track": ["string - KPIs to monitor playbook effectiveness"]
   },
-  "max_tokens": 4000,
-  "temperature": 0.3
+  "max_tokens": 3000,
+  "temperature": 0.2,
+  "capability_code": "PRF_PLAYBOOK_GEN",
+  "agent_code": "PRF",
+  "timeout_seconds": 30
 }

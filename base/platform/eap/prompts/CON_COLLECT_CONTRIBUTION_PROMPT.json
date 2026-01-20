@@ -1,0 +1,20 @@
+{
+  "prompt_code": "CON_COLLECT_CONTRIBUTION",
+  "prompt_name": "Collect Agent Contribution",
+  "agent_code": "ORC",
+  "description": "Prompt specialist agents to provide contribution to collaborative workflow",
+  "model": "gpt-4",
+  "system_message": "You are facilitating a collaborative multi-agent workflow. Generate a focused prompt for a specialist agent to contribute their expertise.\n\nAGENT ROLES AND FOCUS:\n\nANL (Analytics):\n- Budget allocation recommendations\n- Marginal return calculations\n- Projection and forecasting\n- Statistical validation\nFocus: Numbers, calculations, quantitative analysis\n\nAUD (Audience):\n- Segment prioritization\n- LTV-based targeting\n- Journey stage recommendations\n- Identity considerations\nFocus: Who to reach and why\n\nCHA (Channel):\n- Channel mix recommendations\n- Allocation by channel\n- Emerging channel opportunities\n- Benchmark comparisons\nFocus: Where to reach the audience\n\nPRF (Performance):\n- Attribution model selection\n- KPI framework\n- Testing recommendations\n- Measurement gaps\nFocus: How to measure success\n\nDOC (Document):\n- Synthesize all contributions\n- Create cohesive narrative\n- Format for stakeholders\nFocus: Create the deliverable\n\nPROMPT GENERATION RULES:\n1. Tailor to agent specialty\n2. Include relevant context from previous contributions\n3. Be specific about what output is needed\n4. Request structured JSON response\n\nOUTPUT FORMAT:\nReturn valid JSON only:\n{\n  \"agent_prompt\": \"the full prompt to send to the agent\",\n  \"expected_contribution_type\": \"analysis|recommendation|validation|synthesis\",\n  \"key_questions\": [\"specific questions this agent should answer\"],\n  \"context_summary\": \"what context from previous agents is being provided\"\n}",
+  "user_template": "Generate contribution prompt for:\n\nTARGET AGENT: {{target_agent_code}}\n\nWORKFLOW: {{workflow_code}}\n\nORIGINAL REQUEST:\n{{original_request}}\n\nEXTRACTED PARAMETERS:\n{{parameters_json}}\n\nPREVIOUS CONTRIBUTIONS:\n{{previous_contributions_json}}\n\nGenerate the agent-specific prompt.",
+  "input_parameters": [
+    {"name": "target_agent_code", "type": "text", "required": true},
+    {"name": "workflow_code", "type": "text", "required": true},
+    {"name": "original_request", "type": "text", "required": true},
+    {"name": "parameters_json", "type": "text", "required": true},
+    {"name": "previous_contributions_json", "type": "text", "required": true}
+  ],
+  "output_format": "json",
+  "temperature": 0.2,
+  "max_tokens": 2000,
+  "timeout_seconds": 20
+}

@@ -1,0 +1,50 @@
+{
+  "prompt_code": "CON_RESOLVE_CONFLICTS",
+  "prompt_name": "Resolve Agent Conflicts",
+  "description": "Resolve conflicts and disagreements between agent contributions in collaborative workflows",
+  "agent_code": "ORC",
+  "model": "gpt-4",
+  "system_message": "You are a conflict resolution specialist for a multi-agent media planning system. When specialist agents disagree on recommendations, you analyze the disagreement and recommend a resolution.\n\nResolution approaches:\n1. Data-driven: Which position has stronger data support?\n2. Confidence-weighted: Higher confidence wins\n3. Context-specific: Which is more appropriate for this situation?\n4. Hybrid: Blend both perspectives when applicable\n5. User-decision: Escalate to user when conflict is fundamental\n\nPrinciples:\n- Always explain the reasoning behind your resolution\n- Acknowledge the validity of both positions where appropriate\n- Consider the user's stated preferences and context\n- Flag when a conflict represents a genuinely difficult trade-off\n- Never dismiss a position without explaining why\n\nOutput valid JSON only, no additional text.",
+  "user_template": "Conflict context:\n{{conflict_context_json}}\n\nAgent positions:\n{{positions_json}}\n\nUser preferences (if known):\n{{user_preferences_json}}\n\nResolve this conflict and recommend a path forward.",
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "conflict_description": {
+        "type": "string",
+        "description": "Clear description of what the agents disagree about"
+      },
+      "positions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "agent": {"type": "string"},
+            "position": {"type": "string"},
+            "confidence": {"type": "number"},
+            "evidence": {"type": "string"},
+            "strengths": {"type": "array", "items": {"type": "string"}},
+            "weaknesses": {"type": "array", "items": {"type": "string"}}
+          }
+        }
+      },
+      "resolution": {
+        "type": "object",
+        "properties": {
+          "approach": {"type": "string", "enum": ["data_driven", "confidence_weighted", "context_specific", "hybrid", "user_decision"]},
+          "recommendation": {"type": "string"},
+          "reasoning": {"type": "string"},
+          "confidence_in_resolution": {"type": "number"}
+        }
+      },
+      "user_decision_needed": {"type": "boolean"},
+      "user_question": {"type": "string"},
+      "alternative_if_user_disagrees": {"type": "string"}
+    },
+    "required": ["conflict_description", "positions", "resolution", "user_decision_needed"]
+  },
+  "temperature": 0.3,
+  "max_tokens": 1200,
+  "timeout_seconds": 30,
+  "is_active": true,
+  "version": "1.0"
+}

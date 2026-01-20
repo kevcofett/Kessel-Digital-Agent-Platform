@@ -1,0 +1,106 @@
+{
+  "schemaName": "eap_workflow_definition",
+  "displayName": "Workflow Definition",
+  "pluralName": "Workflow Definitions",
+  "description": "Templates for collaborative multi-agent workflows",
+  "primaryColumn": "workflow_name",
+  "columns": [
+    {
+      "schemaName": "eap_workflow_definitionid",
+      "displayName": "Workflow Definition ID",
+      "type": "Uniqueidentifier",
+      "required": true,
+      "isPrimaryKey": true
+    },
+    {
+      "schemaName": "workflow_code",
+      "displayName": "Workflow Code",
+      "type": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Unique workflow identifier"
+    },
+    {
+      "schemaName": "workflow_name",
+      "displayName": "Workflow Name",
+      "type": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Display name"
+    },
+    {
+      "schemaName": "description",
+      "displayName": "Description",
+      "type": "MultilineText",
+      "maxLength": 500,
+      "required": false,
+      "description": "What this workflow does"
+    },
+    {
+      "schemaName": "trigger_phrases_json",
+      "displayName": "Trigger Phrases",
+      "type": "MultilineText",
+      "maxLength": 2000,
+      "required": true,
+      "description": "JSON array of trigger phrases"
+    },
+    {
+      "schemaName": "agent_sequence_json",
+      "displayName": "Agent Sequence",
+      "type": "MultilineText",
+      "maxLength": 1000,
+      "required": true,
+      "description": "JSON array of agents in order"
+    },
+    {
+      "schemaName": "estimated_duration_seconds",
+      "displayName": "Estimated Duration",
+      "type": "WholeNumber",
+      "required": false,
+      "description": "Expected duration in seconds"
+    },
+    {
+      "schemaName": "output_type",
+      "displayName": "Output Type",
+      "type": "Choice",
+      "required": true,
+      "options": ["plan", "analysis", "recommendation", "document"],
+      "description": "Type of output produced"
+    },
+    {
+      "schemaName": "synthesis_template",
+      "displayName": "Synthesis Template",
+      "type": "MultilineText",
+      "maxLength": 4000,
+      "required": false,
+      "description": "Template for synthesis"
+    },
+    {
+      "schemaName": "is_active",
+      "displayName": "Is Active",
+      "type": "Boolean",
+      "required": true,
+      "defaultValue": true,
+      "description": "Whether workflow is enabled"
+    },
+    {
+      "schemaName": "created_at",
+      "displayName": "Created At",
+      "type": "DateTime",
+      "required": true,
+      "description": "When created"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_workflow_code",
+      "columns": ["workflow_code"],
+      "isUnique": true
+    },
+    {
+      "name": "idx_workflow_active",
+      "columns": ["is_active"],
+      "isUnique": false
+    }
+  ]
+}

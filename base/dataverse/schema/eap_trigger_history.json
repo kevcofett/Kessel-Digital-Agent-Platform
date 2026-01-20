@@ -1,0 +1,88 @@
+{
+  "schemaName": "eap_trigger_history",
+  "displayName": "Trigger History",
+  "pluralName": "Trigger History",
+  "description": "History of fired proactive triggers",
+  "primaryColumn": "trigger_code",
+  "columns": [
+    {
+      "schemaName": "eap_trigger_historyid",
+      "displayName": "Trigger History ID",
+      "type": "Uniqueidentifier",
+      "required": true,
+      "isPrimaryKey": true
+    },
+    {
+      "schemaName": "trigger_code",
+      "displayName": "Trigger Code",
+      "type": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Which trigger fired"
+    },
+    {
+      "schemaName": "session_id",
+      "displayName": "Session ID",
+      "type": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Which session"
+    },
+    {
+      "schemaName": "user_id",
+      "displayName": "User ID",
+      "type": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Which user"
+    },
+    {
+      "schemaName": "fired_at",
+      "displayName": "Fired At",
+      "type": "DateTime",
+      "required": true,
+      "description": "When trigger fired"
+    },
+    {
+      "schemaName": "message_delivered",
+      "displayName": "Message Delivered",
+      "type": "MultilineText",
+      "maxLength": 1000,
+      "required": false,
+      "description": "Actual message shown"
+    },
+    {
+      "schemaName": "user_response",
+      "displayName": "User Response",
+      "type": "Choice",
+      "required": false,
+      "options": ["engaged", "dismissed", "ignored"],
+      "description": "How user responded"
+    },
+    {
+      "schemaName": "context_snapshot_json",
+      "displayName": "Context Snapshot",
+      "type": "MultilineText",
+      "maxLength": 4000,
+      "required": false,
+      "description": "Context when fired"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_trigger_user",
+      "columns": ["trigger_code", "user_id"],
+      "isUnique": false
+    },
+    {
+      "name": "idx_user_fired_at",
+      "columns": ["user_id", "fired_at"],
+      "isUnique": false
+    },
+    {
+      "name": "idx_session_triggers",
+      "columns": ["session_id"],
+      "isUnique": false
+    }
+  ]
+}

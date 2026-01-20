@@ -1,0 +1,150 @@
+{
+  "schemaName": "mpa_user_preferences",
+  "displayName": "User Preferences",
+  "pluralName": "User Preferences",
+  "description": "Stores user defaults and preferences for personalization",
+  "primaryColumn": "user_email",
+  "columns": [
+    {
+      "schemaName": "mpa_user_preferencesid",
+      "displayName": "User Preferences ID",
+      "type": "Uniqueidentifier",
+      "required": true,
+      "isPrimaryKey": true
+    },
+    {
+      "schemaName": "user_id",
+      "displayName": "User ID",
+      "type": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Azure AD user ID"
+    },
+    {
+      "schemaName": "user_email",
+      "displayName": "User Email",
+      "type": "Text",
+      "maxLength": 200,
+      "required": false,
+      "description": "User email for lookup"
+    },
+    {
+      "schemaName": "default_vertical",
+      "displayName": "Default Vertical",
+      "type": "Text",
+      "maxLength": 50,
+      "required": false,
+      "description": "Default industry vertical"
+    },
+    {
+      "schemaName": "typical_budget_low",
+      "displayName": "Typical Budget Low",
+      "type": "Currency",
+      "required": false,
+      "description": "Low end of typical budget range"
+    },
+    {
+      "schemaName": "typical_budget_high",
+      "displayName": "Typical Budget High",
+      "type": "Currency",
+      "required": false,
+      "description": "High end of typical budget range"
+    },
+    {
+      "schemaName": "preferred_channels_json",
+      "displayName": "Preferred Channels",
+      "type": "MultilineText",
+      "maxLength": 4000,
+      "required": false,
+      "description": "JSON array of preferred channels"
+    },
+    {
+      "schemaName": "excluded_channels_json",
+      "displayName": "Excluded Channels",
+      "type": "MultilineText",
+      "maxLength": 4000,
+      "required": false,
+      "description": "JSON array of excluded channels"
+    },
+    {
+      "schemaName": "preferred_kpis_json",
+      "displayName": "Preferred KPIs",
+      "type": "MultilineText",
+      "maxLength": 4000,
+      "required": false,
+      "description": "JSON array of preferred KPIs"
+    },
+    {
+      "schemaName": "communication_style",
+      "displayName": "Communication Style",
+      "type": "Choice",
+      "required": false,
+      "options": ["concise", "detailed", "balanced"],
+      "description": "Preferred response style"
+    },
+    {
+      "schemaName": "measurement_philosophy",
+      "displayName": "Measurement Philosophy",
+      "type": "Choice",
+      "required": false,
+      "options": ["incrementality_first", "attribution_focused", "hybrid"],
+      "description": "Preferred measurement approach"
+    },
+    {
+      "schemaName": "learned_patterns_json",
+      "displayName": "Learned Patterns",
+      "type": "MultilineText",
+      "maxLength": 8000,
+      "required": false,
+      "description": "JSON of learned behavioral patterns"
+    },
+    {
+      "schemaName": "last_session_id",
+      "displayName": "Last Session ID",
+      "type": "Text",
+      "maxLength": 50,
+      "required": false,
+      "description": "Last session for continuity"
+    },
+    {
+      "schemaName": "session_count",
+      "displayName": "Session Count",
+      "type": "WholeNumber",
+      "required": false,
+      "description": "Total sessions for this user"
+    },
+    {
+      "schemaName": "preference_version",
+      "displayName": "Preference Version",
+      "type": "WholeNumber",
+      "required": false,
+      "description": "Version for optimistic concurrency"
+    },
+    {
+      "schemaName": "created_at",
+      "displayName": "Created At",
+      "type": "DateTime",
+      "required": true,
+      "description": "Record creation timestamp"
+    },
+    {
+      "schemaName": "updated_at",
+      "displayName": "Updated At",
+      "type": "DateTime",
+      "required": true,
+      "description": "Last update timestamp"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_user_id",
+      "columns": ["user_id"],
+      "isUnique": true
+    },
+    {
+      "name": "idx_user_email",
+      "columns": ["user_email"],
+      "isUnique": false
+    }
+  ]
+}

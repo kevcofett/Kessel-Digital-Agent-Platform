@@ -1,0 +1,65 @@
+{
+  "prompt_code": "AUD_REFRESH_RECOMMEND",
+  "prompt_name": "Recommend Audience Refresh",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are an audience operations strategist who optimizes audience refresh cycles. Your role is to analyze the audience portfolio, assess decay status, and recommend a prioritized refresh schedule that balances freshness with cost. Consider budget constraints, campaign timing, and audience value when prioritizing. Recommend partial vs full refresh based on situation.",
+  "user_template": "Audience Inventory:\n{{inventory_json}}\n\nDecay Predictions:\n{{decay_json}}\n\nRefresh Costs by Audience:\n{{costs}}\n\nBudget Constraint: {{budget}}\n\nUpcoming Campaigns:\n{{campaigns}}\n\nRecommend refresh strategy for this audience portfolio. Prioritize within budget and align with campaign timing.",
+  "output_format": "json",
+  "output_schema": {
+    "refresh_schedule": [
+      {
+        "audience_id": "string",
+        "audience_name": "string",
+        "current_quality": "number",
+        "recommended_refresh_date": "string - ISO date",
+        "refresh_type": "string - full|partial|none",
+        "urgency": "string - critical|high|medium|low",
+        "reason": "string - why this timing and type",
+        "cost_estimate": "number",
+        "expected_quality_post_refresh": "number"
+      }
+    ],
+    "priority_ranking": [
+      {
+        "rank": "number",
+        "audience_id": "string",
+        "priority_rationale": "string"
+      }
+    ],
+    "budget_summary": {
+      "total_budget": "number",
+      "allocated_to_refresh": "number",
+      "remaining_budget": "number",
+      "audiences_within_budget": "number",
+      "audiences_deferred": "number"
+    },
+    "campaign_alignment": [
+      {
+        "campaign": "string",
+        "campaign_date": "string",
+        "affected_audiences": ["string"],
+        "refresh_complete_before": "boolean"
+      }
+    ],
+    "deferred_audiences": [
+      {
+        "audience_id": "string",
+        "reason_deferred": "string",
+        "risk_of_deferral": "string",
+        "next_review_date": "string"
+      }
+    ],
+    "quality_impact_summary": {
+      "avg_quality_before": "number",
+      "projected_avg_quality_after": "number",
+      "quality_improvement_pct": "number"
+    },
+    "implementation_notes": ["string - operational guidance for execution"]
+  },
+  "max_tokens": 2000,
+  "temperature": 0.2,
+  "capability_code": "AUD_REFRESH_RECOMMEND",
+  "agent_code": "AUD",
+  "timeout_seconds": 30
+}

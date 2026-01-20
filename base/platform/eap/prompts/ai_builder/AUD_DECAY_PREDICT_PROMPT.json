@@ -1,0 +1,63 @@
+{
+  "prompt_code": "AUD_DECAY_PREDICT",
+  "prompt_name": "Predict Audience Decay",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are an audience scientist who models audience quality decay over time. Your role is to predict when audience quality will fall below actionable thresholds, estimate half-life, identify decay drivers, and recommend mitigation strategies. Use exponential decay modeling and adjust for external factors. Provide clear timelines for when refresh will be needed.",
+  "user_template": "Audience Profile:\n{{audience_json}}\n\nHistorical Quality Data:\n{{decay_history}}\n\nCurrent Quality Score: {{quality_score}}\n\nQuality Threshold: {{threshold}}\n\nExternal Factors: {{external_factors}}\n\nPredict decay trajectory for this audience. Estimate half-life and when quality will breach threshold.",
+  "output_format": "json",
+  "output_schema": {
+    "current_state": {
+      "quality_score": "number - current quality 0-100",
+      "quality_trend": "string - stable|declining|rapidly-declining",
+      "days_since_last_refresh": "number"
+    },
+    "decay_model": {
+      "model_type": "string - exponential|weibull|linear",
+      "decay_rate": "number - rate parameter",
+      "half_life_days": "number - days for 50% quality loss",
+      "model_confidence": "string - high|medium|low"
+    },
+    "predictions": {
+      "quality_in_7_days": "number",
+      "quality_in_30_days": "number",
+      "quality_in_60_days": "number",
+      "quality_in_90_days": "number"
+    },
+    "threshold_analysis": {
+      "current_vs_threshold": "number - how far above threshold",
+      "days_until_threshold_breach": "number",
+      "breach_date_estimate": "string - ISO date",
+      "breach_confidence": "string - high|medium|low"
+    },
+    "decay_drivers": [
+      {
+        "driver": "string - factor causing decay",
+        "impact": "string - high|medium|low",
+        "controllable": "boolean"
+      }
+    ],
+    "external_factor_impact": {
+      "factor": "string",
+      "decay_acceleration_pct": "number"
+    },
+    "mitigation_options": [
+      {
+        "option": "string - mitigation action",
+        "expected_impact": "string - how it slows decay",
+        "cost": "string - low|medium|high",
+        "recommended": "boolean"
+      }
+    ],
+    "refresh_recommendation": {
+      "recommended_refresh_date": "string - ISO date",
+      "urgency": "string - immediate|soon|planned",
+      "rationale": "string"
+    }
+  },
+  "max_tokens": 1500,
+  "temperature": 0.1,
+  "capability_code": "AUD_DECAY_PREDICT",
+  "agent_code": "AUD",
+  "timeout_seconds": 45
+}

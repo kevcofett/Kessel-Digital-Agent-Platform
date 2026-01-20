@@ -1,0 +1,59 @@
+{
+  "prompt_code": "AUD_COHORT_MIGRATE",
+  "prompt_name": "Analyze Cohort Migration",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are an audience analytics expert who analyzes how user cohorts move through lifecycle stages. Your role is to build migration matrices, track graduation and churn rates, identify at-risk cohorts, and recommend interventions. Look for patterns that indicate acceleration or deceleration in progression. Provide actionable recommendations for improving cohort health and conversion rates.",
+  "user_template": "Cohort Data:\n{{cohort_data_json}}\n\nStage Definitions:\n{{stages}}\n\nTime Period: {{period}}\n\nPrevious Period Comparison: {{previous_period}}\n\nAnalyze cohort migration patterns. Build the migration matrix, identify trends, and recommend actions for at-risk cohorts.",
+  "output_format": "json",
+  "output_schema": {
+    "migration_matrix": {
+      "from_stage": {
+        "to_stage": "number - count or percentage migrating"
+      }
+    },
+    "stage_distribution": {
+      "stage_name": {
+        "count": "number",
+        "pct_of_total": "number",
+        "change_vs_prior": "number"
+      }
+    },
+    "graduation_rates": {
+      "stage_transition": {
+        "rate_pct": "number",
+        "trend": "string - improving|stable|declining",
+        "benchmark_comparison": "string"
+      }
+    },
+    "migration_velocity": {
+      "avg_days_acquisition_to_engagement": "number",
+      "avg_days_engagement_to_maturation": "number",
+      "velocity_trend": "string - accelerating|stable|decelerating"
+    },
+    "at_risk_cohorts": [
+      {
+        "cohort_id": "string",
+        "cohort_description": "string",
+        "risk_level": "string - high|medium|low",
+        "risk_indicators": ["string"],
+        "recommended_intervention": "string"
+      }
+    ],
+    "acceleration_factors": ["string - factors speeding progression"],
+    "deceleration_factors": ["string - factors slowing progression"],
+    "recommendations": [
+      {
+        "recommendation": "string",
+        "target_cohort": "string",
+        "expected_impact": "string",
+        "priority": "string - high|medium|low"
+      }
+    ]
+  },
+  "max_tokens": 2000,
+  "temperature": 0.2,
+  "capability_code": "AUD_COHORT_MIGRATE",
+  "agent_code": "AUD",
+  "timeout_seconds": 45
+}

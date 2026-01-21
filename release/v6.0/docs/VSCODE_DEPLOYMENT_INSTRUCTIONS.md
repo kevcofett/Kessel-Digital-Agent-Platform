@@ -1,8 +1,23 @@
 # MPA v6.0 POWER PLATFORM DEPLOYMENT - VS CODE INSTRUCTIONS
 
-**Date:** 2026-01-19
+**Date:** 2026-01-21 (Updated with Mastercard deployment learnings)
 **Priority:** CRITICAL - Production deployment
-**Estimated Time:** 12-16 hours
+
+---
+
+## MASTERCARD ENVIRONMENT IDENTIFIERS
+
+| Identifier | Value |
+|------------|-------|
+| **Instance URL** | `https://orgcc6eaaec.crm.dynamics.com` |
+| **Environment Org ID** | `75145e53-ba5e-f011-8ee3-000d3a3bc23` |
+| **Environment ID** | `ea9d500a-9299-e7b2-8754-53ebea0cb818` |
+| **Organization ID** | `75145e53-ba5e-f011-8ee3-000d3a3b2c23` |
+| **Unique Name** | `unq75145e53ba5ef0118ee3000d3a3b2` |
+| **Copilot Studio Session ID** | `05e12330-f6f0-11f0-b82a-5dc41b19dfae` |
+| **Copilot Studio Tenant ID** | `f06fa858-824b-4a85-aacb-f372cfdc282e` |
+| **Power Platform Object ID** | `06a89b84-078a-415a-8ef4-3b736cc0480d` |
+| **Cluster URI Suffix** | `us-il106.gateway.prod.island` |
 
 ---
 
@@ -15,8 +30,34 @@ This document provides step-by-step instructions for deploying MPA v6.0 to Power
 2. Validate and import 13 seed data files with 100% data integrity
 3. Create 25 Power Automate flows from YAML specifications
 4. Create 20+ AI Builder prompts
-5. Export solution package
+5. Export solution package using PAC CLI
 6. Run validation tests
+
+---
+
+## CRITICAL LEARNINGS FROM MASTERCARD DEPLOYMENT
+
+**These requirements are MANDATORY for successful deployment:**
+
+1. **Solution Export Method:**
+   - MUST use PAC CLI to export solutions from source environment
+   - Do NOT use programmatically generated solution packages
+   - All tables must exist in Dataverse BEFORE solution export
+
+2. **Schema Requirements:**
+   - Every table MUST have `primaryColumn` defined in schema
+   - Column names for custom attributes MUST use publisher prefix (eap_, mpa_, ca_)
+   - PrimaryNameAttribute must be properly defined for each entity
+
+3. **Publisher Prefixes:**
+   - `eap_` = Enterprise Agent Platform (core platform tables)
+   - `mpa_` = Media Planning Agent (analytics/channel tables)
+   - `ca_` = Consulting Agent (strategy/framework tables)
+
+4. **Pre-Export Checklist:**
+   - Verify all tables exist: `pac org list-tables`
+   - Verify all tables are in solution: Check Power Apps Admin Center
+   - Export using: `pac solution export --name <SolutionName> --path <output.zip>`
 
 ---
 
@@ -768,25 +809,61 @@ Each row contains:
 
 ## PHASE 6: SOLUTION EXPORT & VALIDATION
 
-### 6.1 Export Solution
+### 6.1 Pre-Export Verification (CRITICAL)
+
+Before exporting, verify all components exist in the source environment:
 
 ```powershell
-# Export managed solution
+# Authenticate to source environment
+pac auth create --environment https://orgcc6eaaec.crm.dynamics.com
+
+# Verify connection
+pac org who
+
+# List all tables to verify they exist
+pac org list-tables | Select-String "eap_|mpa_|ca_"
+```
+
+### 6.2 Export Solution (PAC CLI ONLY)
+
+**IMPORTANT:** Always export from a working Dataverse environment. Do NOT use programmatically generated packages.
+
+```powershell
+# Export the platform solution (contains all eap_ tables)
 pac solution export `
-    --path "./solutions/MPAv6MultiAgent_managed.zip" `
-    --name "MPAv6MultiAgent" `
+    --name "EnterpriseAIPlatformv10" `
+    --path "./solutions/EAPPlatform_complete.zip" `
+    --overwrite
+
+# Export managed solution (for production deployment)
+pac solution export `
+    --name "EnterpriseAIPlatformv10" `
+    --path "./solutions/EAPPlatform_managed.zip" `
     --managed
 
-# Export unmanaged solution (for development)
-pac solution export `
-    --path "./solutions/MPAv6MultiAgent_unmanaged.zip" `
-    --name "MPAv6MultiAgent"
-
-# Unpack for source control
+# Unpack for source control (optional)
 pac solution unpack `
-    --zipfile "./solutions/MPAv6MultiAgent_unmanaged.zip" `
-    --folder "./solutions/MPAv6MultiAgent_unpacked"
+    --zipfile "./solutions/EAPPlatform_complete.zip" `
+    --folder "./solutions/EAPPlatform_unpacked"
 ```
+
+### 6.3 Verify Export Contents
+
+After export, verify all required tables are included:
+
+```powershell
+# List entities in exported solution
+unzip -l ./solutions/EAPPlatform_complete.zip | Select-String "customizations.xml"
+
+# Check for all eap_ tables in customizations.xml
+unzip -p ./solutions/EAPPlatform_complete.zip customizations.xml | Select-String "eap_"
+```
+
+Expected tables in export:
+- eap_Client, eap_Session, eap_User
+- eap_capability_implementation, eap_telemetry, eap_featureflag
+- eap_proactive_trigger, eap_trigger_history
+- eap_workflow_contribution, eap_workflow_definition
 
 ### 6.2 Validation Tests
 
@@ -897,9 +974,26 @@ foreach ($table in $expectedCounts.Keys) {
 3. **Import order matters** - Import seed data in dependency order
 4. **Nullable fields are OK** - Some fields legitimately allow NULL (parent_vertical_code, effective_to, fallback_agent_code for ORC)
 5. **Test after each phase** - Don't proceed until current phase validates
+6. **PAC CLI export ONLY** - Never use programmatically generated solution packages
+7. **Tables must exist first** - All Dataverse tables must exist in source environment before solution export
+8. **PrimaryColumn required** - Every schema must have primaryColumn defined for PrimaryNameAttribute
+9. **Publisher prefixes** - Custom columns must use eap_, mpa_, or ca_ prefix
 
 ---
 
-**Document Version:** 1.0
+## SOLUTION FILES LOCATION
+
+After successful deployment and export, solution packages are stored at:
+
+| File | Description | Use Case |
+|------|-------------|----------|
+| `release/v6.0/solutions/EAPPlatform_complete.zip` | Complete platform export from AragornAI | Import to target environments |
+| `release/v6.0/solutions/EAPPlatform_6_1_0_0.zip` | Versioned platform solution | Production deployment |
+| `release/v6.0/solutions/agents/*.zip` | Individual agent solutions | Agent-specific deployment |
+
+---
+
+**Document Version:** 1.1
 **Created:** 2026-01-19
+**Updated:** 2026-01-21 (Mastercard deployment learnings)
 **For:** VS Code (Claude Code)

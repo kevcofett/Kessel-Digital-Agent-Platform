@@ -56,6 +56,12 @@ Before importing solutions:
    - HTTP Premium connector license
    - Dataverse connector configured
 
+4. **Source Environment Requirements (CRITICAL)**
+   - All Dataverse tables must exist in source environment before solution export
+   - Tables must have PrimaryNameAttribute properly defined
+   - Custom columns must use publisher prefix (e.g., `eap_`, `mpa_`, `ca_`)
+   - Solution packages MUST be exported via PAC CLI from source environment
+
 ## Import Steps
 
 ### Using Power Apps Admin Center
@@ -67,11 +73,25 @@ Before importing solutions:
 5. Follow import wizard
 6. Activate flows after import
 
-### Using PAC CLI
+### Using PAC CLI (Recommended)
+
+PAC CLI is the **preferred method** for solution import/export based on deployment learnings.
+
+**Exporting from Source Environment:**
 
 ```bash
-# Authenticate
-pac auth create --environment https://[env].crm.dynamics.com
+# Authenticate to source environment
+pac auth create --environment https://aragornai.crm.dynamics.com
+
+# Export solution (all tables must exist first)
+pac solution export --name EnterpriseAIPlatformv10 --path ./EAPPlatform_complete.zip --overwrite
+```
+
+**Importing to Target Environment:**
+
+```bash
+# Authenticate to target environment
+pac auth create --environment https://[target-env].crm.dynamics.com
 
 # Import platform first
 pac solution import --path EAPPlatform_6_1_0_0.zip --activate-plugins
@@ -81,6 +101,8 @@ pac solution import --path EAPANLAgent_6_1_0_0.zip --activate-plugins
 pac solution import --path EAPAUDAgent_6_1_0_0.zip --activate-plugins
 # ... repeat for other agents
 ```
+
+**Important:** Do NOT use programmatically generated solution packages. Always export from a working Dataverse environment using PAC CLI.
 
 ## Post-Deployment Configuration
 

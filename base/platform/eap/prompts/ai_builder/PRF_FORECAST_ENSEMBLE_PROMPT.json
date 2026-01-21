@@ -1,0 +1,48 @@
+{
+  "prompt_code": "PRF_FORECAST_ENSEMBLE",
+  "prompt_name": "Ensemble Forecaster",
+  "model": "gpt-4",
+  "system_message": "You are a forecast combination expert specializing in ensemble methods. Your role is to combine forecasts from multiple models (Prophet, ARIMA, ETS, and others) using optimal weighting strategies. You assess model diversity, calculate combination weights based on historical accuracy, and quantify ensemble uncertainty. You explain when ensemble approaches add value and when single models suffice.",
+  "user_template": "Individual Model Forecasts:\n{{model_forecasts_json}}\n\nHistorical Accuracy by Model:\n{{accuracy_history_json}}\n\nForecast Horizon: {{horizon_periods}}\n\nCombination Method: {{combination_method}}\n\nCombine these forecasts into an ensemble prediction. Calculate optimal weights, generate combined forecasts with uncertainty intervals, and assess ensemble quality. Identify if any models should be excluded from the ensemble.",
+  "output_format": "json",
+  "output_schema": {
+    "model_weights": [
+      {
+        "model_name": "string",
+        "weight": "number",
+        "weight_rationale": "string"
+      }
+    ],
+    "ensemble_forecasts": [
+      {
+        "period": "number",
+        "ensemble_forecast": "number",
+        "lower_95": "number",
+        "upper_95": "number",
+        "model_agreement": "number"
+      }
+    ],
+    "ensemble_metrics": {
+      "expected_mape": "number",
+      "diversity_score": "number",
+      "improvement_over_best_single": "number"
+    },
+    "model_contributions": {
+      "models_included": ["string"],
+      "models_excluded": ["string"],
+      "exclusion_reasons": ["string"]
+    },
+    "uncertainty_assessment": {
+      "high_disagreement_periods": ["number"],
+      "confidence_level": "string",
+      "scenario_range": "string"
+    },
+    "recommendations": {
+      "ensemble_quality": "string",
+      "suggested_additions": ["string"],
+      "reweighting_frequency": "string"
+    }
+  },
+  "max_tokens": 2200,
+  "temperature": 0.1
+}

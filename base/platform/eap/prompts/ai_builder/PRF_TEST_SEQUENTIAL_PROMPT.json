@@ -1,0 +1,51 @@
+{
+  "prompt_code": "PRF_TEST_SEQUENTIAL",
+  "prompt_name": "Sequential A/B Test Analysis",
+  "description": "Apply sequential testing methodology to enable valid early stopping while maintaining error rate control",
+  "model": "gpt-4",
+  "system_message": "You are a statistical expert specializing in sequential A/B testing methods. Your task is to analyze experiments using group sequential designs that allow valid early stopping.\n\nSEQUENTIAL TESTING METHODOLOGY:\n1. Calculate information fraction (current sample / planned sample)\n2. Apply alpha spending function to determine current boundary\n3. Compare test statistic to spending-adjusted boundaries\n4. Determine if stopping rule is met (efficacy, futility, or continue)\n\nBOUNDARY TYPES:\n- O'Brien-Fleming: conservative early, liberal late (recommended for confirmatory)\n- Pocock: constant boundaries (more early stopping)\n- Haybittle-Peto: very conservative interim (alpha=0.001)\n\nALPHA SPENDING:\n- O'Brien-Fleming: alpha * (2 - 2*Phi(z_alpha/sqrt(t)))\n- Pocock: alpha * ln(1 + (e-1)*t)\n- Track cumulative alpha spent at each look\n\nOUTPUT REQUIREMENTS:\n- Current stopping boundaries\n- Decision recommendation (stop or continue)\n- Projected sample for significance if continuing\n- Conditional power estimates\n- Full sequential analysis audit trail",
+  "user_template": "Perform sequential analysis for this A/B test:\n\nCURRENT RESULTS:\n- Control conversions: {{control_conversions}} / {{control_n}}\n- Treatment conversions: {{treatment_conversions}} / {{treatment_n}}\n\nSEQUENTIAL DESIGN:\n- Planned total sample: {{planned_sample}}\n- Current sample: {{current_sample}}\n- Maximum looks planned: {{max_looks}}\n- Current look number: {{current_look}}\n- Boundary type: {{boundary_type}}\n- Alpha level: {{alpha}}\n\nProvide sequential analysis with stopping recommendation.",
+  "output_format": "json",
+  "output_schema": {
+    "information_fraction": "number",
+    "current_look": "number",
+    "max_looks": "number",
+    "alpha_spent_cumulative": "number",
+    "alpha_remaining": "number",
+    "current_boundary": {
+      "efficacy_z": "number",
+      "futility_z": "number"
+    },
+    "test_statistic": {
+      "z_score": "number",
+      "p_value_nominal": "number"
+    },
+    "stopping_decision": {
+      "recommendation": "string",
+      "reason": "string",
+      "boundary_crossed": "string"
+    },
+    "if_continuing": {
+      "samples_remaining": "number",
+      "conditional_power": "number",
+      "predicted_final_z": "number"
+    },
+    "effect_estimate": {
+      "current_lift_pct": "number",
+      "adjusted_ci_lower": "number",
+      "adjusted_ci_upper": "number"
+    },
+    "audit_trail": [
+      {
+        "look": "number",
+        "information_fraction": "number",
+        "z_score": "number",
+        "boundary": "number",
+        "decision": "string"
+      }
+    ],
+    "confidence": "number"
+  },
+  "max_tokens": 2000,
+  "temperature": 0.1
+}

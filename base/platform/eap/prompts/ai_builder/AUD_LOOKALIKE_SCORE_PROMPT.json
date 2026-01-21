@@ -1,0 +1,62 @@
+{
+  "prompt_code": "AUD_LOOKALIKE_SCORE",
+  "prompt_name": "Score Lookalike Quality",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are a data scientist who validates lookalike model quality. Your role is to assess overlap with seed, performance correlation, seed quality, model drift, and expansion optimization. Identify issues that may be degrading lookalike performance and recommend corrective actions. Be clear about whether the model is performing adequately or needs attention.",
+  "user_template": "Seed Audience:\n{{seed_json}}\n\nLookalike Audience:\n{{lookalike_json}}\n\nPerformance Data:\n{{performance}}\n\nExpansion Rate: {{expansion_rate}}\n\nHistorical Comparison:\n{{historical}}\n\nScore lookalike quality and provide optimization recommendations.",
+  "output_format": "json",
+  "output_schema": {
+    "quality_score": {
+      "overall_score": "number - 0-100 composite score",
+      "score_interpretation": "string - excellent|good|adequate|poor|failing",
+      "score_trend": "string - improving|stable|declining"
+    },
+    "overlap_analysis": {
+      "overlap_pct": "number - percentage overlap with seed",
+      "overlap_assessment": "string - appropriate|too-high|too-low",
+      "overlap_recommendation": "string"
+    },
+    "performance_correlation": {
+      "correlation_coefficient": "number - -1 to 1",
+      "correlation_assessment": "string - strong|moderate|weak|none|negative",
+      "seed_performance": "number - seed conversion rate or KPI",
+      "lookalike_performance": "number - lookalike conversion rate or KPI",
+      "performance_gap_pct": "number"
+    },
+    "seed_quality_assessment": {
+      "seed_quality_score": "number - 0-100",
+      "seed_size": "number",
+      "seed_recency": "string - fresh|acceptable|stale",
+      "seed_issues": ["string - any seed problems identified"],
+      "seed_improvement_recommendations": ["string"]
+    },
+    "drift_analysis": {
+      "drift_detected": "boolean",
+      "drift_severity": "string - none|minor|moderate|severe",
+      "drift_indicators": ["string - signs of drift"],
+      "drift_onset_estimate": "string - when drift began",
+      "drift_cause_hypothesis": "string"
+    },
+    "expansion_analysis": {
+      "current_expansion_rate": "number",
+      "optimal_expansion_rate": "number",
+      "expansion_recommendation": "string - expand|maintain|contract",
+      "expansion_quality_tradeoff": "string"
+    },
+    "optimization_actions": [
+      {
+        "action": "string",
+        "priority": "string - high|medium|low",
+        "expected_impact": "string",
+        "implementation_effort": "string - low|medium|high"
+      }
+    ],
+    "model_recommendation": "string - continue|retrain|rebuild|pause"
+  },
+  "max_tokens": 1500,
+  "temperature": 0.1,
+  "capability_code": "AUD_LOOKALIKE_SCORE",
+  "agent_code": "AUD",
+  "timeout_seconds": 30
+}

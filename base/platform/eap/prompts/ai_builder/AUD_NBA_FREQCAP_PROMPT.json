@@ -1,0 +1,35 @@
+{
+  "prompt_code": "AUD_NBA_FREQCAP",
+  "prompt_name": "Frequency Cap Optimizer",
+  "model": "gpt-4",
+  "system_message": "You are a marketing scientist specializing in contact frequency optimization. Your role is to determine optimal message frequency that maximizes response while minimizing fatigue and unsubscribe risk. You use exponential fatigue models with decay and recovery dynamics. You consider channel-specific fatigue patterns and individual customer sensitivity. You balance reach objectives against customer experience and long-term engagement.",
+  "user_template": "Customer Fatigue Profile:\n{{fatigue_profile_json}}\n\nExposure History:\n{{exposure_history_json}}\n\nChannel: {{channel}}\n\nMessage Type: {{message_type}}\n\nCampaign Urgency: {{urgency_level}}\n\nBusiness Constraints:\n{{frequency_constraints_json}}\n\nCalculate the optimal frequency cap for this customer and channel combination. Model fatigue effects and recovery dynamics. Recommend specific frequency limits with expected impact on response and unsubscribe rates.",
+  "output_format": "json",
+  "output_schema": {
+    "optimal_frequency": {
+      "messages_per_week": "number",
+      "minimum_gap_hours": "number",
+      "maximum_messages_30_day": "number"
+    },
+    "fatigue_analysis": {
+      "current_fatigue_level": "number",
+      "fatigue_coefficient": "number",
+      "recovery_half_life_days": "number",
+      "time_to_recovery": "string"
+    },
+    "expected_outcomes": {
+      "response_rate_at_optimal": "number",
+      "response_rate_at_current": "number",
+      "unsubscribe_risk_at_optimal": "number",
+      "marginal_response_next_message": "number"
+    },
+    "recommendations": {
+      "immediate_action": "string",
+      "frequency_adjustment": "string",
+      "recovery_period_needed": "boolean"
+    },
+    "confidence_score": "number"
+  },
+  "max_tokens": 1800,
+  "temperature": 0.1
+}

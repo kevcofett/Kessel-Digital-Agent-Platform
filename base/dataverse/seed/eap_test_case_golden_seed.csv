@@ -1,0 +1,53 @@
+test_case_id,scenario_name,scenario_category,input_message,expected_agent,expected_capability,expected_output_contains,confidence_threshold,priority,is_active
+TC-001,Budget Optimization Request,ROUTING,Optimize my $500K budget across digital channels for Q2,ANL,ANL_BUDGET_OPTIMIZE,optimal_allocation,0.85,HIGH,true
+TC-002,Audience Segmentation Request,ROUTING,Help me segment my customer base by lifetime value,AUD,AUD_SEGMENT,segments,0.85,HIGH,true
+TC-003,Channel Mix Question,ROUTING,What channels should I use for a brand awareness campaign?,CHA,CHA_RECOMMEND,channel_recommendations,0.80,HIGH,true
+TC-004,Supply Path Analysis,ROUTING,Analyze my programmatic supply path fees,SPO,SPO_FEE_ANALYZE,fee_waterfall,0.85,HIGH,true
+TC-005,Document Generation,ROUTING,Generate a media plan document for my campaign,DOC,DOC_GENERATE,document_url,0.90,HIGH,true
+TC-006,Performance Analysis,ROUTING,Analyze last month's campaign performance and find anomalies,PRF,PRF_ANOMALY_DETECT,anomalies,0.85,HIGH,true
+TC-007,Framework Selection,ROUTING,Which strategic framework should I use for market entry analysis?,CST,CST_FRAMEWORK_SELECT,framework_recommendations,0.85,HIGH,true
+TC-008,Change Management,ROUTING,Help me create a stakeholder communication plan for our MarTech rollout,CHG,CHG_STAKEHOLDER,stakeholder_map,0.85,HIGH,true
+TC-009,Campaign Strategy,ROUTING,Develop a campaign strategy for our new product launch,MKT,MKT_CAMPAIGN_STRATEGY,campaign_strategy,0.85,HIGH,true
+TC-010,Creative Brief,ROUTING,Create a creative brief for our holiday campaign,MKT,MKT_CREATIVE_BRIEF,creative_brief,0.85,HIGH,true
+TC-011,Multi-Agent Budget Flow,WORKFLOW,Create a complete media plan with budget optimization and channel allocation for $1M annual spend,ORC,FULL_MEDIA_PLAN,plan_complete,0.80,HIGH,true
+TC-012,Multi-Agent Measurement,WORKFLOW,Design a measurement strategy with attribution and incrementality testing,ORC,MEASUREMENT_STRATEGY,measurement_plan,0.80,HIGH,true
+TC-013,Propensity Scoring ML,ML_ENDPOINT,Score propensity for my high-value customer segment,AUD,AUD_PROPENSITY_SCORE,propensity_scores,0.85,HIGH,true
+TC-014,Monte Carlo Simulation,ML_ENDPOINT,Run Monte Carlo simulation on these three budget scenarios,ANL,ANL_MONTECARLO,simulation_results,0.85,HIGH,true
+TC-015,Anomaly Detection ML,ML_ENDPOINT,Detect performance anomalies in my campaign data from last week,PRF,PRF_ANOMALY_DETECT,anomaly_flags,0.85,HIGH,true
+TC-016,Media Mix Model,ML_ENDPOINT,Run media mix modeling on my historical spend data,CHA,CHA_MEDIA_MIX,channel_contributions,0.85,HIGH,true
+TC-017,Attribution Analysis ML,ML_ENDPOINT,Calculate attribution for my conversion paths,ANL,ANL_ATTRIBUTION,attribution_weights,0.85,HIGH,true
+TC-018,RICE Prioritization,ML_ENDPOINT,Prioritize these 10 initiatives using RICE scoring,CST,CST_PRIORITIZE,ranked_initiatives,0.85,HIGH,true
+TC-019,LTV Calculation,CAPABILITY,Calculate lifetime value for my top customer segments,AUD,AUD_CALCULATE_LTV,ltv_values,0.85,MEDIUM,true
+TC-020,NPV Analysis,CAPABILITY,Calculate NPV for this MarTech investment over 5 years,ANL,ANL_NPV,npv_result,0.90,MEDIUM,true
+TC-021,IRR Calculation,CAPABILITY,What's the IRR on this $2M campaign investment?,ANL,ANL_IRR,irr_percentage,0.90,MEDIUM,true
+TC-022,Benchmark Lookup,CAPABILITY,What are the CPM benchmarks for retail paid social?,CHA,CHA_BENCHMARK,benchmark_values,0.90,MEDIUM,true
+TC-023,Partner Evaluation,CAPABILITY,Evaluate these three DSPs for our programmatic buy,SPO,SPO_PARTNER_SCORE,partner_scores,0.85,MEDIUM,true
+TC-024,Sensitivity Analysis,CAPABILITY,Run sensitivity analysis on budget allocation assumptions,ANL,ANL_SENSITIVITY,sensitivity_matrix,0.85,MEDIUM,true
+TC-025,Journey Mapping,CAPABILITY,Map the customer journey for our B2B enterprise segment,AUD,AUD_JOURNEY_MAP,journey_stages,0.80,MEDIUM,true
+TC-026,Session Memory Recall,MEMORY,Remember I prefer incrementality-based measurement,ORC,MEM_STORE_PREFERENCE,preference_stored,0.90,HIGH,true
+TC-027,Preference Application,MEMORY,Based on what you know about me recommend channels,ORC,MEM_RETRIEVE_CONTEXT,personalized_response,0.80,HIGH,true
+TC-028,Session Continuity,MEMORY,Continue where we left off yesterday,ORC,MEM_RETRIEVE_CONTEXT,session_resumed,0.80,HIGH,true
+TC-029,Proactive Budget Alert,PROACTIVE,User allocates 80% to single channel,ORC,PRO_EVALUATE_TRIGGERS,concentration_warning,0.85,HIGH,true
+TC-030,Proactive Benchmark Warning,PROACTIVE,User enters CPM 3x above benchmark,ORC,PRO_EVALUATE_TRIGGERS,benchmark_alert,0.85,HIGH,true
+TC-031,Proactive Missing Attribution,PROACTIVE,User reaches Step 8 without defining attribution,ORC,PRO_EVALUATE_TRIGGERS,attribution_reminder,0.80,HIGH,true
+TC-032,File Upload CSV,MULTIMODAL,User uploads campaign_data.csv,DOC,FILE_ANALYZE_CSV,data_extracted,0.85,HIGH,true
+TC-033,File Upload Excel,MULTIMODAL,User uploads budget_template.xlsx,DOC,FILE_ANALYZE_EXCEL,data_extracted,0.85,HIGH,true
+TC-034,File Upload PDF,MULTIMODAL,User uploads RFP_document.pdf,DOC,FILE_EXTRACT_PDF,text_extracted,0.85,HIGH,true
+TC-035,Collaborative Workflow Init,CONSENSUS,Run full media plan workflow with all specialists,ORC,CON_COLLECT_CONTRIBUTION,workflow_initiated,0.80,HIGH,true
+TC-036,Conflict Resolution,CONSENSUS,ANL recommends X but CHA recommends Y,ORC,CON_RESOLVE_CONFLICTS,resolution_presented,0.75,HIGH,true
+TC-037,Contribution Synthesis,CONSENSUS,Synthesize recommendations from ANL AUD and CHA,ORC,CON_SYNTHESIZE_RESPONSE,unified_recommendation,0.80,HIGH,true
+TC-038,Ambiguous Intent Handling,EDGE_CASE,Help me with my campaign,ORC,CLARIFICATION,clarifying_question,0.70,MEDIUM,true
+TC-039,Out of Scope Request,EDGE_CASE,Write me a poem about advertising,ORC,POLITE_DECLINE,scope_explanation,0.90,MEDIUM,true
+TC-040,Incomplete Context,EDGE_CASE,Optimize my budget,ORC,CONTEXT_REQUEST,missing_info_question,0.80,MEDIUM,true
+TC-041,SWOT Framework Application,FRAMEWORK,Apply SWOT analysis to our market position,CST,CST_STRATEGIC_ANALYZE,swot_output,0.85,MEDIUM,true
+TC-042,Porter Five Forces,FRAMEWORK,Analyze our industry using Porter's Five Forces,CST,CST_STRATEGIC_ANALYZE,porter_analysis,0.85,MEDIUM,true
+TC-043,Kotter Change Model,FRAMEWORK,Apply Kotter's 8-step model to our transformation,CHG,CHG_ADOPTION,kotter_plan,0.85,MEDIUM,true
+TC-044,ADKAR Assessment,FRAMEWORK,Assess change readiness using ADKAR,CHG,CHG_READINESS,adkar_scores,0.85,MEDIUM,true
+TC-045,Brand Positioning,FRAMEWORK,Define brand positioning for our new product line,MKT,MKT_BRAND_POSITIONING,positioning_statement,0.85,MEDIUM,true
+TC-046,GTM Planning,FRAMEWORK,Create go-to-market plan for Q3 launch,MKT,MKT_GTM_PLAN,gtm_plan,0.85,MEDIUM,true
+TC-047,Business Case Generation,DOCUMENT,Generate business case for CDP investment,DOC,DOC_BUSINESSCASE,business_case_doc,0.85,MEDIUM,true
+TC-048,Roadmap Generation,DOCUMENT,Create implementation roadmap for MarTech transformation,DOC,DOC_ROADMAP,roadmap_doc,0.85,MEDIUM,true
+TC-049,Vertical Context Retail,VERTICAL,I'm planning a retail holiday campaign,ORC,VERTICAL_CONTEXT,retail_context_applied,0.80,MEDIUM,true
+TC-050,Vertical Context Finance,VERTICAL,Plan a campaign for our financial services client,ORC,VERTICAL_CONTEXT,finance_context_applied,0.80,MEDIUM,true
+TC-051,Express Pathway,PATHWAY,I need a quick budget split no details,ORC,EXPRESS_PATHWAY,rapid_allocation,0.85,MEDIUM,true
+TC-052,Guided Pathway,PATHWAY,Walk me through the full planning process,ORC,GUIDED_PATHWAY,step_by_step,0.85,MEDIUM,true

@@ -1,0 +1,45 @@
+{
+  "prompt_code": "CHA_CURVE_DIMINISHING",
+  "prompt_name": "Diminishing Returns Analyzer",
+  "model": "gpt-4",
+  "system_message": "You are a marketing optimization expert specializing in diminishing returns analysis. Your role is to calculate marginal returns at any spend level, identify optimal allocation points, and recommend budget reallocation to maximize total response. You compare marginal returns across channels and identify opportunities to improve efficiency through reallocation. You provide clear visualization data for diminishing returns curves.",
+  "user_template": "Channel Curve Parameters:\n{{channel_curves_json}}\n\nCurrent Allocations:\n{{current_allocations_json}}\n\nTotal Budget: {{total_budget}}\n\nAnalyze diminishing returns across channels. Calculate marginal return at current spend for each channel. Identify optimal allocation that equalizes marginal returns. Quantify the response improvement from reallocation.",
+  "output_format": "json",
+  "output_schema": {
+    "current_marginal_returns": [
+      {
+        "channel": "string",
+        "current_spend": "number",
+        "marginal_return": "number",
+        "spend_elasticity": "number"
+      }
+    ],
+    "optimal_allocation": [
+      {
+        "channel": "string",
+        "optimal_spend": "number",
+        "marginal_return_at_optimal": "number",
+        "change_from_current": "number"
+      }
+    ],
+    "reallocation_impact": {
+      "current_total_response": "number",
+      "optimal_total_response": "number",
+      "incremental_response": "number",
+      "percent_improvement": "number"
+    },
+    "efficiency_metrics": {
+      "current_average_return": "number",
+      "optimal_average_return": "number",
+      "equalized_marginal_return": "number"
+    },
+    "recommendations": {
+      "top_reallocation_opportunity": "string",
+      "channels_to_increase": ["string"],
+      "channels_to_decrease": ["string"],
+      "implementation_priority": "string"
+    }
+  },
+  "max_tokens": 2000,
+  "temperature": 0.1
+}

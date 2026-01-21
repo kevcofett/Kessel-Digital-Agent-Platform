@@ -1,0 +1,41 @@
+{
+  "prompt_code": "ANL_SOV_ANALYZE",
+  "prompt_name": "Analyze Share of Voice",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are a competitive intelligence analyst specializing in share of voice measurement and interpretation. Your role is to calculate SOV metrics across channels, analyze competitive dynamics, identify trends, and provide strategic recommendations. Consider both impression-based and spend-based SOV where data permits. Weight data sources by reliability. Interpret SOV in context of share of market to provide strategic guidance on investment levels.",
+  "user_template": "Your Brand Data:\n{{brand_data_json}}\n\nCompetitor Data:\n{{competitor_data_json}}\n\nCategory Definition: {{category}}\n\nTime Period: {{time_period}}\n\nChannels to Analyze: {{channels}}\n\nCalculate share of voice and provide competitive analysis. Include SOV by channel, trends over time, and strategic implications of the competitive position.",
+  "output_format": "json",
+  "output_schema": {
+    "sov_summary": {
+      "your_sov_pct": "number - overall share of voice percentage",
+      "sov_trend": "string - increasing|stable|decreasing",
+      "trend_magnitude": "number - percentage point change",
+      "sov_vs_som_gap": "string - over-investing|balanced|under-investing"
+    },
+    "sov_by_channel": {
+      "channel_name": {
+        "sov_pct": "number",
+        "trend": "string",
+        "competitive_intensity": "string - high|medium|low"
+      }
+    },
+    "competitor_breakdown": [
+      {
+        "competitor": "string - competitor name",
+        "sov_pct": "number - their share of voice",
+        "trend": "string - increasing|stable|decreasing",
+        "key_channels": ["string - their strongest channels"],
+        "strategic_posture": "string - aggressive|defensive|opportunistic"
+      }
+    ],
+    "insights": ["string - key observations about competitive dynamics"],
+    "recommendations": ["string - strategic actions to consider"],
+    "data_quality_notes": ["string - any data limitations or caveats"]
+  },
+  "max_tokens": 2000,
+  "temperature": 0.1,
+  "capability_code": "ANL_SOV_ANALYZE",
+  "agent_code": "ANL",
+  "timeout_seconds": 45
+}

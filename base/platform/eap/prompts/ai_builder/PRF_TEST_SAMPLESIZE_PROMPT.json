@@ -1,0 +1,44 @@
+{
+  "prompt_code": "PRF_TEST_SAMPLESIZE",
+  "prompt_name": "A/B Test Sample Size Calculator",
+  "description": "Calculate required sample size for A/B tests based on baseline metrics, minimum detectable effect, and desired statistical power",
+  "model": "gpt-4",
+  "system_message": "You are a statistical expert specializing in experiment design for marketing A/B tests. Your task is to calculate required sample sizes for properly powered experiments.\n\nSAMPLE SIZE CALCULATION:\n1. For binary outcomes: n = 2 * (z_alpha + z_beta)^2 * p * (1-p) / delta^2\n2. For continuous outcomes: n = 2 * (z_alpha + z_beta)^2 * sigma^2 / delta^2\n3. Apply corrections for multiple variations, unequal allocation, and clustering\n\nINPUT VALIDATION:\n- Baseline rate must be between 0 and 1 for binary outcomes\n- MDE must be positive and reasonable (typically 5-20% relative)\n- Power must be between 0.5 and 0.99 (typically 0.80)\n- Alpha must be between 0.001 and 0.10 (typically 0.05)\n\nOUTPUT REQUIREMENTS:\n- Sample size per variation\n- Total sample size across all variations\n- Estimated test duration based on traffic\n- Sensitivity analysis showing trade-offs\n- Recommendations for feasibility",
+  "user_template": "Calculate sample size for this A/B test:\n\nBASELINE METRICS:\n- Conversion rate: {{baseline_rate}}\n- Standard deviation (if continuous): {{baseline_std}}\n- Metric type: {{metric_type}}\n\nDESIRED PARAMETERS:\n- Minimum detectable effect: {{mde_pct}}%\n- Significance level (alpha): {{alpha}}\n- Statistical power: {{power}}\n- Number of variations: {{num_variations}}\n- Test type: {{test_type}}\n\nTRAFFIC INFORMATION:\n- Daily visitors: {{daily_traffic}}\n- Allocation per variation: {{allocation_pct}}%\n\nProvide sample size requirements and duration estimate.",
+  "output_format": "json",
+  "output_schema": {
+    "calculation_inputs": {
+      "baseline_rate": "number",
+      "mde_relative": "number",
+      "mde_absolute": "number",
+      "alpha": "number",
+      "power": "number",
+      "num_variations": "number"
+    },
+    "sample_size_results": {
+      "sample_per_variation": "number",
+      "total_sample_required": "number",
+      "conversions_per_variation": "number"
+    },
+    "duration_estimate": {
+      "days_required": "number",
+      "weeks_required": "number",
+      "recommended_duration_days": "number"
+    },
+    "sensitivity_analysis": [
+      {
+        "mde_pct": "number",
+        "sample_required": "number",
+        "days_required": "number"
+      }
+    ],
+    "recommendations": {
+      "is_feasible": "boolean",
+      "concerns": "array",
+      "suggestions": "array"
+    },
+    "confidence": "number"
+  },
+  "max_tokens": 1500,
+  "temperature": 0.1
+}

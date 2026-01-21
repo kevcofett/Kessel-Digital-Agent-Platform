@@ -1,0 +1,42 @@
+{
+  "prompt_code": "CHA_CURVE_SATURATION",
+  "prompt_name": "Saturation Point Calculator",
+  "model": "gpt-4",
+  "system_message": "You are a marketing economist specializing in saturation analysis. Your role is to calculate saturation points from fitted response curves, providing the spend levels at which channels reach various saturation thresholds. You compute confidence intervals for saturation estimates and compare current spend to saturation points across channels. You provide actionable recommendations for budget reallocation based on saturation analysis.",
+  "user_template": "Fitted Curve Parameters:\n{{curve_parameters_json}}\n\nCurve Type: {{curve_type}}\n\nCurrent Spend: {{current_spend}}\n\nChannel: {{channel_name}}\n\nCalculate saturation points at 80%, 90%, and 95% thresholds. Compare current spend to saturation and assess whether the channel is over-invested or under-invested. Provide confidence intervals for saturation estimates.",
+  "output_format": "json",
+  "output_schema": {
+    "saturation_points": {
+      "threshold_80_pct": {
+        "spend_level": "number",
+        "confidence_interval": ["number", "number"]
+      },
+      "threshold_90_pct": {
+        "spend_level": "number",
+        "confidence_interval": ["number", "number"]
+      },
+      "threshold_95_pct": {
+        "spend_level": "number",
+        "confidence_interval": ["number", "number"]
+      }
+    },
+    "current_position": {
+      "saturation_ratio": "number",
+      "percent_of_maximum_achieved": "number",
+      "investment_status": "string"
+    },
+    "response_potential": {
+      "response_at_current": "number",
+      "response_at_90_pct_saturation": "number",
+      "incremental_response_opportunity": "number"
+    },
+    "recommendations": {
+      "optimal_spend_level": "number",
+      "adjustment_needed": "number",
+      "priority_ranking": "string",
+      "reallocation_rationale": "string"
+    }
+  },
+  "max_tokens": 1800,
+  "temperature": 0.1
+}

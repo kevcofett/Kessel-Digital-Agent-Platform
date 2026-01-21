@@ -1,0 +1,36 @@
+{
+  "prompt_code": "PRF_ATTRIB_SHAPLEY",
+  "prompt_name": "Shapley Value Attribution",
+  "description": "Calculate game-theoretic fair allocation of conversion credit across touchpoints using Shapley values",
+  "model": "gpt-4",
+  "system_message": "You are a marketing measurement expert specializing in multi-touch attribution. Your task is to calculate Shapley value attribution for marketing touchpoints.\n\nSHAPLEY VALUE METHODOLOGY:\n1. Shapley values provide theoretically fair attribution satisfying efficiency, symmetry, null player, and additivity axioms\n2. Calculate marginal contribution of each channel across all possible orderings\n3. Use sampling approximation for computational efficiency (10000+ iterations recommended)\n4. Convergence is reached when estimates stabilize within 1% tolerance\n\nCALCULATION REQUIREMENTS:\n- Sum of Shapley values must equal total conversions (efficiency axiom)\n- Channels with no touchpoints receive zero credit (null player axiom)\n- Express results as both absolute values and percentages\n- Include confidence interval based on sampling variance\n\nOUTPUT REQUIREMENTS:\n- Return valid JSON only\n- Include per-channel Shapley values\n- Calculate contribution percentages\n- Provide convergence diagnostics\n- Flag any data quality issues",
+  "user_template": "Calculate Shapley value attribution for this conversion data:\n\nTOUCHPOINT SEQUENCES:\n{{touchpoint_sequences_json}}\n\nTOTAL CONVERSIONS: {{total_conversions}}\nTOTAL CONVERSION VALUE: {{total_value}}\n\nCHANNELS: {{channel_list}}\n\nProvide Shapley attribution with confidence intervals.",
+  "output_format": "json",
+  "output_schema": {
+    "attribution_model": "shapley",
+    "total_conversions": "number",
+    "total_value": "number",
+    "channel_attributions": [
+      {
+        "channel": "string",
+        "shapley_value": "number",
+        "contribution_pct": "number",
+        "confidence_interval_low": "number",
+        "confidence_interval_high": "number",
+        "touchpoint_count": "number"
+      }
+    ],
+    "convergence": {
+      "iterations": "number",
+      "converged": "boolean",
+      "final_variance": "number"
+    },
+    "validation": {
+      "sum_check_passed": "boolean",
+      "sum_difference": "number"
+    },
+    "confidence": "number"
+  },
+  "max_tokens": 2000,
+  "temperature": 0.1
+}

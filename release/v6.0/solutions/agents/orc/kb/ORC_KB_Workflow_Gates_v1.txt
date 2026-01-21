@@ -1,0 +1,220 @@
+ORCHESTRATOR WORKFLOW GATES REFERENCE
+
+This document provides detailed gate validation logic for the Orchestrator Agent. Gates represent quality checkpoints that ensure sufficient information exists before advancing to subsequent workflow phases.
+
+GATE PHILOSOPHY
+
+Gates exist to prevent incomplete plans. A plan missing foundation elements will fail in strategy phases. A plan missing strategy elements will fail in tactical execution. Gates enforce logical dependencies and ensure each phase builds on complete prior work.
+
+GATE STRUCTURE OVERVIEW
+
+The 10-step workflow contains four gates:
+- Gate 1 follows Steps 1-3 (Foundation)
+- Gate 2 follows Steps 4-6 (Strategy)
+- Gate 3 follows Steps 7-9 (Tactics)
+- Gate 4 follows Step 10 (Finalization)
+
+GATE 1 - FOUNDATION COMPLETE
+
+Gate 1 validates that foundation elements exist before strategy work begins.
+
+REQUIRED ELEMENTS FOR GATE 1
+
+Client Context (Step 1) must include:
+- Industry vertical identified
+- Market position described
+- Compliance requirements listed
+- Geographic scope defined
+- Business model understood
+
+Objectives (Step 2) must include:
+- Primary KPI selected
+- Target value or range specified
+- Success criteria defined
+- Secondary KPIs identified if applicable
+- Measurement timeframe established
+
+Budget (Step 3) must include:
+- Total budget amount confirmed
+- Currency specified
+- Pacing approach selected
+- Budget flexibility indicated
+- Allocation philosophy discussed
+
+GATE 1 VALIDATION LOGIC
+
+All three steps must show status COMPLETE in session state. If any step shows INCOMPLETE or PARTIAL, Gate 1 remains closed.
+
+When user attempts to advance past Gate 1 with incomplete foundation:
+- Identify which specific elements are missing
+- Explain why these elements matter for subsequent steps
+- Offer to help complete the missing elements
+- Do not allow strategy work until Gate 1 passes
+
+GATE 1 BYPASS CONDITIONS
+
+Gate 1 may be bypassed only when:
+- User explicitly requests audit mode for existing plan
+- User provides complete plan document for review
+- Session type is POSTMORTEM analyzing completed campaign
+
+GATE 2 - STRATEGY COMPLETE
+
+Gate 2 validates that strategy elements exist before tactical work begins.
+
+REQUIRED ELEMENTS FOR GATE 2
+
+Audience (Step 4) must include:
+- Primary audience segment defined
+- Targeting approach selected
+- Audience size estimated
+- Data sources identified
+- Exclusions specified if applicable
+
+Channels (Step 5) must include:
+- Channel mix selected with rationale
+- Budget allocation percentages assigned
+- Platform-specific strategies noted
+- Cross-channel coordination addressed
+- Frequency management approach defined
+
+Partners (Step 6) must include:
+- DSP selection made or criteria established
+- Verification partners identified
+- Data providers selected if applicable
+- Publisher relationships noted
+- Technology stack confirmed
+
+GATE 2 VALIDATION LOGIC
+
+All three strategy steps must show status COMPLETE. Gate 2 also requires Gate 1 to be passed - strategy cannot complete without foundation.
+
+When user attempts tactical work with incomplete strategy:
+- Identify missing strategy elements
+- Explain dependencies between strategy and tactics
+- Route to appropriate specialist to complete gaps
+- Block tactical advancement until Gate 2 passes
+
+GATE 2 BYPASS CONDITIONS
+
+Gate 2 may be bypassed only when:
+- Session type is INFLIGHT with existing strategy locked
+- User provides approved strategy document
+- Audit mode reviewing tactical execution only
+
+GATE 3 - TACTICS COMPLETE
+
+Gate 3 validates that tactical elements exist before plan finalization.
+
+REQUIRED ELEMENTS FOR GATE 3
+
+Measurement (Step 7) must include:
+- Attribution model selected
+- Tracking implementation planned
+- Reporting cadence defined
+- Success metrics mapped to objectives
+- Data collection approach confirmed
+
+Optimization (Step 8) must include:
+- Optimization triggers defined
+- Reallocation rules established
+- Testing approach specified
+- Performance thresholds set
+- Escalation procedures noted
+
+Compliance (Step 9) must include:
+- Brand safety requirements documented
+- Regulatory requirements addressed
+- Approval workflows identified
+- Risk mitigation planned
+- Documentation requirements met
+
+GATE 3 VALIDATION LOGIC
+
+All three tactical steps must show status COMPLETE. Gate 3 requires both Gate 1 and Gate 2 to be passed.
+
+When user requests document generation with incomplete tactics:
+- Identify missing tactical elements
+- Explain what will be absent from generated documents
+- Offer to complete tactical sections first
+- Allow partial document generation only with explicit user acknowledgment
+
+GATE 3 BYPASS CONDITIONS
+
+Gate 3 may be bypassed only when:
+- User explicitly requests draft document for review
+- Time constraints require preliminary output
+- User acknowledges incomplete sections will be marked
+
+GATE 4 - FINALIZATION COMPLETE
+
+Gate 4 validates that the plan is ready for delivery.
+
+REQUIRED ELEMENTS FOR GATE 4
+
+Plan Generation (Step 10) must include:
+- All prior gates passed
+- Document format selected
+- Stakeholder requirements addressed
+- Review cycle completed
+- Final approval obtained or scheduled
+
+GATE 4 VALIDATION LOGIC
+
+Gate 4 requires all prior gates passed plus document generation completed. This gate marks the plan as FINALIZED in session state.
+
+GATE STATUS INDICATORS
+
+Each gate maintains one of these states:
+- LOCKED: Prerequisites not met, gate cannot be attempted
+- OPEN: Prerequisites met, validation in progress
+- PASSED: All requirements satisfied, next phase accessible
+- FAILED: Validation attempted but requirements not met
+
+SESSION STATE INTEGRATION
+
+Gate status is stored in session state under workflow_gate field:
+- workflow_gate: 0 means no gates passed (initial state)
+- workflow_gate: 1 means Gate 1 passed
+- workflow_gate: 2 means Gates 1 and 2 passed
+- workflow_gate: 3 means Gates 1, 2, and 3 passed
+- workflow_gate: 4 means all gates passed (plan complete)
+
+PROGRESSIVE DISCLOSURE
+
+As gates are passed, additional capabilities become available:
+- After Gate 1: ANL projections use real budget data
+- After Gate 2: CHA recommendations incorporate audience strategy
+- After Gate 3: DOC can generate complete tactical briefs
+- After Gate 4: Full plan export and delivery enabled
+
+GATE REGRESSION HANDLING
+
+If user modifies foundation elements after passing Gate 1:
+- Automatically re-evaluate Gate 1 status
+- Flag downstream sections that may need updates
+- Notify user of potential cascade effects
+- Recommend review of dependent sections
+
+PARTIAL COMPLETION TRACKING
+
+Within each step, track completion percentage:
+- 0-25%: Initial information gathered
+- 26-50%: Core elements defined
+- 51-75%: Details specified
+- 76-99%: Nearly complete, minor gaps
+- 100%: Step fully complete
+
+GATE VALIDATION MESSAGES
+
+When gate validation fails, provide specific feedback:
+- List exact missing elements
+- Indicate which step needs attention
+- Suggest specific questions to ask user
+- Offer to route to specialist for completion
+
+When gate validation succeeds, confirm advancement:
+- Summarize completed phase
+- Preview next phase requirements
+- Offer transition to next logical step
+- Update session state accordingly

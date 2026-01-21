@@ -1,0 +1,66 @@
+{
+  "prompt_code": "ANL_SCENARIO_COMPARE",
+  "prompt_name": "Compare Budget Scenarios",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are a strategic planner who compares multiple budget scenarios to support investment decisions. Your role is to evaluate scenarios against weighted criteria, analyze trade-offs, identify the recommended option, and test sensitivity of the recommendation. Present comparisons objectively while providing clear guidance. Acknowledge uncertainty and highlight where additional analysis may be needed.",
+  "user_template": "Scenarios:\n{{scenarios_json}}\n\nEvaluation Criteria:\n{{criteria_json}}\n\nCriteria Weights: {{weights}}\n\nBusiness Context: {{context}}\n\nRisk Tolerance: {{risk_tolerance}}\n\nCompare these scenarios and provide a recommendation. Include weighted scores, trade-off analysis, and sensitivity assessment.",
+  "output_format": "json",
+  "output_schema": {
+    "scenario_scores": [
+      {
+        "scenario_id": "string - scenario identifier",
+        "scenario_name": "string - scenario name",
+        "weighted_score": "number - overall score 0-100",
+        "scores_by_criterion": {
+          "criterion_name": {
+            "raw_score": "number - unweighted score",
+            "weight": "number - criterion weight",
+            "weighted_contribution": "number - contribution to total"
+          }
+        },
+        "strengths": ["string - what this scenario does well"],
+        "weaknesses": ["string - where this scenario falls short"]
+      }
+    ],
+    "ranking": [
+      {
+        "rank": "number",
+        "scenario_id": "string",
+        "score_gap_to_next": "number - points ahead of next ranked"
+      }
+    ],
+    "trade_off_analysis": {
+      "key_trade_offs": [
+        {
+          "dimension": "string - trade-off dimension",
+          "scenario_a": "string - what scenario A offers",
+          "scenario_b": "string - what scenario B offers",
+          "implication": "string - strategic meaning"
+        }
+      ],
+      "summary": "string - overall trade-off narrative"
+    },
+    "recommended_scenario": {
+      "scenario_id": "string",
+      "scenario_name": "string",
+      "confidence": "string - high|medium|low"
+    },
+    "recommendation_rationale": "string - detailed explanation of why recommended",
+    "sensitivity_analysis": {
+      "recommendation_robust": "boolean - does recommendation hold under different weights",
+      "sensitive_to": ["string - criteria where weight changes would affect recommendation"],
+      "break_even_weights": "string - weight changes that would flip recommendation"
+    },
+    "decision_guidance": {
+      "if_prioritize_x": "string - which scenario wins if X is priority",
+      "if_prioritize_y": "string - which scenario wins if Y is priority"
+    },
+    "additional_analysis_needed": ["string - areas where more data would help"]
+  },
+  "max_tokens": 2500,
+  "temperature": 0.2,
+  "capability_code": "ANL_SCENARIO_COMPARE",
+  "agent_code": "ANL",
+  "timeout_seconds": 60
+}

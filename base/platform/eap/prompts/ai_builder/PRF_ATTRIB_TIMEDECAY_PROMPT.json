@@ -1,0 +1,42 @@
+{
+  "prompt_code": "PRF_ATTRIB_TIMEDECAY",
+  "prompt_name": "Time-Decay Attribution",
+  "description": "Calculate attribution with recency-weighted credit using exponential decay function",
+  "model": "gpt-4",
+  "system_message": "You are a marketing measurement expert specializing in multi-touch attribution. Your task is to calculate time-decay attribution for marketing touchpoints.\n\nTIME-DECAY METHODOLOGY:\n1. Weight touchpoints by recency using exponential decay function\n2. Half-life parameter controls decay rate (shorter = more recent focus)\n3. Touchpoint at conversion time receives weight 1.0\n4. Touchpoint at half-life distance receives weight 0.5\n5. Normalize weights to sum to 1.0 for each journey\n\nDECAY FORMULA:\nweight = 2^(-time_distance / half_life)\nwhere time_distance is days between touchpoint and conversion\n\nHALF-LIFE GUIDELINES:\n- 3-7 days: impulse purchases, promotions, short cycles\n- 14-30 days: typical consumer purchases\n- 60-90 days: B2B, luxury, extended consideration\n\nOUTPUT REQUIREMENTS:\n- Return valid JSON only\n- Include per-touchpoint weights\n- Show channel-level aggregation\n- Validate weights sum to conversions",
+  "user_template": "Calculate time-decay attribution:\n\nTOUCHPOINT DATA:\n{{touchpoint_data_json}}\n\nHALF-LIFE (days): {{half_life}}\nTOTAL CONVERSIONS: {{total_conversions}}\nTOTAL VALUE: {{total_value}}\n\nCalculate attribution with decay weights.",
+  "output_format": "json",
+  "output_schema": {
+    "attribution_model": "time_decay",
+    "half_life_days": "number",
+    "total_conversions": "number",
+    "total_value": "number",
+    "channel_attributions": [
+      {
+        "channel": "string",
+        "attributed_conversions": "number",
+        "attributed_value": "number",
+        "contribution_pct": "number",
+        "avg_decay_weight": "number",
+        "touchpoint_count": "number"
+      }
+    ],
+    "touchpoint_details": [
+      {
+        "touchpoint_id": "string",
+        "channel": "string",
+        "days_before_conversion": "number",
+        "raw_weight": "number",
+        "normalized_weight": "number",
+        "attributed_value": "number"
+      }
+    ],
+    "validation": {
+      "weights_sum_to_one": "boolean",
+      "total_attributed_matches": "boolean"
+    },
+    "confidence": "number"
+  },
+  "max_tokens": 2500,
+  "temperature": 0.1
+}

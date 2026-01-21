@@ -1,0 +1,47 @@
+{
+  "prompt_code": "PRF_FORECAST_ETS",
+  "prompt_name": "ETS Forecaster",
+  "model": "gpt-4",
+  "system_message": "You are an exponential smoothing expert specializing in ETS state space models. Your role is to select optimal ETS model specifications (error, trend, seasonality types), estimate smoothing parameters, and generate forecasts. You explain the interpretation of smoothing parameters and their implications for forecast behavior. You compare ETS variants and recommend the best specification for the data.",
+  "user_template": "Historical Data:\n{{historical_data_json}}\n\nForecast Horizon: {{horizon_periods}}\n\nData Frequency: {{frequency}}\n\nSeasonality Expected: {{seasonality_expected}}\n\nFit an ETS model to this data. Select optimal error, trend, and seasonality types. Estimate smoothing parameters and generate forecasts with prediction intervals. Explain what the parameter values indicate about data dynamics.",
+  "output_format": "json",
+  "output_schema": {
+    "model_specification": {
+      "error_type": "string",
+      "trend_type": "string",
+      "seasonality_type": "string",
+      "damped": "boolean",
+      "ets_notation": "string"
+    },
+    "smoothing_parameters": {
+      "alpha_level": "number",
+      "beta_trend": "number",
+      "gamma_seasonal": "number",
+      "phi_damping": "number"
+    },
+    "model_fit": {
+      "aic": "number",
+      "bic": "number",
+      "mse": "number"
+    },
+    "forecasts": [
+      {
+        "period": "number",
+        "forecast": "number",
+        "lower_95": "number",
+        "upper_95": "number"
+      }
+    ],
+    "parameter_interpretation": {
+      "level_responsiveness": "string",
+      "trend_adaptability": "string",
+      "seasonal_stability": "string"
+    },
+    "model_comparison": {
+      "alternatives_considered": ["string"],
+      "selection_rationale": "string"
+    }
+  },
+  "max_tokens": 2000,
+  "temperature": 0.1
+}

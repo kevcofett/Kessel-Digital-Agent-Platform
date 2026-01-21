@@ -1,0 +1,68 @@
+{
+  "prompt_code": "CHA_FREQ_CROSS",
+  "prompt_name": "Manage Cross-Channel Frequency",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are a media strategist who manages frequency across channels to optimize reach and avoid fatigue. Your role is to estimate unified frequency, assess overlap between channels, recommend frequency caps, and identify rebalancing opportunities. Help planners deliver effective frequency without over-saturating audiences.",
+  "user_template": "Channel Reach Data:\n{{reach_data}}\n\nCurrent Frequency by Channel:\n{{frequency_data}}\n\nCurrent Frequency Caps:\n{{caps}}\n\nOverlap Estimates:\n{{overlap}}\n\nPerformance by Frequency Level:\n{{perf_by_freq}}\n\nOptimize cross-channel frequency management.",
+  "output_format": "json",
+  "output_schema": {
+    "unified_frequency_analysis": {
+      "estimated_unified_frequency": "number - avg exposures per person",
+      "frequency_distribution": {
+        "1_exposure_pct": "number",
+        "2_3_exposures_pct": "number",
+        "4_6_exposures_pct": "number",
+        "7_plus_exposures_pct": "number"
+      },
+      "effective_reach_pct": "number - % at target frequency"
+    },
+    "overlap_analysis": {
+      "overall_overlap_pct": "number - % of reach overlapping",
+      "channel_pair_overlaps": {
+        "channel_pair": "number - overlap percentage"
+      },
+      "overlap_implication": "string - impact on planning"
+    },
+    "optimal_frequency_recommendation": {
+      "optimal_frequency_target": "number",
+      "rationale": "string - why this target",
+      "performance_at_optimal": "string - expected performance"
+    },
+    "frequency_cap_recommendations": {
+      "total_cap_recommendation": "number - across all channels",
+      "by_channel": [
+        {
+          "channel": "string",
+          "current_cap": "number",
+          "recommended_cap": "number",
+          "change_rationale": "string"
+        }
+      ]
+    },
+    "fatigue_risk_assessment": {
+      "overall_risk": "string - low|moderate|high",
+      "high_frequency_segments": ["string - segments at risk"],
+      "fatigue_indicators": ["string - signs of fatigue"],
+      "mitigation_recommendations": ["string"]
+    },
+    "rebalancing_recommendations": [
+      {
+        "action": "string - what to change",
+        "from_channel": "string",
+        "to_channel": "string",
+        "expected_impact": "string - what improves"
+      }
+    ],
+    "reach_efficiency_summary": {
+      "current_efficiency": "number - reach per impression",
+      "optimized_efficiency": "number - after recommendations",
+      "improvement_pct": "number"
+    }
+  },
+  "max_tokens": 2000,
+  "temperature": 0.2,
+  "capability_code": "CHA_FREQ_CROSS",
+  "agent_code": "CHA",
+  "timeout_seconds": 45
+}

@@ -1,0 +1,142 @@
+{
+  "schemaName": "mpa_session_memory",
+  "displayName": "Session Memory",
+  "pluralName": "Session Memories",
+  "description": "Session-level memory items for context persistence",
+  "primaryColumn": "memory_key",
+  "columns": [
+    {
+      "schemaName": "mpa_session_memoryid",
+      "displayName": "Session Memory ID",
+      "type": "Uniqueidentifier",
+      "required": true,
+      "isPrimaryKey": true
+    },
+    {
+      "schemaName": "session_id",
+      "displayName": "Session ID",
+      "type": "Text",
+      "maxLength": 50,
+      "required": true,
+      "description": "Parent session"
+    },
+    {
+      "schemaName": "user_id",
+      "displayName": "User ID",
+      "type": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "User who owns memory"
+    },
+    {
+      "schemaName": "memory_type",
+      "displayName": "Memory Type",
+      "type": "Choice",
+      "required": true,
+      "options": ["preference", "decision", "context", "pattern"],
+      "description": "Type of memory item"
+    },
+    {
+      "schemaName": "memory_category",
+      "displayName": "Memory Category",
+      "type": "Choice",
+      "required": true,
+      "options": ["vertical", "budget", "channel", "kpi", "measurement", "audience", "other"],
+      "description": "Category of memory"
+    },
+    {
+      "schemaName": "memory_key",
+      "displayName": "Memory Key",
+      "type": "Text",
+      "maxLength": 100,
+      "required": true,
+      "description": "Unique key within category"
+    },
+    {
+      "schemaName": "memory_value_json",
+      "displayName": "Memory Value",
+      "type": "MultilineText",
+      "maxLength": 8000,
+      "required": true,
+      "description": "JSON value"
+    },
+    {
+      "schemaName": "confidence_score",
+      "displayName": "Confidence Score",
+      "type": "WholeNumber",
+      "required": true,
+      "minValue": 0,
+      "maxValue": 100,
+      "description": "0-100 confidence score"
+    },
+    {
+      "schemaName": "source_type",
+      "displayName": "Source Type",
+      "type": "Choice",
+      "required": true,
+      "options": ["explicit", "implicit", "inferred"],
+      "description": "How memory was captured"
+    },
+    {
+      "schemaName": "source_quote",
+      "displayName": "Source Quote",
+      "type": "Text",
+      "maxLength": 500,
+      "required": false,
+      "description": "Original text if explicit"
+    },
+    {
+      "schemaName": "is_persistent",
+      "displayName": "Is Persistent",
+      "type": "Boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Survives session end"
+    },
+    {
+      "schemaName": "expires_at",
+      "displayName": "Expires At",
+      "type": "DateTime",
+      "required": false,
+      "description": "When memory expires"
+    },
+    {
+      "schemaName": "created_at",
+      "displayName": "Created At",
+      "type": "DateTime",
+      "required": true,
+      "description": "When created"
+    },
+    {
+      "schemaName": "last_accessed_at",
+      "displayName": "Last Accessed At",
+      "type": "DateTime",
+      "required": false,
+      "description": "Last retrieval"
+    },
+    {
+      "schemaName": "access_count",
+      "displayName": "Access Count",
+      "type": "WholeNumber",
+      "required": false,
+      "description": "Times retrieved"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_session_user",
+      "columns": ["session_id", "user_id"],
+      "isUnique": false
+    },
+    {
+      "name": "idx_user_persistent",
+      "columns": ["user_id", "is_persistent"],
+      "isUnique": false
+    },
+    {
+      "name": "idx_memory_key",
+      "columns": ["session_id", "memory_category", "memory_key"],
+      "isUnique": true
+    }
+  ]
+}

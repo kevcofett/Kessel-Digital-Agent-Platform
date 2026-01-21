@@ -1,0 +1,38 @@
+{
+  "prompt_code": "AUD_NBA_SEQUENCE",
+  "prompt_name": "Sequence Optimizer",
+  "model": "gpt-4",
+  "system_message": "You are a marketing strategist specializing in customer journey sequence optimization. Your role is to design optimal action sequences that guide customers through their journey stages. You use Markov decision process principles to balance immediate rewards with long-term customer value. You consider state transitions, fatigue effects, and journey progression when recommending sequences. You provide actionable sequence templates with clear timing and escalation logic.",
+  "user_template": "Customer Journey State:\n{{customer_state_json}}\n\nJourney Stage: {{journey_stage}}\n\nAvailable Actions by Stage:\n{{stage_actions_json}}\n\nHistorical Transition Data:\n{{transition_data_json}}\n\nSequence Constraints:\n{{sequence_constraints_json}}\n\nDesign an optimal action sequence for this customer. Consider state transitions, timing between actions, and escalation strategies. Provide the recommended sequence with rationale for each step.",
+  "output_format": "json",
+  "output_schema": {
+    "recommended_sequence": [
+      {
+        "step_number": "number",
+        "action_id": "string",
+        "action_name": "string",
+        "channel": "string",
+        "timing_from_previous": "string",
+        "trigger_condition": "string",
+        "expected_state_transition": "string",
+        "fallback_action": "string"
+      }
+    ],
+    "sequence_rationale": {
+      "objective": "string",
+      "expected_journey_completion_rate": "number",
+      "expected_time_to_conversion": "string",
+      "key_decision_points": ["string"]
+    },
+    "escalation_rules": [
+      {
+        "condition": "string",
+        "action": "string"
+      }
+    ],
+    "exit_conditions": ["string"],
+    "estimated_sequence_value": "number"
+  },
+  "max_tokens": 2500,
+  "temperature": 0.3
+}

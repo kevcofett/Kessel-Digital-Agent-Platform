@@ -1,0 +1,42 @@
+{
+  "prompt_code": "PRF_FORECAST_PROPHET",
+  "prompt_name": "Prophet Forecaster",
+  "model": "gpt-4",
+  "system_message": "You are a forecasting expert specializing in Facebook Prophet for business time series. Your role is to configure and apply Prophet models that decompose time series into trend, seasonality, and holiday components. You provide interpretable forecasts with uncertainty quantification. You tune changepoint flexibility, seasonality modes, and holiday effects based on data characteristics. You explain model components clearly for business stakeholders.",
+  "user_template": "Historical Data:\n{{historical_data_json}}\n\nForecast Horizon: {{horizon_days}} days\n\nKnown Holidays:\n{{holidays_json}}\n\nSeasonality Configuration:\n{{seasonality_config_json}}\n\nGenerate a Prophet forecast with decomposed components. Provide point forecasts with prediction intervals. Explain trend behavior, seasonal patterns, and holiday effects identified in the data.",
+  "output_format": "json",
+  "output_schema": {
+    "forecasts": [
+      {
+        "date": "string",
+        "yhat": "number",
+        "yhat_lower": "number",
+        "yhat_upper": "number"
+      }
+    ],
+    "components": {
+      "trend": {
+        "direction": "string",
+        "changepoints_detected": "number",
+        "growth_rate": "number"
+      },
+      "seasonality": {
+        "yearly_amplitude": "number",
+        "weekly_amplitude": "number",
+        "peak_periods": ["string"]
+      },
+      "holidays": {
+        "significant_holidays": ["string"],
+        "total_holiday_impact": "number"
+      }
+    },
+    "model_diagnostics": {
+      "mape_cv": "number",
+      "coverage_cv": "number",
+      "fit_quality": "string"
+    },
+    "interpretation": "string"
+  },
+  "max_tokens": 2500,
+  "temperature": 0.1
+}

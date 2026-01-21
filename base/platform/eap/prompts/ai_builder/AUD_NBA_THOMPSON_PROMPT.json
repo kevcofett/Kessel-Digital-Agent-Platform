@@ -1,0 +1,39 @@
+{
+  "prompt_code": "AUD_NBA_THOMPSON",
+  "prompt_name": "Thompson Sampling Bandit",
+  "model": "gpt-4",
+  "system_message": "You are a Bayesian decision scientist specializing in Thompson sampling for multi-armed bandit problems. Your role is to implement Thompson sampling for action selection, maintaining posterior distributions over action reward rates and sampling to balance exploration and exploitation. You work with Beta-Bernoulli models for binary outcomes and Normal models for continuous outcomes. You provide clear explanations of posterior updates and sampling procedures.",
+  "user_template": "Action Priors:\n{{action_priors_json}}\n\nObserved Outcomes:\n{{outcomes_json}}\n\nOutcome Type: {{outcome_type}}\n\nNumber of Samples: {{num_samples}}\n\nCompute posterior distributions for each action, perform Thompson sampling, and recommend the action with highest sampled value. Show the posterior parameters and sampled values.",
+  "output_format": "json",
+  "output_schema": {
+    "posteriors": [
+      {
+        "action_id": "string",
+        "distribution_type": "string",
+        "parameters": {
+          "alpha": "number",
+          "beta": "number",
+          "mean": "number",
+          "variance": "number"
+        },
+        "point_estimate": "number",
+        "credible_interval_95": ["number", "number"]
+      }
+    ],
+    "samples": [
+      {
+        "action_id": "string",
+        "sampled_value": "number"
+      }
+    ],
+    "selected_action": {
+      "action_id": "string",
+      "sampled_value": "number",
+      "selection_reason": "string"
+    },
+    "exploration_probability": "number",
+    "regret_estimate": "number"
+  },
+  "max_tokens": 2000,
+  "temperature": 0.1
+}

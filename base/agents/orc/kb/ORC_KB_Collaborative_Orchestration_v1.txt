@@ -1,0 +1,203 @@
+COLLABORATIVE ORCHESTRATION GUIDE
+
+The Orchestrator manages collaborative workflows, coordinating multiple agents to produce unified responses.
+
+WORKFLOW DETECTION
+
+Detect when collaborative mode is needed:
+
+KEYWORD TRIGGERS
+- complete plan
+- comprehensive analysis
+- full strategy
+- end to end
+- everything I need
+- build me a
+- create a full
+
+COMPLEXITY TRIGGERS
+- Request mentions 3 or more agent domains
+- Request includes both strategy and execution
+- Request asks for document with analysis
+- Budget exceeds 250K with multiple objectives
+
+DETECTION PROMPT
+When uncertain, assess:
+- Does this need multiple expert perspectives?
+- Would a single agent miss important aspects?
+- Is the user expecting a comprehensive deliverable?
+
+WORKFLOW SELECTION
+
+Match request to workflow template:
+
+FULL_MEDIA_PLAN
+- Trigger: complete media plan or full campaign strategy
+- Agents: ANL then AUD then CHA then PRF then DOC
+- Duration: 45-60 seconds
+- Output: Comprehensive plan document
+
+BUDGET_OPTIMIZATION
+- Trigger: optimize my budget or best allocation
+- Agents: ANL then CHA then PRF
+- Duration: 30-40 seconds
+- Output: Optimized allocation with rationale
+
+AUDIENCE_CHANNEL_FIT
+- Trigger: which channels for my audience or reach my target
+- Agents: AUD then CHA
+- Duration: 20-30 seconds
+- Output: Channel recommendations by segment
+
+MEASUREMENT_STRATEGY
+- Trigger: how should I measure or attribution approach
+- Agents: PRF then ANL
+- Duration: 20-30 seconds
+- Output: Measurement framework
+
+CAMPAIGN_ANALYSIS
+- Trigger: analyze this campaign or what happened
+- Agents: PRF then ANL then CHA
+- Duration: 30-40 seconds
+- Output: Performance analysis with recommendations
+
+CONTEXT PREPARATION
+
+Before dispatching to agents prepare shared context:
+
+CONTEXT PACKAGE CONTENTS
+{
+  "workflow_instance_id": "unique identifier",
+  "workflow_code": "FULL_MEDIA_PLAN",
+  "session_id": "parent session",
+  "user_id": "requesting user",
+  "original_request": "user's exact words",
+  "extracted_parameters": {
+    "budget": 500000,
+    "vertical": "Retail",
+    "objectives": ["brand awareness"],
+    "timeline": {"start": "2026-04-01", "end": "2026-06-30"},
+    "constraints": []
+  },
+  "user_preferences": {
+    "loaded from mpa_user_preferences"
+  },
+  "session_context": {
+    "any relevant prior decisions"
+  },
+  "previous_contributions": []
+}
+
+SEQUENTIAL DISPATCH
+
+Agents are called in order with accumulating context:
+
+DISPATCH FLOW
+1. Call first agent with base context
+2. Wait for contribution
+3. Add contribution to previous_contributions
+4. Call next agent with enriched context
+5. Repeat until all agents complete
+6. Call synthesis
+
+INTER-AGENT CONTEXT
+Each agent sees:
+- Original request and parameters
+- All previous agent contributions
+- Specific prompt for their role
+
+This allows later agents to build on earlier work.
+
+PARALLEL VS SEQUENTIAL
+
+Current implementation is sequential because:
+- Later agents benefit from earlier contributions
+- Reduces redundant analysis
+- Enables building narrative
+
+Future enhancement could parallelize independent agents.
+
+CONTRIBUTION MONITORING
+
+Track each contribution:
+
+TIMING
+- Start time when dispatched
+- End time when received
+- Timeout at 30 seconds per agent
+
+STATUS TRACKING
+- pending: dispatched awaiting response
+- complete: received valid contribution
+- failed: error or timeout
+- skipped: intentionally omitted
+
+QUALITY CHECK
+- Verify JSON structure
+- Check required fields present
+- Validate confidence score range
+- Flag empty or minimal contributions
+
+SYNTHESIS ORCHESTRATION
+
+After collecting contributions:
+
+SYNTHESIS INPUTS
+{
+  "workflow_code": "FULL_MEDIA_PLAN",
+  "original_request": "user request",
+  "contributions": [
+    {"agent_code": "ANL", "contribution_json": {...}},
+    {"agent_code": "AUD", "contribution_json": {...}},
+    ...
+  ],
+  "synthesis_template": "from workflow definition",
+  "presentation_preferences": {
+    "communication_style": "from user preferences"
+  }
+}
+
+SYNTHESIS PROMPT STRUCTURE
+Given these expert contributions, synthesize into a unified response:
+
+[Contribution summaries]
+
+Create a cohesive recommendation that:
+1. Leads with the unified strategy
+2. Shows how each perspective supports it
+3. Notes any disagreements transparently
+4. Provides clear next steps
+
+USER COMMUNICATION
+
+Keep user informed during workflow:
+
+INITIATION MESSAGE
+This is a comprehensive request, so I am consulting with our Analytics, Audience, Channel, and Performance specialists. This will take about 45 seconds.
+
+PROGRESS UPDATES (if over 30 seconds)
+Analytics complete. Now consulting Audience specialist...
+
+COMPLETION MESSAGE
+I have synthesized recommendations from all specialists. Here is the unified plan:
+
+ERROR COMMUNICATION
+I was unable to get a response from the Performance specialist. I will proceed with the available analysis and note where measurement input would strengthen the recommendation.
+
+WORKFLOW METRICS
+
+Track for optimization:
+
+PER WORKFLOW
+- Total duration
+- Individual agent durations
+- Success vs failure rate
+- User satisfaction signals
+
+AGGREGATE
+- Most used workflows
+- Average durations by workflow
+- Common failure points
+- Synthesis quality scores
+
+Use metrics to improve workflow definitions and timeouts.

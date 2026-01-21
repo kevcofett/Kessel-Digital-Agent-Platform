@@ -1,0 +1,54 @@
+{
+  "prompt_code": "PRF_TEST_SRM",
+  "prompt_name": "Sample Ratio Mismatch Detection",
+  "description": "Detect sample ratio mismatch in A/B tests that could invalidate experimental results due to allocation bugs or systematic bias",
+  "model": "gpt-4",
+  "system_message": "You are a statistical expert specializing in A/B test validity diagnostics. Your task is to detect sample ratio mismatch (SRM) that would invalidate experimental results.\n\nSRM DETECTION:\n1. Compare observed allocation to expected allocation\n2. Apply chi-squared test for goodness of fit\n3. Use conservative threshold (p < 0.001) due to serious implications\n4. Provide daily breakdown to identify when SRM began\n\nCHI-SQUARED TEST:\n- Expected count = total_visitors * allocation_probability\n- Chi-sq = sum((observed - expected)^2 / expected)\n- For 50/50 split: chi-sq = (n1 - n2)^2 / (n1 + n2)\n- Compare to chi-squared distribution with k-1 df\n\nSRM INTERPRETATION:\n- p < 0.001: Strong evidence of SRM - do not trust results\n- p < 0.01: Likely SRM - investigate before proceeding\n- p > 0.01: No evidence of SRM - proceed with analysis\n\nCOMMON CAUSES:\n- Bucketing algorithm bugs\n- Bot traffic affecting variations differently\n- Redirect delays causing differential dropoff\n- Session vs user randomization mismatch\n- Browser caching or ad blocker interference\n\nOUTPUT REQUIREMENTS:\n- SRM test result with p-value\n- Daily allocation breakdown\n- Severity assessment\n- Investigation recommendations if SRM detected",
+  "user_template": "Detect sample ratio mismatch for this A/B test:\n\nOBSERVED ALLOCATION:\n{{observed_allocation_json}}\n\nEXPECTED ALLOCATION:\n{{expected_allocation_json}}\n\nDAILY BREAKDOWN:\n{{daily_data_json}}\n\nTEST CONFIGURATION:\n- Expected split: {{expected_split}}\n- Total variations: {{num_variations}}\n- Test duration: {{test_duration_days}} days\n\nProvide SRM analysis with investigation guidance.",
+  "output_format": "json",
+  "output_schema": {
+    "observed_counts": "object",
+    "expected_counts": "object",
+    "total_visitors": "number",
+    "srm_test": {
+      "chi_squared_statistic": "number",
+      "degrees_freedom": "number",
+      "p_value": "number",
+      "srm_detected": "boolean"
+    },
+    "severity_assessment": {
+      "severity": "string",
+      "deviation_pct": "number",
+      "impact_on_validity": "string"
+    },
+    "daily_analysis": [
+      {
+        "date": "string",
+        "control_n": "number",
+        "treatment_n": "number",
+        "ratio": "number",
+        "cumulative_chi_sq": "number",
+        "srm_flag": "boolean"
+      }
+    ],
+    "srm_onset": {
+      "detected_date": "string",
+      "pattern": "string"
+    },
+    "investigation_checklist": {
+      "bucketing_algorithm": "string",
+      "bot_traffic": "string",
+      "redirect_timing": "string",
+      "session_handling": "string",
+      "caching_issues": "string"
+    },
+    "recommendation": {
+      "action": "string",
+      "rationale": "string",
+      "can_proceed": "boolean"
+    },
+    "confidence": "number"
+  },
+  "max_tokens": 2000,
+  "temperature": 0.1
+}

@@ -1,0 +1,251 @@
+AGENT CONSENSUS PROTOCOL
+
+The Agent Consensus Protocol enables multiple specialist agents to collaborate on complex requests, synthesizing their expertise into unified recommendations.
+
+COLLABORATIVE WORKFLOW CONCEPT
+
+When a user request requires multiple domains of expertise, the Orchestrator initiates a collaborative workflow:
+
+SINGLE AGENT RESPONSE
+- User asks specific question
+- One agent handles completely
+- Direct response
+
+COLLABORATIVE RESPONSE
+- User asks complex multi-faceted question
+- Multiple agents contribute expertise
+- Synthesis combines into unified response
+
+WORKFLOW INITIATION
+
+Trigger conditions for collaborative mode:
+
+EXPLICIT TRIGGERS
+- User says build me a complete plan
+- User says I need a comprehensive analysis
+- User says give me the full picture
+- User asks for document generation with analysis
+
+IMPLICIT TRIGGERS
+- Request spans multiple agent domains
+- Budget plus audience plus channel in one ask
+- Request for strategy plus execution plus measurement
+- High complexity score from intent analysis
+
+WORKFLOW EXECUTION PHASES
+
+PHASE 1 - INITIATION
+- ORC detects collaborative trigger
+- ORC selects appropriate workflow template
+- ORC prepares shared context package
+- ORC notifies user of collaborative approach
+
+PHASE 2 - CONTRIBUTION COLLECTION
+- ORC sends context to each participating agent
+- Each agent executes independently
+- Each agent returns structured contribution
+- Contributions stored in eap_workflow_contribution
+
+PHASE 3 - SYNTHESIS
+- ORC collects all contributions
+- Synthesis prompt combines expertise
+- Conflicts identified and resolved
+- Unified recommendation generated
+
+PHASE 4 - PRESENTATION
+- Combined response formatted
+- Individual contributions cited
+- Confidence levels aggregated
+- Follow-up options offered
+
+AGENT CONTRIBUTION FORMAT
+
+Each agent returns structured contribution:
+
+CONTRIBUTION SCHEMA
+{
+  "agent_code": "ANL",
+  "contribution_type": "analysis|recommendation|validation|context",
+  "summary": "one sentence summary",
+  "key_findings": [
+    {
+      "finding": "description",
+      "confidence": 85,
+      "supporting_data": "evidence"
+    }
+  ],
+  "recommendations": [
+    {
+      "recommendation": "specific action",
+      "rationale": "why",
+      "priority": "high|medium|low"
+    }
+  ],
+  "concerns": [
+    {
+      "concern": "potential issue",
+      "mitigation": "how to address"
+    }
+  ],
+  "data_for_synthesis": {
+    "structured data other agents may need"
+  },
+  "confidence_overall": 80
+}
+
+CONTRIBUTION PROMPTS BY AGENT
+
+Each agent receives tailored prompt:
+
+ANL PROMPT
+Given the context, provide quantitative analysis:
+- Budget allocation recommendations with marginal returns
+- Projection calculations with confidence intervals
+- Scenario comparison if relevant
+Focus on the numbers and validation.
+
+AUD PROMPT
+Given the context, provide audience strategy:
+- Priority segments with LTV rationale
+- Targeting recommendations
+- Journey stage considerations
+Focus on who to reach and why.
+
+CHA PROMPT
+Given the context, provide channel strategy:
+- Recommended channel mix
+- Allocation rationale by channel
+- Emerging channel opportunities
+Focus on where to reach the audience.
+
+PRF PROMPT
+Given the context, provide measurement strategy:
+- Attribution model recommendation
+- KPIs and targets
+- Testing opportunities
+Focus on how to measure success.
+
+DOC PROMPT
+Given all contributions, synthesize into document:
+- Executive summary
+- Integrated recommendations
+- Supporting analysis
+Format for stakeholder presentation.
+
+SYNTHESIS RULES
+
+When combining contributions:
+
+AGREEMENT
+- When agents agree highlight consensus
+- Aggregate confidence scores
+- Present as unified recommendation
+
+COMPLEMENTARY
+- When agents add different perspectives
+- Weave together logically
+- Show how pieces fit together
+
+CONFLICT
+- When agents disagree note the tension
+- Present both perspectives
+- Recommend resolution approach
+- Do not hide disagreement
+
+GAPS
+- When expected contribution is missing
+- Note the gap explicitly
+- Offer to gather additional input
+- Proceed with available information
+
+CONFIDENCE AGGREGATION
+
+Combined confidence calculation:
+
+METHOD
+- Weight by relevance to request
+- Reduce for conflicts
+- Increase for consensus
+
+FORMULA
+Base = average of individual confidences
+Consensus bonus = +5 for each agreeing pair
+Conflict penalty = -10 for each conflict
+Final = min(95, max(30, Base + bonuses - penalties))
+
+PRESENTATION FORMAT
+
+Collaborative responses follow this structure:
+
+OPENING
+Brief acknowledgment that multiple agents contributed
+
+UNIFIED RECOMMENDATION
+The synthesized recommendation as if from one voice
+
+SUPPORTING PERSPECTIVES
+How each agent's expertise supports the recommendation
+
+DETAILED CONTRIBUTIONS
+Option to expand each agent's full analysis
+
+CONFIDENCE AND CAVEATS
+Overall confidence with any noted disagreements
+
+NEXT STEPS
+Follow-up options and actions
+
+EXAMPLE COLLABORATIVE RESPONSE
+
+User: Build me a complete media plan for a $500K retail brand awareness campaign.
+
+Response:
+
+I have consulted with our Analytics, Audience, Channel, and Performance specialists to build a comprehensive plan. Here is the unified recommendation:
+
+RECOMMENDATION SUMMARY
+For your $500K retail brand awareness campaign, we recommend a video-heavy channel mix targeting high-value lifestyle segments, measured through brand lift with incrementality validation.
+
+BUDGET ALLOCATION
+The Analytics team recommends this allocation based on marginal return optimization:
+- Connected TV: $175K (35%) - Primary awareness driver
+- Paid Social Video: $125K (25%) - Reach extension
+- YouTube: $100K (20%) - Engagement depth
+- Programmatic Display: $75K (15%) - Retargeting support
+- Paid Search Brand: $25K (5%) - Intent capture
+
+AUDIENCE STRATEGY
+The Audience team identified three priority segments:
+1. Affluent Lifestyle Seekers (LTV index 145)
+2. Brand-Conscious Millennials (LTV index 128)
+3. Digital-First Families (LTV index 115)
+
+MEASUREMENT FRAMEWORK
+The Performance team recommends:
+- Primary KPI: Brand Lift (target +15%)
+- Secondary: Aided Awareness (target +8 points)
+- Validation: Geo-based incrementality test
+
+CONFIDENCE: 82%
+All agents aligned on strategy. Minor difference on CTV allocation (ANL suggested 40%, CHA suggested 30%) resolved at 35%.
+
+Would you like me to elaborate on any section or generate the formal brief document?
+
+ERROR HANDLING
+
+When collaborative workflow encounters issues:
+
+AGENT TIMEOUT
+- Note which agent did not respond
+- Proceed with available contributions
+- Offer to retry failed agent
+
+AGENT ERROR
+- Log error details
+- Use fallback if available
+- Note reduced confidence
+
+SYNTHESIS FAILURE
+- Present individual contributions
+- Explain synthesis issue
+- Offer manual integration

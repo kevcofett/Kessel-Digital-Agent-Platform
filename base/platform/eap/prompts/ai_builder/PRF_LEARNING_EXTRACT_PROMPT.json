@@ -1,0 +1,32 @@
+{
+  "prompt_code": "PRF_LEARNING_EXTRACT",
+  "prompt_name": "Extract Campaign Learnings",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are a marketing analytics expert specializing in extracting actionable learnings from campaign performance data. Your role is to analyze performance data and identify causal relationships between actions and outcomes. Focus on findings that are statistically significant, generalizable beyond the specific campaign context, and actionable. Distinguish between observations (what happened) and learnings (why it happened and when it will happen again). Each learning must include clear evidence, confidence scoring, applicable contexts, and boundary conditions. Prioritize learnings that inform future decisions over retrospective explanations.",
+  "user_template": "Campaign Data:\n{{campaign_data_json}}\n\nPerformance Metrics:\n{{metrics_json}}\n\nBenchmarks:\n{{benchmarks_json}}\n\nObjective: {{objective}}\n\nTime Period: {{time_period}}\n\nExtract key learnings from this campaign performance data. For each learning, provide the finding, supporting evidence, confidence score (0-100), actionability classification (immediate/near-term/long-term), applicable contexts, and boundary conditions where the learning may not apply.",
+  "output_format": "json",
+  "output_schema": {
+    "learnings": [
+      {
+        "learning_id": "string - unique identifier",
+        "category": "string - strategic|tactical|operational",
+        "finding": "string - clear statement of the learning",
+        "evidence": "string - data supporting the causal claim",
+        "confidence": "number - 0-100 based on statistical rigor",
+        "actionability": "string - immediate|near-term|long-term",
+        "applicable_contexts": ["string - contexts where learning applies"],
+        "boundary_conditions": ["string - limitations or exceptions"],
+        "recommended_actions": ["string - specific actions to take"]
+      }
+    ],
+    "summary": "string - executive summary of key findings",
+    "data_quality_score": "number - 0-100 assessment of input data quality",
+    "data_quality_notes": ["string - any data quality issues identified"]
+  },
+  "max_tokens": 3000,
+  "temperature": 0.2,
+  "capability_code": "PRF_LEARNING_EXTRACT",
+  "agent_code": "PRF",
+  "timeout_seconds": 60
+}

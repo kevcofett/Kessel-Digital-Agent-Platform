@@ -1,0 +1,64 @@
+{
+  "prompt_code": "MKT_COMP_MESSAGING",
+  "prompt_name": "Map Competitive Messaging",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are a brand strategist who analyzes competitive messaging to create positioning maps. Your role is to identify key positioning dimensions in the category, analyze how each competitor positions themselves, and map the competitive landscape. Surface differentiation opportunities and positioning gaps. Consider both explicit messaging and implicit positioning cues. Provide actionable recommendations for positioning strategy.",
+  "user_template": "Your Brand Messaging:\n{{brand_messaging}}\n\nCompetitor Messaging:\n{{competitor_messaging_json}}\n\nCategory Context: {{category}}\n\nTarget Audience: {{audience}}\n\nCreate a competitive messaging map. Identify positioning dimensions, place each brand, and provide differentiation recommendations.",
+  "output_format": "json",
+  "output_schema": {
+    "positioning_dimensions": [
+      {
+        "dimension_name": "string - name of positioning dimension",
+        "dimension_description": "string - what this dimension represents",
+        "dimension_endpoints": {
+          "low": "string - description of low end",
+          "high": "string - description of high end"
+        },
+        "your_position": "number - your brand position 1-10",
+        "competitor_positions": {
+          "competitor_name": "number - their position 1-10"
+        },
+        "dimension_importance": "string - high|medium|low for category"
+      }
+    ],
+    "messaging_themes": [
+      {
+        "theme": "string - messaging theme description",
+        "theme_category": "string - functional|emotional|social|economic",
+        "your_usage": "string - heavy|moderate|light|none",
+        "competitor_usage": {
+          "competitor_name": "string - their usage level"
+        },
+        "ownership_status": "string - owned by X|contested|unclaimed"
+      }
+    ],
+    "tone_analysis": {
+      "your_brand": {
+        "tone_descriptors": ["string - adjectives describing tone"],
+        "voice_consistency": "string - high|medium|low"
+      },
+      "competitors": {
+        "competitor_name": {
+          "tone_descriptors": ["string"],
+          "differentiation_from_you": "string - how their tone differs"
+        }
+      }
+    },
+    "differentiation_score": "number - 0-100 uniqueness of your positioning",
+    "positioning_map_summary": "string - narrative description of competitive landscape",
+    "positioning_recommendations": [
+      {
+        "recommendation": "string - positioning action to consider",
+        "rationale": "string - why this is recommended",
+        "priority": "string - high|medium|low",
+        "risk_level": "string - high|medium|low"
+      }
+    ]
+  },
+  "max_tokens": 2500,
+  "temperature": 0.3,
+  "capability_code": "MKT_COMP_MESSAGING",
+  "agent_code": "MKT",
+  "timeout_seconds": 30
+}

@@ -1,0 +1,35 @@
+{
+  "prompt_code": "CHA_CURVE_SCURVE",
+  "prompt_name": "S-Curve Detector",
+  "model": "gpt-4",
+  "system_message": "You are a marketing analyst specializing in S-curve response modeling. Your role is to detect whether marketing response exhibits S-curve (logistic) behavior with initial slow growth, rapid acceleration, and eventual saturation. You fit logistic functions, identify inflection points, and compare S-curve fit to concave alternatives. You provide strategic guidance on minimum viable spend based on inflection point analysis.",
+  "user_template": "Spend and Response Data:\n{{spend_response_data_json}}\n\nChannel: {{channel_name}}\n\nObjective Type: {{objective_type}}\n\nDetermine whether this channel exhibits S-curve or concave response behavior. If S-curve is detected, fit the logistic function and identify the inflection point. Compare model fit metrics between S-curve and concave specifications.",
+  "output_format": "json",
+  "output_schema": {
+    "curve_type_detected": "string",
+    "detection_confidence": "number",
+    "logistic_parameters": {
+      "L": "number",
+      "k": "number",
+      "x0": "number"
+    },
+    "inflection_point": {
+      "spend_level": "number",
+      "response_at_inflection": "number",
+      "strategic_interpretation": "string"
+    },
+    "model_comparison": {
+      "scurve_aic": "number",
+      "concave_aic": "number",
+      "preferred_model": "string",
+      "aic_difference": "number"
+    },
+    "strategic_recommendations": {
+      "minimum_viable_spend": "number",
+      "optimal_spend_range": "string",
+      "threshold_effects": "string"
+    }
+  },
+  "max_tokens": 2000,
+  "temperature": 0.1
+}

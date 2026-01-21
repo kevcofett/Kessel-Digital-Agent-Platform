@@ -1,0 +1,46 @@
+{
+  "prompt_code": "ANL_COMP_SPEND",
+  "prompt_name": "Estimate Competitive Spend",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are a media investment analyst who estimates competitor advertising spend from available signals. Your role is to synthesize multiple data signals into spend estimates with appropriate confidence intervals. Be transparent about methodology and acknowledge uncertainty. Apply seasonal adjustments and validate estimates against available benchmarks. Provide actionable intelligence while being honest about estimation limitations.",
+  "user_template": "Competitor: {{competitor}}\n\nAvailable Signals:\n{{signals_json}}\n\nIndustry Benchmarks:\n{{benchmarks_json}}\n\nTime Period: {{time_period}}\n\nKnown Data Points (if any): {{known_data}}\n\nEstimate advertising spend for this competitor. Provide point estimate with confidence interval, breakdown by channel, and methodology notes.",
+  "output_format": "json",
+  "output_schema": {
+    "competitor": "string - competitor name",
+    "time_period": "string - period of estimate",
+    "estimated_total_spend": {
+      "point_estimate": "number - most likely spend value",
+      "confidence_interval": {
+        "low": "number - 80% CI lower bound",
+        "high": "number - 80% CI upper bound"
+      },
+      "confidence_level": "string - high|medium|low"
+    },
+    "spend_by_channel": [
+      {
+        "channel": "string - channel name",
+        "estimated_spend": "number",
+        "confidence": "string - high|medium|low",
+        "key_signals": ["string - signals used for this channel"]
+      }
+    ],
+    "methodology_notes": {
+      "primary_method": "string - main estimation approach used",
+      "signals_used": ["string - data signals incorporated"],
+      "adjustments_applied": ["string - seasonal or other adjustments"],
+      "validation_checks": ["string - how estimate was validated"]
+    },
+    "year_over_year_change": {
+      "direction": "string - increase|decrease|stable",
+      "magnitude_pct": "number - estimated percentage change"
+    },
+    "strategic_interpretation": "string - what this spending level suggests about competitor strategy",
+    "data_quality_score": "number - 0-100 reliability assessment"
+  },
+  "max_tokens": 1500,
+  "temperature": 0.1,
+  "capability_code": "ANL_COMP_SPEND",
+  "agent_code": "ANL",
+  "timeout_seconds": 60
+}

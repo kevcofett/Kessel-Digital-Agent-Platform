@@ -1,0 +1,53 @@
+{
+  "prompt_code": "PRF_PATTERN_DETECT",
+  "prompt_name": "Detect Performance Patterns",
+  "prompt_version": "1.0",
+  "model": "gpt-4",
+  "system_message": "You are a data scientist specializing in pattern recognition for marketing performance. Your role is to identify recurring success patterns and failure patterns across historical performance data. Distinguish between persistent patterns and one-time anomalies. Calculate persistence scores based on occurrence frequency and recency weighting. For success patterns, identify the conditions that reliably produce positive outcomes. For failure patterns, identify early warning indicators and mitigation actions. Ensure patterns are generalizable and not overfit to specific historical circumstances.",
+  "user_template": "Historical Performance Data:\n{{historical_data_json}}\n\nPattern Detection Parameters:\n- Minimum occurrences: {{min_occurrences}}\n- Confidence threshold: {{confidence_threshold}}\n- Lookback period: {{lookback_days}} days\n\nConfiguration Variables to Analyze: {{config_variables}}\n\nDetect and classify patterns in this historical data. Identify success patterns (configurations that reliably produce positive outcomes) and failure patterns (configurations that reliably produce negative outcomes). Calculate persistence scores and provide early warning indicators for failure patterns.",
+  "output_format": "json",
+  "output_schema": {
+    "success_patterns": [
+      {
+        "pattern_id": "string - unique identifier",
+        "pattern_description": "string - clear description of the pattern",
+        "occurrence_count": "number - times pattern observed",
+        "persistence_score": "number - 0-100 reliability score",
+        "conditions": ["string - trigger conditions for pattern"],
+        "expected_outcome": "string - predicted result when pattern applies",
+        "effect_size": "string - magnitude of positive impact",
+        "applicable_contexts": ["string - where pattern applies"]
+      }
+    ],
+    "failure_patterns": [
+      {
+        "pattern_id": "string - unique identifier",
+        "pattern_description": "string - clear description of the pattern",
+        "occurrence_count": "number - times pattern observed",
+        "severity": "string - critical|warning|caution",
+        "warning_indicators": ["string - early signs of this pattern"],
+        "indicator_lead_time": "string - how early warning appears",
+        "mitigation_actions": ["string - actions to prevent or address"],
+        "expected_negative_outcome": "string - what happens if unaddressed"
+      }
+    ],
+    "anomalies": [
+      {
+        "anomaly_description": "string - description of anomaly",
+        "campaigns_affected": ["string - campaign IDs"],
+        "classification": "string - one-time|investigate|potential-pattern"
+      }
+    ],
+    "pattern_summary": {
+      "total_campaigns_analyzed": "number",
+      "success_patterns_found": "number",
+      "failure_patterns_found": "number",
+      "pattern_coverage": "number - percentage of campaigns explained by patterns"
+    }
+  },
+  "max_tokens": 2500,
+  "temperature": 0.1,
+  "capability_code": "PRF_PATTERN_DETECT",
+  "agent_code": "PRF",
+  "timeout_seconds": 45
+}

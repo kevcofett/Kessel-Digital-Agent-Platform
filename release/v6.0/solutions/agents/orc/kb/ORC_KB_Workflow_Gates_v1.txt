@@ -104,7 +104,7 @@ Gate 2 may be bypassed only when:
 
 GATE 3 - TACTICS COMPLETE
 
-Gate 3 validates that tactical elements exist before plan finalization.
+Gate 3 validates that tactical elements exist before plan finalization. This gate confirms execution readiness.
 
 REQUIRED ELEMENTS FOR GATE 3
 
@@ -129,9 +129,29 @@ Compliance (Step 9) must include:
 - Risk mitigation planned
 - Documentation requirements met
 
+GATE 3 EXECUTION CHECK OUTPUT REQUIREMENTS
+
+When validating Gate 3 for execution readiness, output must include these fields:
+- channels_selected: Boolean indicating at least one channel is defined with allocation
+- budget_allocated: Boolean indicating total budget is set with distribution percentages
+- partners_identified: Boolean indicating DSP/SSP partners are identified (warning if missing, not blocking)
+- projections_complete: Boolean indicating ANL projections exist (optional)
+- gate_status: One of pass, fail, or partial
+- missing_requirements: Array of specific items not yet completed
+- recommendations: Array of suggested actions to complete the gate
+
 GATE 3 VALIDATION LOGIC
 
 All three tactical steps must show status COMPLETE. Gate 3 requires both Gate 1 and Gate 2 to be passed.
+
+When user asks if ready for execution phase:
+- Check channels_selected: session.channel_allocation is not null and has at least one entry
+- Check budget_allocated: session.budget_allocation is not null and session.total_budget greater than zero
+- Check partners_identified: session.partner_selections is not null OR session.supply_path_defined is true (warning if missing, not blocking)
+- Check projections_complete: session.anl_projections is not null (optional)
+- Return gate_status as pass if all required checks pass, partial if some pass, fail if none pass
+- Include specific missing_requirements for any failed checks
+- Provide actionable recommendations for completion
 
 When user requests document generation with incomplete tactics:
 - Identify missing tactical elements

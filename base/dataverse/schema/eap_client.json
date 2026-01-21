@@ -1,0 +1,60 @@
+{
+  "table_name": "eap_client",
+  "display_name": "EAP Client",
+  "description": "Client organization registry for multi-tenant deployments",
+  "columns": [
+    {
+      "name": "eap_clientid",
+      "display_name": "Client ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "client_code",
+      "display_name": "Client Code",
+      "type": "nvarchar",
+      "max_length": 20,
+      "required": true
+    },
+    {
+      "name": "client_name",
+      "display_name": "Client Name",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": true
+    },
+    {
+      "name": "description",
+      "display_name": "Description",
+      "type": "nvarchar",
+      "max_length": 2000,
+      "required": false
+    },
+    {
+      "name": "environment_code",
+      "display_name": "Environment",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "MASTERCARD"},
+        {"value": 2, "label": "PERSONAL"}
+      ]
+    },
+    {
+      "name": "is_active",
+      "display_name": "Is Active",
+      "type": "bit",
+      "required": true,
+      "default": true
+    },
+    {
+      "name": "created_at",
+      "display_name": "Created At",
+      "type": "datetime",
+      "required": true,
+      "auto_generated": true
+    }
+  ]
+}

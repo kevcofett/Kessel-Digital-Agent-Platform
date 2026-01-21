@@ -1,0 +1,87 @@
+{
+  "table_name": "eap_user",
+  "display_name": "EAP User",
+  "description": "User registry for tracking user preferences and history",
+  "columns": [
+    {
+      "name": "eap_userid",
+      "display_name": "User ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "user_principal_name",
+      "display_name": "User Principal Name",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": true
+    },
+    {
+      "name": "display_name",
+      "display_name": "Display Name",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": false
+    },
+    {
+      "name": "email",
+      "display_name": "Email",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": false
+    },
+    {
+      "name": "environment_code",
+      "display_name": "Environment",
+      "type": "choice",
+      "required": true,
+      "choices": [
+        {"value": 1, "label": "MASTERCARD"},
+        {"value": 2, "label": "PERSONAL"}
+      ]
+    },
+    {
+      "name": "preferred_agent_code",
+      "display_name": "Preferred Agent",
+      "type": "nvarchar",
+      "max_length": 10,
+      "required": false
+    },
+    {
+      "name": "preferences_json",
+      "display_name": "Preferences",
+      "type": "nvarchar",
+      "max_length": 8000,
+      "required": false
+    },
+    {
+      "name": "total_sessions",
+      "display_name": "Total Sessions",
+      "type": "int",
+      "required": false,
+      "default": 0
+    },
+    {
+      "name": "last_active_at",
+      "display_name": "Last Active",
+      "type": "datetime",
+      "required": false
+    },
+    {
+      "name": "is_active",
+      "display_name": "Is Active",
+      "type": "bit",
+      "required": true,
+      "default": true
+    },
+    {
+      "name": "created_at",
+      "display_name": "Created At",
+      "type": "datetime",
+      "required": true,
+      "auto_generated": true
+    }
+  ]
+}

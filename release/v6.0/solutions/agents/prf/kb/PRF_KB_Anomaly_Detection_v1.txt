@@ -432,7 +432,106 @@ LOW PRIORITY ALERTS (Weekly Review)
 - Optimization opportunities identified
 
 ================================================================================
-SECTION 8 - ANOMALY DETECTION FORMULAS
+SECTION 8 - FRAUD DETECTION SIGNALS
+================================================================================
+
+FRAUD DETECTION OVERVIEW
+
+Fraud detection identifies potential invalid traffic (IVT) and suspicious patterns that may indicate ad fraud. This is a specialized form of anomaly detection focused on protecting media investment.
+
+FRAUD INDICATOR TYPES
+
+CLICK FRAUD
+Artificially generated clicks to deplete budget or inflate metrics.
+Indicators: CTR significantly above benchmark (greater than 150 percent of P95), click-to-conversion collapse, uniform click timing patterns.
+
+BOT TRAFFIC
+Non-human traffic from automated scripts or botnets.
+Indicators: Extremely short session duration (less than 2 seconds), uniform session patterns (standard deviation less than 0.5 seconds), geographic anomalies.
+
+INVALID TRAFFIC
+Traffic that does not represent genuine user interest.
+Indicators: High impressions with near-zero conversions (conversion rate less than 0.001 percent), single source concentration (greater than 50 percent from one source).
+
+SUSPICIOUS SOURCE
+Traffic sources exhibiting questionable patterns.
+Indicators: Disproportionate traffic from single publisher, unfamiliar referrers, mismatched geographic targeting.
+
+FRAUD DETECTION RULES
+
+RULE FRAUD_001 - Abnormal CTR Pattern
+Description: CTR significantly above channel benchmark
+Threshold: CTR greater than benchmark_p95 multiplied by 1.5
+Severity: HIGH
+Indicator Type: Click fraud
+
+RULE FRAUD_002 - Geographic Mismatch
+Description: Traffic from unexpected geographies
+Threshold: Geographic distribution differs more than 30 percent from target
+Severity: MEDIUM
+Indicator Type: Bot traffic
+
+RULE FRAUD_003 - Session Duration Anomaly
+Description: Extremely short or uniform session durations
+Threshold: Average session duration less than 2 seconds OR session duration standard deviation less than 0.5 seconds
+Severity: HIGH
+Indicator Type: Bot traffic
+
+RULE FRAUD_004 - Conversion Rate Collapse
+Description: High traffic volume with near-zero conversions
+Threshold: Impressions greater than 10000 AND conversion rate less than 0.001 percent
+Severity: CRITICAL
+Indicator Type: Invalid traffic
+
+RULE FRAUD_005 - Source Concentration
+Description: Disproportionate traffic from single source
+Threshold: Single source percentage greater than 50 percent
+Severity: MEDIUM
+Indicator Type: Suspicious source
+
+FRAUD RISK SCORING
+
+Risk score is calculated using weighted sum of triggered rules.
+
+SEVERITY WEIGHTS
+Critical: 40 points
+High: 25 points
+Medium: 15 points
+Low: 5 points
+
+RISK LEVEL THRESHOLDS
+Low Risk: 0 to 25 points
+Moderate Risk: 26 to 50 points
+High Risk: 51 to 75 points
+Critical Risk: 76 to 100 points
+
+FRAUD DETECTION OUTPUT SCHEMA
+
+When analyzing for fraud signals, output must include:
+
+fraud_indicators: Array of detected indicators with indicator_type, rule_triggered, severity, evidence, and recommendation for each.
+
+risk_score: Object containing overall_score (0 to 100), risk_level (low, moderate, high, critical), and confidence percentage.
+
+affected_sources: Array of sources with source_name, source_type, traffic_volume, fraud_probability percentage, and recommended_action.
+
+FRAUD INVESTIGATION GUIDANCE
+
+When fraud signals detected:
+1. Verify data accuracy before acting
+2. Cross-reference with verification partners (IAS, DoubleVerify, MOAT)
+3. Document evidence before making changes
+4. Consider incremental response before full blocking
+
+RECOMMENDED ACTIONS BY RISK LEVEL
+
+LOW RISK: Monitor closely, increase reporting frequency
+MODERATE RISK: Implement source-level caps, enable enhanced verification
+HIGH RISK: Pause suspicious sources, request vendor investigation
+CRITICAL RISK: Immediate pause of affected campaigns, escalate to leadership
+
+================================================================================
+SECTION 9 - ANOMALY DETECTION FORMULAS
 ================================================================================
 
 STATISTICAL FORMULAS
@@ -455,6 +554,42 @@ COMPARISON FORMULAS
 Segment_Z = (Segment_Value - Cross_Segment_Mean) / Cross_Segment_StdDev
 Benchmark_Deviation = (Actual - Benchmark) / Benchmark x 100
 Period_Change = (Current_Period - Prior_Period) / Prior_Period x 100
+
+================================================================================
+SECTION 10 - PRF TO ANL HANDOFF PROTOCOL
+================================================================================
+
+HANDOFF TRIGGER PATTERNS
+
+Detect intent to update projections based on actual performance when user requests:
+- Update projections based on actual performance
+- Revise forecast with actuals
+- Compare projections to actual results
+- Adjust forecast based on campaign data
+
+HANDOFF OUTPUT REQUIREMENTS
+
+When handing off to ANL for projection updates, PRF must provide:
+
+actual_performance: Object containing:
+- period: Date range of actual data
+- metrics: impressions, reach, frequency, clicks, conversions, spend
+- channel_breakdown: Performance by channel
+- variance_from_projection: Calculated variance from original projections
+
+performance_insights: Object containing:
+- trends: Array of identified trends
+- anomalies: Array of detected anomalies
+- contributing_factors: Array of factors affecting performance
+
+handoff_context: Object containing:
+- original_projection_id: Reference to the projection being updated
+- update_reason: Why the update is needed
+- confidence_adjustment: Suggested adjustment to confidence intervals
+
+HANDOFF MESSAGE
+
+When transferring to ANL, display: Transferring performance actuals to Analytics for projection update.
 
 ================================================================================
 END OF DOCUMENT

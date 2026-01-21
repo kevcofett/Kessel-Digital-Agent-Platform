@@ -18,6 +18,7 @@ import shutil
 import zipfile
 import argparse
 import uuid
+import re
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 from pathlib import Path
@@ -39,6 +40,8 @@ API_URL = "https://aragornai.api.crm.dynamics.com/api/data/v9.2"
 SCRIPT_DIR = Path(__file__).parent
 RELEASE_DIR = SCRIPT_DIR.parent
 AGENTS_DIR = RELEASE_DIR / "agents"
+BASE_DIR = RELEASE_DIR.parent.parent / "base"
+SCHEMA_DIR = BASE_DIR / "dataverse" / "schema"
 
 # Publisher configuration
 PUBLISHER = {
@@ -193,6 +196,355 @@ def get_headers(token: str) -> Dict[str, str]:
     }
 
 
+def load_table_schema(table_name: str) -> Optional[Dict]:
+    """Load table schema from JSON file."""
+    schema_file = SCHEMA_DIR / f"{table_name}.json"
+    if schema_file.exists():
+        with open(schema_file, 'r') as f:
+            return json.load(f)
+    return None
+
+
+def get_primary_name_attribute(schema: Dict) -> str:
+    """Determine the primary name attribute for a table schema."""
+    if not schema:
+        return "name"
+
+    columns = schema.get("columns", [])
+    table_name = schema.get("table_name", "")
+
+    # Priority order for primary name attribute:
+    # 1. Column named "{table}_name" or "name"
+    # 2. Column named "{table}_code" or "code"
+    # 3. First nvarchar column that's not the primary key
+    # 4. Default to "name"
+
+    name_candidates = []
+    code_candidates = []
+    nvarchar_candidates = []
+
+    for col in columns:
+        col_name = col.get("name", "")
+        col_type = col.get("type", "")
+        is_pk = col.get("primary_key", False)
+
+        if is_pk:
+            continue
+
+        if col_name in ["name", f"{table_name}_name", "agent_name", "capability_name",
+                        "prompt_name", "session_code", "capability_code"]:
+            name_candidates.append(col_name)
+        elif col_name.endswith("_code") and col_type == "nvarchar":
+            code_candidates.append(col_name)
+        elif col_type == "nvarchar" and not is_pk:
+            nvarchar_candidates.append(col_name)
+
+    # Return best match
+    if name_candidates:
+        return name_candidates[0]
+    if code_candidates:
+        return code_candidates[0]
+    if nvarchar_candidates:
+        return nvarchar_candidates[0]
+
+    return "name"
+
+
+def map_datatype_to_crm(col: Dict) -> Dict:
+    """Map JSON schema column type to CRM attribute metadata."""
+    col_type = col.get("type", "nvarchar")
+    col_name = col.get("name", "")
+    max_length = col.get("max_length", 100)
+    required = col.get("required", False)
+
+    # Base attribute properties
+    attr = {
+        "LogicalName": col_name,
+        "DisplayName": col.get("display_name", col_name),
+        "RequiredLevel": "ApplicationRequired" if required else "None",
+        "IsCustomizable": "1",
+        "IsRenameable": "1"
+    }
+
+    if col_type == "uniqueidentifier":
+        attr["Type"] = "Uniqueidentifier"
+    elif col_type == "nvarchar":
+        attr["Type"] = "String"
+        attr["Format"] = "Text"
+        attr["MaxLength"] = str(min(max_length, 4000))
+        attr["ImeMode"] = "Auto"
+    elif col_type == "int":
+        attr["Type"] = "Integer"
+        attr["Format"] = "None"
+        attr["MinValue"] = "-2147483648"
+        attr["MaxValue"] = "2147483647"
+    elif col_type == "decimal":
+        attr["Type"] = "Decimal"
+        attr["Precision"] = str(col.get("precision", 10))
+        attr["MinValue"] = "-100000000000"
+        attr["MaxValue"] = "100000000000"
+    elif col_type == "bit":
+        attr["Type"] = "Boolean"
+        attr["DefaultValue"] = "1" if col.get("default", True) else "0"
+    elif col_type == "datetime":
+        attr["Type"] = "DateTime"
+        attr["Format"] = "DateAndTime"
+        attr["ImeMode"] = "Disabled"
+    elif col_type == "choice":
+        attr["Type"] = "Picklist"
+        choices = col.get("choices", [])
+        attr["Options"] = choices
+    elif col_type == "lookup":
+        attr["Type"] = "Lookup"
+        attr["LookupTable"] = col.get("lookup_table", "")
+    else:
+        attr["Type"] = "String"
+        attr["Format"] = "Text"
+        attr["MaxLength"] = "100"
+
+    return attr
+
+
+def generate_entity_xml(table_name: str, schema: Dict) -> str:
+    """Generate full entity XML with attributes for a table."""
+    if not schema:
+        # Fallback for tables without schema
+        return f'''
+      <Entity>
+        <Name LocalizedName="{table_name}" OriginalName="{table_name}">{table_name}</Name>
+        <ObjectTypeCode>{table_name}</ObjectTypeCode>
+        <EntityInfo>
+          <entity Name="{table_name}">
+            <LocalizedNames>
+              <LocalizedName description="{table_name}" languagecode="1033" />
+            </LocalizedNames>
+            <PrimaryNameAttribute>name</PrimaryNameAttribute>
+          </entity>
+        </EntityInfo>
+      </Entity>'''
+
+    display_name = schema.get("display_name", table_name)
+    description = schema.get("description", "")
+    columns = schema.get("columns", [])
+    primary_name = get_primary_name_attribute(schema)
+    primary_id = f"{table_name}id"
+
+    # Generate attributes XML
+    attributes_xml = ""
+    for col in columns:
+        col_name = col.get("name", "")
+        if col.get("primary_key", False):
+            continue  # Skip primary key in attributes
+
+        attr = map_datatype_to_crm(col)
+        attr_type = attr.get("Type", "String")
+
+        if attr_type == "String":
+            attributes_xml += f'''
+            <attribute PhysicalName="{col_name}">
+              <Type>{attr_type}</Type>
+              <Name>{col_name}</Name>
+              <LogicalName>{col_name}</LogicalName>
+              <RequiredLevel>{attr.get("RequiredLevel", "None")}</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>{attr.get("ImeMode", "Auto")}</ImeMode>
+              <IsCustomizable>{attr.get("IsCustomizable", "1")}</IsCustomizable>
+              <IsRenameable>{attr.get("IsRenameable", "1")}</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>{attr.get("Format", "Text")}</Format>
+              <MaxLength>{attr.get("MaxLength", "100")}</MaxLength>
+              <displaynames>
+                <displayname description="{attr.get("DisplayName", col_name)}" languagecode="1033" />
+              </displaynames>
+            </attribute>'''
+        elif attr_type == "Integer":
+            attributes_xml += f'''
+            <attribute PhysicalName="{col_name}">
+              <Type>{attr_type}</Type>
+              <Name>{col_name}</Name>
+              <LogicalName>{col_name}</LogicalName>
+              <RequiredLevel>{attr.get("RequiredLevel", "None")}</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>{attr.get("IsCustomizable", "1")}</IsCustomizable>
+              <IsRenameable>{attr.get("IsRenameable", "1")}</IsRenameable>
+              <Format>{attr.get("Format", "None")}</Format>
+              <MinValue>{attr.get("MinValue", "-2147483648")}</MinValue>
+              <MaxValue>{attr.get("MaxValue", "2147483647")}</MaxValue>
+              <displaynames>
+                <displayname description="{attr.get("DisplayName", col_name)}" languagecode="1033" />
+              </displaynames>
+            </attribute>'''
+        elif attr_type == "Decimal":
+            attributes_xml += f'''
+            <attribute PhysicalName="{col_name}">
+              <Type>{attr_type}</Type>
+              <Name>{col_name}</Name>
+              <LogicalName>{col_name}</LogicalName>
+              <RequiredLevel>{attr.get("RequiredLevel", "None")}</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>{attr.get("IsCustomizable", "1")}</IsCustomizable>
+              <IsRenameable>{attr.get("IsRenameable", "1")}</IsRenameable>
+              <Precision>{attr.get("Precision", "2")}</Precision>
+              <MinValue>{attr.get("MinValue", "-100000000000")}</MinValue>
+              <MaxValue>{attr.get("MaxValue", "100000000000")}</MaxValue>
+              <displaynames>
+                <displayname description="{attr.get("DisplayName", col_name)}" languagecode="1033" />
+              </displaynames>
+            </attribute>'''
+        elif attr_type == "Boolean":
+            attributes_xml += f'''
+            <attribute PhysicalName="{col_name}">
+              <Type>{attr_type}</Type>
+              <Name>{col_name}</Name>
+              <LogicalName>{col_name}</LogicalName>
+              <RequiredLevel>{attr.get("RequiredLevel", "None")}</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>{attr.get("IsCustomizable", "1")}</IsCustomizable>
+              <IsRenameable>{attr.get("IsRenameable", "1")}</IsRenameable>
+              <DefaultValue>{attr.get("DefaultValue", "1")}</DefaultValue>
+              <displaynames>
+                <displayname description="{attr.get("DisplayName", col_name)}" languagecode="1033" />
+              </displaynames>
+              <optionset Name="{col_name}">
+                <OptionSetType>Boolean</OptionSetType>
+                <options>
+                  <option value="0">
+                    <labels>
+                      <label description="No" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="1">
+                    <labels>
+                      <label description="Yes" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>'''
+        elif attr_type == "DateTime":
+            attributes_xml += f'''
+            <attribute PhysicalName="{col_name}">
+              <Type>{attr_type}</Type>
+              <Name>{col_name}</Name>
+              <LogicalName>{col_name}</LogicalName>
+              <RequiredLevel>{attr.get("RequiredLevel", "None")}</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>{attr.get("IsCustomizable", "1")}</IsCustomizable>
+              <IsRenameable>{attr.get("IsRenameable", "1")}</IsRenameable>
+              <Format>{attr.get("Format", "DateAndTime")}</Format>
+              <ImeMode>{attr.get("ImeMode", "Disabled")}</ImeMode>
+              <displaynames>
+                <displayname description="{attr.get("DisplayName", col_name)}" languagecode="1033" />
+              </displaynames>
+            </attribute>'''
+        elif attr_type == "Picklist":
+            options_xml = ""
+            for opt in attr.get("Options", []):
+                opt_value = opt.get("value", 1)
+                opt_label = opt.get("label", "")
+                options_xml += f'''
+                  <option value="{opt_value}">
+                    <labels>
+                      <label description="{opt_label}" languagecode="1033" />
+                    </labels>
+                  </option>'''
+
+            attributes_xml += f'''
+            <attribute PhysicalName="{col_name}">
+              <Type>{attr_type}</Type>
+              <Name>{col_name}</Name>
+              <LogicalName>{col_name}</LogicalName>
+              <RequiredLevel>{attr.get("RequiredLevel", "None")}</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>{attr.get("IsCustomizable", "1")}</IsCustomizable>
+              <IsRenameable>{attr.get("IsRenameable", "1")}</IsRenameable>
+              <displaynames>
+                <displayname description="{attr.get("DisplayName", col_name)}" languagecode="1033" />
+              </displaynames>
+              <optionset Name="{col_name}">
+                <OptionSetType>Picklist</OptionSetType>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <IsCustomizable>1</IsCustomizable>
+                <options>{options_xml}
+                </options>
+              </optionset>
+            </attribute>'''
+        elif attr_type == "Lookup":
+            lookup_table = attr.get("LookupTable", table_name)
+            attributes_xml += f'''
+            <attribute PhysicalName="{col_name}">
+              <Type>{attr_type}</Type>
+              <Name>{col_name}</Name>
+              <LogicalName>{col_name}</LogicalName>
+              <RequiredLevel>{attr.get("RequiredLevel", "None")}</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>{attr.get("IsCustomizable", "1")}</IsCustomizable>
+              <IsRenameable>{attr.get("IsRenameable", "1")}</IsRenameable>
+              <LookupStyle>single</LookupStyle>
+              <displaynames>
+                <displayname description="{attr.get("DisplayName", col_name)}" languagecode="1033" />
+              </displaynames>
+              <LookupTypes>
+                <LookupType id="00000000-0000-0000-0000-000000000000">{lookup_table}</LookupType>
+              </LookupTypes>
+            </attribute>'''
+
+    return f'''
+      <Entity>
+        <Name LocalizedName="{display_name}" OriginalName="{table_name}">{table_name}</Name>
+        <ObjectTypeCode>{table_name}</ObjectTypeCode>
+        <EntityInfo>
+          <entity Name="{table_name}">
+            <LocalizedNames>
+              <LocalizedName description="{display_name}" languagecode="1033" />
+            </LocalizedNames>
+            <Descriptions>
+              <Description description="{description}" languagecode="1033" />
+            </Descriptions>
+            <PrimaryIdAttribute>{primary_id}</PrimaryIdAttribute>
+            <PrimaryNameAttribute>{primary_name}</PrimaryNameAttribute>
+            <EntitySetName>{table_name}s</EntitySetName>
+            <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
+            <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+            <IsCustomEntity>1</IsCustomEntity>
+            <IsAuditEnabled>0</IsAuditEnabled>
+            <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+            <IsActivity>0</IsActivity>
+            <IsActivityParty>0</IsActivityParty>
+            <IsAvailableOffline>1</IsAvailableOffline>
+            <IsChildEntity>0</IsChildEntity>
+            <IsConnectionsEnabled>0</IsConnectionsEnabled>
+            <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+            <IsEnabledForCharts>1</IsEnabledForCharts>
+            <IsImportable>1</IsImportable>
+            <IsIntersect>0</IsIntersect>
+            <IsMailMergeEnabled>0</IsMailMergeEnabled>
+            <IsManaged>0</IsManaged>
+            <IsMapiGridEnabled>0</IsMapiGridEnabled>
+            <IsReadingPaneEnabled>1</IsReadingPaneEnabled>
+            <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+            <IsValidForQueue>0</IsValidForQueue>
+            <IsVisibleInMobile>1</IsVisibleInMobile>
+            <IsVisibleInMobileClient>1</IsVisibleInMobileClient>
+            <IsCustomizable>1</IsCustomizable>
+            <IsRenameable>1</IsRenameable>
+            <IsMappable>1</IsMappable>
+            <CanCreateAttributes>1</CanCreateAttributes>
+            <CanCreateForms>1</CanCreateForms>
+            <CanCreateViews>1</CanCreateViews>
+            <CanCreateCharts>1</CanCreateCharts>
+            <CanBeRelatedEntityInRelationship>1</CanBeRelatedEntityInRelationship>
+            <CanBePrimaryEntityInRelationship>1</CanBePrimaryEntityInRelationship>
+            <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <attributes>{attributes_xml}
+            </attributes>
+          </entity>
+        </EntityInfo>
+      </Entity>'''
+
+
 def generate_solution_xml(
     solution_name: str,
     display_name: str,
@@ -265,12 +617,20 @@ def generate_solution_xml(
 
 
 def generate_customizations_xml(tables: List[str] = None, flows: List[str] = None) -> str:
-    """Generate customizations.xml content."""
+    """Generate customizations.xml content with full entity metadata."""
 
     entities_xml = ""
     if tables:
         for table in tables:
-            entities_xml += f'''
+            # Load schema from JSON file
+            schema = load_table_schema(table)
+            if schema:
+                print(f"    Loaded schema for {table}")
+                entities_xml += generate_entity_xml(table, schema)
+            else:
+                # Fallback for tables without schema
+                print(f"    No schema found for {table}, using minimal definition")
+                entities_xml += f'''
       <Entity>
         <Name LocalizedName="{table}" OriginalName="{table}">{table}</Name>
         <ObjectTypeCode>{table}</ObjectTypeCode>
@@ -279,6 +639,9 @@ def generate_customizations_xml(tables: List[str] = None, flows: List[str] = Non
             <LocalizedNames>
               <LocalizedName description="{table}" languagecode="1033" />
             </LocalizedNames>
+            <PrimaryNameAttribute>name</PrimaryNameAttribute>
+            <IsCustomEntity>1</IsCustomEntity>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
           </entity>
         </EntityInfo>
       </Entity>'''

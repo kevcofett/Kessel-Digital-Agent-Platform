@@ -1,0 +1,73 @@
+{
+  "table_name": "eap_featureflag",
+  "display_name": "EAP Feature Flag",
+  "description": "Feature flag registry for controlled feature rollout",
+  "columns": [
+    {
+      "name": "eap_featureflagid",
+      "display_name": "Feature Flag ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "primary_key": true,
+      "auto_generated": true
+    },
+    {
+      "name": "flag_code",
+      "display_name": "Flag Code",
+      "type": "nvarchar",
+      "max_length": 50,
+      "required": true
+    },
+    {
+      "name": "flag_name",
+      "display_name": "Flag Name",
+      "type": "nvarchar",
+      "max_length": 100,
+      "required": true
+    },
+    {
+      "name": "description",
+      "display_name": "Description",
+      "type": "nvarchar",
+      "max_length": 2000,
+      "required": false
+    },
+    {
+      "name": "is_enabled",
+      "display_name": "Is Enabled",
+      "type": "bit",
+      "required": true,
+      "default": false
+    },
+    {
+      "name": "environment_code",
+      "display_name": "Environment",
+      "type": "choice",
+      "required": false,
+      "choices": [
+        {"value": 1, "label": "MASTERCARD"},
+        {"value": 2, "label": "PERSONAL"},
+        {"value": 3, "label": "ALL"}
+      ]
+    },
+    {
+      "name": "rollout_percentage",
+      "display_name": "Rollout Percentage",
+      "type": "int",
+      "required": false,
+      "default": 100
+    },
+    {
+      "name": "effective_from",
+      "display_name": "Effective From",
+      "type": "datetime",
+      "required": false
+    },
+    {
+      "name": "effective_to",
+      "display_name": "Effective To",
+      "type": "datetime",
+      "required": false
+    }
+  ]
+}

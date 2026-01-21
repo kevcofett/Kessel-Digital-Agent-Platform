@@ -129,10 +129,10 @@ def run(raw_data: str) -> str:
             "expected_roi": round(expected_roi, 4),
             "confidence": confidence,
             "optimization_details": {
-                "success": result.success,
-                "iterations": result.nit,
+                "success": bool(result.success),
+                "iterations": int(result.nit),
                 "objective_value": float(-result.fun),
-                "message": result.message
+                "message": str(result.message)
             }
         }
         

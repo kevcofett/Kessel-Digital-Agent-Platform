@@ -1,0 +1,446 @@
+AUD KNOWLEDGE BASE - NEXT-BEST-ACTION ENGINE
+
+OVERVIEW
+
+This document provides comprehensive methodology for implementing next-best-action decision engines in marketing contexts. Next-best-action systems select optimal messages, offers, and channels for individual customers in real-time. These systems balance exploration of new strategies with exploitation of known effective approaches.
+
+Next-best-action engines transform marketing from batch campaigns to personalized interactions. Every customer touchpoint becomes an opportunity to deliver the most relevant experience. The engine considers customer context, historical response patterns, business constraints, and real-time signals to select actions that maximize long-term customer value.
+
+MULTI-ARMED BANDIT FUNDAMENTALS
+
+EXPLORATION VERSUS EXPLOITATION TRADEOFF
+
+The central challenge in next-best-action systems is balancing exploration and exploitation. Exploitation means selecting the action with highest known expected reward. Exploration means trying actions with uncertain rewards to gather more information.
+
+Pure exploitation converges prematurely on suboptimal actions. The system never discovers that an untried action might perform better. Pure exploration wastes opportunities by selecting random actions regardless of performance history.
+
+Optimal strategies balance these concerns dynamically. Early in learning, exploration is more valuable because information is scarce. As data accumulates, exploitation becomes more valuable because estimates become reliable.
+
+The regret of a bandit algorithm measures cumulative opportunity cost. Regret equals the reward from always selecting the true best action minus actual rewards obtained. Good algorithms achieve sublinear regret, meaning regret per decision decreases over time.
+
+EPSILON-GREEDY STRATEGY
+
+Epsilon-greedy is the simplest exploration strategy. With probability epsilon, select a random action. With probability one minus epsilon, select the action with highest estimated reward.
+
+Implementation requirements:
+- Maintain running estimate of reward for each action
+- Update estimates after each observation
+- Decay epsilon over time to reduce exploration as learning progresses
+
+Typical epsilon schedules:
+- Fixed epsilon of 0.1 for ongoing exploration
+- Decaying epsilon starting at 0.3 and halving every 10000 observations
+- Contextual epsilon based on estimate uncertainty
+
+Epsilon-greedy is simple but inefficient. It explores all actions equally regardless of their uncertainty or potential. Actions with high uncertainty and high potential deserve more exploration than actions that are clearly suboptimal.
+
+UPPER CONFIDENCE BOUND METHODS
+
+Upper confidence bound methods select actions based on optimistic estimates. The algorithm maintains both a point estimate and uncertainty measure for each action. Selection uses the upper confidence bound: estimate plus exploration bonus.
+
+UCB1 formula for action selection:
+- UCB equals estimated reward plus c times square root of log(total observations) divided by action observations
+- Select action with highest UCB value
+- Parameter c controls exploration intensity
+
+UCB automatically balances exploration and exploitation. Actions with high estimates are selected for exploitation. Actions with high uncertainty are selected for exploration. As an action accumulates observations, its uncertainty decreases and exploitation dominates.
+
+UCB achieves logarithmic regret, which is optimal for this problem class. The algorithm requires no tuning of exploration parameters. UCB is deterministic given the same history, which simplifies debugging and reproducibility.
+
+THOMPSON SAMPLING METHODOLOGY
+
+BETA-BERNOULLI MODEL FOR BINARY OUTCOMES
+
+Thompson sampling uses Bayesian inference for exploration. The algorithm maintains a probability distribution over the true reward rate for each action. Selection samples from each distribution and chooses the action with highest sampled value.
+
+For binary outcomes like click or conversion:
+- Model reward rate with Beta distribution
+- Prior is Beta with alpha-zero equals 1 and beta-zero equals 1 for uniform prior
+- After observing s successes and f failures, posterior is Beta with alpha equals alpha-zero plus s and beta equals beta-zero plus f
+
+Thompson sampling procedure:
+- For each action, sample theta from Beta with alpha and beta parameters
+- Select action with highest sampled theta
+- Observe outcome and update posterior parameters
+- Repeat for each decision
+
+Thompson sampling achieves near-optimal regret while being computationally simple. The randomization provides natural exploration that adapts to uncertainty. Actions with uncertain estimates have high-variance samples, causing occasional selection even when point estimates are low.
+
+NORMAL MODEL FOR CONTINUOUS OUTCOMES
+
+For continuous outcomes like revenue or engagement score:
+- Model reward with Normal distribution
+- Maintain running mean and variance estimates for each action
+- Use Normal-Inverse-Gamma conjugate prior for full Bayesian treatment
+- Or use Normal approximation with sample mean and variance
+
+Sampling procedure for Normal model:
+- Sample variance from Inverse-Gamma distribution
+- Sample mean from Normal with sampled variance
+- Select action with highest sampled mean
+
+The Normal model handles continuous rewards but requires more computation. For large action spaces, approximations like moment matching improve efficiency. For non-Normal rewards, consider transformations or non-parametric methods.
+
+CONTEXTUAL BANDITS
+
+Contextual bandits incorporate customer features into action selection. The reward distribution depends on both the action and the context. This enables personalized action selection based on customer attributes.
+
+Context features for marketing:
+- Customer demographics and firmographics
+- Purchase history and recency-frequency-monetary scores
+- Channel engagement patterns and preferences
+- Current session behavior and intent signals
+- Time of day and day of week
+- Device type and location
+
+Linear contextual bandit models:
+- Expected reward equals context features times action-specific weights
+- Maintain weight estimates for each action
+- Update weights using online linear regression
+- Add exploration bonus based on weight uncertainty
+
+LinUCB algorithm:
+- Maintain design matrix A and response vector b for each action
+- Compute weight estimate as inverse of A times b
+- Compute UCB as weight estimate times context plus exploration bonus
+- Exploration bonus uses ridge regression confidence bound
+
+Thompson sampling for contextual bandits:
+- Sample weights from posterior distribution
+- Compute expected reward for each action using sampled weights
+- Select action with highest expected reward
+- Update posterior with observed outcome
+
+ACTION SEQUENCE OPTIMIZATION
+
+MARKOV DECISION PROCESS FRAMEWORK
+
+Customer journeys involve sequences of actions over time. The optimal action at each step depends on the current state and future opportunities. Markov decision processes provide the framework for sequential optimization.
+
+MDP components for marketing:
+- States represent customer engagement levels and journey positions
+- Actions are marketing messages, offers, and channel selections
+- Transitions describe how actions change customer state
+- Rewards measure immediate value of state-action pairs
+- Discount factor balances immediate versus future rewards
+
+State representation considerations:
+- Include recency of last interaction
+- Include frequency of recent interactions
+- Include monetary value of recent purchases
+- Include channel engagement indicators
+- Include lifecycle stage indicators
+
+Bellman equation for optimal value:
+- V-star of state s equals maximum over actions of expected immediate reward plus discounted expected future value
+- Q-star of state-action pair equals expected immediate reward plus discounted expected value of next state
+- Optimal policy selects action with highest Q-star value
+
+DYNAMIC PROGRAMMING SOLUTIONS
+
+For small state and action spaces, exact dynamic programming solves the MDP. Value iteration repeatedly applies the Bellman update until convergence. Policy iteration alternates between policy evaluation and policy improvement.
+
+Value iteration procedure:
+- Initialize value function to zero for all states
+- Repeat until convergence: update V of s to maximum over actions of R plus gamma times sum over next states of transition probability times V of next state
+- Extract policy by selecting action that achieves maximum
+
+Policy iteration procedure:
+- Initialize policy arbitrarily
+- Policy evaluation: compute value function for current policy
+- Policy improvement: update policy to be greedy with respect to value function
+- Repeat until policy is stable
+
+For large state spaces, approximate methods are necessary:
+- Function approximation represents value function with parametric model
+- Fitted Q-iteration uses supervised learning to estimate Q-function
+- Deep reinforcement learning uses neural networks for function approximation
+
+SEQUENCE HEURISTICS
+
+When full MDP solution is impractical, heuristics guide action sequencing:
+- Recency rules: do not repeat same message within N days
+- Diversity rules: vary message themes across sequence
+- Escalation rules: increase offer value for non-responders
+- Cadence rules: maintain consistent contact frequency
+
+Sequence templates for common journeys:
+- Welcome sequence: introduction, value proposition, activation offer, reminder
+- Reactivation sequence: recognition, incentive, urgency, final attempt
+- Upsell sequence: usage highlight, recommendation, limited offer, social proof
+- Retention sequence: appreciation, exclusive benefit, feedback request, loyalty reward
+
+FREQUENCY CAP OPTIMIZATION
+
+FATIGUE MODELING
+
+Message fatigue reduces response rates when customers receive too many communications. Fatigue accumulates with each exposure and decays over time. Optimal frequency balances reach against fatigue effects.
+
+Fatigue model components:
+- Exposure count within rolling window
+- Time since last exposure
+- Channel-specific fatigue accumulation
+- Message type fatigue accumulation
+- Individual fatigue sensitivity
+
+Exponential fatigue model:
+- Response rate equals baseline rate times exponential of negative fatigue coefficient times exposure count
+- Fatigue coefficient varies by customer and channel
+- Higher coefficient indicates faster fatigue
+
+Recovery model:
+- Fatigue decays exponentially with time since last exposure
+- Recovery half-life varies by channel and message intensity
+- Email typically recovers faster than direct mail
+- High-value offers cause more persistent fatigue
+
+OPTIMAL FREQUENCY CALCULATION
+
+Marginal response framework:
+- Calculate expected incremental responses from each additional exposure
+- Continue exposures while marginal response exceeds marginal cost
+- Stop when marginal response falls below threshold
+
+Dynamic frequency caps:
+- Base cap on customer engagement level
+- Increase cap for highly engaged customers
+- Decrease cap for customers showing fatigue signals
+- Adjust cap based on message urgency and value
+
+Frequency optimization constraints:
+- Minimum frequency to maintain awareness
+- Maximum frequency to prevent unsubscribe
+- Channel-specific limits based on norms
+- Budget constraints on total exposures
+
+HOLDOUT METHODOLOGY
+
+Frequency holdouts measure true fatigue effects:
+- Randomly assign customers to frequency treatment groups
+- Vary only frequency while holding message content constant
+- Measure response rate and unsubscribe rate by frequency level
+- Estimate optimal frequency from response curve
+
+Holdout design considerations:
+- Sufficient sample size for each frequency level
+- Duration long enough to observe fatigue effects
+- Control for seasonality and external factors
+- Measure both immediate response and long-term engagement
+
+CHANNEL PREFERENCE SCORING
+
+CHANNEL AFFINITY ESTIMATION
+
+Channel affinity scores predict customer preference for each channel. Customers respond differently to email, SMS, push notification, direct mail, and phone. Personalized channel selection improves response rates and customer experience.
+
+Affinity score inputs:
+- Historical response rates by channel
+- Engagement metrics by channel
+- Explicit preferences from preference center
+- Opt-out patterns and complaints
+- Device and platform usage
+
+Affinity calculation methods:
+- Simple: response rate by channel normalized to sum to one
+- Bayesian: posterior probability of response given channel
+- Model-based: logistic regression with channel indicators and interactions
+
+Channel affinity model features:
+- Customer demographics
+- Past channel engagement
+- Time of day and day of week patterns
+- Device type and platform
+- Geographic location
+
+CHANNEL ORCHESTRATION
+
+Multi-channel coordination prevents conflicting messages:
+- Suppress duplicate messages across channels
+- Coordinate timing to avoid overwhelming
+- Escalate through channels based on response
+- Respect channel-specific frequency limits
+
+Channel selection rules:
+- Primary channel is highest affinity with availability
+- Secondary channel for non-responders after wait period
+- Tertiary channel for high-value communications only
+- Emergency channel for time-sensitive messages only
+
+Cross-channel attribution:
+- Track exposures across all channels
+- Attribute conversions to assisting and converting channels
+- Adjust affinity scores for cross-channel effects
+- Avoid double-counting in multi-channel journeys
+
+REAL-TIME VERSUS BATCH IMPLEMENTATION
+
+REAL-TIME NBA ARCHITECTURE
+
+Real-time implementation selects actions at moment of customer interaction. This enables personalization based on current context and immediate response. Real-time systems require low-latency infrastructure.
+
+Real-time components:
+- Feature store for pre-computed customer attributes
+- Model serving infrastructure for low-latency scoring
+- Decision service for action selection logic
+- Event streaming for real-time signal capture
+- Response logging for model updates
+
+Latency requirements:
+- Web personalization requires sub-100 millisecond response
+- Email send-time optimization allows seconds
+- Call center next-best-action requires sub-second
+- Mobile push requires sub-second for triggered messages
+
+Real-time feature computation:
+- Session features computed from current interaction
+- Customer features retrieved from feature store
+- Contextual features from request metadata
+- Model scores computed in serving infrastructure
+
+BATCH NBA ARCHITECTURE
+
+Batch implementation pre-computes action assignments for customer populations. This simplifies infrastructure but limits personalization to known contexts. Batch systems suit scheduled campaigns and outbound communications.
+
+Batch process flow:
+- Extract customer features from data warehouse
+- Score all customers for all eligible actions
+- Apply business rules and constraints
+- Generate contact lists with assigned actions
+- Execute through campaign management platform
+
+Batch scheduling considerations:
+- Run frequency balances freshness against cost
+- Daily batch suits most outbound programs
+- Weekly batch for lower-priority segments
+- Triggered batch for event-driven campaigns
+
+Batch limitations:
+- Cannot incorporate real-time signals
+- Action assignment may be stale at execution time
+- Difficult to coordinate with real-time interactions
+- Less adaptive to changing conditions
+
+HYBRID APPROACHES
+
+Hybrid systems combine batch pre-computation with real-time adjustment:
+- Batch computes candidate actions and base scores
+- Real-time selects from candidates based on current context
+- Real-time applies constraints and business rules
+- Real-time logs decisions for batch model updates
+
+Hybrid benefits:
+- Reduced real-time computation requirements
+- Maintains personalization capability
+- Graceful degradation if real-time fails
+- Easier testing and debugging
+
+INTEGRATION WITH JOURNEY ORCHESTRATION
+
+CONNECTION TO AUD JOURNEY CAPABILITIES
+
+Next-best-action integrates with journey orchestration for holistic customer management. Journey orchestration defines the overall customer experience. NBA selects specific actions within journey framework.
+
+Integration points:
+- Journey defines eligible actions at each stage
+- NBA selects optimal action from eligible set
+- Journey tracks customer progression through stages
+- NBA feedback informs journey optimization
+
+Journey stage considerations:
+- Awareness stage emphasizes reach and education
+- Consideration stage emphasizes differentiation and proof
+- Decision stage emphasizes urgency and incentive
+- Retention stage emphasizes value and loyalty
+
+Handoff protocols:
+- Journey triggers NBA decision request
+- NBA returns selected action with confidence
+- Journey executes action through appropriate channel
+- Journey captures response and updates customer state
+- NBA receives outcome for model update
+
+CAPABILITY DEPENDENCIES
+
+This knowledge base connects to related AUD capabilities:
+
+AUD_JOURNEY_ORCHESTRATE provides journey stage definitions and progression logic. NBA operates within journey-defined action spaces.
+
+AUD_SEGMENT_CREATE provides audience segmentation for NBA model training. Segments define subpopulations with distinct response patterns.
+
+AUD_PROPENSITY_SCORE provides base propensity estimates that NBA refines with exploration. Propensity scores initialize NBA reward estimates.
+
+AUD_LOOKALIKE_MODEL identifies prospects similar to high-value customers. NBA prioritizes exploration for lookalike audiences.
+
+IMPLEMENTATION CHECKLIST
+
+PRE-LAUNCH REQUIREMENTS
+
+Data requirements:
+- Historical response data by customer and action
+- Customer feature data for contextual models
+- Action metadata for constraint enforcement
+- Channel availability and preference data
+
+Model requirements:
+- Trained bandit model with initialized parameters
+- Feature pipeline for real-time scoring
+- Constraint engine for business rules
+- Logging infrastructure for feedback
+
+Testing requirements:
+- Unit tests for selection logic
+- Integration tests for end-to-end flow
+- Load tests for latency under volume
+- A/B test framework for model comparison
+
+MONITORING AND MAINTENANCE
+
+Operational monitoring:
+- Selection latency percentiles
+- Model scoring errors
+- Constraint violation rates
+- Feature pipeline freshness
+
+Performance monitoring:
+- Response rates by action
+- Exploration versus exploitation ratio
+- Regret estimates
+- Model convergence metrics
+
+Model maintenance:
+- Regular retraining on recent data
+- Drift detection for feature distributions
+- Action catalog updates for new options
+- Constraint updates for business changes
+
+COMMON PITFALLS
+
+Implementation mistakes to avoid:
+- Insufficient exploration in early learning
+- Ignoring delayed conversions in reward signal
+- Failure to handle cold-start for new actions
+- Incorrect handling of missing features
+- Inadequate logging for model updates
+
+Business mistakes to avoid:
+- Optimizing for short-term response at expense of long-term value
+- Ignoring customer experience in action selection
+- Failing to coordinate with other customer touchpoints
+- Not respecting customer preferences and opt-outs
+- Over-relying on model without human oversight
+
+CAPABILITY REFERENCE
+
+This knowledge base supports the following AUD agent capabilities:
+
+AUD_NBA_SELECT - Primary next-best-action selection using multi-armed bandit approach with business constraint enforcement
+
+AUD_NBA_THOMPSON - Thompson sampling implementation for binary and continuous outcomes with Bayesian posterior updates
+
+AUD_NBA_SEQUENCE - Action sequence optimization using Markov decision process framework with approximate dynamic programming
+
+AUD_NBA_FREQCAP - Frequency cap optimization using fatigue modeling with exponential decay and recovery
+
+AUD_NBA_CHANNEL - Channel preference scoring using affinity models with cross-channel orchestration rules
+
+END OF DOCUMENT

@@ -1,0 +1,476 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 12876
+
+PURPOSE
+
+This knowledge base provides the Performance Agent with comprehensive anomaly detection methodology including statistical methods, machine learning approaches, and alerting frameworks for marketing performance monitoring.
+
+ANOMALY DETECTION FUNDAMENTALS
+
+Understanding performance deviation identification.
+
+ANOMALY CONCEPT
+
+What anomaly detection achieves.
+
+Definition
+- Unusual pattern identification
+- Expected behavior deviation
+- Outlier detection
+- Exception finding
+
+Importance
+- Early problem detection
+- Opportunity identification
+- Performance protection
+- Resource optimization
+
+Detection challenge
+- Normal variation differentiation
+- Context consideration
+- False positive management
+- Timeliness requirement
+
+ANOMALY TYPES
+
+Categories of anomalies.
+
+Point anomalies
+- Single data point
+- Individual outlier
+- Extreme value
+- Isolated exception
+
+Contextual anomalies
+- Context-dependent
+- Seasonal expectation
+- Time-specific
+- Condition-based
+
+Collective anomalies
+- Group pattern
+- Sequence anomaly
+- Related observations
+- Pattern deviation
+
+MARKETING ANOMALY CONTEXTS
+
+Performance monitoring applications.
+
+Spend anomalies
+- Unexpected spend levels
+- Budget deviation
+- Pacing issues
+- Cost spikes
+
+Performance anomalies
+- Conversion rate drops
+- CTR changes
+- Efficiency shifts
+- Volume changes
+
+Traffic anomalies
+- Impression spikes
+- Click patterns
+- Bot activity
+- Source changes
+
+Revenue anomalies
+- Revenue drops
+- ROAS changes
+- Value shifts
+- Attribution issues
+
+STATISTICAL METHODS
+
+Traditional anomaly detection.
+
+UNIVARIATE METHODS
+
+Single variable approaches.
+
+Z-score method
+- Standard deviation distance
+- Mean comparison
+- Threshold-based
+- Simple implementation
+
+IQR method
+- Interquartile range
+- Robust to outliers
+- Box plot based
+- Median-centered
+
+Grubbs test
+- Maximum outlier test
+- Single outlier detection
+- Statistical significance
+- Normal distribution assumption
+
+Modified Z-score
+- Median-based
+- MAD scaling
+- Robust calculation
+- Outlier resilience
+
+MULTIVARIATE METHODS
+
+Multi-variable approaches.
+
+Mahalanobis distance
+- Covariance consideration
+- Correlation-aware
+- Multi-dimensional
+- Elliptical detection
+
+Principal component analysis
+- Dimension reduction
+- Reconstruction error
+- Low variance components
+- Compressed representation
+
+Robust covariance
+- Outlier-resistant estimation
+- Minimum covariance determinant
+- Robust Mahalanobis
+- Improved detection
+
+THRESHOLD DETERMINATION
+
+Setting detection thresholds.
+
+Static thresholds
+- Fixed boundaries
+- Business-defined
+- Simple implementation
+- Context-independent
+
+Dynamic thresholds
+- Data-driven boundaries
+- Rolling calculation
+- Adaptive limits
+- Seasonal adjustment
+
+Statistical thresholds
+- Confidence interval based
+- Percentile-based
+- Standard deviation multiple
+- Probability-based
+
+MACHINE LEARNING METHODS
+
+Advanced anomaly detection.
+
+ISOLATION FOREST
+
+Tree-based isolation.
+
+Algorithm concept
+- Random partitioning
+- Isolation path length
+- Anomaly isolation
+- Ensemble approach
+
+Implementation
+- Multiple trees
+- Random feature selection
+- Random split points
+- Path length averaging
+
+Advantages
+- No distribution assumption
+- Scalable
+- Handles high dimensions
+- Effective for outliers
+
+Hyperparameters
+- Number of trees
+- Contamination rate
+- Sample size
+- Max depth
+
+ONE-CLASS SVM
+
+Support vector machine approach.
+
+Algorithm concept
+- Single class training
+- Boundary learning
+- Normal region definition
+- Outlier exclusion
+
+Kernel selection
+- RBF kernel common
+- Feature mapping
+- Non-linear boundary
+- Flexibility enabled
+
+Advantages
+- Effective for small data
+- Handles non-linear
+- Well-established
+- Interpretable boundary
+
+Limitations
+- Scaling sensitivity
+- Kernel selection
+- Parameter tuning
+- Computation for large data
+
+AUTOENCODERS
+
+Neural network reconstruction.
+
+Algorithm concept
+- Compression and reconstruction
+- Reconstruction error
+- Latent representation
+- Deviation detection
+
+Architecture
+- Encoder network
+- Bottleneck layer
+- Decoder network
+- Error calculation
+
+Advantages
+- Complex patterns
+- Non-linear relationships
+- Feature learning
+- Scalable
+
+Implementation
+- Training on normal data
+- Error threshold setting
+- Variational extensions
+- Deep architectures
+
+LOCAL OUTLIER FACTOR
+
+Density-based detection.
+
+Algorithm concept
+- Local density comparison
+- Neighbor-based
+- Relative outlier score
+- Cluster awareness
+
+Calculation
+- K-nearest neighbors
+- Local reachability density
+- Density ratio
+- LOF score
+
+Advantages
+- Varying density handling
+- Cluster-aware
+- No global assumption
+- Local context
+
+Parameters
+- Neighbor count
+- Distance metric
+- Contamination
+- Leaf size
+
+TIME SERIES ANOMALY
+
+Temporal anomaly detection.
+
+PROPHET-BASED DETECTION
+
+Facebook Prophet approach.
+
+Forecasting basis
+- Time series decomposition
+- Trend extraction
+- Seasonality modeling
+- Holiday effects
+
+Anomaly detection
+- Prediction intervals
+- Residual analysis
+- Uncertainty quantification
+- Threshold application
+
+Advantages
+- Automatic seasonality
+- Holiday handling
+- Robust to missing data
+- Interpretable
+
+Implementation
+- Model fitting
+- Prediction generation
+- Interval comparison
+- Anomaly flagging
+
+DEEP LEARNING APPROACHES
+
+Neural network time series.
+
+LSTM autoencoders
+- Sequence reconstruction
+- Temporal patterns
+- Long-term dependencies
+- Reconstruction error
+
+Temporal convolutional networks
+- Causal convolutions
+- Dilated receptive field
+- Efficient computation
+- Sequence modeling
+
+Transformer-based
+- Self-attention
+- Long-range dependencies
+- Parallel processing
+- State-of-the-art performance
+
+STREAMING DETECTION
+
+Real-time anomaly detection.
+
+Online learning
+- Incremental updates
+- Streaming data
+- Low latency
+- Memory efficient
+
+Window-based
+- Sliding windows
+- Moving statistics
+- Recent history
+- Adaptive baseline
+
+Alert latency
+- Detection delay
+- Minimum samples
+- Confidence trade-off
+- Timeliness balance
+
+ALERTING FRAMEWORK
+
+Anomaly response system.
+
+SEVERITY CLASSIFICATION
+
+Anomaly severity levels.
+
+Severity criteria
+- Deviation magnitude
+- Business impact
+- Duration expectation
+- Historical context
+
+Severity levels
+- Critical severity
+- High severity
+- Medium severity
+- Low severity
+
+Classification logic
+- Threshold-based
+- Impact-based
+- Rule-based
+- Model-based
+
+ROOT CAUSE SUGGESTION
+
+Anomaly explanation.
+
+Feature contribution
+- SHAP values
+- Feature importance
+- Contribution analysis
+- Explanation generation
+
+Historical comparison
+- Similar past anomalies
+- Resolution patterns
+- Cause correlation
+- Learning-based
+
+Correlation analysis
+- Related metrics
+- Upstream correlation
+- External factors
+- Pattern matching
+
+ALERT MANAGEMENT
+
+Alert handling process.
+
+Alert routing
+- Severity-based routing
+- Role-based assignment
+- Escalation rules
+- Notification channels
+
+Alert fatigue prevention
+- Suppression rules
+- Aggregation logic
+- Priority filtering
+- Smart bundling
+
+Resolution tracking
+- Acknowledgment
+- Investigation status
+- Root cause documentation
+- Resolution time
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for anomaly detection.
+
+DETECTION WORKFLOW
+
+Standard anomaly process.
+
+Monitoring phase
+- Data collection
+- Feature calculation
+- Model application
+- Anomaly scoring
+
+Alert phase
+- Threshold comparison
+- Severity classification
+- Alert generation
+- Notification dispatch
+
+Response phase
+- Investigation support
+- Root cause analysis
+- Resolution tracking
+- Learning capture
+
+CROSS-AGENT INTEGRATION
+
+Anomaly outputs for downstream agents.
+
+Outputs to PRF Agent
+- Anomaly alerts
+- Severity assessment
+- Trend analysis
+- Resolution recommendations
+
+Outputs to ORC Agent
+- Decision support
+- Priority guidance
+- Action recommendations
+- Escalation triggers
+
+Outputs to NDS Agent
+- Optimization pause triggers
+- Confidence adjustment
+- Model recalibration
+- Parameter review
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive anomaly detection methodology

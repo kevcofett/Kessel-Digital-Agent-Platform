@@ -159,35 +159,77 @@ EOF
     cat > "$func_dir/score/__init__.py" << EOF
 import json
 import logging
+import traceback
 import azure.functions as func
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Import scoring module
 import sys
-sys.path.insert(0, '/home/site/wwwroot')
-from scoring.${scoring_script%.py} import init, run
+import os
 
-# Initialize on cold start
-init()
+# Add the wwwroot directory to the path
+wwwroot = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if wwwroot not in sys.path:
+    sys.path.insert(0, wwwroot)
+
+logger.info(f"Python path: {sys.path}")
+logger.info(f"Working directory: {os.getcwd()}")
+logger.info(f"wwwroot: {wwwroot}")
+
+try:
+    from scoring.${scoring_script%.py} import init, run
+    logger.info("Scoring module imported successfully")
+    # Initialize on cold start
+    init()
+    logger.info("Scoring module initialized")
+    MODULE_LOADED = True
+except Exception as e:
+    logger.error(f"Failed to import scoring module: {e}")
+    logger.error(traceback.format_exc())
+    MODULE_LOADED = False
+    LOAD_ERROR = str(e)
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Score function processed a request.')
+    logger.info('Score function processing request')
+
+    if not MODULE_LOADED:
+        return func.HttpResponse(
+            json.dumps({"error": f"Module not loaded: {LOAD_ERROR}"}),
+            status_code=500,
+            mimetype="application/json"
+        )
 
     try:
         req_body = req.get_json()
+        logger.info(f"Request body: {req_body}")
         result = run(json.dumps(req_body))
+        logger.info(f"Result: {result[:200] if len(result) > 200 else result}")
         return func.HttpResponse(result, mimetype="application/json")
-    except Exception as e:
-        logging.error(f"Error: {str(e)}")
+    except ValueError as ve:
+        logger.error(f"Invalid JSON in request: {ve}")
         return func.HttpResponse(
-            json.dumps({"error": str(e)}),
+            json.dumps({"error": f"Invalid JSON: {str(ve)}"}),
+            status_code=400,
+            mimetype="application/json"
+        )
+    except Exception as e:
+        logger.error(f"Scoring error: {e}")
+        logger.error(traceback.format_exc())
+        return func.HttpResponse(
+            json.dumps({"error": str(e), "traceback": traceback.format_exc()}),
             status_code=500,
             mimetype="application/json"
         )
 EOF
 
-    # Copy scoring scripts
+    # Copy scoring scripts and create package
     mkdir -p "$func_dir/scoring"
     cp "$SCRIPT_DIR/scoring/"*.py "$func_dir/scoring/"
+
+    # Create __init__.py to make scoring a proper Python package
+    touch "$func_dir/scoring/__init__.py"
 
     # Create requirements.txt
     cat > "$func_dir/requirements.txt" << 'EOF'

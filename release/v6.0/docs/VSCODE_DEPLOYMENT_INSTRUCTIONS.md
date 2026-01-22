@@ -26,12 +26,15 @@
 This document provides step-by-step instructions for deploying MPA v6.0 to Power Platform. The repo contains all specifications (YAML flows, JSON schemas, CSV seed data) but nothing is deployed yet.
 
 **Your deliverables:**
-1. Create 15 Dataverse tables from schemas
-2. Validate and import 13 seed data files with 100% data integrity
-3. Create 25 Power Automate flows from YAML specifications
-4. Create 20+ AI Builder prompts
-5. Export solution package using PAC CLI
-6. Run validation tests
+
+1. Import solution package with 28 Dataverse tables (pre-exported from AragornAI)
+2. Validate and import seed data files with 100% data integrity
+3. Create 25 Power Automate flows from JSON specifications
+4. Deploy 79 AI Builder prompts
+5. Run validation tests
+
+**SOLUTION FILE TO IMPORT:**
+`release/v6.0/solutions/EAPPlatform_v10_full.zip` - Contains all 28 tables
 
 ---
 
@@ -983,17 +986,90 @@ foreach ($table in $expectedCounts.Keys) {
 
 ## SOLUTION FILES LOCATION
 
-After successful deployment and export, solution packages are stored at:
+**PRIMARY SOLUTION FILE (USE THIS):**
 
-| File | Description | Use Case |
-|------|-------------|----------|
-| `release/v6.0/solutions/EAPPlatform_complete.zip` | Complete platform export from AragornAI | Import to target environments |
-| `release/v6.0/solutions/EAPPlatform_6_1_0_0.zip` | Versioned platform solution | Production deployment |
-| `release/v6.0/solutions/agents/*.zip` | Individual agent solutions | Agent-specific deployment |
+| File | Description | Tables |
+|------|-------------|--------|
+| `release/v6.0/solutions/EAPPlatform_v10_full.zip` | **Complete platform with all 28 tables** | 10 eap_ + 11 mpa_ + 7 ca_ |
+
+**TABLES INCLUDED IN SOLUTION (28 total):**
+
+EAP Tables (10):
+- eap_capability_implementation
+- eap_client
+- eap_featureflag
+- eap_proactive_trigger
+- eap_session
+- eap_telemetry
+- eap_trigger_history
+- eap_user
+- eap_workflow_contribution
+- eap_workflow_definition
+
+MPA Tables (11):
+- mpa_audience
+- mpa_benchmark
+- mpa_channel
+- mpa_kpi
+- mpa_mediaplan
+- mpa_planallocation
+- mpa_plandata
+- mpa_planversion
+- mpa_session_memory
+- mpa_user_preferences
+- mpa_vertical
+
+CA Tables (7):
+- ca_analysis
+- ca_benchmarks
+- ca_deliverable
+- ca_framework
+- ca_framework_usage
+- ca_learning
+- ca_recommendation
 
 ---
 
-**Document Version:** 1.1
+## POWER AUTOMATE FLOWS (25 total)
+
+Flow JSON files ready for import at: `release/v6.0/platform/flows/solution-ready/`
+
+| Agent | Flows |
+|-------|-------|
+| ORC (Orchestrator) | RouteToSpecialist, GetSessionState, UpdateProgress |
+| ANL (Analytics) | CalculateProjection, RunScenario |
+| AUD (Audience) | SegmentAudience, CalculateLTV |
+| CHA (Channel) | CalculateAllocation, LookupBenchmarks |
+| SPO (Supply Path) | CalculateNBI, AnalyzeFees, EvaluatePartner |
+| DOC (Document) | GenerateDocument |
+| PRF (Performance) | AnalyzePerformance, DetectAnomalies, ExtractLearnings |
+| CHG (Change) | AssessReadiness, MapStakeholders, PlanAdoption |
+| CST (Strategy) | SelectFramework, ApplyAnalysis, PrioritizeInitiatives |
+| MKT (Marketing) | DevelopStrategy, CreateBrief, AnalyzeCompetitive |
+
+---
+
+## AI BUILDER PROMPTS (79 total)
+
+Prompt definitions at: `base/platform/eap/prompts/`
+
+Deploy using: `release/v6.0/scripts/deploy_ai_builder_prompts.py`
+
+---
+
+## SEED DATA FILES
+
+Location: `base/dataverse/seed/`
+
+Import in this order:
+1. Configuration tables: mpa_vertical, mpa_channel, mpa_kpi, ca_framework
+2. Agent tables: eap_agent (if exists), eap_capability
+3. Operational tables: mpa_benchmark, mpa_partner
+4. Session/workflow tables: eap_session, eap_workflow_definition, eap_proactive_trigger
+
+---
+
+**Document Version:** 1.2
 **Created:** 2026-01-19
-**Updated:** 2026-01-21 (Mastercard deployment learnings)
+**Updated:** 2026-01-21 (Full solution with 28 tables)
 **For:** VS Code (Claude Code)

@@ -4,7 +4,7 @@ MPA V7 CONVERSATIONAL TOPIC CREATION GUIDE
 Purpose: Step-by-step instructions for creating the minimal topic structure
 that supports the conversational agent pattern introduced in v7.
 Date: January 2026
-Version: 7.0
+Version: 7.1
 
 EXECUTIVE SUMMARY
 -----------------
@@ -56,6 +56,33 @@ Phase 5: Publish ORC
 This order matters because you cannot redirect to an agent that does not exist yet.
 
 
+HOW TO CREATE A TOPIC
+---------------------
+
+Step 1: Open your agent in Copilot Studio
+
+Step 2: Click Topics in left navigation
+
+Step 3: Click + New topic then From blank
+
+Step 4: Configure basic settings
+- Enter the Name (internal identifier)
+- Enter the Display name (what appears in UI)
+
+Step 5: Configure the trigger
+- Click Edit next to the trigger section
+- In the box labeled Describe what the topic does enter a natural language
+  description of when this topic should activate
+- The AI uses this description to match user intent and route to this topic
+- Be specific and include example phrases users might say
+
+Step 6: Add nodes below the trigger
+- Click + Add node to add message nodes, question nodes, or transfer nodes
+
+Step 7: Save the topic
+
+
+
 ORC TOPIC CREATION
 ------------------
 
@@ -70,34 +97,20 @@ Step 2: Configure basic settings
 - Name: Greeting
 - Display name: Greeting
 
-Step 3: Add trigger phrases
-Add each phrase, pressing Enter after each:
-- Hello
-- Hi
-- Hey
-- Good morning
-- Good afternoon
-- Good evening
-- Start
-- Begin
-- Get started
-- Help me
-- I need help
-- Help me plan
-- Media planning
-- Let us begin
+Step 3: Configure the trigger
+- Click Edit next to the trigger section
+- In the Describe what the topic does box enter:
+
+This topic handles greetings and welcome messages when users say hello, hi, hey, good morning, good afternoon, good evening, start, begin, get started, help me, I need help, help me plan, media planning, let us begin, or any other greeting or conversation starter.
 
 Step 4: Add message node
 - Click + Add node below the trigger
 - Select Send a message
-- Paste this message:
+- Enter this message:
 
-Welcome! I am your media planning advisor. I help you think through
-campaign strategy - from budget and audience to channels and measurement.
+Welcome! I am your media planning advisor. I help you think through campaign strategy - from budget and audience to channels and measurement.
 
-What are you working on today? You can tell me about a specific challenge,
-ask me to help with a particular aspect of planning, or we can start
-fresh with a new campaign.
+What are you working on today? You can tell me about a specific challenge, ask me to help with a particular aspect of planning, or we can start fresh with a new campaign.
 
 Step 5: Add generative answers node
 - Click + Add node below the message
@@ -117,22 +130,11 @@ Step 2: Configure basic settings
 - Name: Conversation
 - Display name: Main Conversation
 
-Step 3: Add trigger phrases
-These are broad catch-all phrases:
-- I want to
-- I need to
-- Can you help
-- Tell me about
-- What should
-- How do I
-- Help me with
-- I am trying to
-- Let us work on
-- Can we discuss
-- What do you think
-- Walk me through
-- Explain
-- Show me
+Step 3: Configure the trigger
+- Click Edit next to the trigger section
+- In the Describe what the topic does box enter:
+
+This topic handles general conversation and requests when users say I want to, I need to, can you help, tell me about, what should, how do I, help me with, I am trying to, let us work on, can we discuss, what do you think, walk me through, explain, show me, or any other general request for help with media planning that does not specifically request a specialist.
 
 Step 4: Add generative answers node
 - Click + Add node below the trigger
@@ -152,32 +154,11 @@ Step 2: Configure basic settings
 - Name: Specialist_Handoff
 - Display name: Route to Specialist
 
-Step 3: Add trigger phrases
-- Connect me with analytics
-- Route to analytics
-- I need the analytics specialist
-- Transfer to ANL
-- Connect me with audience
-- Route to audience
-- I need the audience specialist
-- Transfer to AUD
-- Connect me with channel
-- Route to channel
-- I need the channel specialist
-- Transfer to CHA
-- Connect me with supply path
-- Route to supply path
-- I need the programmatic specialist
-- Transfer to SPO
-- Connect me with document
-- Route to document
-- Generate a document
-- Transfer to DOC
-- Connect me with performance
-- Route to performance
-- I need the performance specialist
-- Transfer to PRF
-- Let me talk to a specialist
+Step 3: Configure the trigger
+- Click Edit next to the trigger section
+- In the Describe what the topic does box enter:
+
+This topic handles when users explicitly request a specialist by saying connect me with analytics, route to analytics, I need the analytics specialist, transfer to ANL, connect me with audience, route to audience, transfer to AUD, connect me with channel, transfer to CHA, connect me with supply path, transfer to SPO, connect me with document, transfer to DOC, connect me with performance, transfer to PRF, or let me talk to a specialist.
 
 Step 4: Add question node for intent classification
 - Click + Add node then Ask a question
@@ -234,21 +215,17 @@ Step 2: Configure basic settings
 - Name: Return_From_Specialist
 - Display name: Return from Specialist
 
-Step 3: Add trigger phrases
-- I am back
-- Back to main
-- Return to orchestrator
-- Continue with planning
-- What is next
-- Move forward
-- Back to workflow
-- Continue
-- Proceed
+Step 3: Configure the trigger
+- Click Edit next to the trigger section
+- In the Describe what the topic does box enter:
+
+This topic handles when users return from a specialist agent and say I am back, back to main, return to orchestrator, continue with planning, what is next, move forward, back to workflow, continue, proceed, or any indication they want to return to the main planning flow.
 
 Step 4: Add message node
-Welcome back! Based on the work with the specialist, what would you like
-to focus on next? We can continue building the plan, explore another area,
-or I can summarize where things stand.
+- Click + Add node then Send a message
+- Enter this message:
+
+Welcome back! Based on the work with the specialist, what would you like to focus on next? We can continue building the plan, explore another area, or I can summarize where things stand.
 
 Step 5: Add generative answers node
 - Click + Add node below the message
@@ -267,8 +244,10 @@ Step 1: Locate or create Fallback topic
 - If not, click + New topic then From blank and name it Fallback
 
 Step 2: Configure trigger
-- Set trigger to On Unrecognized (system trigger, not phrases)
-- This is found in the trigger configuration area
+- For the Fallback topic, look for a system trigger option
+- Select On Unrecognized or Unrecognized user input
+- This is a special trigger that fires when no other topic matches
+- You do not enter a description for this trigger type
 
 Step 3: Replace existing nodes with generative answers
 - Delete any existing nodes in the topic
@@ -292,20 +271,19 @@ Step 2: Configure basic settings
 - Name: Greeting
 - Display name: ANL Greeting
 
-Step 3: Add trigger phrases
-- Hello
-- Hi
-- Hey
-- Start
-- Begin
+Step 3: Configure the trigger
+- Click Edit next to the trigger section
+- In the Describe what the topic does box enter:
+
+This topic handles greetings when users are transferred to the Analytics Agent and say hello, hi, hey, start, begin, or any greeting when first arriving at this agent.
 
 Step 4: Add message node
-I am the Analytics Agent. I help with quantitative analysis - budget
-optimization, scenario modeling, performance projections, and statistical
-approaches.
+- Click + Add node then Send a message
+- Enter this message:
 
-What would you like to analyze? If you tell me about your situation, I can
-suggest the most useful calculations.
+I am the Analytics Agent. I help with quantitative analysis - budget optimization, scenario modeling, performance projections, and statistical approaches.
+
+What would you like to analyze? If you tell me about your situation, I can suggest the most useful calculations.
 
 Step 5: Add generative answers node
 - Click + Add node below the message
@@ -325,25 +303,11 @@ Step 2: Configure basic settings
 - Name: Conversation
 - Display name: ANL Analysis
 
-Step 3: Add trigger phrases
-- Calculate
-- Project
-- Forecast
-- Analyze
-- Budget
-- Scenario
-- What if
-- Compare
-- Model
-- Estimate
-- How much
-- ROI
-- ROAS
-- Marginal
-- Efficiency
-- Diminishing returns
-- Confidence
-- Statistical
+Step 3: Configure the trigger
+- Click Edit next to the trigger section
+- In the Describe what the topic does box enter:
+
+This topic handles analytics requests when users ask to calculate, project, forecast, analyze, discuss budget, run scenarios, do what-if analysis, compare options, model outcomes, estimate results, ask how much, discuss ROI, ROAS, marginal returns, efficiency, diminishing returns, confidence levels, statistical analysis, or any quantitative analysis request.
 
 Step 4: Add generative answers node
 - Click + Add node below the trigger
@@ -363,19 +327,16 @@ Step 2: Configure basic settings
 - Name: Return_To_ORC
 - Display name: Return to Orchestrator
 
-Step 3: Add trigger phrases
-- Go back
-- Return to main
-- Back to orchestrator
-- I need help with something else
-- Route me back
-- Transfer back
-- That is all for analytics
-- Done with analysis
-- Move on
-- What is next in the workflow
+Step 3: Configure the trigger
+- Click Edit next to the trigger section
+- In the Describe what the topic does box enter:
+
+This topic handles when users want to leave the Analytics Agent by saying go back, return to main, back to orchestrator, I need help with something else, route me back, transfer back, that is all for analytics, done with analysis, move on, what is next in the workflow, or any indication they want to return to the main orchestrator.
 
 Step 4: Add message node
+- Click + Add node then Send a message
+- Enter this message:
+
 I will connect you back to the Orchestrator to continue with your plan.
 
 Step 5: Add transfer node
@@ -391,33 +352,24 @@ SPECIALIST TOPIC TEMPLATES
 --------------------------
 
 Apply the same 3-topic pattern to each remaining specialist agent.
-Below are the specific trigger phrases and messages for each.
+Below are the trigger descriptions and messages for each.
 
 
 AUD (AUDIENCE AGENT) TOPICS
 
+AUD Greeting Trigger Description:
+This topic handles greetings when users are transferred to the Audience Agent and say hello, hi, hey, start, begin, or any greeting when first arriving at this agent.
+
 AUD Greeting Message:
-I am the Audience Agent. I help with segmentation strategy, targeting
-approaches, LTV modeling, and customer journey analysis.
+I am the Audience Agent. I help with segmentation strategy, targeting approaches, LTV modeling, and customer journey analysis.
 
-Tell me about your campaign or customer base, and I will help identify
-the most effective audience strategy.
+Tell me about your campaign or customer base, and I will help identify the most effective audience strategy.
 
-AUD Conversation Trigger Phrases:
-- Audience
-- Segment
-- Target
-- Persona
-- LTV
-- Customer
-- Journey
-- Who should
-- Reach
-- Demographics
-- Propensity
-- Lifetime value
-- Segmentation
-- Targeting
+AUD Conversation Trigger Description:
+This topic handles audience requests when users ask about audience, segments, targeting, personas, LTV, customers, journey mapping, who should we reach, demographics, propensity, lifetime value, segmentation strategy, targeting approach, or any audience-related analysis.
+
+AUD Return Trigger Description:
+This topic handles when users want to leave the Audience Agent by saying go back, return to main, back to orchestrator, done with audience, move on, what is next, or any indication they want to return to the main orchestrator.
 
 AUD Return Message:
 I will connect you back to the Orchestrator to continue with your plan.
@@ -425,28 +377,19 @@ I will connect you back to the Orchestrator to continue with your plan.
 
 CHA (CHANNEL AGENT) TOPICS
 
+CHA Greeting Trigger Description:
+This topic handles greetings when users are transferred to the Channel Agent and say hello, hi, hey, start, begin, or any greeting when first arriving at this agent.
+
 CHA Greeting Message:
-I am the Channel Agent. I help with channel selection, media mix strategy,
-allocation decisions, and emerging channel evaluation.
+I am the Channel Agent. I help with channel selection, media mix strategy, allocation decisions, and emerging channel evaluation.
 
 What channels or media mix questions can I help you work through?
 
-CHA Conversation Trigger Phrases:
-- Channel
-- Media mix
-- Allocation
-- CTV
-- Display
-- Social
-- Programmatic
-- Where should
-- Which channels
-- Television
-- Digital
-- Video
-- Audio
-- Out of home
-- Retail media
+CHA Conversation Trigger Description:
+This topic handles channel requests when users ask about channels, media mix, allocation, CTV, display, social, programmatic, where should we advertise, which channels, television, digital, video, audio, out of home, retail media, or any channel selection and media mix question.
+
+CHA Return Trigger Description:
+This topic handles when users want to leave the Channel Agent by saying go back, return to main, back to orchestrator, done with channels, move on, what is next, or any indication they want to return to the main orchestrator.
 
 CHA Return Message:
 I will connect you back to the Orchestrator to continue with your plan.
@@ -454,27 +397,19 @@ I will connect you back to the Orchestrator to continue with your plan.
 
 SPO (SUPPLY PATH AGENT) TOPICS
 
+SPO Greeting Trigger Description:
+This topic handles greetings when users are transferred to the Supply Path Agent and say hello, hi, hey, start, begin, or any greeting when first arriving at this agent.
+
 SPO Greeting Message:
-I am the Supply Path Agent. I help with programmatic optimization,
-DSP and SSP evaluation, fee analysis, and supply chain transparency.
+I am the Supply Path Agent. I help with programmatic optimization, DSP and SSP evaluation, fee analysis, and supply chain transparency.
 
 What programmatic or supply path questions can I help you analyze?
 
-SPO Conversation Trigger Phrases:
-- Supply path
-- DSP
-- SSP
-- Programmatic
-- Fees
-- Transparency
-- NBI
-- Partners
-- Vendors
-- Ad tech
-- Bidding
-- Inventory
-- Exchange
-- Take rate
+SPO Conversation Trigger Description:
+This topic handles supply path requests when users ask about supply path, DSP, SSP, programmatic, fees, transparency, NBI, partners, vendors, ad tech, bidding, inventory, exchange, take rate, or any programmatic optimization question.
+
+SPO Return Trigger Description:
+This topic handles when users want to leave the Supply Path Agent by saying go back, return to main, back to orchestrator, done with supply path, move on, what is next, or any indication they want to return to the main orchestrator.
 
 SPO Return Message:
 I will connect you back to the Orchestrator to continue with your plan.
@@ -482,26 +417,19 @@ I will connect you back to the Orchestrator to continue with your plan.
 
 DOC (DOCUMENT AGENT) TOPICS
 
+DOC Greeting Trigger Description:
+This topic handles greetings when users are transferred to the Document Agent and say hello, hi, hey, start, begin, or any greeting when first arriving at this agent.
+
 DOC Greeting Message:
-I am the Document Agent. I help with media brief creation, report
-generation, and document formatting and export.
+I am the Document Agent. I help with media brief creation, report generation, and document formatting and export.
 
 What document would you like me to help you create?
 
-DOC Conversation Trigger Phrases:
-- Document
-- Brief
-- Report
-- Export
-- Generate
-- Create document
-- Media plan document
-- Summary
-- Template
-- Format
-- PDF
-- Word
-- Presentation
+DOC Conversation Trigger Description:
+This topic handles document requests when users ask about documents, briefs, reports, exports, generating documents, creating media plan documents, summaries, templates, formatting, PDF, Word, presentations, or any document creation request.
+
+DOC Return Trigger Description:
+This topic handles when users want to leave the Document Agent by saying go back, return to main, back to orchestrator, done with document, move on, what is next, or any indication they want to return to the main orchestrator.
 
 DOC Return Message:
 I will connect you back to the Orchestrator to continue with your plan.
@@ -509,28 +437,19 @@ I will connect you back to the Orchestrator to continue with your plan.
 
 PRF (PERFORMANCE AGENT) TOPICS
 
+PRF Greeting Trigger Description:
+This topic handles greetings when users are transferred to the Performance Agent and say hello, hi, hey, start, begin, or any greeting when first arriving at this agent.
+
 PRF Greeting Message:
-I am the Performance Agent. I help with attribution analysis, anomaly
-detection, incrementality testing, and optimization recommendations.
+I am the Performance Agent. I help with attribution analysis, anomaly detection, incrementality testing, and optimization recommendations.
 
 What performance questions or campaign results would you like me to analyze?
 
-PRF Conversation Trigger Phrases:
-- Performance
-- Attribution
-- Anomaly
-- Optimization
-- Incrementality
-- Results
-- KPI
-- Metrics
-- Why did
-- Drop
-- Increase
-- Testing
-- Measurement
-- MTA
-- MMM
+PRF Conversation Trigger Description:
+This topic handles performance requests when users ask about performance, attribution, anomalies, optimization, incrementality, results, KPIs, metrics, why did something drop, why did something increase, testing, measurement, MTA, MMM, or any performance analysis question.
+
+PRF Return Trigger Description:
+This topic handles when users want to leave the Performance Agent by saying go back, return to main, back to orchestrator, done with performance, move on, what is next, or any indication they want to return to the main orchestrator.
 
 PRF Return Message:
 I will connect you back to the Orchestrator to continue with your plan.
@@ -637,7 +556,8 @@ TROUBLESHOOTING
 
 Topic Not Triggering:
 - Verify topic status is On
-- Check for conflicting trigger phrases in other topics
+- Check if the trigger description is too narrow or too broad
+- Ensure no other topic has a conflicting description
 - Republish the agent after changes
 
 Transfer Failing:
@@ -651,12 +571,21 @@ Generative Answers Not Working:
 - Check that Activity.Text is set as the input
 
 Fallback Triggering Too Often:
-- Add more diverse trigger phrases to Conversation topic
-- Check that phrases are not too specific
+- Make trigger descriptions more specific in other topics
+- Add more example phrases to trigger descriptions
+
+Wrong Topic Triggering:
+- Make trigger descriptions more distinct from each other
+- Add negative examples if needed (this topic does NOT handle...)
 
 
 DOCUMENT VERSION HISTORY
 ------------------------
+
+Version 7.1 - January 2026
+- Updated to use new Copilot Studio trigger format
+- Replaced trigger phrases with Describe what the topic does descriptions
+- Added detailed instructions for the new interface
 
 Version 7.0 - January 2026
 - Initial conversational pattern architecture

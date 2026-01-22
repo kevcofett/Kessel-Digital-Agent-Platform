@@ -1069,7 +1069,93 @@ Import in this order:
 
 ---
 
-**Document Version:** 1.2
+---
+
+## PHASE 8: SHAREPOINT KNOWLEDGE BASE UPLOAD
+
+### 8.1 SharePoint Configuration
+
+**Target Site:** https://mastercard.sharepoint.com/sites/CAEConsultingProduct
+**Library:** Shared Documents
+
+**Pre-Configured Folder URLs:**
+- MPA KB: https://mastercard.sharepoint.com/:f:/s/CAEConsultingProduct/lgCZ7qTFJCgASKcb204jJRn0AfB5alCc74AMyE2etdchqA4?e=urKrHq
+- CA KB: https://mastercard.sharepoint.com/:f:/s/CAEConsultingProduct/IgDzc0ufDknYTpTghwRGqCXGAUvoLc-7BLhVv8c7TrZEPAI?e=JrfOGP
+- EAP KB: https://mastercard.sharepoint.com/:f:/s/CAEConsultingProduct/lgAMlDUM-pK9Rqol_B77NT8JAWaSvFONRHLabpRleGIwxko?e=24fqOR
+
+### 8.2 Required Folder Structure
+
+Create this folder structure in SharePoint Shared Documents:
+
+```
+Shared Documents/
+├── MPA_Agent_KB/
+│   ├── ORC/    (3 files)
+│   ├── ANL/    (9 files)
+│   ├── AUD/    (9 files)
+│   ├── CHA/    (10 files)
+│   ├── SPO/    (7 files)
+│   ├── DOC/    (5 files)
+│   ├── PRF/    (7 files)
+│   ├── CHG/    (7 files)
+│   ├── CST/    (7 files)
+│   └── MKT/    (7 files)
+├── CA_Agent_KB/
+└── EAP_Platform_KB/
+```
+
+### 8.3 KB Document Sources
+
+Upload files from these repository locations:
+
+| Agent | Source Path | Files |
+|-------|-------------|-------|
+| ORC | `release/v6.0/solutions/agents/orc/kb/` | ORC_KB_*.txt |
+| ANL | `release/v6.0/solutions/agents/anl/kb/` | ANL_KB_*.txt |
+| AUD | `release/v6.0/solutions/agents/aud/kb/` | AUD_KB_*.txt |
+| CHA | `release/v6.0/solutions/agents/cha/kb/` | CHA_KB_*.txt |
+| SPO | `release/v6.0/solutions/agents/spo/kb/` | SPO_KB_*.txt |
+| DOC | `release/v6.0/solutions/agents/doc/kb/` | DOC_KB_*.txt |
+| PRF | `release/v6.0/solutions/agents/prf/kb/` | PRF_KB_*.txt |
+| CHG | `release/v6.0/solutions/agents/chg/kb/` | CHG_KB_*.txt |
+| CST | `release/v6.0/solutions/agents/cst/kb/` | CST_KB_*.txt |
+| MKT | `release/v6.0/solutions/agents/mkt/kb/` | MKT_KB_*.txt |
+
+### 8.4 Upload Procedure
+
+1. Navigate to SharePoint folder (e.g., MPA_Agent_KB/ANL/)
+2. Click "Upload" > "Files"
+3. Select all .txt files from corresponding source folder
+4. Wait for upload to complete
+5. Verify file count matches expected
+6. Repeat for each agent folder
+
+### 8.5 Copilot Studio KB Integration
+
+After uploading KB files to SharePoint:
+
+1. Open Copilot Studio for MC environment
+2. Select agent (e.g., MPA Analytics Agent)
+3. Go to "Knowledge" settings
+4. Click "Add knowledge source"
+5. Select "SharePoint"
+6. Connect to: https://mastercard.sharepoint.com/sites/CAEConsultingProduct
+7. Select folder: MPA_Agent_KB/{AGENT_CODE}/
+8. Enable "Use knowledge in responses"
+9. Save and test
+
+---
+
+## COMPLETE DEPLOYMENT REFERENCE
+
+For detailed step-by-step manual deployment instructions, see:
+**[MASTERCARD_MANUAL_DEPLOYMENT_PLAN.md](MASTERCARD_MANUAL_DEPLOYMENT_PLAN.md)**
+
+This comprehensive guide covers all 8 deployment phases in execution order.
+
+---
+
+**Document Version:** 1.3
 **Created:** 2026-01-19
-**Updated:** 2026-01-21 (Full solution with 28 tables)
+**Updated:** 2026-01-21 (Added SharePoint KB upload instructions, full solution with 28 tables)
 **For:** VS Code (Claude Code)

@@ -1,7 +1,7 @@
 # MPA v6.0 FINAL ARCHITECTURE
 
-**Version:** 1.0  
-**Date:** January 18, 2026  
+**Version:** 2.0  
+**Date:** January 22, 2026  
 **Status:** Production Ready  
 **Environments:** Mastercard (DLP-restricted) + Personal (Full Azure)
 
@@ -31,7 +31,7 @@
 
 ### 1.1 Architecture Overview
 
-The Media Planning Agent (MPA) v6.0 implements a **7 Agents + Deep Modules** architecture with a **Capability Abstraction Layer** enabling deployment to two distinct environments:
+The Media Planning Agent (MPA) v6.0 implements a **10 Agents + Deep Modules** architecture with a **Capability Abstraction Layer** enabling deployment to two distinct environments:
 
 - **Mastercard Environment**: DLP-restricted, AI Builder only, no HTTP/custom connectors
 - **Personal Environment (Aragorn AI)**: Full Azure access, HTTP connectors, Azure Functions
@@ -40,13 +40,14 @@ The Media Planning Agent (MPA) v6.0 implements a **7 Agents + Deep Modules** arc
 
 | Metric | Value |
 |--------|-------|
-| Total Agents | 7 |
-| Total KB Files | 37 |
-| Instruction Space | 56,000 characters (8K Ã— 7) |
+| Total Agents | 10 |
+| Total KB Files | 135 |
+| Instruction Space | 80,000 characters (8K × 10) |
 | EAP Shared Files | 6 |
-| AI Builder Prompts | 15+ |
-| Dataverse Tables | 11 |
+| AI Builder Prompts | 69 |
+| Dataverse Tables | 24 |
 | Azure Functions (Personal) | 8+ |
+| Vertical Overlays | 12 |
 
 ### 1.3 Core Innovations
 
@@ -79,7 +80,7 @@ The Media Planning Agent (MPA) v6.0 implements a **7 Agents + Deep Modules** arc
 ```
 AVAILABLE IN MASTERCARD
 -----------------------------------------
-âœ“ Copilot Studio (7 agents Ã— 8K instructions = 56K total)
+âœ“ Copilot Studio (10 agents Ã— 8K instructions = 80K total)
 âœ“ SharePoint KB hosting (36K char limit per file)
 âœ“ Dataverse (full CRUD access)
 âœ“ Power Automate Premium (approved connectors only)
@@ -129,7 +130,7 @@ AVAILABLE IN PERSONAL (ARAGORN AI)
 
 | ADR | Decision | Rationale |
 |-----|----------|-----------|
-| ADR-001 | 7 agents, not 10+ | Routing complexity increases exponentially; 7 is sweet spot |
+| ADR-001 | 10 agents for v6.0 | Expanded from 7 to include CHG, CST, MKT for full coverage |
 | ADR-002 | Deep modules per agent | Retrieval precision; focused content beats mega-documents |
 | ADR-003 | NDS content â†’ ANL | Budget optimization belongs with analytics |
 | ADR-004 | CSO content â†’ AUD | Journey orchestration belongs with audience |
@@ -146,7 +147,7 @@ AVAILABLE IN PERSONAL (ARAGORN AI)
 
 | Feature | Mastercard | Personal | Notes |
 |---------|------------|----------|-------|
-| Copilot Studio Agents | âœ“ | âœ“ | 7 agents, 8K chars each |
+| Copilot Studio Agents | âœ“ | âœ“ | 10 agents, 8K chars each |
 | SharePoint KB | âœ“ | âœ“ | 36K char limit per file |
 | Dataverse | âœ“ | âœ“ | Full schema |
 | Power Automate Premium | âœ“ | âœ“ | Approved connectors only in MC |
@@ -178,13 +179,16 @@ AVAILABLE IN PERSONAL (ARAGORN AI)
 
 | Code | Name | Responsibility | Instructions | Core KB | Deep Modules |
 |------|------|----------------|--------------|---------|--------------|
-| ORC | Orchestrator | Intent classification, routing, session | 8K chars | 1 | 0 |
-| ANL | Analytics | Projections, calculations, modeling | 8K chars | 1 | 4 |
-| AUD | Audience | Segmentation, targeting, journeys | 8K chars | 1 | 4 |
-| CHA | Channel | Channel mix, allocation, emerging | 8K chars | 1 | 3 |
-| SPO | Supply Path | Programmatic optimization, fees | 8K chars | 1 | 2 |
-| DOC | Document | Document generation, export | 8K chars | 1 | 1 |
-| PRF | Performance | Monitoring, attribution, optimization | 8K chars | 1 | 3 |
+| ORC | Orchestrator | Intent classification, routing, session | 8K chars | 1 | 4 |
+| ANL | Analytics | Projections, calculations, modeling, competitive analysis | 8K chars | 1 | 22 |
+| AUD | Audience | Segmentation, targeting, journeys, lifecycle | 8K chars | 1 | 25 |
+| CHA | Channel | Channel mix, allocation, flighting, frequency | 8K chars | 1 | 12 |
+| CHG | Change Management | Adoption planning, readiness, stakeholders | 8K chars | 1 | 2 |
+| CST | Consulting Strategy | Strategic frameworks, prioritization | 8K chars | 1 | 3 |
+| DOC | Document | Document generation, export, automation | 8K chars | 1 | 6 |
+| MKT | Marketing | Brand positioning, competitive messaging, GTM | 8K chars | 1 | 6 |
+| PRF | Performance | Monitoring, attribution, optimization, learning | 8K chars | 1 | 31 |
+| SPO | Supply Path | Programmatic optimization, NBI, fees | 8K chars | 1 | 14 |
 
 ### 4.2 Agent Interaction Pattern
 
@@ -1380,7 +1384,7 @@ Kessel-Digital-Agent-Platform/
 | Task | Owner | Deliverable |
 |------|-------|-------------|
 | Create agent instructions (7) | Desktop | Instruction files |
-| Configure Copilot agents | VS Code | 7 agents configured in Copilot Studio |
+| Configure Copilot agents | VS Code | 10 agents configured in Copilot Studio |
 | Connect KB sources | VS Code | SharePoint KB linked |
 | Configure capabilities | VS Code | Capability mappings configured |
 
@@ -1438,9 +1442,11 @@ Kessel-Digital-Agent-Platform/
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-01-18 | Claude | Initial release |
+| 2.0 | 2026-01-22 | Claude | Updated for v6.6: 10 agents, 135 KB files, 69 AI Builder prompts, 24 Dataverse tables |
 
 ---
 
-**Document Version:** 1.0  
+**Document Version:** 2.0  
 **Created:** January 18, 2026  
+**Updated:** January 22, 2026  
 **Status:** Production Ready

@@ -55,31 +55,68 @@ Phase 5: Publish ORC
 
 This order matters because you cannot redirect to an agent that does not exist yet.
 
-
 HOW TO CREATE A TOPIC
 ---------------------
 
-Step 1: Open your agent in Copilot Studio
+Step 1: Open the agent in Copilot Studio
 
-Step 2: Click Topics in left navigation
+Step 2: Click Topics in the left navigation
 
 Step 3: Click + New topic then From blank
 
-Step 4: Configure basic settings
+Step 4: Configure the topic name
+- Click the topic name at the top to edit it
 - Enter the Name (internal identifier)
-- Enter the Display name (what appears in UI)
 
-Step 5: Configure the trigger
-- Click Edit next to the trigger section
-- In the box labeled Describe what the topic does enter a natural language
-  description of when this topic should activate
-- The AI uses this description to match user intent and route to this topic
-- Be specific and include example phrases users might say
+Step 5: Configure the trigger description
+- Click in the box labeled Describe what the topic does
+- Write a natural language description of when this topic should activate
+- The AI uses this description to match user intent
+- Include key phrases and scenarios the topic should handle
 
 Step 6: Add nodes below the trigger
-- Click + Add node to add message nodes, question nodes, or transfer nodes
+- Click + Add node to add message nodes, question nodes, or actions
 
-Step 7: Save the topic
+Step 7: Save the topic by clicking Save in the top right
+
+HOW TO ADD A MESSAGE NODE
+-------------------------
+
+Step 1: Click + Add node below the trigger or previous node
+
+Step 2: Select Send a message
+
+Step 3: Type or paste the message text in the box
+
+Step 4: Click outside the box to confirm
+
+HOW TO ADD A GENERATIVE ANSWERS NODE
+------------------------------------
+
+Step 1: Click + Add node
+
+Step 2: Select Advanced then Generative answers
+
+Step 3: Configure the Input field as Activity.Text
+
+Step 4: Select all connected knowledge sources
+
+Step 5: Leave other settings as default
+
+HOW TO ADD A TRANSFER NODE
+--------------------------
+
+Step 1: Click + Add node
+
+Step 2: Select Topic management
+
+Step 3: Select Transfer conversation
+
+Step 4: Select Transfer to another copilot
+
+Step 5: Choose the target agent from the dropdown
+
+Step 6: Save the topic
 
 
 
@@ -88,82 +125,39 @@ ORC TOPIC CREATION
 
 ORC TOPIC 1: GREETING
 
-Step 1: Create the topic
-- Open MPA Orchestrator Agent in Copilot Studio
-- Click Topics in left navigation
-- Click + New topic then From blank
+Name: Greeting
 
-Step 2: Configure basic settings
-- Name: Greeting
-- Display name: Greeting
-
-Step 3: Configure the trigger
-- Click Edit next to the trigger section
-- In the Describe what the topic does box enter:
-
+Trigger Description (paste into Describe what the topic does):
 This topic handles greetings and welcome messages when users say hello, hi, hey, good morning, good afternoon, good evening, start, begin, get started, help me, I need help, help me plan, media planning, let us begin, or any other greeting or conversation starter.
 
-Step 4: Add message node
-- Click + Add node below the trigger
-- Select Send a message
-- Enter this message:
-
+Message Node:
 Welcome! I am your media planning advisor. I help you think through campaign strategy - from budget and audience to channels and measurement.
 
 What are you working on today? You can tell me about a specific challenge, ask me to help with a particular aspect of planning, or we can start fresh with a new campaign.
 
-Step 5: Add generative answers node
-- Click + Add node below the message
-- Select Advanced then Generative answers
-- Configure Input as Activity.Text
-- Select all connected knowledge sources
-
-Step 6: Save the topic
+Then Add: Generative answers node with Activity.Text input
 
 
 ORC TOPIC 2: CONVERSATION
 
-Step 1: Create the topic
-- Click + New topic then From blank
+Name: Conversation
 
-Step 2: Configure basic settings
-- Name: Conversation
-- Display name: Main Conversation
-
-Step 3: Configure the trigger
-- Click Edit next to the trigger section
-- In the Describe what the topic does box enter:
-
+Trigger Description (paste into Describe what the topic does):
 This topic handles general conversation and requests when users say I want to, I need to, can you help, tell me about, what should, how do I, help me with, I am trying to, let us work on, can we discuss, what do you think, walk me through, explain, show me, or any other general request for help with media planning that does not specifically request a specialist.
 
-Step 4: Add generative answers node
-- Click + Add node below the trigger
-- Select Advanced then Generative answers
-- Configure Input as Activity.Text
-- Select all connected knowledge sources
-
-Step 5: Save the topic
+Then Add: Generative answers node with Activity.Text input
 
 
 ORC TOPIC 3: SPECIALIST HANDOFF
 
-Step 1: Create the topic
-- Click + New topic then From blank
+Name: Specialist_Handoff
 
-Step 2: Configure basic settings
-- Name: Specialist_Handoff
-- Display name: Route to Specialist
-
-Step 3: Configure the trigger
-- Click Edit next to the trigger section
-- In the Describe what the topic does box enter:
-
+Trigger Description (paste into Describe what the topic does):
 This topic handles when users explicitly request a specialist by saying connect me with analytics, route to analytics, I need the analytics specialist, transfer to ANL, connect me with audience, route to audience, transfer to AUD, connect me with channel, transfer to CHA, connect me with supply path, transfer to SPO, connect me with document, transfer to DOC, connect me with performance, transfer to PRF, or let me talk to a specialist.
 
-Step 4: Add question node for intent classification
-- Click + Add node then Ask a question
+Question Node:
 - Question text: Which specialist would be most helpful?
-- Identify: Select Multiple choice
+- Identify: Multiple choice
 - Options:
   - Analytics (budget, projections, scenarios)
   - Audience (segments, targeting, LTV)
@@ -171,91 +165,40 @@ Step 4: Add question node for intent classification
   - Supply Path (programmatic, DSP/SSP)
   - Document (briefs, reports)
   - Performance (attribution, optimization)
-- Save response as: Create variable Topic.SpecialistChoice
+- Save response as: Topic.SpecialistChoice
 
-Step 5: Add condition node with branches
-- Click + Add node then Add a condition
-
-Branch 1 - Analytics:
-- Condition: Topic.SpecialistChoice equals Analytics (budget, projections, scenarios)
-- Add node: Topic management then Transfer conversation
-- Select Transfer to another copilot
-- Choose: MPA Analytics Agent
-
-Branch 2 - Audience:
-- Condition: Topic.SpecialistChoice equals Audience (segments, targeting, LTV)
-- Transfer to: MPA Audience Agent
-
-Branch 3 - Channel:
-- Condition: Topic.SpecialistChoice equals Channels (media mix, channel selection)
-- Transfer to: MPA Channel Agent
-
-Branch 4 - Supply Path:
-- Condition: Topic.SpecialistChoice equals Supply Path (programmatic, DSP/SSP)
-- Transfer to: MPA Supply Path Agent
-
-Branch 5 - Document:
-- Condition: Topic.SpecialistChoice equals Document (briefs, reports)
-- Transfer to: MPA Document Agent
-
-Branch 6 - Performance:
-- Condition: Topic.SpecialistChoice equals Performance (attribution, optimization)
-- Transfer to: MPA Performance Agent
-
-Step 6: Save the topic
-
+Condition Node with 6 branches:
+- If Analytics selected: Transfer to MPA Analytics Agent
+- If Audience selected: Transfer to MPA Audience Agent
+- If Channels selected: Transfer to MPA Channel Agent
+- If Supply Path selected: Transfer to MPA Supply Path Agent
+- If Document selected: Transfer to MPA Document Agent
+- If Performance selected: Transfer to MPA Performance Agent
 
 
 ORC TOPIC 4: RETURN FROM SPECIALIST
 
-Step 1: Create the topic
-- Click + New topic then From blank
+Name: Return_From_Specialist
 
-Step 2: Configure basic settings
-- Name: Return_From_Specialist
-- Display name: Return from Specialist
-
-Step 3: Configure the trigger
-- Click Edit next to the trigger section
-- In the Describe what the topic does box enter:
-
+Trigger Description (paste into Describe what the topic does):
 This topic handles when users return from a specialist agent and say I am back, back to main, return to orchestrator, continue with planning, what is next, move forward, back to workflow, continue, proceed, or any indication they want to return to the main planning flow.
 
-Step 4: Add message node
-- Click + Add node then Send a message
-- Enter this message:
-
+Message Node:
 Welcome back! Based on the work with the specialist, what would you like to focus on next? We can continue building the plan, explore another area, or I can summarize where things stand.
 
-Step 5: Add generative answers node
-- Click + Add node below the message
-- Select Advanced then Generative answers
-- Configure Input as Activity.Text
-- Select all connected knowledge sources
-
-Step 6: Save the topic
+Then Add: Generative answers node with Activity.Text input
 
 
 ORC TOPIC 5: FALLBACK
 
-Step 1: Locate or create Fallback topic
-- Copilot Studio usually creates a default Fallback topic
-- If it exists, click on Fallback in the Topics list to edit it
-- If not, click + New topic then From blank and name it Fallback
+Name: Fallback
 
-Step 2: Configure trigger
-- For the Fallback topic, look for a system trigger option
-- Select On Unrecognized or Unrecognized user input
-- This is a special trigger that fires when no other topic matches
-- You do not enter a description for this trigger type
+Trigger: System trigger On Unrecognized (not a description)
 
-Step 3: Replace existing nodes with generative answers
-- Delete any existing nodes in the topic
-- Click + Add node then Advanced then Generative answers
-- Configure Input as Activity.Text
-- Select all connected knowledge sources
+Note: The Fallback topic uses a special system trigger that activates when no other topic matches. Look for an option to set the trigger type to On Unrecognized or Unrecognized user input instead of entering a description.
 
-Step 4: Save the topic
+Then Add: Generative answers node with Activity.Text input
+
 
 
 ANL TOPIC CREATION
@@ -263,88 +206,40 @@ ANL TOPIC CREATION
 
 ANL TOPIC 1: GREETING
 
-Step 1: Create the topic
-- Open MPA Analytics Agent in Copilot Studio
-- Click Topics then + New topic then From blank
+Name: Greeting
 
-Step 2: Configure basic settings
-- Name: Greeting
-- Display name: ANL Greeting
-
-Step 3: Configure the trigger
-- Click Edit next to the trigger section
-- In the Describe what the topic does box enter:
-
+Trigger Description (paste into Describe what the topic does):
 This topic handles greetings when users are transferred to the Analytics Agent and say hello, hi, hey, start, begin, or any greeting when first arriving at this agent.
 
-Step 4: Add message node
-- Click + Add node then Send a message
-- Enter this message:
-
+Message Node:
 I am the Analytics Agent. I help with quantitative analysis - budget optimization, scenario modeling, performance projections, and statistical approaches.
 
 What would you like to analyze? If you tell me about your situation, I can suggest the most useful calculations.
 
-Step 5: Add generative answers node
-- Click + Add node below the message
-- Select Advanced then Generative answers
-- Configure Input as Activity.Text
-- Select all connected knowledge sources
-
-Step 6: Save the topic
+Then Add: Generative answers node with Activity.Text input
 
 
 ANL TOPIC 2: CONVERSATION
 
-Step 1: Create the topic
-- Click + New topic then From blank
+Name: Conversation
 
-Step 2: Configure basic settings
-- Name: Conversation
-- Display name: ANL Analysis
-
-Step 3: Configure the trigger
-- Click Edit next to the trigger section
-- In the Describe what the topic does box enter:
-
+Trigger Description (paste into Describe what the topic does):
 This topic handles analytics requests when users ask to calculate, project, forecast, analyze, discuss budget, run scenarios, do what-if analysis, compare options, model outcomes, estimate results, ask how much, discuss ROI, ROAS, marginal returns, efficiency, diminishing returns, confidence levels, statistical analysis, or any quantitative analysis request.
 
-Step 4: Add generative answers node
-- Click + Add node below the trigger
-- Select Advanced then Generative answers
-- Configure Input as Activity.Text
-- Select all connected knowledge sources
-
-Step 5: Save the topic
+Then Add: Generative answers node with Activity.Text input
 
 
 ANL TOPIC 3: RETURN TO ORC
 
-Step 1: Create the topic
-- Click + New topic then From blank
+Name: Return_To_ORC
 
-Step 2: Configure basic settings
-- Name: Return_To_ORC
-- Display name: Return to Orchestrator
-
-Step 3: Configure the trigger
-- Click Edit next to the trigger section
-- In the Describe what the topic does box enter:
-
+Trigger Description (paste into Describe what the topic does):
 This topic handles when users want to leave the Analytics Agent by saying go back, return to main, back to orchestrator, I need help with something else, route me back, transfer back, that is all for analytics, done with analysis, move on, what is next in the workflow, or any indication they want to return to the main orchestrator.
 
-Step 4: Add message node
-- Click + Add node then Send a message
-- Enter this message:
-
+Message Node:
 I will connect you back to the Orchestrator to continue with your plan.
 
-Step 5: Add transfer node
-- Click + Add node then Topic management then Transfer conversation
-- Select Transfer to another copilot
-- Choose: MPA Orchestrator Agent
-
-Step 6: Save the topic
+Then Add: Transfer node to MPA Orchestrator Agent
 
 
 
@@ -355,103 +250,93 @@ Apply the same 3-topic pattern to each remaining specialist agent.
 Below are the trigger descriptions and messages for each.
 
 
-AUD (AUDIENCE AGENT) TOPICS
+AUD (AUDIENCE AGENT)
 
-AUD Greeting Trigger Description:
+Greeting Trigger Description:
 This topic handles greetings when users are transferred to the Audience Agent and say hello, hi, hey, start, begin, or any greeting when first arriving at this agent.
 
-AUD Greeting Message:
-I am the Audience Agent. I help with segmentation strategy, targeting approaches, LTV modeling, and customer journey analysis.
+Greeting Message:
+I am the Audience Agent. I help with segmentation strategy, targeting approaches, LTV modeling, and customer journey analysis. Tell me about your campaign or customer base, and I will help identify the most effective audience strategy.
 
-Tell me about your campaign or customer base, and I will help identify the most effective audience strategy.
-
-AUD Conversation Trigger Description:
+Conversation Trigger Description:
 This topic handles audience requests when users ask about audience, segments, targeting, personas, LTV, customers, journey mapping, who should we reach, demographics, propensity, lifetime value, segmentation strategy, targeting approach, or any audience-related analysis.
 
-AUD Return Trigger Description:
+Return Trigger Description:
 This topic handles when users want to leave the Audience Agent by saying go back, return to main, back to orchestrator, done with audience, move on, what is next, or any indication they want to return to the main orchestrator.
 
-AUD Return Message:
+Return Message:
 I will connect you back to the Orchestrator to continue with your plan.
 
 
-CHA (CHANNEL AGENT) TOPICS
+CHA (CHANNEL AGENT)
 
-CHA Greeting Trigger Description:
+Greeting Trigger Description:
 This topic handles greetings when users are transferred to the Channel Agent and say hello, hi, hey, start, begin, or any greeting when first arriving at this agent.
 
-CHA Greeting Message:
-I am the Channel Agent. I help with channel selection, media mix strategy, allocation decisions, and emerging channel evaluation.
+Greeting Message:
+I am the Channel Agent. I help with channel selection, media mix strategy, allocation decisions, and emerging channel evaluation. What channels or media mix questions can I help you work through?
 
-What channels or media mix questions can I help you work through?
-
-CHA Conversation Trigger Description:
+Conversation Trigger Description:
 This topic handles channel requests when users ask about channels, media mix, allocation, CTV, display, social, programmatic, where should we advertise, which channels, television, digital, video, audio, out of home, retail media, or any channel selection and media mix question.
 
-CHA Return Trigger Description:
+Return Trigger Description:
 This topic handles when users want to leave the Channel Agent by saying go back, return to main, back to orchestrator, done with channels, move on, what is next, or any indication they want to return to the main orchestrator.
 
-CHA Return Message:
+Return Message:
 I will connect you back to the Orchestrator to continue with your plan.
 
 
-SPO (SUPPLY PATH AGENT) TOPICS
+SPO (SUPPLY PATH AGENT)
 
-SPO Greeting Trigger Description:
+Greeting Trigger Description:
 This topic handles greetings when users are transferred to the Supply Path Agent and say hello, hi, hey, start, begin, or any greeting when first arriving at this agent.
 
-SPO Greeting Message:
-I am the Supply Path Agent. I help with programmatic optimization, DSP and SSP evaluation, fee analysis, and supply chain transparency.
+Greeting Message:
+I am the Supply Path Agent. I help with programmatic optimization, DSP and SSP evaluation, fee analysis, and supply chain transparency. What programmatic or supply path questions can I help you analyze?
 
-What programmatic or supply path questions can I help you analyze?
-
-SPO Conversation Trigger Description:
+Conversation Trigger Description:
 This topic handles supply path requests when users ask about supply path, DSP, SSP, programmatic, fees, transparency, NBI, partners, vendors, ad tech, bidding, inventory, exchange, take rate, or any programmatic optimization question.
 
-SPO Return Trigger Description:
+Return Trigger Description:
 This topic handles when users want to leave the Supply Path Agent by saying go back, return to main, back to orchestrator, done with supply path, move on, what is next, or any indication they want to return to the main orchestrator.
 
-SPO Return Message:
+Return Message:
 I will connect you back to the Orchestrator to continue with your plan.
 
 
-DOC (DOCUMENT AGENT) TOPICS
+DOC (DOCUMENT AGENT)
 
-DOC Greeting Trigger Description:
+Greeting Trigger Description:
 This topic handles greetings when users are transferred to the Document Agent and say hello, hi, hey, start, begin, or any greeting when first arriving at this agent.
 
-DOC Greeting Message:
-I am the Document Agent. I help with media brief creation, report generation, and document formatting and export.
+Greeting Message:
+I am the Document Agent. I help with media brief creation, report generation, and document formatting and export. What document would you like me to help you create?
 
-What document would you like me to help you create?
-
-DOC Conversation Trigger Description:
+Conversation Trigger Description:
 This topic handles document requests when users ask about documents, briefs, reports, exports, generating documents, creating media plan documents, summaries, templates, formatting, PDF, Word, presentations, or any document creation request.
 
-DOC Return Trigger Description:
+Return Trigger Description:
 This topic handles when users want to leave the Document Agent by saying go back, return to main, back to orchestrator, done with document, move on, what is next, or any indication they want to return to the main orchestrator.
 
-DOC Return Message:
+Return Message:
 I will connect you back to the Orchestrator to continue with your plan.
 
 
-PRF (PERFORMANCE AGENT) TOPICS
+PRF (PERFORMANCE AGENT)
 
-PRF Greeting Trigger Description:
+Greeting Trigger Description:
 This topic handles greetings when users are transferred to the Performance Agent and say hello, hi, hey, start, begin, or any greeting when first arriving at this agent.
 
-PRF Greeting Message:
-I am the Performance Agent. I help with attribution analysis, anomaly detection, incrementality testing, and optimization recommendations.
+Greeting Message:
+I am the Performance Agent. I help with attribution analysis, anomaly detection, incrementality testing, and optimization recommendations. What performance questions or campaign results would you like me to analyze?
 
-What performance questions or campaign results would you like me to analyze?
-
-PRF Conversation Trigger Description:
+Conversation Trigger Description:
 This topic handles performance requests when users ask about performance, attribution, anomalies, optimization, incrementality, results, KPIs, metrics, why did something drop, why did something increase, testing, measurement, MTA, MMM, or any performance analysis question.
 
-PRF Return Trigger Description:
+Return Trigger Description:
 This topic handles when users want to leave the Performance Agent by saying go back, return to main, back to orchestrator, done with performance, move on, what is next, or any indication they want to return to the main orchestrator.
 
-PRF Return Message:
+Return Message:
 I will connect you back to the Orchestrator to continue with your plan.
 
 
@@ -481,8 +366,7 @@ FOR EACH SPECIALIST:
 Step 1: Open the specialist agent in Copilot Studio
 Step 2: Go to Settings then Agent transfers
 Step 3: Enable agent transfers toggle
-Step 4: Click Add agent and select:
-- MPA Orchestrator Agent
+Step 4: Click Add agent and select MPA Orchestrator Agent
 Step 5: Save settings
 Step 6: Publish the agent
 
@@ -492,39 +376,17 @@ KNOWLEDGE SOURCE CONFIGURATION
 
 Ensure each agent has the correct knowledge sources connected:
 
-ORC Knowledge Sources:
-- SharePoint: EAP folder (shared platform content)
-- SharePoint: Agents/ORC folder
-
-ANL Knowledge Sources:
-- SharePoint: EAP folder (shared platform content)
-- SharePoint: Agents/ANL folder (all ANL KB files)
-
-AUD Knowledge Sources:
-- SharePoint: EAP folder (shared platform content)
-- SharePoint: Agents/AUD folder (all AUD KB files)
-
-CHA Knowledge Sources:
-- SharePoint: EAP folder (shared platform content)
-- SharePoint: Agents/CHA folder (all CHA KB files)
-
-SPO Knowledge Sources:
-- SharePoint: EAP folder (shared platform content)
-- SharePoint: Agents/SPO folder
-
-DOC Knowledge Sources:
-- SharePoint: EAP folder (shared platform content)
-- SharePoint: Agents/DOC folder
-
-PRF Knowledge Sources:
-- SharePoint: EAP folder (shared platform content)
-- SharePoint: Agents/PRF folder (all PRF KB files)
+ORC: EAP folder (shared) and Agents/ORC folder
+ANL: EAP folder (shared) and Agents/ANL folder
+AUD: EAP folder (shared) and Agents/AUD folder
+CHA: EAP folder (shared) and Agents/CHA folder
+SPO: EAP folder (shared) and Agents/SPO folder
+DOC: EAP folder (shared) and Agents/DOC folder
+PRF: EAP folder (shared) and Agents/PRF folder
 
 
 VALIDATION TESTING
 ------------------
-
-After completing all configuration, test with these scenarios:
 
 Test 1 - Ambiguous Start:
 - Input: I need help with a campaign
@@ -540,7 +402,7 @@ Test 3 - Partial Information:
 
 Test 4 - Mid-Stream Pivot:
 - Input: Actually, let us talk about audience instead
-- Expected: Smooth transition to AUD, context preserved
+- Expected: Smooth transition to AUD
 
 Test 5 - Return from Specialist:
 - Input: That is helpful, what should I do next?
@@ -570,10 +432,6 @@ Generative Answers Not Working:
 - Verify knowledge sources are connected and indexed
 - Check that Activity.Text is set as the input
 
-Fallback Triggering Too Often:
-- Make trigger descriptions more specific in other topics
-- Add more example phrases to trigger descriptions
-
 Wrong Topic Triggering:
 - Make trigger descriptions more distinct from each other
 - Add negative examples if needed (this topic does NOT handle...)
@@ -585,10 +443,10 @@ DOCUMENT VERSION HISTORY
 Version 7.1 - January 2026
 - Updated to use new Copilot Studio trigger format
 - Replaced trigger phrases with Describe what the topic does descriptions
-- Added detailed instructions for the new interface
+- Added detailed step-by-step instructions for new interface
+- Added how-to sections for message nodes, generative answers, and transfers
 
 Version 7.0 - January 2026
 - Initial conversational pattern architecture
 - Reduced from 30 topics to 23 topics
 - Shifted intelligence from topic structure to instructions and KB
-- Added generative answers as primary response mechanism

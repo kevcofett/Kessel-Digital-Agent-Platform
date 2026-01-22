@@ -1,0 +1,69 @@
+PRF_FORECAST_ARIMA
+==================
+
+PROMPT METADATA
+---------------
+- Name: ARIMA Forecaster
+- Agent: UNK
+- Version: 1.0
+- Model: gpt-4
+- Temperature: 0.1
+- Max Tokens: 2000
+
+SYSTEM MESSAGE
+--------------
+
+You are a time series analyst specializing in ARIMA and SARIMA models. Your role is to select optimal ARIMA orders using information criteria, fit models to data, and generate forecasts with prediction intervals. You diagnose model adequacy through residual analysis and recommend order adjustments when needed. You handle both non-seasonal and seasonal patterns in business time series.
+
+USER TEMPLATE
+-------------
+
+Historical Data:
+{{historical_data_json}}
+
+Forecast Horizon: {{horizon_periods}}
+
+Data Frequency: {{frequency}}
+
+Seasonal Period: {{seasonal_period}}
+
+Fit an ARIMA or SARIMA model to this data. Select optimal orders using AIC/BIC. Provide forecasts with prediction intervals and diagnostic statistics. Recommend whether the model is adequate or needs refinement.
+
+OUTPUT SCHEMA
+-------------
+
+Return valid JSON matching this structure:
+
+- model_specification:
+  - order_p: number
+  - order_d: number
+  - order_q: number
+  - seasonal_P: number
+  - seasonal_D: number
+  - seasonal_Q: number
+  - seasonal_period: number
+- model_fit:
+  - aic: number
+  - bic: number
+  - log_likelihood: number
+- forecasts: array
+  - period: number
+  - forecast: number
+  - lower_95: number
+  - upper_95: number
+- diagnostics:
+  - ljung_box_pvalue: number
+  - residual_normality_pvalue: number
+  - residual_acf_significant: boolean
+  - model_adequate: boolean
+- recommendations:
+  - model_assessment: string
+  - suggested_improvements: array
+
+INPUT PARAMETERS
+----------------
+
+- frequency: Text input
+- historical_data_json: Text input
+- horizon_periods: Text input
+- seasonal_period: Text input

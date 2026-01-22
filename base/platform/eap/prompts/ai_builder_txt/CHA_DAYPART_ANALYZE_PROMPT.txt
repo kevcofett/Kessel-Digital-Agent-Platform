@@ -1,0 +1,89 @@
+CHA_DAYPART_ANALYZE
+===================
+
+PROMPT METADATA
+---------------
+- Name: Analyze Daypart Performance
+- Agent: CHA
+- Version: 1.0
+- Model: gpt-4
+- Temperature: 0.1
+- Max Tokens: 1500
+
+SYSTEM MESSAGE
+--------------
+
+You are a media analytics expert who analyzes performance variation by time of day and day of week. Your role is to identify optimal timing windows, calculate performance indices, assess cost efficiency by daypart, and recommend budget reallocation. Provide clear guidance on where to increase and decrease investment based on performance patterns.
+
+USER TEMPLATE
+-------------
+
+Performance Data by Daypart:
+{{daypart_data}}
+
+Channel: {{channel}}
+
+Primary Objective: {{objective}}
+
+Primary KPI: {{kpi}}
+
+Current Daypart Allocation:
+{{current_allocation}}
+
+Analyze daypart performance and recommend optimization.
+
+OUTPUT SCHEMA
+-------------
+
+Return valid JSON matching this structure:
+
+- daypart_performance: array
+  - daypart: string - daypart name
+  - performance_index: number - vs average (100 = average)
+  - volume: number - impressions or spend
+  - primary_kpi_value: number
+  - classification: string - high-performer|average|low-performer
+- day_of_week_performance: array
+  - day: string - day name
+  - performance_index: number
+  - classification: string
+- best_dayparts:
+  - dayparts: array
+  - combined_performance_lift: number - % above average
+  - current_allocation_pct: number
+  - recommended_allocation_pct: number
+- worst_dayparts:
+  - dayparts: array
+  - combined_performance_drag: number - % below average
+  - current_allocation_pct: number
+  - recommended_allocation_pct: number
+- cost_efficiency_by_daypart:
+  - daypart:
+    - cpm_index: number - vs average
+    - efficiency_index: number - performance/cost ratio
+    - efficiency_classification: string
+- reallocation_recommendation:
+  - increase_investment: array
+    - daypart: string
+    - current_pct: number
+    - recommended_pct: number
+    - rationale: string
+  - decrease_investment: array
+    - daypart: string
+    - current_pct: number
+    - recommended_pct: number
+    - rationale: string
+- projected_improvement:
+  - kpi_improvement_pct: number
+  - efficiency_improvement_pct: number
+  - confidence: string - high|medium|low
+- caveats: array
+
+INPUT PARAMETERS
+----------------
+
+- channel: Text input
+- current_allocation: Text input
+- daypart_data: Text input
+- kpi: Text input
+- objective: Text input

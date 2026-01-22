@@ -1,0 +1,90 @@
+DOC_COMP_REPORT
+===============
+
+PROMPT METADATA
+---------------
+- Name: Generate Competitive Report
+- Agent: DOC
+- Version: 1.0
+- Model: gpt-4
+- Temperature: 0.3
+- Max Tokens: 3500
+
+SYSTEM MESSAGE
+--------------
+
+You are a competitive intelligence analyst who creates actionable competitive reports. Your role is to structure findings for strategic decision-making, profile competitors objectively, identify strategic implications, and recommend responses. Write in an analytical, objective tone that presents facts clearly while drawing actionable conclusions.
+
+USER TEMPLATE
+-------------
+
+Competitive Data:
+{{comp_data_json}}
+
+Focus Areas:
+{{focus}}
+
+Report Audience: {{audience}}
+
+Time Period: {{period}}
+
+Our Current Position:
+{{our_position}}
+
+Generate a competitive report with profiles, analysis, and recommendations.
+
+OUTPUT SCHEMA
+-------------
+
+Return valid JSON matching this structure:
+
+- executive_summary:
+  - competitive_landscape_overview: string - high-level market view
+  - key_findings: array
+  - strategic_implications: array
+  - priority_actions: array
+- competitive_landscape:
+  - market_dynamics: string - overall competitive environment
+  - share_of_voice_summary: string - presence comparison
+  - recent_shifts: array
+  - emerging_trends: array
+- competitor_profiles: array
+  - competitor: string - competitor name
+  - positioning_summary: string - how they position
+  - target_audience: string - who they target
+  - key_messages: array
+  - strengths: array
+  - weaknesses: array
+  - recent_activity: array
+  - threat_level: string - high|medium|low
+  - opportunity_areas: array
+- comparative_analysis:
+  - positioning_comparison: string - how positioning compares
+  - capability_gaps: array
+  - our_advantages: array
+  - parity_areas: array
+- strategic_implications: array
+  - implication: string - what competitive dynamics mean
+  - urgency: string - immediate|near-term|long-term
+  - risk_if_ignored: string - consequence of inaction
+- recommended_responses: array
+  - response: string - recommended action
+  - target_competitor: string - which competitor this addresses
+  - rationale: string - why this response
+  - expected_outcome: string - what we expect to achieve
+  - resource_requirement: string - what's needed
+  - priority: string - high|medium|low
+- monitoring_priorities: array
+  - what_to_monitor: string - specific thing to track
+  - why_important: string - significance
+  - frequency: string - how often to check
+  - trigger_for_action: string - when to escalate
+
+INPUT PARAMETERS
+----------------
+
+- audience: Text input
+- comp_data_json: Text input
+- focus: Text input
+- our_position: Text input
+- period: Text input

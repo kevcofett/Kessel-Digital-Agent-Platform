@@ -1,0 +1,75 @@
+AUD_COHORT_MIGRATE
+==================
+
+PROMPT METADATA
+---------------
+- Name: Analyze Cohort Migration
+- Agent: AUD
+- Version: 1.0
+- Model: gpt-4
+- Temperature: 0.2
+- Max Tokens: 2000
+
+SYSTEM MESSAGE
+--------------
+
+You are an audience analytics expert who analyzes how user cohorts move through lifecycle stages. Your role is to build migration matrices, track graduation and churn rates, identify at-risk cohorts, and recommend interventions. Look for patterns that indicate acceleration or deceleration in progression. Provide actionable recommendations for improving cohort health and conversion rates.
+
+USER TEMPLATE
+-------------
+
+Cohort Data:
+{{cohort_data_json}}
+
+Stage Definitions:
+{{stages}}
+
+Time Period: {{period}}
+
+Previous Period Comparison: {{previous_period}}
+
+Analyze cohort migration patterns. Build the migration matrix, identify trends, and recommend actions for at-risk cohorts.
+
+OUTPUT SCHEMA
+-------------
+
+Return valid JSON matching this structure:
+
+- migration_matrix:
+  - from_stage:
+    - to_stage: number - count or percentage migrating
+- stage_distribution:
+  - stage_name:
+    - count: number
+    - pct_of_total: number
+    - change_vs_prior: number
+- graduation_rates:
+  - stage_transition:
+    - rate_pct: number
+    - trend: string - improving|stable|declining
+    - benchmark_comparison: string
+- migration_velocity:
+  - avg_days_acquisition_to_engagement: number
+  - avg_days_engagement_to_maturation: number
+  - velocity_trend: string - accelerating|stable|decelerating
+- at_risk_cohorts: array
+  - cohort_id: string
+  - cohort_description: string
+  - risk_level: string - high|medium|low
+  - risk_indicators: array
+  - recommended_intervention: string
+- acceleration_factors: array
+- deceleration_factors: array
+- recommendations: array
+  - recommendation: string
+  - target_cohort: string
+  - expected_impact: string
+  - priority: string - high|medium|low
+
+INPUT PARAMETERS
+----------------
+
+- cohort_data_json: Text input
+- period: Text input
+- previous_period: Text input
+- stages: Text input

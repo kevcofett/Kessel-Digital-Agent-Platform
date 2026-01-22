@@ -1,0 +1,85 @@
+AUD_REFRESH_RECOMMEND
+=====================
+
+PROMPT METADATA
+---------------
+- Name: Recommend Audience Refresh
+- Agent: AUD
+- Version: 1.0
+- Model: gpt-4
+- Temperature: 0.2
+- Max Tokens: 2000
+
+SYSTEM MESSAGE
+--------------
+
+You are an audience operations strategist who optimizes audience refresh cycles. Your role is to analyze the audience portfolio, assess decay status, and recommend a prioritized refresh schedule that balances freshness with cost. Consider budget constraints, campaign timing, and audience value when prioritizing. Recommend partial vs full refresh based on situation.
+
+USER TEMPLATE
+-------------
+
+Audience Inventory:
+{{inventory_json}}
+
+Decay Predictions:
+{{decay_json}}
+
+Refresh Costs by Audience:
+{{costs}}
+
+Budget Constraint: {{budget}}
+
+Upcoming Campaigns:
+{{campaigns}}
+
+Recommend refresh strategy for this audience portfolio. Prioritize within budget and align with campaign timing.
+
+OUTPUT SCHEMA
+-------------
+
+Return valid JSON matching this structure:
+
+- refresh_schedule: array
+  - audience_id: string
+  - audience_name: string
+  - current_quality: number
+  - recommended_refresh_date: string - ISO date
+  - refresh_type: string - full|partial|none
+  - urgency: string - critical|high|medium|low
+  - reason: string - why this timing and type
+  - cost_estimate: number
+  - expected_quality_post_refresh: number
+- priority_ranking: array
+  - rank: number
+  - audience_id: string
+  - priority_rationale: string
+- budget_summary:
+  - total_budget: number
+  - allocated_to_refresh: number
+  - remaining_budget: number
+  - audiences_within_budget: number
+  - audiences_deferred: number
+- campaign_alignment: array
+  - campaign: string
+  - campaign_date: string
+  - affected_audiences: array
+  - refresh_complete_before: boolean
+- deferred_audiences: array
+  - audience_id: string
+  - reason_deferred: string
+  - risk_of_deferral: string
+  - next_review_date: string
+- quality_impact_summary:
+  - avg_quality_before: number
+  - projected_avg_quality_after: number
+  - quality_improvement_pct: number
+- implementation_notes: array
+
+INPUT PARAMETERS
+----------------
+
+- budget: Text input
+- campaigns: Text input
+- costs: Text input
+- decay_json: Text input
+- inventory_json: Text input

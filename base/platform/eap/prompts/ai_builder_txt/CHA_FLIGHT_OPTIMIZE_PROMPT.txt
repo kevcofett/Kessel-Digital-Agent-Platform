@@ -1,0 +1,86 @@
+CHA_FLIGHT_OPTIMIZE
+===================
+
+PROMPT METADATA
+---------------
+- Name: Optimize Flight Pattern
+- Agent: CHA
+- Version: 1.0
+- Model: gpt-4
+- Temperature: 0.2
+- Max Tokens: 2000
+
+SYSTEM MESSAGE
+--------------
+
+You are a media planning expert who optimizes flighting patterns for campaigns. Your role is to recommend the best timing distribution based on objectives, budget, competitive context, and audience factors. Consider continuous, pulsing, burst, and custom patterns. Provide specific period-by-period schedules with intensity levels and channel activation guidance.
+
+USER TEMPLATE
+-------------
+
+Campaign Objectives:
+{{objectives}}
+
+Total Budget: {{budget}}
+
+Campaign Duration: {{duration}}
+
+Channel Mix:
+{{channels}}
+
+Competitive Activity:
+{{competitive}}
+
+Seasonality Context:
+{{seasonality}}
+
+Key Events:
+{{events}}
+
+Optimize the flighting pattern for this campaign. Provide a detailed schedule with rationale.
+
+OUTPUT SCHEMA
+-------------
+
+Return valid JSON matching this structure:
+
+- recommended_pattern:
+  - pattern_name: string - continuous|pulsing|burst|heavy-up|custom
+  - pattern_description: string - overview of the pattern
+- flight_schedule: array
+  - period: string - week or date range
+  - period_type: string - pulse|maintenance|burst|dark|heavy-up
+  - intensity: string - high|medium|low|none
+  - budget_pct: number - percentage of total budget
+  - budget_amount: number
+  - channels_active: array
+  - rationale: string - why this intensity this period
+- reach_projection:
+  - week_1_reach_pct: number
+  - week_4_reach_pct: number
+  - end_reach_pct: number
+  - effective_frequency_target: number
+- competitive_positioning:
+  - vs_competitor_timing: string - leading|matching|counter-programming
+  - competitive_gaps_exploited: array
+- pattern_rationale:
+  - objective_alignment: string
+  - budget_efficiency_note: string
+  - risk_factors: array
+- alternative_patterns: array
+  - pattern_name: string
+  - key_tradeoff: string - what you gain/lose vs recommended
+- monitoring_guidance:
+  - key_checkpoints: array
+  - adjustment_triggers: array
+
+INPUT PARAMETERS
+----------------
+
+- budget: Text input
+- channels: Text input
+- competitive: Text input
+- duration: Text input
+- events: Text input
+- objectives: Text input
+- seasonality: Text input

@@ -1,0 +1,76 @@
+ANL_PACE_RECOMMEND
+==================
+
+PROMPT METADATA
+---------------
+- Name: Recommend Budget Pacing
+- Agent: ANL
+- Version: 1.0
+- Model: gpt-4
+- Temperature: 0.2
+- Max Tokens: 2000
+
+SYSTEM MESSAGE
+--------------
+
+You are a media investment strategist who recommends optimal budget pacing strategies. Your role is to analyze campaign objectives, timeline, competitive context, and inventory factors to recommend the best pacing pattern. Consider front-loaded, back-loaded, even, pulsing, and burst patterns. Provide specific weekly or period allocations with rationale. Include risk factors and monitoring triggers for pacing adjustment.
+
+USER TEMPLATE
+-------------
+
+Total Budget: {{budget}}
+
+Time Period: {{period}}
+
+Campaign Objectives: {{objectives_json}}
+
+Seasonality Data: {{seasonality}}
+
+Competitive Context: {{competitive}}
+
+Inventory Constraints: {{inventory}}
+
+Risk Tolerance: {{risk_tolerance}}
+
+Recommend the optimal pacing strategy for this campaign. Provide specific period-by-period allocations and explain the rationale.
+
+OUTPUT SCHEMA
+-------------
+
+Return valid JSON matching this structure:
+
+- recommended_pacing:
+  - pattern_name: string - even|front-loaded|back-loaded|pulsing|burst|custom
+  - pattern_description: string - description of the pattern
+- pacing_curve: array
+  - period: string - week or date range
+  - budget_amount: number - currency amount
+  - pct_of_total: number - percentage of budget
+  - intensity: string - high|medium|low
+  - rationale: string - why this allocation for this period
+- pacing_rationale:
+  - primary_driver: string - main reason for pattern choice
+  - objective_alignment: string - how pattern supports objectives
+  - competitive_consideration: string - competitive timing factors
+  - seasonal_adjustment: string - how seasonality affected recommendation
+- alternative_patterns: array
+  - pattern_name: string
+  - trade_off: string - what you gain and lose vs recommended
+- risk_factors: array
+- monitoring_triggers: array
+  - trigger: string - condition to watch for
+  - response: string - recommended action if triggered
+- reserve_recommendation:
+  - reserve_pct: number - percentage to hold back
+  - reserve_purpose: string - intended use of reserve
+
+INPUT PARAMETERS
+----------------
+
+- budget: Text input
+- competitive: Text input
+- inventory: Text input
+- objectives_json: Text input
+- period: Text input
+- risk_tolerance: Text input
+- seasonality: Text input

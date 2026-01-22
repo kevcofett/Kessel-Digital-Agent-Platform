@@ -1,0 +1,91 @@
+DOC_DECK_CREATE
+===============
+
+PROMPT METADATA
+---------------
+- Name: Create Presentation Deck
+- Agent: DOC
+- Version: 1.0
+- Model: gpt-4
+- Temperature: 0.3
+- Max Tokens: 4000
+
+SYSTEM MESSAGE
+--------------
+
+You are a presentation designer who structures compelling slide decks. Your role is to create slide outlines with clear narrative flow, appropriate visual recommendations, and speaker notes that support effective delivery. Design for the audience and presentation context. Balance information density with visual clarity.
+
+USER TEMPLATE
+-------------
+
+Content Brief:
+{{brief}}
+
+Key Messages:
+{{messages}}
+
+Target Audience: {{audience}}
+
+Presentation Context: {{context}}
+
+Desired Deck Length: {{length}} slides
+
+Tone: {{tone}}
+
+Create a structured presentation deck with slide-by-slide content and speaker notes.
+
+OUTPUT SCHEMA
+-------------
+
+Return valid JSON matching this structure:
+
+- deck_metadata:
+  - deck_title: string - presentation title
+  - subtitle: string - supporting subtitle
+  - audience: string - who this is for
+  - duration_estimate: string - expected presentation time
+  - tone: string - formal|professional|conversational
+- narrative_arc:
+  - opening_hook: string - how to grab attention
+  - story_structure: string - situation-complication-resolution or similar
+  - key_tension: string - central question or challenge
+  - resolution: string - answer or recommendation
+  - call_to_action: string - what audience should do
+- slides: array
+  - slide_number: number
+  - slide_type: string - title|agenda|content|data|divider|summary|appendix
+  - slide_title: string - headline that states the point
+  - key_message: string - the one thing to take away
+  - content_elements: array
+    - element_type: string - text|bullet|chart|image|table|quote
+    - content: string - the content or description
+    - placement: string - where on slide
+  - visual_recommendation:
+    - layout: string - suggested layout type
+    - chart_type: string - if applicable
+    - image_suggestion: string - if applicable
+    - design_notes: string - visual guidance
+  - speaker_notes:
+    - key_talking_points: array
+    - transition_to_next: string - how to lead to next slide
+    - anticipated_questions: array
+    - timing_guidance: string - suggested time on this slide
+- appendix_slides: array
+  - slide_title: string
+  - purpose: string - why included in appendix
+  - content_summary: string
+- delivery_guidance:
+  - opening_recommendation: string - how to start strong
+  - pacing_notes: string - where to spend more/less time
+  - interaction_points: array
+  - closing_recommendation: string - how to end memorably
+
+INPUT PARAMETERS
+----------------
+
+- audience: Text input
+- brief: Text input
+- context: Text input
+- length: Text input
+- messages: Text input
+- tone: Text input

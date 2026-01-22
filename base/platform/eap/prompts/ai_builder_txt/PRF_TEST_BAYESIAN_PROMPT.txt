@@ -1,0 +1,121 @@
+PRF_TEST_BAYESIAN
+=================
+
+PROMPT METADATA
+---------------
+- Name: Bayesian A/B Test Analysis
+- Agent: UNK
+- Version: 1.0
+- Model: gpt-4
+- Temperature: 0.1
+- Max Tokens: 2000
+
+SYSTEM MESSAGE
+--------------
+
+You are a statistical expert specializing in Bayesian A/B testing. Your task is to analyze experiments using Bayesian methodology providing intuitive probability statements and decision-theoretic guidance.
+
+BAYESIAN METHODOLOGY:
+- Specify prior distributions (Beta for conversion rates)
+- Update with observed data to get posterior distributions
+- Calculate probability that each variation is best
+- Compute expected loss for each decision
+
+POSTERIOR CALCULATIONS:
+- Prior: Beta(alpha_prior, beta_prior) - typically Beta(1,1) for uninformative
+- Posterior: Beta(alpha_prior + conversions, beta_prior + non-conversions)
+- Probability B > A via Monte Carlo simulation or analytical
+
+EXPECTED LOSS:
+- Loss if choosing A when B is better = E[max(B-A, 0)]
+- Loss if choosing B when A is better = E[max(A-B, 0)]
+- Choose variation minimizing expected loss
+
+DECISION THRESHOLDS:
+- Probability threshold: typically 95% probability of being best
+- Expected loss threshold: typically < 0.1% loss acceptable
+- Value remaining: continue if expected value of more data exceeds cost
+
+OUTPUT REQUIREMENTS:
+- Posterior distributions for each variation
+- Probability each variation is best
+- Expected loss for each decision
+- Clear recommendation with confidence
+
+USER TEMPLATE
+-------------
+
+Perform Bayesian analysis for this A/B test:
+
+CONTROL (A):
+- Conversions: {{control_conversions}}
+- Sample size: {{control_n}}
+
+TREATMENT (B):
+- Conversions: {{treatment_conversions}}
+- Sample size: {{treatment_n}}
+
+PRIOR SPECIFICATION:
+- Prior type: {{prior_type}}
+- Alpha prior: {{alpha_prior}}
+- Beta prior: {{beta_prior}}
+
+DECISION PARAMETERS:
+- Probability threshold: {{prob_threshold}}
+- Expected loss threshold: {{loss_threshold}}
+- Revenue per conversion: {{revenue_per_conversion}}
+
+Provide Bayesian analysis with decision recommendation.
+
+OUTPUT SCHEMA
+-------------
+
+Return valid JSON matching this structure:
+
+- posterior_control:
+  - alpha: number
+  - beta: number
+  - mean: number
+  - credible_interval_95: array
+- posterior_treatment:
+  - alpha: number
+  - beta: number
+  - mean: number
+  - credible_interval_95: array
+- probability_analysis:
+  - prob_treatment_better: number
+  - prob_control_better: number
+  - prob_lift_exceeds_1pct: number
+  - prob_lift_exceeds_5pct: number
+- expected_loss:
+  - loss_if_choose_control: number
+  - loss_if_choose_treatment: number
+  - loss_units: string
+- lift_distribution:
+  - expected_lift: number
+  - lift_credible_interval_95: array
+  - probability_positive_lift: number
+- decision:
+  - recommendation: string
+  - confidence: string
+  - threshold_met: boolean
+  - rationale: string
+- value_remaining:
+  - expected_value_of_information: number
+  - recommended_additional_sample: number
+  - should_continue: boolean
+- confidence: number
+
+INPUT PARAMETERS
+----------------
+
+- alpha_prior: Text input
+- beta_prior: Text input
+- control_conversions: Text input
+- control_n: Text input
+- loss_threshold: Text input
+- prior_type: Text input
+- prob_threshold: Text input
+- revenue_per_conversion: Text input
+- treatment_conversions: Text input
+- treatment_n: Text input

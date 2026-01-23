@@ -1,6 +1,6 @@
 # MPA v6.0 MASTERCARD ARCHITECTURE OVERVIEW
 
-**Version:** 2.0  
+**Version:** 2.1  
 **Date:** January 22, 2026  
 **Status:** Production Ready  
 **Target Environment:** Mastercard (DLP-Restricted)  
@@ -20,7 +20,8 @@
 8. [Deployment Constraints](#8-deployment-constraints)
 9. [v6.6 Capability Expansions](#9-v66-capability-expansions)
 10. [Conversational Topic Architecture](#10-conversational-topic-architecture)
-11. [Implementation Checklist](#11-implementation-checklist)
+11. [Deep Reasoning Integration](#11-deep-reasoning-integration)
+12. [Implementation Checklist](#12-implementation-checklist)
 
 ---
 

@@ -1,0 +1,11 @@
+$schema: https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json
+name: blue
+endpoint_name: kdap-budget-optimizer
+code_configuration:
+  code: /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/src/azure-ml/deploy/scoring
+  scoring_script: score_budget_optimization.py
+environment:
+  conda_file: /Users/kevinbauer/Kessel-Digital/Kessel-Digital-Agent-Platform/src/azure-ml/deploy/environments/budget-optimization-env.yaml
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu22.04:latest
+instance_type: Standard_DS3_v2
+instance_count: 1

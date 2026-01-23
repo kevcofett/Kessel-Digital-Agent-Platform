@@ -1,7 +1,7 @@
 # MPA v6.0 FINAL ARCHITECTURE
 
-**Version:** 2.0  
-**Date:** January 22, 2026  
+**Version:** 2.1  
+**Date:** January 23, 2026  
 **Status:** Production Ready  
 **Environments:** Mastercard (DLP-restricted) + Personal (Full Azure)
 
@@ -41,9 +41,10 @@ The Media Planning Agent (MPA) v6.0 implements a **10 Agents + Deep Modules** ar
 | Metric | Value |
 |--------|-------|
 | Total Agents | 10 |
-| Total KB Files | 135 |
+| Agent KB Files | 135 |
+| EAP Platform KB Files | 5 |
+| Total KB Files | 140 |
 | Instruction Space | 80,000 characters (8K × 10) |
-| EAP Shared Files | 6 |
 | AI Builder Prompts | 69 |
 | Dataverse Tables | 24 |
 | Azure Functions (Personal) | 8+ |
@@ -53,10 +54,22 @@ The Media Planning Agent (MPA) v6.0 implements a **10 Agents + Deep Modules** ar
 
 1. **Capability Abstraction**: Same agent code routes to different implementations based on environment
 2. **AI Builder Universal Fallback**: Every capability has an AI Builder implementation working in both environments
-3. **Environment Parity**: Identical agents, KB, and orchestrationâ€”only implementation registrations differ
+3. **Environment Parity**: Identical agents, KB, and orchestration - only implementation registrations differ
 4. **Test-Driven Quality**: Golden test cases in Dataverse validate behavior pre-deployment
 5. **Observability by Default**: All capability invocations logged to telemetry
+6. **KB-First Retrieval**: Mandatory knowledge base retrieval before responding to domain questions
+7. **Domain Scope Boundaries**: Explicit boundaries preventing cross-domain confusion
+8. **Behavioral Safeguards**: Consistent guardrails across all agent instructions
 
+### 1.4 Recent Updates (January 2026)
+
+- Complete instruction file audit and remediation for all 10 agents
+- KB Critical Path Enhancement with proactive intelligence patterns
+- DOMAIN SCOPE boundaries added to all specialist agents
+- MANDATORY RESPONSE SEQUENCE enforcing KB-first retrieval
+- Consistent behavioral safeguards across all agent instructions
+- Deep Reasoning keyword integration for extended analysis triggers
+- ORC guardrails preventing autonomous plan completion and web search
 ---
 
 ## 2. ARCHITECTURE PRINCIPLES

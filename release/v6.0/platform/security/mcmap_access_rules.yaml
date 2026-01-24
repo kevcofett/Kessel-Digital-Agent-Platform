@@ -1,0 +1,282 @@
+# MCMAP Attribute-Based Access Control Configuration
+# This file defines content access rules based on directory attributes
+# Changes sync to eap_access_rule table on deployment
+#
+# Version: 2.0
+# Last Updated: 2026-01-24
+# Schema Version: ABAC-1.0
+
+# ============================================================
+# GLOBAL SETTINGS
+# ============================================================
+settings:
+  abac_enabled: false              # Full ABAC off by default
+  csuite_protection: true          # C-Suite protection always on
+  profile_tracking: true           # Capture user profiles
+  directory_sync: true             # Sync from Microsoft Directory
+  cache_ttl_hours: 24              # Profile cache duration
+  default_access: ALLOW            # Default when no rule matches
+
+# ============================================================
+# ORGANIZATIONAL HIERARCHY REFERENCE
+# ============================================================
+# Known values for Mastercard directory attributes
+# Used for validation and documentation
+
+org_hierarchy:
+  employee_levels:
+    - CEO
+    - President
+    - EVP
+    - SVP
+    - VP
+    - Director
+    - Senior Manager
+    - Manager
+    - Senior Analyst
+    - Analyst
+    - Associate
+
+  divisions:
+    - "Data & Services"
+    - "Network Services"
+    - "Cyber & Intelligence"
+    - "Corporate"
+    - "Technology"
+
+  regions:
+    - "North America"
+    - "Latin America"
+    - "Europe"
+    - "APMEA"
+
+  departments:
+    - "Marketing Services"
+    - "Advisors & Consulting"
+    - "Data Services"
+    - "Analytics"
+    - "Engineering"
+    - "Product"
+    - "Sales"
+    - "Finance"
+    - "Legal"
+    - "Human Resources"
+
+# ============================================================
+# ACCESS RULES
+# ============================================================
+
+access_rules:
+
+  # ----------------------------------------------------------
+  # EXECUTIVE CONTENT - Always protected even when ABAC is OFF
+  # ----------------------------------------------------------
+
+  - name: "C-Suite Executive Briefs"
+    description: "CEO and C-Suite role-specific strategic briefs"
+    type: CONTENT_SET
+    patterns:
+      - "00-MCMAP_CEO_Brief.md"
+      - "00-A-MCMAP_Chief_*.md"
+      - "00-B-MCMAP_Chief_*.md"
+      - "00-C-MCMAP_Chief_*.md"
+      - "00-D-MCMAP_Chief_*.md"
+    applies_when_abac_off: true
+    priority: 100
+    condition_logic: ANY
+    conditions:
+      - attribute: employee_level
+        operator: IN
+        values: ["CEO", "President", "EVP", "SVP"]
+      - attribute: security_group
+        operator: MEMBER_OF
+        values: ["MCMAP-Executive-Access"]
+    denial_message: |
+      This content is reserved for Executive Leadership.
+      To request access say request access and I will submit your request.
+
+  - name: "Investment Proposal"
+    description: "Financial investment case - highly sensitive"
+    type: DOCUMENT
+    patterns:
+      - "09A-MCMAP_Investment_Proposal.md"
+    applies_when_abac_off: true
+    priority: 100
+    condition_logic: ANY
+    conditions:
+      - attribute: employee_level
+        operator: IN
+        values: ["CEO", "President", "EVP", "SVP"]
+      - attribute: department
+        operator: IN
+        values: ["Finance", "Strategy"]
+      - attribute: security_group
+        operator: MEMBER_OF
+        values: ["MCMAP-Executive-Access"]
+    denial_message: |
+      This financial document is restricted.
+      To request access say request access.
+
+  # ----------------------------------------------------------
+  # LEADERSHIP CONTENT - Only enforced when full ABAC is ON
+  # ----------------------------------------------------------
+
+  - name: "Technical Architecture Documentation"
+    description: "System architecture and technical specs"
+    type: CONTENT_SET
+    patterns:
+      - "01-MCMAP_Executive_Summary.md"
+      - "02-MCMAP_System_Architecture.md"
+      - "03-MCMAP_Security_Compliance.md"
+      - "04-MCMAP_Agent_Capabilities.md"
+      - "05-MCMAP_Data_Architecture.md"
+      - "06-MCMAP_AIBuilder_Integration.md"
+    applies_when_abac_off: false
+    priority: 80
+    condition_logic: ANY
+    conditions:
+      - attribute: employee_level
+        operator: IN
+        values: ["CEO", "President", "EVP", "SVP", "VP", "Director"]
+      - attribute: department
+        operator: IN
+        values: ["Engineering", "Technology", "Product", "Analytics"]
+      - attribute: security_group
+        operator: MEMBER_OF
+        values: ["MCMAP-Leadership-Access", "MCMAP-Executive-Access"]
+
+  # ----------------------------------------------------------
+  # DEPARTMENT-SPECIFIC CONTENT
+  # ----------------------------------------------------------
+
+  - name: "Marketing Services Content"
+    description: "Content specific to Marketing Services department"
+    type: CONTENT_SET
+    patterns:
+      - "KB-Marketing-*.md"
+    applies_when_abac_off: false
+    priority: 70
+    condition_logic: ALL
+    conditions:
+      - attribute: department
+        operator: EQUALS
+        values: ["Marketing Services"]
+      - attribute: employee_level
+        operator: IN
+        values: ["CEO", "President", "EVP", "SVP", "VP", "Director", "Manager"]
+
+  - name: "Consulting-Only Content"
+    description: "Consulting methodologies and frameworks"
+    type: CONTENT_SET
+    patterns:
+      - "KB-Consulting-*.md"
+      - "KB-Framework-*.md"
+    applies_when_abac_off: false
+    priority: 70
+    condition_logic: ANY
+    conditions:
+      - attribute: department
+        operator: EQUALS
+        values: ["Advisors & Consulting"]
+      - attribute: team
+        operator: CONTAINS
+        values: ["Consulting"]
+
+  # ----------------------------------------------------------
+  # REGIONAL CONTENT
+  # ----------------------------------------------------------
+
+  - name: "North America Regional Data"
+    description: "NA-specific benchmarks and data"
+    type: DATA_AREA
+    patterns:
+      - "mpa_benchmark.region_na_*"
+    applies_when_abac_off: false
+    priority: 60
+    condition_logic: ALL
+    conditions:
+      - attribute: region
+        operator: EQUALS
+        values: ["North America"]
+
+  - name: "Europe Regional Data"
+    description: "EMEA-specific benchmarks and data"
+    type: DATA_AREA
+    patterns:
+      - "mpa_benchmark.region_eu_*"
+    applies_when_abac_off: false
+    priority: 60
+    condition_logic: ALL
+    conditions:
+      - attribute: region
+        operator: EQUALS
+        values: ["Europe"]
+
+  # ----------------------------------------------------------
+  # DIVISION-SPECIFIC RULES
+  # ----------------------------------------------------------
+
+  - name: "Data and Services Division Full Access"
+    description: "Full platform access for D&S division leadership"
+    type: AGENT
+    patterns:
+      - "*"
+    applies_when_abac_off: false
+    priority: 50
+    condition_logic: ALL
+    conditions:
+      - attribute: division
+        operator: EQUALS
+        values: ["Data & Services"]
+      - attribute: employee_level
+        operator: IN
+        values: ["EVP", "SVP", "VP"]
+
+  # ----------------------------------------------------------
+  # FINANCIAL DATA - Highly Restricted
+  # ----------------------------------------------------------
+
+  - name: "Financial Benchmark Data"
+    description: "Revenue and margin benchmarks - Finance only"
+    type: DATA_AREA
+    patterns:
+      - "mpa_benchmark.revenue_*"
+      - "mpa_benchmark.margin_*"
+      - "mpa_benchmark.financial_*"
+    applies_when_abac_off: false
+    priority: 90
+    condition_logic: ANY
+    conditions:
+      - attribute: department
+        operator: EQUALS
+        values: ["Finance"]
+      - attribute: employee_level
+        operator: IN
+        values: ["CEO", "President", "EVP"]
+
+  # ----------------------------------------------------------
+  # PUBLIC CONTENT - Always accessible
+  # ----------------------------------------------------------
+
+  - name: "Public Documentation"
+    description: "Glossary and index - open to all"
+    type: CONTENT_SET
+    patterns:
+      - "00-MCMAP_Glossary.md"
+      - "00-MCMAP_Index.md"
+    applies_when_abac_off: false
+    priority: 1
+    condition_logic: ANY
+    conditions:
+      - attribute: user_id
+        operator: NOT_EQUALS
+        values: [""]
+
+# ============================================================
+# DEFAULT DENIAL MESSAGE
+# ============================================================
+
+default_denial_message: |
+  This content requires specific access permissions based on your role.
+  To request access say request access and I will help submit your request.
+  The Platform team typically responds within 2 business days.

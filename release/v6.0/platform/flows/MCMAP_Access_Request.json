@@ -1,0 +1,204 @@
+{
+  "flow_name": "MCMAP_Access_Request",
+  "display_name": "MCMAP Access Request",
+  "description": "Handles user requests for access to protected content",
+  "version": "1.0",
+  "trigger": {
+    "type": "HTTP_REQUEST",
+    "description": "Called from Copilot Studio when user says request access",
+    "input_schema": {
+      "user_id": {
+        "type": "string",
+        "description": "Azure AD user ID from System.User.Id",
+        "required": true
+      },
+      "requested_content": {
+        "type": "string",
+        "description": "Content or capability user is requesting access to",
+        "required": true
+      },
+      "justification": {
+        "type": "string",
+        "description": "User provided reason for needing access",
+        "required": false
+      },
+      "rule_triggered": {
+        "type": "string",
+        "description": "Name of access rule that denied access",
+        "required": false
+      }
+    }
+  },
+  "actions": [
+    {
+      "step": 1,
+      "action": "Check_Access_Request_Enabled",
+      "type": "Dataverse_Get_Row",
+      "description": "Check if access request flow is enabled",
+      "parameters": {
+        "table": "eap_security_config",
+        "filter": "config_key eq 'ACCESS_REQUEST_ENABLED'"
+      }
+    },
+    {
+      "step": 2,
+      "action": "Validate_Request_Enabled",
+      "type": "Condition",
+      "description": "Return error if access requests are disabled",
+      "condition": "outputs('Check_Access_Request_Enabled')?['body']?['config_value'] eq 'true'",
+      "if_false": {
+        "action": "Return_Disabled_Message",
+        "type": "Response",
+        "parameters": {
+          "status_code": 200,
+          "body": {
+            "success": false,
+            "message": "Access requests are not currently available. Please contact your manager for assistance."
+          }
+        }
+      }
+    },
+    {
+      "step": 3,
+      "action": "Get_User_Profile",
+      "type": "Dataverse_Get_Row",
+      "description": "Get full user profile for request record",
+      "parameters": {
+        "table": "eap_user_profile",
+        "filter": "user_id eq '@{triggerBody()?['user_id']}'"
+      }
+    },
+    {
+      "step": 4,
+      "action": "Check_Duplicate_Request",
+      "type": "Dataverse_List_Rows",
+      "description": "Check for existing pending request for same content",
+      "parameters": {
+        "table": "eap_access_request",
+        "filter": "user_id eq '@{triggerBody()?['user_id']}' and requested_content eq '@{triggerBody()?['requested_content']}' and request_status eq 1",
+        "top": 1
+      }
+    },
+    {
+      "step": 5,
+      "action": "Handle_Duplicate",
+      "type": "Condition",
+      "description": "If duplicate exists, return existing request info",
+      "condition": "length(outputs('Check_Duplicate_Request')?['body']?['value']) gt 0",
+      "if_true": {
+        "action": "Return_Existing_Request",
+        "type": "Response",
+        "parameters": {
+          "status_code": 200,
+          "body": {
+            "success": true,
+            "message": "You already have a pending request for this content.",
+            "request_id": "@{first(outputs('Check_Duplicate_Request')?['body']?['value'])?['eap_access_requestid']}",
+            "requested_at": "@{first(outputs('Check_Duplicate_Request')?['body']?['value'])?['requested_at']}"
+          }
+        }
+      }
+    },
+    {
+      "step": 6,
+      "action": "Generate_Request_ID",
+      "type": "Compose",
+      "description": "Generate short request ID for user reference",
+      "expression": "concat('REQ-', substring(guid(), 0, 8))"
+    },
+    {
+      "step": 7,
+      "action": "Create_Access_Request",
+      "type": "Dataverse_Create_Row",
+      "description": "Create access request record",
+      "parameters": {
+        "table": "eap_access_request",
+        "record": {
+          "user_id": "@{triggerBody()?['user_id']}",
+          "user_display_name": "@{outputs('Get_User_Profile')?['body']?['display_name']}",
+          "user_email": "@{outputs('Get_User_Profile')?['body']?['email']}",
+          "user_job_title": "@{outputs('Get_User_Profile')?['body']?['job_title']}",
+          "user_employee_level": "@{outputs('Get_User_Profile')?['body']?['employee_level']}",
+          "user_department": "@{outputs('Get_User_Profile')?['body']?['department']}",
+          "user_division": "@{outputs('Get_User_Profile')?['body']?['division']}",
+          "user_region": "@{outputs('Get_User_Profile')?['body']?['region']}",
+          "requested_content": "@{triggerBody()?['requested_content']}",
+          "justification": "@{triggerBody()?['justification']}",
+          "request_status": 1,
+          "requested_at": "@{utcNow()}",
+          "rule_triggered": "@{triggerBody()?['rule_triggered']}"
+        }
+      }
+    },
+    {
+      "step": 8,
+      "action": "Send_Email_Notification",
+      "type": "Office365_Send_Email",
+      "description": "Send email to Platform Owner - email address hardcoded, never exposed to user",
+      "parameters": {
+        "to": "kevin.bauer@mastercard.com",
+        "subject": "MCMAP Access Request: @{triggerBody()?['requested_content']}",
+        "body": {
+          "contentType": "HTML",
+          "content": "<h2>New MCMAP Access Request</h2><p><strong>Request ID:</strong> @{outputs('Generate_Request_ID')}</p><h3>Requester Information</h3><table border='1' cellpadding='8'><tr><td><strong>Name</strong></td><td>@{outputs('Get_User_Profile')?['body']?['display_name']}</td></tr><tr><td><strong>Email</strong></td><td>@{outputs('Get_User_Profile')?['body']?['email']}</td></tr><tr><td><strong>Job Title</strong></td><td>@{outputs('Get_User_Profile')?['body']?['job_title']}</td></tr><tr><td><strong>Level</strong></td><td>@{outputs('Get_User_Profile')?['body']?['employee_level']}</td></tr><tr><td><strong>Department</strong></td><td>@{outputs('Get_User_Profile')?['body']?['department']}</td></tr><tr><td><strong>Division</strong></td><td>@{outputs('Get_User_Profile')?['body']?['division']}</td></tr><tr><td><strong>Region</strong></td><td>@{outputs('Get_User_Profile')?['body']?['region']}</td></tr></table><h3>Request Details</h3><p><strong>Requested Content:</strong> @{triggerBody()?['requested_content']}</p><p><strong>Rule Triggered:</strong> @{triggerBody()?['rule_triggered']}</p><p><strong>Justification:</strong></p><p>@{coalesce(triggerBody()?['justification'], 'No justification provided')}</p><p><strong>Requested At:</strong> @{utcNow()}</p><hr><p>To approve or deny this request, update the record in Dataverse table eap_access_request.</p>"
+        }
+      }
+    },
+    {
+      "step": 9,
+      "action": "Log_Request_Event",
+      "type": "Dataverse_Create_Row",
+      "description": "Log access request to telemetry",
+      "parameters": {
+        "table": "eap_telemetry",
+        "record": {
+          "event_type": "ACCESS_REQUEST",
+          "user_id": "@{triggerBody()?['user_id']}",
+          "user_display_name": "@{outputs('Get_User_Profile')?['body']?['display_name']}",
+          "user_employee_level": "@{outputs('Get_User_Profile')?['body']?['employee_level']}",
+          "user_department": "@{outputs('Get_User_Profile')?['body']?['department']}",
+          "content_requested": "@{triggerBody()?['requested_content']}",
+          "timestamp": "@{utcNow()}"
+        }
+      }
+    },
+    {
+      "step": 10,
+      "action": "Return_Success",
+      "type": "Response",
+      "description": "Return success message to user - no email address exposed",
+      "parameters": {
+        "status_code": 200,
+        "body": {
+          "success": true,
+          "message": "Your access request has been submitted. The Platform team typically responds within 2 business days.",
+          "request_id": "@{outputs('Generate_Request_ID')}"
+        }
+      }
+    }
+  ],
+  "error_handling": {
+    "on_email_failure": {
+      "action": "Continue_Without_Email",
+      "description": "Request is still created, admin can check Dataverse directly"
+    },
+    "on_dataverse_failure": {
+      "action": "Return_Error",
+      "type": "Response",
+      "parameters": {
+        "status_code": 200,
+        "body": {
+          "success": false,
+          "message": "Unable to submit your request at this time. Please try again later."
+        }
+      }
+    }
+  },
+  "permissions_required": [
+    "Dataverse: Read eap_security_config",
+    "Dataverse: Read eap_user_profile",
+    "Dataverse: Create eap_access_request",
+    "Dataverse: Create eap_telemetry",
+    "Office 365: Send Mail"
+  ]
+}

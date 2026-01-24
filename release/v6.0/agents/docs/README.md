@@ -2,106 +2,94 @@
 
 ## Overview
 
-The DOCS agent is a lightweight chatbot that helps Mastercard employees discover and search the MCMAP architecture documentation. It provides:
+The DOCS agent is a lightweight chatbot that helps Mastercard employees discover and navigate the MCMAP platform architecture documentation. It provides persona-based responses tailored to C-Suite executives, Senior Leadership, and Operations staff.
 
-- Text-based numbered menu navigation (1-9 categories)
-- Terminology and acronym definitions
-- Architecture documentation search
-- Quick reference for agent codes and platform concepts
+## Features
 
-## Agent Identity
+- **Persona-Based Responses**: Select A (C-Suite), B (Leadership), or C (Operations) for tailored depth
+- **Numbered Navigation**: Topics 1-11 for quick access to major areas
+- **Terminology Lookup**: Ask "what does X mean" for glossary definitions
+- **Document Citations**: Responses reference specific documents and sections
+- **ORC Integration**: Seamlessly routes from/to planning workflows
 
-| Attribute | Value |
-|-----------|-------|
-| Code | DOCS |
-| Domain | Support |
-| Function | Documentation search, terminology, architecture guidance |
-| Integration | Routable from ORC; hands back for planning tasks |
+## Persona Descriptions
 
-## Files
+| Persona | Code | Focus |
+|---------|------|-------|
+| C-Suite | A | Strategic value, ROI, competitive positioning, revenue opportunity |
+| Senior Leadership | B | Capabilities, architecture, integration, roadmap |
+| Operations | C | Workflows, how-to, troubleshooting, support contacts |
 
-```
-release/v6.0/agents/docs/
-├── instructions/
-│   └── DOCS_Instructions_v1.md    # Copilot Studio instructions (3.9KB)
-├── kb/
-│   └── (uses mcmap-reference-packet docs)
-├── integration/
-│   └── ORC_Routing_Update.md      # ORC integration patterns
-└── README.md                       # This file
-```
+## Knowledge Base
 
-## Deployment
+| File | Description |
+|------|-------------|
+| 00-MCMAP_Glossary.md | 100+ terms and acronyms |
+| 00-MCMAP_Index.md | Document navigation guide |
+| 01-MCMAP_Executive_Summary.md | Strategic value, platform overview |
+| 02-MCMAP_System_Architecture.md | Technical architecture |
+| 03-MCMAP_Security_Compliance.md | DLP, security controls |
+| 04-MCMAP_Agent_Capabilities.md | 10 agents, 36 capabilities |
+| 05-MCMAP_Data_Architecture.md | Dataverse schema |
+| 06-MCMAP_AIBuilder_Integration.md | AI Builder prompts |
+| 07-MCMAP_Operational_Runbook.md | Support procedures |
+| 08-MCMAP_Quality_Assurance.md | Testing framework |
+| 09-MCMAP_Future_Use_Cases.md | Strategic opportunities ($6.7-12B TAM) |
+| 10-MCMAP_Contact_Reference.md | Support contacts |
 
-### Standalone Deployment
+## Deployment Steps
 
-1. Create new agent in Copilot Studio
-2. Copy instructions from `DOCS_Instructions_v1.md`
-3. Add knowledge base: all documents from `mcmap-reference-packet/`
-4. Configure greeting message
-5. Publish to desired channel
+1. **Upload Instructions**
+   - File: instructions/DOCS_Instructions_v5.txt
+   - Target: Copilot Studio agent instructions
+   - Verify: Character count < 8,000
 
-### ORC Integration
+2. **Configure KB Sources**
+   - Upload all files from kb/ folder to SharePoint
+   - Link SharePoint folder as Copilot knowledge source
+   - Enable generative answers
 
-When integrated with ORC orchestrator:
+3. **Add ORC Routing**
+   - Add DOCS triggers to ORC agent
+   - Triggers: "documentation", "architecture", "glossary", "define", "what does X mean"
+   - Configure handoff protocol
 
-1. Add DOCS to ORC routing table
-2. Configure terminology/architecture question detection
-3. Enable handoff pattern:
-   - User in MPA asks "What does X mean?"
-   - ORC routes to DOCS
-   - DOCS provides answer
-   - User says "back to planning"
-   - Returns to MPA context
+4. **Test Scenarios**
+   - Test persona selection (A/B/C)
+   - Test numbered navigation (1-11)
+   - Test terminology lookups
+   - Test ORC handoff and return
 
-## Knowledge Base Documents
+## Usage Examples
 
-The DOCS agent uses the MCMAP reference packet:
+**Starting a session:**
 
-| Document | Content |
-|----------|---------|
-| 01-MCMAP_Executive_Summary | Value proposition, overview |
-| 02-MCMAP_System_Architecture | Technical architecture |
-| 03-MCMAP_Security_Compliance | DLP, security, data provenance |
-| 04-MCMAP_Agent_Capabilities | All agents and capabilities |
-| 05-MCMAP_Data_Architecture | Dataverse schema |
-| 06-MCMAP_AIBuilder_Integration | AI Builder configuration |
-| 07-MCMAP_Operational_Runbook | Support procedures |
-| 08-MCMAP_Quality_Assurance | Testing framework |
-| 10-MCMAP_Contact_Reference | Key contacts |
+User: Hi
+DOCS: Welcome to MCMAP Documentation! Select your role: A (C-Suite), B (Leadership), C (Operations)...
 
-## Menu Categories
+**Persona selection:**
 
-| # | Category | Content |
-|---|----------|---------|
-| 1 | PLATFORM OVERVIEW | Metrics, value proposition |
-| 2 | AGENTS | 10 specialists, capabilities |
-| 3 | ARCHITECTURE | Tech stack, data flows |
-| 4 | DATA MODEL | Dataverse tables |
-| 5 | SECURITY | DLP, compliance, data provenance |
-| 6 | AI INTEGRATION | Prompts, KB structure |
-| 7 | OPERATIONS | Support tiers |
-| 8 | TESTING | QA framework |
-| 9 | GLOSSARY | Terms, acronyms |
+User: A
+DOCS: [Provides C-Suite focused overview with revenue metrics and strategic positioning]
 
-## Glossary Coverage
+**Topic navigation:**
 
-The agent includes built-in quick reference for:
+User: 10
+DOCS: [Provides Future Use Cases summary appropriate to selected persona]
 
-- **Agent Codes**: ORC, ANL, AUD, CHA, SPO, DOC, PRF, CST, CHG, CA
-- **Platform Acronyms**: MCMAP, MPA, EAP, CAL, DLP, KB
-- **Technology Terms**: AI Builder, Dataverse, Copilot Studio, SharePoint
-- **Metrics Terms**: LTV, CAC, ROAS, MMM, NBI, SPO
+**Terminology lookup:**
+
+User: What does CAL mean?
+DOCS: CAL = Capability Abstraction Layer. It is the architecture pattern that separates capability definitions from implementations, enabling platform portability...
+
+## Contact
+
+Kevin Bauer (kevin.bauer@mastercard.com) - All inquiries
 
 ## Version History
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 1.0 | Jan 24, 2026 | Initial release |
-
-## Compliance
-
-- Instructions file: 3.9KB (under 8K Copilot limit)
-- Plain text formatting (ALL-CAPS headers, hyphens only)
-- No external dependencies
-- DLP compliant (no HTTP connectors)
+| v5 | Jan 24, 2026 | Added persona-based responses, Future Use Cases |
+| v4 | Jan 24, 2026 | Added glossary, ORC integration |
+| v1-v3 | Jan 2026 | Initial development |

@@ -168,6 +168,19 @@ Based on Phase 1 results, approve/modify Phase 2 investment for client-facing ca
 
 ---
 
+## ROLE-SPECIFIC BRIEFS AVAILABLE
+
+For detailed perspectives tailored to specific leadership roles:
+
+| Document | Audience | Focus |
+|----------|----------|-------|
+| 00-A-MCMAP_Chief_Consulting_Officer.md | Head of Consulting Services | Consultant productivity, methodology, margins |
+| 00-B-MCMAP_Chief_Technology_Officer.md | Head of Engineering | Architecture, security, scalability |
+| 00-C-MCMAP_Chief_AI_Officer.md | Head of AI/ML | AI governance, accuracy, responsible AI |
+| 00-D-MCMAP_Chief_Revenue_Officer.md | Head of Sales | Revenue enablement, competitive positioning |
+
+---
+
 ## SUPPORTING DOCUMENTATION
 
 For detailed specifications, see:

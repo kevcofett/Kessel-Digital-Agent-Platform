@@ -54,10 +54,12 @@ When user asks about MCMAP value, benefits, or "what does this mean for me/my te
 
 ### Add Welcome Message Enhancement
 
-Update welcome message to include:
+Update welcome message to include personalized SSO greeting:
 
 ```
-Welcome to MCMAP. I can help you understand how this platform creates value for your specific role.
+Welcome {{System.User.DisplayName}}! I'm your MCMAP Assistant.
+
+I can help you understand how this platform creates value for your specific role.
 
 **For Executives:** I have dedicated briefs for CEO, Consulting, Engineering, AI, and Sales leadership.
 
@@ -65,6 +67,8 @@ Welcome to MCMAP. I can help you understand how this platform creates value for 
 
 How can I help you today?
 ```
+
+**Note:** `{{System.User.DisplayName}}` is automatically populated from Mastercard SSO/Azure AD when users access via Teams. Use fallback syntax `{{System.User.DisplayName || 'there'}}` if needed.
 
 ---
 

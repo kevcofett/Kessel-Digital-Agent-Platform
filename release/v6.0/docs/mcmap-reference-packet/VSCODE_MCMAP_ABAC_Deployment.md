@@ -10,16 +10,574 @@
 
 ## EXECUTIVE SUMMARY
 
-This document provides step-by-step instructions to deploy the MCMAP Attribute-Based Access Control (ABAC) system:
+This document provides step-by-step instructions to deploy the MCMAP Attribute-Based Access Control (ABAC) system. **VS Code with Power Platform Tools extension enables programmatic import of all components.**
 
-1. **Dataverse Table Deployment** - Create 4 new security tables programmatically
-2. **Power Automate Flow Deployment** - Deploy 3 security flows
-3. **Agent Instructions Update** - Update DOCS and ORC agents with access control
-4. **Configuration Deployment** - Load YAML access rules into Dataverse
-5. **Copilot Studio Topic Creation** - Create manual access check and request topics
-6. **Testing & Validation** - Verify two-mode operation works correctly
+### Deployment Capabilities
 
-**Estimated execution time:** 4-6 hours
+| Component | Programmatic Import | Method |
+|-----------|---------------------|--------|
+| Dataverse Tables | YES | `pac solution import` or `pac data import` |
+| Power Automate Flows | YES | `pac solution import` or `pac flow import` |
+| Copilot Studio Topics | YES | `pac pva import-topic` or solution import |
+| Agent Instructions | MANUAL | Copy to Copilot Studio Settings |
+| KB Documents | MANUAL | Upload to SharePoint |
+
+### Deployment Phases
+
+1. **VS Code Power Platform Setup** - Install extensions, authenticate via pac CLI
+2. **Dataverse Table Import** - Import 4 security tables via solution package
+3. **Power Automate Flow Import** - Import 3 security flows via solution package
+4. **Copilot Studio Topic Import** - Import 3 topics via pac pva or solution
+5. **Agent Instructions Update** - Update DOCS and ORC agents (manual)
+6. **Configuration Deployment** - Load YAML access rules into Dataverse
+7. **Testing & Validation** - Verify two-mode operation works correctly
+
+**Estimated execution time:**
+- Programmatic deployment: 1-2 hours
+- Manual deployment: 4-6 hours
+
+---
+
+## VS CODE POWER PLATFORM INTEGRATION
+
+VS Code with the Power Platform Tools extension provides programmatic import capabilities for all ABAC components. This is the **recommended approach** for enterprise deployments.
+
+### Required VS Code Extensions
+
+Install these extensions from the VS Code marketplace:
+
+| Extension | ID | Purpose |
+|-----------|-----|---------|
+| Power Platform Tools | microsoft-IsvExpTools.powerplatform-vscode | Full Power Platform CLI integration |
+| Power Platform Connectors | microsoft-IsvExpTools.powerplatform-connector-vscode | Connector development |
+| Dataverse DevTools | danish-naglekar.dataverse-devtools | Dataverse schema management |
+
+**Installation via command line:**
+```bash
+code --install-extension microsoft-IsvExpTools.powerplatform-vscode
+code --install-extension microsoft-IsvExpTools.powerplatform-connector-vscode
+code --install-extension danish-naglekar.dataverse-devtools
+```
+
+### Power Platform CLI (pac) Setup
+
+The Power Platform CLI is bundled with the VS Code extension. To verify installation:
+
+```bash
+# Check pac version
+pac --version
+
+# Authenticate to Mastercard environment
+pac auth create --environment "https://aragornai.crm.dynamics.com"
+
+# List available environments
+pac auth list
+
+# Select target environment
+pac auth select --index 1
+```
+
+---
+
+## PROGRAMMATIC IMPORT: DATAVERSE TABLES
+
+### Method 1: Import via Solution Package
+
+Export existing tables as a solution and import programmatically:
+
+```bash
+# Create solution directory structure
+mkdir -p release/v6.0/platform/solutions/MCMAP_Security
+
+# Export schema definitions to solution
+pac solution export \
+  --name MCMAP_Security_Tables \
+  --path release/v6.0/platform/solutions/MCMAP_Security \
+  --managed false
+
+# Import solution to target environment
+pac solution import \
+  --path release/v6.0/platform/solutions/MCMAP_Security/MCMAP_Security_Tables.zip \
+  --async true \
+  --publish-changes true
+```
+
+### Method 2: Generate Table Schema Files
+
+Create Dataverse table schemas programmatically:
+
+```bash
+# Initialize solution in VS Code
+pac solution init \
+  --publisher-name MastercardAI \
+  --publisher-prefix eap
+
+# Add table component
+pac solution add-reference \
+  --path release/v6.0/platform/dataverse/eap_security_config_schema.json
+
+# Clone existing table structure (if table exists in another env)
+pac solution clone \
+  --name MCMAP_Security \
+  --include-entity eap_security_config \
+  --include-entity eap_user_profile \
+  --include-entity eap_access_rule \
+  --include-entity eap_access_request
+```
+
+### Method 3: Direct Table Creation via pac data
+
+```bash
+# Import table data from CSV seed files
+pac data import \
+  --data release/v6.0/platform/dataverse/eap_security_config.csv \
+  --entity eap_security_config \
+  --map-file release/v6.0/platform/dataverse/eap_security_config_map.xml
+
+# Verify import
+pac data export \
+  --entity eap_security_config \
+  --path release/v6.0/platform/dataverse/exports/
+```
+
+### VS Code Task: Deploy All Dataverse Tables
+
+Create `.vscode/tasks.json` for automated deployment:
+
+```json
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Deploy ABAC Dataverse Tables",
+      "type": "shell",
+      "command": "pac",
+      "args": [
+        "solution", "import",
+        "--path", "${workspaceFolder}/release/v6.0/platform/solutions/MCMAP_Security.zip",
+        "--async", "true",
+        "--publish-changes", "true"
+      ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Export ABAC Tables for Backup",
+      "type": "shell",
+      "command": "pac",
+      "args": [
+        "solution", "export",
+        "--name", "MCMAP_Security",
+        "--path", "${workspaceFolder}/release/v6.0/platform/solutions/backups/",
+        "--managed", "false",
+        "--include", "eap_*"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}
+```
+
+---
+
+## PROGRAMMATIC IMPORT: POWER AUTOMATE FLOWS
+
+### Method 1: Import Flows via Solution
+
+Power Automate flows can be packaged in solutions and imported via pac:
+
+```bash
+# Export flows from source environment
+pac solution export \
+  --name MCMAP_Flows \
+  --path release/v6.0/platform/solutions/MCMAP_Flows \
+  --managed false
+
+# Import flows to target environment
+pac solution import \
+  --path release/v6.0/platform/solutions/MCMAP_Flows/MCMAP_Flows.zip \
+  --activate-plugins true \
+  --async true
+```
+
+### Method 2: Import Individual Flow Packages
+
+Flows exported as .zip packages can be imported directly:
+
+```bash
+# Import flow package (requires flow exported from Power Automate)
+pac flow import \
+  --path release/v6.0/platform/flows/MCMAP_User_Profile_Sync.zip \
+  --environment "https://aragornai.crm.dynamics.com"
+
+pac flow import \
+  --path release/v6.0/platform/flows/MCMAP_Check_Content_Access.zip \
+  --environment "https://aragornai.crm.dynamics.com"
+
+pac flow import \
+  --path release/v6.0/platform/flows/MCMAP_Access_Request.zip \
+  --environment "https://aragornai.crm.dynamics.com"
+```
+
+### Method 3: Create Flows from JSON Definition
+
+Convert flow JSON specifications to solution components:
+
+```bash
+# Pack flow definition into solution
+pac solution pack \
+  --zipfile release/v6.0/platform/solutions/MCMAP_Flows.zip \
+  --folder release/v6.0/platform/flows/ \
+  --packagetype Both
+
+# Import the packed solution
+pac solution import \
+  --path release/v6.0/platform/solutions/MCMAP_Flows.zip
+```
+
+### VS Code Task: Deploy All Flows
+
+Add to `.vscode/tasks.json`:
+
+```json
+{
+  "label": "Deploy ABAC Power Automate Flows",
+  "type": "shell",
+  "command": "bash",
+  "args": [
+    "-c",
+    "pac solution import --path ${workspaceFolder}/release/v6.0/platform/solutions/MCMAP_Flows.zip --activate-plugins true && echo 'Flows deployed successfully'"
+  ],
+  "problemMatcher": [],
+  "dependsOn": ["Deploy ABAC Dataverse Tables"]
+}
+```
+
+### Flow Connection Reference Setup
+
+After import, update flow connections:
+
+```bash
+# List available connections
+pac connection list
+
+# Update flow connection references
+pac solution update-connection-references \
+  --solution-name MCMAP_Flows \
+  --connection-mapping release/v6.0/platform/flows/connection_map.json
+```
+
+**connection_map.json format:**
+```json
+{
+  "shared_commondataserviceforapps": "conn-guid-for-dataverse",
+  "shared_office365": "conn-guid-for-office365",
+  "shared_microsoftgraph": "conn-guid-for-graph"
+}
+```
+
+---
+
+## PROGRAMMATIC IMPORT: COPILOT STUDIO TOPICS
+
+### Method 1: Import via Copilot Studio Solution
+
+Copilot Studio agents and topics can be exported/imported as solutions:
+
+```bash
+# Export Copilot agent with topics
+pac solution export \
+  --name MCMAP_Copilot_Agent \
+  --path release/v6.0/platform/solutions/MCMAP_Copilot \
+  --managed false \
+  --include copilot
+
+# Import Copilot agent to target environment
+pac solution import \
+  --path release/v6.0/platform/solutions/MCMAP_Copilot/MCMAP_Copilot_Agent.zip \
+  --async true
+```
+
+### Method 2: Power Virtual Agents CLI (pva)
+
+For granular topic management:
+
+```bash
+# List existing topics in agent
+pac pva list-topics \
+  --environment "https://aragornai.crm.dynamics.com" \
+  --bot-id "your-bot-guid"
+
+# Export specific topic
+pac pva export-topic \
+  --environment "https://aragornai.crm.dynamics.com" \
+  --bot-id "your-bot-guid" \
+  --topic-id "topic-guid" \
+  --output release/v6.0/platform/topics/
+
+# Import topic to agent
+pac pva import-topic \
+  --environment "https://aragornai.crm.dynamics.com" \
+  --bot-id "your-bot-guid" \
+  --path release/v6.0/platform/topics/MCMAP_Access_Check.yaml
+```
+
+### Method 3: Bot Component Framework
+
+Create topics programmatically using YAML definitions:
+
+**release/v6.0/platform/topics/MCMAP_Session_Start.yaml:**
+```yaml
+kind: Topic
+name: MCMAP_Session_Start
+schemaVersion: "1.0"
+trigger:
+  kind: ConversationStart
+actions:
+  - kind: InvokeCloudFlow
+    id: CallProfileSync
+    input:
+      flowId: "flow-guid-for-profile-sync"
+      parameters:
+        user_id: =System.User.Id
+    output:
+      variable: UserProfile
+  - kind: SetVariable
+    id: StoreProfile
+    variable: Global.UserProfile
+    value: =Topic.UserProfile
+  - kind: GotoTopic
+    id: RedirectToGreeting
+    topicName: Greeting
+```
+
+**release/v6.0/platform/topics/MCMAP_Access_Check.yaml:**
+```yaml
+kind: Topic
+name: MCMAP_Access_Check
+schemaVersion: "1.0"
+trigger:
+  kind: Redirect
+inputVariables:
+  - name: content_identifier
+    type: String
+actions:
+  - kind: InvokeCloudFlow
+    id: CheckAccess
+    input:
+      flowId: "flow-guid-for-access-check"
+      parameters:
+        user_id: =System.User.Id
+        content_identifier: =Topic.content_identifier
+    output:
+      variable: AccessResult
+  - kind: Condition
+    id: CheckGranted
+    condition: =Topic.AccessResult.granted
+    actions:
+      - kind: SetVariable
+        variable: Global.AccessGranted
+        value: true
+      - kind: EndTopic
+    elseActions:
+      - kind: SendMessage
+        message: =Topic.AccessResult.denial_message
+      - kind: SendMessage
+        message: "To request access, say 'request access' and I'll help submit your request."
+      - kind: SetVariable
+        variable: Global.AccessGranted
+        value: false
+      - kind: EndTopic
+```
+
+**release/v6.0/platform/topics/MCMAP_Request_Access.yaml:**
+```yaml
+kind: Topic
+name: MCMAP_Request_Access
+schemaVersion: "1.0"
+trigger:
+  kind: Phrases
+  phrases:
+    - "request access"
+    - "I need access"
+    - "how do I get access"
+    - "access request"
+actions:
+  - kind: Question
+    id: AskContent
+    prompt: "What content would you like access to?"
+    variable: RequestedContent
+  - kind: Question
+    id: AskJustification
+    prompt: "Please briefly describe why you need this access (1-2 sentences)."
+    variable: Justification
+  - kind: InvokeCloudFlow
+    id: SubmitRequest
+    input:
+      flowId: "flow-guid-for-access-request"
+      parameters:
+        user_id: =System.User.Id
+        requested_content: =Topic.RequestedContent
+        justification: =Topic.Justification
+    output:
+      variable: RequestResult
+  - kind: SendMessage
+    message: "Your access request has been submitted."
+  - kind: SendMessage
+    message: ="Request ID: " & Topic.RequestResult.request_id
+  - kind: SendMessage
+    message: "The Platform team typically responds within 2 business days. Is there anything else I can help you with?"
+```
+
+### Import Topics via pac
+
+```bash
+# Import all topic YAML files to agent
+for topic in release/v6.0/platform/topics/*.yaml; do
+  pac pva import-topic \
+    --environment "https://aragornai.crm.dynamics.com" \
+    --bot-id "your-bot-guid" \
+    --path "$topic"
+done
+```
+
+### VS Code Task: Deploy All Topics
+
+Add to `.vscode/tasks.json`:
+
+```json
+{
+  "label": "Deploy ABAC Copilot Topics",
+  "type": "shell",
+  "command": "bash",
+  "args": [
+    "-c",
+    "for topic in ${workspaceFolder}/release/v6.0/platform/topics/*.yaml; do pac pva import-topic --environment 'https://aragornai.crm.dynamics.com' --bot-id '${input:botId}' --path \"$topic\"; done"
+  ],
+  "problemMatcher": [],
+  "dependsOn": ["Deploy ABAC Power Automate Flows"]
+}
+```
+
+---
+
+## UNIFIED DEPLOYMENT SCRIPT
+
+Create a single script for complete ABAC deployment:
+
+**release/v6.0/scripts/deploy_abac_all.sh:**
+
+```bash
+#!/bin/bash
+# MCMAP ABAC Complete Deployment Script
+# Deploys all components via Power Platform CLI
+
+set -e  # Exit on error
+
+ENVIRONMENT_URL="https://aragornai.crm.dynamics.com"
+BOT_ID="your-bot-guid"  # Update with actual bot ID
+SOLUTION_PATH="release/v6.0/platform/solutions"
+
+echo "=============================================="
+echo "MCMAP ABAC Deployment - Starting"
+echo "Environment: $ENVIRONMENT_URL"
+echo "=============================================="
+
+# Step 1: Authenticate
+echo "[1/5] Authenticating to Power Platform..."
+pac auth create --environment "$ENVIRONMENT_URL" --kind admin
+
+# Step 2: Deploy Dataverse Tables
+echo "[2/5] Deploying Dataverse Tables..."
+pac solution import \
+  --path "$SOLUTION_PATH/MCMAP_Security_Tables.zip" \
+  --async true \
+  --publish-changes true
+
+# Wait for async import
+sleep 30
+
+# Step 3: Deploy Power Automate Flows
+echo "[3/5] Deploying Power Automate Flows..."
+pac solution import \
+  --path "$SOLUTION_PATH/MCMAP_Flows.zip" \
+  --activate-plugins true \
+  --async true
+
+# Wait for async import
+sleep 30
+
+# Step 4: Deploy Copilot Topics
+echo "[4/5] Deploying Copilot Studio Topics..."
+for topic in release/v6.0/platform/topics/*.yaml; do
+  echo "  Importing: $topic"
+  pac pva import-topic \
+    --environment "$ENVIRONMENT_URL" \
+    --bot-id "$BOT_ID" \
+    --path "$topic"
+done
+
+# Step 5: Verify Deployment
+echo "[5/5] Verifying Deployment..."
+pac solution list | grep MCMAP
+
+echo "=============================================="
+echo "MCMAP ABAC Deployment - Complete"
+echo "=============================================="
+```
+
+**Make executable:**
+```bash
+chmod +x release/v6.0/scripts/deploy_abac_all.sh
+```
+
+---
+
+## VS CODE LAUNCH CONFIGURATION
+
+Add debug/run configurations for deployment:
+
+**.vscode/launch.json:**
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Deploy ABAC to Mastercard",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/release/v6.0/scripts/deploy_abac_all.sh",
+      "console": "integratedTerminal",
+      "env": {
+        "PAC_CLI_ENVIRONMENT": "https://aragornai.crm.dynamics.com"
+      }
+    }
+  ]
+}
+```
+
+---
+
+## ENVIRONMENT VARIABLE CONFIGURATION
+
+Set up environment-specific variables for deployment:
+
+**.env.mastercard:**
+```bash
+PAC_CLI_ENVIRONMENT=https://aragornai.crm.dynamics.com
+MCMAP_TENANT_ID=3933d83c-778f-4bf2-b5d7-1eea5844e9a3
+MCMAP_CLIENT_ID=f1ccccf1-c2a0-4890-8d52-fdfcd6620ac8
+MCMAP_BOT_ID=your-bot-guid
+```
+
+Load before deployment:
+```bash
+source .env.mastercard
+./release/v6.0/scripts/deploy_abac_all.sh
+```
 
 ---
 

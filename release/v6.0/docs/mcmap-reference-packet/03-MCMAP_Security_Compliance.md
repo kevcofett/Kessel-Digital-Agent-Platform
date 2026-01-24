@@ -661,6 +661,123 @@ Compliance Acknowledgment: ____________________  Date: ____________
 
 ---
 
+## 12. ATTRIBUTE-BASED ACCESS CONTROL (ABAC)
+
+### 12.1 ABAC Architecture Overview
+
+MCMAP implements Attribute-Based Access Control integrated with the Mastercard Microsoft Directory for granular content protection:
+
+```
++-----------------------------------------------------------------------------+
+|                    ABAC ENFORCEMENT LAYER                                    |
++-----------------------------------------------------------------------------+
+|                                                                              |
+|  USER SESSION START                                                          |
+|        |                                                                     |
+|        V                                                                     |
+|  +---------------------------+      +----------------------------------+     |
+|  | MCMAP_User_Profile_Sync   |----->| eap_user_profile Table           |     |
+|  | (Microsoft Graph API)     |      | - employee_level                 |     |
+|  +---------------------------+      | - department, team, division     |     |
+|                                     | - region, country                |     |
+|                                     | - security_groups, manager_chain |     |
+|                                     +----------------------------------+     |
+|                                                    |                         |
+|  CONTENT REQUEST                                   V                         |
+|        |                              +----------------------------------+   |
+|        V                              | eap_access_rule Table            |   |
+|  +---------------------------+        | - conditions_json (ABAC rules)   |   |
+|  | MCMAP_Check_Content_Access|------->| - applies_when_abac_off flag     |   |
+|  | (Rule Evaluation)         |        +----------------------------------+   |
+|  +---------------------------+                     |                         |
+|        |                                           |                         |
+|        +--------------------+----------------------+                         |
+|                             |                                                |
+|               +-------------+-------------+                                  |
+|               |                           |                                  |
+|               V                           V                                  |
+|        ACCESS GRANTED              ACCESS DENIED                             |
+|        (Return content)            (Graceful message)                        |
+|                                                                              |
++-----------------------------------------------------------------------------+
+```
+
+### 12.2 Two-Mode Operation
+
+| Mode | ABAC_ENABLED | Protection Level |
+|------|--------------|------------------|
+| **Launch Mode** (default) | false | C-Suite documents only (CEO Brief, 00-A through 00-D, Investment Proposal) |
+| **Full ABAC Mode** | true | All rules active (department, division, region, data areas) |
+
+### 12.3 User Profile Attributes Captured
+
+| Attribute | Source | Purpose |
+|-----------|--------|---------|
+| employee_level | Microsoft Directory / Job Title | Role-based access |
+| department | Microsoft Directory | Department restrictions |
+| team | Extension attribute | Team-level access |
+| division | Microsoft Directory | Division-based rules |
+| region | Usage location | Geographic restrictions |
+| country | Microsoft Directory | Country-specific content |
+| security_groups | Azure AD | Group-based access |
+| manager_chain | Microsoft Graph | Hierarchical access |
+
+### 12.4 ABAC Condition Operators
+
+| Operator | Description | Example |
+|----------|-------------|---------|
+| EQUALS | Exact match | department EQUALS "Finance" |
+| IN | Value in list | employee_level IN ["EVP", "SVP", "VP"] |
+| NOT_IN | Value not in list | division NOT_IN ["Corporate"] |
+| CONTAINS | String contains | job_title CONTAINS "Director" |
+| MEMBER_OF | Security group | security_group MEMBER_OF "MCMAP-Executive-Access" |
+| MANAGER_CHAIN | Manager hierarchy | manager_chain CONTAINS "user-guid" |
+
+### 12.5 Access Denial Handling
+
+When access is denied, the system:
+
+1. **Returns graceful message**: "This content requires specific access permissions."
+2. **Offers access request**: "To request access, say 'request access' and I'll submit your request."
+3. **Never reveals**:
+   - Platform Owner email address
+   - Specific access conditions
+   - Workarounds to access content
+
+### 12.6 Access Request Workflow
+
+| Step | Action | Data Captured |
+|------|--------|---------------|
+| 1 | User says "request access" | Request initiated |
+| 2 | System asks for content desired | requested_content |
+| 3 | System asks for justification | justification |
+| 4 | Request submitted | Full user profile + request details |
+| 5 | Email sent to Platform Owner | All context for decision |
+| 6 | User receives confirmation | Request ID, 2-day SLA |
+
+### 12.7 ABAC Security Controls
+
+| Control | Implementation | Verification |
+|---------|----------------|--------------|
+| Rule Evaluation | Server-side Power Automate | Cannot be bypassed from client |
+| Profile Sync | Microsoft Graph API | Authoritative directory source |
+| Telemetry Logging | All access checks logged | Full audit trail |
+| Email Protection | Hardcoded in flow | Never exposed to user |
+| Condition Privacy | Never disclosed to user | Prevents gaming |
+
+### 12.8 ABAC-Related Dataverse Tables
+
+| Table | Purpose | Records |
+|-------|---------|---------|
+| eap_security_config | Global toggles (ABAC_ENABLED, etc.) | 8 |
+| eap_user_profile | User attributes from directory | Per user |
+| eap_access_rule | Access rule definitions | ~20 |
+| eap_access_request | Access request tracking | Per request |
+
+**Reference:** For complete ABAC implementation details, see `MCMAP_ABAC_Implementation.md`
+
+---
+
 ## APPENDIX A: SECURITY CONFIGURATION REFERENCE
 
 ### A.1 Azure AD Application Registration

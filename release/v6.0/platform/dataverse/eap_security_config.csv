@@ -1,0 +1,9 @@
+config_key,config_value,description,is_active
+ABAC_ENABLED,false,Master toggle for full Attribute-Based Access Control. When false only C-Suite protection applies. Set to true to enable all access rules.,true
+CSUITE_PROTECTION_ENABLED,true,C-Suite content protection is always enforced regardless of ABAC_ENABLED setting. Protects CEO Brief and C-Suite role briefs.,true
+PROFILE_TRACKING_ENABLED,true,Capture user profile from Microsoft Directory on session start. Required for usage reporting by level department division region.,true
+ACCESS_REQUEST_ENABLED,true,Enable access request workflow. Users can say request access to submit request to Platform team.,true
+CACHE_TTL_HOURS,24,User profile cache duration in hours. Profile refreshed from directory after TTL expires.,true
+DIRECTORY_SYNC_ENABLED,true,Sync user attributes from Microsoft Entra ID / Azure AD. Required for ABAC enforcement.,true
+DEFAULT_ACCESS,ALLOW,Default access decision when no rule matches. ALLOW grants access. DENY requires explicit rule.,true
+LOG_ACCESS_CHECKS,true,Log all access check decisions to eap_telemetry for audit and reporting.,true

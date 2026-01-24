@@ -81,8 +81,9 @@
 | Category | Table Count | Purpose |
 |----------|-------------|---------|
 | EAP Platform | 8 | Agent registry, capabilities, telemetry |
+| EAP Security (ABAC) | 4 | User profiles, access rules, security config |
 | MPA Domain | 6 | Channel, KPI, benchmark reference data |
-| **TOTAL** | **14** | |
+| **TOTAL** | **18** | |
 
 ---
 
@@ -347,7 +348,107 @@ DATAVERSE SCHEMA DIAGRAM
 
 ---
 
-### 3.2 MPA Domain Tables
+### 3.2 EAP Security Tables (ABAC)
+
+#### eap_security_config
+
+**Purpose:** Global security settings and toggles
+
+| Column | Type | Required | Description |
+|--------|------|----------|-------------|
+| eap_security_configid | GUID | Yes | Primary key |
+| config_key | Text(100) | Yes | Configuration key |
+| config_value | Text(500) | Yes | Configuration value |
+| description | Text(500) | No | What this setting does |
+| is_active | Boolean | Yes | Active flag (default: true) |
+
+**Key Settings:** ABAC_ENABLED, CSUITE_PROTECTION_ENABLED, PROFILE_TRACKING_ENABLED, DEFAULT_ACCESS
+
+**Seed Data Count:** 8 records
+
+---
+
+#### eap_user_profile
+
+**Purpose:** Full user profile from Microsoft Directory
+
+| Column | Type | Required | Description |
+|--------|------|----------|-------------|
+| eap_user_profileid | GUID | Yes | Primary key |
+| user_id | GUID | Yes | Azure AD user ID (unique) |
+| display_name | Text(200) | Yes | Full name |
+| email | Text(320) | Yes | Email address |
+| job_title | Text(200) | No | Job title |
+| employee_level | Text(50) | No | Level (CEO, EVP, SVP, VP, Director, etc.) |
+| department | Text(200) | No | Department name |
+| team | Text(200) | No | Team name |
+| division | Text(200) | No | Business division |
+| region | Text(100) | No | Geographic region |
+| country | Text(100) | No | Country |
+| office_location | Text(200) | No | Office location |
+| cost_center | Text(50) | No | Cost center code |
+| manager_id | GUID | No | Direct manager's Azure AD ID |
+| manager_display_name | Text(200) | No | Manager's name |
+| manager_chain_json | Multiline | No | JSON array of manager chain |
+| security_groups_json | Multiline | No | JSON array of security group memberships |
+| first_seen | DateTime | No | First platform access |
+| last_updated | DateTime | No | Profile cache timestamp |
+
+**Retention:** Indefinite (updated on session start when stale)
+
+---
+
+#### eap_access_rule
+
+**Purpose:** Attribute-based access control rules
+
+| Column | Type | Required | Description |
+|--------|------|----------|-------------|
+| eap_access_ruleid | GUID | Yes | Primary key |
+| rule_name | Text(200) | Yes | Descriptive name |
+| rule_description | Text(1000) | No | Detailed description |
+| rule_type | Choice | Yes | AGENT, CONTENT_SET, DOCUMENT, CAPABILITY, DATA_AREA |
+| target_pattern | Text(500) | Yes | What this rule protects (supports wildcards) |
+| conditions_json | Multiline | Yes | JSON conditions that must be met |
+| condition_logic | Choice | Yes | ALL (AND) / ANY (OR) |
+| denial_message | Text(1000) | No | Custom denial message |
+| applies_when_abac_off | Boolean | Yes | Does this rule apply in Launch Mode? |
+| priority | Number | Yes | Higher = evaluated first |
+| is_active | Boolean | Yes | Active flag |
+
+**Seed Data Count:** ~20 records
+
+---
+
+#### eap_access_request
+
+**Purpose:** Track access requests
+
+| Column | Type | Required | Description |
+|--------|------|----------|-------------|
+| eap_access_requestid | GUID | Yes | Primary key |
+| user_id | GUID | Yes | Requesting user |
+| user_display_name | Text(200) | No | User's name |
+| user_email | Text(320) | No | User's email |
+| user_department | Text(200) | No | User's department |
+| user_job_title | Text(200) | No | User's title |
+| user_employee_level | Text(50) | No | User's level |
+| user_division | Text(200) | No | User's division |
+| user_region | Text(100) | No | User's region |
+| requested_content | Text(500) | Yes | What they want access to |
+| justification | Multiline | No | Why they need access |
+| request_status | Choice | Yes | PENDING, APPROVED, DENIED |
+| requested_at | DateTime | Yes | When submitted |
+| resolved_at | DateTime | No | When resolved |
+| resolved_by | Text(200) | No | Who resolved it |
+| resolution_notes | Text(1000) | No | Notes from resolver |
+| rule_triggered | Text(200) | No | Name of rule that denied access |
+
+**Retention:** 1 year (for audit purposes)
+
+---
+
+### 3.3 MPA Domain Tables
 
 #### mpa_channel
 

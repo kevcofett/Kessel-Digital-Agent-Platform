@@ -382,6 +382,40 @@ MCMAP inherits Microsoft Power Platform's compliance certifications:
 | Platform outage | LOW | Microsoft SLA provides adequate assurance |
 | Insider threat | LOW | Standard enterprise controls apply |
 
+### 9.4 Strategic & Business Risks
+
+In addition to technical security risks, the following strategic and business risks are identified for executive awareness:
+
+| Risk Category | Risk | Likelihood | Impact | Mitigation |
+|---------------|------|------------|--------|------------|
+| **Adoption** | Users don't adopt platform | Medium | Medium | Phased rollout, champion network, executive sponsorship |
+| **Competitive** | Competitors launch similar capabilities | High | Medium | First-mover advantage, Mastercard data moat, rapid iteration |
+| **Dependency** | Microsoft changes platform/pricing | Low | High | Portable architecture, abstraction layer |
+| **Regulatory** | AI governance requirements increase | Medium | Medium | Audit logging in place, explainability features |
+| **Resource** | Cannot hire/retain platform team | Medium | High | Competitive compensation, clear career path |
+| **Integration** | Mastercard data integration delays | Medium | Medium | Phased approach, alternative value delivery |
+
+### 9.5 AI-Specific Governance Considerations
+
+| Consideration | MCMAP Approach | Status |
+|---------------|----------------|--------|
+| **Explainability** | All responses cite knowledge base sources | Implemented |
+| **Auditability** | Complete telemetry logging | Implemented |
+| **Human Oversight** | Users review and approve all outputs | By design |
+| **Bias Monitoring** | Evaluation framework includes fairness checks | Implemented |
+| **Data Minimization** | No PII processing, session isolation | Implemented |
+| **Model Governance** | Microsoft-managed LLM, no custom training | By design |
+
+### 9.6 Regulatory Landscape
+
+| Regulation | Applicability | MCMAP Compliance |
+|------------|---------------|------------------|
+| **EU AI Act** | Medium (marketing services) | Low-risk classification expected |
+| **GDPR** | High (EU users) | No PII processing, consent not required |
+| **CCPA** | Medium (CA users) | No consumer data processing |
+| **SOX** | Low (not financial reporting) | Audit trail available if needed |
+| **Industry-Specific** | Varies by client vertical | Configurable compliance constraints |
+
 ---
 
 ## 10. SECURITY CONTROLS MATRIX

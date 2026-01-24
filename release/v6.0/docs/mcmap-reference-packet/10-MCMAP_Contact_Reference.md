@@ -7,6 +7,17 @@
 
 ---
 
+## EXECUTIVE CONTACTS
+
+| Role | Responsibility | Name/TBD |
+|------|----------------|----------|
+| **Executive Sponsor** | Strategic direction, resource advocacy | TBD |
+| **Steering Committee Chair** | Quarterly review, major decisions | TBD |
+| **Finance Partner** | Budget, ROI tracking | TBD |
+| **Legal Partner** | Client contracts, IP review | TBD |
+
+---
+
 ## PRIMARY CONTACT
 
 | Name | Role | Email |
@@ -66,8 +77,9 @@
 | Level | Contact | When to Use |
 |-------|---------|-------------|
 | **Level 1** | Kevin Bauer | All initial inquiries |
-| **Level 2** | TBD | Platform unavailable, security incidents |
-| **Level 3** | TBD | Executive escalation |
+| **Level 2** | Executive Sponsor (TBD) | Platform unavailable, security incidents |
+| **Level 3** | Steering Committee Chair (TBD) | Executive escalation, major decisions |
+| **Security** | CISO Office | Security incidents, compliance issues |
 
 ---
 

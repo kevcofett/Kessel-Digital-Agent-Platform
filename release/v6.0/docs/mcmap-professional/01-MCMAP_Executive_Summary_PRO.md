@@ -3,6 +3,10 @@
 ---
 
 # EXECUTIVE REFERENCE PACKET
+## Professional Executive Version
+
+> **This document is optimized for executive presentations and printing.**
+> For Copilot Studio knowledge base integration, use the KB-compliant version.
 
 ---
 
@@ -11,11 +15,12 @@
 | | |
 |---|---|
 | **Document Title** | MCMAP Executive Summary |
-| **Document Number** | 01-MCMAP_Executive_Summary.md |
-| **Version** | 2.0 |
+| **Document Number** | 01-MCMAP_Executive_Summary_PRO.md |
+| **Version** | 2.1 (Professional) |
 | **Date** | January 24, 2026 |
 | **Classification** | Mastercard Internal |
 | **Status** | Production Ready |
+| **Format** | Professional Executive Version |
 | **Prepared For** | Mastercard Engineering Leadership, Revenue Operations |
 | **Prepared By** | Platform Development Team |
 

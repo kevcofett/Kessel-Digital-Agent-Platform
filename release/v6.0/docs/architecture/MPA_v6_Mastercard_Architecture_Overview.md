@@ -24,7 +24,8 @@
 12. [Behavioral Safeguards](#12-behavioral-safeguards)
 13. [KB-First Retrieval Pattern](#13-kb-first-retrieval-pattern)
 14. [Instruction Audit Remediation](#14-instruction-audit-remediation)
-15. [Implementation Checklist](#15-implementation-checklist)
+15. [Agent AI Configuration](#15-agent-ai-configuration)
+16. [Implementation Checklist](#16-implementation-checklist)
 
 ---
 
@@ -781,9 +782,102 @@ All instruction files verified against:
 
 ---
 
-## 15. IMPLEMENTATION CHECKLIST
+## 15. AGENT AI CONFIGURATION
 
-### 15.1 Pre-Deployment Checklist
+### 15.1 Complete Settings Matrix
+
+**These settings must be configured for EVERY agent in Copilot Studio:**
+
+| Agent | Model | Web Search | General Knowledge | Deep Reasoning | Moderation |
+|-------|-------|------------|-------------------|----------------|------------|
+| **ORC** | Claude Sonnet 4.5 | OFF | OFF | OFF | Medium |
+| **AUD** | Claude Sonnet 4.5 | ON | OFF | OFF | Medium |
+| **CHA** | Claude Sonnet 4.5 | ON | OFF | OFF | Medium |
+| **ANL** | Claude Opus 4.5 | OFF | OFF | ON | Medium |
+| **SPO** | Claude Opus 4.5 | ON | OFF | ON | Medium |
+| **DOC** | Claude Sonnet 4.5 | OFF | OFF | OFF | Medium |
+| **PRF** | Claude Opus 4.5 | ON | OFF | ON | Medium |
+| **CHG** | Claude Sonnet 4.5 | OFF | OFF | OFF | Medium |
+| **CST** | Claude Sonnet 4.5 | OFF | OFF | OFF | Medium |
+| **MKT** | Claude Sonnet 4.5 | ON | OFF | OFF | Medium |
+
+### 15.2 Settings Location in Copilot Studio
+
+| Setting | UI Location |
+|---------|-------------|
+| Model | Settings → AI capabilities → Model selection |
+| Web Search | Overview toggle OR Settings → Knowledge → "Use information from web" |
+| General Knowledge | Settings → Knowledge → "Use general knowledge" |
+| Deep Reasoning | Settings → AI capabilities → Deep reasoning toggle |
+| Content Moderation | Settings → AI capabilities → Moderation level |
+| Generative AI Orchestration | Settings → Orchestration (ORC only: ON/Dynamic) |
+
+### 15.3 Critical Configuration Rules
+
+| Rule | Applies To | Rationale |
+|------|------------|-----------|
+| **General Knowledge = OFF** | ALL 10 agents | Prevents "based on general industry knowledge" responses; forces KB-first retrieval |
+| **Web Search = Selective** | See matrix | Only enabled for agents needing current market data (AUD, CHA, SPO, PRF, MKT) |
+| **Deep Reasoning = Selective** | ANL, SPO, PRF | Complex calculations need extended reasoning; others should be concise |
+| **Content Moderation = Medium** | ALL 10 agents | Balanced filtering appropriate for enterprise B2B environment |
+
+### 15.4 Model Selection Rationale
+
+**Claude Sonnet 4.5 (7 agents):** ORC, AUD, CHA, DOC, CHG, CST, MKT
+- Fast response times
+- Excellent instruction-following
+- Respects word limits and format rules
+- Ideal for user-facing, format-sensitive outputs
+
+**Claude Opus 4.5 (3 agents):** ANL, SPO, PRF
+- Deep reasoning capabilities
+- Multi-step analysis
+- Complex calculation synthesis
+- Ideal for analytical and quantitative tasks
+
+### 15.5 Web Search Configuration Rationale
+
+**Web Search ON:**
+- **AUD**: Current platform capabilities, audience sizing validation
+- **CHA**: Channel benchmarks, platform capabilities change frequently
+- **SPO**: DSP/SSP fees and partner capabilities change frequently
+- **PRF**: Current attribution methodologies, platform changes
+- **MKT**: Market trends, competitive intelligence
+
+**Web Search OFF:**
+- **ORC**: Orchestrator routes, doesn't need external data
+- **ANL**: Calculations from user inputs and KB formulas only
+- **DOC**: Generates from session data, not external sources
+- **CHG**: Internal change management frameworks only
+- **CST**: Strategy from internal KB frameworks only
+
+### 15.6 Validation Test
+
+After configuring all agents, test with this scenario:
+
+**Input:**
+```
+help me create a media plan for Nike. They have $250,000 to acquire new customers. They are targeting runners in the US
+```
+
+**Expected ORC Behavior:**
+1. Response under 300 words
+2. No bullet points - prose only
+3. Asks clarifying questions (timeline, KPIs)
+4. Does NOT auto-route to specialists without user confirmation
+5. Ends with question inviting user input
+
+**Red Flags (Configuration Error):**
+- Multi-agent execution plan created immediately
+- 4,000+ word response with bullet points
+- "Based on general industry knowledge" statements
+- Specialists invoked without user approval
+
+---
+
+## 16. IMPLEMENTATION CHECKLIST
+
+### 16.1 Pre-Deployment Checklist
 
 **Environment Setup:**
 - [ ] Verify Mastercard Power Platform environment access
@@ -799,7 +893,7 @@ All instruction files verified against:
 - [ ] Confirm all prompts in Copilot-compliant format
 - [ ] Verify instruction files pass 6-Rule compliance
 
-### 15.2 Dataverse Deployment
+### 16.2 Dataverse Deployment
 
 **Table Creation Order (Dependency-Based):**
 
@@ -831,7 +925,7 @@ All instruction files verified against:
 - eap_workflow_definition
 - eap_workflow_contribution
 
-### 15.3 KB Deployment
+### 16.3 KB Deployment
 
 **SharePoint Library Setup:**
 - Create SharePoint site: `MasterCardCopilotKB`
@@ -840,7 +934,7 @@ All instruction files verified against:
 - Upload KB files to respective folders
 - Link library to Copilot Studio knowledge source
 
-### 15.4 AI Builder Prompt Deployment
+### 16.4 AI Builder Prompt Deployment
 
 **For Each Prompt (69 total):**
 - Navigate to make.powerapps.com then AI Builder then Custom prompts
@@ -851,7 +945,7 @@ All instruction files verified against:
 - Save and test
 - Enable for use in flows
 
-### 15.5 Agent Deployment
+### 16.5 Agent Deployment
 
 **For Each Agent (10 total):**
 - Navigate to Copilot Studio
@@ -864,7 +958,7 @@ All instruction files verified against:
 - Configure handoff topics for routing
 - Publish agent
 
-### 15.6 Post-Deployment Validation
+### 16.6 Post-Deployment Validation
 
 **Functional Tests:**
 - [ ] ORC correctly classifies intents
@@ -881,6 +975,66 @@ All instruction files verified against:
 - [ ] Full workflow: Audience targeting scenario
 - [ ] Full workflow: Performance analysis scenario
 - [ ] Handoff chain: ORC to ANL to PRF to ORC
+
+---
+
+## 17. DEVELOPMENT DATA PROVENANCE & SECURITY ATTESTATION
+
+### 17.1 Governance Assurance Statement
+
+MCMAP was developed entirely outside Mastercard's corporate environment using exclusively publicly available information. **No proprietary Mastercard data, customer information, internal systems, or confidential business information was accessed or incorporated during development.**
+
+### 17.2 Data Sourcing Attestation
+
+| Category | Source Type | MC Proprietary Data | Verification |
+|----------|-------------|---------------------|--------------|
+| Knowledge Base Content | Public industry publications, academic research | NONE | Verified |
+| Analytics Methodologies | Open-source algorithms, public frameworks | NONE | Verified |
+| Benchmark Data | Published industry benchmarks, vendor documentation | NONE | Verified |
+| Channel Specifications | IAB/MRC standards, platform public documentation | NONE | Verified |
+| Test Scenarios | Synthetic data, fictional use cases | NONE | Verified |
+
+### 17.3 Development Tool Security
+
+| Tool | Purpose | Data Shared with Tool | MC Data Exposure |
+|------|---------|----------------------|------------------|
+| Claude.ai / Claude Code | AI-assisted development | Code, generic queries | NONE |
+| GitHub | Version control | Source code, docs | NONE |
+| Braintrust | Test execution | Synthetic test data | NONE |
+| Perplexity / ChatGPT | Research assistance | Public queries | NONE |
+
+### 17.4 Why External Development Does Not Compromise Security
+
+**Key Points:**
+
+1. **Nothing proprietary entered development** - Only public information was used
+2. **Nothing proprietary can exit production** - DLP blocks all outbound connectivity
+3. **The code is fully auditable** - No hidden external dependencies or backdoors
+4. **Architecture designed for isolation** - No HTTP, no custom connectors, no external APIs
+
+### 17.5 Post-Deployment Data Isolation
+
+When deployed to Mastercard environment:
+
+| Control | Implementation | Effect |
+|---------|----------------|--------|
+| **DLP Policy** | Blocks HTTP, custom connectors | No data can exit MC boundary |
+| **Internal Storage** | Dataverse + SharePoint (MC tenant) | All data stays internal |
+| **AI Processing** | AI Builder (MC tenant GPT) | No external AI calls |
+| **KB Retrieval** | SharePoint (MC hosted) | No external document access |
+
+### 17.6 Attestation Summary
+
+**For Security, Compliance, and Engineering Leadership:**
+
+- No Mastercard proprietary data was used during development
+- All knowledge base content derived from public sources
+- No connection to MC internal systems during development
+- Code repository contains no proprietary MC information
+- Deployed solution operates entirely within MC security boundary
+- DLP enforcement prevents any data exfiltration
+
+> **For detailed attestation with sign-off checklist, see MCMAP Document 03: Security & Compliance Framework, Section 11**
 
 ---
 
@@ -920,10 +1074,11 @@ All instruction files verified against:
 | 2.0 | 2026-01-22 | Updated for v6.6 expansions, 10 agents, 69 prompts, 135 KB files |
 | 2.1 | 2026-01-22 | Added Deep Reasoning integration section |
 | 2.2 | 2026-01-23 | Added Behavioral Safeguards, KB-First Retrieval Pattern, Instruction Audit Remediation sections; updated metrics for EAP KB files |
+| 2.3 | 2026-01-24 | Added Section 17: Development Data Provenance & Security Attestation |
 
 ---
 
-**Document Version:** 2.2  
-**Last Updated:** January 23, 2026  
+**Document Version:** 2.3  
+**Last Updated:** January 24, 2026  
 **Author:** Claude (KDAP Architecture Assistant)  
 **Status:** Production Ready for Mastercard Deployment

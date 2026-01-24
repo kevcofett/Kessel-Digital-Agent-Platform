@@ -1,0 +1,234 @@
+{
+  "table_name": "eap_user_profile",
+  "display_name": "MCMAP User Profile",
+  "description": "Stores user profile data from Mastercard Microsoft Directory for access control and usage reporting",
+  "schema_version": "1.0",
+  "primary_key": "eap_user_profileid",
+  "fields": [
+    {
+      "name": "eap_user_profileid",
+      "display_name": "User Profile ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "description": "Primary key - auto-generated GUID"
+    },
+    {
+      "name": "user_id",
+      "display_name": "Azure AD User ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "unique": true,
+      "indexed": true,
+      "description": "Azure AD / Entra ID user identifier from System.User.Id",
+      "graph_source": "id"
+    },
+    {
+      "name": "display_name",
+      "display_name": "Display Name",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": true,
+      "description": "User full name",
+      "graph_source": "displayName"
+    },
+    {
+      "name": "email",
+      "display_name": "Email Address",
+      "type": "nvarchar",
+      "max_length": 320,
+      "required": true,
+      "indexed": true,
+      "description": "Primary email address",
+      "graph_source": "mail,userPrincipalName"
+    },
+    {
+      "name": "job_title",
+      "display_name": "Job Title",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": false,
+      "description": "Job title from directory",
+      "graph_source": "jobTitle"
+    },
+    {
+      "name": "employee_level",
+      "display_name": "Employee Level",
+      "type": "nvarchar",
+      "max_length": 50,
+      "required": false,
+      "indexed": true,
+      "description": "Organizational level: CEO, President, EVP, SVP, VP, Director, Senior Manager, Manager, Senior Analyst, Analyst, Associate",
+      "graph_source": "extension_{app_id}_employeeLevel",
+      "fallback_parse": "jobTitle"
+    },
+    {
+      "name": "department",
+      "display_name": "Department",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": false,
+      "indexed": true,
+      "description": "Department name",
+      "graph_source": "department"
+    },
+    {
+      "name": "team",
+      "display_name": "Team",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": false,
+      "indexed": true,
+      "description": "Team name within department",
+      "graph_source": "extension_{app_id}_team"
+    },
+    {
+      "name": "division",
+      "display_name": "Division",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": false,
+      "indexed": true,
+      "description": "Business division: Data & Services, Network Services, Cyber & Intelligence, Corporate, Technology",
+      "graph_source": "extension_{app_id}_division,companyName"
+    },
+    {
+      "name": "region",
+      "display_name": "Region",
+      "type": "nvarchar",
+      "max_length": 100,
+      "required": false,
+      "indexed": true,
+      "description": "Geographic region: North America, Latin America, Europe, APMEA",
+      "graph_source": "extension_{app_id}_region,usageLocation"
+    },
+    {
+      "name": "country",
+      "display_name": "Country",
+      "type": "nvarchar",
+      "max_length": 100,
+      "required": false,
+      "indexed": true,
+      "description": "Country code or name",
+      "graph_source": "country"
+    },
+    {
+      "name": "office_location",
+      "display_name": "Office Location",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": false,
+      "description": "Physical office location",
+      "graph_source": "officeLocation"
+    },
+    {
+      "name": "cost_center",
+      "display_name": "Cost Center",
+      "type": "nvarchar",
+      "max_length": 50,
+      "required": false,
+      "indexed": true,
+      "description": "Cost center code for reporting",
+      "graph_source": "extension_{app_id}_costCenter"
+    },
+    {
+      "name": "company_name",
+      "display_name": "Company Name",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": false,
+      "description": "Legal entity or company name",
+      "graph_source": "companyName"
+    },
+    {
+      "name": "manager_id",
+      "display_name": "Manager ID",
+      "type": "uniqueidentifier",
+      "required": false,
+      "description": "Direct manager Azure AD ID",
+      "graph_source": "manager.id"
+    },
+    {
+      "name": "manager_display_name",
+      "display_name": "Manager Name",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": false,
+      "description": "Direct manager display name",
+      "graph_source": "manager.displayName"
+    },
+    {
+      "name": "manager_chain_json",
+      "display_name": "Manager Chain",
+      "type": "ntext",
+      "required": false,
+      "description": "JSON array of manager chain IDs up to CEO level. Computed by recursive manager lookup.",
+      "example": "[\"manager1-guid\", \"manager2-guid\", \"evp-guid\", \"ceo-guid\"]"
+    },
+    {
+      "name": "security_groups_json",
+      "display_name": "Security Groups",
+      "type": "ntext",
+      "required": false,
+      "description": "JSON array of security group IDs and names user belongs to",
+      "graph_source": "memberOf",
+      "example": "[{\"id\": \"group-guid\", \"displayName\": \"MCMAP-Executive-Access\"}]"
+    },
+    {
+      "name": "all_attributes_json",
+      "display_name": "All Attributes",
+      "type": "ntext",
+      "required": false,
+      "description": "Complete Microsoft Graph API response as JSON for future rule expansion"
+    },
+    {
+      "name": "first_seen",
+      "display_name": "First Seen",
+      "type": "datetime",
+      "required": true,
+      "default": "GETUTCDATE()",
+      "description": "Timestamp of first platform access"
+    },
+    {
+      "name": "last_updated",
+      "display_name": "Last Updated",
+      "type": "datetime",
+      "required": true,
+      "default": "GETUTCDATE()",
+      "description": "Timestamp of last profile sync from directory"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "IX_eap_user_profile_user_id",
+      "fields": ["user_id"],
+      "unique": true
+    },
+    {
+      "name": "IX_eap_user_profile_email",
+      "fields": ["email"],
+      "unique": false
+    },
+    {
+      "name": "IX_eap_user_profile_level_dept",
+      "fields": ["employee_level", "department"],
+      "unique": false
+    },
+    {
+      "name": "IX_eap_user_profile_division_region",
+      "fields": ["division", "region"],
+      "unique": false
+    }
+  ],
+  "microsoft_graph_query": {
+    "endpoint": "/users/{id}",
+    "select": "id,displayName,mail,userPrincipalName,jobTitle,department,companyName,officeLocation,country,usageLocation,manager",
+    "expand": "manager($select=id,displayName)",
+    "extension_attributes": [
+      "extension_{app_id}_employeeLevel",
+      "extension_{app_id}_division",
+      "extension_{app_id}_team",
+      "extension_{app_id}_region",
+      "extension_{app_id}_costCenter"
+    ]
+  }
+}

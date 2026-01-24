@@ -1,8 +1,45 @@
 # Multi-Agent Copilot Studio Deployment Checklist
 
-**Version:** 1.0.0
-**Date:** January 2026
-**Branch:** feature/multi-agent-architecture
+**Version:** 2.0.0
+**Date:** January 22, 2026
+**Branch:** deploy/mastercard
+
+---
+
+## CRITICAL: Agent AI Configuration Settings
+
+**These settings must be configured for EVERY agent before publishing.**
+
+### Complete Agent Settings Matrix
+
+| Agent | Model | Web Search | General Knowledge | Deep Reasoning | Moderation |
+|-------|-------|------------|-------------------|----------------|------------|
+| **ORC** | Claude Sonnet 4.5 | OFF | OFF | OFF | Medium |
+| **AUD** | Claude Sonnet 4.5 | ON | OFF | OFF | Medium |
+| **CHA** | Claude Sonnet 4.5 | ON | OFF | OFF | Medium |
+| **ANL** | Claude Opus 4.5 | OFF | OFF | ON | Medium |
+| **SPO** | Claude Opus 4.5 | ON | OFF | ON | Medium |
+| **DOC** | Claude Sonnet 4.5 | OFF | OFF | OFF | Medium |
+| **PRF** | Claude Opus 4.5 | ON | OFF | ON | Medium |
+| **CHG** | Claude Sonnet 4.5 | OFF | OFF | OFF | Medium |
+| **CST** | Claude Sonnet 4.5 | OFF | OFF | OFF | Medium |
+| **MKT** | Claude Sonnet 4.5 | ON | OFF | OFF | Medium |
+
+### Settings Location in Copilot Studio UI
+
+| Setting | Location |
+|---------|----------|
+| Model | Settings → AI capabilities |
+| Web Search | Overview tab toggle OR Settings → Knowledge → "Use information from web" |
+| General Knowledge | Settings → Knowledge → "Use general knowledge" |
+| Deep Reasoning | Settings → AI capabilities |
+| Content Moderation | Settings → AI capabilities |
+
+### CRITICAL RULES
+
+1. **General Knowledge = OFF for ALL agents** - Prevents unvalidated "general industry knowledge" responses
+2. **Web Search = Selective** - Only ON for agents needing current market data
+3. **Deep Reasoning = Selective** - Only ON for complex analytical agents (ANL, SPO, PRF)
 
 ---
 
@@ -26,7 +63,10 @@ Deploy agents in this order to ensure dependencies are met:
 4. **CHA** (Channel) - No dependencies
 5. **SPO** (Supply Path) - No dependencies
 6. **PRF** (Performance) - No dependencies
-7. **DOC** (Document) - Deploy last, requires Azure Functions
+7. **DOC** (Document) - Requires Azure Functions
+8. **CHG** (Change Management) - No dependencies
+9. **CST** (Customer Strategy) - No dependencies
+10. **MKT** (Marketing) - No dependencies
 
 ---
 
@@ -40,15 +80,26 @@ Deploy agents in this order to ensure dependencies are met:
 4. Description: `Routes media planning requests to specialist agents`
 5. Agent Code: `ORC`
 
-### 1.2 Configure Instructions
+### 1.2 Configure AI Settings
 
-1. Navigate to agent settings > Instructions
-2. Open file: `release/v6.0/agents/orc/instructions/ORC_Copilot_Instructions_v1.txt`
-3. Copy entire content (7,999 characters)
+| Setting | Value |
+|---------|-------|
+| Model | **Claude Sonnet 4.5** |
+| Web Search | **OFF** |
+| General Knowledge | **OFF** |
+| Deep Reasoning | **OFF** |
+| Content Moderation | **Medium** |
+| Generative AI Orchestration | **ON (Dynamic)** |
+
+### 1.3 Configure Instructions
+
+1. Navigate to agent settings → Instructions
+2. Open file: `release/v6.0/agents/orc/instructions/ORC_Copilot_Instructions_v3_CORRECTED.txt`
+3. Copy entire content (6,157 characters)
 4. Paste into Instructions field
 5. Click Save
 
-### 1.3 Upload Knowledge Base
+### 1.4 Upload Knowledge Base
 
 Upload the following files to agent knowledge base:
 
@@ -57,14 +108,7 @@ Upload the following files to agent knowledge base:
 | `ORC_KB_Workflow_Gates_v1.txt` | ~12KB | 10-step workflow and 5 gates |
 | `ORC_KB_Error_Handling_v1.txt` | ~10KB | Error codes and recovery |
 
-**Steps:**
-1. Go to Knowledge Base tab
-2. Click "Add knowledge source" > "Upload files"
-3. Upload each file
-4. Wait for indexing (1-2 minutes per file)
-5. Verify status shows "Ready"
-
-### 1.4 Connect Power Automate Flows
+### 1.5 Connect Power Automate Flows
 
 | Flow Name | Purpose |
 |-----------|---------|
@@ -72,37 +116,128 @@ Upload the following files to agent knowledge base:
 | GetSessionState | Retrieve session context |
 | UpdateProgress | Update workflow step/gate |
 
-**Steps:**
-1. Go to Actions tab
-2. Click "Add action" > "Power Automate"
-3. Select or create each flow
-4. Configure input/output mappings
-5. Test each flow individually
+### 1.6 Validation Checklist
 
-### 1.5 Validation
-
-- [ ] Instructions saved without error
+- [ ] AI settings configured per table above
+- [ ] Instructions saved without error (v3_CORRECTED)
 - [ ] Both KB files indexed and ready
 - [ ] All 3 flows connected and tested
-- [ ] Test routing: "Help me create a media plan" (should acknowledge and begin workflow)
+- [ ] Test: "Help me create a media plan" → Should ask clarifying questions, NOT auto-route
 
 ---
 
-## 2. ANL (Analytics & Forecasting) Agent
+## 2. AUD (Audience Intelligence) Agent
 
 ### 2.1 Create Agent
+
+1. Name: `Audience Intelligence Agent`
+2. Description: `Handles segmentation, targeting, and LTV analysis`
+3. Agent Code: `AUD`
+
+### 2.2 Configure AI Settings
+
+| Setting | Value |
+|---------|-------|
+| Model | **Claude Sonnet 4.5** |
+| Web Search | **ON** |
+| General Knowledge | **OFF** |
+| Deep Reasoning | **OFF** |
+| Content Moderation | **Medium** |
+
+### 2.3 Configure Instructions
+
+1. Open file: `release/v6.0/agents/aud/instructions/AUD_Copilot_Instructions_v2_CORRECTED.txt`
+2. Copy content (6,767 characters)
+3. Paste into Instructions field
+
+### 2.4 Upload Knowledge Base
+
+| File | Size | Description |
+|------|------|-------------|
+| `AUD_KB_Segmentation_Methods_v1.txt` | ~14KB | RFM, behavioral, demographic |
+| `AUD_KB_LTV_Models_v1.txt` | ~12KB | Lifetime value calculations |
+| `AUD_KB_Targeting_Strategy_v1.txt` | ~11KB | Targeting approaches |
+
+### 2.5 Connect Power Automate Flows
+
+| Flow Name | Purpose |
+|-----------|---------|
+| SegmentAudience | Audience segmentation |
+| CalculateLTV | Customer lifetime value |
+
+### 2.6 Validation Checklist
+
+- [ ] AI settings configured per table above
+- [ ] Instructions saved (v2_CORRECTED)
+- [ ] Response under 400 words, prose only, no bullets
+- [ ] Test: "Segment our customers using RFM analysis"
+
+---
+
+## 3. CHA (Channel Strategy) Agent
+
+### 3.1 Create Agent
+
+1. Name: `Channel Strategy Agent`
+2. Description: `Manages channel selection and budget allocation`
+3. Agent Code: `CHA`
+
+### 3.2 Configure AI Settings
+
+| Setting | Value |
+|---------|-------|
+| Model | **Claude Sonnet 4.5** |
+| Web Search | **ON** |
+| General Knowledge | **OFF** |
+| Deep Reasoning | **OFF** |
+| Content Moderation | **Medium** |
+
+### 3.3 Configure Instructions
+
+1. Open file: `release/v6.0/agents/cha/instructions/CHA_Copilot_Instructions_v1.txt`
+2. Copy content
+3. Paste into Instructions field
+
+### 3.4 Upload Knowledge Base
+
+| File | Size | Description |
+|------|------|-------------|
+| `CHA_KB_Channel_Registry_v1.txt` | ~13KB | Channel definitions |
+| `CHA_KB_Channel_Playbooks_v1.txt` | ~10KB | Channel strategies |
+| `CHA_KB_Allocation_Methods_v1.txt` | ~10KB | Budget allocation |
+
+### 3.5 Validation Checklist
+
+- [ ] AI settings configured per table above
+- [ ] Test: "Allocate $500K across Meta, Google, and YouTube"
+
+---
+
+## 4. ANL (Analytics & Forecasting) Agent
+
+### 4.1 Create Agent
 
 1. Name: `Analytics and Forecasting Agent`
 2. Description: `Provides projections, scenarios, and forecasting`
 3. Agent Code: `ANL`
 
-### 2.2 Configure Instructions
+### 4.2 Configure AI Settings
+
+| Setting | Value |
+|---------|-------|
+| Model | **Claude Opus 4.5** |
+| Web Search | **OFF** |
+| General Knowledge | **OFF** |
+| Deep Reasoning | **ON** |
+| Content Moderation | **Medium** |
+
+### 4.3 Configure Instructions
 
 1. Open file: `release/v6.0/agents/anl/instructions/ANL_Copilot_Instructions_v1.txt`
-2. Copy content (7,797 characters)
+2. Copy content
 3. Paste into Instructions field
 
-### 2.3 Upload Knowledge Base
+### 4.4 Upload Knowledge Base
 
 | File | Size | Description |
 |------|------|-------------|
@@ -111,92 +246,10 @@ Upload the following files to agent knowledge base:
 | `ANL_KB_Scenario_Modeling_v1.txt` | ~12KB | Scenario comparison |
 | `ANL_KB_Statistical_Tests_v1.txt` | ~10KB | Statistical methods |
 
-### 2.4 Connect Power Automate Flows
+### 4.5 Validation Checklist
 
-| Flow Name | Purpose |
-|-----------|---------|
-| CalculateProjection | Media performance projections |
-| RunScenario | Multi-scenario comparison |
-
-### 2.5 Validation
-
+- [ ] AI settings configured per table above (note: Deep Reasoning ON)
 - [ ] Test: "Project results for a $500K budget over 12 weeks"
-- [ ] Test: "Compare conservative vs aggressive budget scenarios"
-- [ ] Verify confidence intervals included in responses
-
----
-
-## 3. AUD (Audience Intelligence) Agent
-
-### 3.1 Create Agent
-
-1. Name: `Audience Intelligence Agent`
-2. Description: `Handles segmentation, targeting, and LTV analysis`
-3. Agent Code: `AUD`
-
-### 3.2 Configure Instructions
-
-1. Open file: `release/v6.0/agents/aud/instructions/AUD_Copilot_Instructions_v1.txt`
-2. Copy content (4,881 characters)
-3. Paste into Instructions field
-
-### 3.3 Upload Knowledge Base
-
-| File | Size | Description |
-|------|------|-------------|
-| `AUD_KB_Segmentation_Methods_v1.txt` | ~14KB | RFM, behavioral, demographic |
-| `AUD_KB_LTV_Models_v1.txt` | ~12KB | Lifetime value calculations |
-| `AUD_KB_Targeting_Strategy_v1.txt` | ~11KB | Targeting approaches |
-
-### 3.4 Connect Power Automate Flows
-
-| Flow Name | Purpose |
-|-----------|---------|
-| SegmentAudience | Audience segmentation |
-| CalculateLTV | Customer lifetime value |
-
-### 3.5 Validation
-
-- [ ] Test: "Segment our customers using RFM analysis"
-- [ ] Test: "Calculate LTV for our top segments"
-- [ ] Verify segment sizes and priorities in responses
-
----
-
-## 4. CHA (Channel Strategy) Agent
-
-### 4.1 Create Agent
-
-1. Name: `Channel Strategy Agent`
-2. Description: `Manages channel selection and budget allocation`
-3. Agent Code: `CHA`
-
-### 4.2 Configure Instructions
-
-1. Open file: `release/v6.0/agents/cha/instructions/CHA_Copilot_Instructions_v1.txt`
-2. Copy content (7,187 characters)
-3. Paste into Instructions field
-
-### 4.3 Upload Knowledge Base
-
-| File | Size | Description |
-|------|------|-------------|
-| `CHA_KB_Channel_Registry_v1.txt` | ~13KB | Channel definitions |
-| `CHA_KB_Channel_Playbooks_v1.txt` | ~10KB | Channel strategies |
-| `CHA_KB_Allocation_Methods_v1.txt` | ~10KB | Budget allocation |
-
-### 4.4 Connect Power Automate Flows
-
-| Flow Name | Purpose |
-|-----------|---------|
-| CalculateAllocation | Budget allocation |
-| LookupBenchmarks | Performance benchmarks |
-
-### 4.5 Validation
-
-- [ ] Test: "Allocate $500K across Meta, Google, and YouTube"
-- [ ] Test: "What are the benchmarks for e-commerce on Meta?"
-- [ ] Verify allocation percentages sum to 100%
 
 ---
 
@@ -208,13 +261,23 @@ Upload the following files to agent knowledge base:
 2. Description: `Optimizes programmatic supply paths and fees`
 3. Agent Code: `SPO`
 
-### 5.2 Configure Instructions
+### 5.2 Configure AI Settings
+
+| Setting | Value |
+|---------|-------|
+| Model | **Claude Opus 4.5** |
+| Web Search | **ON** |
+| General Knowledge | **OFF** |
+| Deep Reasoning | **ON** |
+| Content Moderation | **Medium** |
+
+### 5.3 Configure Instructions
 
 1. Open file: `release/v6.0/agents/spo/instructions/SPO_Copilot_Instructions_v1.txt`
-2. Copy content (5,364 characters)
+2. Copy content
 3. Paste into Instructions field
 
-### 5.3 Upload Knowledge Base
+### 5.4 Upload Knowledge Base
 
 | File | Size | Description |
 |------|------|-------------|
@@ -222,19 +285,10 @@ Upload the following files to agent knowledge base:
 | `SPO_KB_Partner_Evaluation_v1.txt` | ~13KB | Partner scoring |
 | `SPO_KB_NBI_Calculation_v1.txt` | ~11KB | Net Benefit Index |
 
-### 5.4 Connect Power Automate Flows
+### 5.5 Validation Checklist
 
-| Flow Name | Purpose |
-|-----------|---------|
-| CalculateNBI | Net Benefit Index |
-| AnalyzeFees | Fee stack analysis |
-| EvaluatePartner | Partner evaluation |
-
-### 5.5 Validation
-
+- [ ] AI settings configured per table above (note: Deep Reasoning ON)
 - [ ] Test: "Analyze our fee stack - we're at 42% working media"
-- [ ] Test: "Calculate NBI for switching from open exchange to PMP"
-- [ ] Verify NBI formula correctly applied
 
 ---
 
@@ -246,33 +300,33 @@ Upload the following files to agent knowledge base:
 2. Description: `Monitors performance and extracts learnings`
 3. Agent Code: `PRF`
 
-### 6.2 Configure Instructions
+### 6.2 Configure AI Settings
+
+| Setting | Value |
+|---------|-------|
+| Model | **Claude Opus 4.5** |
+| Web Search | **ON** |
+| General Knowledge | **OFF** |
+| Deep Reasoning | **ON** |
+| Content Moderation | **Medium** |
+
+### 6.3 Configure Instructions
 
 1. Open file: `release/v6.0/agents/prf/instructions/PRF_Copilot_Instructions_v1.txt`
-2. Copy content (6,436 characters)
+2. Copy content
 3. Paste into Instructions field
 
-### 6.3 Upload Knowledge Base
+### 6.4 Upload Knowledge Base
 
 | File | Size | Description |
 |------|------|-------------|
 | `PRF_KB_Optimization_Triggers_v1.txt` | ~14KB | Threshold triggers |
 | `PRF_KB_Anomaly_Detection_v1.txt` | ~13KB | Statistical detection |
-| `PRF_KB_Learning_Extraction_v1.txt` | ~13KB | Learning catalog |
 
-### 6.4 Connect Power Automate Flows
+### 6.5 Validation Checklist
 
-| Flow Name | Purpose |
-|-----------|---------|
-| AnalyzePerformance | Variance analysis |
-| DetectAnomalies | Anomaly detection |
-| ExtractLearnings | Learning extraction |
-
-### 6.5 Validation
-
-- [ ] Test: "Our CPA is 25% above target - what should we do?"
-- [ ] Test: "CTR dropped from 0.15% to 0.08% - is this an anomaly?"
-- [ ] Verify severity levels (GREEN/YELLOW/ORANGE/RED) in responses
+- [ ] AI settings configured per table above (note: Deep Reasoning ON)
+- [ ] Test: "Analyze performance trends for the last 4 weeks"
 
 ---
 
@@ -281,132 +335,142 @@ Upload the following files to agent knowledge base:
 ### 7.1 Create Agent
 
 1. Name: `Document Generation Agent`
-2. Description: `Generates media plans, presentations, and reports`
+2. Description: `Generates media briefs and reports`
 3. Agent Code: `DOC`
 
-### 7.2 Configure Instructions
+### 7.2 Configure AI Settings
+
+| Setting | Value |
+|---------|-------|
+| Model | **Claude Sonnet 4.5** |
+| Web Search | **OFF** |
+| General Knowledge | **OFF** |
+| Deep Reasoning | **OFF** |
+| Content Moderation | **Medium** |
+
+### 7.3 Configure Instructions
 
 1. Open file: `release/v6.0/agents/doc/instructions/DOC_Copilot_Instructions_v1.txt`
-2. Copy content (4,268 characters)
+2. Copy content
 3. Paste into Instructions field
 
-### 7.3 Upload Knowledge Base
+### 7.4 Validation Checklist
 
-| File | Size | Description |
-|------|------|-------------|
-| `DOC_KB_Template_Library_v1.txt` | ~12KB | Document templates |
-| `DOC_KB_Formatting_Rules_v1.txt` | ~8KB | Formatting standards |
-| `DOC_KB_Export_Specifications_v1.txt` | ~7KB | Export formats |
+- [ ] AI settings configured per table above
+- [ ] Azure Functions deployed and connected
+- [ ] Test: "Generate a media brief for our current plan"
 
-### 7.4 Deploy Azure Functions
+---
 
-**Prerequisites:**
-- Azure Functions Core Tools installed
-- Node.js 18+ installed
+## 8. CHG (Change Management) Agent
 
-**Deployment Steps:**
+### 8.1 Create Agent
 
-```bash
-cd release/v6.0/agents/doc/functions/document-generator
-npm install docx
-func azure functionapp publish <YOUR_FUNCTION_APP_NAME>
+1. Name: `Change Management Agent`
+2. Description: `Manages adoption planning and change initiatives`
+3. Agent Code: `CHG`
 
-cd ../presentation-generator
-npm install pptxgenjs
-func azure functionapp publish <YOUR_FUNCTION_APP_NAME>
+### 8.2 Configure AI Settings
+
+| Setting | Value |
+|---------|-------|
+| Model | **Claude Sonnet 4.5** |
+| Web Search | **OFF** |
+| General Knowledge | **OFF** |
+| Deep Reasoning | **OFF** |
+| Content Moderation | **Medium** |
+
+### 8.3 Validation Checklist
+
+- [ ] AI settings configured per table above
+
+---
+
+## 9. CST (Customer Strategy) Agent
+
+### 9.1 Create Agent
+
+1. Name: `Customer Strategy Agent`
+2. Description: `Provides strategic customer guidance`
+3. Agent Code: `CST`
+
+### 9.2 Configure AI Settings
+
+| Setting | Value |
+|---------|-------|
+| Model | **Claude Sonnet 4.5** |
+| Web Search | **OFF** |
+| General Knowledge | **OFF** |
+| Deep Reasoning | **OFF** |
+| Content Moderation | **Medium** |
+
+### 9.3 Validation Checklist
+
+- [ ] AI settings configured per table above
+
+---
+
+## 10. MKT (Marketing) Agent
+
+### 10.1 Create Agent
+
+1. Name: `Marketing Agent`
+2. Description: `Provides marketing recommendations and guidance`
+3. Agent Code: `MKT`
+
+### 10.2 Configure AI Settings
+
+| Setting | Value |
+|---------|-------|
+| Model | **Claude Sonnet 4.5** |
+| Web Search | **ON** |
+| General Knowledge | **OFF** |
+| Deep Reasoning | **OFF** |
+| Content Moderation | **Medium** |
+
+### 10.3 Validation Checklist
+
+- [ ] AI settings configured per table above
+
+---
+
+## Post-Deployment Validation
+
+### System Test
+
+After all agents are deployed, test the complete workflow:
+
+**Input:**
+```
+help me create a media plan for Nike. They have $250,000 to acquire new customers. They are targeting runners in the US
 ```
 
-### 7.5 Connect Power Automate Flows
+**Expected ORC Behavior:**
+1. Response under 300 words
+2. No bullet points - prose only
+3. Asks clarifying questions (timeline, KPIs)
+4. Does NOT auto-route to specialists without user confirmation
+5. Ends with question inviting user input
 
-| Flow Name | Purpose |
-|-----------|---------|
-| GenerateDocument | Document orchestration |
+### Red Flags (Test FAILS)
 
-**Flow Configuration:**
-- Set `DOC_AZURE_FUNCTION_URL` environment variable
-- Configure SharePoint connection for document storage
-
-### 7.6 Validation
-
-- [ ] Azure Functions deployed and responding
-- [ ] Test: "Generate the full media plan document"
-- [ ] Test: "Create a PowerPoint presentation for the client"
-- [ ] Verify documents download correctly
+- ❌ Multi-agent execution plan created immediately
+- ❌ 4,000+ word response with bullet points
+- ❌ "Based on general industry knowledge" statements
+- ❌ Character encoding artifacts (â€", â€™)
+- ❌ No clarifying questions asked
 
 ---
 
-## Post-Deployment Integration Testing
+## Document References
 
-### Cross-Agent Routing Tests
-
-| Test | Input | Expected Agent |
-|------|-------|----------------|
-| 1 | "Help me create a media plan" | ORC |
-| 2 | "Project results for $500K" | ANL |
-| 3 | "Segment our audience using RFM" | AUD |
-| 4 | "Allocate budget across channels" | CHA |
-| 5 | "Analyze our fee stack" | SPO |
-| 6 | "Generate the plan document" | DOC |
-| 7 | "Our CPA is above target" | PRF |
-
-### End-to-End Workflow Test
-
-1. Start new session with ORC
-2. Complete Steps 1-2 (objectives, audience) - should route to AUD
-3. Complete Steps 3-5 (channels, allocation) - should route to CHA
-4. Request projections - should route to ANL
-5. Request document - should route to DOC
-6. Verify document generated with all sections
-
-### Performance Benchmarks
-
-| Metric | Target | Acceptable |
-|--------|--------|------------|
-| ORC routing decision | < 1s | < 2s |
-| Specialist response | < 3s | < 5s |
-| Document generation | < 10s | < 15s |
-| Full workflow (10 steps) | < 3min | < 5min |
+| Document | Purpose |
+|----------|---------|
+| `MPA_v6_Agent_Configuration_Reference.md` | Complete settings rationale |
+| `MPA_v6_Manual_Deployment_Instructions.md` | Step-by-step manual tasks |
+| `sanitize_kb_files.py` | KB encoding sanitization script |
 
 ---
 
-## Rollback Procedure
-
-If issues are encountered:
-
-1. **Immediate:** Disable multi-agent feature flag
-2. **Within 1 hour:** Revert to monolithic MPA
-3. **Document:** Log all issues in GitHub issue tracker
-
-### Feature Flag Commands
-
-```
-# Disable multi-agent routing
-Set-FeatureFlag -Name "multi_agent_enabled" -Value $false
-
-# Revert to monolithic
-Set-FeatureFlag -Name "use_mpa_v55" -Value $true
-```
-
----
-
-## Sign-Off
-
-| Role | Name | Date | Signature |
-|------|------|------|-----------|
-| Developer | | | |
-| QA | | | |
-| Product Owner | | | |
-
----
-
-## Appendix: File Locations
-
-| Agent | Instructions Path | KB Path |
-|-------|-------------------|---------|
-| ORC | `release/v6.0/agents/orc/instructions/` | `release/v6.0/agents/orc/kb/` |
-| ANL | `release/v6.0/agents/anl/instructions/` | `release/v6.0/agents/anl/kb/` |
-| AUD | `release/v6.0/agents/aud/instructions/` | `release/v6.0/agents/aud/kb/` |
-| CHA | `release/v6.0/agents/cha/instructions/` | `release/v6.0/agents/cha/kb/` |
-| SPO | `release/v6.0/agents/spo/instructions/` | `release/v6.0/agents/spo/kb/` |
-| DOC | `release/v6.0/agents/doc/instructions/` | `release/v6.0/agents/doc/kb/` |
-| PRF | `release/v6.0/agents/prf/instructions/` | `release/v6.0/agents/prf/kb/` |
+**Document Version:** 2.0.0
+**Last Updated:** January 22, 2026

@@ -1,0 +1,222 @@
+{
+  "table_name": "eap_access_rule",
+  "display_name": "MCMAP Access Rule",
+  "description": "Attribute-based access control rules for MCMAP content and capabilities",
+  "schema_version": "1.0",
+  "primary_key": "eap_access_ruleid",
+  "fields": [
+    {
+      "name": "eap_access_ruleid",
+      "display_name": "Access Rule ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "description": "Primary key - auto-generated GUID"
+    },
+    {
+      "name": "rule_name",
+      "display_name": "Rule Name",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": true,
+      "description": "Descriptive name for the access rule"
+    },
+    {
+      "name": "rule_description",
+      "display_name": "Rule Description",
+      "type": "nvarchar",
+      "max_length": 1000,
+      "required": false,
+      "description": "Detailed description of what this rule protects and why"
+    },
+    {
+      "name": "rule_type",
+      "display_name": "Rule Type",
+      "type": "choice",
+      "required": true,
+      "options": [
+        {"value": 1, "label": "AGENT"},
+        {"value": 2, "label": "CONTENT_SET"},
+        {"value": 3, "label": "DOCUMENT"},
+        {"value": 4, "label": "CAPABILITY"},
+        {"value": 5, "label": "DATA_AREA"}
+      ],
+      "description": "Type of resource this rule protects"
+    },
+    {
+      "name": "target_pattern",
+      "display_name": "Target Pattern",
+      "type": "nvarchar",
+      "max_length": 500,
+      "required": true,
+      "description": "Pattern matching what this rule protects. Supports wildcards (* for any). Multiple patterns comma-separated."
+    },
+    {
+      "name": "conditions_json",
+      "display_name": "Conditions",
+      "type": "ntext",
+      "required": true,
+      "description": "JSON array of conditions that must be met for access. See conditions_schema for structure."
+    },
+    {
+      "name": "condition_logic",
+      "display_name": "Condition Logic",
+      "type": "choice",
+      "required": true,
+      "default": 1,
+      "options": [
+        {"value": 1, "label": "ALL"},
+        {"value": 2, "label": "ANY"}
+      ],
+      "description": "ALL requires all conditions true (AND). ANY requires at least one condition true (OR)."
+    },
+    {
+      "name": "denial_message",
+      "display_name": "Denial Message",
+      "type": "nvarchar",
+      "max_length": 1000,
+      "required": false,
+      "description": "Custom message shown when access is denied. If blank uses default denial message."
+    },
+    {
+      "name": "applies_when_abac_off",
+      "display_name": "Applies When ABAC Off",
+      "type": "bit",
+      "required": true,
+      "default": false,
+      "description": "If true this rule is enforced even when full ABAC is disabled. Used for C-Suite protection."
+    },
+    {
+      "name": "priority",
+      "display_name": "Priority",
+      "type": "int",
+      "required": true,
+      "default": 50,
+      "description": "Higher priority rules evaluated first. Range 1-100. C-Suite rules typically 100."
+    },
+    {
+      "name": "is_active",
+      "display_name": "Is Active",
+      "type": "bit",
+      "required": true,
+      "default": true,
+      "description": "Whether this rule is currently enforced"
+    },
+    {
+      "name": "created_on",
+      "display_name": "Created On",
+      "type": "datetime",
+      "required": true,
+      "default": "GETUTCDATE()"
+    },
+    {
+      "name": "modified_on",
+      "display_name": "Modified On",
+      "type": "datetime",
+      "required": true,
+      "default": "GETUTCDATE()"
+    }
+  ],
+  "conditions_schema": {
+    "description": "Schema for conditions_json field",
+    "structure": {
+      "conditions": [
+        {
+          "attribute": "string - user profile attribute name",
+          "operator": "string - comparison operator",
+          "values": ["array of values to compare against"]
+        }
+      ]
+    },
+    "supported_attributes": [
+      "employee_level",
+      "department",
+      "team",
+      "division",
+      "region",
+      "country",
+      "cost_center",
+      "job_title",
+      "security_group",
+      "manager_chain",
+      "user_id"
+    ],
+    "supported_operators": [
+      {
+        "operator": "EQUALS",
+        "description": "Exact match - attribute equals first value"
+      },
+      {
+        "operator": "NOT_EQUALS",
+        "description": "Not equal - attribute does not equal first value"
+      },
+      {
+        "operator": "IN",
+        "description": "Value in list - attribute matches any value in array"
+      },
+      {
+        "operator": "NOT_IN",
+        "description": "Value not in list - attribute does not match any value"
+      },
+      {
+        "operator": "CONTAINS",
+        "description": "String contains - attribute contains first value as substring"
+      },
+      {
+        "operator": "STARTS_WITH",
+        "description": "String starts with - attribute begins with first value"
+      },
+      {
+        "operator": "MEMBER_OF",
+        "description": "Security group membership - user is member of any group in values"
+      },
+      {
+        "operator": "MANAGER_CHAIN",
+        "description": "Manager chain - first value user_id appears in manager_chain_json"
+      },
+      {
+        "operator": "REGEX",
+        "description": "Regular expression - attribute matches first value as regex pattern"
+      }
+    ],
+    "example": {
+      "conditions": [
+        {
+          "attribute": "employee_level",
+          "operator": "IN",
+          "values": ["CEO", "President", "EVP", "SVP"]
+        },
+        {
+          "attribute": "security_group",
+          "operator": "MEMBER_OF",
+          "values": ["MCMAP-Executive-Access"]
+        }
+      ]
+    }
+  },
+  "seed_rules": [
+    {
+      "rule_name": "C-Suite Executive Briefs",
+      "rule_description": "CEO and C-Suite role-specific strategic briefs restricted to executive leadership",
+      "rule_type": 2,
+      "target_pattern": "00-MCMAP_CEO_Brief.md,00-A-MCMAP_Chief_*.md,00-B-MCMAP_Chief_*.md,00-C-MCMAP_Chief_*.md,00-D-MCMAP_Chief_*.md",
+      "conditions_json": "{\"conditions\":[{\"attribute\":\"employee_level\",\"operator\":\"IN\",\"values\":[\"CEO\",\"President\",\"EVP\",\"SVP\"]},{\"attribute\":\"security_group\",\"operator\":\"MEMBER_OF\",\"values\":[\"MCMAP-Executive-Access\"]}]}",
+      "condition_logic": 2,
+      "denial_message": "This content is reserved for Executive Leadership. To request access say request access and I will submit your request.",
+      "applies_when_abac_off": true,
+      "priority": 100,
+      "is_active": true
+    },
+    {
+      "rule_name": "Investment Proposal",
+      "rule_description": "Financial investment case document restricted to executives and Finance/Strategy",
+      "rule_type": 3,
+      "target_pattern": "09A-MCMAP_Investment_Proposal.md",
+      "conditions_json": "{\"conditions\":[{\"attribute\":\"employee_level\",\"operator\":\"IN\",\"values\":[\"CEO\",\"President\",\"EVP\",\"SVP\"]},{\"attribute\":\"department\",\"operator\":\"IN\",\"values\":[\"Finance\",\"Strategy\"]},{\"attribute\":\"security_group\",\"operator\":\"MEMBER_OF\",\"values\":[\"MCMAP-Executive-Access\"]}]}",
+      "condition_logic": 2,
+      "denial_message": "This financial document is restricted. To request access say request access.",
+      "applies_when_abac_off": true,
+      "priority": 100,
+      "is_active": true
+    }
+  ]
+}

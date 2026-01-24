@@ -1,0 +1,164 @@
+{
+  "table_name": "eap_access_request",
+  "display_name": "MCMAP Access Request",
+  "description": "Tracks user requests for access to protected content",
+  "schema_version": "1.0",
+  "primary_key": "eap_access_requestid",
+  "fields": [
+    {
+      "name": "eap_access_requestid",
+      "display_name": "Access Request ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "description": "Primary key - auto-generated GUID"
+    },
+    {
+      "name": "user_id",
+      "display_name": "User ID",
+      "type": "uniqueidentifier",
+      "required": true,
+      "indexed": true,
+      "description": "Azure AD user ID of requester"
+    },
+    {
+      "name": "user_display_name",
+      "display_name": "User Name",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": true,
+      "description": "Requester display name"
+    },
+    {
+      "name": "user_email",
+      "display_name": "User Email",
+      "type": "nvarchar",
+      "max_length": 320,
+      "required": true,
+      "description": "Requester email address"
+    },
+    {
+      "name": "user_job_title",
+      "display_name": "User Job Title",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": false,
+      "description": "Requester job title at time of request"
+    },
+    {
+      "name": "user_employee_level",
+      "display_name": "User Level",
+      "type": "nvarchar",
+      "max_length": 50,
+      "required": false,
+      "description": "Requester employee level at time of request"
+    },
+    {
+      "name": "user_department",
+      "display_name": "User Department",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": false,
+      "description": "Requester department at time of request"
+    },
+    {
+      "name": "user_division",
+      "display_name": "User Division",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": false,
+      "description": "Requester division at time of request"
+    },
+    {
+      "name": "user_region",
+      "display_name": "User Region",
+      "type": "nvarchar",
+      "max_length": 100,
+      "required": false,
+      "description": "Requester region at time of request"
+    },
+    {
+      "name": "requested_content",
+      "display_name": "Requested Content",
+      "type": "nvarchar",
+      "max_length": 500,
+      "required": true,
+      "description": "Content or capability access was requested for"
+    },
+    {
+      "name": "justification",
+      "display_name": "Justification",
+      "type": "ntext",
+      "required": false,
+      "description": "User provided reason for needing access"
+    },
+    {
+      "name": "request_status",
+      "display_name": "Request Status",
+      "type": "choice",
+      "required": true,
+      "default": 1,
+      "options": [
+        {"value": 1, "label": "PENDING"},
+        {"value": 2, "label": "APPROVED"},
+        {"value": 3, "label": "DENIED"}
+      ],
+      "description": "Current status of the access request"
+    },
+    {
+      "name": "requested_at",
+      "display_name": "Requested At",
+      "type": "datetime",
+      "required": true,
+      "default": "GETUTCDATE()",
+      "description": "Timestamp when request was submitted"
+    },
+    {
+      "name": "resolved_at",
+      "display_name": "Resolved At",
+      "type": "datetime",
+      "required": false,
+      "description": "Timestamp when request was approved or denied"
+    },
+    {
+      "name": "resolved_by",
+      "display_name": "Resolved By",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": false,
+      "description": "Name of person who resolved the request"
+    },
+    {
+      "name": "resolution_notes",
+      "display_name": "Resolution Notes",
+      "type": "nvarchar",
+      "max_length": 1000,
+      "required": false,
+      "description": "Notes from resolver explaining decision"
+    },
+    {
+      "name": "rule_triggered",
+      "display_name": "Rule Triggered",
+      "type": "nvarchar",
+      "max_length": 200,
+      "required": false,
+      "description": "Name of access rule that triggered the denial"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "IX_eap_access_request_user_id",
+      "fields": ["user_id"],
+      "unique": false
+    },
+    {
+      "name": "IX_eap_access_request_status",
+      "fields": ["request_status"],
+      "unique": false
+    },
+    {
+      "name": "IX_eap_access_request_requested_at",
+      "fields": ["requested_at"],
+      "unique": false
+    }
+  ]
+}

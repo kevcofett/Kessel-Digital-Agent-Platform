@@ -9,15 +9,23 @@ Quick reference for navigating MCMAP documentation.
 | Doc # | Title | Size | Key Sections |
 |-------|-------|------|--------------|
 | 01 | Executive Summary | 57K | Strategic value, platform overview, extensibility |
-| 02 | System Architecture | 90K | Technical stack, component layers, integration |
-| 03 | Security Compliance | 55K | DLP, data provenance, audit controls |
+| 02 | System Architecture | 90K | Technical stack, component layers, ABAC integration |
+| 03 | Security Compliance | 55K | DLP, data provenance, audit controls, ABAC (Section 12) |
 | 04 | Agent Capabilities | 31K | 10 agents, 36 capabilities, invocation |
-| 05 | Data Architecture | 53K | 14 Dataverse tables, schema, relationships |
+| 05 | Data Architecture | 56K | 18 Dataverse tables, schema, EAP Security tables |
 | 06 | AI Builder Integration | 53K | 26 prompts, configuration, GPT settings |
 | 07 | Operational Runbook | 37K | Support tiers, maintenance, incidents |
 | 08 | Quality Assurance | 51K | Testing framework, Braintrust, scorers |
 | 09 | Future Use Cases | 25K | Strategic opportunities, $6.7-12B TAM |
 | 10 | Contact Reference | 3K | Kevin Bauer, escalation paths |
+
+### Security & Access Control Documentation
+
+| Document | Size | Purpose |
+|----------|------|---------|
+| MCMAP_ABAC_Implementation.md | 24K | Complete ABAC implementation guide |
+| KB-MCMAP_Access_Control_Reference.md | 8K | Agent reference for protected content |
+| mcmap_access_rules.yaml | 9K | Master access rule configuration |
 
 ---
 
@@ -41,6 +49,9 @@ Quick reference for navigating MCMAP documentation.
 | Who to contact? | 10 | 1 |
 | How to extend? | 01 | 9 |
 | Future roadmap? | 09 | 9 |
+| Access control? | 03 | 12 (ABAC) |
+| Protected content? | KB-Access_Control | All |
+| User profiles? | 05 | 3.2 (EAP Security) |
 
 ---
 
@@ -84,6 +95,8 @@ Quick reference for navigating MCMAP documentation.
 
 | Keyword | Documents |
 |---------|-----------|
+| ABAC | 03 (Sec 12), 05 (Sec 3.2), MCMAP_ABAC_Implementation |
+| Access Control | 03, KB-Access_Control_Reference, MCMAP_ABAC_Implementation |
 | AI Builder | 06, 02, 01 |
 | Agent Factory | 09, 01 |
 | Attribution | 04 (PRF), 08 |
@@ -100,7 +113,7 @@ Quick reference for navigating MCMAP documentation.
 | Persona | This document |
 | Power Platform | 02, 01 |
 | Revenue | 09, 01 |
-| Security | 03, 01 |
+| Security | 03 (incl. ABAC Sec 12), 01, MCMAP_ABAC_Implementation |
 | Session | 05, 02 |
 | SharePoint | 02, 06 |
 | Strategic | 09, 01 |

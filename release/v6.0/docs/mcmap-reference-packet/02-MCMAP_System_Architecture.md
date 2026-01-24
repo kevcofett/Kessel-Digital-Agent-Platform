@@ -79,9 +79,10 @@ MCMAP operates within Mastercard's Microsoft Power Platform environment, providi
 | Total KB Files | 37+ | Across all agents |
 | Instruction Space | 80,000 chars | 8K Ã— 10 agents |
 | AI Builder Prompts | 26 | Registered in eap_prompt |
-| Dataverse Tables | 14 | EAP (8) + MPA (6) |
-| Power Automate Flows | 5 | Core orchestration flows |
+| Dataverse Tables | 18 | EAP (8) + MPA (6) + Security (4) |
+| Power Automate Flows | 8 | 5 Core + 3 Security (ABAC) |
 | SharePoint Libraries | 1 | Knowledge Base hosting |
+| ABAC Rules | 20+ | Content access control rules |
 
 ### 1.3 Technology Stack Summary
 
@@ -93,6 +94,7 @@ MCMAP operates within Mastercard's Microsoft Power Platform environment, providi
 | Data | Dataverse | Structured data storage |
 | Knowledge | SharePoint | Unstructured KB content |
 | Identity | Azure AD | Authentication & authorization |
+| Access Control | ABAC (Dataverse + Flows) | Attribute-based content protection |
 | Monitoring | Power Platform Analytics | Observability |
 
 ---
@@ -709,7 +711,7 @@ POWER PLATFORM SOLUTIONS
 â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
 â”‚  MPA_v6_Platform (Managed Solution)                                         â”‚
 â”‚  â”œâ”€â”€ Components                                                             â”‚
-â”‚  â”‚   â”œâ”€â”€ Dataverse Tables (14)                                              â”‚
+â”‚  â”‚   â”œâ”€â”€ Dataverse Tables (18)                                              â”‚
 â”‚  â”‚   â”œâ”€â”€ Power Automate Flows (5)                                           â”‚
 â”‚  â”‚   â”œâ”€â”€ AI Builder Prompts (26)                                            â”‚
 â”‚  â”‚   â””â”€â”€ Environment Variables                                              â”‚

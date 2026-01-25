@@ -37,6 +37,11 @@ This platform provides immediate scale to the organization's consulting services
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## THE 11 AGENTS
 
 MCMAP currently deploys 11 specialized AI agents that collaborate to provide comprehensive support:
@@ -63,6 +68,11 @@ MCMAP currently deploys 11 specialized AI agents that collaborate to provide com
 - 708+ channel benchmarks
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## THREE TRANSFORMATIONAL CAPABILITIES
 
@@ -135,6 +145,11 @@ Just as the App Store transformed Apple from a hardware company into an ecosyste
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## EFFICIENCY GAINS
 
 The media planning deployment demonstrates substantial operational improvements:
@@ -152,6 +167,11 @@ The media planning deployment demonstrates substantial operational improvements:
 - Reduced rework through standardized processes and quality gates
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## REVENUE OPPORTUNITIES
 
@@ -177,6 +197,11 @@ The media planning deployment demonstrates substantial operational improvements:
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## COMPETITIVE POSITIONING
 
 **The Power of Live Demonstration:**
@@ -197,6 +222,11 @@ MCMAP enables Mastercard to demonstrate live transformational capabilities to cl
 Each agent added attracts more users, generates improving data, creates demand for more agents, reduces marginal cost, and increases switching costs. Combined with Mastercard's proprietary data assets, this creates advantages impossible for competitors to replicate.
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## PLATFORM ARCHITECTURE
 
@@ -256,6 +286,11 @@ MCMAP is designed so **expanding capabilities does not require rewriting code**.
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## RISK ANALYSIS
 
 MCMAP presents **low risk** due to how it is built:
@@ -276,6 +311,11 @@ MCMAP presents **low risk** due to how it is built:
 **The platform can be extended and scaled while maintaining the same level of risk avoidance and protection.**
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## THE PATH FORWARD
 

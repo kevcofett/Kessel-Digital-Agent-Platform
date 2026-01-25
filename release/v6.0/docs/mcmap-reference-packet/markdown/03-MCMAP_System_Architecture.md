@@ -25,6 +25,11 @@
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## 1. ARCHITECTURE OVERVIEW
 
 ### 1.1 System Context
@@ -416,6 +421,11 @@ All capabilities are registered in the `eap_capability` Dataverse table:
 | ORC_VALIDATE_GATE | ORC | Validate workflow gate |
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## 6. KNOWLEDGE BASE ARCHITECTURE
 

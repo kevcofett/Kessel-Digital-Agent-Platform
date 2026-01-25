@@ -46,7 +46,7 @@ This document outlines how MCMAP's agentic AI architecture positions Mastercard 
 7. [Data Services & Open Banking Opportunities](#7-data-services--open-banking-opportunities)
 8. [Internal Efficiency Opportunities](#8-internal-efficiency-opportunities)
 9. [Implementation Roadmap](#9-implementation-roadmap)
-10. [Investment & Return Summary](#10-investment--return-summary)
+10. [Strategic Summary](#10-strategic-summary)
 
 ---
 
@@ -54,7 +54,7 @@ This document outlines how MCMAP's agentic AI architecture positions Mastercard 
 
 ### The Opportunity
 
-MCMAP demonstrates that enterprise AI agents can be built rapidly, deployed securely within Mastercard's DLP-compliant environment, and deliver immediate business value. The same architectural patterns that power media planning can be extended to capture **$3-5B+ in annual revenue opportunity** across Mastercard's service portfolio.
+MCMAP demonstrates that enterprise AI agents can be built rapidly, deployed securely within Mastercard's DLP-compliant environment, and deliver immediate business value. The same architectural patterns that power media planning can be extended to capture **significant revenue opportunity** across Mastercard's service portfolio.
 
 ### Key Insight
 
@@ -62,14 +62,14 @@ MCMAP is not a media planning tool. **It is an enterprise AI platform** that tra
 
 ### Revenue Impact Summary
 
-| Category | Estimated Annual Revenue | MCMAP Role |
-|----------|--------------------------|------------|
-| Advisors & Consulting | $2.0-3.5B | Agent implementation practice, AI consulting |
-| Network & Payments | $1.2-2.5B | Agentic commerce, cognitive routing |
-| Analytics & Risk | $1.0-1.8B | Autonomous fraud defense, risk agents |
-| Marketing & Loyalty | $1.5-2.5B | Commerce media, personalization agents |
-| Data Services | $0.5-1.0B | Open banking orchestration, insight agents |
-| Internal Efficiency | $0.5-0.7B equivalent | Ops automation, sales enablement |
+| Category | Opportunity Scale | MCMAP Role |
+|----------|-------------------|------------|
+| Advisors & Consulting | Very High | Agent implementation practice, AI consulting |
+| Network & Payments | Very High | Agentic commerce, cognitive routing |
+| Analytics & Risk | High | Autonomous fraud defense, risk agents |
+| Marketing & Loyalty | Very High | Commerce media, personalization agents |
+| Data Services | High | Open banking orchestration, insight agents |
+| Internal Efficiency | Significant | Ops automation, sales enablement |
 
 ---
 
@@ -125,7 +125,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $300-600M/year |
+| **Opportunity Scale** | Very High |
 | **Efficiency Impact** | Medium |
 | **How AI Drives It** | Advisors lead clients through identifying, designing, and deploying agents (fraud, CX, ops, marketing) on top of Mastercard platforms, turning scattered use cases into an integrated agentic operating model |
 | **MCMAP Connection** | MCMAP provides the reference architecture and proven patterns that advisors bring to clients |
@@ -134,7 +134,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $300-600M/year |
+| **Opportunity Scale** | Very High |
 | **Efficiency Impact** | Medium |
 | **How AI Drives It** | Advisors define data foundations and MLOps patterns so clients can safely run large fleets of agents (risk agents, personalization agents) and keep models updated and governed |
 | **MCMAP Connection** | EAP shared infrastructure demonstrates enterprise-grade MLOps patterns |
@@ -143,7 +143,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $200-400M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | Low-Medium |
 | **How AI Drives It** | Advisors design AI-driven audience models, bidding/optimization agents, and closed-loop measurement based on Mastercard Commerce Media and transaction data, turning banks/retailers into media businesses |
 | **MCMAP Connection** | AUD agent patterns for segmentation; ANL for measurement |
@@ -152,7 +152,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $200-300M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | Medium |
 | **How AI Drives It** | Agents automatically design and run Test & Learn experiments on pricing, rewards, and product constructs, continuously suggesting new tests and portfolio changes that maximize profit per customer |
 | **MCMAP Connection** | PRF agent provides attribution and testing patterns |
@@ -161,7 +161,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $200-300M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | Medium |
 | **How AI Drives It** | Advisors help clients deploy personalization and loyalty agents that decide "who gets what offer, when, and on which channel," optimizing CLV using real-time behavior and Mastercard spend patterns |
 | **MCMAP Connection** | AUD + CHA agents demonstrate channel optimization patterns |
@@ -170,7 +170,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $150-300M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | High |
 | **How AI Drives It** | Advisors re-architect fraud programs around autonomous risk agents that score transactions, predict compromise, and triage cases, turning static rules into continuously learning defenses |
 | **MCMAP Connection** | Agent collaboration patterns; real-time decision architecture |
@@ -179,7 +179,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $150-250M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | Medium |
 | **How AI Drives It** | Advisors design agent workflows that pull open-banking data, analyze cash-flow, and trigger credit/underwriting or payment decisions, while other agents manage secure, privacy-preserving data collaboration in clean rooms |
 | **MCMAP Connection** | Data provenance framework; session isolation patterns |
@@ -188,7 +188,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $100-200M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | Low-Medium |
 | **How AI Drives It** | Scenario agents combine Mastercard spend data with macro models to continuously produce "what-if" portfolio and market outlooks for clients, rather than occasional static reports |
 | **MCMAP Connection** | ANL agent scenario modeling capabilities |
@@ -197,7 +197,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $100-200M/year + pull-through |
+| **Opportunity Scale** | High with expansion potential |
 | **Efficiency Impact** | Low-Medium |
 | **How AI Drives It** | Clients co-design new agentic products (SME cash-flow coach agents, travel booking agents) in Mastercard labs; prototype agents show value quickly and then scale via Mastercard platforms |
 | **MCMAP Connection** | Rapid agent development patterns; shared orchestration |
@@ -206,7 +206,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $100-200M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | Medium |
 | **How AI Drives It** | Advisors restructure client data (models, governance, lineage) specifically so agents can safely read/write across systems, enforcing policies via data-access agents instead of manual controls |
 | **MCMAP Connection** | Data provenance framework; Dataverse patterns |
@@ -219,7 +219,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $600M-1B+/year |
+| **Opportunity Scale** | High-1B+/year |
 | **Efficiency Impact** | Medium |
 | **How AI Drives It** | Payment agents verify intent, authenticate themselves, and orchestrate tokenized transactions on behalf of consumers and businesses, creating a standard way for agents to "pay" over Mastercard |
 | **MCMAP Enabler** | Authentication and session patterns; secure state management |
@@ -228,7 +228,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $300-600M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | Medium-High |
 | **How AI Drives It** | Routing and decision agents evaluate each authorization in real time, choosing the route, message structure, and retry strategy that maximizes approval probability at lowest cost |
 | **MCMAP Enabler** | Real-time decision patterns; capability dispatcher |
@@ -237,7 +237,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $300-600M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | High |
 | **How AI Drives It** | Treasury agents monitor flows, FX, and balances continuously, scheduling payments and currency conversion to minimize cost and ensure liquidity without human intervention |
 | **MCMAP Enabler** | Autonomous agent patterns; continuous monitoring |
@@ -250,7 +250,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | Up to $800M/year |
+| **Revenue Band** | Very High |
 | **Efficiency Impact** | High |
 | **How AI Drives It** | Fraud agents score transactions, predict compromised credentials, monitor merchants, and even gather evidence for investigations; they continuously retrain on new fraud patterns from network data |
 | **MCMAP Enabler** | Multi-agent collaboration; knowledge base updates |
@@ -259,7 +259,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $300-500M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | Medium-High |
 | **How AI Drives It** | Domain-specific risk agents (credit, AML, healthcare) learn individual and network patterns to predict default, suspicious activity, and abuse, feeding decisions into client systems in near real time |
 | **MCMAP Enabler** | Vertical-specific agent patterns; industry knowledge bases |
@@ -268,7 +268,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $100-200M/year incremental |
+| **Opportunity Scale** | High incremental |
 | **Efficiency Impact** | Medium |
 | **How AI Drives It** | Experiment agents translate business questions into tests, pick control/treatment, monitor KPIs, and return recommended actions, effectively running a continuous experimentation engine |
 | **MCMAP Enabler** | PRF agent attribution patterns; ANL statistical capabilities |
@@ -281,7 +281,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $1B+/year |
+| **Opportunity Scale** | High+/year |
 | **Efficiency Impact** | High |
 | **How AI Drives It** | Audience, bidding, and attribution agents decide which users to target, how much to bid, and how to reallocate budget based on actual purchase outcomes on the Mastercard network |
 | **MCMAP Enabler** | AUD segmentation; CHA channel optimization; ANL measurement |
@@ -290,7 +290,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $300-500M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | Medium |
 | **How AI Drives It** | Real-time agents pick content, offers, and products per user and per session, using transaction and behavioral data; they also auto-run experiments and promote winning variants |
 | **MCMAP Enabler** | Real-time decision patterns; A/B testing framework |
@@ -299,7 +299,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $500M+/year |
+| **Opportunity Scale** | High+/year |
 | **Efficiency Impact** | High |
 | **How AI Drives It** | Orchestration agents coordinate decisions across personalization, loyalty, and media in one brain - optimizing at the customer level instead of per channel |
 | **MCMAP Enabler** | ORC orchestration patterns; cross-agent collaboration |
@@ -308,7 +308,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $200-300M/year incremental |
+| **Opportunity Scale** | High incremental |
 | **Efficiency Impact** | Medium-High |
 | **How AI Drives It** | Campaign agents build segments, creatives, and schedules, while optimization agents monitor and adjust campaigns, letting human consultants focus on strategy and client management |
 | **MCMAP Enabler** | DOC agent document generation; AUD segmentation |
@@ -317,7 +317,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $200-300M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | Medium |
 | **How AI Drives It** | Segmentation agents learn fine-grained spending patterns, generate and refresh in-market audiences, and push them to ad platforms without exposing raw PII |
 | **MCMAP Enabler** | AUD agent patterns; privacy-preserving design |
@@ -326,7 +326,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $200-300M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | Medium |
 | **How AI Drives It** | Retention agents detect churn risk early and automatically choose which incentive (or intervention) to offer each customer to maximize lifetime value |
 | **MCMAP Enabler** | LTV modeling; proactive intelligence patterns |
@@ -335,7 +335,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $100-200M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | Medium |
 | **How AI Drives It** | Agents manage matching, run privacy-safe queries, and generate aggregated insights inside the clean room, so humans don't need to hand-craft every analysis |
 | **MCMAP Enabler** | Data provenance; secure computation patterns |
@@ -348,7 +348,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $100-150M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | Medium |
 | **How AI Drives It** | Insight agents sit over SpendingPulse and answer natural-language questions, build charts, and explain trends, rather than clients hiring analysts to mine the data |
 | **MCMAP Enabler** | Conversational patterns; knowledge retrieval |
@@ -357,7 +357,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $150-300M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | Medium-High |
 | **How AI Drives It** | Data agents manage consent, pull bank data, and analyze cash-flow to drive instant credit, KYC, or payment decisions without manual underwriting |
 | **MCMAP Enabler** | Session management; secure data handling |
@@ -366,7 +366,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $150-250M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | Medium |
 | **How AI Drives It** | Embedded agents turn raw Mastercard data into ready-to-use signals (risk scores, propensity scores) that client systems can call via APIs |
 | **MCMAP Enabler** | Capability abstraction; standardized outputs |
@@ -375,7 +375,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Revenue Band** | $100-150M/year |
+| **Opportunity Scale** | High |
 | **Efficiency Impact** | Low-Medium |
 | **How AI Drives It** | Scenario agents continuously update forecasts and stress tests using live spend data and external macro inputs, instead of periodic manual modelling |
 | **MCMAP Enabler** | ANL scenario capabilities; continuous refresh |
@@ -388,7 +388,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Impact** | Supports $100-200M/year incremental/retained revenue |
+| **Impact** | Supports High incremental/retained revenue |
 | **Efficiency Impact** | Medium |
 | **How AI Drives It** | Agents watch account behavior, suggest next products to pitch, and generate tailored decks/RFP responses, raising hit rates per seller |
 | **MCMAP Enabler** | DOC agent generation; MKT competitive intelligence |
@@ -397,7 +397,7 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 | Attribute | Detail |
 |-----------|--------|
-| **Impact** | $500-700M/year equivalent savings/capacity at scale |
+| **Impact** | High equivalent savings/capacity at scale |
 | **Efficiency Impact** | High |
 | **How AI Drives It** | Back-office agents process invoices, reconcile data, screen sanctions, and handle routine HR/IT requests, shrinking cycle times and manual effort across the company |
 | **MCMAP Enabler** | Agent factory model; shared infrastructure |
@@ -432,27 +432,31 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 ---
 
-## 10. INVESTMENT & RETURN SUMMARY
+## 10. STRATEGIC SUMMARY
 
 ### Total Addressable Opportunity
 
-| Category | Conservative | Aggressive |
-|----------|--------------|------------|
-| Advisors & Consulting | $2.0B | $3.5B |
-| Network & Payments | $1.2B | $2.5B |
-| Analytics & Risk | $1.0B | $1.8B |
-| Marketing & Loyalty | $1.5B | $2.5B |
-| Data Services | $0.5B | $1.0B |
-| Internal Efficiency | $0.5B | $0.7B |
-| **Total** | **$6.7B** | **$12.0B** |
+MCMAP creates significant revenue potential across all categories through the agent factory model:
 
-### MCMAP Investment Leverage
+| Category | Opportunity Level | Primary Value Driver |
+|----------|-------------------|----------------------|
+| Advisors & Consulting | Very High | AI implementation practice, transformation consulting |
+| Network & Payments | Very High | Agentic commerce, cognitive payment routing |
+| Analytics & Risk | High | Autonomous fraud defense, continuous risk monitoring |
+| Marketing & Loyalty | Very High | Commerce media, unified personalization |
+| Data Services | High | Open banking orchestration, insight agents |
+| Internal Efficiency | Significant | Ops automation, sales enablement |
 
-| Investment Type | One-Time Cost | Ongoing | Benefit |
-|-----------------|---------------|---------|---------|
-| MCMAP Platform (already built) | ~$100K | ~$50K/year | Foundation for all agents |
-| Per New Agent | ~$50-100K | ~$20K/year | Decreasing marginal cost |
-| Enterprise Scale (20+ agents) | Minimal incremental | Shared infrastructure | Maximum leverage |
+### MCMAP Platform Leverage
+
+The platform architecture creates compounding value:
+
+| Investment Characteristic | MCMAP Advantage |
+|--------------------------|-----------------|
+| Foundation Already Built | Core infrastructure ready for expansion |
+| Marginal Cost Decreasing | Each new agent leverages existing components |
+| Shared Infrastructure | Enterprise scale achieved with minimal incremental cost |
+| Security Pre-Approved | DLP compliance inherited by all new agents |
 
 ### The Strategic Imperative
 
@@ -460,6 +464,6 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 ---
 
-**Document Version:** 1.0
+**Document Version:** 2.0
 **Classification:** Mastercard Internal
-**Last Updated:** January 24, 2026
+**Last Updated:** January 25, 2026

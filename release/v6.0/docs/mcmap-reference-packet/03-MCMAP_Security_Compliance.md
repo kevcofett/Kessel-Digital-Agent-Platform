@@ -43,43 +43,43 @@ MCMAP is architected with security as a foundational principle, designed specifi
 
 ### 1.2 Security Boundary
 
-```
-+-----------------------------------------------------------------------------+
-|                      MCMAP SECURITY BOUNDARY                                 |
-+-----------------------------------------------------------------------------+
-|                                                                              |
-|  EXTERNAL (BLOCKED)                        INTERNAL (ALLOWED)                |
-|  +----------------------+                  +----------------------+          |
-|  | X Public Internet    |                  | V Azure AD           |          |
-|  | X External APIs      |                  | V Dataverse          |          |
-|  | X Third-party SaaS   |    FIREWALL      | V SharePoint         |          |
-|  | X Custom Endpoints   |<--------------->| V AI Builder         |          |
-|  | X Unmanaged Azure    |                  | V Power Automate     |          |
-|  | X HTTP Connector     |                  | V Copilot Studio     |          |
-|  +----------------------+                  | V Microsoft Teams    |          |
-|                                            | V Office 365         |          |
-|                                            +----------------------+          |
-|                                                                              |
-|  +----------------------------------------------------------------------+   |
-|  |                      DLP ENFORCEMENT LAYER                           |   |
-|  |  All data flows validated against Mastercard DLP policies            |   |
-|  |  Non-compliant connectors blocked at runtime                         |   |
-|  +----------------------------------------------------------------------+   |
-|                                                                              |
-+-----------------------------------------------------------------------------+
-```
+MCMAP operates with configurable security controls. All elements can be easily turned on or off to comply with DLP and integrate with the full Microsoft security suite.
+
+**Currently Turned Off (External):**
+- Public Internet access
+- External APIs
+- Third-party SaaS connections
+- Custom endpoints
+- Unmanaged Azure resources
+- HTTP Connector
+
+**Currently Turned On (Internal):**
+- Azure AD authentication
+- Dataverse data storage
+- SharePoint knowledge base
+- AI Builder computation
+- Power Automate workflows
+- Copilot Studio agents
+- Microsoft Teams integration
+- Office 365 services
+
+**Key Design Principle:** The platform is built with modularity and graceful failure. All security elements can be easily configured to meet specific requirements while maintaining compliance.
 
 ### 1.3 Security Posture Summary
 
-| Category | Status | Evidence |
-|----------|--------|----------|
-| External Connectivity | BLOCKED | DLP policy enforcement |
-| Data Exfiltration | PREVENTED | No outbound HTTP |
-| Authentication | ENFORCED | Azure AD SSO required |
-| Authorization | IMPLEMENTED | RBAC via Dataverse |
-| Audit Logging | ENABLED | eap_telemetry table |
-| Encryption at Rest | ENABLED | Dataverse TDE |
-| Encryption in Transit | ENABLED | TLS 1.2+ mandatory |
+MCMAP is designed with modularity and security flexibility at its core:
+
+| Category | Current Status | Configurable |
+|----------|----------------|--------------|
+| External Connectivity | Currently turned off | Yes - can enable specific integrations |
+| Data Exfiltration Prevention | Enabled via DLP configuration | Yes - adjustable per requirement |
+| Authentication | Azure AD SSO required | Standard enterprise auth |
+| Authorization | RBAC via Dataverse | Fully configurable |
+| Audit Logging | Enabled (eap_telemetry table) | Yes - retention adjustable |
+| Encryption at Rest | Enabled (Dataverse TDE) | Microsoft-managed |
+| Encryption in Transit | TLS 1.2+ mandatory | Standard compliance |
+
+**Design Philosophy:** Every security element can be easily turned on or off. The platform gracefully adapts to different security requirements while maintaining compliance with the full Microsoft security suite.
 
 ---
 
@@ -97,33 +97,35 @@ MCMAP is fully compliant with Mastercard's Data Loss Prevention policies:
 | Approved connectors only | See approved list below | COMPLIANT |
 | Audit trail required | eap_telemetry logging | COMPLIANT |
 
-### 2.2 Approved Connector Inventory
+### 2.2 Connectors Currently Turned On
 
-MCMAP uses **exclusively** Mastercard-approved connectors:
+MCMAP uses **exclusively** Mastercard-approved connectors. All connectors can be easily turned on or off based on requirements:
 
-| Connector | Business Justification | Data Flow |
-|-----------|------------------------|-----------|
-| **Microsoft Dataverse** | Primary data storage for configuration, sessions, telemetry | Bidirectional |
-| **AI Builder** | Computation layer for analytics and processing | Processing only |
-| **SharePoint** | Knowledge base document storage | Read-only |
-| **Office 365 Outlook** | Notification delivery (optional) | Outbound only |
-| **Office 365 Users** | User identity resolution | Read-only |
-| **Microsoft Teams** | User interface integration | Bidirectional |
-| **Approvals** | Workflow approval processes | Bidirectional |
-| **Excel Online (Business)** | Data import/export within tenant | Bidirectional |
+| Connector | Business Justification | Data Flow | Status |
+|-----------|------------------------|-----------|--------|
+| **Microsoft Dataverse** | Primary data storage for configuration, sessions, telemetry | Bidirectional | Turned On |
+| **AI Builder** | Computation layer for analytics and processing | Processing only | Turned On |
+| **SharePoint** | Knowledge base document storage | Read-only | Turned On |
+| **Office 365 Outlook** | Notification delivery (optional) | Outbound only | Turned On |
+| **Office 365 Users** | User identity resolution | Read-only | Turned On |
+| **Microsoft Teams** | User interface integration | Bidirectional | Turned On |
+| **Approvals** | Workflow approval processes | Bidirectional | Turned On |
+| **Excel Online (Business)** | Data import/export within tenant | Bidirectional | Turned On |
 
-### 2.3 Blocked Connectors
+### 2.3 Connectors Currently Turned Off
 
-The following connectors are **NOT USED** in MCMAP due to DLP restrictions:
+The following connectors are **currently turned off** and can be enabled as needed for future capabilities:
 
-| Connector | Reason Blocked | Alternative Used |
-|-----------|----------------|------------------|
-| HTTP | External connectivity risk | AI Builder prompts |
-| Custom Connectors | Unvetted external endpoints | None required |
-| Azure Functions | External Azure resources | AI Builder prompts |
-| Azure Blob Storage | External storage risk | SharePoint |
-| SQL Server | External database risk | Dataverse |
-| SFTP | External file transfer risk | SharePoint |
+| Connector | Current Status | Notes |
+|-----------|----------------|-------|
+| HTTP | Turned off | Can be enabled for external API integrations |
+| Custom Connectors | Turned off | Can be enabled for specific partner integrations |
+| Azure Functions | Turned off | Can be enabled for enhanced compute scenarios |
+| Azure Blob Storage | Turned off | Can be enabled for large file processing |
+| SQL Server | Turned off | Can be enabled for external database connections |
+| SFTP | Turned off | Can be enabled for file transfer workflows |
+
+**Key Point:** All connectors can be easily turned on or off to comply with DLP and integrate with the full Microsoft security suite. This modularity is a core design principle.
 
 ### 2.4 DLP Policy Verification
 
@@ -550,7 +552,7 @@ When deployed to Mastercard environments, MCMAP operates under strict isolation:
 | Control | Implementation | Effect |
 |---------|----------------|--------|
 | **No Outbound HTTP** | DLP policy blocks all HTTP connectors | Data cannot leave MC boundary |
-| **No External APIs** | Custom connectors blocked by policy | No external service calls possible |
+| **No External APIs** | Custom connectors turned off by policy | No external service calls possible |
 | **Internal Storage Only** | All data persists in Dataverse/SharePoint | Data stays within MC tenant |
 | **No Internet KB Access** | Knowledge base hosted in MC SharePoint | KB retrieval is internal only |
 | **No External AI Calls** | AI Builder uses MC-tenant GPT instances | No data sent to external models |
@@ -578,9 +580,9 @@ When deployed to Mastercard environments, MCMAP operates under strict isolation:
 |                    |   DLP ENFORCEMENT      |                                |
 |                    |   LAYER                |                                |
 |                    |                        |                                |
-|                    |  X HTTP blocked        |                                |
-|                    |  X Custom blocked      |                                |
-|                    |  X External blocked    |                                |
+|                    |  - HTTP turned off     |                                |
+|                    |  - Custom turned off   |                                |
+|                    |  - External turned off |                                |
 |                    +------------------------+                                |
 |                              |                                               |
 |                              V                                               |
@@ -600,7 +602,7 @@ When deployed to Mastercard environments, MCMAP operates under strict isolation:
 | **In Code Repository** | No MC data in code | GitHub repository contains no proprietary data |
 | **In Knowledge Base** | No MC data in KB | All KB content from public sources |
 | **During Testing** | No MC data in tests | Test scenarios use synthetic data |
-| **Post-Deployment** | No MC data can exit | DLP blocks all outbound data flows |
+| **Post-Deployment** | No MC data can exit | DLP controls prevent outbound data flows |
 
 ### 11.9 Third-Party Tool Data Handling
 
@@ -620,7 +622,7 @@ When deployed to Mastercard environments, MCMAP operates under strict isolation:
 | **Data Sources** | Public information only | MC-approved data + public info |
 | **Network Access** | Standard internet | MC internal network only |
 | **Data Storage** | Local/GitHub | Dataverse/SharePoint (MC tenant) |
-| **Outbound Connectivity** | Standard internet | BLOCKED by DLP |
+| **Outbound Connectivity** | Standard internet | Turned off by DLP |
 | **AI Model Access** | Public Claude/GPT APIs | MC-tenant AI Builder only |
 | **Security Controls** | Standard development practices | Full MC enterprise security |
 

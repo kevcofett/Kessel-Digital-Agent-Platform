@@ -81,12 +81,35 @@ AI Builder Custom Prompts serve as the universal computation layer for MCMAP, pr
 
 | Specification | Value |
 |---------------|-------|
-| Model | GPT-4 (Azure OpenAI via AI Builder) |
+| Current Model | Claude Sonnet 4 / Claude Opus 4 (varies by agent) |
+| Model Flexibility | Can be switched to ChatGPT or other models as engineering provides within Microsoft tech stack |
 | Max Input Tokens | 8,000 |
 | Max Output Tokens | 2,500 |
 | Default Temperature | 0.1 - 0.3 |
 | Timeout | 30 - 60 seconds |
 | Rate Limit | 60 requests/minute (environment limit) |
+
+**Model Portability Note:** Claude models can easily be switched out for ChatGPT models or others as engineering provides within the Microsoft tech stack. The Capability Abstraction Layer ensures model changes require only configuration updates, not code changes.
+
+### 1.4 Agent Configuration Table
+
+The following table shows the current LLM model deployed for each agent, web search status, and other critical settings:
+
+| Agent | LLM Model | Web Search | Temperature | Max Tokens | Critical Settings |
+|-------|-----------|------------|-------------|------------|-------------------|
+| **ORC** | Claude Sonnet 4 | Turned Off | 0.1 | 500 | Intent classification, low variance |
+| **ANL** | Claude Opus 4 | Turned Off | 0.1-0.2 | 2,000 | Statistical precision required |
+| **AUD** | Claude Sonnet 4 | Turned Off | 0.3 | 1,500 | Audience modeling |
+| **CHA** | Claude Sonnet 4 | Turned On | 0.3 | 2,500 | Current benchmark data |
+| **SPO** | Claude Opus 4 | Turned Off | 0.1 | 1,500 | Fee calculation precision |
+| **DOC** | Claude Sonnet 4 | Turned Off | 0.5 | 4,000 | Document generation flexibility |
+| **PRF** | Claude Opus 4 | Turned Off | 0.2 | 2,000 | Attribution analysis |
+| **CST** | Claude Sonnet 4 | Turned On | 0.3 | 2,000 | Framework recommendations |
+| **CHG** | Claude Sonnet 4 | Turned Off | 0.3 | 1,500 | Change management |
+| **CA** | Claude Opus 4 | Turned Off | 0.2 | 2,000 | Business case analysis |
+| **DOCS** | Claude Sonnet 4 | Turned Off | 0.3 | 1,500 | Documentation lookup |
+
+**Key:** Web Search status indicates whether real-time web data retrieval is currently enabled for that agent. All settings can be easily adjusted.
 
 ---
 
@@ -1154,11 +1177,79 @@ eap_telemetry
 
 ---
 
+## 11. Agent Expansion Opportunities
+
+The following table outlines short and medium-term agent expansion opportunities across teams, departments, and business units:
+
+### Short-Term Expansion Opportunities (3-6 months)
+
+| Business Area | Agent Opportunity | Value Driver | MCMAP Connection |
+|---------------|-------------------|--------------|------------------|
+| **Sales Enablement** | Proposal Generator Agent | Faster sales cycles, consistent quality | DOC + ANL patterns |
+| **Client Success** | Account Health Monitor | Retention, upsell identification | PRF + AUD patterns |
+| **Finance** | Forecast & Variance Agent | Better planning accuracy | ANL patterns |
+| **HR Onboarding** | New Hire Navigator | Faster productivity, better experience | CST patterns |
+| **Legal/Compliance** | Policy Q&A Agent | Reduced legal inquiries | KB + ORC patterns |
+| **IT Support** | Tier 1 Support Agent | Reduced ticket volume | ORC + CST patterns |
+
+### Medium-Term Expansion Opportunities (6-12 months)
+
+| Business Area | Agent Opportunity | Value Driver | MCMAP Connection |
+|---------------|-------------------|--------------|------------------|
+| **Product Development** | Market Research Agent | Faster insights, competitive intel | CHA + AUD patterns |
+| **Procurement** | Vendor Assessment Agent | Better supplier decisions | ANL + SPO patterns |
+| **Risk Management** | Compliance Monitor Agent | Continuous compliance | PRF patterns |
+| **Partner Ecosystem** | Partner Enablement Agent | Faster partner onboarding | DOC + CST patterns |
+| **Data Products** | Insights Assistant Agent | Self-service analytics | ANL + AUD patterns |
+| **Client Delivery** | Project Health Agent | Proactive issue detection | PRF + CHG patterns |
+
+### External/Client-Facing Expansion (12+ months)
+
+| Offering | Agent Opportunity | Revenue Model | MCMAP Connection |
+|----------|-------------------|---------------|------------------|
+| **Licensed Agents** | Clients deploy branded agents | Subscription | Full platform |
+| **Agent-as-a-Service** | Hosted agents via API | Usage-based | All agent patterns |
+| **Partner Extensions** | Third parties build on MCMAP | Revenue share | Platform SDK |
+| **Data-Enhanced Agents** | Agents with MC data products | Premium licensing | AUD + ANL + data |
+
+---
+
+## 12. The Ask: AI Governance Partnership
+
+**Bring MCMAP into full Mastercard AI governance model:**
+
+| Ask | Description | Benefit |
+|-----|-------------|---------|
+| **AI Governance Integration** | Incorporate MCMAP into MC's enterprise AI governance framework | Formal oversight, policy alignment |
+| **Platform Expansion Support** | Resources to enhance and expand platform for internal and external use cases | Accelerated capability delivery |
+| **Strategic Partnership** | Establish ongoing collaboration between AI business leads and strategic business units | Business-driven development |
+| **Dedicated Engineering Pods** | Engineering pods assigned to AI Business leads | Rapid iteration capacity |
+| **Dev Environment Access** | Development environments firewalled from MC data for demos, prototypes, and sales | Safe innovation space |
+
+**Development Environment Requirements:**
+
+Safe environments that enable rapid prototyping without risk to production data:
+- Isolated from Mastercard production data
+- Full platform capabilities for building and testing
+- Ability to demonstrate to clients and prospects
+- Support for rapid iteration on new agent concepts
+- Access for sales and delivery teams to create client-specific demos
+
+**Operational Model:**
+
+Minimal engineering support required. The platform is designed so that consultants and staff can build to suit within MC DLP constraints. Engineering involvement focuses on:
+- Platform infrastructure maintenance
+- Security and compliance oversight
+- Performance optimization
+- New capability enablement (when needed)
+
+---
+
 ## Document References
 
 | Document | Purpose |
 |----------|---------|
-| [01-MCMAP_Executive_Summary.md](./01-MCMAP_Executive_Summary.md) | Executive overview |
+| [00-MCMAP_Strategic_Platform_Vision.md](./00-MCMAP_Strategic_Platform_Vision.md) | Strategic overview |
 | [02-MCMAP_System_Architecture.md](./02-MCMAP_System_Architecture.md) | Technical architecture |
 | [03-MCMAP_Security_Compliance.md](./03-MCMAP_Security_Compliance.md) | Security framework |
 | [04-MCMAP_Agent_Capabilities.md](./04-MCMAP_Agent_Capabilities.md) | Agent reference |

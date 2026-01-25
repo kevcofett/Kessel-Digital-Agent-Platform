@@ -23,6 +23,11 @@
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## 1. Operations Overview
 
 ### 1.1 Platform Components
@@ -87,6 +92,11 @@ MCMAP consists of these operational components:
 | Microsoft Support | Premier Support | Vendor escalation |
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## 2. Monitoring & Alerting
 
@@ -240,6 +250,11 @@ Runbook: Section 6.3 - Performance Issues
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## 3. Incident Management
 
 ### 3.1 Incident Classification
@@ -353,6 +368,11 @@ For SEV-1 and SEV-2 incidents:
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## 4. Support Procedures
 
 ### 4.1 L1 Support Procedures
@@ -445,6 +465,11 @@ For SEV-1 and SEV-2 incidents:
 | New Capability | Product Owner | Full deployment |
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## 5. Maintenance Operations
 
@@ -539,6 +564,11 @@ WHERE created_on < DATEADD(day, -180, GETDATE())
 ```
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## 6. Troubleshooting Guide
 
@@ -681,6 +711,11 @@ WHERE created_on < DATEADD(day, -180, GETDATE())
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## 7. Escalation Procedures
 
 ### 7.1 Escalation Matrix
@@ -744,6 +779,11 @@ Options:
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## 8. Service Level Agreements
 
 ### 8.1 Availability SLA
@@ -783,6 +823,11 @@ Options:
 - User satisfaction metrics
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## 9. Capacity Management
 
@@ -827,6 +872,11 @@ Options:
 | Session cleanup | -5% storage | Automated retention |
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## 10. Disaster Recovery
 

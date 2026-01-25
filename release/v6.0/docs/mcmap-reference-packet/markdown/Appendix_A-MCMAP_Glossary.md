@@ -23,6 +23,11 @@ This document provides definitions for all acronyms, terms, and concepts used ac
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## PLATFORM ACRONYMS
 
 | Acronym | Full Name | Definition |
@@ -38,6 +43,11 @@ This document provides definitions for all acronyms, terms, and concepts used ac
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## TECHNOLOGY TERMS
 
 | Term | Definition |
@@ -52,6 +62,11 @@ This document provides definitions for all acronyms, terms, and concepts used ac
 | Topic | Copilot Studio conversation unit that handles specific user intents |
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## METRICS AND KPIs
 
@@ -70,6 +85,11 @@ This document provides definitions for all acronyms, terms, and concepts used ac
 | Working Media Ratio | Percentage of media budget reaching actual impressions vs. fees |
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## CONSULTING FRAMEWORKS
 
@@ -96,6 +116,11 @@ This document provides definitions for all acronyms, terms, and concepts used ac
 | **VRIO Framework** | Resource-based analysis: Value, Rarity, Imitability, Organization | CST | Competitive advantage |
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## BUILT-IN ANALYTICAL MODELS
 

@@ -50,6 +50,11 @@ This document outlines how MCMAP's agentic AI architecture positions Mastercard 
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## 1. EXECUTIVE SUMMARY
 
 ### The Opportunity
@@ -72,6 +77,11 @@ MCMAP is not a media planning tool. **It is an enterprise AI platform** that tra
 | Internal Efficiency | Significant | Ops automation, sales enablement |
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## 2. MCMAP AS STRATEGIC FOUNDATION
 
@@ -118,6 +128,11 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 - **Govern Consistently**: Security and compliance built in
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## 3. TOP 10 ADVISORS & CONSULTING OPPORTUNITIES
 
@@ -213,6 +228,11 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## 4. NETWORK & PAYMENTS OPPORTUNITIES
 
 ### 4.1 Agent Pay / Agentic Commerce Suite
@@ -244,6 +264,11 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## 5. ANALYTICS & RISK PLATFORM OPPORTUNITIES
 
 ### 5.1 Autonomous Fraud Defense Platform
@@ -274,6 +299,11 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 | **MCMAP Enabler** | PRF agent attribution patterns; ANL statistical capabilities |
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## 6. MARKETING, ADVERTISING & LOYALTY OPPORTUNITIES
 
@@ -342,6 +372,11 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## 7. DATA SERVICES & OPEN BANKING OPPORTUNITIES
 
 ### 7.1 SpendingPulse Conversational Intelligence
@@ -382,6 +417,11 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## 8. INTERNAL EFFICIENCY OPPORTUNITIES
 
 ### 8.1 Sales Intelligence & Proposal Agents
@@ -403,6 +443,11 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 | **MCMAP Enabler** | Agent factory model; shared infrastructure |
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## 9. IMPLEMENTATION ROADMAP
 
@@ -431,6 +476,11 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 | Client-Facing Agent Factory | White-label patterns | Medium |
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## 10. STRATEGIC SUMMARY
 

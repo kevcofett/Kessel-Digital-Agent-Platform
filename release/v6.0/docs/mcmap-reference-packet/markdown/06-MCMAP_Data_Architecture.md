@@ -24,6 +24,11 @@
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## 1. DATA ARCHITECTURE OVERVIEW
 
 ### 1.1 Data Architecture Diagram
@@ -86,6 +91,11 @@
 | **TOTAL** | **18** | |
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## 2. DATAVERSE SCHEMA
 
@@ -180,6 +190,11 @@ DATAVERSE SCHEMA DIAGRAM
 | JSON column | {descriptor}_json | inputs_json |
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## 3. TABLE SPECIFICATIONS
 
@@ -552,6 +567,11 @@ DATAVERSE SCHEMA DIAGRAM
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## 4. DATA RELATIONSHIPS
 
 ### 4.1 Primary Relationships
@@ -576,6 +596,11 @@ DATAVERSE SCHEMA DIAGRAM
 | mpa_channel | parent_channel_code | mpa_channel | Channel hierarchy |
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## 5. DATA FLOWS
 
@@ -656,6 +681,11 @@ DATAVERSE SCHEMA DIAGRAM
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## 6. DATA GOVERNANCE
 
 ### 6.1 Data Stewardship
@@ -688,6 +718,11 @@ DATAVERSE SCHEMA DIAGRAM
 
 ---
 
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 ## 7. DATA QUALITY
 
 ### 7.1 Quality Rules
@@ -719,6 +754,11 @@ DATAVERSE SCHEMA DIAGRAM
 | Stale Data | < 5% | Records not updated per retention |
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## 8. SEED DATA MANAGEMENT
 
@@ -770,6 +810,11 @@ SEED DATA IMPORT SEQUENCE
 ```
 
 ---
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 ## 9. BACKUP & RECOVERY
 

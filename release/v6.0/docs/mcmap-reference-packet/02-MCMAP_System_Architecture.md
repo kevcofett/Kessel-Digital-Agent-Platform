@@ -696,8 +696,52 @@ All KB files must comply with the 6-Rule Framework:
 | Microsoft Teams | Collaboration | âœ“ Approved | Business |
 | Approvals | Workflow | âœ“ Approved | Business |
 | Excel Online (Business) | Data | âœ“ Approved | Business |
-| HTTP | External | âœ— Blocked | Non-Business |
-| Custom Connectors | Custom | âœ— Blocked | Non-Business |
+| HTTP | External | Currently Turned Off | Non-Business |
+| Custom Connectors | Custom | Currently Turned Off | Non-Business |
+
+---
+
+## 9.3 Platform Portability Assessment
+
+MCMAP is designed for technology independence. While deployed on Microsoft Power Platform, the architecture adapts to alternative stacks:
+
+| Layer | Current Implementation | Alternative Options | Portability Effort |
+|-------|------------------------|---------------------|-------------------|
+| **Orchestration** | Power Automate | LangGraph, LangChain, AutoGen | Medium - pattern translation |
+| **Computation** | AI Builder | Direct LLM APIs, Azure OpenAI, Claude | Low - prompt reuse |
+| **Data Storage** | Dataverse | **DataBricks**, PostgreSQL, MongoDB | Medium - schema mapping |
+| **Knowledge Base** | SharePoint | Any RAG implementation, Vector DBs | Low - content portable |
+| **Identity** | Azure AD | Any OIDC provider | Low - standard protocols |
+| **Agents** | Copilot Studio | Custom agents, third-party platforms | Medium - logic portable |
+
+**DataBricks Integration Path:**
+
+For organizations using DataBricks as their primary data platform:
+- MCMAP's data layer (Dataverse tables) can be replicated to DataBricks
+- Capability implementations can query DataBricks directly via approved connectors
+- Analytics and ML capabilities can leverage DataBricks compute
+- Knowledge base can integrate with DataBricks-hosted document stores
+
+**Key Portability Principles:**
+- Abstracted orchestration enables framework migration
+- Standard prompt contracts work with any LLM provider  
+- Database independence through clean schema design
+- API-first capabilities for external integration
+- Modular knowledge base works with any RAG implementation
+
+---
+
+## 9.4 Future Integration Roadmap
+
+MCMAP is designed to easily plug in additional agents and data sets as needs evolve:
+
+| Integration Type | Description | Enablement Path |
+|------------------|-------------|-----------------|
+| **New Agents** | Additional specialist agents | Register with ORC, create KB, define capabilities |
+| **External Data Sets** | Third-party data integration | Approved connector + capability implementation |
+| **Partner Systems** | Client or partner platform integration | API exposure through capability layer |
+| **MC Data Products** | SpendingPulse, Audiences, Commerce Media | Capability implementations with data access |
+| **Analytics Platforms** | DataBricks, Snowflake, BigQuery | Connector enablement + query capabilities |
 
 ---
 

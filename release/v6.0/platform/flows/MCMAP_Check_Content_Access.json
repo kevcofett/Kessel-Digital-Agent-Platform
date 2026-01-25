@@ -1,0 +1,274 @@
+{
+  "flow_name": "MCMAP_Check_Content_Access",
+  "display_name": "MCMAP Check Content Access",
+  "description": "Evaluates ABAC rules to determine if user can access specific content",
+  "version": "1.0",
+  "trigger": {
+    "type": "HTTP_REQUEST",
+    "description": "Called from Copilot Studio before returning protected content",
+    "input_schema": {
+      "user_id": {
+        "type": "string",
+        "description": "Azure AD user ID from System.User.Id",
+        "required": true
+      },
+      "content_identifier": {
+        "type": "string",
+        "description": "Document name, agent code, or data area identifier",
+        "required": true
+      },
+      "content_type": {
+        "type": "string",
+        "description": "Type of content: AGENT, CONTENT_SET, DOCUMENT, CAPABILITY, DATA_AREA",
+        "required": true
+      }
+    }
+  },
+  "actions": [
+    {
+      "step": 1,
+      "action": "Get_Security_Config",
+      "type": "Dataverse_List_Rows",
+      "description": "Get ABAC and C-Suite protection settings",
+      "parameters": {
+        "table": "eap_security_config",
+        "filter": "config_key eq 'ABAC_ENABLED' or config_key eq 'CSUITE_PROTECTION_ENABLED' or config_key eq 'DEFAULT_ACCESS' or config_key eq 'LOG_ACCESS_CHECKS'"
+      }
+    },
+    {
+      "step": 2,
+      "action": "Parse_Config_Values",
+      "type": "Compose",
+      "description": "Extract config values into variables",
+      "variables": {
+        "abac_enabled": "boolean from ABAC_ENABLED",
+        "csuite_protection": "boolean from CSUITE_PROTECTION_ENABLED",
+        "default_access": "string from DEFAULT_ACCESS",
+        "log_access_checks": "boolean from LOG_ACCESS_CHECKS"
+      }
+    },
+    {
+      "step": 3,
+      "action": "Get_User_Profile",
+      "type": "Dataverse_Get_Row",
+      "description": "Get user profile for rule evaluation",
+      "parameters": {
+        "table": "eap_user_profile",
+        "filter": "user_id eq '@{triggerBody()?['user_id']}'"
+      }
+    },
+    {
+      "step": 4,
+      "action": "Check_Profile_Exists",
+      "type": "Condition",
+      "description": "If no profile exists, call sync flow first",
+      "condition": "outputs('Get_User_Profile')?['body'] is not null",
+      "if_false": {
+        "action": "Call_Profile_Sync",
+        "type": "HTTP",
+        "uri": "[MCMAP_User_Profile_Sync endpoint]",
+        "body": {
+          "user_id": "@{triggerBody()?['user_id']}"
+        }
+      }
+    },
+    {
+      "step": 5,
+      "action": "Get_Applicable_Rules",
+      "type": "Dataverse_List_Rows",
+      "description": "Get active rules that may apply to this content",
+      "parameters": {
+        "table": "eap_access_rule",
+        "filter": "is_active eq true",
+        "orderby": "priority desc"
+      }
+    },
+    {
+      "step": 6,
+      "action": "Filter_Rules_By_Mode",
+      "type": "Filter_Array",
+      "description": "Filter rules based on ABAC mode",
+      "expression": "(@{variables('abac_enabled')} eq true) or (item()?['applies_when_abac_off'] eq true and @{variables('csuite_protection')} eq true)"
+    },
+    {
+      "step": 7,
+      "action": "Match_Rules_To_Content",
+      "type": "Apply_To_Each",
+      "description": "Find rules that match the content identifier",
+      "items": "@{outputs('Filter_Rules_By_Mode')}",
+      "actions": [
+        {
+          "action": "Check_Pattern_Match",
+          "type": "Compose",
+          "description": "Check if content_identifier matches target_pattern using wildcard matching",
+          "logic": {
+            "exact_match": "content_identifier eq target_pattern",
+            "wildcard_match": "content_identifier matches pattern with * as wildcard",
+            "comma_separated": "Split target_pattern by comma and check each"
+          }
+        },
+        {
+          "action": "Add_To_Matching_Rules",
+          "type": "Append_To_Array",
+          "condition": "pattern_matched eq true"
+        }
+      ]
+    },
+    {
+      "step": 8,
+      "action": "Evaluate_Matching_Rules",
+      "type": "Apply_To_Each",
+      "description": "Evaluate conditions for each matching rule in priority order",
+      "items": "@{outputs('Match_Rules_To_Content')}",
+      "actions": [
+        {
+          "action": "Parse_Conditions",
+          "type": "Parse_JSON",
+          "content": "@{item()?['conditions_json']}"
+        },
+        {
+          "action": "Evaluate_Each_Condition",
+          "type": "Apply_To_Each",
+          "items": "@{outputs('Parse_Conditions')?['conditions']}",
+          "actions": [
+            {
+              "action": "Get_User_Attribute_Value",
+              "type": "Compose",
+              "expression": "outputs('Get_User_Profile')?['body']?[condition.attribute]"
+            },
+            {
+              "action": "Apply_Operator",
+              "type": "Switch",
+              "on": "@{item()?['operator']}",
+              "cases": {
+                "EQUALS": {
+                  "result": "user_value eq condition.values[0]"
+                },
+                "NOT_EQUALS": {
+                  "result": "user_value ne condition.values[0]"
+                },
+                "IN": {
+                  "result": "contains(condition.values, user_value)"
+                },
+                "NOT_IN": {
+                  "result": "not(contains(condition.values, user_value))"
+                },
+                "CONTAINS": {
+                  "result": "contains(user_value, condition.values[0])"
+                },
+                "STARTS_WITH": {
+                  "result": "startsWith(user_value, condition.values[0])"
+                },
+                "MEMBER_OF": {
+                  "result": "Check if any security_group in user profile matches any value in condition.values"
+                },
+                "MANAGER_CHAIN": {
+                  "result": "Check if condition.values[0] exists in manager_chain_json"
+                },
+                "REGEX": {
+                  "result": "Apply regex pattern from condition.values[0] to user_value"
+                }
+              }
+            },
+            {
+              "action": "Store_Condition_Result",
+              "type": "Append_To_Array",
+              "value": {
+                "attribute": "@{item()?['attribute']}",
+                "operator": "@{item()?['operator']}",
+                "result": "@{outputs('Apply_Operator')}"
+              }
+            }
+          ]
+        },
+        {
+          "action": "Apply_Condition_Logic",
+          "type": "Compose",
+          "description": "Apply ALL (AND) or ANY (OR) logic to condition results",
+          "expression": {
+            "ALL": "all condition results are true",
+            "ANY": "at least one condition result is true"
+          }
+        },
+        {
+          "action": "Check_If_Access_Granted",
+          "type": "Condition",
+          "condition": "outputs('Apply_Condition_Logic') eq true",
+          "if_true": {
+            "action": "Set_Access_Granted",
+            "variables": {
+              "access_granted": true,
+              "rule_applied": "@{item()?['rule_name']}",
+              "denial_message": null
+            },
+            "terminate_loop": true
+          }
+        }
+      ]
+    },
+    {
+      "step": 9,
+      "action": "Determine_Final_Access",
+      "type": "Compose",
+      "description": "If no rule granted access, apply default access",
+      "logic": {
+        "if_access_granted": "Return granted",
+        "if_matching_rules_exist": "Return denied with denial message from highest priority rule",
+        "if_no_matching_rules": "Apply default_access setting"
+      }
+    },
+    {
+      "step": 10,
+      "action": "Log_Access_Check",
+      "type": "Condition",
+      "description": "Log access check to telemetry if enabled",
+      "condition": "variables('log_access_checks') eq true",
+      "if_true": {
+        "action": "Create_Telemetry_Record",
+        "type": "Dataverse_Create_Row",
+        "parameters": {
+          "table": "eap_telemetry",
+          "record": {
+            "event_type": "ACCESS_CHECK",
+            "user_id": "@{triggerBody()?['user_id']}",
+            "user_display_name": "@{outputs('Get_User_Profile')?['body']?['display_name']}",
+            "user_employee_level": "@{outputs('Get_User_Profile')?['body']?['employee_level']}",
+            "user_department": "@{outputs('Get_User_Profile')?['body']?['department']}",
+            "user_division": "@{outputs('Get_User_Profile')?['body']?['division']}",
+            "user_region": "@{outputs('Get_User_Profile')?['body']?['region']}",
+            "content_requested": "@{triggerBody()?['content_identifier']}",
+            "access_granted": "@{variables('access_granted')}",
+            "access_rule_applied": "@{variables('rule_applied')}",
+            "timestamp": "@{utcNow()}"
+          }
+        }
+      }
+    },
+    {
+      "step": 11,
+      "action": "Return_Access_Decision",
+      "type": "Response",
+      "description": "Return access decision to Copilot Studio",
+      "parameters": {
+        "status_code": 200,
+        "body": {
+          "granted": "@{variables('access_granted')}",
+          "rule_applied": "@{variables('rule_applied')}",
+          "denial_message": "@{coalesce(variables('denial_message'), 'This content requires specific access permissions. To request access say request access.')}",
+          "user_attributes_evaluated": {
+            "employee_level": "@{outputs('Get_User_Profile')?['body']?['employee_level']}",
+            "department": "@{outputs('Get_User_Profile')?['body']?['department']}",
+            "division": "@{outputs('Get_User_Profile')?['body']?['division']}",
+            "region": "@{outputs('Get_User_Profile')?['body']?['region']}"
+          }
+        }
+      }
+    }
+  ],
+  "permissions_required": [
+    "Dataverse: Read eap_security_config",
+    "Dataverse: Read eap_user_profile",
+    "Dataverse: Read eap_access_rule",
+    "Dataverse: Create eap_telemetry"
+  ]
+}

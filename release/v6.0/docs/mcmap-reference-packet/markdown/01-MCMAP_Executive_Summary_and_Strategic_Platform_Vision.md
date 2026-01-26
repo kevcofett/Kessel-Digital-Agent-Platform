@@ -36,10 +36,6 @@
 - 4.3 Security & Compliance Posture
 - 4.4 Quality Assurance & Performance
 
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## PART 1: What Exists Today - Two Production-Ready Use Cases
 
 ### 1.1 Executive Overview
@@ -55,10 +51,6 @@ MCMAP delivers two production-ready capabilities today---Media Planning and Stra
 **What it cost to build:**
 
 - One person. ~100 hours. Under $3,000.
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ### 1.2 USE CASE 1: Media Planning Agent (MPA)
 
@@ -92,10 +84,6 @@ The Media Planning Agent transforms media brief development from blank-page gues
 - 2-Way API Execution: Push plans to DSPs, campaign platforms, measurement systems.
 
 **Result:** World-class media plans that deliver better results than any other partner or platform.
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ### 1.3 USE CASE 2: Consulting Agent (CA)
 
@@ -132,10 +120,6 @@ The Consulting Agent accelerates research, discovery, and assessment phases by r
 
 **Result:** Higher-quality research, discovery, and assessments that elevate every consulting deliverable.
 
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ### 1.4 Business Impact Summary
 
 | Impact Area | Traditional Approach | MCMAP Approach |
@@ -152,10 +136,6 @@ The Consulting Agent accelerates research, discovery, and assessment phases by r
 **Explore MCMAP Interactively:** An accompanying Documentation Agent (DOCS) is available for anyone who wants to explore the platform architecture, agent capabilities, and technical details in a more dynamic, conversational format. Ask it anything about MCMAP and it will guide you through the relevant documentation with full source citations.
 
 ---
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## PART 2: The Critical Bridge - From Use Cases to Platform
 
@@ -208,10 +188,6 @@ The question is not 'what can MCMAP do?'
 
 **The question is 'what does Mastercard want MCMAP to do next?'**
 
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## PART 3: Strategic Platform Vision
 
 ### 3.1 From Use Cases to Platform: The Agent Factory Model
@@ -261,10 +237,6 @@ MCMAP transforms Mastercard from building individual AI solutions to operating a
 - Maintain Centrally: Updates propagate across all agents
 - Govern Consistently: Security and compliance built in
 
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ### 3.4 Revenue Opportunities Beyond Media/Consulting
 
 The same platform architecture creates opportunities across Mastercard's entire service portfolio:
@@ -301,10 +273,6 @@ The same platform architecture creates opportunities across Mastercard's entire 
 - Open Banking Intelligence: Account aggregation insights and financial wellness agents
 - Merchant Analytics Suite: Business performance, benchmarking, and growth recommendation agents
 
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ### 3.5 Strategic Positioning & Competitive Moats
 
 **Mastercard Data Integration**
@@ -323,10 +291,6 @@ The same platform architecture creates opportunities across Mastercard's entire 
 
 - Not Locked to Power Platform: Capability abstraction enables migration to any stack.
 - Future-Proof Architecture: Technology choices can evolve while capabilities persist.
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## PART 4: Technical Foundation & Production Readiness
 
@@ -357,10 +321,6 @@ MCMAP is deployed on Microsoft Power Platform but architected for complete techn
 
 This means MCMAP can be customized and deployed for any client on their preferred technology stack, creating unlimited revenue opportunities through platform licensing, custom deployments, and agent-as-a-service offerings.
 
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ### 4.2 Agent System
 
 **11 Specialized Agents | 42 Capabilities**
@@ -378,10 +338,6 @@ This means MCMAP can be customized and deployed for any client on their preferre
 | Change Management | CHG | Consulting | Adoption planning, stakeholder mapping, readiness assessment | 3 |
 | Consulting Analysis | CA | Consulting | Business case development, ROI modeling, implementation roadmaps | 3 |
 | Documentation | DOCS | Platform | Architecture discovery, document navigation, terminology lookup, platform Q&A | 4 |
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ### 4.3 Security & Compliance Posture
 

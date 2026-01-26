@@ -23,11 +23,6 @@
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 1. Quality Assurance Framework
 
 ### 1.1 Quality Principles
@@ -92,11 +87,6 @@
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 2. Test Strategy
 
 ### 2.1 Test Pyramid
@@ -141,11 +131,6 @@
 | Golden test cases | eap_test_case | Maintained | Curated scenarios |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 3. Test Categories
 
@@ -299,11 +284,6 @@ Teardown:
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 4. Test Case Management
 
 ### 4.1 Test Case Repository
@@ -404,11 +384,6 @@ All test cases are stored in the `eap_test_case` Dataverse table:
 ```
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 5. Automated Testing
 
@@ -557,11 +532,6 @@ def response_accuracy(input: str, output: str, expected: dict) -> float:
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 6. Manual Testing Procedures
 
 ### 6.1 User Acceptance Testing (UAT)
@@ -633,11 +603,6 @@ Bugs Found:
 | Text sizing | 200% zoom support | Browser zoom test |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 7. Performance Testing
 
@@ -722,11 +687,6 @@ Pass Criteria:
 | Flow runs/day | 8,000 | Monitor at peak |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 8. Deployment Validation
 
@@ -839,11 +799,6 @@ Trigger rollback if:
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 9. Quality Metrics
 
 ### 9.1 Quality Dashboard Metrics
@@ -893,11 +848,6 @@ Track weekly/monthly:
 | Defects Found | 5 | 3 | 2 | 1 | â†“ |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 10. Continuous Improvement
 

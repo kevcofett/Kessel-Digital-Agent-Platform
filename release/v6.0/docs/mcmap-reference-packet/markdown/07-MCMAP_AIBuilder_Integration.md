@@ -23,11 +23,6 @@
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 1. AI Builder Architecture
 
 ### 1.1 Role in MCMAP
@@ -118,11 +113,6 @@ The following table shows the current LLM model deployed for each agent, web sea
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 2. Prompt Inventory
 
 ### 2.1 Complete Prompt Registry
@@ -180,11 +170,6 @@ All prompts are registered in the `eap_prompt` Dataverse table:
 | modified_at | DateTime | Last modification |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 3. Prompt Design Standards
 
@@ -265,11 +250,6 @@ When prompts cannot complete successfully:
 | Booleans | is_ prefix | {{is_brand_campaign}} |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 4. Agent-Specific Prompts
 
@@ -737,11 +717,6 @@ When prompts cannot complete successfully:
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 5. Power Automate Flows
 
 ### 5.1 Flow Inventory
@@ -897,11 +872,6 @@ MCMAP uses 5 core Power Automate flows:
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 6. Capability Abstraction Layer
 
 ### 6.1 Architecture Overview
@@ -992,11 +962,6 @@ To add a new capability:
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 7. Connector Configuration
 
 ### 7.1 Approved Connectors
@@ -1039,11 +1004,6 @@ Flows use connection references for environment-independent deployment:
 | MPA_Teams_Connection | Teams | Bot integration |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 8. Integration Patterns
 
@@ -1105,11 +1065,6 @@ Canvas and Model-Driven apps can interact with MCMAP:
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 9. Error Handling
 
 ### 9.1 Error Categories
@@ -1165,11 +1120,6 @@ When capabilities fail, MCMAP degrades gracefully:
 | Session lookup fails | Create new session |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 10. Performance Optimization
 

@@ -28,11 +28,6 @@
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 1. AGENT SYSTEM OVERVIEW
 
 ### 1.1 Agent Architecture
@@ -98,11 +93,6 @@ Users interact with MCMAP through natural language. The Orchestrator (ORC) autom
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 2. ORC - ORCHESTRATOR AGENT
 
 ### 2.1 Agent Profile
@@ -161,11 +151,6 @@ workflow, step, gate, help            â†’ ORC (self)
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 3. ANL - ANALYTICS AGENT
 
 ### 3.1 Agent Profile
@@ -211,11 +196,6 @@ workflow, step, gate, help            â†’ ORC (self)
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 4. AUD - AUDIENCE INTELLIGENCE AGENT
 
 ### 4.1 Agent Profile
@@ -260,11 +240,6 @@ workflow, step, gate, help            â†’ ORC (self)
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 5. CHA - CHANNEL STRATEGY AGENT
 
 ### 5.1 Agent Profile
@@ -305,11 +280,6 @@ workflow, step, gate, help            â†’ ORC (self)
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 6. SPO - SUPPLY PATH OPTIMIZATION AGENT
 
 ### 6.1 Agent Profile
@@ -348,11 +318,6 @@ workflow, step, gate, help            â†’ ORC (self)
 | "Calculate NBI for our top SSPs" | SPO_NBI_CALCULATE | NBI scores with interpretation |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 7. DOC - DOCUMENT GENERATION AGENT
 
@@ -393,11 +358,6 @@ workflow, step, gate, help            â†’ ORC (self)
 | Executive Summary | EXEC_SUMMARY_v1 | Leadership briefing |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 8. PRF - PERFORMANCE INTELLIGENCE AGENT
 
@@ -440,11 +400,6 @@ workflow, step, gate, help            â†’ ORC (self)
 | "What optimizations should we make?" | PRF_OPTIMIZE | Prioritized optimization recommendations |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 9. CST - CONSULTING STRATEGY AGENT
 
@@ -490,11 +445,6 @@ workflow, step, gate, help            â†’ ORC (self)
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 10. CHG - CHANGE MANAGEMENT AGENT
 
 ### 10.1 Agent Profile
@@ -535,11 +485,6 @@ workflow, step, gate, help            â†’ ORC (self)
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 11. CA - CONSULTING ANALYSIS AGENT
 
 ### 11.1 Agent Profile
@@ -572,11 +517,6 @@ workflow, step, gate, help            â†’ ORC (self)
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 12. CAPABILITY CROSS-REFERENCE
 
 ### 12.1 Capability by Agent
@@ -607,11 +547,6 @@ workflow, step, gate, help            â†’ ORC (self)
 | **Strategy** | CST_FRAMEWORK_SELECT, CST_STRATEGIC_ANALYZE, CST_PRIORITIZE |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 13. USAGE EXAMPLES
 

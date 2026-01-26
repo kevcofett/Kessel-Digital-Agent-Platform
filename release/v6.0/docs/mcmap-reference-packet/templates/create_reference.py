@@ -4,14 +4,18 @@ Create reference.docx template for MCMAP documentation.
 Footer contains:
   - Center: MASTERCARD CONFIDENTIAL (C) 2026
   - Right: Page number
+Headings use Mastercard Orange (#FF5F00)
 """
 
 from docx import Document
-from docx.shared import Pt, Inches, Twips
+from docx.shared import Pt, Inches, Twips, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT
 from docx.oxml.ns import qn, nsmap
 from docx.oxml import OxmlElement
 import os
+
+# Mastercard Orange
+MC_ORANGE = RGBColor(0xFF, 0x5F, 0x00)
 
 def add_page_number(paragraph):
     """Add a page number field to a paragraph."""
@@ -54,6 +58,11 @@ def add_tab_stops(paragraph, center_pos, right_pos):
 
     pPr.append(tabs)
 
+def set_heading_style_color(doc, style_name, color):
+    """Set the font color for a heading style in the document."""
+    style = doc.styles[style_name]
+    style.font.color.rgb = color
+
 def create_reference_doc():
     doc = Document()
 
@@ -65,6 +74,25 @@ def create_reference_doc():
     section.right_margin = Inches(1)
     section.top_margin = Inches(1)
     section.bottom_margin = Inches(1)
+
+    # Set heading styles to Mastercard Orange
+    for level in range(1, 4):
+        style_name = f'Heading {level}'
+        set_heading_style_color(doc, style_name, MC_ORANGE)
+        doc.styles[style_name].font.name = 'Calibri Light'
+
+    # Set specific sizes per level
+    doc.styles['Heading 1'].font.size = Pt(18)
+    doc.styles['Heading 2'].font.size = Pt(15)
+    doc.styles['Heading 3'].font.size = Pt(13)
+
+    # Also set Heading 4 for good measure
+    try:
+        set_heading_style_color(doc, 'Heading 4', MC_ORANGE)
+        doc.styles['Heading 4'].font.name = 'Calibri Light'
+        doc.styles['Heading 4'].font.size = Pt(12)
+    except KeyError:
+        pass
 
     # Enable footer
     footer = section.footer
@@ -98,14 +126,10 @@ def create_reference_doc():
     page_run.font.size = Pt(9)
     page_run.font.name = 'Calibri'
 
-    # Add a sample heading to establish styles
+    # Add sample headings to establish styles in the document
     heading = doc.add_heading('Sample Heading 1', level=1)
-    heading.runs[0].font.name = 'Calibri Light'
-    heading.runs[0].font.size = Pt(16)
-
     heading2 = doc.add_heading('Sample Heading 2', level=2)
-    heading2.runs[0].font.name = 'Calibri Light'
-    heading2.runs[0].font.size = Pt(14)
+    heading3 = doc.add_heading('Sample Heading 3', level=3)
 
     para = doc.add_paragraph('Sample body text for reference document.')
     para.runs[0].font.name = 'Calibri'

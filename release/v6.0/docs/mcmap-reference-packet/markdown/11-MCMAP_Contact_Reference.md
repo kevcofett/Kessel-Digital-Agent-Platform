@@ -26,11 +26,6 @@
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## CONTACT ROUTING GUIDE
 
 | Question Type | Contact | Response Time |
@@ -45,11 +40,6 @@
 | **Training Requests** | Kevin Bauer | 1 week |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## HOW TO ENGAGE
 
@@ -81,11 +71,6 @@
 | **Mastercard Environment** | Corporate Power Platform (DLP-compliant) |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## ESCALATION PATH
 

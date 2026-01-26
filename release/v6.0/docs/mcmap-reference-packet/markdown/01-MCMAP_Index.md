@@ -32,11 +32,6 @@ Quick reference for navigating MCMAP documentation.
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## QUESTION ROUTING
 
 | Question Type | Document | Section |
@@ -64,11 +59,6 @@ Quick reference for navigating MCMAP documentation.
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## PERSONA-BASED ENTRY POINTS
 
 ### Executive Leadership
@@ -89,11 +79,6 @@ Quick reference for navigating MCMAP documentation.
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## TOPIC CROSS-REFERENCE
 
 | Topic | Primary Doc | Related Docs |
@@ -107,11 +92,6 @@ Quick reference for navigating MCMAP documentation.
 | Revenue Opportunity | 02 | 10 |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## KEYWORD INDEX
 
@@ -143,11 +123,6 @@ Quick reference for navigating MCMAP documentation.
 | Vertical | 02, 05 |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## COMMON QUESTIONS BY PERSONA
 

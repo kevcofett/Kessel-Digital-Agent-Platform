@@ -26,11 +26,6 @@
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 1. SECURITY OVERVIEW
 
 ### 1.1 Security Architecture Principles
@@ -87,11 +82,6 @@ MCMAP is designed with modularity and security flexibility at its core:
 **Design Philosophy:** Every security element can be easily turned on or off. The platform gracefully adapts to different security requirements while maintaining compliance with the full Microsoft security suite.
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 2. DATA LOSS PREVENTION (DLP) COMPLIANCE
 
@@ -154,11 +144,6 @@ DLP POLICY VERIFICATION CHECKLIST
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 3. AUTHENTICATION & AUTHORIZATION
 
 ### 3.1 Authentication Architecture
@@ -209,11 +194,6 @@ MCMAP implements role-based access control (RBAC) via Dataverse security roles:
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 4. DATA PROTECTION
 
 ### 4.1 Data Classification
@@ -244,11 +224,6 @@ MCMAP implements role-based access control (RBAC) via Dataverse security roles:
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 5. NETWORK SECURITY
 
 ### 5.1 Network Isolation
@@ -271,11 +246,6 @@ MCMAP has **zero external network connectivity**:
 - No outbound data flows
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 6. AUDIT & MONITORING
 
@@ -301,11 +271,6 @@ All MCMAP operations are logged to the eap_telemetry Dataverse table:
 | Security Events | Azure AD sign-in logs | Continuous |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 7. INCIDENT RESPONSE
 
@@ -360,11 +325,6 @@ INCIDENT RESPONSE WORKFLOW
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 8. COMPLIANCE CERTIFICATIONS
 
 ### 8.1 Microsoft Power Platform Compliance
@@ -391,11 +351,6 @@ MCMAP inherits Microsoft Power Platform's compliance certifications:
 | Data Processing Agreement | Microsoft DPA | Volume licensing |
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 9. RISK ASSESSMENT
 
@@ -465,11 +420,6 @@ In addition to technical security risks, the following strategic and business ri
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 10. SECURITY CONTROLS MATRIX
 
 ### 10.1 Control Categories
@@ -519,11 +469,6 @@ Security Contact: ____________________
 ```
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## 11. DEVELOPMENT DATA PROVENANCE & BUILD SECURITY ATTESTATION
 
@@ -718,11 +663,6 @@ Compliance Acknowledgment: ____________________  Date: ____________
 
 ---
 
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
-
 ## 12. ATTRIBUTE-BASED ACCESS CONTROL (ABAC)
 
 ### 12.1 ABAC Architecture Overview
@@ -839,11 +779,6 @@ When access is denied, the system:
 **Reference:** For complete ABAC implementation details, see `MCMAP_ABAC_Implementation.md`
 
 ---
-
-
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-```
 
 ## APPENDIX A: SECURITY CONFIGURATION REFERENCE
 

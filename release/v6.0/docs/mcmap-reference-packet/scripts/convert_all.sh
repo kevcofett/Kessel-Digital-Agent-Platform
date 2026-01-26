@@ -50,3 +50,8 @@ done
 echo ""
 echo "Complete: $count files converted"
 echo "Output: $DOCX_DIR"
+echo ""
+
+# Post-process: Fix heading colors to Mastercard Orange
+echo "Post-processing: Fixing heading colors..."
+python3 "$SCRIPT_DIR/fix_heading_colors.py"

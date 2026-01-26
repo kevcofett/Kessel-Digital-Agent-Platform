@@ -10,7 +10,7 @@ Quick reference for navigating MCMAP documentation.
 |-------|-------|--------------|
 | 00 | Title Page | Platform overview, document contents |
 | 01 | Index (This Document) | Navigation, question routing, cross-references |
-| 02 | Strategic Platform Vision | Platform opportunity, 11 agents, efficiency gains, revenue opportunities |
+| 02 | Executive Summary | Use cases, platform vision, agents, approach, benefits, technical foundation |
 | 03 | System Architecture | Technical stack, component layers, ABAC integration |
 | 04 | Security & Compliance | DLP, data provenance, audit controls, ABAC |
 | 05 | Agent Capabilities | 11 agents, 36 capabilities, invocation patterns |
@@ -36,13 +36,13 @@ Quick reference for navigating MCMAP documentation.
 
 | Question Type | Document | Section |
 |---------------|----------|---------|
-| What is MCMAP? | 02 | Platform Opportunity |
-| Strategic value? | 02 | Transforming Mastercard at Scale |
-| Revenue opportunity? | 02 | Revenue Opportunities |
-| How many agents? | 02, 05 | The 11 Agents |
+| What is MCMAP? | 02 | Part 2: The Platform Is The Product |
+| Strategic value? | 02 | Part 5: Benefits & Outcomes |
+| Revenue opportunity? | 02 | 5.2 Revenue Opportunities |
+| How many agents? | 02, 05 | Part 3: The 11 Agents |
 | What can ANL do? | 05 | Analytics |
 | What can AUD do? | 05 | Audience |
-| Platform stack? | 02, 03 | Platform Architecture |
+| Platform stack? | 02, 03 | Part 6: Technical Foundation |
 | DLP compliance? | 04 | DLP Compliance |
 | Data provenance? | 04 | Section 11 |
 | Dataverse tables? | 06 | Section 2 |
@@ -50,7 +50,7 @@ Quick reference for navigating MCMAP documentation.
 | Support tiers? | 08 | Section 2 |
 | Testing approach? | 09 | Section 3 |
 | Who to contact? | 11 | Section 1 |
-| How to extend? | 02 | Configuration-Driven Extensibility |
+| How to extend? | 02 | 4.3 Configuration-Driven Extensibility |
 | Future roadmap? | 10 | Strategic Opportunities |
 | Access control? | 04 | ABAC Section |
 | Protected content? | KB-Access_Control | All |
@@ -62,14 +62,14 @@ Quick reference for navigating MCMAP documentation.
 ## PERSONA-BASED ENTRY POINTS
 
 ### Executive Leadership
-- **Start:** Document 02 (Strategic Platform Vision)
-- **Focus:** Platform opportunity, competitive positioning, revenue opportunities
-- **Key Sections:** Transforming Mastercard at Scale, The 11 Agents, Risk Analysis
+- **Start:** Document 02 (Executive Summary)
+- **Focus:** Use cases, competitive positioning, revenue opportunities
+- **Key Sections:** Part 1 (Use Cases), Part 5 (Benefits & Outcomes), The Path Forward
 
 ### Senior Leadership
-- **Start:** Document 02 (Strategic Platform Vision), then Document 03 (System Architecture)
+- **Start:** Document 02 (Executive Summary), then Document 03 (System Architecture)
 - **Focus:** Capabilities, scalability, integration pathway
-- **Key Sections:** Three Transformational Capabilities, Platform Architecture
+- **Key Sections:** Part 4 (The Approach), Part 6 (Technical Foundation)
 
 ### Operations Staff
 - **Start:** Document 08 (Operational Runbook)
@@ -83,9 +83,9 @@ Quick reference for navigating MCMAP documentation.
 
 | Topic | Primary Doc | Related Docs |
 |-------|-------------|--------------|
-| Agents | 05 | 02 (overview), 07 (prompts) |
-| Architecture | 03 | 02 (summary), 06 (data) |
-| Security | 04 | 02 (summary), 08 (ops) |
+| Agents | 05 | 02 (Part 3), 07 (prompts) |
+| Architecture | 03 | 02 (Part 6), 06 (data) |
+| Security | 04 | 02 (Part 6), 08 (ops) |
 | Testing | 09 | 08 (ops), 05 (capabilities) |
 | Extensibility | 02 | 03, 07 |
 | Future Roadmap | 10 | 02 |
@@ -129,17 +129,17 @@ Quick reference for navigating MCMAP documentation.
 ### Executive Questions
 | Question | Answer Location |
 |----------|-----------------|
-| What's the efficiency gain? | Doc 02, Efficiency Gains |
-| What's the revenue opportunity? | Doc 02, Revenue Opportunities |
-| What's the competitive advantage? | Doc 02, Competitive Positioning |
-| What are the risks? | Doc 02, Risk Analysis |
+| What's the efficiency gain? | Doc 02, 5.1 Efficiency Gains |
+| What's the revenue opportunity? | Doc 02, 5.2 Revenue Opportunities |
+| What's the competitive advantage? | Doc 02, 5.3 Competitive Positioning |
+| What are the risks? | Doc 02, 5.4 Risk Analysis |
 
 ### Leadership Questions
 | Question | Answer Location |
 |----------|-----------------|
 | How does it integrate? | Doc 03, Integration Patterns |
 | What's the architecture? | Doc 03, Component Architecture |
-| How do we extend it? | Doc 02, Configuration-Driven Extensibility |
+| How do we extend it? | Doc 02, 4.3 Configuration-Driven Extensibility |
 | What's the roadmap? | Doc 10, Strategic Opportunities |
 
 ### Operations Questions

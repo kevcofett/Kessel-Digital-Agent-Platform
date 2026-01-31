@@ -85,7 +85,7 @@ release/v7.0/
 │   ├── orc/                           # Orchestrator
 │   │   ├── README.md
 │   │   ├── instructions/
-│   │   │   └── ORC_Copilot_Instructions_v3_CORRECTED.txt
+│   │   │   └── ORC_Copilot_Instructions_v3.txt
 │   │   └── kb/
 │   │       ├── ORC_KB_Routing_Logic_v1.txt
 │   │       ├── ORC_KB_Workflow_Gates_v1.txt
@@ -104,7 +104,7 @@ release/v7.0/
 │   ├── gha/                           # Growth Hacking Agent (v7.0 NEW)
 │   │   ├── README.md
 │   │   ├── instructions/
-│   │   │   └── 01_CoPilot_Core_Instructions_V3_6_REVISED.txt
+│   │   │   └── GHA_Copilot_Instructions_v1.txt
 │   │   ├── kb/
 │   │   │   ├── GHA_KB_Specialist_Requests_v1.txt
 │   │   │   ├── GHA_KB_Growth_Workflows_v1.txt

@@ -25,8 +25,8 @@ The following files have been pushed to all branches:
 
 **Files Added:**
 ```
-release/v6.0/agents/orc/instructions/ORC_Copilot_Instructions_v3_CORRECTED.txt
-release/v6.0/agents/aud/instructions/AUD_Copilot_Instructions_v2_CORRECTED.txt
+release/v6.0/agents/orc/instructions/ORC_Copilot_Instructions_v3.txt
+release/v6.0/agents/aud/instructions/AUD_Copilot_Instructions_v2.txt
 release/v6.0/scripts/sanitize_kb_files.py
 release/v6.0/docs/MPA_v6_Agent_Configuration_Reference.md
 ```
@@ -90,9 +90,9 @@ release/v6.0/docs/MPA_v6_Agent_Configuration_Reference.md
 3. Scroll to **Instructions** section
 4. **Delete all existing text**
 5. Copy/paste from the appropriate instruction file:
-   - ORC: `ORC_Copilot_Instructions_v3_CORRECTED.txt`
-   - AUD: `AUD_Copilot_Instructions_v2_CORRECTED.txt`
-   - Others: Current v1.txt (pending CORRECTED versions)
+   - ORC: `ORC_Copilot_Instructions_v3.txt`
+   - AUD: `AUD_Copilot_Instructions_v2.txt`
+   - Others: Current v1.txt files
 6. Click **Save**
 
 #### Step B: Configure AI Settings
@@ -319,7 +319,7 @@ python3 release/v6.0/scripts/sanitize_kb_files.py release/v6.0/agents
 git add . && git commit -m "fix(kb): Sanitize KB files" && git push
 
 # Check character count of instruction file
-wc -c release/v6.0/agents/orc/instructions/ORC_Copilot_Instructions_v3_CORRECTED.txt
+wc -c release/v6.0/agents/orc/instructions/ORC_Copilot_Instructions_v3.txt
 ```
 
 ---
@@ -330,8 +330,8 @@ wc -c release/v6.0/agents/orc/instructions/ORC_Copilot_Instructions_v3_CORRECTED
 |----------|----------|---------|
 | Agent Configuration Reference | `release/v6.0/docs/MPA_v6_Agent_Configuration_Reference.md` | Complete rationale |
 | Deployment Checklist | `release/v6.0/COPILOT_STUDIO_DEPLOYMENT_CHECKLIST.md` | Full deployment steps |
-| ORC Instructions | `release/v6.0/agents/orc/instructions/ORC_Copilot_Instructions_v3_CORRECTED.txt` | ORC config |
-| AUD Instructions | `release/v6.0/agents/aud/instructions/AUD_Copilot_Instructions_v2_CORRECTED.txt` | AUD config |
+| ORC Instructions | `release/v6.0/agents/orc/instructions/ORC_Copilot_Instructions_v3.txt` | ORC config |
+| AUD Instructions | `release/v6.0/agents/aud/instructions/AUD_Copilot_Instructions_v2.txt` | AUD config |
 | KB Sanitization Script | `release/v6.0/scripts/sanitize_kb_files.py` | Encoding fixes |
 
 ---

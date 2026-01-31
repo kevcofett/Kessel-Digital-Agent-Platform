@@ -50,7 +50,7 @@ This document provides complete instructions for VS Code Claude to:
 ### 1.3 Document Dependencies
 
 Read these documents before proceeding:
-- **MPA_v6_Architecture_Final.md** - Complete architecture specification
+- **MPA_v6_Architecture.md** - Complete architecture specification
 - **MPA_v6_Dataverse_Schema.md** - Database schema details
 - **MPA_v6_AI_Builder_Prompts.md** - Prompt specifications
 - **MPA_v6_Azure_Functions.md** - Function specifications (Personal only)

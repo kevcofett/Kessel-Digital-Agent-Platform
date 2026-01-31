@@ -380,10 +380,10 @@ Kessel-Digital-Agent-Platform/
 
 The next conversation should create these documents:
 
-1. **MPA_v6_Architecture.md** - Complete architecture with capability abstraction
-2. **MPA_v6_Dataverse_Schema.md** - All tables with full column definitions
-3. **MPA_v6_AI_Builder_Prompts.md** - Detailed prompt specifications
-4. **MPA_v6_Azure_Functions.md** - Function specs (personal environment)
+1. **MPA_Architecture_v6.0.md** - Complete architecture with capability abstraction
+2. **MPA_Dataverse_Schema_v6.0.md** - All tables with full column definitions
+3. **MPA_AI_Builder_Prompts_v6.0.md** - Detailed prompt specifications
+4. **MPA_Azure_Functions_v6.0.md** - Function specs (personal environment)
 5. **VSCODE_Instructions.md** - Repository setup, both environments
 6. **DESKTOP_Instructions.md** - Content creation, both environments
 

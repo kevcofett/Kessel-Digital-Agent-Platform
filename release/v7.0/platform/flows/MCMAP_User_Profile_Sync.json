@@ -1,0 +1,238 @@
+{
+  "flow_name": "MCMAP_User_Profile_Sync",
+  "display_name": "MCMAP User Profile Sync",
+  "description": "Syncs user profile from Microsoft Directory on session start for ABAC and reporting",
+  "version": "1.0",
+  "trigger": {
+    "type": "HTTP_REQUEST",
+    "description": "Called from Copilot Studio on session start",
+    "input_schema": {
+      "user_id": {
+        "type": "string",
+        "description": "Azure AD user ID from System.User.Id",
+        "required": true
+      },
+      "force_refresh": {
+        "type": "boolean",
+        "description": "Force refresh even if cache is valid",
+        "required": false,
+        "default": false
+      }
+    }
+  },
+  "actions": [
+    {
+      "step": 1,
+      "action": "Get_Security_Config",
+      "type": "Dataverse_List_Rows",
+      "description": "Get cache TTL and profile tracking settings",
+      "parameters": {
+        "table": "eap_security_config",
+        "filter": "config_key eq 'CACHE_TTL_HOURS' or config_key eq 'PROFILE_TRACKING_ENABLED' or config_key eq 'DIRECTORY_SYNC_ENABLED'"
+      }
+    },
+    {
+      "step": 2,
+      "action": "Check_Profile_Tracking_Enabled",
+      "type": "Condition",
+      "description": "Skip if profile tracking is disabled",
+      "condition": "PROFILE_TRACKING_ENABLED eq 'true'",
+      "if_false": {
+        "action": "Return_Empty_Profile",
+        "return": {
+          "status": "disabled",
+          "message": "Profile tracking is disabled"
+        }
+      }
+    },
+    {
+      "step": 3,
+      "action": "Check_Existing_Profile",
+      "type": "Dataverse_Get_Row",
+      "description": "Check if user profile exists and is fresh",
+      "parameters": {
+        "table": "eap_user_profile",
+        "filter": "user_id eq '@{triggerBody()?['user_id']}'"
+      }
+    },
+    {
+      "step": 4,
+      "action": "Check_Cache_Valid",
+      "type": "Condition",
+      "description": "Use cached profile if fresh and not force refresh",
+      "condition": "profile exists AND last_updated > (now - CACHE_TTL_HOURS) AND force_refresh eq false",
+      "if_true": {
+        "action": "Return_Cached_Profile",
+        "return": {
+          "status": "cached",
+          "profile": "@{outputs('Check_Existing_Profile')?['body']}"
+        }
+      }
+    },
+    {
+      "step": 5,
+      "action": "Check_Directory_Sync_Enabled",
+      "type": "Condition",
+      "description": "Skip Graph API call if directory sync disabled",
+      "condition": "DIRECTORY_SYNC_ENABLED eq 'true'",
+      "if_false": {
+        "action": "Return_Cached_Or_Basic",
+        "description": "Return cached profile or create basic profile from Copilot context"
+      }
+    },
+    {
+      "step": 6,
+      "action": "Get_User_From_Graph",
+      "type": "HTTP",
+      "description": "Call Microsoft Graph API to get full user profile",
+      "parameters": {
+        "method": "GET",
+        "uri": "https://graph.microsoft.com/v1.0/users/@{triggerBody()?['user_id']}",
+        "queries": {
+          "$select": "id,displayName,mail,userPrincipalName,jobTitle,department,companyName,officeLocation,country,usageLocation",
+          "$expand": "manager($select=id,displayName)"
+        },
+        "authentication": {
+          "type": "ManagedIdentity",
+          "audience": "https://graph.microsoft.com"
+        }
+      }
+    },
+    {
+      "step": 7,
+      "action": "Get_User_Extension_Attributes",
+      "type": "HTTP",
+      "description": "Get custom extension attributes for employee level, division, team, region",
+      "parameters": {
+        "method": "GET",
+        "uri": "https://graph.microsoft.com/v1.0/users/@{triggerBody()?['user_id']}?$select=extension_{app_id}_employeeLevel,extension_{app_id}_division,extension_{app_id}_team,extension_{app_id}_region,extension_{app_id}_costCenter",
+        "authentication": {
+          "type": "ManagedIdentity",
+          "audience": "https://graph.microsoft.com"
+        }
+      },
+      "note": "Replace {app_id} with actual application ID for extension attributes"
+    },
+    {
+      "step": 8,
+      "action": "Get_User_Groups",
+      "type": "HTTP",
+      "description": "Get security group memberships",
+      "parameters": {
+        "method": "GET",
+        "uri": "https://graph.microsoft.com/v1.0/users/@{triggerBody()?['user_id']}/memberOf?$filter=securityEnabled eq true&$select=id,displayName",
+        "authentication": {
+          "type": "ManagedIdentity",
+          "audience": "https://graph.microsoft.com"
+        }
+      }
+    },
+    {
+      "step": 9,
+      "action": "Get_Manager_Chain",
+      "type": "Do_Until_Loop",
+      "description": "Recursively get manager chain up to 10 levels or CEO",
+      "parameters": {
+        "max_iterations": 10,
+        "condition": "manager_id is null OR level_title contains 'CEO'",
+        "actions": [
+          {
+            "action": "Get_Next_Manager",
+            "type": "HTTP",
+            "uri": "https://graph.microsoft.com/v1.0/users/@{current_manager_id}/manager?$select=id,displayName,jobTitle"
+          },
+          {
+            "action": "Append_To_Chain",
+            "type": "Compose",
+            "inputs": "Add manager to chain array"
+          }
+        ]
+      }
+    },
+    {
+      "step": 10,
+      "action": "Parse_Employee_Level",
+      "type": "Compose",
+      "description": "Determine employee level from extension attribute or job title",
+      "logic": {
+        "priority_1": "extension_employeeLevel if exists",
+        "priority_2": "Parse from jobTitle if contains: CEO, President, EVP, SVP, VP, Director, Manager",
+        "default": "Employee"
+      },
+      "parsing_rules": [
+        {"pattern": "CEO|Chief Executive", "level": "CEO"},
+        {"pattern": "President", "level": "President"},
+        {"pattern": "EVP|Executive Vice President", "level": "EVP"},
+        {"pattern": "SVP|Senior Vice President", "level": "SVP"},
+        {"pattern": "VP|Vice President", "level": "VP"},
+        {"pattern": "Director", "level": "Director"},
+        {"pattern": "Senior Manager", "level": "Senior Manager"},
+        {"pattern": "Manager", "level": "Manager"},
+        {"pattern": "Senior Analyst", "level": "Senior Analyst"},
+        {"pattern": "Analyst", "level": "Analyst"},
+        {"pattern": "Associate", "level": "Associate"}
+      ]
+    },
+    {
+      "step": 11,
+      "action": "Upsert_User_Profile",
+      "type": "Dataverse_Upsert",
+      "description": "Create or update user profile record",
+      "parameters": {
+        "table": "eap_user_profile",
+        "alternate_key": "user_id",
+        "record": {
+          "user_id": "@{triggerBody()?['user_id']}",
+          "display_name": "@{outputs('Get_User_From_Graph')?['body']?['displayName']}",
+          "email": "@{coalesce(outputs('Get_User_From_Graph')?['body']?['mail'], outputs('Get_User_From_Graph')?['body']?['userPrincipalName'])}",
+          "job_title": "@{outputs('Get_User_From_Graph')?['body']?['jobTitle']}",
+          "employee_level": "@{outputs('Parse_Employee_Level')}",
+          "department": "@{outputs('Get_User_From_Graph')?['body']?['department']}",
+          "team": "@{outputs('Get_User_Extension_Attributes')?['body']?['extension_{app_id}_team']}",
+          "division": "@{coalesce(outputs('Get_User_Extension_Attributes')?['body']?['extension_{app_id}_division'], outputs('Get_User_From_Graph')?['body']?['companyName'])}",
+          "region": "@{coalesce(outputs('Get_User_Extension_Attributes')?['body']?['extension_{app_id}_region'], outputs('Get_User_From_Graph')?['body']?['usageLocation'])}",
+          "country": "@{outputs('Get_User_From_Graph')?['body']?['country']}",
+          "office_location": "@{outputs('Get_User_From_Graph')?['body']?['officeLocation']}",
+          "cost_center": "@{outputs('Get_User_Extension_Attributes')?['body']?['extension_{app_id}_costCenter']}",
+          "company_name": "@{outputs('Get_User_From_Graph')?['body']?['companyName']}",
+          "manager_id": "@{outputs('Get_User_From_Graph')?['body']?['manager']?['id']}",
+          "manager_display_name": "@{outputs('Get_User_From_Graph')?['body']?['manager']?['displayName']}",
+          "manager_chain_json": "@{string(outputs('Get_Manager_Chain'))}",
+          "security_groups_json": "@{string(outputs('Get_User_Groups')?['body']?['value'])}",
+          "all_attributes_json": "@{string(union(outputs('Get_User_From_Graph')?['body'], outputs('Get_User_Extension_Attributes')?['body']))}",
+          "first_seen": "@{if(empty(outputs('Check_Existing_Profile')?['body']), utcNow(), outputs('Check_Existing_Profile')?['body']?['first_seen'])}",
+          "last_updated": "@{utcNow()}"
+        }
+      }
+    },
+    {
+      "step": 12,
+      "action": "Return_Profile",
+      "type": "Response",
+      "description": "Return complete user profile",
+      "parameters": {
+        "status_code": 200,
+        "body": {
+          "status": "synced",
+          "profile": "@{outputs('Upsert_User_Profile')?['body']}"
+        }
+      }
+    }
+  ],
+  "error_handling": {
+    "on_graph_api_error": {
+      "action": "Return_Cached_Or_Basic",
+      "description": "If Graph API fails, return cached profile or create basic profile from available context"
+    },
+    "on_dataverse_error": {
+      "action": "Log_And_Continue",
+      "description": "Log error but don't block user session"
+    }
+  },
+  "permissions_required": [
+    "Microsoft Graph: User.Read.All",
+    "Microsoft Graph: Directory.Read.All",
+    "Microsoft Graph: GroupMember.Read.All",
+    "Dataverse: Read/Write eap_user_profile"
+  ]
+}

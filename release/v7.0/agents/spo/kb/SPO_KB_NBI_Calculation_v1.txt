@@ -1,0 +1,381 @@
+SPO KNOWLEDGE BASE - NBI CALCULATION v1
+VERSION: 1.0
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+================================================================================
+SECTION 1 - NET BENEFIT INDEX FUNDAMENTALS
+================================================================================
+
+NBI DEFINITION AND PURPOSE
+
+The Net Benefit Index (NBI) is a decision metric for evaluating supply path optimization opportunities. NBI quantifies whether a proposed optimization will deliver net positive value after accounting for potential performance trade-offs.
+
+CORE NBI FORMULA
+
+NBI = Fee_Savings_Percent - (Effectiveness_Loss_Percent x Weight)
+
+Where:
+- Fee_Savings_Percent: Reduction in tech tax from optimization
+- Effectiveness_Loss_Percent: Estimated performance degradation
+- Weight: Multiplier reflecting campaign priority (typically 1.0-2.5)
+
+INTERPRETATION
+
+POSITIVE NBI: Optimization is recommended
+- Benefits outweigh performance trade-offs
+- Higher NBI indicates stronger recommendation
+- Proceed with implementation
+
+ZERO NBI: Neutral outcome
+- Savings exactly offset by performance loss
+- Decision depends on secondary factors
+- Requires additional analysis
+
+NEGATIVE NBI: Optimization not recommended
+- Performance loss exceeds fee savings
+- Current path may be optimal
+- Maintain existing approach
+
+================================================================================
+SECTION 2 - NBI CALCULATION METHODOLOGY
+================================================================================
+
+STEP-BY-STEP CALCULATION
+
+STEP 1 - CALCULATE FEE SAVINGS
+
+Current_Working_Media = Publisher_Payment / Total_Spend x 100
+Optimized_Working_Media = New_Publisher_Payment / Total_Spend x 100
+Fee_Savings_Percent = Optimized_Working_Media - Current_Working_Media
+
+STEP 2 - ESTIMATE EFFECTIVENESS LOSS
+
+Compare current and proposed path quality indicators:
+- Historical performance data if available
+- Inventory quality scores
+- Viewability benchmarks
+- Brand safety ratings
+
+Effectiveness_Loss_Percent = Current_Performance_Index - Projected_Performance_Index
+
+STEP 3 - DETERMINE WEIGHT
+
+Weight selection based on campaign priority:
+
+AWARENESS CAMPAIGNS
+- Weight: 1.0-1.5
+- Rationale: Reach efficiency prioritized
+- Higher tolerance for quality trade-offs
+
+CONSIDERATION CAMPAIGNS
+- Weight: 1.5-2.0
+- Rationale: Balanced priority
+- Moderate tolerance for trade-offs
+
+CONVERSION CAMPAIGNS
+- Weight: 2.0-2.5
+- Rationale: Performance critical
+- Low tolerance for quality degradation
+
+STEP 4 - CALCULATE NBI
+
+NBI = Fee_Savings_Percent - (Effectiveness_Loss_Percent x Weight)
+
+EXAMPLE CALCULATION
+
+SCENARIO
+Current path: 45 percent working media
+Optimized path: 55 percent working media
+Current CTR: 0.12 percent
+Projected CTR: 0.10 percent
+Campaign type: Conversion (Weight: 2.0)
+
+CALCULATION
+Fee_Savings_Percent = 55 - 45 = 10 percent
+Effectiveness_Loss_Percent = (0.12 - 0.10) / 0.12 x 100 = 16.7 percent
+NBI = 10 - (16.7 x 2.0) = 10 - 33.4 = -23.4
+
+RESULT: Negative NBI (-23.4)
+RECOMMENDATION: Do not optimize. Performance loss outweighs fee savings.
+
+================================================================================
+SECTION 3 - NBI DECISION THRESHOLDS
+================================================================================
+
+NBI THRESHOLD FRAMEWORK
+
+NBI GREATER THAN 15 PERCENT - STRONG RECOMMENDATION
+
+Action: Implement optimization immediately
+Confidence: High
+Rationale:
+- Clear efficiency opportunity
+- Minimal quality trade-off
+- Strong ROI expected
+
+Typical scenarios:
+- Removing obvious reseller arbitrage
+- Eliminating duplicate bid paths
+- Consolidating redundant SSPs
+
+NBI 8 TO 15 PERCENT - MODERATE RECOMMENDATION
+
+Action: Implement with performance monitoring
+Confidence: Medium-High
+Rationale:
+- Meaningful efficiency gain
+- Some quality trade-off possible
+- Monitor for unexpected degradation
+
+Typical scenarios:
+- Shifting to preferred SSP relationships
+- Reducing data layering
+- Adjusting verification stack
+
+NBI 3 TO 8 PERCENT - CONDITIONAL RECOMMENDATION
+
+Action: Evaluate on case-by-case basis
+Confidence: Medium
+Rationale:
+- Modest efficiency gain
+- Weigh against implementation effort
+- Consider for high-spend campaigns only
+
+Typical scenarios:
+- Minor path consolidation
+- Incremental fee negotiation
+- Secondary DSP optimization
+
+NBI LESS THAN 3 PERCENT - NO ACTION
+
+Action: Maintain current path
+Confidence: High
+Rationale:
+- Minimal efficiency gain
+- Implementation cost may exceed benefit
+- Focus optimization efforts elsewhere
+
+Typical scenarios:
+- Already optimized paths
+- Premium placement requirements
+- Brand safety prioritized environments
+
+================================================================================
+SECTION 4 - EFFECTIVENESS LOSS ESTIMATION
+================================================================================
+
+ESTIMATING PERFORMANCE IMPACT
+
+When historical data is unavailable, estimate effectiveness loss using proxy indicators.
+
+INVENTORY QUALITY PROXY
+
+TIER 1 TO TIER 2 SHIFT
+Estimated effectiveness loss: 5-10 percent
+Rationale: Slight reduction in premium inventory
+
+TIER 1 TO TIER 3 SHIFT
+Estimated effectiveness loss: 15-25 percent
+Rationale: Notable quality reduction
+
+TIER 2 TO TIER 3 SHIFT
+Estimated effectiveness loss: 8-15 percent
+Rationale: Moderate quality reduction
+
+VIEWABILITY PROXY
+
+For each 5 percentage point viewability drop:
+Estimated effectiveness loss: 3-5 percent
+
+Example:
+Current viewability: 70 percent
+Projected viewability: 60 percent
+Estimated loss: 6-10 percent (2 x 5 point increments)
+
+BRAND SAFETY PROXY
+
+HIGH TO MEDIUM SAFETY
+Estimated effectiveness loss: 2-5 percent
+Increased risk of negative adjacency
+
+MEDIUM TO LOW SAFETY
+Estimated effectiveness loss: 5-10 percent
+Significant brand risk exposure
+
+AUDIENCE MATCH PROXY
+
+For each 10 percentage point audience match rate drop:
+Estimated effectiveness loss: 5-8 percent
+
+Example:
+Current match: 80 percent
+Projected match: 65 percent
+Estimated loss: 7.5-12 percent (1.5 x 10 point increments)
+
+================================================================================
+SECTION 5 - WEIGHT SELECTION GUIDE
+================================================================================
+
+WEIGHT DETERMINATION FACTORS
+
+CAMPAIGN OBJECTIVE
+
+Brand Awareness: Weight 1.0-1.3
+- Reach and frequency primary goals
+- Higher tolerance for efficiency trade-offs
+- CPM efficiency often acceptable trade-off
+
+Consideration and Engagement: Weight 1.3-1.8
+- Balanced reach and performance
+- Moderate tolerance for trade-offs
+- Quality of engagement matters
+
+Direct Response: Weight 1.8-2.3
+- Conversion efficiency critical
+- Low tolerance for performance loss
+- Every conversion counts
+
+Customer Acquisition: Weight 2.0-2.5
+- LTV consideration critical
+- Quality of conversions matters
+- Higher weight protects value
+
+BUDGET SIZE IMPACT
+
+Small budgets (under $100K): Add 0.2 to weight
+- Less room for error
+- Every dollar matters more
+
+Large budgets (over $1M): Subtract 0.2 from weight
+- More room for optimization learning
+- Can absorb some performance variance
+
+HISTORICAL PERFORMANCE
+
+Strong performance history: Subtract 0.1-0.2
+- Confidence in baseline
+- Optimization less risky
+
+Weak or no history: Add 0.1-0.2
+- Higher uncertainty
+- Conservative approach warranted
+
+COMPETITIVE CONTEXT
+
+High competition: Add 0.2-0.3
+- Cannot afford performance slip
+- Market share at risk
+
+Low competition: Subtract 0.1-0.2
+- More room for efficiency focus
+- Less performance pressure
+
+================================================================================
+SECTION 6 - NBI APPLICATION SCENARIOS
+================================================================================
+
+SCENARIO 1 - DSP CONSOLIDATION
+
+Situation: Advertiser using 4 DSPs, considering consolidation to 2
+
+Current state:
+- Average working media: 48 percent
+- Average CTR: 0.15 percent
+- Total spend: $500K monthly
+
+Proposed state:
+- Projected working media: 56 percent (volume discounts)
+- Projected CTR: 0.14 percent (less inventory diversity)
+
+Calculation:
+- Fee_Savings = 56 - 48 = 8 percent
+- Effectiveness_Loss = (0.15 - 0.14) / 0.15 x 100 = 6.7 percent
+- Campaign type: Consideration (Weight: 1.5)
+- NBI = 8 - (6.7 x 1.5) = 8 - 10 = -2
+
+Result: Negative NBI. Consolidation not recommended with current projections.
+
+SCENARIO 2 - SSP EXCLUSION LIST
+
+Situation: Removing low-quality SSPs from bid requests
+
+Current state:
+- Working media: 42 percent
+- Viewability: 55 percent
+- Win rate: 12 percent
+
+Proposed state:
+- Working media: 50 percent (fewer intermediaries)
+- Viewability: 68 percent (better inventory)
+- Win rate: 10 percent (less scale)
+
+Calculation:
+- Fee_Savings = 50 - 42 = 8 percent
+- Viewability improvement: +13 points (positive effect)
+- Win rate loss: -2 points (minor negative)
+- Net Effectiveness_Loss = -5 percent (improvement)
+- Campaign type: Brand (Weight: 1.2)
+- NBI = 8 - (-5 x 1.2) = 8 + 6 = 14
+
+Result: Positive NBI (14). Recommend implementation.
+
+SCENARIO 3 - DATA LAYER REDUCTION
+
+Situation: Reducing third-party data layers from 4 to 2
+
+Current state:
+- Data costs: $2.50 CPM
+- Working media: 46 percent
+- Target match: 85 percent
+
+Proposed state:
+- Data costs: $1.00 CPM
+- Working media: 52 percent
+- Target match: 70 percent
+
+Calculation:
+- Fee_Savings = 52 - 46 = 6 percent
+- Target match loss = (85 - 70) / 85 x 100 = 17.6 percent
+- Campaign type: Acquisition (Weight: 2.2)
+- NBI = 6 - (17.6 x 2.2) = 6 - 38.7 = -32.7
+
+Result: Strongly negative NBI. Maintain data layers.
+
+================================================================================
+SECTION 7 - NBI FORMULAS REFERENCE
+================================================================================
+
+CORE FORMULAS
+
+NBI = Fee_Savings_Pct - (Effectiveness_Loss_Pct x Weight)
+
+Fee_Savings_Pct = Optimized_Working_Media - Current_Working_Media
+
+Effectiveness_Loss_Pct = (Current_Metric - Projected_Metric) / Current_Metric x 100
+
+WORKING MEDIA FORMULAS
+
+Working_Media_Pct = Publisher_Payment / Total_Spend x 100
+Fee_Stack_Pct = 100 - Working_Media_Pct
+Fee_Savings_Dollars = Annual_Spend x Fee_Savings_Pct / 100
+
+WEIGHT ADJUSTMENT FORMULA
+
+Final_Weight = Base_Weight + Objective_Adj + Budget_Adj + History_Adj + Competition_Adj
+
+Where adjustments range from -0.3 to +0.3 each
+
+CONFIDENCE ADJUSTED NBI
+
+When estimation uncertainty is high:
+Confidence_Adjusted_NBI = NBI x Confidence_Factor
+
+Confidence factors:
+- High confidence (historical data): 1.0
+- Medium confidence (proxy estimates): 0.8
+- Low confidence (assumptions): 0.6
+
+================================================================================
+END OF DOCUMENT
+================================================================================

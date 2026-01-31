@@ -1,0 +1,90 @@
+{
+  "patch_id": "PATCH-003",
+  "version": "6.0.2",
+  "date": "2026-01-19",
+  "description": "Fix ORC-013 Gate 3 Execution Check capability test",
+  "affected_tests": ["ORC-013"],
+  "priority": "P1",
+  "type": "capability_fix",
+
+  "root_cause_analysis": {
+    "test_id": "ORC-013",
+    "test_name": "Gate 3 - Execution Check",
+    "input": "Are we ready to move to the execution phase?",
+    "expected_flow": "UpdateProgress",
+    "expected_output_contains": ["channels_selected", "budget_allocated", "partners_identified"],
+    "failure_reason": "Gate 3 validation logic incomplete - missing partner identification check and output formatting",
+    "actual_behavior": "Gate check returns incomplete validation response"
+  },
+
+  "changes": [
+    {
+      "file": "agents/orc/flows/UpdateProgress.yaml",
+      "section": "gate_validations.gate_3",
+      "change_type": "update",
+      "description": "Complete Gate 3 execution phase validation logic",
+      "content": {
+        "gate_3_execution": {
+          "name": "Execution Gate",
+          "description": "Validates readiness for campaign execution phase",
+          "required_completions": [
+            {
+              "field": "channels_selected",
+              "check": "session.channel_allocation != null && session.channel_allocation.length > 0",
+              "error_message": "No channels have been selected. Please complete channel strategy first."
+            },
+            {
+              "field": "budget_allocated",
+              "check": "session.budget_allocation != null && session.total_budget > 0",
+              "error_message": "Budget has not been allocated. Please define budget distribution."
+            },
+            {
+              "field": "partners_identified",
+              "check": "session.partner_selections != null || session.supply_path_defined == true",
+              "error_message": "Supply path partners have not been identified. Consider running SPO analysis.",
+              "optional": true,
+              "warning_if_missing": true
+            },
+            {
+              "field": "projections_complete",
+              "check": "session.anl_projections != null",
+              "error_message": "Projections have not been calculated. Run analytics before proceeding.",
+              "optional": true
+            }
+          ],
+          "output_format": {
+            "gate_status": "pass|fail|partial",
+            "channels_selected": "boolean",
+            "budget_allocated": "boolean",
+            "partners_identified": "boolean",
+            "missing_requirements": "array",
+            "recommendations": "array"
+          }
+        }
+      }
+    },
+    {
+      "file": "agents/orc/kb/ORC_KB_Workflow_Gates_v1.txt",
+      "section": "GATE 3 EXECUTION CHECK",
+      "change_type": "update",
+      "description": "Update KB documentation for Gate 3 checks",
+      "content": "GATE 3 EXECUTION CHECK\n\nGate 3 validates readiness for campaign execution. Required completions include channel selection with budget allocation. Partner identification is recommended but not blocking.\n\nCheck these elements:\n- channels_selected: At least one channel must be defined with allocation\n- budget_allocated: Total budget must be set with distribution percentages\n- partners_identified: DSP/SSP partners should be identified (warning if missing)\n- projections_complete: ANL projections should exist (optional)\n\nOutput must include gate_status, all check results, and recommendations for any missing items."
+    }
+  ],
+
+  "test_validation": {
+    "ORC-013": {
+      "name": "Gate 3 - Execution Check",
+      "input": "Are we ready to move to the execution phase?",
+      "expected_flow": "UpdateProgress",
+      "expected_output_contains": ["channels_selected", "budget_allocated", "partners_identified"],
+      "fix_rationale": "Added complete Gate 3 validation logic with all required output fields"
+    }
+  },
+
+  "implementation_instructions": [
+    "1. Update UpdateProgress flow with complete Gate 3 validation",
+    "2. Update ORC KB documentation for Gate 3",
+    "3. Re-run test ORC-013 to validate fix"
+  ]
+}

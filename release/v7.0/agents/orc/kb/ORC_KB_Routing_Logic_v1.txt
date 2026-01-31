@@ -1,0 +1,322 @@
+ORC KNOWLEDGE BASE - ROUTING LOGIC AND INTENT CLASSIFICATION
+
+OVERVIEW
+
+This knowledge base provides detailed routing logic for the Orchestrator Agent to classify user intent and route requests to the appropriate specialist agent. Accurate routing ensures users receive expert assistance while maintaining seamless conversation flow.
+
+MPA DOMAIN ROUTING
+
+The Media Planning Agent domain encompasses analytics, audience, channel, supply path, document, performance, and marketing strategy specialists. These agents support the complete media planning workflow from strategy through execution and measurement.
+
+ANL AGENT TRIGGERS
+
+Route to Analytics Agent when:
+- User asks about budget projections or forecasting
+- User requests scenario analysis or what-if modeling
+- User needs ROI, ROAS, CAC, or LTV calculations
+- User asks about statistical significance or incrementality
+- User wants diminishing returns or saturation curve analysis
+- User requests NPV, IRR, or payback period calculations
+- User needs sensitivity analysis or Monte Carlo simulation
+- User asks about financial modeling or investment analysis
+
+Keywords: projection, forecast, scenario, model, calculate, ROI, ROAS, CAC, LTV, NPV, IRR, statistical, incrementality, lift, saturation, diminishing returns, sensitivity, financial
+
+AUD AGENT TRIGGERS
+
+Route to Audience Agent when:
+- User asks about audience segments or segmentation strategy
+- User needs targeting recommendations or audience sizing
+- User requests customer value analysis or LTV tiers
+- User asks about personas or customer profiles
+- User needs lookalike audience guidance or seed quality
+- User asks about first-party data activation or clean rooms
+- User requests propensity scoring or behavioral analysis
+
+Keywords: audience, segment, targeting, persona, LTV, customer value, lookalike, first-party, clean room, propensity, behavioral, demographics, psychographics
+
+CHA AGENT TRIGGERS
+
+Route to Channel Agent when:
+- User asks about channel selection or media mix
+- User needs budget allocation across channels
+- User requests platform recommendations
+- User asks about CPM, CPC, or CPA benchmarks
+- User needs frequency or reach guidance
+- User asks about channel-specific tactics
+
+Keywords: channel, media mix, allocation, platform, CPM, CPC, CPA, benchmark, frequency, reach, Meta, Google, TikTok, Amazon, programmatic, social, search, display
+
+SPO AGENT TRIGGERS
+
+Route to Supply Path Agent when:
+- User asks about programmatic optimization
+- User needs fee analysis or transparency assessment
+- User requests DSP or SSP evaluation
+- User asks about working media ratio
+- User needs partner selection guidance
+- User asks about PMP versus open exchange
+
+Keywords: supply path, programmatic, DSP, SSP, fees, transparency, working media, tech tax, PMP, exchange, partner, verification
+
+DOC AGENT TRIGGERS
+
+Route to Document Agent when:
+- User asks to generate a plan or document
+- User requests export or download functionality
+- User needs presentation or report creation
+- User asks for executive summary or brief
+- User requests business case or roadmap document
+
+Keywords: generate, create, document, export, download, PDF, PowerPoint, Word, presentation, report, summary, brief, business case, roadmap
+
+PRF AGENT TRIGGERS
+
+Route to Performance Agent when:
+- User asks about campaign performance or results
+- User needs optimization recommendations
+- User reports pacing issues or budget variance
+- User requests post-mortem analysis
+- User asks about learnings or insights extraction
+- User needs anomaly detection or alerting
+
+Keywords: performance, results, metrics, optimization, pacing, variance, post-mortem, analysis, learnings, anomaly, alert, in-flight
+
+MKT AGENT TRIGGERS
+
+Route to Marketing Strategy Agent when:
+- User asks about campaign strategy development
+- User needs creative brief creation or guidance
+- User requests brand positioning framework
+- User asks about go-to-market planning
+- User needs competitive analysis or landscape assessment
+- User asks about messaging architecture or hierarchy
+- User needs launch strategy or execution planning
+- User requests marketing planning frameworks
+
+Keywords: campaign strategy, creative brief, brand positioning, go-to-market, GTM, competitive analysis, messaging, message architecture, launch strategy, marketing plan, value proposition, positioning statement
+
+Intent Patterns for MKT:
+- Help me develop a campaign strategy for...
+- Create a creative brief for...
+- How should we position our brand against...
+- Build a go-to-market plan for...
+- Analyze our competitive landscape...
+- Develop messaging for...
+- What should our launch strategy include...
+- Help me with marketing planning for...
+
+GROWTH DOMAIN ROUTING
+
+The Growth Strategy domain provides comprehensive growth marketing strategy including lifecycle optimization, growth hacking frameworks, and behavioral design. The Growth Hacking Agent orchestrates broader growth initiatives that may feed into media plans or consulting projects.
+
+GHA AGENT TRIGGERS
+
+Route to Growth Strategy Agent when:
+- User asks about growth strategy or growth marketing
+- User mentions AARRR funnel or growth frameworks
+- User asks about lifecycle optimization including acquisition, activation, retention, referral, or revenue
+- User needs growth hacking tactics or experiments
+- User asks about viral mechanics or referral programs
+- User requests customer lifecycle analysis
+- User asks about usage expansion or reactivation strategy
+- User mentions fintech, neobank, or credit card growth
+- User asks about North Star metrics or growth KPIs
+- User needs competitive growth intelligence
+- User asks about psychological triggers or behavioral design
+- User asks about Hook Model or growth loops
+- User needs help with activation rates or churn reduction
+
+Keywords: growth strategy, growth marketing, AARRR, lifecycle, acquisition, activation, retention, referral, revenue, growth hack, viral, referral program, reactivation, usage expansion, North Star metric, growth KPI, Hook Model, growth loop, behavioral design, psychological trigger, fintech growth, neobank, credit card growth, churn, activation rate, onboarding optimization
+
+Intent Patterns for GHA:
+- Help me develop a growth strategy for...
+- How do I grow acquisition or activation or retention...
+- Create a growth marketing plan for...
+- Design a referral program for...
+- What growth tactics should I use for...
+- Analyze our lifecycle funnel...
+- Build a reactivation strategy...
+- How do competitors like Nubank or Chime grow...
+- What is the best North Star metric for...
+- Help me reduce churn for...
+- Optimize our onboarding for activation...
+
+CA DOMAIN ROUTING
+
+The Consulting Agent domain encompasses consulting strategy and change management specialists. These agents support strategic consulting engagements from assessment through implementation.
+
+CST AGENT TRIGGERS
+
+Route to Consulting Strategy Agent when:
+- User asks about frameworks or methodology selection
+- User needs prioritization help for initiatives or features
+- User requests strategic analysis like SWOT or Porter
+- User asks about assessment or diagnostic approaches
+- User needs business model analysis
+- User requests consulting engagement guidance
+- User asks about maturity evaluation or benchmarking
+
+Keywords: framework, SWOT, Porter, PESTEL, RICE, MoSCoW, prioritize, prioritization, strategic analysis, assessment, diagnostic, maturity, business model canvas, methodology, consulting
+
+Intent Patterns for CST:
+- What framework should I use for...
+- Help me prioritize these initiatives...
+- Perform a SWOT analysis...
+- Assess our digital maturity...
+- Which methodology is best for...
+- How should I structure this engagement...
+- Compare these strategic options...
+
+CHG AGENT TRIGGERS
+
+Route to Change Management Agent when:
+- User asks about change management approaches
+- User needs stakeholder analysis or mapping
+- User requests adoption planning or rollout strategy
+- User asks about resistance management
+- User needs change readiness assessment
+- User requests communication planning for change
+- User asks about training approach for transformation
+
+Keywords: change management, stakeholder, adoption, rollout, resistance, readiness, transformation, Kotter, ADKAR, communication plan, training, change network, champion
+
+Intent Patterns for CHG:
+- Assess our readiness for this change...
+- Map the stakeholders for this initiative...
+- Create an adoption plan for...
+- How do I manage resistance to...
+- What change methodology should I use...
+- Help me plan the rollout of...
+- Build a communication plan for...
+
+MULTI-AGENT SCENARIOS
+
+Some user requests require coordination across multiple agents. The Orchestrator should recognize these patterns and sequence the routing appropriately.
+
+MPA Multi-Agent Patterns:
+- Budget optimization: ANL for projections then CHA for allocation
+- Audience strategy: AUD for segments then CHA for targeting tactics
+- Campaign planning: MKT for strategy then CHA for channels then DOC for document
+- Performance review: PRF for analysis then ANL for projections
+- Full campaign development: MKT then AUD then CHA then ANL then DOC
+
+MKT Multi-Agent Patterns:
+- Campaign strategy with audience: MKT for strategy then AUD for segmentation
+- Campaign strategy with channels: MKT for strategy then CHA for channel mix
+- Full marketing plan: MKT for strategy then AUD plus CHA plus ANL then DOC
+
+CA Multi-Agent Patterns:
+- Business case: CST for framework then ANL for financials then DOC for document
+- Transformation: CST for assessment then CHG for change plan then DOC for roadmap
+- Strategy implementation: CST for prioritization then CHG for adoption then DOC for brief
+
+GHA Multi-Agent Patterns:
+- Growth strategy development: GHA for framework then AUD for segments then ANL for projections then CHA for channels then DOC for documentation
+- Lifecycle optimization: GHA for stage analysis then AUD for segment health then ANL for projections
+- Growth with media plan: GHA for growth strategy then handoff to MPA domain with growth context
+- Growth with consulting: GHA for growth strategy then CST for strategic framework then DOC for business case
+
+Cross-Domain Patterns:
+- Marketing transformation: CST plus CHG plus MKT plus MPA agents
+- Campaign strategy: MKT for marketing strategy plus AUD plus CHA for execution
+- Measurement strategy: CST for approach plus ANL for methodology
+- Product launch: MKT for GTM plus CST for strategic framework plus CHG for adoption
+- Growth to media plan: GHA for growth strategy then ORC routes to MPA domain with growth context
+- Growth to consulting: GHA for growth strategy then CST for frameworks then CHG for adoption
+- Full growth initiative: GHA then AUD then CHA then ANL then DOC with growth plan handoff
+
+ROUTING DECISION LOGIC
+
+Step 1 - Domain Classification
+- Media planning, campaigns, advertising - MPA domain
+- Marketing strategy, creative briefs, positioning - MKT agent
+- Growth strategy, lifecycle optimization, growth hacking - GHA agent
+- Consulting, strategy frameworks, change - CA domain
+- General questions, workflow - Handle as ORC
+
+Step 2 - Agent Selection
+- Match keywords and intent patterns
+- Consider conversation context
+- Default to most specific match
+- MKT handles strategic marketing; CHA handles channel tactics
+
+Step 3 - Context Preparation
+- Gather relevant session state
+- Include prior specialist outputs
+- Provide user preferences and constraints
+
+Step 4 - Handoff Execution
+- Route with full context
+- Present response seamlessly
+- Update session state
+
+AMBIGUOUS INTENT HANDLING
+
+When intent is unclear:
+- Ask clarifying question if significantly ambiguous
+- Default to broader agent if minor ambiguity
+- Use conversation history for context clues
+- Prefer action over excessive clarification
+
+Common Ambiguities:
+- Analysis could mean ANL calculations or CST strategic analysis
+- Planning could mean media planning or change planning or marketing planning
+- Strategy could mean channel strategy or consulting strategy or marketing strategy
+- Campaign could mean MKT strategy or CHA channel tactics
+- Resolution: Use surrounding context and keywords
+- MKT handles why and what; CHA handles where and how much
+
+MKT vs CHA Distinction:
+- Campaign strategy and positioning - route to MKT
+- Channel selection and budget allocation - route to CHA
+- Creative brief and messaging - route to MKT
+- Platform tactics and benchmarks - route to CHA
+
+MKT vs CST Distinction:
+- Marketing-specific strategy - route to MKT
+- General business or consulting frameworks - route to CST
+- Brand positioning and creative - route to MKT
+- Strategic prioritization and assessment - route to CST
+
+GHA vs MKT Distinction:
+- Growth strategy and lifecycle optimization - route to GHA
+- Campaign strategy and creative briefs - route to MKT
+- Growth frameworks like AARRR or Hook Model - route to GHA
+- Marketing frameworks like positioning or messaging - route to MKT
+- GHA handles HOW to grow the business; MKT handles HOW to market campaigns
+- Referral programs and viral mechanics - route to GHA
+- Brand positioning and competitive messaging - route to MKT
+
+GHA vs CST Distinction:
+- Growth-specific frameworks - route to GHA
+- General business or consulting frameworks - route to CST
+- AARRR, Hook Model, Growth Loops - route to GHA
+- SWOT, Porter, RICE, MoSCoW - route to CST
+- GHA handles growth tactics and lifecycle; CST handles strategic analysis
+- Product-led growth and user activation - route to GHA
+- Digital maturity and transformation assessment - route to CST
+
+GHA vs CHA Distinction:
+- Growth channel strategy with behavioral design - route to GHA
+- Media mix and budget allocation - route to CHA
+- Viral mechanics and referral programs - route to GHA
+- CPM benchmarks and platform tactics - route to CHA
+- GHA handles growth channels with psychological triggers; CHA handles media channels with benchmarks
+- TikTok viral strategy or influencer duets - route to GHA
+- TikTok media buy with CPM targeting - route to CHA
+
+GHA vs AUD Distinction:
+- Growth segment strategy and lifecycle stages - route to GHA
+- Detailed RFM segmentation and LTV modeling - route to AUD
+- User activation and retention cohorts - route to GHA
+- Audience sizing and lookalike strategy - route to AUD
+- GHA handles growth-focused segmentation; AUD handles detailed audience analysis
+
+FALLBACK BEHAVIOR
+
+When no specialist matches:
+- Handle as ORC for general workflow questions
+- Provide helpful response from knowledge base
+- Offer to clarify what type of help user needs
+- Never claim inability to help without attempting

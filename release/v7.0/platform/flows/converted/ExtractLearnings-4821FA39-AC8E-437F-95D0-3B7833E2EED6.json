@@ -1,0 +1,399 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {},
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "method": "POST",
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id",
+                "campaign_id",
+                "metric",
+                "target",
+                "actual",
+                "learning_type"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "campaign_id": {
+                  "type": "string"
+                },
+                "campaign_name": {
+                  "type": "string"
+                },
+                "metric": {
+                  "type": "string",
+                  "description": "Metric the learning relates to"
+                },
+                "target": {
+                  "type": "number",
+                  "description": "Target value"
+                },
+                "actual": {
+                  "type": "number",
+                  "description": "Actual achieved value"
+                },
+                "learning_type": {
+                  "type": "string",
+                  "enum": [
+                    "BENCHMARK",
+                    "AUDIENCE",
+                    "CHANNEL",
+                    "CREATIVE",
+                    "TIMING",
+                    "BUDGET",
+                    "TARGETING",
+                    "OPTIMIZATION"
+                  ]
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the learning"
+                },
+                "context": {
+                  "type": "object",
+                  "description": "Additional context for the learning"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "67260E61-68CF-4B8F-B384-0D34C19622AD"
+          },
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "campaign_id": "@triggerBody()?['campaign_id']",
+            "campaign_name": "@coalesce(triggerBody()?['campaign_name'], triggerBody()?['campaign_id'])",
+            "metric": "@triggerBody()?['metric']",
+            "target": "@triggerBody()?['target']",
+            "actual": "@triggerBody()?['actual']",
+            "learning_type": "@triggerBody()?['learning_type']",
+            "description": "@coalesce(triggerBody()?['description'], '')",
+            "context": "@triggerBody()?['context']",
+            "start_time": "@utcNow()"
+          }
+        },
+        "calculate_achievement": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "EADFEAFF-E6FE-4FC6-ABB6-7CACD54290CA"
+          },
+          "inputs": {
+            "target": "@outputs('parse_input')?['target']",
+            "actual": "@outputs('parse_input')?['actual']",
+            "achievement_percent": "@if(equals(outputs('parse_input')?['target'], 0), 100, mul(div(outputs('parse_input')?['actual'], outputs('parse_input')?['target']), 100))",
+            "variance_percent": "@if(equals(outputs('parse_input')?['target'], 0), 0, mul(div(sub(outputs('parse_input')?['actual'], outputs('parse_input')?['target']), outputs('parse_input')?['target']), 100))",
+            "exceeded_target": "@greater(outputs('parse_input')?['actual'], outputs('parse_input')?['target'])"
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "determine_significance": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "2A41C2FA-62F2-4078-8694-4E5FAD04DBFD"
+          },
+          "inputs": {
+            "variance_abs": "@abs(outputs('calculate_achievement')?['variance_percent'])",
+            "is_significant": "@greater(abs(outputs('calculate_achievement')?['variance_percent']), 10)",
+            "significance_level": "@if(greater(abs(outputs('calculate_achievement')?['variance_percent']), 30), 'HIGH', if(greater(abs(outputs('calculate_achievement')?['variance_percent']), 15), 'MEDIUM', if(greater(abs(outputs('calculate_achievement')?['variance_percent']), 10), 'LOW', 'MINIMAL')))",
+            "outcome_type": "@if(outputs('calculate_achievement')?['exceeded_target'], 'SUCCESS', if(less(outputs('calculate_achievement')?['achievement_percent'], 80), 'FAILURE', 'PARTIAL'))"
+          },
+          "runAfter": {
+            "calculate_achievement": [
+              "Succeeded"
+            ]
+          }
+        },
+        "generate_learning_id": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "79679AF6-6C1B-4BB4-B6F0-3C7EE8965225"
+          },
+          "inputs": {
+            "learning_type_prefix": "@substring(outputs('parse_input')?['learning_type'], 0, 3)",
+            "year": "@formatDateTime(utcNow(), 'yyyy')",
+            "sequence": "@rand(100, 999)",
+            "learning_id": "@concat('LRN-', substring(outputs('parse_input')?['learning_type'], 0, 3), '-', formatDateTime(utcNow(), 'yyyy'), '-', string(rand(100, 999)))"
+          },
+          "runAfter": {
+            "determine_significance": [
+              "Succeeded"
+            ]
+          }
+        },
+        "determine_promotability": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "8368832C-55A8-4884-802C-22F2DC4DA8BC"
+          },
+          "inputs": {
+            "is_significant": "@outputs('determine_significance')?['is_significant']",
+            "significance_level": "@outputs('determine_significance')?['significance_level']",
+            "promotable": "@and(outputs('determine_significance')?['is_significant'], or(equals(outputs('determine_significance')?['significance_level'], 'HIGH'), equals(outputs('determine_significance')?['significance_level'], 'MEDIUM')))",
+            "promotion_recommendation": "@if(and(outputs('determine_significance')?['is_significant'], or(equals(outputs('determine_significance')?['significance_level'], 'HIGH'), equals(outputs('determine_significance')?['significance_level'], 'MEDIUM'))), 'PROMOTE_TO_KNOWLEDGE_BASE', if(outputs('determine_significance')?['is_significant'], 'VALIDATE_WITH_ADDITIONAL_DATA', 'ARCHIVE_FOR_REFERENCE'))",
+            "validation_status": "HYPOTHESIS"
+          },
+          "runAfter": {
+            "generate_learning_id": [
+              "Succeeded"
+            ]
+          }
+        },
+        "load_learning_metadata": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "E846F177-6033-4C59-8EDB-2D67C7E5B108"
+          },
+          "inputs": {
+            "learning_types": {
+              "BENCHMARK": {
+                "category": "Performance Standards",
+                "application": "Use to set future targets and evaluate performance",
+                "retention_months": 12,
+                "review_frequency": "QUARTERLY"
+              },
+              "AUDIENCE": {
+                "category": "Audience Insights",
+                "application": "Apply to targeting and segmentation strategy",
+                "retention_months": 6,
+                "review_frequency": "MONTHLY"
+              },
+              "CHANNEL": {
+                "category": "Channel Performance",
+                "application": "Inform channel mix and allocation decisions",
+                "retention_months": 12,
+                "review_frequency": "QUARTERLY"
+              },
+              "CREATIVE": {
+                "category": "Creative Performance",
+                "application": "Guide creative development and testing",
+                "retention_months": 6,
+                "review_frequency": "MONTHLY"
+              },
+              "TIMING": {
+                "category": "Timing Optimization",
+                "application": "Optimize dayparting and flighting strategies",
+                "retention_months": 12,
+                "review_frequency": "QUARTERLY"
+              },
+              "BUDGET": {
+                "category": "Budget Efficiency",
+                "application": "Inform budget allocation and pacing",
+                "retention_months": 12,
+                "review_frequency": "QUARTERLY"
+              },
+              "TARGETING": {
+                "category": "Targeting Effectiveness",
+                "application": "Refine targeting parameters and strategies",
+                "retention_months": 6,
+                "review_frequency": "MONTHLY"
+              },
+              "OPTIMIZATION": {
+                "category": "Optimization Tactics",
+                "application": "Document effective optimization approaches",
+                "retention_months": 12,
+                "review_frequency": "QUARTERLY"
+              }
+            }
+          },
+          "runAfter": {
+            "determine_promotability": [
+              "Succeeded"
+            ]
+          }
+        },
+        "generate_insights": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "FC2CEDCB-5EE2-4C8C-BE56-762BB5A90615"
+          },
+          "inputs": {
+            "learning_type": "@outputs('parse_input')?['learning_type']",
+            "outcome_type": "@outputs('determine_significance')?['outcome_type']",
+            "variance": "@outputs('calculate_achievement')?['variance_percent']",
+            "primary_insight": "@if(equals(outputs('determine_significance')?['outcome_type'], 'SUCCESS'), concat('Achieved ', string(outputs('calculate_achievement')?['achievement_percent']), '% of target - ', outputs('parse_input')?['metric'], ' exceeded expectations'), if(equals(outputs('determine_significance')?['outcome_type'], 'FAILURE'), concat('Underperformed at ', string(outputs('calculate_achievement')?['achievement_percent']), '% of target - investigate root cause for ', outputs('parse_input')?['metric']), concat('Partial success at ', string(outputs('calculate_achievement')?['achievement_percent']), '% of target - opportunities for improvement')))",
+            "application_guidance": {
+              "SUCCESS": [
+                "Document conditions that led to success",
+                "Consider applying similar approach to other campaigns",
+                "Update benchmarks to reflect new performance ceiling"
+              ],
+              "FAILURE": [
+                "Identify root cause before replicating approach",
+                "Adjust expectations or approach for similar campaigns",
+                "Flag for follow-up validation"
+              ],
+              "PARTIAL": [
+                "Identify what worked and what didn't",
+                "Test modifications in next campaign",
+                "Monitor for consistency"
+              ]
+            }
+          },
+          "runAfter": {
+            "load_learning_metadata": [
+              "Succeeded"
+            ]
+          }
+        },
+        "create_learning_record": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "005CEAC9-18E1-46D4-9452-84AD5CA0A6B8"
+          },
+          "inputs": {
+            "learning_id": "@outputs('generate_learning_id')?['learning_id']",
+            "campaign_id": "@outputs('parse_input')?['campaign_id']",
+            "campaign_name": "@outputs('parse_input')?['campaign_name']",
+            "learning_type": "@outputs('parse_input')?['learning_type']",
+            "category": "@outputs('load_learning_metadata')?['learning_types']?[outputs('parse_input')?['learning_type']]?['category']",
+            "metric": "@outputs('parse_input')?['metric']",
+            "target": "@outputs('parse_input')?['target']",
+            "actual": "@outputs('parse_input')?['actual']",
+            "achievement_percent": "@outputs('calculate_achievement')?['achievement_percent']",
+            "variance_percent": "@outputs('calculate_achievement')?['variance_percent']",
+            "outcome_type": "@outputs('determine_significance')?['outcome_type']",
+            "significance_level": "@outputs('determine_significance')?['significance_level']",
+            "description": "@outputs('parse_input')?['description']",
+            "primary_insight": "@outputs('generate_insights')?['primary_insight']",
+            "promotable": "@outputs('determine_promotability')?['promotable']",
+            "promotion_recommendation": "@outputs('determine_promotability')?['promotion_recommendation']",
+            "validation_status": "@outputs('determine_promotability')?['validation_status']",
+            "application_guidance": "@outputs('load_learning_metadata')?['learning_types']?[outputs('parse_input')?['learning_type']]?['application']",
+            "retention_months": "@outputs('load_learning_metadata')?['learning_types']?[outputs('parse_input')?['learning_type']]?['retention_months']",
+            "review_frequency": "@outputs('load_learning_metadata')?['learning_types']?[outputs('parse_input')?['learning_type']]?['review_frequency']",
+            "created_date": "@utcNow()",
+            "created_by": "PRF_AGENT"
+          },
+          "runAfter": {
+            "generate_insights": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "BBB25933-844A-4C8B-BA95-0904F30FD2CB"
+          },
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "PRF",
+            "status": "success",
+            "data": {
+              "learning_record": "@outputs('create_learning_record')",
+              "achievement_analysis": {
+                "target": "@outputs('parse_input')?['target']",
+                "actual": "@outputs('parse_input')?['actual']",
+                "achievement_percent": "@outputs('calculate_achievement')?['achievement_percent']",
+                "variance_percent": "@outputs('calculate_achievement')?['variance_percent']",
+                "exceeded_target": "@outputs('calculate_achievement')?['exceeded_target']"
+              },
+              "significance_assessment": {
+                "is_significant": "@outputs('determine_significance')?['is_significant']",
+                "significance_level": "@outputs('determine_significance')?['significance_level']",
+                "outcome_type": "@outputs('determine_significance')?['outcome_type']"
+              },
+              "promotion_status": {
+                "promotable": "@outputs('determine_promotability')?['promotable']",
+                "recommendation": "@outputs('determine_promotability')?['promotion_recommendation']",
+                "validation_status": "@outputs('determine_promotability')?['validation_status']"
+              },
+              "actionable_insights": {
+                "primary_insight": "@outputs('generate_insights')?['primary_insight']",
+                "application_guidance": "@outputs('generate_insights')?['application_guidance']?[outputs('determine_significance')?['outcome_type']]"
+              },
+              "lifecycle": {
+                "retention_months": "@outputs('load_learning_metadata')?['learning_types']?[outputs('parse_input')?['learning_type']]?['retention_months']",
+                "review_frequency": "@outputs('load_learning_metadata')?['learning_types']?[outputs('parse_input')?['learning_type']]?['review_frequency']",
+                "expiration_date": "@addToTime(utcNow(), outputs('load_learning_metadata')?['learning_types']?[outputs('parse_input')?['learning_type']]?['retention_months'], 'Month')"
+              }
+            },
+            "confidence": "@if(equals(outputs('determine_significance')?['significance_level'], 'HIGH'), 'HIGH', if(equals(outputs('determine_significance')?['significance_level'], 'MEDIUM'), 'MEDIUM', 'LOW'))",
+            "sources": [
+              "CALCULATION",
+              "CAMPAIGN_DATA",
+              "AGENT_KB"
+            ],
+            "recommendations": [
+              "@outputs('determine_promotability')?['promotion_recommendation']",
+              "@outputs('load_learning_metadata')?['learning_types']?[outputs('parse_input')?['learning_type']]?['application']"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "create_learning_record": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "E1A2ABC4-6A2B-496E-A7FF-C74F1926E4FE"
+          },
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('build_response')"
+          },
+          "kind": "Http"
+        },
+        "return_error": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "15D3A52B-9A4F-4E31-827B-99CA3AB2D662"
+          },
+          "inputs": {
+            "statusCode": 500,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "request_id": "@outputs('parse_input')?['request_id']",
+              "source_agent": "PRF",
+              "error": true,
+              "code": "LEARNING_EXTRACTION_ERROR",
+              "message": "Failed to extract learning"
+            }
+          },
+          "kind": "Http",
+          "operationOptions": "OnError"
+        }
+      }
+    },
+    "state": "Activated"
+  },
+  "schemaVersion": "1.0.0.0"
+}

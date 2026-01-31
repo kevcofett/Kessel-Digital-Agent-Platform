@@ -1,0 +1,236 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {},
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "method": "POST",
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id",
+                "framework_code",
+                "inputs"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "framework_code": {
+                  "type": "string",
+                  "enum": [
+                    "SWOT",
+                    "PESTEL",
+                    "PORTER_FIVE_FORCES",
+                    "BCG_MATRIX",
+                    "ANSOFF_MATRIX",
+                    "VALUE_CHAIN",
+                    "MCKINSEY_7S"
+                  ]
+                },
+                "inputs": {
+                  "type": "object",
+                  "description": "Framework-specific input data"
+                },
+                "context": {
+                  "type": "object",
+                  "properties": {
+                    "company_name": {
+                      "type": "string"
+                    },
+                    "industry": {
+                      "type": "string"
+                    },
+                    "strategic_objective": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "750BF629-8163-46D7-90E5-BDC2D06D73AB"
+          },
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "framework_code": "@triggerBody()?['framework_code']",
+            "inputs": "@triggerBody()?['inputs']",
+            "context": "@triggerBody()?['context']",
+            "start_time": "@utcNow()"
+          }
+        },
+        "route_framework": {
+          "type": "Switch",
+          "metadata": {
+            "operationMetadataId": "43AF064C-7393-4F0B-A33A-E614CB57205F"
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "generate_synthesis": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "0B02AE14-A1DD-48FA-A36E-EA81B8141370"
+          },
+          "inputs": {
+            "executive_summary": "Analysis reveals a moderately attractive strategic position with strong internal capabilities and favorable external trends. Key success factors include differentiation, technology investment, and customer retention focus.",
+            "key_insights": [
+              {
+                "insight": "Internal strengths align well with external opportunities",
+                "confidence": "high",
+                "actionability": "immediate"
+              },
+              {
+                "insight": "Infrastructure modernization is prerequisite for growth",
+                "confidence": "high",
+                "actionability": "short_term"
+              },
+              {
+                "insight": "Competitive intensity requires sustained differentiation investment",
+                "confidence": "medium",
+                "actionability": "ongoing"
+              }
+            ],
+            "strategic_options": [
+              {
+                "option": "Accelerated Growth",
+                "description": "Invest heavily in capturing market opportunity",
+                "risk_level": "medium",
+                "resource_requirement": "high",
+                "fit_score": 85
+              },
+              {
+                "option": "Selective Investment",
+                "description": "Focused investment in highest-potential areas",
+                "risk_level": "low",
+                "resource_requirement": "medium",
+                "fit_score": 90
+              },
+              {
+                "option": "Defensive Positioning",
+                "description": "Protect current position while building capabilities",
+                "risk_level": "low",
+                "resource_requirement": "low",
+                "fit_score": 70
+              }
+            ],
+            "recommended_option": "Selective Investment",
+            "recommendation_rationale": "Best balance of growth capture and risk management given current capabilities"
+          },
+          "runAfter": {
+            "route_framework": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "30606441-713B-4B4B-A307-6429AFE43EDA"
+          },
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "CST",
+            "status": "success",
+            "data": {
+              "framework_applied": "@outputs('parse_input')?['framework_code']",
+              "context": "@outputs('parse_input')?['context']",
+              "analysis": "@coalesce(outputs('apply_swot'), outputs('apply_porter'), outputs('apply_pestel'), outputs('unsupported_framework'))",
+              "synthesis": {
+                "executive_summary": "@outputs('generate_synthesis')?['executive_summary']",
+                "key_insights": "@outputs('generate_synthesis')?['key_insights']",
+                "strategic_options": "@outputs('generate_synthesis')?['strategic_options']",
+                "recommended_option": "@outputs('generate_synthesis')?['recommended_option']",
+                "recommendation_rationale": "@outputs('generate_synthesis')?['recommendation_rationale']"
+              }
+            },
+            "confidence": "HIGH",
+            "sources": [
+              "AGENT_KB",
+              "FRAMEWORK_ANALYSIS",
+              "INPUT_DATA"
+            ],
+            "recommendations": [
+              "Review analysis with leadership team",
+              "Validate assumptions with market data",
+              "Develop action plan for selected strategic option"
+            ],
+            "follow_up_questions": [
+              "Would you like to prioritize initiatives based on this analysis?",
+              "Should we apply additional frameworks for deeper insight?",
+              "Do you want to develop a detailed implementation roadmap?"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "generate_synthesis": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "C9BA7047-5155-4AA6-BD31-96D24309486A"
+          },
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('build_response')"
+          },
+          "kind": "Http"
+        },
+        "return_error": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "D0078C1B-F357-425D-9AB6-E2631F349DD3"
+          },
+          "inputs": {
+            "statusCode": 500,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "request_id": "@outputs('parse_input')?['request_id']",
+              "source_agent": "CST",
+              "error": true,
+              "code": "ANALYSIS_ERROR",
+              "message": "Failed to apply framework analysis"
+            }
+          },
+          "kind": "Http",
+          "operationOptions": "OnError"
+        }
+      }
+    },
+    "state": "Activated"
+  },
+  "schemaVersion": "1.0.0.0"
+}

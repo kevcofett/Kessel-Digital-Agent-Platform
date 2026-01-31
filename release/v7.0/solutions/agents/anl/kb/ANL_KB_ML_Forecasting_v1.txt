@@ -1,0 +1,434 @@
+MACHINE LEARNING FORECASTING METHODS
+
+PURPOSE AND SCOPE
+
+This document provides comprehensive guidance on applying machine learning techniques to marketing forecasting. ML-driven forecasting enables more accurate predictions of marketing outcomes enabling better planning and real-time optimization.
+
+FORECASTING FUNDAMENTALS
+
+FORECASTING OBJECTIVES
+
+Business Applications
+- Campaign performance prediction
+- Budget utilization forecasting
+- Conversion volume projection
+- Revenue forecast generation
+- Resource planning support
+
+Forecast Horizons
+- Short-term forecasts for daily optimization
+- Medium-term forecasts for campaign planning
+- Long-term forecasts for budget cycles
+- Rolling forecasts for continuous planning
+- Scenario forecasts for contingency planning
+
+TRADITIONAL VERSUS ML FORECASTING
+
+Traditional Methods
+- Moving averages and smoothing
+- Linear trend extrapolation
+- Seasonal decomposition
+- ARIMA family models
+- Judgmental adjustment
+
+ML Methods
+- Complex pattern recognition
+- Multi-variable relationships
+- Nonlinear dynamics capture
+- Automatic feature learning
+- Ensemble predictions
+
+TIME SERIES FOUNDATIONS
+
+COMPONENTS OF TIME SERIES
+
+Trend Component
+- Long-term directional movement
+- Linear or nonlinear patterns
+- Structural changes detection
+- Trend reversal identification
+- Growth rate estimation
+
+Seasonal Component
+- Regular periodic patterns
+- Weekly and monthly cycles
+- Holiday effects
+- Day-of-week patterns
+- Quarterly seasonality
+
+Cyclical Component
+- Longer period fluctuations
+- Economic cycle correlation
+- Industry cycle patterns
+- Multi-year patterns
+- Irregular timing
+
+Residual Component
+- Random variation
+- Unexplained fluctuation
+- Noise versus signal
+- Outlier identification
+- Model improvement opportunity
+
+STATIONARITY CONCEPTS
+
+Stationarity Requirements
+- Constant mean over time
+- Constant variance over time
+- Covariance depends only on lag
+- No trend or seasonality
+- Statistical properties stable
+
+Transformation Methods
+- Differencing for trend removal
+- Log transformation for variance
+- Seasonal differencing
+- Box-Cox transformations
+- Detrending approaches
+
+CLASSICAL FORECASTING MODELS
+
+EXPONENTIAL SMOOTHING
+
+Simple Exponential Smoothing
+- Single smoothing parameter
+- Level only estimation
+- Suitable for no trend data
+- Weighted average approach
+- Fast adaptation to changes
+
+Holt Linear Method
+- Trend component addition
+- Two smoothing parameters
+- Linear trend projection
+- Additive or multiplicative
+- Short-term trend capture
+
+Holt-Winters Method
+- Seasonal component addition
+- Three smoothing parameters
+- Additive or multiplicative seasonality
+- Complete decomposition
+- Industry standard approach
+
+ARIMA FAMILY
+
+ARIMA Models
+- Autoregressive component
+- Integrated differencing
+- Moving average component
+- Order selection methods
+- Diagnostic checking
+
+SARIMA Models
+- Seasonal ARIMA extension
+- Seasonal differencing
+- Seasonal AR and MA terms
+- Complex seasonal patterns
+- Multiple seasonality handling
+
+ARIMAX Models
+- Exogenous variable inclusion
+- Covariate relationship modeling
+- External factor incorporation
+- Transfer function approach
+- Improved accuracy potential
+
+MACHINE LEARNING MODELS
+
+GRADIENT BOOSTING METHODS
+
+XGBoost for Time Series
+- Feature engineering critical
+- Lag features creation
+- Rolling statistics inclusion
+- Cross-validation adaptation
+- Hyperparameter tuning
+
+LightGBM Applications
+- Faster training speed
+- Lower memory usage
+- Categorical feature handling
+- Gradient-based sampling
+- Large dataset capability
+
+CatBoost Implementation
+- Categorical feature encoding
+- Ordered boosting
+- Symmetric trees
+- GPU acceleration
+- Robust to overfitting
+
+NEURAL NETWORK APPROACHES
+
+Recurrent Neural Networks
+- Sequential data processing
+- Hidden state maintenance
+- Vanishing gradient challenges
+- Short sequence limitation
+- Basic architecture
+
+LSTM Networks
+- Long short-term memory
+- Gate mechanism design
+- Long-term dependency capture
+- Gradient flow improvement
+- State-of-art RNN variant
+
+GRU Networks
+- Gated recurrent units
+- Simplified LSTM variant
+- Fewer parameters
+- Comparable performance
+- Faster training
+
+Transformer Models
+- Attention mechanism
+- Parallel processing
+- Long-range dependencies
+- State-of-art performance
+- Temporal fusion transformer
+
+HYBRID APPROACHES
+
+Prophet Model
+- Facebook developed
+- Additive decomposition
+- Holiday effect handling
+- Trend changepoint detection
+- Interpretable components
+
+Neural Prophet
+- Prophet with neural networks
+- Auto-regression capability
+- Lagged regressor support
+- Local context modeling
+- PyTorch implementation
+
+Ensemble Methods
+- Multiple model combination
+- Weighted averaging
+- Stacking approaches
+- Model diversity benefits
+- Improved robustness
+
+FEATURE ENGINEERING
+
+TEMPORAL FEATURES
+
+Calendar Features
+- Day of week encoding
+- Month indicators
+- Quarter flags
+- Year progression
+- Holiday markers
+
+Lag Features
+- Previous period values
+- Multiple lag horizons
+- Optimal lag selection
+- Autocorrelation guidance
+- Partial autocorrelation
+
+Rolling Statistics
+- Moving averages
+- Rolling standard deviation
+- Rolling min and max
+- Window size selection
+- Exponential weighting
+
+EXTERNAL FEATURES
+
+Marketing Variables
+- Spend by channel
+- Campaign indicators
+- Creative changes
+- Pricing changes
+- Promotion flags
+
+Environmental Variables
+- Weather data
+- Economic indicators
+- Competitive activity
+- Industry trends
+- Search trends
+
+EVENT FEATURES
+
+Scheduled Events
+- Product launches
+- Campaign starts
+- Promotional periods
+- Seasonal events
+- Company milestones
+
+Unscheduled Events
+- Viral moments
+- Crisis events
+- Competitive actions
+- Market disruptions
+- External shocks
+
+MODEL EVALUATION
+
+ACCURACY METRICS
+
+Scale-Dependent Metrics
+- Mean Absolute Error (MAE)
+- Root Mean Squared Error (RMSE)
+- Mean Squared Error (MSE)
+- Interpretable units
+- Outlier sensitivity
+
+Percentage Metrics
+- Mean Absolute Percentage Error (MAPE)
+- Symmetric MAPE (sMAPE)
+- Weighted MAPE
+- Scale independence
+- Zero value handling
+
+Relative Metrics
+- Mean Absolute Scaled Error (MASE)
+- Relative MAE
+- Benchmark comparison
+- Naive method baseline
+- Cross-series comparison
+
+VALIDATION STRATEGIES
+
+Time Series Cross-Validation
+- Walk-forward validation
+- Expanding window
+- Sliding window
+- Gap consideration
+- Realistic evaluation
+
+Holdout Testing
+- Final period holdout
+- Multiple test periods
+- Seasonal coverage
+- Representative selection
+- Unbiased assessment
+
+UNCERTAINTY QUANTIFICATION
+
+Prediction Intervals
+- Confidence level selection
+- Interval width interpretation
+- Coverage probability
+- Calibration assessment
+- Decision support
+
+Probabilistic Forecasts
+- Full distribution estimation
+- Quantile regression
+- Monte Carlo simulation
+- Scenario generation
+- Risk assessment support
+
+FORECASTING APPLICATIONS
+
+CAMPAIGN FORECASTING
+
+Pre-Campaign Projection
+- Expected performance range
+- Resource requirement estimation
+- Budget utilization prediction
+- Goal achievability assessment
+- Risk identification
+
+In-Flight Forecasting
+- Real-time projection update
+- Pacing assessment
+- End-of-campaign prediction
+- Optimization opportunity
+- Early warning signals
+
+BUDGET FORECASTING
+
+Spend Pacing
+- Daily spend projection
+- Budget depletion timing
+- Underspend identification
+- Overspend prevention
+- Reallocation triggers
+
+Performance Pacing
+- Conversion trajectory
+- Revenue accumulation
+- Efficiency trend
+- Goal attainment path
+- Intervention timing
+
+DEMAND FORECASTING
+
+Lead Generation
+- Lead volume prediction
+- Quality distribution forecast
+- Conversion rate projection
+- Pipeline value estimation
+- Capacity planning
+
+Sales Forecasting
+- Revenue prediction
+- Deal closure timing
+- Win rate projection
+- Pipeline velocity
+- Resource allocation
+
+IMPLEMENTATION GUIDANCE
+
+MODEL SELECTION
+
+Selection Criteria
+- Data characteristics match
+- Computational requirements
+- Interpretability needs
+- Accuracy requirements
+- Maintenance burden
+
+Model Comparison
+- Multiple model testing
+- Consistent evaluation
+- Statistical significance
+- Practical significance
+- Implementation cost
+
+DEPLOYMENT CONSIDERATIONS
+
+Production Requirements
+- Real-time capability
+- Batch processing
+- API integration
+- Monitoring setup
+- Retraining schedule
+
+Maintenance Needs
+- Drift detection
+- Performance monitoring
+- Model retraining triggers
+- Version management
+- Documentation maintenance
+
+COMMON PITFALLS
+
+Data Issues
+- Insufficient history
+- Missing values handling
+- Outlier treatment
+- Level shifts
+- Structural breaks
+
+Modeling Issues
+- Overfitting to history
+- Underfitting patterns
+- Feature leakage
+- Improper validation
+- Overconfident intervals
+
+Implementation Issues
+- Stale models in production
+- Ignored uncertainty
+- Missing feedback loops
+- Poor documentation
+- Lack of monitoring

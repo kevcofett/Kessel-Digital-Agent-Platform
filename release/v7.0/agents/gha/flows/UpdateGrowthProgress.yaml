@@ -1,0 +1,332 @@
+# UpdateGrowthProgress Power Automate Flow Definition
+# Version: 1.0.0
+# Agent: GHA (Growth Hacking Agent)
+# Description: Updates growth session progress - advances steps/gates and updates growth plan state
+
+name: UpdateGrowthProgress
+description: >
+  HTTP-triggered flow that updates growth session progress in EAP Dataverse.
+  Can advance growth workflow steps, complete growth gates, and update growth plan state fields.
+  Used after GHA completes growth strategy steps or receives specialist analysis.
+  Operates on eap_growth_sessions table with 8 steps and 4 gates.
+
+trigger:
+  type: HTTP
+  method: POST
+  schema:
+    type: object
+    required:
+      - session_id
+    properties:
+      session_id:
+        type: string
+        format: uuid
+        description: Main session identifier
+      growth_session_id:
+        type: string
+        format: uuid
+        description: Direct growth session identifier if known
+      action:
+        type: string
+        enum:
+          - advance_step
+          - complete_gate
+          - set_step
+          - update_growth_state
+          - create_session
+        description: Type of progress update
+      target_step:
+        type: integer
+        minimum: 1
+        maximum: 8
+        description: Target step (for set_step action)
+      growth_plan_state_updates:
+        type: object
+        description: Partial growth plan state to merge
+      north_star_metric:
+        type: object
+        description: North Star metric object to update
+      priority_stages:
+        type: array
+        description: Array of priority lifecycle stages
+      specialist_output:
+        type: object
+        description: Output from specialist call to integrate
+
+environment_variables:
+  EAP_DATAVERSE_URL:
+    description: EAP Dataverse environment URL
+    required: true
+
+steps:
+  # Step 1: Parse input
+  - id: parse_input
+    type: Compose
+    name: Parse Input
+    inputs:
+      session_id: "@triggerBody()?['session_id']"
+      growth_session_id: "@triggerBody()?['growth_session_id']"
+      action: "@coalesce(triggerBody()?['action'], 'update_growth_state')"
+      target_step: "@triggerBody()?['target_step']"
+      growth_plan_state_updates: "@triggerBody()?['growth_plan_state_updates']"
+      north_star_metric: "@triggerBody()?['north_star_metric']"
+      priority_stages: "@triggerBody()?['priority_stages']"
+      specialist_output: "@triggerBody()?['specialist_output']"
+      request_timestamp: "@utcNow()"
+
+  # Step 2: Check if action is create_session
+  - id: check_create_action
+    type: Condition
+    name: Is Create Session Action?
+    expression:
+      equals:
+        - "@outputs('parse_input')?['action']"
+        - "create_session"
+    run_after: parse_input
+
+  # Step 2a: Create new growth session
+  - id: create_growth_session
+    type: HTTP
+    name: Create New Growth Session
+    condition: check_create_action.true
+    inputs:
+      method: POST
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_growth_sessions"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_growth_sessionid: "@guid()"
+        eap_session_id: "@outputs('parse_input')?['session_id']"
+        eap_growth_workflow_step: 1
+        eap_growth_workflow_gate: 0
+        eap_growth_plan_state: "{}"
+    run_after: check_create_action
+
+  # Step 2b: Build create response
+  - id: build_create_response
+    type: Compose
+    name: Build Create Response
+    condition: check_create_action.true
+    inputs:
+      success: true
+      action: "create_session"
+      growth_session_id: "@body('create_growth_session')?['eap_growth_sessionid']"
+      session_id: "@outputs('parse_input')?['session_id']"
+      new_state:
+        step: 1
+        gate: 0
+        gate_name: "Pre-Foundation"
+      created_at: "@utcNow()"
+    run_after: create_growth_session
+
+  # Step 3: Get current growth session state (for non-create actions)
+  - id: get_current_growth_session
+    type: HTTP
+    name: Get Current Growth Session
+    condition: check_create_action.false
+    inputs:
+      method: GET
+      uri: "@if(empty(outputs('parse_input')?['growth_session_id']), concat(variables('EAP_DATAVERSE_URL'), '/api/data/v9.2/eap_growth_sessions?$filter=eap_session_id eq ''', outputs('parse_input')?['session_id'], ''''), concat(variables('EAP_DATAVERSE_URL'), '/api/data/v9.2/eap_growth_sessions(', outputs('parse_input')?['growth_session_id'], ')'))"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+    run_after: check_create_action
+
+  # Step 4: Parse current growth state
+  - id: parse_current_state
+    type: Compose
+    name: Parse Current Growth State
+    condition: check_create_action.false
+    inputs:
+      growth_session_id: "@coalesce(body('get_current_growth_session')?['eap_growth_sessionid'], first(body('get_current_growth_session')?['value'])?['eap_growth_sessionid'])"
+      current_step: "@coalesce(body('get_current_growth_session')?['eap_growth_workflow_step'], first(body('get_current_growth_session')?['value'])?['eap_growth_workflow_step'], 1)"
+      current_gate: "@coalesce(body('get_current_growth_session')?['eap_growth_workflow_gate'], first(body('get_current_growth_session')?['value'])?['eap_growth_workflow_gate'], 0)"
+      current_growth_plan_state: "@json(coalesce(body('get_current_growth_session')?['eap_growth_plan_state'], first(body('get_current_growth_session')?['value'])?['eap_growth_plan_state'], '{}'))"
+      current_north_star: "@coalesce(body('get_current_growth_session')?['eap_north_star_metric'], first(body('get_current_growth_session')?['value'])?['eap_north_star_metric'])"
+      current_priority_stages: "@json(coalesce(body('get_current_growth_session')?['eap_priority_stages'], first(body('get_current_growth_session')?['value'])?['eap_priority_stages'], '[]'))"
+    run_after: get_current_growth_session
+
+  # Step 5: Calculate new step/gate based on action
+  - id: calculate_new_progress
+    type: Compose
+    name: Calculate New Progress
+    condition: check_create_action.false
+    inputs:
+      new_step: "@if(equals(outputs('parse_input')?['action'], 'advance_step'), min(add(outputs('parse_current_state')?['current_step'], 1), 8), if(equals(outputs('parse_input')?['action'], 'set_step'), outputs('parse_input')?['target_step'], outputs('parse_current_state')?['current_step']))"
+      new_gate: "@if(lessOrEquals(variables('new_step'), 0), 0, if(lessOrEquals(variables('new_step'), 2), 1, if(lessOrEquals(variables('new_step'), 4), 2, if(lessOrEquals(variables('new_step'), 7), 3, 4))))"
+      gate_changed: "@not(equals(variables('new_gate'), outputs('parse_current_state')?['current_gate']))"
+      new_gate_name: "@if(equals(variables('new_gate'), 0), 'Pre-Foundation', if(equals(variables('new_gate'), 1), 'Growth Foundation', if(equals(variables('new_gate'), 2), 'Growth Strategy', if(equals(variables('new_gate'), 3), 'Growth Tactics', 'Growth Plan Complete'))))"
+    run_after: parse_current_state
+
+  # Step 6: Merge growth plan state updates
+  - id: merge_growth_plan_state
+    type: Compose
+    name: Merge Growth Plan State Updates
+    condition: check_create_action.false
+    inputs:
+      merged_growth_plan_state: "@union(outputs('parse_current_state')?['current_growth_plan_state'], coalesce(outputs('parse_input')?['growth_plan_state_updates'], json('{}')))"
+      merged_with_specialist: "@if(empty(outputs('parse_input')?['specialist_output']), variables('merged_growth_plan_state'), union(variables('merged_growth_plan_state'), createObject('specialist_outputs', union(coalesce(outputs('parse_current_state')?['current_growth_plan_state']?['specialist_outputs'], json('[]')), createArray(outputs('parse_input')?['specialist_output'])))))"
+    run_after: calculate_new_progress
+
+  # Step 7: Build update payload
+  - id: build_update_payload
+    type: Compose
+    name: Build Update Payload
+    condition: check_create_action.false
+    inputs:
+      eap_growth_workflow_step: "@outputs('calculate_new_progress')?['new_step']"
+      eap_growth_workflow_gate: "@outputs('calculate_new_progress')?['new_gate']"
+      eap_growth_plan_state: "@string(outputs('merge_growth_plan_state')?['merged_with_specialist'])"
+      eap_north_star_metric: "@coalesce(outputs('parse_input')?['north_star_metric'], outputs('parse_current_state')?['current_north_star'])"
+      eap_priority_stages: "@string(coalesce(outputs('parse_input')?['priority_stages'], outputs('parse_current_state')?['current_priority_stages']))"
+    run_after: merge_growth_plan_state
+
+  # Step 8: Update growth session in Dataverse
+  - id: update_growth_session
+    type: HTTP
+    name: Update Growth Session in Dataverse
+    condition: check_create_action.false
+    inputs:
+      method: PATCH
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_growth_sessions(@{outputs('parse_current_state')?['growth_session_id']})"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body: "@outputs('build_update_payload')"
+    run_after: build_update_payload
+
+  # Step 9: Log growth session event
+  - id: log_growth_event
+    type: HTTP
+    name: Log Growth Session Event
+    condition: check_create_action.false
+    inputs:
+      method: POST
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_session_logs"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_entry_id: "@guid()"
+        eap_session_id: "@outputs('parse_input')?['session_id']"
+        eap_source_agent: "GHA"
+        eap_event_type: "@if(outputs('calculate_new_progress')?['gate_changed'], 'growth_gate_passed', 'growth_step_advanced')"
+        eap_workflow_step: "@outputs('calculate_new_progress')?['new_step']"
+        eap_workflow_gate: "@outputs('calculate_new_progress')?['new_gate']"
+        eap_details: "@string(createArray('action', outputs('parse_input')?['action'], 'from_step', outputs('parse_current_state')?['current_step'], 'to_step', outputs('calculate_new_progress')?['new_step'], 'gate_name', outputs('calculate_new_progress')?['new_gate_name']))"
+    run_after: update_growth_session
+
+  # Step 10: Check for growth plan completion (step 8)
+  - id: check_completion
+    type: Condition
+    name: Growth Plan Complete?
+    condition: check_create_action.false
+    expression:
+      equals:
+        - "@outputs('calculate_new_progress')?['new_step']"
+        - 8
+    run_after: log_growth_event
+
+  # Step 10a: Log completion event and prepare handoff
+  - id: log_completion
+    type: HTTP
+    name: Log Completion Event
+    condition: check_completion.true
+    inputs:
+      method: POST
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_session_logs"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_entry_id: "@guid()"
+        eap_session_id: "@outputs('parse_input')?['session_id']"
+        eap_source_agent: "GHA"
+        eap_event_type: "growth_plan_completed"
+        eap_workflow_step: 8
+        eap_workflow_gate: 4
+        eap_details: "@string(createObject('north_star_metric', outputs('parse_current_state')?['current_north_star'], 'priority_stages', outputs('parse_current_state')?['current_priority_stages']))"
+    run_after: check_completion
+
+  # Step 11: Validate gate requirements
+  - id: validate_gate_requirements
+    type: Compose
+    name: Validate Gate Requirements
+    condition: check_create_action.false
+    inputs:
+      gate1_validation:
+        business_model_documented: "@not(empty(outputs('merge_growth_plan_state')?['merged_with_specialist']?['business_model']))"
+        growth_stage_identified: "@not(empty(outputs('merge_growth_plan_state')?['merged_with_specialist']?['growth_stage']))"
+        north_star_selected: "@not(empty(coalesce(outputs('parse_input')?['north_star_metric'], outputs('parse_current_state')?['current_north_star'])))"
+        gate_status: "@if(and(variables('business_model_documented'), variables('growth_stage_identified'), variables('north_star_selected')), 'pass', 'incomplete')"
+      gate2_validation:
+        lifecycle_analysis_complete: "@not(empty(outputs('merge_growth_plan_state')?['merged_with_specialist']?['lifecycle_analysis']))"
+        priority_stages_identified: "@greater(length(coalesce(outputs('parse_input')?['priority_stages'], outputs('parse_current_state')?['current_priority_stages'])), 0)"
+        audience_strategy_defined: "@not(empty(outputs('merge_growth_plan_state')?['merged_with_specialist']?['audience_segments']))"
+        gate_status: "@if(and(variables('lifecycle_analysis_complete'), variables('priority_stages_identified'), variables('audience_strategy_defined')), 'pass', 'incomplete')"
+      gate3_validation:
+        tactics_selected: "@not(empty(outputs('merge_growth_plan_state')?['merged_with_specialist']?['tactics']))"
+        channels_recommended: "@not(empty(outputs('merge_growth_plan_state')?['merged_with_specialist']?['channel_strategy']))"
+        projections_calculated: "@not(empty(outputs('merge_growth_plan_state')?['merged_with_specialist']?['projections']))"
+        gate_status: "@if(and(variables('tactics_selected'), variables('channels_recommended'), variables('projections_calculated')), 'pass', 'incomplete')"
+      gate4_validation:
+        documentation_generated: "@not(empty(outputs('merge_growth_plan_state')?['merged_with_specialist']?['growth_plan_document']))"
+        handoff_context_prepared: "@not(empty(outputs('merge_growth_plan_state')?['merged_with_specialist']?['handoff_context']))"
+        gate_status: "@if(and(variables('documentation_generated'), variables('handoff_context_prepared')), 'pass', 'incomplete')"
+    run_after: log_growth_event
+
+  # Step 12: Build update response
+  - id: build_response
+    type: Compose
+    name: Build Response
+    condition: check_create_action.false
+    inputs:
+      success: true
+      growth_session_id: "@outputs('parse_current_state')?['growth_session_id']"
+      session_id: "@outputs('parse_input')?['session_id']"
+      action: "@outputs('parse_input')?['action']"
+      previous_state:
+        step: "@outputs('parse_current_state')?['current_step']"
+        gate: "@outputs('parse_current_state')?['current_gate']"
+      new_state:
+        step: "@outputs('calculate_new_progress')?['new_step']"
+        gate: "@outputs('calculate_new_progress')?['new_gate']"
+        gate_name: "@outputs('calculate_new_progress')?['new_gate_name']"
+      gate_changed: "@outputs('calculate_new_progress')?['gate_changed']"
+      gate_validations: "@outputs('validate_gate_requirements')"
+      growth_plan_complete: "@equals(outputs('calculate_new_progress')?['new_step'], 8)"
+      handoff_available:
+        media_plan: "@equals(outputs('calculate_new_progress')?['new_step'], 8)"
+        consulting: "@equals(outputs('calculate_new_progress')?['new_step'], 8)"
+      updated_at: "@utcNow()"
+    run_after:
+      - log_growth_event
+      - log_completion
+      - validate_gate_requirements
+
+  # Step 13: Return response
+  - id: return_response
+    type: Response
+    name: Return Response
+    inputs:
+      statusCode: 200
+      headers:
+        Content-Type: application/json
+      body: "@coalesce(outputs('build_create_response'), outputs('build_response'))"
+
+error_handling:
+  on_error:
+    - id: return_error
+      type: Response
+      name: Return Error Response
+      inputs:
+        statusCode: 500
+        headers:
+          Content-Type: application/json
+        body:
+          success: false
+          error: true
+          code: "UPDATE_FAILED"
+          message: "Failed to update growth session progress"
+          session_id: "@outputs('parse_input')?['session_id']"

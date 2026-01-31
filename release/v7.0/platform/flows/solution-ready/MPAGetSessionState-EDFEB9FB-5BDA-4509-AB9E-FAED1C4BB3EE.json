@@ -1,0 +1,341 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "0f360dab-77e0-4f91-8d73-abd049fcd8dc"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "Session identifier to retrieve"
+                },
+                "include_history": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Include conversation history summary"
+                },
+                "include_audit": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Include recent audit logs"
+                }
+              }
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "include_history": "@coalesce(triggerBody()?['include_history'], false)",
+            "include_audit": "@coalesce(triggerBody()?['include_audit'], false)",
+            "request_timestamp": "@utcNow()"
+          },
+          "metadata": {
+            "operationMetadataId": "5f8afcbe-f345-4623-98dc-97537622b8a7"
+          },
+          "runAfter": {}
+        },
+        "get_session": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {},
+            "authentication": "@parameters('$authentication')"
+          },
+          "metadata": {
+            "operationMetadataId": "1c4a6b9c-77b7-4216-8c5f-508fe3ce86f2"
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "check_session_exists": {
+          "type": "If",
+          "expression": {
+            "not": {
+              "equals": [
+                "@outputs('get_session')?['statusCode']",
+                404
+              ]
+            }
+          },
+          "actions": {},
+          "else": {
+            "actions": {}
+          },
+          "metadata": {
+            "operationMetadataId": "ad002bbe-ddc6-456a-accf-61487c8088a3"
+          },
+          "runAfter": {
+            "get_session": [
+              "Succeeded"
+            ]
+          }
+        },
+        "parse_session": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@body('get_session')?['eap_sessionid']",
+            "workflow_step": "@body('get_session')?['eap_workflow_step']",
+            "workflow_gate": "@body('get_session')?['eap_workflow_gate']",
+            "session_type": "@body('get_session')?['eap_session_type']",
+            "plan_state": "@json(coalesce(body('get_session')?['eap_plan_state'], '{}'))",
+            "created_at": "@body('get_session')?['createdon']",
+            "updated_at": "@body('get_session')?['modifiedon']",
+            "conversation_history_summary": "@body('get_session')?['eap_conversation_summary']"
+          },
+          "metadata": {
+            "operationMetadataId": "e568c923-bfd1-4d0e-8900-74e9d8ff892b"
+          },
+          "runAfter": {
+            "check_session_exists": [
+              "Succeeded"
+            ]
+          }
+        },
+        "get_gate_details": {
+          "type": "Compose",
+          "inputs": {
+            "gate_number": "@outputs('parse_session')?['workflow_gate']",
+            "gate_name": "@if(equals(outputs('parse_session')?['workflow_gate'], 0), 'Initialization', if(equals(outputs('parse_session')?['workflow_gate'], 1), 'Foundation', if(equals(outputs('parse_session')?['workflow_gate'], 2), 'Strategy', if(equals(outputs('parse_session')?['workflow_gate'], 3), 'Execution', 'Documentation'))))",
+            "gate_steps": [
+              {
+                "gate": 0,
+                "steps": [
+                  1
+                ],
+                "name": "Initialization"
+              },
+              {
+                "gate": 1,
+                "steps": [
+                  2,
+                  3
+                ],
+                "name": "Foundation"
+              },
+              {
+                "gate": 2,
+                "steps": [
+                  4,
+                  5,
+                  6
+                ],
+                "name": "Strategy"
+              },
+              {
+                "gate": 3,
+                "steps": [
+                  7,
+                  8,
+                  9
+                ],
+                "name": "Execution"
+              },
+              {
+                "gate": 4,
+                "steps": [
+                  10
+                ],
+                "name": "Documentation"
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "80c02fb8-43f4-4141-8724-18272c330434"
+          },
+          "runAfter": {
+            "parse_session": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_completion": {
+          "type": "Compose",
+          "inputs": {
+            "current_step": "@outputs('parse_session')?['workflow_step']",
+            "total_steps": 10,
+            "completion_percentage": "@mul(div(outputs('parse_session')?['workflow_step'], 10), 100)",
+            "steps_completed": "@sub(outputs('parse_session')?['workflow_step'], 1)",
+            "steps_remaining": "@sub(10, outputs('parse_session')?['workflow_step'])",
+            "plan_state_fields_populated": "@length(intersection(createArray('client_context', 'objectives', 'budget', 'audience', 'channels', 'partners', 'measurement', 'optimization', 'compliance', 'document'), json(coalesce(body('get_session')?['eap_plan_state'], '{}'))))"
+          },
+          "metadata": {
+            "operationMetadataId": "6bcc309b-f41e-4700-900a-12c8f680a239"
+          },
+          "runAfter": {
+            "get_gate_details": [
+              "Succeeded"
+            ]
+          }
+        },
+        "check_include_audit": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@outputs('parse_input')?['include_audit']",
+                  true
+                ]
+              }
+            ]
+          },
+          "actions": {},
+          "else": {
+            "actions": {}
+          },
+          "metadata": {
+            "operationMetadataId": "3734db7c-2843-4bfc-89d6-fb352ff8bdfb"
+          },
+          "runAfter": {
+            "calculate_completion": [
+              "Succeeded"
+            ]
+          }
+        },
+        "get_routing_logs": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {},
+            "authentication": "@parameters('$authentication')"
+          },
+          "metadata": {
+            "operationMetadataId": "e231a458-3bb0-43f5-8ac4-8b4c42458611"
+          },
+          "runAfter": {
+            "check_include_audit": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_audit_summary": {
+          "type": "Compose",
+          "inputs": {
+            "recent_routes": "@body('get_routing_logs')?['value']",
+            "route_count": "@length(body('get_routing_logs')?['value'])",
+            "agents_consulted": "@union(body('get_routing_logs')?['value'], 'eap_target_agent')"
+          },
+          "metadata": {
+            "operationMetadataId": "1a36514c-eda2-4526-ae1c-930ad1bf7d96"
+          },
+          "runAfter": {
+            "get_routing_logs": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "inputs": {
+            "session_context": "@outputs('parse_session')",
+            "workflow_details": {
+              "current_gate": "@outputs('get_gate_details')",
+              "completion": "@outputs('calculate_completion')"
+            },
+            "audit_summary": "@if(outputs('parse_input')?['include_audit'], outputs('build_audit_summary'), null)",
+            "metadata": {
+              "retrieved_at": "@utcNow()",
+              "request_session_id": "@outputs('parse_input')?['session_id']"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "91fc4143-ba89-4865-865d-7fa8856f24b4"
+          },
+          "runAfter": {
+            "calculate_completion": [
+              "Succeeded"
+            ],
+            "build_audit_summary": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_not_found_response": {
+          "type": "Compose",
+          "inputs": {
+            "error": true,
+            "code": "SESSION_NOT_FOUND",
+            "message": "Session not found",
+            "session_id": "@outputs('parse_input')?['session_id']",
+            "suggestion": "Create a new session or verify the session ID"
+          },
+          "metadata": {
+            "operationMetadataId": "d9696148-1523-4759-8fc6-2f7eda62b47a"
+          },
+          "runAfter": {
+            "check_session_exists": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": "@if(outputs('check_session_exists'), 200, 404)",
+            "body": "@coalesce(outputs('build_response'), outputs('build_not_found_response'))",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "8242d659-4132-4033-9ff6-fa9b7fb13899"
+          },
+          "runAfter": {}
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

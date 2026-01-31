@@ -1,0 +1,405 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {},
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "method": "POST",
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id",
+                "metric",
+                "actual",
+                "target"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "metric": {
+                  "type": "string",
+                  "enum": [
+                    "CPA",
+                    "CPM",
+                    "CTR",
+                    "CVR",
+                    "ROAS",
+                    "FREQUENCY",
+                    "VIEWABILITY",
+                    "VCR"
+                  ]
+                },
+                "actual": {
+                  "type": "number",
+                  "description": "Actual metric value"
+                },
+                "target": {
+                  "type": "number",
+                  "description": "Target metric value"
+                },
+                "prior_period": {
+                  "type": "number",
+                  "description": "Prior period value for trend analysis"
+                },
+                "campaign_id": {
+                  "type": "string"
+                },
+                "campaign_phase": {
+                  "type": "string",
+                  "enum": [
+                    "LAUNCH",
+                    "LEARNING",
+                    "OPTIMIZATION",
+                    "MATURE"
+                  ],
+                  "default": "OPTIMIZATION"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "F0A5F65B-A819-4420-814C-D7E8DD0AFDB0"
+          },
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "metric": "@triggerBody()?['metric']",
+            "actual": "@triggerBody()?['actual']",
+            "target": "@triggerBody()?['target']",
+            "prior_period": "@triggerBody()?['prior_period']",
+            "campaign_id": "@coalesce(triggerBody()?['campaign_id'], 'UNKNOWN')",
+            "campaign_phase": "@coalesce(triggerBody()?['campaign_phase'], 'OPTIMIZATION')",
+            "start_time": "@utcNow()"
+          }
+        },
+        "load_thresholds": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "A3F1F8F3-4EC7-4F91-BF4C-8E41C5E988D9"
+          },
+          "inputs": {
+            "thresholds": {
+              "CPA": {
+                "yellow": 10,
+                "orange": 20,
+                "red": 35,
+                "direction": "lower_is_better",
+                "description": "Cost Per Acquisition"
+              },
+              "CPM": {
+                "yellow": 15,
+                "orange": 25,
+                "red": 40,
+                "direction": "lower_is_better",
+                "description": "Cost Per Mille"
+              },
+              "CTR": {
+                "yellow": 20,
+                "orange": 35,
+                "red": 50,
+                "direction": "higher_is_better",
+                "description": "Click-Through Rate"
+              },
+              "CVR": {
+                "yellow": 15,
+                "orange": 25,
+                "red": 40,
+                "direction": "higher_is_better",
+                "description": "Conversion Rate"
+              },
+              "ROAS": {
+                "yellow": 15,
+                "orange": 30,
+                "red": 50,
+                "direction": "higher_is_better",
+                "description": "Return On Ad Spend"
+              },
+              "FREQUENCY": {
+                "yellow": 20,
+                "orange": 40,
+                "red": 60,
+                "direction": "target_range",
+                "description": "Average Frequency"
+              },
+              "VIEWABILITY": {
+                "yellow": 10,
+                "orange": 20,
+                "red": 30,
+                "direction": "higher_is_better",
+                "description": "Viewability Rate"
+              },
+              "VCR": {
+                "yellow": 15,
+                "orange": 25,
+                "red": 40,
+                "direction": "higher_is_better",
+                "description": "Video Completion Rate"
+              }
+            }
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_variance": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "3AFBF23B-E079-4FA6-9B1B-7F92BCFB055D"
+          },
+          "inputs": {
+            "actual": "@outputs('parse_input')?['actual']",
+            "target": "@outputs('parse_input')?['target']",
+            "absolute_variance": "@sub(outputs('parse_input')?['actual'], outputs('parse_input')?['target'])",
+            "variance_percent": "@if(equals(outputs('parse_input')?['target'], 0), 0, mul(div(sub(outputs('parse_input')?['actual'], outputs('parse_input')?['target']), outputs('parse_input')?['target']), 100))",
+            "direction": "@outputs('load_thresholds')?['thresholds']?[outputs('parse_input')?['metric']]?['direction']"
+          },
+          "runAfter": {
+            "load_thresholds": [
+              "Succeeded"
+            ]
+          }
+        },
+        "determine_direction": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "BF43DADA-FBA3-48C9-AB29-E5F09E75E415"
+          },
+          "inputs": {
+            "variance_percent": "@outputs('calculate_variance')?['variance_percent']",
+            "direction": "@outputs('calculate_variance')?['direction']",
+            "is_favorable": "@if(equals(outputs('calculate_variance')?['direction'], 'lower_is_better'), less(outputs('parse_input')?['actual'], outputs('parse_input')?['target']), if(equals(outputs('calculate_variance')?['direction'], 'higher_is_better'), greater(outputs('parse_input')?['actual'], outputs('parse_input')?['target']), and(greater(outputs('parse_input')?['actual'], mul(outputs('parse_input')?['target'], 0.8)), less(outputs('parse_input')?['actual'], mul(outputs('parse_input')?['target'], 1.2)))))",
+            "adjusted_variance": "@if(equals(outputs('calculate_variance')?['direction'], 'lower_is_better'), mul(outputs('calculate_variance')?['variance_percent'], -1), outputs('calculate_variance')?['variance_percent'])"
+          },
+          "runAfter": {
+            "calculate_variance": [
+              "Succeeded"
+            ]
+          }
+        },
+        "determine_severity": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "CC6D1C84-FD85-4B07-84A2-C463AD1409CF"
+          },
+          "inputs": {
+            "metric": "@outputs('parse_input')?['metric']",
+            "variance_abs": "@abs(outputs('calculate_variance')?['variance_percent'])",
+            "thresholds": "@outputs('load_thresholds')?['thresholds']?[outputs('parse_input')?['metric']]",
+            "severity": "@if(greater(abs(outputs('calculate_variance')?['variance_percent']), outputs('load_thresholds')?['thresholds']?[outputs('parse_input')?['metric']]?['red']), 'RED', if(greater(abs(outputs('calculate_variance')?['variance_percent']), outputs('load_thresholds')?['thresholds']?[outputs('parse_input')?['metric']]?['orange']), 'ORANGE', if(greater(abs(outputs('calculate_variance')?['variance_percent']), outputs('load_thresholds')?['thresholds']?[outputs('parse_input')?['metric']]?['yellow']), 'YELLOW', 'GREEN')))",
+            "is_favorable": "@outputs('determine_direction')?['is_favorable']"
+          },
+          "runAfter": {
+            "determine_direction": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_trend": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "97C3A598-D662-46DB-9CDE-40DB337F0E60"
+          },
+          "inputs": {
+            "has_prior_period": "@not(equals(outputs('parse_input')?['prior_period'], null))",
+            "prior_period": "@outputs('parse_input')?['prior_period']",
+            "actual": "@outputs('parse_input')?['actual']",
+            "period_change_percent": "@if(equals(outputs('parse_input')?['prior_period'], null), null, if(equals(outputs('parse_input')?['prior_period'], 0), null, mul(div(sub(outputs('parse_input')?['actual'], outputs('parse_input')?['prior_period']), outputs('parse_input')?['prior_period']), 100)))",
+            "trend": "@if(equals(outputs('parse_input')?['prior_period'], null), 'UNKNOWN', if(greater(mul(div(sub(outputs('parse_input')?['actual'], outputs('parse_input')?['prior_period']), if(equals(outputs('parse_input')?['prior_period'], 0), 1, outputs('parse_input')?['prior_period'])), 100), 10), 'IMPROVING', if(less(mul(div(sub(outputs('parse_input')?['actual'], outputs('parse_input')?['prior_period']), if(equals(outputs('parse_input')?['prior_period'], 0), 1, outputs('parse_input')?['prior_period'])), 100), -10), 'DECLINING', 'STABLE')))"
+          },
+          "runAfter": {
+            "determine_severity": [
+              "Succeeded"
+            ]
+          }
+        },
+        "determine_action": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "8CD90DB7-C1E5-475A-B84E-44290FE46A21"
+          },
+          "inputs": {
+            "severity": "@outputs('determine_severity')?['severity']",
+            "is_favorable": "@outputs('determine_severity')?['is_favorable']",
+            "action": "@if(and(equals(outputs('determine_severity')?['severity'], 'RED'), not(outputs('determine_severity')?['is_favorable'])), 'IMMEDIATE_ACTION', if(and(equals(outputs('determine_severity')?['severity'], 'ORANGE'), not(outputs('determine_severity')?['is_favorable'])), 'ACTION_WITHIN_24H', if(and(equals(outputs('determine_severity')?['severity'], 'YELLOW'), not(outputs('determine_severity')?['is_favorable'])), 'REVIEW_WITHIN_48H', 'CONTINUE_MONITORING')))",
+            "action_descriptions": {
+              "IMMEDIATE_ACTION": "Critical variance detected. Requires immediate intervention.",
+              "ACTION_WITHIN_24H": "Significant variance. Review and adjust within 24 hours.",
+              "REVIEW_WITHIN_48H": "Moderate variance. Schedule review within 48 hours.",
+              "CONTINUE_MONITORING": "Performance within acceptable range. Continue monitoring."
+            }
+          },
+          "runAfter": {
+            "calculate_trend": [
+              "Succeeded"
+            ]
+          }
+        },
+        "generate_recommendations": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "2CB0620F-779C-4D86-BC95-5A68739575FF"
+          },
+          "inputs": {
+            "metric": "@outputs('parse_input')?['metric']",
+            "severity": "@outputs('determine_severity')?['severity']",
+            "is_favorable": "@outputs('determine_severity')?['is_favorable']",
+            "recommendations": {
+              "unfavorable": {
+                "CPA": [
+                  "Review targeting parameters for efficiency",
+                  "Analyze conversion funnel for drop-off points",
+                  "Consider reducing bids on underperforming segments"
+                ],
+                "CPM": [
+                  "Evaluate inventory sources for cost efficiency",
+                  "Consider moving budget to lower-cost placements",
+                  "Review frequency caps to reduce waste"
+                ],
+                "CTR": [
+                  "Test new creative variations",
+                  "Review audience targeting relevance",
+                  "Evaluate placement quality"
+                ],
+                "CVR": [
+                  "Analyze landing page performance",
+                  "Review audience quality signals",
+                  "Test conversion path optimization"
+                ],
+                "ROAS": [
+                  "Shift budget to higher-performing channels",
+                  "Review attribution window settings",
+                  "Analyze product/offer mix"
+                ]
+              },
+              "favorable": {
+                "general": [
+                  "Document successful tactics for replication",
+                  "Consider scaling budget to capture opportunity",
+                  "Monitor for sustainability"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "determine_action": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "C5AC41EF-7031-4872-8CE6-D1B883DD9F4E"
+          },
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "PRF",
+            "status": "success",
+            "data": {
+              "performance_analysis": {
+                "metric": "@outputs('parse_input')?['metric']",
+                "metric_description": "@outputs('load_thresholds')?['thresholds']?[outputs('parse_input')?['metric']]?['description']",
+                "actual": "@outputs('parse_input')?['actual']",
+                "target": "@outputs('parse_input')?['target']",
+                "variance_percent": "@outputs('calculate_variance')?['variance_percent']",
+                "absolute_variance": "@outputs('calculate_variance')?['absolute_variance']"
+              },
+              "assessment": {
+                "severity": "@outputs('determine_severity')?['severity']",
+                "is_favorable": "@outputs('determine_severity')?['is_favorable']",
+                "action": "@outputs('determine_action')?['action']",
+                "action_description": "@outputs('determine_action')?['action_descriptions']?[outputs('determine_action')?['action']]"
+              },
+              "trend_analysis": {
+                "trend": "@outputs('calculate_trend')?['trend']",
+                "period_change_percent": "@outputs('calculate_trend')?['period_change_percent']",
+                "prior_period_value": "@outputs('parse_input')?['prior_period']"
+              },
+              "thresholds_applied": {
+                "yellow_threshold": "@outputs('load_thresholds')?['thresholds']?[outputs('parse_input')?['metric']]?['yellow']",
+                "orange_threshold": "@outputs('load_thresholds')?['thresholds']?[outputs('parse_input')?['metric']]?['orange']",
+                "red_threshold": "@outputs('load_thresholds')?['thresholds']?[outputs('parse_input')?['metric']]?['red']"
+              },
+              "context": {
+                "campaign_id": "@outputs('parse_input')?['campaign_id']",
+                "campaign_phase": "@outputs('parse_input')?['campaign_phase']"
+              },
+              "recommendations": "@if(outputs('determine_severity')?['is_favorable'], outputs('generate_recommendations')?['recommendations']?['favorable']?['general'], coalesce(outputs('generate_recommendations')?['recommendations']?['unfavorable']?[outputs('parse_input')?['metric']], outputs('generate_recommendations')?['recommendations']?['favorable']?['general']))"
+            },
+            "confidence": "@if(equals(outputs('determine_severity')?['severity'], 'GREEN'), 'HIGH', if(equals(outputs('determine_severity')?['severity'], 'YELLOW'), 'HIGH', 'MEDIUM'))",
+            "sources": [
+              "CALCULATION",
+              "AGENT_KB"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "generate_recommendations": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "E6D46FB7-4CD8-477F-A2B9-3A1C27BE9B2B"
+          },
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('build_response')"
+          },
+          "kind": "Http"
+        },
+        "return_error": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "8618D0E8-0451-41FC-8737-8F7C92409237"
+          },
+          "inputs": {
+            "statusCode": 500,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "request_id": "@outputs('parse_input')?['request_id']",
+              "source_agent": "PRF",
+              "error": true,
+              "code": "PERFORMANCE_ANALYSIS_ERROR",
+              "message": "Failed to analyze performance"
+            }
+          },
+          "kind": "Http",
+          "operationOptions": "OnError"
+        }
+      }
+    },
+    "state": "Activated"
+  },
+  "schemaVersion": "1.0.0.0"
+}

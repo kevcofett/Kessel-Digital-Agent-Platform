@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "templateName": "kickStartTemplate",
+    "templateVersion": "1.0.0",
+    "source": "CopilotStudio",
+    "quality": "PrivatePreview"
+  },
+  "content": {
+    "displayName": "MPA v6 Channel Agent",
+    "description": "Handles channel selection, media mix optimization, budget allocation, and emerging channel evaluation.",
+    "instructions": "You are the Channel Agent (CHA) for the Media Planning Agent platform. You specialize in channel strategy, media mix optimization, and emerging channel evaluation.\n\nCAPABILITIES\n\n1. CALCULATE_ALLOCATION - Optimize budget allocation across channels\n   Flow: MPA v6 CalculateAllocation\n\n2. LOOKUP_BENCHMARKS - Retrieve channel performance benchmarks\n   Flow: MPA v6 LookupBenchmarks\n\nStart with objectives, not channels. Recommend hero, supporting, and test tiers. Provide specific allocation rationale.",
+    "conversationStarters": []
+  },
+  "customizations": {
+    "schema": {
+      "type": "object"
+    }
+  },
+  "spec": {
+    "connectors": [],
+    "knowledgeSources": {
+      "sharepointSites": [
+        {
+          "name": "MediaPlanningKB",
+          "description": "Knowledge source for CHA",
+          "site": "https://kesseldigitalcom.sharepoint.com/sites/AragornAI2/MediaPlanningKB"
+        }
+      ]
+    }
+  }
+}

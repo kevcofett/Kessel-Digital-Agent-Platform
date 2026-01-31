@@ -1,0 +1,271 @@
+# AnalyzeFees Power Automate Flow Definition
+# Version: 1.0.0
+# Agent: SPO (Supply Path Optimization)
+# Description: Analyzes programmatic fee stack and working media ratio
+
+name: AnalyzeFees
+description: >
+  HTTP-triggered flow that analyzes the programmatic fee stack layer by layer,
+  calculating working media ratio and identifying optimization opportunities.
+  Provides benchmarks and recommendations for fee reduction.
+
+trigger:
+  type: HTTP
+  method: POST
+  schema:
+    type: object
+    required:
+      - session_id
+      - request_id
+      - total_spend
+    properties:
+      session_id:
+        type: string
+        format: uuid
+      request_id:
+        type: string
+        format: uuid
+      total_spend:
+        type: number
+        minimum: 0
+        description: Total programmatic spend
+      dsp_fee_percent:
+        type: number
+        minimum: 0
+        maximum: 100
+        default: 15
+      data_fee_cpm:
+        type: number
+        minimum: 0
+        default: 1.50
+      verification_fee_cpm:
+        type: number
+        minimum: 0
+        default: 0.05
+      ssp_fee_percent:
+        type: number
+        minimum: 0
+        maximum: 100
+        default: 15
+      impressions:
+        type: number
+        minimum: 0
+      channel_type:
+        type: string
+        enum: [display, video, ctv, audio, native]
+        default: display
+
+environment_variables:
+  EAP_DATAVERSE_URL:
+    description: EAP Dataverse environment URL
+    required: true
+
+steps:
+  # Step 1: Parse input
+  - id: parse_input
+    type: Compose
+    name: Parse Input
+    inputs:
+      session_id: "@triggerBody()?['session_id']"
+      request_id: "@triggerBody()?['request_id']"
+      total_spend: "@triggerBody()?['total_spend']"
+      dsp_fee_percent: "@coalesce(triggerBody()?['dsp_fee_percent'], 15)"
+      data_fee_cpm: "@coalesce(triggerBody()?['data_fee_cpm'], 1.50)"
+      verification_fee_cpm: "@coalesce(triggerBody()?['verification_fee_cpm'], 0.05)"
+      ssp_fee_percent: "@coalesce(triggerBody()?['ssp_fee_percent'], 15)"
+      impressions: "@coalesce(triggerBody()?['impressions'], div(mul(triggerBody()?['total_spend'], 1000), 5))"
+      channel_type: "@coalesce(triggerBody()?['channel_type'], 'display')"
+      start_time: "@utcNow()"
+
+  # Step 2: Load channel benchmarks
+  - id: load_benchmarks
+    type: Compose
+    name: Load Channel Benchmarks
+    inputs:
+      benchmarks:
+        display:
+          target_working_media: 55
+          excellent_working_media: 65
+          typical_dsp_fee: 15
+          typical_ssp_fee: 15
+          typical_data_cpm: 1.50
+        video:
+          target_working_media: 50
+          excellent_working_media: 60
+          typical_dsp_fee: 15
+          typical_ssp_fee: 18
+          typical_data_cpm: 2.00
+        ctv:
+          target_working_media: 45
+          excellent_working_media: 55
+          typical_dsp_fee: 12
+          typical_ssp_fee: 20
+          typical_data_cpm: 2.50
+        audio:
+          target_working_media: 55
+          excellent_working_media: 65
+          typical_dsp_fee: 15
+          typical_ssp_fee: 15
+          typical_data_cpm: 1.00
+        native:
+          target_working_media: 50
+          excellent_working_media: 60
+          typical_dsp_fee: 15
+          typical_ssp_fee: 18
+          typical_data_cpm: 1.75
+    run_after: parse_input
+
+  # Step 3: Calculate DSP layer
+  - id: calculate_dsp_layer
+    type: Compose
+    name: Calculate DSP Layer
+    inputs:
+      gross_spend: "@outputs('parse_input')?['total_spend']"
+      dsp_fee_percent: "@outputs('parse_input')?['dsp_fee_percent']"
+      dsp_fee_amount: "@mul(outputs('parse_input')?['total_spend'], div(outputs('parse_input')?['dsp_fee_percent'], 100))"
+      post_dsp: "@sub(outputs('parse_input')?['total_spend'], mul(outputs('parse_input')?['total_spend'], div(outputs('parse_input')?['dsp_fee_percent'], 100)))"
+    run_after: load_benchmarks
+
+  # Step 4: Calculate data layer
+  - id: calculate_data_layer
+    type: Compose
+    name: Calculate Data Layer
+    inputs:
+      impressions: "@outputs('parse_input')?['impressions']"
+      data_fee_cpm: "@outputs('parse_input')?['data_fee_cpm']"
+      data_fee_amount: "@mul(div(outputs('parse_input')?['impressions'], 1000), outputs('parse_input')?['data_fee_cpm'])"
+      post_data: "@sub(outputs('calculate_dsp_layer')?['post_dsp'], mul(div(outputs('parse_input')?['impressions'], 1000), outputs('parse_input')?['data_fee_cpm']))"
+    run_after: calculate_dsp_layer
+
+  # Step 5: Calculate verification layer
+  - id: calculate_verification_layer
+    type: Compose
+    name: Calculate Verification Layer
+    inputs:
+      verification_fee_cpm: "@outputs('parse_input')?['verification_fee_cpm']"
+      verification_fee_amount: "@mul(div(outputs('parse_input')?['impressions'], 1000), outputs('parse_input')?['verification_fee_cpm'])"
+      post_verification: "@sub(outputs('calculate_data_layer')?['post_data'], mul(div(outputs('parse_input')?['impressions'], 1000), outputs('parse_input')?['verification_fee_cpm']))"
+    run_after: calculate_data_layer
+
+  # Step 6: Calculate SSP layer
+  - id: calculate_ssp_layer
+    type: Compose
+    name: Calculate SSP Layer
+    inputs:
+      ssp_fee_percent: "@outputs('parse_input')?['ssp_fee_percent']"
+      ssp_fee_amount: "@mul(outputs('calculate_verification_layer')?['post_verification'], div(outputs('parse_input')?['ssp_fee_percent'], 100))"
+      publisher_payment: "@sub(outputs('calculate_verification_layer')?['post_verification'], mul(outputs('calculate_verification_layer')?['post_verification'], div(outputs('parse_input')?['ssp_fee_percent'], 100)))"
+    run_after: calculate_verification_layer
+
+  # Step 7: Calculate totals
+  - id: calculate_totals
+    type: Compose
+    name: Calculate Totals
+    inputs:
+      total_spend: "@outputs('parse_input')?['total_spend']"
+      publisher_payment: "@outputs('calculate_ssp_layer')?['publisher_payment']"
+      total_fees: "@sub(outputs('parse_input')?['total_spend'], outputs('calculate_ssp_layer')?['publisher_payment'])"
+      working_media_ratio: "@mul(div(outputs('calculate_ssp_layer')?['publisher_payment'], outputs('parse_input')?['total_spend']), 100)"
+      fee_stack_percent: "@mul(div(sub(outputs('parse_input')?['total_spend'], outputs('calculate_ssp_layer')?['publisher_payment']), outputs('parse_input')?['total_spend']), 100)"
+    run_after: calculate_ssp_layer
+
+  # Step 8: Evaluate against benchmarks
+  - id: evaluate_benchmarks
+    type: Compose
+    name: Evaluate Against Benchmarks
+    inputs:
+      channel_type: "@outputs('parse_input')?['channel_type']"
+      working_media_ratio: "@outputs('calculate_totals')?['working_media_ratio']"
+      target: "@outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['target_working_media']"
+      excellent: "@outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['excellent_working_media']"
+      rating: "@if(greaterOrEquals(outputs('calculate_totals')?['working_media_ratio'], outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['excellent_working_media']), 'EXCELLENT', if(greaterOrEquals(outputs('calculate_totals')?['working_media_ratio'], outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['target_working_media']), 'GOOD', if(greaterOrEquals(outputs('calculate_totals')?['working_media_ratio'], sub(outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['target_working_media'], 10)), 'BELOW_TARGET', 'POOR')))"
+      gap_to_target: "@sub(outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['target_working_media'], outputs('calculate_totals')?['working_media_ratio'])"
+      potential_savings: "@if(greater(sub(outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['target_working_media'], outputs('calculate_totals')?['working_media_ratio']), 0), mul(outputs('parse_input')?['total_spend'], div(sub(outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['target_working_media'], outputs('calculate_totals')?['working_media_ratio']), 100)), 0)"
+    run_after: calculate_totals
+
+  # Step 9: Generate recommendations
+  - id: generate_recommendations
+    type: Compose
+    name: Generate Recommendations
+    inputs:
+      recommendations:
+        - "@if(greater(outputs('parse_input')?['dsp_fee_percent'], outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['typical_dsp_fee']), 'Negotiate DSP fees - currently above market rate', 'DSP fees are competitive')"
+        - "@if(greater(outputs('parse_input')?['ssp_fee_percent'], outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['typical_ssp_fee']), 'Explore alternative SSPs or direct publisher deals', 'SSP fees are competitive')"
+        - "@if(greater(outputs('parse_input')?['data_fee_cpm'], outputs('load_benchmarks')?['benchmarks']?[outputs('parse_input')?['channel_type']]?['typical_data_cpm']), 'Review data targeting necessity - fees above benchmark', 'Data fees are within benchmark')"
+      priority_actions:
+        - action: "Audit supply path for unnecessary intermediaries"
+          impact: "HIGH"
+          effort: "MEDIUM"
+        - action: "Negotiate volume-based fee reductions"
+          impact: "MEDIUM"
+          effort: "LOW"
+        - action: "Consider SPO consolidation to fewer partners"
+          impact: "HIGH"
+          effort: "HIGH"
+    run_after: evaluate_benchmarks
+
+  # Step 10: Build response
+  - id: build_response
+    type: Compose
+    name: Build Response
+    inputs:
+      request_id: "@outputs('parse_input')?['request_id']"
+      timestamp: "@utcNow()"
+      source_agent: "SPO"
+      status: "success"
+      data:
+        fee_breakdown:
+          total_spend: "@outputs('parse_input')?['total_spend']"
+          dsp_fees: "@outputs('calculate_dsp_layer')?['dsp_fee_amount']"
+          data_fees: "@outputs('calculate_data_layer')?['data_fee_amount']"
+          verification_fees: "@outputs('calculate_verification_layer')?['verification_fee_amount']"
+          ssp_fees: "@outputs('calculate_ssp_layer')?['ssp_fee_amount']"
+          publisher_payment: "@outputs('calculate_ssp_layer')?['publisher_payment']"
+          total_fees: "@outputs('calculate_totals')?['total_fees']"
+        working_media:
+          ratio_percent: "@outputs('calculate_totals')?['working_media_ratio']"
+          fee_stack_percent: "@outputs('calculate_totals')?['fee_stack_percent']"
+          rating: "@outputs('evaluate_benchmarks')?['rating']"
+        benchmarks:
+          channel_type: "@outputs('parse_input')?['channel_type']"
+          target_working_media: "@outputs('evaluate_benchmarks')?['target']"
+          excellent_working_media: "@outputs('evaluate_benchmarks')?['excellent']"
+          gap_to_target: "@outputs('evaluate_benchmarks')?['gap_to_target']"
+          potential_savings: "@outputs('evaluate_benchmarks')?['potential_savings']"
+        recommendations: "@outputs('generate_recommendations')?['recommendations']"
+        priority_actions: "@outputs('generate_recommendations')?['priority_actions']"
+      confidence: "@if(equals(outputs('evaluate_benchmarks')?['rating'], 'EXCELLENT'), 'HIGH', if(equals(outputs('evaluate_benchmarks')?['rating'], 'GOOD'), 'HIGH', 'MEDIUM'))"
+      sources:
+        - "CALCULATION"
+        - "BENCHMARK_DATA"
+        - "AGENT_KB"
+      metadata:
+        processing_time_ms: "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+        impressions_analyzed: "@outputs('parse_input')?['impressions']"
+    run_after: generate_recommendations
+
+  # Step 11: Return response
+  - id: return_response
+    type: Response
+    name: Return Response
+    inputs:
+      statusCode: 200
+      headers:
+        Content-Type: application/json
+      body: "@outputs('build_response')"
+
+error_handling:
+  on_error:
+    - id: return_error
+      type: Response
+      name: Return Error Response
+      inputs:
+        statusCode: 500
+        headers:
+          Content-Type: application/json
+        body:
+          request_id: "@outputs('parse_input')?['request_id']"
+          source_agent: "SPO"
+          error: true
+          code: "FEE_ANALYSIS_ERROR"
+          message: "Failed to analyze fee stack"

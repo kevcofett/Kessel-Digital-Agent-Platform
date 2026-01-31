@@ -1,0 +1,70 @@
+{
+  "patch_id": "PATCH-002",
+  "version": "6.0.2",
+  "date": "2026-01-19",
+  "description": "Fix RT-038 Adoption Planning routing to CHG agent",
+  "affected_tests": ["RT-038"],
+  "priority": "P1",
+  "type": "routing_fix",
+
+  "root_cause_analysis": {
+    "test_id": "RT-038",
+    "test_name": "Adoption Planning",
+    "input": "Create a phased adoption plan for rolling out the new CRM system",
+    "expected_agent": "CHG",
+    "failure_reason": "Routing keywords for CHG missing 'phased', 'adoption plan', 'CRM', 'rollout plan'",
+    "actual_behavior": "Request potentially routed to ORC or incorrect agent due to keyword mismatch"
+  },
+
+  "changes": [
+    {
+      "file": "platform/agent-registry.json",
+      "section": "routingKeywords.CHG",
+      "change_type": "update",
+      "description": "Enhance CHG routing keywords for adoption planning",
+      "before": ["change", "readiness", "stakeholder", "adoption", "rollout", "transformation", "resistance", "communication plan"],
+      "after": ["change", "readiness", "stakeholder", "adoption", "rollout", "transformation", "resistance", "communication plan", "phased", "adoption plan", "crm", "erp", "system rollout", "implementation plan", "training program", "user adoption", "change initiative"]
+    },
+    {
+      "file": "agents/chg/flows/PlanAdoption.yaml",
+      "section": "triggers",
+      "change_type": "update",
+      "description": "Add additional trigger phrases for PlanAdoption flow",
+      "content": {
+        "triggers": {
+          "intent_patterns": [
+            "create.*adoption plan",
+            "phased.*rollout",
+            "rollout.*plan",
+            "implementation.*plan",
+            "adoption.*strategy",
+            "user.*training",
+            "change.*rollout"
+          ],
+          "entity_extraction": {
+            "system_name": "extract system/tool being rolled out",
+            "timeline": "extract desired timeline",
+            "scope": "extract organizational scope"
+          }
+        }
+      }
+    }
+  ],
+
+  "test_validation": {
+    "RT-038": {
+      "name": "Adoption Planning",
+      "input": "Create a phased adoption plan for rolling out the new CRM system",
+      "expected_agent": "CHG",
+      "expected_flow": "PlanAdoption",
+      "expected_output_contains": ["phases", "milestones", "training", "metrics"],
+      "fix_rationale": "Added 'phased', 'adoption plan', 'CRM' to CHG keywords"
+    }
+  },
+
+  "implementation_instructions": [
+    "1. Update agent-registry.json CHG routing keywords",
+    "2. Update PlanAdoption flow with additional trigger patterns",
+    "3. Re-run test RT-038 to validate fix"
+  ]
+}

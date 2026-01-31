@@ -1,0 +1,2839 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2.0.0" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="KesselDigital" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Entities>
+      <Entity>
+        <Name LocalizedName="EAP Capability Implementation" OriginalName="eap_capability_implementation">eap_capability_implementation</Name>
+        <ObjectTypeCode>eap_capability_implementation</ObjectTypeCode>
+        <EntityInfo>
+          <entity Name="eap_capability_implementation">
+            <LocalizedNames>
+              <LocalizedName description="EAP Capability Implementation" languagecode="1033" />
+            </LocalizedNames>
+            <Descriptions>
+              <Description description="Implementation registry per environment with priority ordering" languagecode="1033" />
+            </Descriptions>
+            <PrimaryIdAttribute>eap_capability_implementationid</PrimaryIdAttribute>
+            <PrimaryNameAttribute>capability_code</PrimaryNameAttribute>
+            <EntitySetName>eap_capability_implementations</EntitySetName>
+            <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
+            <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+            <IsCustomEntity>1</IsCustomEntity>
+            <IsAuditEnabled>0</IsAuditEnabled>
+            <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+            <IsActivity>0</IsActivity>
+            <IsActivityParty>0</IsActivityParty>
+            <IsAvailableOffline>1</IsAvailableOffline>
+            <IsChildEntity>0</IsChildEntity>
+            <IsConnectionsEnabled>0</IsConnectionsEnabled>
+            <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+            <IsEnabledForCharts>1</IsEnabledForCharts>
+            <IsImportable>1</IsImportable>
+            <IsIntersect>0</IsIntersect>
+            <IsMailMergeEnabled>0</IsMailMergeEnabled>
+            <IsManaged>0</IsManaged>
+            <IsMapiGridEnabled>0</IsMapiGridEnabled>
+            <IsReadingPaneEnabled>1</IsReadingPaneEnabled>
+            <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+            <IsValidForQueue>0</IsValidForQueue>
+            <IsVisibleInMobile>1</IsVisibleInMobile>
+            <IsVisibleInMobileClient>1</IsVisibleInMobileClient>
+            <IsCustomizable>1</IsCustomizable>
+            <IsRenameable>1</IsRenameable>
+            <IsMappable>1</IsMappable>
+            <CanCreateAttributes>1</CanCreateAttributes>
+            <CanCreateForms>1</CanCreateForms>
+            <CanCreateViews>1</CanCreateViews>
+            <CanCreateCharts>1</CanCreateCharts>
+            <CanBeRelatedEntityInRelationship>1</CanBeRelatedEntityInRelationship>
+            <CanBePrimaryEntityInRelationship>1</CanBePrimaryEntityInRelationship>
+            <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <attributes>
+            <attribute PhysicalName="capability_code">
+              <Type>String</Type>
+              <Name>capability_code</Name>
+              <LogicalName>capability_code</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>50</MaxLength>
+              <displaynames>
+                <displayname description="Capability Code" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="environment_code">
+              <Type>Picklist</Type>
+              <Name>environment_code</Name>
+              <LogicalName>environment_code</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="Environment" languagecode="1033" />
+              </displaynames>
+              <optionset Name="environment_code">
+                <OptionSetType>Picklist</OptionSetType>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <IsCustomizable>1</IsCustomizable>
+                <options>
+                  <option value="1">
+                    <labels>
+                      <label description="MASTERCARD" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="2">
+                    <labels>
+                      <label description="PERSONAL" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="implementation_type">
+              <Type>Picklist</Type>
+              <Name>implementation_type</Name>
+              <LogicalName>implementation_type</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="Implementation Type" languagecode="1033" />
+              </displaynames>
+              <optionset Name="implementation_type">
+                <OptionSetType>Picklist</OptionSetType>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <IsCustomizable>1</IsCustomizable>
+                <options>
+                  <option value="1">
+                    <labels>
+                      <label description="AI_BUILDER_PROMPT" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="2">
+                    <labels>
+                      <label description="AZURE_FUNCTION" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="3">
+                    <labels>
+                      <label description="HTTP_ENDPOINT" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="4">
+                    <labels>
+                      <label description="DATAVERSE_LOGIC" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="implementation_reference">
+              <Type>String</Type>
+              <Name>implementation_reference</Name>
+              <LogicalName>implementation_reference</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>500</MaxLength>
+              <displaynames>
+                <displayname description="Implementation Reference" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="configuration_json">
+              <Type>String</Type>
+              <Name>configuration_json</Name>
+              <LogicalName>configuration_json</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>4000</MaxLength>
+              <displaynames>
+                <displayname description="Configuration" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="priority_order">
+              <Type>Integer</Type>
+              <Name>priority_order</Name>
+              <LogicalName>priority_order</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>None</Format>
+              <MinValue>-2147483648</MinValue>
+              <MaxValue>2147483647</MaxValue>
+              <displaynames>
+                <displayname description="Priority" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="is_enabled">
+              <Type>Boolean</Type>
+              <Name>is_enabled</Name>
+              <LogicalName>is_enabled</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <DefaultValue>1</DefaultValue>
+              <displaynames>
+                <displayname description="Is Enabled" languagecode="1033" />
+              </displaynames>
+              <optionset Name="is_enabled">
+                <OptionSetType>Boolean</OptionSetType>
+                <options>
+                  <option value="0">
+                    <labels>
+                      <label description="No" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="1">
+                    <labels>
+                      <label description="Yes" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="fallback_implementation_id">
+              <Type>Lookup</Type>
+              <Name>fallback_implementation_id</Name>
+              <LogicalName>fallback_implementation_id</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <LookupStyle>single</LookupStyle>
+              <displaynames>
+                <displayname description="Fallback Implementation" languagecode="1033" />
+              </displaynames>
+              <LookupTypes>
+                <LookupType id="00000000-0000-0000-0000-000000000000">eap_capability_implementation</LookupType>
+              </LookupTypes>
+            </attribute>
+            <attribute PhysicalName="timeout_seconds">
+              <Type>Integer</Type>
+              <Name>timeout_seconds</Name>
+              <LogicalName>timeout_seconds</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>None</Format>
+              <MinValue>-2147483648</MinValue>
+              <MaxValue>2147483647</MaxValue>
+              <displaynames>
+                <displayname description="Timeout" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="retry_count">
+              <Type>Integer</Type>
+              <Name>retry_count</Name>
+              <LogicalName>retry_count</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>None</Format>
+              <MinValue>-2147483648</MinValue>
+              <MaxValue>2147483647</MaxValue>
+              <displaynames>
+                <displayname description="Retry Count" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="retry_delay_ms">
+              <Type>Integer</Type>
+              <Name>retry_delay_ms</Name>
+              <LogicalName>retry_delay_ms</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>None</Format>
+              <MinValue>-2147483648</MinValue>
+              <MaxValue>2147483647</MaxValue>
+              <displaynames>
+                <displayname description="Retry Delay" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            </attributes>
+          </entity>
+        </EntityInfo>
+      </Entity>
+      <Entity>
+        <Name LocalizedName="EAP Client" OriginalName="eap_client">eap_client</Name>
+        <ObjectTypeCode>eap_client</ObjectTypeCode>
+        <EntityInfo>
+          <entity Name="eap_client">
+            <LocalizedNames>
+              <LocalizedName description="EAP Client" languagecode="1033" />
+            </LocalizedNames>
+            <Descriptions>
+              <Description description="Client organization registry for multi-tenant deployments" languagecode="1033" />
+            </Descriptions>
+            <PrimaryIdAttribute>eap_clientid</PrimaryIdAttribute>
+            <PrimaryNameAttribute>client_code</PrimaryNameAttribute>
+            <EntitySetName>eap_clients</EntitySetName>
+            <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
+            <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+            <IsCustomEntity>1</IsCustomEntity>
+            <IsAuditEnabled>0</IsAuditEnabled>
+            <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+            <IsActivity>0</IsActivity>
+            <IsActivityParty>0</IsActivityParty>
+            <IsAvailableOffline>1</IsAvailableOffline>
+            <IsChildEntity>0</IsChildEntity>
+            <IsConnectionsEnabled>0</IsConnectionsEnabled>
+            <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+            <IsEnabledForCharts>1</IsEnabledForCharts>
+            <IsImportable>1</IsImportable>
+            <IsIntersect>0</IsIntersect>
+            <IsMailMergeEnabled>0</IsMailMergeEnabled>
+            <IsManaged>0</IsManaged>
+            <IsMapiGridEnabled>0</IsMapiGridEnabled>
+            <IsReadingPaneEnabled>1</IsReadingPaneEnabled>
+            <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+            <IsValidForQueue>0</IsValidForQueue>
+            <IsVisibleInMobile>1</IsVisibleInMobile>
+            <IsVisibleInMobileClient>1</IsVisibleInMobileClient>
+            <IsCustomizable>1</IsCustomizable>
+            <IsRenameable>1</IsRenameable>
+            <IsMappable>1</IsMappable>
+            <CanCreateAttributes>1</CanCreateAttributes>
+            <CanCreateForms>1</CanCreateForms>
+            <CanCreateViews>1</CanCreateViews>
+            <CanCreateCharts>1</CanCreateCharts>
+            <CanBeRelatedEntityInRelationship>1</CanBeRelatedEntityInRelationship>
+            <CanBePrimaryEntityInRelationship>1</CanBePrimaryEntityInRelationship>
+            <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <attributes>
+            <attribute PhysicalName="client_code">
+              <Type>String</Type>
+              <Name>client_code</Name>
+              <LogicalName>client_code</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>20</MaxLength>
+              <displaynames>
+                <displayname description="Client Code" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="client_name">
+              <Type>String</Type>
+              <Name>client_name</Name>
+              <LogicalName>client_name</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>200</MaxLength>
+              <displaynames>
+                <displayname description="Client Name" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="description">
+              <Type>String</Type>
+              <Name>description</Name>
+              <LogicalName>description</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>2000</MaxLength>
+              <displaynames>
+                <displayname description="Description" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="environment_code">
+              <Type>Picklist</Type>
+              <Name>environment_code</Name>
+              <LogicalName>environment_code</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="Environment" languagecode="1033" />
+              </displaynames>
+              <optionset Name="environment_code">
+                <OptionSetType>Picklist</OptionSetType>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <IsCustomizable>1</IsCustomizable>
+                <options>
+                  <option value="1">
+                    <labels>
+                      <label description="MASTERCARD" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="2">
+                    <labels>
+                      <label description="PERSONAL" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="is_active">
+              <Type>Boolean</Type>
+              <Name>is_active</Name>
+              <LogicalName>is_active</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <DefaultValue>1</DefaultValue>
+              <displaynames>
+                <displayname description="Is Active" languagecode="1033" />
+              </displaynames>
+              <optionset Name="is_active">
+                <OptionSetType>Boolean</OptionSetType>
+                <options>
+                  <option value="0">
+                    <labels>
+                      <label description="No" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="1">
+                    <labels>
+                      <label description="Yes" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="created_at">
+              <Type>DateTime</Type>
+              <Name>created_at</Name>
+              <LogicalName>created_at</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>DateAndTime</Format>
+              <ImeMode>Disabled</ImeMode>
+              <displaynames>
+                <displayname description="Created At" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            </attributes>
+          </entity>
+        </EntityInfo>
+      </Entity>
+      <Entity>
+        <Name LocalizedName="EAP Feature Flag" OriginalName="eap_featureflag">eap_featureflag</Name>
+        <ObjectTypeCode>eap_featureflag</ObjectTypeCode>
+        <EntityInfo>
+          <entity Name="eap_featureflag">
+            <LocalizedNames>
+              <LocalizedName description="EAP Feature Flag" languagecode="1033" />
+            </LocalizedNames>
+            <Descriptions>
+              <Description description="Feature flag registry for controlled feature rollout" languagecode="1033" />
+            </Descriptions>
+            <PrimaryIdAttribute>eap_featureflagid</PrimaryIdAttribute>
+            <PrimaryNameAttribute>flag_code</PrimaryNameAttribute>
+            <EntitySetName>eap_featureflags</EntitySetName>
+            <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
+            <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+            <IsCustomEntity>1</IsCustomEntity>
+            <IsAuditEnabled>0</IsAuditEnabled>
+            <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+            <IsActivity>0</IsActivity>
+            <IsActivityParty>0</IsActivityParty>
+            <IsAvailableOffline>1</IsAvailableOffline>
+            <IsChildEntity>0</IsChildEntity>
+            <IsConnectionsEnabled>0</IsConnectionsEnabled>
+            <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+            <IsEnabledForCharts>1</IsEnabledForCharts>
+            <IsImportable>1</IsImportable>
+            <IsIntersect>0</IsIntersect>
+            <IsMailMergeEnabled>0</IsMailMergeEnabled>
+            <IsManaged>0</IsManaged>
+            <IsMapiGridEnabled>0</IsMapiGridEnabled>
+            <IsReadingPaneEnabled>1</IsReadingPaneEnabled>
+            <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+            <IsValidForQueue>0</IsValidForQueue>
+            <IsVisibleInMobile>1</IsVisibleInMobile>
+            <IsVisibleInMobileClient>1</IsVisibleInMobileClient>
+            <IsCustomizable>1</IsCustomizable>
+            <IsRenameable>1</IsRenameable>
+            <IsMappable>1</IsMappable>
+            <CanCreateAttributes>1</CanCreateAttributes>
+            <CanCreateForms>1</CanCreateForms>
+            <CanCreateViews>1</CanCreateViews>
+            <CanCreateCharts>1</CanCreateCharts>
+            <CanBeRelatedEntityInRelationship>1</CanBeRelatedEntityInRelationship>
+            <CanBePrimaryEntityInRelationship>1</CanBePrimaryEntityInRelationship>
+            <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <attributes>
+            <attribute PhysicalName="flag_code">
+              <Type>String</Type>
+              <Name>flag_code</Name>
+              <LogicalName>flag_code</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>50</MaxLength>
+              <displaynames>
+                <displayname description="Flag Code" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="flag_name">
+              <Type>String</Type>
+              <Name>flag_name</Name>
+              <LogicalName>flag_name</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="Flag Name" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="description">
+              <Type>String</Type>
+              <Name>description</Name>
+              <LogicalName>description</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>2000</MaxLength>
+              <displaynames>
+                <displayname description="Description" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="is_enabled">
+              <Type>Boolean</Type>
+              <Name>is_enabled</Name>
+              <LogicalName>is_enabled</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <DefaultValue>0</DefaultValue>
+              <displaynames>
+                <displayname description="Is Enabled" languagecode="1033" />
+              </displaynames>
+              <optionset Name="is_enabled">
+                <OptionSetType>Boolean</OptionSetType>
+                <options>
+                  <option value="0">
+                    <labels>
+                      <label description="No" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="1">
+                    <labels>
+                      <label description="Yes" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="environment_code">
+              <Type>Picklist</Type>
+              <Name>environment_code</Name>
+              <LogicalName>environment_code</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="Environment" languagecode="1033" />
+              </displaynames>
+              <optionset Name="environment_code">
+                <OptionSetType>Picklist</OptionSetType>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <IsCustomizable>1</IsCustomizable>
+                <options>
+                  <option value="1">
+                    <labels>
+                      <label description="MASTERCARD" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="2">
+                    <labels>
+                      <label description="PERSONAL" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="3">
+                    <labels>
+                      <label description="ALL" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="rollout_percentage">
+              <Type>Integer</Type>
+              <Name>rollout_percentage</Name>
+              <LogicalName>rollout_percentage</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>None</Format>
+              <MinValue>-2147483648</MinValue>
+              <MaxValue>2147483647</MaxValue>
+              <displaynames>
+                <displayname description="Rollout Percentage" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="effective_from">
+              <Type>DateTime</Type>
+              <Name>effective_from</Name>
+              <LogicalName>effective_from</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>DateAndTime</Format>
+              <ImeMode>Disabled</ImeMode>
+              <displaynames>
+                <displayname description="Effective From" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="effective_to">
+              <Type>DateTime</Type>
+              <Name>effective_to</Name>
+              <LogicalName>effective_to</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>DateAndTime</Format>
+              <ImeMode>Disabled</ImeMode>
+              <displaynames>
+                <displayname description="Effective To" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            </attributes>
+          </entity>
+        </EntityInfo>
+      </Entity>
+      <Entity>
+        <Name LocalizedName="eap_proactive_trigger" OriginalName="eap_proactive_trigger">eap_proactive_trigger</Name>
+        <ObjectTypeCode>eap_proactive_trigger</ObjectTypeCode>
+        <EntityInfo>
+          <entity Name="eap_proactive_trigger">
+            <LocalizedNames>
+              <LocalizedName description="eap_proactive_trigger" languagecode="1033" />
+            </LocalizedNames>
+            <Descriptions>
+              <Description description="Definitions for proactive intelligence triggers" languagecode="1033" />
+            </Descriptions>
+            <PrimaryIdAttribute>eap_proactive_triggerid</PrimaryIdAttribute>
+            <PrimaryNameAttribute>name</PrimaryNameAttribute>
+            <EntitySetName>eap_proactive_triggers</EntitySetName>
+            <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
+            <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+            <IsCustomEntity>1</IsCustomEntity>
+            <IsAuditEnabled>0</IsAuditEnabled>
+            <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+            <IsActivity>0</IsActivity>
+            <IsActivityParty>0</IsActivityParty>
+            <IsAvailableOffline>1</IsAvailableOffline>
+            <IsChildEntity>0</IsChildEntity>
+            <IsConnectionsEnabled>0</IsConnectionsEnabled>
+            <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+            <IsEnabledForCharts>1</IsEnabledForCharts>
+            <IsImportable>1</IsImportable>
+            <IsIntersect>0</IsIntersect>
+            <IsMailMergeEnabled>0</IsMailMergeEnabled>
+            <IsManaged>0</IsManaged>
+            <IsMapiGridEnabled>0</IsMapiGridEnabled>
+            <IsReadingPaneEnabled>1</IsReadingPaneEnabled>
+            <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+            <IsValidForQueue>0</IsValidForQueue>
+            <IsVisibleInMobile>1</IsVisibleInMobile>
+            <IsVisibleInMobileClient>1</IsVisibleInMobileClient>
+            <IsCustomizable>1</IsCustomizable>
+            <IsRenameable>1</IsRenameable>
+            <IsMappable>1</IsMappable>
+            <CanCreateAttributes>1</CanCreateAttributes>
+            <CanCreateForms>1</CanCreateForms>
+            <CanCreateViews>1</CanCreateViews>
+            <CanCreateCharts>1</CanCreateCharts>
+            <CanBeRelatedEntityInRelationship>1</CanBeRelatedEntityInRelationship>
+            <CanBePrimaryEntityInRelationship>1</CanBePrimaryEntityInRelationship>
+            <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <attributes>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            </attributes>
+          </entity>
+        </EntityInfo>
+      </Entity>
+      <Entity>
+        <Name LocalizedName="EAP Session" OriginalName="eap_session">eap_session</Name>
+        <ObjectTypeCode>eap_session</ObjectTypeCode>
+        <EntityInfo>
+          <entity Name="eap_session">
+            <LocalizedNames>
+              <LocalizedName description="EAP Session" languagecode="1033" />
+            </LocalizedNames>
+            <Descriptions>
+              <Description description="Platform-level session tracking for all agents" languagecode="1033" />
+            </Descriptions>
+            <PrimaryIdAttribute>eap_sessionid</PrimaryIdAttribute>
+            <PrimaryNameAttribute>session_code</PrimaryNameAttribute>
+            <EntitySetName>eap_sessions</EntitySetName>
+            <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
+            <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+            <IsCustomEntity>1</IsCustomEntity>
+            <IsAuditEnabled>0</IsAuditEnabled>
+            <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+            <IsActivity>0</IsActivity>
+            <IsActivityParty>0</IsActivityParty>
+            <IsAvailableOffline>1</IsAvailableOffline>
+            <IsChildEntity>0</IsChildEntity>
+            <IsConnectionsEnabled>0</IsConnectionsEnabled>
+            <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+            <IsEnabledForCharts>1</IsEnabledForCharts>
+            <IsImportable>1</IsImportable>
+            <IsIntersect>0</IsIntersect>
+            <IsMailMergeEnabled>0</IsMailMergeEnabled>
+            <IsManaged>0</IsManaged>
+            <IsMapiGridEnabled>0</IsMapiGridEnabled>
+            <IsReadingPaneEnabled>1</IsReadingPaneEnabled>
+            <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+            <IsValidForQueue>0</IsValidForQueue>
+            <IsVisibleInMobile>1</IsVisibleInMobile>
+            <IsVisibleInMobileClient>1</IsVisibleInMobileClient>
+            <IsCustomizable>1</IsCustomizable>
+            <IsRenameable>1</IsRenameable>
+            <IsMappable>1</IsMappable>
+            <CanCreateAttributes>1</CanCreateAttributes>
+            <CanCreateForms>1</CanCreateForms>
+            <CanCreateViews>1</CanCreateViews>
+            <CanCreateCharts>1</CanCreateCharts>
+            <CanBeRelatedEntityInRelationship>1</CanBeRelatedEntityInRelationship>
+            <CanBePrimaryEntityInRelationship>1</CanBePrimaryEntityInRelationship>
+            <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <attributes>
+            <attribute PhysicalName="session_code">
+              <Type>String</Type>
+              <Name>session_code</Name>
+              <LogicalName>session_code</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>50</MaxLength>
+              <displaynames>
+                <displayname description="Session Code" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="user_id">
+              <Type>String</Type>
+              <Name>user_id</Name>
+              <LogicalName>user_id</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="User ID" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="agent_code">
+              <Type>String</Type>
+              <Name>agent_code</Name>
+              <LogicalName>agent_code</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>10</MaxLength>
+              <displaynames>
+                <displayname description="Primary Agent" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="session_status">
+              <Type>Picklist</Type>
+              <Name>session_status</Name>
+              <LogicalName>session_status</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="Status" languagecode="1033" />
+              </displaynames>
+              <optionset Name="session_status">
+                <OptionSetType>Picklist</OptionSetType>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <IsCustomizable>1</IsCustomizable>
+                <options>
+                  <option value="1">
+                    <labels>
+                      <label description="ACTIVE" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="2">
+                    <labels>
+                      <label description="PAUSED" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="3">
+                    <labels>
+                      <label description="COMPLETED" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="4">
+                    <labels>
+                      <label description="ABANDONED" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="5">
+                    <labels>
+                      <label description="ERROR" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="environment_code">
+              <Type>Picklist</Type>
+              <Name>environment_code</Name>
+              <LogicalName>environment_code</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="Environment" languagecode="1033" />
+              </displaynames>
+              <optionset Name="environment_code">
+                <OptionSetType>Picklist</OptionSetType>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <IsCustomizable>1</IsCustomizable>
+                <options>
+                  <option value="1">
+                    <labels>
+                      <label description="MASTERCARD" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="2">
+                    <labels>
+                      <label description="PERSONAL" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="current_step">
+              <Type>Integer</Type>
+              <Name>current_step</Name>
+              <LogicalName>current_step</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>None</Format>
+              <MinValue>-2147483648</MinValue>
+              <MaxValue>2147483647</MaxValue>
+              <displaynames>
+                <displayname description="Current Step" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="pathway_code">
+              <Type>Picklist</Type>
+              <Name>pathway_code</Name>
+              <LogicalName>pathway_code</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="Pathway" languagecode="1033" />
+              </displaynames>
+              <optionset Name="pathway_code">
+                <OptionSetType>Picklist</OptionSetType>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <IsCustomizable>1</IsCustomizable>
+                <options>
+                  <option value="1">
+                    <labels>
+                      <label description="EXPRESS" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="2">
+                    <labels>
+                      <label description="STANDARD" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="3">
+                    <labels>
+                      <label description="GUIDED" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="4">
+                    <labels>
+                      <label description="AUDIT" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="session_data_json">
+              <Type>String</Type>
+              <Name>session_data_json</Name>
+              <LogicalName>session_data_json</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>4000</MaxLength>
+              <displaynames>
+                <displayname description="Session Data" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="context_json">
+              <Type>String</Type>
+              <Name>context_json</Name>
+              <LogicalName>context_json</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>4000</MaxLength>
+              <displaynames>
+                <displayname description="Context" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="started_at">
+              <Type>DateTime</Type>
+              <Name>started_at</Name>
+              <LogicalName>started_at</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>DateAndTime</Format>
+              <ImeMode>Disabled</ImeMode>
+              <displaynames>
+                <displayname description="Started At" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="last_activity_at">
+              <Type>DateTime</Type>
+              <Name>last_activity_at</Name>
+              <LogicalName>last_activity_at</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>DateAndTime</Format>
+              <ImeMode>Disabled</ImeMode>
+              <displaynames>
+                <displayname description="Last Activity" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="completed_at">
+              <Type>DateTime</Type>
+              <Name>completed_at</Name>
+              <LogicalName>completed_at</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>DateAndTime</Format>
+              <ImeMode>Disabled</ImeMode>
+              <displaynames>
+                <displayname description="Completed At" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="total_interactions">
+              <Type>Integer</Type>
+              <Name>total_interactions</Name>
+              <LogicalName>total_interactions</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>None</Format>
+              <MinValue>-2147483648</MinValue>
+              <MaxValue>2147483647</MaxValue>
+              <displaynames>
+                <displayname description="Total Interactions" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="total_tokens_used">
+              <Type>Integer</Type>
+              <Name>total_tokens_used</Name>
+              <LogicalName>total_tokens_used</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>None</Format>
+              <MinValue>-2147483648</MinValue>
+              <MaxValue>2147483647</MaxValue>
+              <displaynames>
+                <displayname description="Total Tokens Used" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            </attributes>
+          </entity>
+        </EntityInfo>
+      </Entity>
+      <Entity>
+        <Name LocalizedName="EAP Telemetry" OriginalName="eap_telemetry">eap_telemetry</Name>
+        <ObjectTypeCode>eap_telemetry</ObjectTypeCode>
+        <EntityInfo>
+          <entity Name="eap_telemetry">
+            <LocalizedNames>
+              <LocalizedName description="EAP Telemetry" languagecode="1033" />
+            </LocalizedNames>
+            <Descriptions>
+              <Description description="Observability and logging for all capability invocations" languagecode="1033" />
+            </Descriptions>
+            <PrimaryIdAttribute>eap_telemetryid</PrimaryIdAttribute>
+            <PrimaryNameAttribute>capability_code</PrimaryNameAttribute>
+            <EntitySetName>eap_telemetrys</EntitySetName>
+            <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
+            <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+            <IsCustomEntity>1</IsCustomEntity>
+            <IsAuditEnabled>0</IsAuditEnabled>
+            <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+            <IsActivity>0</IsActivity>
+            <IsActivityParty>0</IsActivityParty>
+            <IsAvailableOffline>1</IsAvailableOffline>
+            <IsChildEntity>0</IsChildEntity>
+            <IsConnectionsEnabled>0</IsConnectionsEnabled>
+            <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+            <IsEnabledForCharts>1</IsEnabledForCharts>
+            <IsImportable>1</IsImportable>
+            <IsIntersect>0</IsIntersect>
+            <IsMailMergeEnabled>0</IsMailMergeEnabled>
+            <IsManaged>0</IsManaged>
+            <IsMapiGridEnabled>0</IsMapiGridEnabled>
+            <IsReadingPaneEnabled>1</IsReadingPaneEnabled>
+            <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+            <IsValidForQueue>0</IsValidForQueue>
+            <IsVisibleInMobile>1</IsVisibleInMobile>
+            <IsVisibleInMobileClient>1</IsVisibleInMobileClient>
+            <IsCustomizable>1</IsCustomizable>
+            <IsRenameable>1</IsRenameable>
+            <IsMappable>1</IsMappable>
+            <CanCreateAttributes>1</CanCreateAttributes>
+            <CanCreateForms>1</CanCreateForms>
+            <CanCreateViews>1</CanCreateViews>
+            <CanCreateCharts>1</CanCreateCharts>
+            <CanBeRelatedEntityInRelationship>1</CanBeRelatedEntityInRelationship>
+            <CanBePrimaryEntityInRelationship>1</CanBePrimaryEntityInRelationship>
+            <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <attributes>
+            <attribute PhysicalName="session_id">
+              <Type>String</Type>
+              <Name>session_id</Name>
+              <LogicalName>session_id</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>50</MaxLength>
+              <displaynames>
+                <displayname description="Session ID" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="timestamp">
+              <Type>DateTime</Type>
+              <Name>timestamp</Name>
+              <LogicalName>timestamp</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>DateAndTime</Format>
+              <ImeMode>Disabled</ImeMode>
+              <displaynames>
+                <displayname description="Timestamp" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="event_type">
+              <Type>Picklist</Type>
+              <Name>event_type</Name>
+              <LogicalName>event_type</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="Event Type" languagecode="1033" />
+              </displaynames>
+              <optionset Name="event_type">
+                <OptionSetType>Picklist</OptionSetType>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <IsCustomizable>1</IsCustomizable>
+                <options>
+                  <option value="1">
+                    <labels>
+                      <label description="ROUTING" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="2">
+                    <labels>
+                      <label description="CAPABILITY_INVOKE" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="3">
+                    <labels>
+                      <label description="CAPABILITY_SUCCESS" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="4">
+                    <labels>
+                      <label description="CAPABILITY_FAILURE" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="5">
+                    <labels>
+                      <label description="CAPABILITY_TIMEOUT" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="6">
+                    <labels>
+                      <label description="CAPABILITY_FALLBACK" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="7">
+                    <labels>
+                      <label description="KB_RETRIEVAL" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="8">
+                    <labels>
+                      <label description="SESSION_START" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="9">
+                    <labels>
+                      <label description="SESSION_END" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="10">
+                    <labels>
+                      <label description="GATE_VALIDATION" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="11">
+                    <labels>
+                      <label description="ERROR" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="agent_code">
+              <Type>String</Type>
+              <Name>agent_code</Name>
+              <LogicalName>agent_code</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>10</MaxLength>
+              <displaynames>
+                <displayname description="Agent Code" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="capability_code">
+              <Type>String</Type>
+              <Name>capability_code</Name>
+              <LogicalName>capability_code</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>50</MaxLength>
+              <displaynames>
+                <displayname description="Capability Code" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="implementation_type">
+              <Type>Picklist</Type>
+              <Name>implementation_type</Name>
+              <LogicalName>implementation_type</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="Implementation Type" languagecode="1033" />
+              </displaynames>
+              <optionset Name="implementation_type">
+                <OptionSetType>Picklist</OptionSetType>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <IsCustomizable>1</IsCustomizable>
+                <options>
+                  <option value="1">
+                    <labels>
+                      <label description="AI_BUILDER_PROMPT" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="2">
+                    <labels>
+                      <label description="AZURE_FUNCTION" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="3">
+                    <labels>
+                      <label description="HTTP_ENDPOINT" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="4">
+                    <labels>
+                      <label description="DATAVERSE_LOGIC" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="environment_code">
+              <Type>Picklist</Type>
+              <Name>environment_code</Name>
+              <LogicalName>environment_code</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="Environment" languagecode="1033" />
+              </displaynames>
+              <optionset Name="environment_code">
+                <OptionSetType>Picklist</OptionSetType>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <IsCustomizable>1</IsCustomizable>
+                <options>
+                  <option value="1">
+                    <labels>
+                      <label description="MASTERCARD" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="2">
+                    <labels>
+                      <label description="PERSONAL" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="inputs_json">
+              <Type>String</Type>
+              <Name>inputs_json</Name>
+              <LogicalName>inputs_json</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>4000</MaxLength>
+              <displaynames>
+                <displayname description="Inputs" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="outputs_json">
+              <Type>String</Type>
+              <Name>outputs_json</Name>
+              <LogicalName>outputs_json</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>4000</MaxLength>
+              <displaynames>
+                <displayname description="Outputs" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="execution_time_ms">
+              <Type>Integer</Type>
+              <Name>execution_time_ms</Name>
+              <LogicalName>execution_time_ms</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>None</Format>
+              <MinValue>-2147483648</MinValue>
+              <MaxValue>2147483647</MaxValue>
+              <displaynames>
+                <displayname description="Execution Time (ms)" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="confidence_level">
+              <Type>Decimal</Type>
+              <Name>confidence_level</Name>
+              <LogicalName>confidence_level</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Precision>5</Precision>
+              <MinValue>-100000000000</MinValue>
+              <MaxValue>100000000000</MaxValue>
+              <displaynames>
+                <displayname description="Confidence Level" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="error_code">
+              <Type>String</Type>
+              <Name>error_code</Name>
+              <LogicalName>error_code</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>50</MaxLength>
+              <displaynames>
+                <displayname description="Error Code" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="error_message">
+              <Type>String</Type>
+              <Name>error_message</Name>
+              <LogicalName>error_message</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>4000</MaxLength>
+              <displaynames>
+                <displayname description="Error Message" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="kb_chunks_retrieved">
+              <Type>String</Type>
+              <Name>kb_chunks_retrieved</Name>
+              <LogicalName>kb_chunks_retrieved</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>4000</MaxLength>
+              <displaynames>
+                <displayname description="KB Chunks Retrieved" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="user_feedback">
+              <Type>Picklist</Type>
+              <Name>user_feedback</Name>
+              <LogicalName>user_feedback</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="User Feedback" languagecode="1033" />
+              </displaynames>
+              <optionset Name="user_feedback">
+                <OptionSetType>Picklist</OptionSetType>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <IsCustomizable>1</IsCustomizable>
+                <options>
+                  <option value="1">
+                    <labels>
+                      <label description="THUMBS_UP" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="2">
+                    <labels>
+                      <label description="THUMBS_DOWN" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="3">
+                    <labels>
+                      <label description="NONE" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="is_fallback">
+              <Type>Boolean</Type>
+              <Name>is_fallback</Name>
+              <LogicalName>is_fallback</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <DefaultValue>0</DefaultValue>
+              <displaynames>
+                <displayname description="Is Fallback" languagecode="1033" />
+              </displaynames>
+              <optionset Name="is_fallback">
+                <OptionSetType>Boolean</OptionSetType>
+                <options>
+                  <option value="0">
+                    <labels>
+                      <label description="No" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="1">
+                    <labels>
+                      <label description="Yes" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="retry_count">
+              <Type>Integer</Type>
+              <Name>retry_count</Name>
+              <LogicalName>retry_count</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>None</Format>
+              <MinValue>-2147483648</MinValue>
+              <MaxValue>2147483647</MaxValue>
+              <displaynames>
+                <displayname description="Retry Count" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="correlation_id">
+              <Type>String</Type>
+              <Name>correlation_id</Name>
+              <LogicalName>correlation_id</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>50</MaxLength>
+              <displaynames>
+                <displayname description="Correlation ID" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            </attributes>
+          </entity>
+        </EntityInfo>
+      </Entity>
+      <Entity>
+        <Name LocalizedName="eap_trigger_history" OriginalName="eap_trigger_history">eap_trigger_history</Name>
+        <ObjectTypeCode>eap_trigger_history</ObjectTypeCode>
+        <EntityInfo>
+          <entity Name="eap_trigger_history">
+            <LocalizedNames>
+              <LocalizedName description="eap_trigger_history" languagecode="1033" />
+            </LocalizedNames>
+            <Descriptions>
+              <Description description="History of fired proactive triggers" languagecode="1033" />
+            </Descriptions>
+            <PrimaryIdAttribute>eap_trigger_historyid</PrimaryIdAttribute>
+            <PrimaryNameAttribute>name</PrimaryNameAttribute>
+            <EntitySetName>eap_trigger_historys</EntitySetName>
+            <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
+            <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+            <IsCustomEntity>1</IsCustomEntity>
+            <IsAuditEnabled>0</IsAuditEnabled>
+            <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+            <IsActivity>0</IsActivity>
+            <IsActivityParty>0</IsActivityParty>
+            <IsAvailableOffline>1</IsAvailableOffline>
+            <IsChildEntity>0</IsChildEntity>
+            <IsConnectionsEnabled>0</IsConnectionsEnabled>
+            <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+            <IsEnabledForCharts>1</IsEnabledForCharts>
+            <IsImportable>1</IsImportable>
+            <IsIntersect>0</IsIntersect>
+            <IsMailMergeEnabled>0</IsMailMergeEnabled>
+            <IsManaged>0</IsManaged>
+            <IsMapiGridEnabled>0</IsMapiGridEnabled>
+            <IsReadingPaneEnabled>1</IsReadingPaneEnabled>
+            <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+            <IsValidForQueue>0</IsValidForQueue>
+            <IsVisibleInMobile>1</IsVisibleInMobile>
+            <IsVisibleInMobileClient>1</IsVisibleInMobileClient>
+            <IsCustomizable>1</IsCustomizable>
+            <IsRenameable>1</IsRenameable>
+            <IsMappable>1</IsMappable>
+            <CanCreateAttributes>1</CanCreateAttributes>
+            <CanCreateForms>1</CanCreateForms>
+            <CanCreateViews>1</CanCreateViews>
+            <CanCreateCharts>1</CanCreateCharts>
+            <CanBeRelatedEntityInRelationship>1</CanBeRelatedEntityInRelationship>
+            <CanBePrimaryEntityInRelationship>1</CanBePrimaryEntityInRelationship>
+            <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <attributes>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            </attributes>
+          </entity>
+        </EntityInfo>
+      </Entity>
+      <Entity>
+        <Name LocalizedName="EAP User" OriginalName="eap_user">eap_user</Name>
+        <ObjectTypeCode>eap_user</ObjectTypeCode>
+        <EntityInfo>
+          <entity Name="eap_user">
+            <LocalizedNames>
+              <LocalizedName description="EAP User" languagecode="1033" />
+            </LocalizedNames>
+            <Descriptions>
+              <Description description="User registry for tracking user preferences and history" languagecode="1033" />
+            </Descriptions>
+            <PrimaryIdAttribute>eap_userid</PrimaryIdAttribute>
+            <PrimaryNameAttribute>preferred_agent_code</PrimaryNameAttribute>
+            <EntitySetName>eap_users</EntitySetName>
+            <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
+            <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+            <IsCustomEntity>1</IsCustomEntity>
+            <IsAuditEnabled>0</IsAuditEnabled>
+            <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+            <IsActivity>0</IsActivity>
+            <IsActivityParty>0</IsActivityParty>
+            <IsAvailableOffline>1</IsAvailableOffline>
+            <IsChildEntity>0</IsChildEntity>
+            <IsConnectionsEnabled>0</IsConnectionsEnabled>
+            <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+            <IsEnabledForCharts>1</IsEnabledForCharts>
+            <IsImportable>1</IsImportable>
+            <IsIntersect>0</IsIntersect>
+            <IsMailMergeEnabled>0</IsMailMergeEnabled>
+            <IsManaged>0</IsManaged>
+            <IsMapiGridEnabled>0</IsMapiGridEnabled>
+            <IsReadingPaneEnabled>1</IsReadingPaneEnabled>
+            <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+            <IsValidForQueue>0</IsValidForQueue>
+            <IsVisibleInMobile>1</IsVisibleInMobile>
+            <IsVisibleInMobileClient>1</IsVisibleInMobileClient>
+            <IsCustomizable>1</IsCustomizable>
+            <IsRenameable>1</IsRenameable>
+            <IsMappable>1</IsMappable>
+            <CanCreateAttributes>1</CanCreateAttributes>
+            <CanCreateForms>1</CanCreateForms>
+            <CanCreateViews>1</CanCreateViews>
+            <CanCreateCharts>1</CanCreateCharts>
+            <CanBeRelatedEntityInRelationship>1</CanBeRelatedEntityInRelationship>
+            <CanBePrimaryEntityInRelationship>1</CanBePrimaryEntityInRelationship>
+            <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <attributes>
+            <attribute PhysicalName="user_principal_name">
+              <Type>String</Type>
+              <Name>user_principal_name</Name>
+              <LogicalName>user_principal_name</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>200</MaxLength>
+              <displaynames>
+                <displayname description="User Principal Name" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="display_name">
+              <Type>String</Type>
+              <Name>display_name</Name>
+              <LogicalName>display_name</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>200</MaxLength>
+              <displaynames>
+                <displayname description="Display Name" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="email">
+              <Type>String</Type>
+              <Name>email</Name>
+              <LogicalName>email</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>200</MaxLength>
+              <displaynames>
+                <displayname description="Email" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="environment_code">
+              <Type>Picklist</Type>
+              <Name>environment_code</Name>
+              <LogicalName>environment_code</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <displaynames>
+                <displayname description="Environment" languagecode="1033" />
+              </displaynames>
+              <optionset Name="environment_code">
+                <OptionSetType>Picklist</OptionSetType>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <IsCustomizable>1</IsCustomizable>
+                <options>
+                  <option value="1">
+                    <labels>
+                      <label description="MASTERCARD" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="2">
+                    <labels>
+                      <label description="PERSONAL" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="preferred_agent_code">
+              <Type>String</Type>
+              <Name>preferred_agent_code</Name>
+              <LogicalName>preferred_agent_code</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>10</MaxLength>
+              <displaynames>
+                <displayname description="Preferred Agent" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="preferences_json">
+              <Type>String</Type>
+              <Name>preferences_json</Name>
+              <LogicalName>preferences_json</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>4000</MaxLength>
+              <displaynames>
+                <displayname description="Preferences" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="total_sessions">
+              <Type>Integer</Type>
+              <Name>total_sessions</Name>
+              <LogicalName>total_sessions</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>None</Format>
+              <MinValue>-2147483648</MinValue>
+              <MaxValue>2147483647</MaxValue>
+              <displaynames>
+                <displayname description="Total Sessions" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="last_active_at">
+              <Type>DateTime</Type>
+              <Name>last_active_at</Name>
+              <LogicalName>last_active_at</LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>DateAndTime</Format>
+              <ImeMode>Disabled</ImeMode>
+              <displaynames>
+                <displayname description="Last Active" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="is_active">
+              <Type>Boolean</Type>
+              <Name>is_active</Name>
+              <LogicalName>is_active</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <DefaultValue>1</DefaultValue>
+              <displaynames>
+                <displayname description="Is Active" languagecode="1033" />
+              </displaynames>
+              <optionset Name="is_active">
+                <OptionSetType>Boolean</OptionSetType>
+                <options>
+                  <option value="0">
+                    <labels>
+                      <label description="No" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="1">
+                    <labels>
+                      <label description="Yes" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+            <attribute PhysicalName="created_at">
+              <Type>DateTime</Type>
+              <Name>created_at</Name>
+              <LogicalName>created_at</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <Format>DateAndTime</Format>
+              <ImeMode>Disabled</ImeMode>
+              <displaynames>
+                <displayname description="Created At" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            </attributes>
+          </entity>
+        </EntityInfo>
+      </Entity>
+      <Entity>
+        <Name LocalizedName="eap_workflow_contribution" OriginalName="eap_workflow_contribution">eap_workflow_contribution</Name>
+        <ObjectTypeCode>eap_workflow_contribution</ObjectTypeCode>
+        <EntityInfo>
+          <entity Name="eap_workflow_contribution">
+            <LocalizedNames>
+              <LocalizedName description="eap_workflow_contribution" languagecode="1033" />
+            </LocalizedNames>
+            <Descriptions>
+              <Description description="Agent contributions during collaborative workflows" languagecode="1033" />
+            </Descriptions>
+            <PrimaryIdAttribute>eap_workflow_contributionid</PrimaryIdAttribute>
+            <PrimaryNameAttribute>name</PrimaryNameAttribute>
+            <EntitySetName>eap_workflow_contributions</EntitySetName>
+            <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
+            <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+            <IsCustomEntity>1</IsCustomEntity>
+            <IsAuditEnabled>0</IsAuditEnabled>
+            <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+            <IsActivity>0</IsActivity>
+            <IsActivityParty>0</IsActivityParty>
+            <IsAvailableOffline>1</IsAvailableOffline>
+            <IsChildEntity>0</IsChildEntity>
+            <IsConnectionsEnabled>0</IsConnectionsEnabled>
+            <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+            <IsEnabledForCharts>1</IsEnabledForCharts>
+            <IsImportable>1</IsImportable>
+            <IsIntersect>0</IsIntersect>
+            <IsMailMergeEnabled>0</IsMailMergeEnabled>
+            <IsManaged>0</IsManaged>
+            <IsMapiGridEnabled>0</IsMapiGridEnabled>
+            <IsReadingPaneEnabled>1</IsReadingPaneEnabled>
+            <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+            <IsValidForQueue>0</IsValidForQueue>
+            <IsVisibleInMobile>1</IsVisibleInMobile>
+            <IsVisibleInMobileClient>1</IsVisibleInMobileClient>
+            <IsCustomizable>1</IsCustomizable>
+            <IsRenameable>1</IsRenameable>
+            <IsMappable>1</IsMappable>
+            <CanCreateAttributes>1</CanCreateAttributes>
+            <CanCreateForms>1</CanCreateForms>
+            <CanCreateViews>1</CanCreateViews>
+            <CanCreateCharts>1</CanCreateCharts>
+            <CanBeRelatedEntityInRelationship>1</CanBeRelatedEntityInRelationship>
+            <CanBePrimaryEntityInRelationship>1</CanBePrimaryEntityInRelationship>
+            <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <attributes>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            </attributes>
+          </entity>
+        </EntityInfo>
+      </Entity>
+      <Entity>
+        <Name LocalizedName="eap_workflow_definition" OriginalName="eap_workflow_definition">eap_workflow_definition</Name>
+        <ObjectTypeCode>eap_workflow_definition</ObjectTypeCode>
+        <EntityInfo>
+          <entity Name="eap_workflow_definition">
+            <LocalizedNames>
+              <LocalizedName description="eap_workflow_definition" languagecode="1033" />
+            </LocalizedNames>
+            <Descriptions>
+              <Description description="Templates for collaborative multi-agent workflows" languagecode="1033" />
+            </Descriptions>
+            <PrimaryIdAttribute>eap_workflow_definitionid</PrimaryIdAttribute>
+            <PrimaryNameAttribute>name</PrimaryNameAttribute>
+            <EntitySetName>eap_workflow_definitions</EntitySetName>
+            <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
+            <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+            <IsCustomEntity>1</IsCustomEntity>
+            <IsAuditEnabled>0</IsAuditEnabled>
+            <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+            <IsActivity>0</IsActivity>
+            <IsActivityParty>0</IsActivityParty>
+            <IsAvailableOffline>1</IsAvailableOffline>
+            <IsChildEntity>0</IsChildEntity>
+            <IsConnectionsEnabled>0</IsConnectionsEnabled>
+            <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+            <IsEnabledForCharts>1</IsEnabledForCharts>
+            <IsImportable>1</IsImportable>
+            <IsIntersect>0</IsIntersect>
+            <IsMailMergeEnabled>0</IsMailMergeEnabled>
+            <IsManaged>0</IsManaged>
+            <IsMapiGridEnabled>0</IsMapiGridEnabled>
+            <IsReadingPaneEnabled>1</IsReadingPaneEnabled>
+            <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+            <IsValidForQueue>0</IsValidForQueue>
+            <IsVisibleInMobile>1</IsVisibleInMobile>
+            <IsVisibleInMobileClient>1</IsVisibleInMobileClient>
+            <IsCustomizable>1</IsCustomizable>
+            <IsRenameable>1</IsRenameable>
+            <IsMappable>1</IsMappable>
+            <CanCreateAttributes>1</CanCreateAttributes>
+            <CanCreateForms>1</CanCreateForms>
+            <CanCreateViews>1</CanCreateViews>
+            <CanCreateCharts>1</CanCreateCharts>
+            <CanBeRelatedEntityInRelationship>1</CanBeRelatedEntityInRelationship>
+            <CanBePrimaryEntityInRelationship>1</CanBePrimaryEntityInRelationship>
+            <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <attributes>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>None</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            <attribute PhysicalName="">
+              <Type>String</Type>
+              <Name></Name>
+              <LogicalName></LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>100</MaxLength>
+              <displaynames>
+                <displayname description="" languagecode="1033" />
+              </displaynames>
+            </attribute>
+            </attributes>
+          </entity>
+        </EntityInfo>
+      </Entity>
+  </Entities>
+  <Workflows>
+      <Workflow WorkflowId="{a7ba6eb1-0e47-42ac-b39f-9b5f5df8a100}" Name="MPA Initialize Session">
+        <JsonFileName>/Workflows/MPA_Initialize_Session.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>1</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>0</StateCode>
+        <StatusCode>1</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>1.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="MPA Initialize Session" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{81dfc840-a981-41d7-86d4-8545c937afec}" Name="MPA_Memory_Initialize">
+        <JsonFileName>/Workflows/MPA_Memory_Initialize.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>1</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>0</StateCode>
+        <StatusCode>1</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>1.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="MPA_Memory_Initialize" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{e99656a3-a2a2-47db-9342-f44d205a93c0}" Name="MPA_Memory_Store">
+        <JsonFileName>/Workflows/MPA_Memory_Store.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>1</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>0</StateCode>
+        <StatusCode>1</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>1.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="MPA_Memory_Store" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{3b7bb054-ba98-4265-b8c2-e8645a087fe2}" Name="MPA_Proactive_Evaluate">
+        <JsonFileName>/Workflows/MPA_Proactive_Evaluate.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>1</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>0</StateCode>
+        <StatusCode>1</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>1.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="MPA_Proactive_Evaluate" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{4fa6ae8b-e51d-4ce9-995a-8778c128abcc}" Name="MPA_File_Process">
+        <JsonFileName>/Workflows/MPA_File_Process.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>1</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>0</StateCode>
+        <StatusCode>1</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>1.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="MPA_File_Process" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{fbeb4520-cfbd-4ab8-9b32-282118794e87}" Name="MPA_ML_Endpoint_Router">
+        <JsonFileName>/Workflows/MPA_ML_Endpoint_Router.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>1</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>0</StateCode>
+        <StatusCode>1</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>1.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="MPA_ML_Endpoint_Router" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{2530c4b8-7dd1-4b9f-a42d-20bd52e51fe3}" Name="MPA_Telemetry_Logger">
+        <JsonFileName>/Workflows/MPA_Telemetry_Logger.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>1</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>0</StateCode>
+        <StatusCode>1</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>1.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="MPA_Telemetry_Logger" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+  </Workflows>
+</ImportExportXml>

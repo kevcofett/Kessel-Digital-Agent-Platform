@@ -1,0 +1,207 @@
+{
+  "version": "1.0.0",
+  "name": "MPA v6.0 Test Suite",
+  "description": "Complete test configuration for Media Planning Agent multi-agent system",
+  "created": "2026-01-19",
+  "updated": "2026-01-19",
+  
+  "test_inventory": {
+    "routing_tests": {
+      "file": "tests/multi-agent-routing-tests.json",
+      "count": 47,
+      "description": "ORC routing accuracy tests"
+    },
+    "capability_tests": {
+      "total": 150,
+      "by_agent": {
+        "ORC": { "file": "agents/orc/tests/orc-capability-tests.json", "count": 20 },
+        "ANL": { "file": "agents/anl/tests/anl-capability-tests.json", "count": 15 },
+        "AUD": { "file": "agents/aud/tests/aud-capability-tests.json", "count": 15 },
+        "CHA": { "file": "agents/cha/tests/cha-capability-tests.json", "count": 15 },
+        "SPO": { "file": "agents/spo/tests/spo-capability-tests.json", "count": 15 },
+        "DOC": { "file": "agents/doc/tests/doc-capability-tests.json", "count": 15 },
+        "PRF": { "file": "agents/prf/tests/prf-capability-tests.json", "count": 15 },
+        "CHG": { "file": "agents/chg/tests/chg-capability-tests.json", "count": 15 },
+        "CST": { "file": "agents/cst/tests/cst-capability-tests.json", "count": 15 },
+        "MKT": { "file": "agents/mkt/tests/mkt-capability-tests.json", "count": 15 }
+      }
+    },
+    "integration_tests": {
+      "file": "tests/integration-tests.json",
+      "count": 25,
+      "description": "Cross-agent integration scenarios"
+    },
+    "e2e_tests": {
+      "file": "tests/e2e-workflow-tests.json",
+      "count": 12,
+      "description": "End-to-end workflow tests"
+    }
+  },
+  
+  "total_tests": 234,
+  
+  "test_categories": {
+    "P0_critical": {
+      "description": "Must pass for deployment",
+      "pass_threshold": 100,
+      "estimated_count": 85
+    },
+    "P1_high": {
+      "description": "Should pass for production quality",
+      "pass_threshold": 90,
+      "estimated_count": 95
+    },
+    "P2_medium": {
+      "description": "Nice to have",
+      "pass_threshold": 80,
+      "estimated_count": 54
+    }
+  },
+  
+  "execution_environments": {
+    "development": {
+      "url": "https://aragorn-ai.crm.dynamics.com",
+      "agent_prefix": "dev_",
+      "timeout_seconds": 30
+    },
+    "staging": {
+      "url": "https://kessel-staging.crm.dynamics.com",
+      "agent_prefix": "stg_",
+      "timeout_seconds": 30
+    },
+    "production": {
+      "url": "https://kessel-prod.crm.dynamics.com",
+      "agent_prefix": "prod_",
+      "timeout_seconds": 60
+    }
+  },
+  
+  "runners": {
+    "python": {
+      "file": "scripts/run-tests.py",
+      "command": "python3 scripts/run-tests.py",
+      "examples": [
+        "python3 scripts/run-tests.py --type all --report html --output report.html",
+        "python3 scripts/run-tests.py --type capability --agent ANL",
+        "python3 scripts/run-tests.py --type e2e --scenario E2E-001"
+      ]
+    },
+    "powershell": {
+      "file": "scripts/Run-MPATests.ps1",
+      "command": ".\\scripts\\Run-MPATests.ps1",
+      "examples": [
+        ".\\scripts\\Run-MPATests.ps1 -TestType all -ReportFormat html -OutputFile report.html",
+        ".\\scripts\\Run-MPATests.ps1 -TestType capability -Agent ANL",
+        ".\\scripts\\Run-MPATests.ps1 -TestType routing"
+      ]
+    }
+  },
+  
+  "ci_cd_integration": {
+    "github_actions": {
+      "workflow_file": ".github/workflows/test-agents.yml",
+      "triggers": ["push", "pull_request"],
+      "required_secrets": ["POWERPLATFORM_CLIENT_ID", "POWERPLATFORM_CLIENT_SECRET", "POWERPLATFORM_TENANT_ID"]
+    },
+    "azure_devops": {
+      "pipeline_file": "azure-pipelines.yml",
+      "triggers": ["main", "develop"]
+    }
+  },
+  
+  "reporting": {
+    "formats": ["text", "json", "html"],
+    "output_directory": "test-results",
+    "retention_days": 30,
+    "metrics_captured": [
+      "test_id",
+      "test_name",
+      "test_type",
+      "status",
+      "duration_ms",
+      "agent",
+      "flow_triggered",
+      "error_message",
+      "latency_ms",
+      "tokens_used"
+    ]
+  },
+  
+  "quality_gates": {
+    "pre_deployment": {
+      "routing_pass_rate": 100,
+      "capability_p0_pass_rate": 100,
+      "capability_p1_pass_rate": 90,
+      "integration_pass_rate": 85,
+      "e2e_p0_pass_rate": 100
+    },
+    "post_deployment": {
+      "smoke_test_pass_rate": 100,
+      "performance_sla_ms": 5000
+    }
+  },
+  
+  "execution_order": [
+    {
+      "phase": 1,
+      "name": "Routing Tests",
+      "description": "Verify ORC routes to correct agents",
+      "blocking": true
+    },
+    {
+      "phase": 2,
+      "name": "Capability Tests - P0",
+      "description": "Critical capability tests for all agents",
+      "blocking": true
+    },
+    {
+      "phase": 3,
+      "name": "Integration Tests",
+      "description": "Cross-agent collaboration scenarios",
+      "blocking": false
+    },
+    {
+      "phase": 4,
+      "name": "E2E Workflow Tests",
+      "description": "Full user journey validation",
+      "blocking": false
+    },
+    {
+      "phase": 5,
+      "name": "Capability Tests - P1/P2",
+      "description": "Secondary capability tests",
+      "blocking": false
+    }
+  ],
+  
+  "troubleshooting": {
+    "common_issues": [
+      {
+        "error": "Agent not found",
+        "cause": "Agent not deployed or wrong environment",
+        "solution": "Verify agent deployment with: pac agent list"
+      },
+      {
+        "error": "Flow timeout",
+        "cause": "Flow execution exceeded timeout",
+        "solution": "Check flow complexity, increase timeout, or optimize flow"
+      },
+      {
+        "error": "Authentication failed",
+        "cause": "Invalid or expired credentials",
+        "solution": "Re-authenticate with: pac auth create"
+      },
+      {
+        "error": "Context not preserved",
+        "cause": "Session isolation issue",
+        "solution": "Verify session_id passed correctly between agents"
+      }
+    ],
+    "debug_commands": [
+      "pac auth who",
+      "pac solution list",
+      "pac flow list",
+      "pac org who"
+    ]
+  }
+}

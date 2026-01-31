@@ -1,0 +1,521 @@
+{
+  "version": "1.1.0",
+  "description": "Multi-agent routing test scenarios for Copilot Studio deployment validation",
+  "created": "2026-01-18",
+  "updated": "2026-01-19",
+  "total_scenarios": 47,
+  "categories": {
+    "orc_routing": 11,
+    "anl_specific": 3,
+    "aud_specific": 3,
+    "cha_specific": 3,
+    "spo_specific": 3,
+    "doc_specific": 3,
+    "prf_specific": 3,
+    "chg_specific": 3,
+    "cst_specific": 3,
+    "mkt_specific": 3,
+    "cross_agent": 5,
+    "edge_cases": 4
+  },
+  "scenarios": [
+    {
+      "id": "RT-001",
+      "category": "orc_routing",
+      "name": "Initial Planning Request",
+      "input": "Help me create a media plan for a Q2 campaign",
+      "expected_agent": "ORC",
+      "expected_behavior": "Acknowledge request, initiate workflow, ask for objectives",
+      "priority": "P0",
+      "tags": ["routing", "initialization"]
+    },
+    {
+      "id": "RT-002",
+      "category": "orc_routing",
+      "name": "Route to ANL",
+      "input": "What results can I expect with a $500K budget?",
+      "expected_agent": "ANL",
+      "expected_behavior": "Calculate projections with confidence intervals",
+      "priority": "P0",
+      "tags": ["routing", "anl"]
+    },
+    {
+      "id": "RT-003",
+      "category": "orc_routing",
+      "name": "Route to AUD",
+      "input": "Segment our customer base using RFM analysis",
+      "expected_agent": "AUD",
+      "expected_behavior": "Perform RFM segmentation with priorities",
+      "priority": "P0",
+      "tags": ["routing", "aud"]
+    },
+    {
+      "id": "RT-004",
+      "category": "orc_routing",
+      "name": "Route to CHA",
+      "input": "Allocate our budget across digital channels",
+      "expected_agent": "CHA",
+      "expected_behavior": "Calculate channel allocation percentages",
+      "priority": "P0",
+      "tags": ["routing", "cha"]
+    },
+    {
+      "id": "RT-005",
+      "category": "orc_routing",
+      "name": "Route to SPO",
+      "input": "Analyze our programmatic fee stack",
+      "expected_agent": "SPO",
+      "expected_behavior": "Break down fees by layer with benchmarks",
+      "priority": "P0",
+      "tags": ["routing", "spo"]
+    },
+    {
+      "id": "RT-006",
+      "category": "orc_routing",
+      "name": "Route to DOC",
+      "input": "Generate the media plan document",
+      "expected_agent": "DOC",
+      "expected_behavior": "Create document with download link",
+      "priority": "P0",
+      "tags": ["routing", "doc"]
+    },
+    {
+      "id": "RT-007",
+      "category": "orc_routing",
+      "name": "Route to PRF",
+      "input": "Our CPA is 25% above target, analyze this",
+      "expected_agent": "PRF",
+      "expected_behavior": "Variance analysis with severity and recommendations",
+      "priority": "P0",
+      "tags": ["routing", "prf"]
+    },
+    {
+      "id": "RT-008",
+      "category": "orc_routing",
+      "name": "Session State Query",
+      "input": "What step are we on in the planning process?",
+      "expected_agent": "ORC",
+      "expected_behavior": "Report current step and gate status",
+      "priority": "P1",
+      "tags": ["routing", "state"]
+    },
+    {
+      "id": "RT-045",
+      "category": "orc_routing",
+      "name": "Route to CHG",
+      "input": "Assess our organization's change readiness",
+      "expected_agent": "CHG",
+      "expected_behavior": "ADKAR assessment with dimension scores",
+      "priority": "P0",
+      "tags": ["routing", "chg"]
+    },
+    {
+      "id": "RT-046",
+      "category": "orc_routing",
+      "name": "Route to CST",
+      "input": "Help me select a strategic framework for market analysis",
+      "expected_agent": "CST",
+      "expected_behavior": "Framework recommendation with rationale",
+      "priority": "P0",
+      "tags": ["routing", "cst"]
+    },
+    {
+      "id": "RT-047",
+      "category": "orc_routing",
+      "name": "Route to MKT",
+      "input": "Develop a marketing campaign strategy",
+      "expected_agent": "MKT",
+      "expected_behavior": "Campaign strategy with channels and messaging",
+      "priority": "P0",
+      "tags": ["routing", "mkt"]
+    },
+    {
+      "id": "RT-009",
+      "category": "anl_specific",
+      "name": "Budget Projection",
+      "input": "Project impressions, reach, and conversions for a 12-week $600K campaign",
+      "expected_agent": "ANL",
+      "expected_behavior": "Detailed projections with confidence intervals",
+      "priority": "P0",
+      "tags": ["anl", "projection"]
+    },
+    {
+      "id": "RT-010",
+      "category": "anl_specific",
+      "name": "Scenario Comparison",
+      "input": "Compare conservative $300K vs aggressive $750K budget scenarios",
+      "expected_agent": "ANL",
+      "expected_behavior": "Side-by-side scenario comparison with recommendation",
+      "priority": "P0",
+      "tags": ["anl", "scenario"]
+    },
+    {
+      "id": "RT-011",
+      "category": "anl_specific",
+      "name": "Diminishing Returns Analysis",
+      "input": "At what budget level do we see diminishing returns?",
+      "expected_agent": "ANL",
+      "expected_behavior": "Efficiency curve analysis with inflection point",
+      "priority": "P1",
+      "tags": ["anl", "efficiency"]
+    },
+    {
+      "id": "RT-012",
+      "category": "aud_specific",
+      "name": "RFM Segmentation",
+      "input": "Create RFM-based customer segments to identify our best customers",
+      "expected_agent": "AUD",
+      "expected_behavior": "RFM segments with scores and recommendations",
+      "priority": "P0",
+      "tags": ["aud", "rfm"]
+    },
+    {
+      "id": "RT-013",
+      "category": "aud_specific",
+      "name": "LTV Calculation",
+      "input": "Calculate lifetime value for our top customer segments",
+      "expected_agent": "AUD",
+      "expected_behavior": "LTV by segment with methodology",
+      "priority": "P0",
+      "tags": ["aud", "ltv"]
+    },
+    {
+      "id": "RT-014",
+      "category": "aud_specific",
+      "name": "Behavioral Segmentation",
+      "input": "Segment our audience based on shopping behavior patterns",
+      "expected_agent": "AUD",
+      "expected_behavior": "Behavioral segments with characteristics",
+      "priority": "P1",
+      "tags": ["aud", "behavioral"]
+    },
+    {
+      "id": "RT-015",
+      "category": "cha_specific",
+      "name": "Channel Allocation",
+      "input": "Allocate $500K across Meta, Google Search, YouTube, and TikTok",
+      "expected_agent": "CHA",
+      "expected_behavior": "Allocation percentages with rationale",
+      "priority": "P0",
+      "tags": ["cha", "allocation"]
+    },
+    {
+      "id": "RT-016",
+      "category": "cha_specific",
+      "name": "Benchmark Lookup",
+      "input": "What are typical CPM and conversion rates for e-commerce on Meta?",
+      "expected_agent": "CHA",
+      "expected_behavior": "Industry benchmarks with percentiles",
+      "priority": "P0",
+      "tags": ["cha", "benchmarks"]
+    },
+    {
+      "id": "RT-017",
+      "category": "cha_specific",
+      "name": "Optimization Objective",
+      "input": "Optimize our channel mix for maximum conversions",
+      "expected_agent": "CHA",
+      "expected_behavior": "Conversion-optimized allocation",
+      "priority": "P1",
+      "tags": ["cha", "optimization"]
+    },
+    {
+      "id": "RT-018",
+      "category": "spo_specific",
+      "name": "Fee Stack Analysis",
+      "input": "Our programmatic display shows 42% working media - analyze the fees",
+      "expected_agent": "SPO",
+      "expected_behavior": "Layer-by-layer fee breakdown with improvements",
+      "priority": "P0",
+      "tags": ["spo", "fees"]
+    },
+    {
+      "id": "RT-019",
+      "category": "spo_specific",
+      "name": "NBI Calculation",
+      "input": "Calculate NBI if we switch from open exchange to PMP",
+      "expected_agent": "SPO",
+      "expected_behavior": "NBI score with recommendation",
+      "priority": "P0",
+      "tags": ["spo", "nbi"]
+    },
+    {
+      "id": "RT-020",
+      "category": "spo_specific",
+      "name": "Partner Evaluation",
+      "input": "Evaluate whether we should switch DSPs",
+      "expected_agent": "SPO",
+      "expected_behavior": "Partner evaluation criteria and scoring",
+      "priority": "P1",
+      "tags": ["spo", "partner"]
+    },
+    {
+      "id": "RT-021",
+      "category": "doc_specific",
+      "name": "Full Plan Document",
+      "input": "Generate the complete media plan document",
+      "expected_agent": "DOC",
+      "expected_behavior": "DOCX with all sections and download link",
+      "priority": "P0",
+      "tags": ["doc", "full-plan"]
+    },
+    {
+      "id": "RT-022",
+      "category": "doc_specific",
+      "name": "Executive Summary",
+      "input": "Create a 2-page executive summary for leadership",
+      "expected_agent": "DOC",
+      "expected_behavior": "Concise summary document",
+      "priority": "P0",
+      "tags": ["doc", "summary"]
+    },
+    {
+      "id": "RT-023",
+      "category": "doc_specific",
+      "name": "Presentation Deck",
+      "input": "Generate a PowerPoint presentation for the client meeting",
+      "expected_agent": "DOC",
+      "expected_behavior": "PPTX with slides and download link",
+      "priority": "P0",
+      "tags": ["doc", "presentation"]
+    },
+    {
+      "id": "RT-024",
+      "category": "prf_specific",
+      "name": "Performance Variance",
+      "input": "Our CPA is 30% above target - what should we do?",
+      "expected_agent": "PRF",
+      "expected_behavior": "Severity assessment with action recommendations",
+      "priority": "P0",
+      "tags": ["prf", "variance"]
+    },
+    {
+      "id": "RT-025",
+      "category": "prf_specific",
+      "name": "Anomaly Detection",
+      "input": "CTR dropped from 0.15% to 0.08% in the last week - is this an anomaly?",
+      "expected_agent": "PRF",
+      "expected_behavior": "Statistical analysis with confidence level",
+      "priority": "P0",
+      "tags": ["prf", "anomaly"]
+    },
+    {
+      "id": "RT-026",
+      "category": "prf_specific",
+      "name": "Learning Extraction",
+      "input": "The campaign ended - what did we learn?",
+      "expected_agent": "PRF",
+      "expected_behavior": "Categorized learnings with applications",
+      "priority": "P1",
+      "tags": ["prf", "learnings"]
+    },
+    {
+      "id": "RT-036",
+      "category": "chg_specific",
+      "name": "Change Readiness Assessment",
+      "input": "Assess our organization's readiness for implementing the new ERP system",
+      "expected_agent": "CHG",
+      "expected_behavior": "ADKAR-based assessment with dimension scores and recommendations",
+      "priority": "P0",
+      "tags": ["chg", "readiness"]
+    },
+    {
+      "id": "RT-037",
+      "category": "chg_specific",
+      "name": "Stakeholder Mapping",
+      "input": "Map stakeholders for the digital transformation initiative using power-interest grid",
+      "expected_agent": "CHG",
+      "expected_behavior": "Stakeholder grid with engagement strategies",
+      "priority": "P0",
+      "tags": ["chg", "stakeholder"]
+    },
+    {
+      "id": "RT-038",
+      "category": "chg_specific",
+      "name": "Adoption Planning",
+      "input": "Create a phased adoption plan for rolling out the new CRM system",
+      "expected_agent": "CHG",
+      "expected_behavior": "Phased plan with milestones, training, and metrics",
+      "priority": "P1",
+      "tags": ["chg", "adoption"]
+    },
+    {
+      "id": "RT-039",
+      "category": "cst_specific",
+      "name": "Strategic Framework Selection",
+      "input": "What strategic framework should I use to analyze our competitive position?",
+      "expected_agent": "CST",
+      "expected_behavior": "Framework recommendation with rationale and application guidance",
+      "priority": "P0",
+      "tags": ["cst", "framework"]
+    },
+    {
+      "id": "RT-040",
+      "category": "cst_specific",
+      "name": "SWOT Analysis",
+      "input": "Conduct a SWOT analysis for our product division",
+      "expected_agent": "CST",
+      "expected_behavior": "Complete SWOT with strategic implications",
+      "priority": "P0",
+      "tags": ["cst", "swot"]
+    },
+    {
+      "id": "RT-041",
+      "category": "cst_specific",
+      "name": "Initiative Prioritization",
+      "input": "Prioritize our strategic initiatives using ICE framework",
+      "expected_agent": "CST",
+      "expected_behavior": "Scored and ranked initiatives with recommendations",
+      "priority": "P1",
+      "tags": ["cst", "prioritization"]
+    },
+    {
+      "id": "RT-042",
+      "category": "mkt_specific",
+      "name": "Campaign Strategy",
+      "input": "Develop a marketing campaign strategy for our Q3 product launch",
+      "expected_agent": "MKT",
+      "expected_behavior": "Strategy framework with channels, messaging, and measurement",
+      "priority": "P0",
+      "tags": ["mkt", "strategy"]
+    },
+    {
+      "id": "RT-043",
+      "category": "mkt_specific",
+      "name": "Creative Brief",
+      "input": "Generate a creative brief for our brand awareness campaign",
+      "expected_agent": "MKT",
+      "expected_behavior": "Complete brief with audience, creative direction, deliverables",
+      "priority": "P0",
+      "tags": ["mkt", "brief"]
+    },
+    {
+      "id": "RT-044",
+      "category": "mkt_specific",
+      "name": "Competitive Analysis",
+      "input": "Analyze our competitive positioning and identify messaging opportunities",
+      "expected_agent": "MKT",
+      "expected_behavior": "Competitive matrix with gaps and opportunities",
+      "priority": "P1",
+      "tags": ["mkt", "competitive"]
+    },
+    {
+      "id": "RT-027",
+      "category": "cross_agent",
+      "name": "AUD to ANL Handoff",
+      "input": "Segment our audience and then project results for targeting them with $400K",
+      "expected_agent": "AUD",
+      "expected_behavior": "AUD segments, then ANL projections",
+      "secondary_agent": "ANL",
+      "priority": "P0",
+      "tags": ["cross-agent", "handoff"]
+    },
+    {
+      "id": "RT-028",
+      "category": "cross_agent",
+      "name": "CHA to ANL Handoff",
+      "input": "Allocate budget across channels and project the results",
+      "expected_agent": "CHA",
+      "expected_behavior": "CHA allocation, then ANL projections",
+      "secondary_agent": "ANL",
+      "priority": "P0",
+      "tags": ["cross-agent", "handoff"]
+    },
+    {
+      "id": "RT-029",
+      "category": "cross_agent",
+      "name": "Full Workflow Sequence",
+      "input": "Complete media plan: segment audience, allocate budget, project results",
+      "expected_agent": "AUD",
+      "expected_behavior": "Sequential: AUD -> CHA -> ANL",
+      "secondary_agent": "CHA",
+      "tertiary_agent": "ANL",
+      "priority": "P0",
+      "tags": ["cross-agent", "workflow"]
+    },
+    {
+      "id": "RT-030",
+      "category": "cross_agent",
+      "name": "SPO to CHA Handoff",
+      "input": "Optimize our supply path and reallocate savings to channels",
+      "expected_agent": "SPO",
+      "expected_behavior": "SPO optimization, then CHA reallocation",
+      "secondary_agent": "CHA",
+      "priority": "P1",
+      "tags": ["cross-agent", "handoff"]
+    },
+    {
+      "id": "RT-031",
+      "category": "cross_agent",
+      "name": "PRF to CHA Handoff",
+      "input": "Analyze underperforming channels and recommend reallocation",
+      "expected_agent": "PRF",
+      "expected_behavior": "PRF analysis, then CHA reallocation",
+      "secondary_agent": "CHA",
+      "priority": "P1",
+      "tags": ["cross-agent", "handoff"]
+    },
+    {
+      "id": "RT-032",
+      "category": "edge_cases",
+      "name": "Ambiguous Routing",
+      "input": "What's the best way to reach millennials?",
+      "expected_agent": "AUD",
+      "expected_behavior": "Route to AUD for targeting (could also be CHA)",
+      "alternative_agent": "CHA",
+      "priority": "P2",
+      "tags": ["edge-case", "ambiguous"]
+    },
+    {
+      "id": "RT-033",
+      "category": "edge_cases",
+      "name": "Minimal Input",
+      "input": "Budget?",
+      "expected_agent": "ORC",
+      "expected_behavior": "Ask for clarification",
+      "priority": "P2",
+      "tags": ["edge-case", "clarification"]
+    },
+    {
+      "id": "RT-034",
+      "category": "edge_cases",
+      "name": "Multiple Questions",
+      "input": "What's our LTV, what are the benchmarks, and can you project Q3?",
+      "expected_agent": "AUD",
+      "expected_behavior": "Handle sequentially: AUD -> CHA -> ANL",
+      "secondary_agent": "CHA",
+      "tertiary_agent": "ANL",
+      "priority": "P2",
+      "tags": ["edge-case", "multi-question"]
+    },
+    {
+      "id": "RT-035",
+      "category": "edge_cases",
+      "name": "Unsupported Request",
+      "input": "Book the media directly with publishers",
+      "expected_agent": "ORC",
+      "expected_behavior": "Explain capability limitation politely",
+      "priority": "P2",
+      "tags": ["edge-case", "unsupported"]
+    }
+  ],
+  "execution_instructions": {
+    "environment": "Copilot Studio test environment",
+    "prerequisites": [
+      "All 10 agents deployed (ORC, ANL, AUD, CHA, SPO, DOC, PRF, CHG, CST, MKT)",
+      "All flows connected",
+      "KB files indexed"
+    ],
+    "pass_criteria": {
+      "P0_tests": "100% pass required",
+      "P1_tests": "90% pass required",
+      "P2_tests": "75% pass required"
+    },
+    "metrics_to_capture": [
+      "Response time (ms)",
+      "Correct agent routed (Y/N)",
+      "Response quality (1-5)",
+      "Session state maintained (Y/N)"
+    ]
+  }
+}

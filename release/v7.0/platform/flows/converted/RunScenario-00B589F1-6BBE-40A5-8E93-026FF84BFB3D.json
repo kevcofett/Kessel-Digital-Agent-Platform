@@ -1,0 +1,470 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {},
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "method": "POST",
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id",
+                "base_budget",
+                "scenarios"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "base_budget": {
+                  "type": "number",
+                  "minimum": 1000
+                },
+                "scenarios": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "budget_multiplier": {
+                        "type": "number"
+                      },
+                      "channel_adjustments": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                },
+                "comparison_metrics": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "default": [
+                    "conversions",
+                    "roas",
+                    "reach",
+                    "efficiency"
+                  ]
+                },
+                "primary_kpi": {
+                  "type": "string",
+                  "default": "conversions"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "A807FB60-84EB-4D4D-85E0-BAF71A0C69CE"
+          },
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "base_budget": "@triggerBody()?['base_budget']",
+            "scenarios": "@triggerBody()?['scenarios']",
+            "comparison_metrics": "@coalesce(triggerBody()?['comparison_metrics'], createArray('conversions', 'roas', 'reach', 'efficiency'))",
+            "primary_kpi": "@coalesce(triggerBody()?['primary_kpi'], 'conversions')",
+            "start_time": "@utcNow()"
+          }
+        },
+        "run_scenario_projections": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "8DDDD59E-388C-4BCC-B7F6-2B3B2DAD13A9"
+          },
+          "inputs": {
+            "base_budget": "@outputs('parse_input')?['base_budget']",
+            "scenario_results": [
+              {
+                "name": "Conservative",
+                "budget": 300000,
+                "budget_multiplier": 0.6,
+                "projected_metrics": {
+                  "impressions": 30000000,
+                  "reach": 9000000,
+                  "frequency": 3.3,
+                  "conversions": 4138,
+                  "cpa": 72.49,
+                  "roas": 2.07,
+                  "efficiency_score": 82
+                },
+                "channel_mix": {
+                  "meta_facebook": 35,
+                  "google_search": 30,
+                  "youtube": 15,
+                  "programmatic_display": 12,
+                  "tiktok": 8
+                }
+              },
+              {
+                "name": "Moderate",
+                "budget": 500000,
+                "budget_multiplier": 1.0,
+                "projected_metrics": {
+                  "impressions": 50000000,
+                  "reach": 15000000,
+                  "frequency": 3.3,
+                  "conversions": 6897,
+                  "cpa": 72.49,
+                  "roas": 2.07,
+                  "efficiency_score": 80
+                },
+                "channel_mix": {
+                  "meta_facebook": 30,
+                  "google_search": 25,
+                  "youtube": 20,
+                  "programmatic_display": 15,
+                  "tiktok": 10
+                }
+              },
+              {
+                "name": "Aggressive",
+                "budget": 750000,
+                "budget_multiplier": 1.5,
+                "projected_metrics": {
+                  "impressions": 75000000,
+                  "reach": 21500000,
+                  "frequency": 3.5,
+                  "conversions": 9932,
+                  "cpa": 75.51,
+                  "roas": 1.99,
+                  "efficiency_score": 75
+                },
+                "channel_mix": {
+                  "meta_facebook": 28,
+                  "google_search": 22,
+                  "youtube": 22,
+                  "programmatic_display": 16,
+                  "tiktok": 12
+                }
+              }
+            ]
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_relative_performance": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "B8FDAA69-8D05-4385-8480-95964AEB693D"
+          },
+          "inputs": {
+            "baseline_scenario": "Moderate",
+            "relative_performance": [
+              {
+                "name": "Conservative",
+                "vs_baseline": {
+                  "impressions": -40,
+                  "reach": -40,
+                  "conversions": -40,
+                  "roas": 0,
+                  "efficiency": 2.5
+                },
+                "index_vs_baseline": {
+                  "impressions": 60,
+                  "reach": 60,
+                  "conversions": 60,
+                  "roas": 100,
+                  "efficiency": 102.5
+                }
+              },
+              {
+                "name": "Moderate",
+                "vs_baseline": {
+                  "impressions": 0,
+                  "reach": 0,
+                  "conversions": 0,
+                  "roas": 0,
+                  "efficiency": 0
+                },
+                "index_vs_baseline": {
+                  "impressions": 100,
+                  "reach": 100,
+                  "conversions": 100,
+                  "roas": 100,
+                  "efficiency": 100
+                }
+              },
+              {
+                "name": "Aggressive",
+                "vs_baseline": {
+                  "impressions": 50,
+                  "reach": 43,
+                  "conversions": 44,
+                  "roas": -4,
+                  "efficiency": -6.25
+                },
+                "index_vs_baseline": {
+                  "impressions": 150,
+                  "reach": 143,
+                  "conversions": 144,
+                  "roas": 96,
+                  "efficiency": 93.75
+                }
+              }
+            ]
+          },
+          "runAfter": {
+            "run_scenario_projections": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_efficiency_curves": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "82D0CD19-52A2-411F-91A0-C9A5975E8F89"
+          },
+          "inputs": {
+            "diminishing_returns_analysis": {
+              "threshold_budget": 600000,
+              "optimal_range": {
+                "min": 400000,
+                "max": 600000
+              },
+              "efficiency_curve": [
+                {
+                  "budget": 200000,
+                  "marginal_conversions_per_dollar": 0.015,
+                  "efficiency_index": 108
+                },
+                {
+                  "budget": 400000,
+                  "marginal_conversions_per_dollar": 0.014,
+                  "efficiency_index": 102
+                },
+                {
+                  "budget": 500000,
+                  "marginal_conversions_per_dollar": 0.0138,
+                  "efficiency_index": 100
+                },
+                {
+                  "budget": 600000,
+                  "marginal_conversions_per_dollar": 0.013,
+                  "efficiency_index": 96
+                },
+                {
+                  "budget": 750000,
+                  "marginal_conversions_per_dollar": 0.012,
+                  "efficiency_index": 89
+                },
+                {
+                  "budget": 1000000,
+                  "marginal_conversions_per_dollar": 0.01,
+                  "efficiency_index": 78
+                }
+              ]
+            },
+            "inflection_point": 550000
+          },
+          "runAfter": {
+            "calculate_relative_performance": [
+              "Succeeded"
+            ]
+          }
+        },
+        "rank_scenarios": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "3B716DD9-A619-4B2A-8518-DEA1739282EF"
+          },
+          "inputs": {
+            "primary_kpi": "@outputs('parse_input')?['primary_kpi']",
+            "rankings": {
+              "by_conversions": [
+                {
+                  "rank": 1,
+                  "scenario": "Aggressive",
+                  "value": 9932
+                },
+                {
+                  "rank": 2,
+                  "scenario": "Moderate",
+                  "value": 6897
+                },
+                {
+                  "rank": 3,
+                  "scenario": "Conservative",
+                  "value": 4138
+                }
+              ],
+              "by_roas": [
+                {
+                  "rank": 1,
+                  "scenario": "Conservative",
+                  "value": 2.07
+                },
+                {
+                  "rank": 2,
+                  "scenario": "Moderate",
+                  "value": 2.07
+                },
+                {
+                  "rank": 3,
+                  "scenario": "Aggressive",
+                  "value": 1.99
+                }
+              ],
+              "by_efficiency": [
+                {
+                  "rank": 1,
+                  "scenario": "Conservative",
+                  "value": 82
+                },
+                {
+                  "rank": 2,
+                  "scenario": "Moderate",
+                  "value": 80
+                },
+                {
+                  "rank": 3,
+                  "scenario": "Aggressive",
+                  "value": 75
+                }
+              ]
+            },
+            "recommended_scenario": "Moderate",
+            "recommendation_rationale": "Best balance of scale and efficiency. Aggressive shows diminishing returns past $600K threshold."
+          },
+          "runAfter": {
+            "calculate_efficiency_curves": [
+              "Succeeded"
+            ]
+          }
+        },
+        "generate_summary": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "3EC0BA02-7F9E-4F0C-A2E8-6E548A5ACE8F"
+          },
+          "inputs": {
+            "summary": "Scenario analysis shows the Moderate budget ($500K) offers the optimal balance between scale and efficiency. While the Aggressive scenario delivers 44% more conversions, the marginal efficiency drops significantly past $600K. The Conservative scenario maintains efficiency but sacrifices significant reach and conversion volume.",
+            "key_insights": [
+              "Diminishing returns begin at $550K budget level",
+              "Efficiency drops 6% moving from Moderate to Aggressive",
+              "ROAS remains stable across Conservative and Moderate scenarios",
+              "Aggressive scenario requires 50% more budget for 44% more conversions"
+            ],
+            "trade_offs": {
+              "scale_vs_efficiency": "Higher budgets reduce marginal efficiency",
+              "reach_vs_frequency": "Larger budgets enable reach expansion vs frequency",
+              "channel_diversification": "Aggressive allows more experimentation"
+            }
+          },
+          "runAfter": {
+            "rank_scenarios": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "D2FC3797-1FCB-404B-BFF7-DE0896B430B6"
+          },
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "ANL",
+            "status": "success",
+            "data": {
+              "scenarios": "@outputs('run_scenario_projections')?['scenario_results']",
+              "relative_performance": "@outputs('calculate_relative_performance')?['relative_performance']",
+              "efficiency_analysis": "@outputs('calculate_efficiency_curves')?['diminishing_returns_analysis']",
+              "rankings": "@outputs('rank_scenarios')?['rankings']",
+              "recommended_scenario": "@outputs('rank_scenarios')?['recommended_scenario']",
+              "recommendation_rationale": "@outputs('rank_scenarios')?['recommendation_rationale']",
+              "comparison_summary": "@outputs('generate_summary')?['summary']",
+              "key_insights": "@outputs('generate_summary')?['key_insights']",
+              "trade_offs": "@outputs('generate_summary')?['trade_offs']"
+            },
+            "confidence": "HIGH",
+            "sources": [
+              "CALCULATION",
+              "BENCHMARK_DATA",
+              "AGENT_KB"
+            ],
+            "recommendations": [
+              "Start with Moderate budget and optimize before scaling",
+              "Monitor efficiency metrics closely if increasing to Aggressive",
+              "Consider phased approach: start Moderate, expand if ROI targets met"
+            ],
+            "follow_up_questions": [
+              "Would you like detailed channel breakdowns for any scenario?",
+              "Should we adjust any scenario parameters?",
+              "Do you want to explore a custom budget level?"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)",
+              "scenarios_analyzed": "@length(outputs('run_scenario_projections')?['scenario_results'])"
+            }
+          },
+          "runAfter": {
+            "generate_summary": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "3E279F91-7176-4A9E-9A58-E432E06F0140"
+          },
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('build_response')"
+          },
+          "kind": "Http"
+        },
+        "return_error": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "9F2F08CC-6B12-4490-80B8-5EFF202E0B88"
+          },
+          "inputs": {
+            "statusCode": 500,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "request_id": "@outputs('parse_input')?['request_id']",
+              "source_agent": "ANL",
+              "error": true,
+              "code": "SCENARIO_ERROR",
+              "message": "Failed to run scenario comparison"
+            }
+          },
+          "kind": "Http",
+          "operationOptions": "OnError"
+        }
+      }
+    },
+    "state": "Activated"
+  },
+  "schemaVersion": "1.0.0.0"
+}

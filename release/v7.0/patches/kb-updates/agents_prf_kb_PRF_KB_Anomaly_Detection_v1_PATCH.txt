@@ -1,0 +1,22 @@
+# KB PATCH
+# Target: agents/prf/kb/PRF_KB_Anomaly_Detection_v1.txt
+# Section: FRAUD DETECTION
+# Change Type: add
+# Patch Source: PATCH-006
+
+============================================================
+
+FRAUD DETECTION SIGNALS
+
+Fraud detection identifies potential invalid traffic (IVT) and suspicious patterns that may indicate ad fraud.
+
+Key indicators checked:
+- fraud_indicators: Specific patterns suggesting fraudulent activity
+- risk_score: Composite score from 0-100 indicating fraud likelihood
+- affected_sources: Traffic sources with elevated fraud signals
+
+Detection rules include CTR anomalies, geographic mismatches, session duration patterns, conversion rate collapses, and source concentration.
+
+Recommendations should include immediate actions (block sources), short-term (adjust targeting), and long-term (partner evaluation).
+
+Always note that fraud detection is probabilistic and should be validated with verification partners like IAS, DoubleVerify, or MOAT before taking action.

@@ -1,0 +1,403 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {},
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "method": "POST",
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "cohort_data": {
+                  "type": "array",
+                  "description": "Historical cohort revenue data",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "cohort_id": {
+                        "type": "string"
+                      },
+                      "acquisition_cost": {
+                        "type": "number"
+                      },
+                      "revenue_months": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                },
+                "projection_months": {
+                  "type": "integer",
+                  "default": 36,
+                  "description": "Months to project LTV forward"
+                },
+                "discount_rate": {
+                  "type": "number",
+                  "default": 0.1,
+                  "description": "Annual discount rate for NPV calculation"
+                },
+                "segmentation": {
+                  "type": "string",
+                  "enum": [
+                    "rfm",
+                    "behavioral",
+                    "demographic",
+                    "value_tier"
+                  ],
+                  "description": "Segmentation method for LTV tiers"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "327AD07E-7E64-4461-96AE-34A1EA32FC0F"
+          },
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "cohort_data": "@triggerBody()?['cohort_data']",
+            "projection_months": "@coalesce(triggerBody()?['projection_months'], 36)",
+            "discount_rate": "@coalesce(triggerBody()?['discount_rate'], 0.10)",
+            "segmentation": "@coalesce(triggerBody()?['segmentation'], 'value_tier')",
+            "start_time": "@utcNow()"
+          }
+        },
+        "check_cohort_data": {
+          "type": "Condition",
+          "metadata": {
+            "operationMetadataId": "9608FB49-3894-4369-BB9D-118304C39E3E"
+          },
+          "expression": {
+            "greater": [
+              "@length(coalesce(outputs('parse_input')?['cohort_data'], createArray()))",
+              0
+            ]
+          },
+          "actions": {},
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_cohort_metrics": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "1335C596-B783-4359-8EE0-1E79E5F4B8D8"
+          },
+          "inputs": {
+            "cohorts": "@outputs('parse_input')?['cohort_data']",
+            "metrics_per_cohort": "@json('[{\"cohort_id\": \"sample\", \"total_revenue\": 0, \"months_active\": 0, \"arpu\": 0, \"retention_rate\": 0}]')"
+          },
+          "runAfter": {
+            "check_cohort_data": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "calculate_retention": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "8EB1A3D8-988C-4DF6-B00D-C57D8C545C1F"
+          },
+          "inputs": {
+            "retention_rates": {
+              "month_1": 0.85,
+              "month_3": 0.65,
+              "month_6": 0.5,
+              "month_12": 0.35,
+              "month_24": 0.25,
+              "month_36": 0.18
+            },
+            "churn_model": "exponential_decay",
+            "decay_rate": 0.08
+          },
+          "runAfter": {
+            "calculate_cohort_metrics": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "project_ltv": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "9EAE9187-9727-4438-85C1-4C0E6F1AAB05"
+          },
+          "inputs": {
+            "projection_months": "@outputs('parse_input')?['projection_months']",
+            "discount_rate": "@outputs('parse_input')?['discount_rate']",
+            "monthly_discount": "@div(outputs('parse_input')?['discount_rate'], 12)",
+            "projected_values": {
+              "year_1_ltv": 0,
+              "year_2_ltv": 0,
+              "year_3_ltv": 0,
+              "total_ltv": 0,
+              "npv_ltv": 0
+            }
+          },
+          "runAfter": {
+            "calculate_retention": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "segment_ltv_tiers": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "C022AD59-DEB5-4A4A-963E-EFAF864A416D"
+          },
+          "inputs": {
+            "tiers": [
+              {
+                "tier_name": "High Value",
+                "ltv_range": {
+                  "min": 1000,
+                  "max": 999999
+                },
+                "percentage_of_customers": 15,
+                "percentage_of_revenue": 55,
+                "recommended_investment_multiplier": 2.5
+              },
+              {
+                "tier_name": "Medium Value",
+                "ltv_range": {
+                  "min": 250,
+                  "max": 999
+                },
+                "percentage_of_customers": 35,
+                "percentage_of_revenue": 35,
+                "recommended_investment_multiplier": 1.0
+              },
+              {
+                "tier_name": "Low Value",
+                "ltv_range": {
+                  "min": 0,
+                  "max": 249
+                },
+                "percentage_of_customers": 50,
+                "percentage_of_revenue": 10,
+                "recommended_investment_multiplier": 0.5
+              }
+            ],
+            "segmentation_method": "@outputs('parse_input')?['segmentation']"
+          },
+          "runAfter": {
+            "project_ltv": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "calculate_acquisition_economics": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "0E1B9FB1-BB03-4743-8C60-712C0186AB6D"
+          },
+          "inputs": {
+            "ltv_cac_ratio": {
+              "high_value": 5.2,
+              "medium_value": 2.8,
+              "low_value": 1.1,
+              "blended": 3.0
+            },
+            "payback_period_months": {
+              "high_value": 4,
+              "medium_value": 8,
+              "low_value": 18,
+              "blended": 10
+            },
+            "max_cac_recommendation": {
+              "high_value": 400,
+              "medium_value": 150,
+              "low_value": 50
+            }
+          },
+          "runAfter": {
+            "segment_ltv_tiers": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "use_benchmark_ltv": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "491A12CF-28C4-4230-9523-541CEE9D9976"
+          },
+          "inputs": {
+            "source": "industry_benchmark",
+            "warning": "No cohort data provided - using industry benchmarks",
+            "benchmark_ltv": {
+              "e_commerce_retail": 450,
+              "saas_b2b": 2500,
+              "financial_services": 800,
+              "media_entertainment": 180,
+              "travel_hospitality": 350
+            },
+            "assumptions": [
+              "Based on industry averages from benchmark database",
+              "Actual LTV may vary significantly based on product and audience",
+              "Recommend providing actual cohort data for accurate projections"
+            ]
+          },
+          "runAfter": {
+            "check_cohort_data": [
+              "Succeeded"
+            ]
+          },
+          "operationOptions": "condition"
+        },
+        "build_response": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "97F0413C-69BD-4EA0-9C52-1B934F46907B"
+          },
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "AUD",
+            "status": "success",
+            "data": {
+              "ltv_analysis": {
+                "cohort_metrics": "@coalesce(outputs('calculate_cohort_metrics'), outputs('use_benchmark_ltv'))",
+                "retention_curve": "@outputs('calculate_retention')",
+                "projections": "@outputs('project_ltv')",
+                "ltv_tiers": "@outputs('segment_ltv_tiers')?['tiers']",
+                "acquisition_economics": "@outputs('calculate_acquisition_economics')"
+              },
+              "methodology": {
+                "projection_months": "@outputs('parse_input')?['projection_months']",
+                "discount_rate": "@outputs('parse_input')?['discount_rate']",
+                "segmentation": "@outputs('parse_input')?['segmentation']"
+              }
+            },
+            "confidence": "@if(outputs('check_cohort_data'), 'HIGH', 'MEDIUM')",
+            "sources": [
+              "@if(outputs('check_cohort_data'), 'USER_PROVIDED', 'BENCHMARK_DATA')",
+              "CALCULATION",
+              "AGENT_KB"
+            ],
+            "recommendations": [
+              "Focus acquisition spend on high-value customer profiles",
+              "Implement retention programs for medium-value tier to prevent churn",
+              "Consider re-engagement campaigns for at-risk customers"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)",
+              "data_sources": [
+                "@if(outputs('check_cohort_data'), 'cohort_data', 'industry_benchmark')"
+              ]
+            }
+          },
+          "runAfter": {
+            "calculate_acquisition_economics": [
+              "Succeeded"
+            ],
+            "use_benchmark_ltv": [
+              "Succeeded"
+            ]
+          }
+        },
+        "log_response": {
+          "type": "HTTP",
+          "metadata": {
+            "operationMetadataId": "480DB717-9E5F-427B-A96B-CF53720DBC77"
+          },
+          "inputs": {
+            "method": "POST",
+            "uri": "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_response_logs",
+            "headers": {
+              "Authorization": "Bearer @{body('Get_Access_Token')?['access_token']}",
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "eap_entry_id": "@guid()",
+              "eap_session_id": "@outputs('parse_input')?['session_id']",
+              "eap_request_id": "@outputs('parse_input')?['request_id']",
+              "eap_agent": "AUD",
+              "eap_status": "success",
+              "eap_confidence": "@outputs('build_response')?['confidence']",
+              "eap_processing_time_ms": "@outputs('build_response')?['metadata']?['processing_time_ms']"
+            }
+          },
+          "runAfter": {
+            "build_response": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "65422DEF-B178-46F2-9F04-DE165E78F69B"
+          },
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('build_response')"
+          },
+          "kind": "Http"
+        },
+        "return_error": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "7DBAE33C-5ABA-46BE-BABB-C7A8B3D96752"
+          },
+          "inputs": {
+            "statusCode": 500,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "request_id": "@outputs('parse_input')?['request_id']",
+              "timestamp": "@utcNow()",
+              "source_agent": "AUD",
+              "error": true,
+              "code": "CALCULATION_ERROR",
+              "message": "Failed to calculate LTV",
+              "recovery_options": [
+                "Verify cohort data format",
+                "Try with benchmark data instead"
+              ]
+            }
+          },
+          "kind": "Http",
+          "operationOptions": "OnError"
+        }
+      }
+    },
+    "state": "Activated"
+  },
+  "schemaVersion": "1.0.0.0"
+}

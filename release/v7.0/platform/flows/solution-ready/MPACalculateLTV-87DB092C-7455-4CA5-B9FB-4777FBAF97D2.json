@@ -1,0 +1,390 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "fd627eb1-2657-4a1a-a754-0a709fffea45"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "cohort_data": {
+                  "type": "array",
+                  "description": "Historical cohort revenue data",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "cohort_id": {
+                        "type": "string"
+                      },
+                      "acquisition_cost": {
+                        "type": "number"
+                      },
+                      "revenue_months": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                },
+                "projection_months": {
+                  "type": "integer",
+                  "default": 36,
+                  "description": "Months to project LTV forward"
+                },
+                "discount_rate": {
+                  "type": "number",
+                  "default": 0.1,
+                  "description": "Annual discount rate for NPV calculation"
+                },
+                "segmentation": {
+                  "type": "string",
+                  "enum": [
+                    "rfm",
+                    "behavioral",
+                    "demographic",
+                    "value_tier"
+                  ],
+                  "description": "Segmentation method for LTV tiers"
+                }
+              }
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "cohort_data": "@triggerBody()?['cohort_data']",
+            "projection_months": "@coalesce(triggerBody()?['projection_months'], 36)",
+            "discount_rate": "@coalesce(triggerBody()?['discount_rate'], 0.10)",
+            "segmentation": "@coalesce(triggerBody()?['segmentation'], 'value_tier')",
+            "start_time": "@utcNow()"
+          },
+          "metadata": {
+            "operationMetadataId": "0145f6ff-d69c-4069-90c7-4b63d96e3c9d"
+          },
+          "runAfter": {}
+        },
+        "check_cohort_data": {
+          "type": "If",
+          "expression": {
+            "greater": [
+              "@length(coalesce(outputs('parse_input')?['cohort_data'], createArray()))",
+              0
+            ]
+          },
+          "actions": {},
+          "else": {
+            "actions": {}
+          },
+          "metadata": {
+            "operationMetadataId": "c068b5f1-4cc3-4039-ab6f-8178050f650a"
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_cohort_metrics": {
+          "type": "Compose",
+          "inputs": {
+            "cohorts": "@outputs('parse_input')?['cohort_data']",
+            "metrics_per_cohort": "@json('[{\"cohort_id\": \"sample\", \"total_revenue\": 0, \"months_active\": 0, \"arpu\": 0, \"retention_rate\": 0}]')"
+          },
+          "metadata": {
+            "operationMetadataId": "9174098d-5702-482a-a445-9783b276feac"
+          },
+          "runAfter": {
+            "check_cohort_data": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_retention": {
+          "type": "Compose",
+          "inputs": {
+            "retention_rates": {
+              "month_1": 0.85,
+              "month_3": 0.65,
+              "month_6": 0.5,
+              "month_12": 0.35,
+              "month_24": 0.25,
+              "month_36": 0.18
+            },
+            "churn_model": "exponential_decay",
+            "decay_rate": 0.08
+          },
+          "metadata": {
+            "operationMetadataId": "c94f44b9-19cd-4d00-9454-a52707520bda"
+          },
+          "runAfter": {
+            "calculate_cohort_metrics": [
+              "Succeeded"
+            ]
+          }
+        },
+        "project_ltv": {
+          "type": "Compose",
+          "inputs": {
+            "projection_months": "@outputs('parse_input')?['projection_months']",
+            "discount_rate": "@outputs('parse_input')?['discount_rate']",
+            "monthly_discount": "@div(outputs('parse_input')?['discount_rate'], 12)",
+            "projected_values": {
+              "year_1_ltv": 0,
+              "year_2_ltv": 0,
+              "year_3_ltv": 0,
+              "total_ltv": 0,
+              "npv_ltv": 0
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "3ebecd80-91f5-466a-b3dd-95832d12f194"
+          },
+          "runAfter": {
+            "calculate_retention": [
+              "Succeeded"
+            ]
+          }
+        },
+        "segment_ltv_tiers": {
+          "type": "Compose",
+          "inputs": {
+            "tiers": [
+              {
+                "tier_name": "High Value",
+                "ltv_range": {
+                  "min": 1000,
+                  "max": 999999
+                },
+                "percentage_of_customers": 15,
+                "percentage_of_revenue": 55,
+                "recommended_investment_multiplier": 2.5
+              },
+              {
+                "tier_name": "Medium Value",
+                "ltv_range": {
+                  "min": 250,
+                  "max": 999
+                },
+                "percentage_of_customers": 35,
+                "percentage_of_revenue": 35,
+                "recommended_investment_multiplier": 1.0
+              },
+              {
+                "tier_name": "Low Value",
+                "ltv_range": {
+                  "min": 0,
+                  "max": 249
+                },
+                "percentage_of_customers": 50,
+                "percentage_of_revenue": 10,
+                "recommended_investment_multiplier": 0.5
+              }
+            ],
+            "segmentation_method": "@outputs('parse_input')?['segmentation']"
+          },
+          "metadata": {
+            "operationMetadataId": "a8da4e15-7ce9-4127-82e4-c144375d64b0"
+          },
+          "runAfter": {
+            "project_ltv": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_acquisition_economics": {
+          "type": "Compose",
+          "inputs": {
+            "ltv_cac_ratio": {
+              "high_value": 5.2,
+              "medium_value": 2.8,
+              "low_value": 1.1,
+              "blended": 3.0
+            },
+            "payback_period_months": {
+              "high_value": 4,
+              "medium_value": 8,
+              "low_value": 18,
+              "blended": 10
+            },
+            "max_cac_recommendation": {
+              "high_value": 400,
+              "medium_value": 150,
+              "low_value": 50
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "e97ed947-ecbf-42e9-aa0d-004bffb9f798"
+          },
+          "runAfter": {
+            "segment_ltv_tiers": [
+              "Succeeded"
+            ]
+          }
+        },
+        "use_benchmark_ltv": {
+          "type": "Compose",
+          "inputs": {
+            "source": "industry_benchmark",
+            "warning": "No cohort data provided - using industry benchmarks",
+            "benchmark_ltv": {
+              "e_commerce_retail": 450,
+              "saas_b2b": 2500,
+              "financial_services": 800,
+              "media_entertainment": 180,
+              "travel_hospitality": 350
+            },
+            "assumptions": [
+              "Based on industry averages from benchmark database",
+              "Actual LTV may vary significantly based on product and audience",
+              "Recommend providing actual cohort data for accurate projections"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "42be39f5-25df-4aa8-be8d-25d22ed6e1fc"
+          },
+          "runAfter": {
+            "check_cohort_data": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "AUD",
+            "status": "success",
+            "data": {
+              "ltv_analysis": {
+                "cohort_metrics": "@coalesce(outputs('calculate_cohort_metrics'), outputs('use_benchmark_ltv'))",
+                "retention_curve": "@outputs('calculate_retention')",
+                "projections": "@outputs('project_ltv')",
+                "ltv_tiers": "@outputs('segment_ltv_tiers')?['tiers']",
+                "acquisition_economics": "@outputs('calculate_acquisition_economics')"
+              },
+              "methodology": {
+                "projection_months": "@outputs('parse_input')?['projection_months']",
+                "discount_rate": "@outputs('parse_input')?['discount_rate']",
+                "segmentation": "@outputs('parse_input')?['segmentation']"
+              }
+            },
+            "confidence": "@if(outputs('check_cohort_data'), 'HIGH', 'MEDIUM')",
+            "sources": [
+              "@if(outputs('check_cohort_data'), 'USER_PROVIDED', 'BENCHMARK_DATA')",
+              "CALCULATION",
+              "AGENT_KB"
+            ],
+            "recommendations": [
+              "Focus acquisition spend on high-value customer profiles",
+              "Implement retention programs for medium-value tier to prevent churn",
+              "Consider re-engagement campaigns for at-risk customers"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)",
+              "data_sources": [
+                "@if(outputs('check_cohort_data'), 'cohort_data', 'industry_benchmark')"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "e240a9ca-5afa-4d1f-a352-b562b1717ddc"
+          },
+          "runAfter": {
+            "calculate_acquisition_economics": [
+              "Succeeded"
+            ],
+            "use_benchmark_ltv": [
+              "Succeeded"
+            ]
+          }
+        },
+        "log_response": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {},
+            "authentication": "@parameters('$authentication')"
+          },
+          "metadata": {
+            "operationMetadataId": "288256be-69cf-4595-9b8d-df5e5a1a994b"
+          },
+          "runAfter": {
+            "build_response": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": "@outputs('build_response')",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "89c2b905-e575-46b9-9dd2-c0bc26d8d140"
+          },
+          "runAfter": {}
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

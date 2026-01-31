@@ -1,0 +1,503 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "be63c890-a11e-4fc7-92f0-11983fcc33b0"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id",
+                "competitors"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "competitors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "website": {
+                        "type": "string"
+                      },
+                      "market_position": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "category": {
+                  "type": "string",
+                  "description": "Product/service category"
+                },
+                "own_brand": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "positioning": {
+                      "type": "string"
+                    },
+                    "key_differentiators": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "analysis_focus": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "messaging",
+                      "visual_identity",
+                      "channel_presence",
+                      "pricing",
+                      "product_features"
+                    ]
+                  }
+                }
+              }
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "competitors": "@triggerBody()?['competitors']",
+            "category": "@triggerBody()?['category']",
+            "own_brand": "@triggerBody()?['own_brand']",
+            "analysis_focus": "@coalesce(triggerBody()?['analysis_focus'], createArray('messaging', 'channel_presence', 'positioning'))",
+            "start_time": "@utcNow()"
+          },
+          "metadata": {
+            "operationMetadataId": "eba8e7be-79e2-4ab2-94a6-8a2654058646"
+          },
+          "runAfter": {}
+        },
+        "build_profiles": {
+          "type": "Compose",
+          "inputs": {
+            "competitor_profiles": [
+              {
+                "name": "Competitor A",
+                "market_position": "Market Leader",
+                "estimated_market_share": 35,
+                "strengths": [
+                  "Strong brand recognition",
+                  "Large customer base",
+                  "Comprehensive product suite"
+                ],
+                "weaknesses": [
+                  "Perceived as expensive",
+                  "Slow to innovate",
+                  "Complex implementation"
+                ],
+                "positioning": "Enterprise solution for large organizations",
+                "key_messages": [
+                  "Trusted by Fortune 500",
+                  "Complete enterprise platform"
+                ],
+                "target_audience": "Large enterprises",
+                "pricing_tier": "Premium",
+                "channel_presence": {
+                  "paid_search": "heavy",
+                  "paid_social": "moderate",
+                  "content_marketing": "heavy",
+                  "events": "heavy"
+                }
+              },
+              {
+                "name": "Competitor B",
+                "market_position": "Challenger",
+                "estimated_market_share": 20,
+                "strengths": [
+                  "Modern technology",
+                  "Competitive pricing",
+                  "Strong customer service"
+                ],
+                "weaknesses": [
+                  "Limited enterprise features",
+                  "Smaller partner ecosystem"
+                ],
+                "positioning": "Modern solution for growing companies",
+                "key_messages": [
+                  "Built for the modern business",
+                  "Simple yet powerful"
+                ],
+                "target_audience": "Mid-market growth companies",
+                "pricing_tier": "Mid-range",
+                "channel_presence": {
+                  "paid_search": "heavy",
+                  "paid_social": "heavy",
+                  "content_marketing": "moderate",
+                  "events": "light"
+                }
+              },
+              {
+                "name": "Competitor C",
+                "market_position": "Niche Player",
+                "estimated_market_share": 10,
+                "strengths": [
+                  "Deep specialization",
+                  "Industry expertise",
+                  "Personalized service"
+                ],
+                "weaknesses": [
+                  "Limited scalability",
+                  "Narrow feature set"
+                ],
+                "positioning": "Specialist solution for specific industries",
+                "key_messages": [
+                  "Industry-specific expertise",
+                  "Tailored for your needs"
+                ],
+                "target_audience": "Industry-specific buyers",
+                "pricing_tier": "Variable",
+                "channel_presence": {
+                  "paid_search": "moderate",
+                  "paid_social": "light",
+                  "content_marketing": "heavy",
+                  "events": "moderate"
+                }
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a64cccf6-e296-4e62-bfcb-ca01e97a01dd"
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "create_matrix": {
+          "type": "Compose",
+          "inputs": {
+            "comparison_dimensions": [
+              {
+                "dimension": "Market Presence",
+                "our_brand": 4,
+                "competitor_a": 5,
+                "competitor_b": 3,
+                "competitor_c": 2
+              },
+              {
+                "dimension": "Product Innovation",
+                "our_brand": 4,
+                "competitor_a": 3,
+                "competitor_b": 5,
+                "competitor_c": 3
+              },
+              {
+                "dimension": "Price Competitiveness",
+                "our_brand": 3,
+                "competitor_a": 2,
+                "competitor_b": 4,
+                "competitor_c": 3
+              },
+              {
+                "dimension": "Customer Service",
+                "our_brand": 5,
+                "competitor_a": 3,
+                "competitor_b": 4,
+                "competitor_c": 5
+              },
+              {
+                "dimension": "Ease of Use",
+                "our_brand": 4,
+                "competitor_a": 2,
+                "competitor_b": 5,
+                "competitor_c": 3
+              },
+              {
+                "dimension": "Enterprise Features",
+                "our_brand": 4,
+                "competitor_a": 5,
+                "competitor_b": 3,
+                "competitor_c": 2
+              }
+            ],
+            "overall_scores": {
+              "our_brand": 24,
+              "competitor_a": 20,
+              "competitor_b": 24,
+              "competitor_c": 18
+            },
+            "competitive_position": "Strong challenger with differentiation opportunity"
+          },
+          "metadata": {
+            "operationMetadataId": "6cec335e-8404-4b3a-bb29-19fa7268e4a0"
+          },
+          "runAfter": {
+            "build_profiles": [
+              "Succeeded"
+            ]
+          }
+        },
+        "analyze_messaging": {
+          "type": "Compose",
+          "inputs": {
+            "messaging_analysis": {
+              "common_themes": [
+                {
+                  "theme": "Digital Transformation",
+                  "prevalence": "high",
+                  "our_usage": "moderate",
+                  "differentiation_opportunity": "Execution expertise"
+                },
+                {
+                  "theme": "ROI/Business Outcomes",
+                  "prevalence": "high",
+                  "our_usage": "high",
+                  "differentiation_opportunity": "Specific proof points"
+                },
+                {
+                  "theme": "Innovation",
+                  "prevalence": "medium",
+                  "our_usage": "low",
+                  "differentiation_opportunity": "Technology leadership"
+                },
+                {
+                  "theme": "Simplicity",
+                  "prevalence": "medium",
+                  "our_usage": "high",
+                  "differentiation_opportunity": "User experience"
+                }
+              ],
+              "messaging_gaps": [
+                {
+                  "gap": "Human element / partnership",
+                  "opportunity": "Emphasize dedicated support and success partnership"
+                },
+                {
+                  "gap": "Speed to value",
+                  "opportunity": "Highlight faster implementation and time to ROI"
+                },
+                {
+                  "gap": "Flexibility/customization",
+                  "opportunity": "Showcase adaptable solutions"
+                }
+              ],
+              "recommended_positioning": {
+                "primary_position": "The trusted partner for business transformation",
+                "differentiation_pillars": [
+                  "Proven expertise (outcomes focus)",
+                  "Dedicated partnership (human element)",
+                  "Flexible solutions (customization)"
+                ],
+                "avoid_competing_on": [
+                  "Lowest price",
+                  "Feature count",
+                  "Company size"
+                ]
+              }
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "a751b3b6-59b2-4d67-830a-f8cfdc1f1a50"
+          },
+          "runAfter": {
+            "create_matrix": [
+              "Succeeded"
+            ]
+          }
+        },
+        "identify_opportunities": {
+          "type": "Compose",
+          "inputs": {
+            "strategic_opportunities": [
+              {
+                "opportunity": "Differentiate on Customer Success",
+                "description": "No competitor strongly owns the 'partnership' positioning",
+                "tactics": [
+                  "Highlight dedicated success teams",
+                  "Showcase customer testimonials",
+                  "Emphasize long-term relationships"
+                ],
+                "priority": "high",
+                "effort": "low"
+              },
+              {
+                "opportunity": "Own Speed to Value",
+                "description": "Market leader perceived as slow; opportunity to position as agile",
+                "tactics": [
+                  "Publish implementation benchmarks",
+                  "Create quick-start programs",
+                  "Case studies on rapid deployments"
+                ],
+                "priority": "high",
+                "effort": "medium"
+              },
+              {
+                "opportunity": "Target Dissatisfied Enterprise Customers",
+                "description": "Competitor A customers frustrated with complexity and cost",
+                "tactics": [
+                  "Competitive switch campaigns",
+                  "Migration support messaging",
+                  "TCO comparison content"
+                ],
+                "priority": "medium",
+                "effort": "medium"
+              },
+              {
+                "opportunity": "Build Thought Leadership",
+                "description": "Gap in original industry insights and research",
+                "tactics": [
+                  "Publish original research",
+                  "Industry benchmark reports",
+                  "Expert webinar series"
+                ],
+                "priority": "medium",
+                "effort": "high"
+              }
+            ],
+            "threats_to_monitor": [
+              {
+                "threat": "Competitor B aggressive pricing",
+                "mitigation": "Emphasize value over price, total cost of ownership"
+              },
+              {
+                "threat": "Competitor A product updates",
+                "mitigation": "Monitor releases, maintain feature parity on key areas"
+              },
+              {
+                "threat": "New market entrants",
+                "mitigation": "Strengthen customer relationships, increase switching costs"
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3bf00e68-20e9-4ca3-99a7-9e803bb8f552"
+          },
+          "runAfter": {
+            "analyze_messaging": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "MKT",
+            "status": "success",
+            "data": {
+              "analysis_scope": {
+                "category": "@outputs('parse_input')?['category']",
+                "competitors_analyzed": "@length(outputs('parse_input')?['competitors'])",
+                "focus_areas": "@outputs('parse_input')?['analysis_focus']"
+              },
+              "competitor_profiles": "@outputs('build_profiles')?['competitor_profiles']",
+              "competitive_matrix": {
+                "dimensions": "@outputs('create_matrix')?['comparison_dimensions']",
+                "overall_scores": "@outputs('create_matrix')?['overall_scores']",
+                "competitive_position": "@outputs('create_matrix')?['competitive_position']"
+              },
+              "messaging_landscape": {
+                "common_themes": "@outputs('analyze_messaging')?['messaging_analysis']?['common_themes']",
+                "messaging_gaps": "@outputs('analyze_messaging')?['messaging_analysis']?['messaging_gaps']",
+                "recommended_positioning": "@outputs('analyze_messaging')?['recommended_positioning']"
+              },
+              "strategic_opportunities": "@outputs('identify_opportunities')?['strategic_opportunities']",
+              "threats_to_monitor": "@outputs('identify_opportunities')?['threats_to_monitor']"
+            },
+            "confidence": "HIGH",
+            "sources": [
+              "AGENT_KB",
+              "COMPETITIVE_ANALYSIS",
+              "MARKET_DATA"
+            ],
+            "recommendations": [
+              "Focus messaging on partnership and customer success",
+              "Develop competitive switch campaign for enterprise segment",
+              "Invest in thought leadership content"
+            ],
+            "follow_up_questions": [
+              "Would you like to develop a campaign strategy based on this analysis?",
+              "Should we create competitive battle cards?",
+              "Do you want detailed positioning recommendations?"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "b7d03861-06f7-4b82-b317-d50da252f823"
+          },
+          "runAfter": {
+            "identify_opportunities": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": "@outputs('build_response')",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "f6ac7748-ecea-4405-a78f-0f824ed82545"
+          },
+          "runAfter": {}
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

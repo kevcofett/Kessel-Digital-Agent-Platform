@@ -1,0 +1,506 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 12567
+
+PURPOSE
+
+This knowledge base provides the Performance Agent with comprehensive model validation methodology including data splitting strategies, evaluation metrics, calibration assessment, and monitoring frameworks.
+
+MODEL VALIDATION FUNDAMENTALS
+
+Understanding model assessment.
+
+VALIDATION CONCEPT
+
+What model validation achieves.
+
+Definition
+- Model performance assessment
+- Generalization evaluation
+- Quality verification
+- Deployment readiness
+
+Importance
+- Overfit detection
+- Real-world performance
+- Confidence establishment
+- Risk mitigation
+
+Validation types
+- Holdout validation
+- Cross-validation
+- Temporal validation
+- Production monitoring
+
+DATA SPLITTING STRATEGIES
+
+Dividing data for validation.
+
+TRAIN-VALIDATION-TEST SPLIT
+
+Standard three-way division.
+
+Training set purpose
+- Model fitting
+- Parameter learning
+- Pattern extraction
+- Largest portion
+
+Validation set purpose
+- Hyperparameter tuning
+- Model selection
+- Early stopping
+- Development feedback
+
+Test set purpose
+- Final evaluation
+- Unbiased assessment
+- Performance reporting
+- Deployment decision
+
+Split ratios
+- 70-15-15 common
+- 60-20-20 alternative
+- Data size dependent
+- Task-specific consideration
+
+TEMPORAL SPLITS
+
+Time-based division.
+
+Temporal importance
+- Time ordering preservation
+- Realistic evaluation
+- Leakage prevention
+- Production simulation
+
+Walk-forward validation
+- Sequential splits
+- Expanding window
+- Multiple test periods
+- Robust assessment
+
+Rolling window
+- Fixed window size
+- Sliding through time
+- Recency emphasis
+- Drift handling
+
+Gap periods
+- Prediction horizon gap
+- Label leakage prevention
+- Realistic separation
+- Production alignment
+
+STRATIFIED SPLITS
+
+Maintaining distribution.
+
+Stratification purpose
+- Distribution preservation
+- Rare class handling
+- Representative splits
+- Reduced variance
+
+Stratification variables
+- Target variable
+- Key features
+- Time periods
+- Business segments
+
+Implementation
+- Scikit-learn stratify
+- Custom stratification
+- Multi-label handling
+- Group stratification
+
+CROSS-VALIDATION
+
+Multiple split evaluation.
+
+K-fold cross-validation
+- K partitions
+- K iterations
+- Average performance
+- Variance estimation
+
+Stratified K-fold
+- Class distribution
+- Each fold representative
+- Classification focus
+- Imbalanced data
+
+Time series split
+- Temporal ordering
+- Expanding training
+- Forward-only
+- Appropriate for time data
+
+Group K-fold
+- Group integrity
+- No group leakage
+- User-level split
+- Entity preservation
+
+CLASSIFICATION METRICS
+
+Classification model evaluation.
+
+CONFUSION MATRIX
+
+Classification outcome breakdown.
+
+Matrix structure
+- True positives
+- True negatives
+- False positives
+- False negatives
+
+Derived metrics
+- Accuracy
+- Error rate
+- True positive rate
+- True negative rate
+
+Interpretation
+- Error type analysis
+- Cost consideration
+- Business alignment
+- Threshold impact
+
+PRIMARY METRICS
+
+Core classification measures.
+
+Accuracy
+- Correct predictions ratio
+- Overall performance
+- Imbalance sensitivity
+- Simple interpretation
+
+Precision
+- Positive prediction accuracy
+- False positive focus
+- Resource efficiency
+- Targeting quality
+
+Recall
+- Actual positive capture
+- False negative focus
+- Coverage measurement
+- Sensitivity
+
+F1 score
+- Precision-recall harmonic mean
+- Balanced measure
+- Single metric
+- Trade-off summary
+
+THRESHOLD-INDEPENDENT METRICS
+
+Probability-based evaluation.
+
+ROC curve
+- True positive vs false positive
+- Threshold variation
+- Trade-off visualization
+- Overall discrimination
+
+AUC-ROC
+- Area under ROC
+- Discrimination ability
+- Ranking quality
+- Threshold-free
+
+Precision-recall curve
+- Precision vs recall
+- Imbalanced focus
+- Positive class emphasis
+- AUC-PR metric
+
+REGRESSION METRICS
+
+Continuous outcome evaluation.
+
+ERROR METRICS
+
+Prediction error measures.
+
+Mean Absolute Error
+- Average absolute error
+- Same scale as target
+- Interpretable
+- Outlier moderated
+
+Mean Squared Error
+- Squared error average
+- Large error penalty
+- Optimization-friendly
+- Scale squared
+
+Root Mean Squared Error
+- Square root of MSE
+- Same scale as target
+- Common reporting
+- Large error emphasis
+
+Mean Absolute Percentage Error
+- Percentage error
+- Scale-independent
+- Zero issue
+- Relative measure
+
+VARIANCE EXPLAINED
+
+Explained variation measures.
+
+R-squared
+- Variance explained ratio
+- Relative to mean baseline
+- Zero to one scale
+- Interpretation caution
+
+Adjusted R-squared
+- Feature count adjustment
+- Overfitting penalty
+- Model comparison
+- Complexity awareness
+
+RESIDUAL ANALYSIS
+
+Error pattern examination.
+
+Residual distribution
+- Normality check
+- Heteroscedasticity
+- Pattern detection
+- Assumption verification
+
+Residual plots
+- Fitted vs residual
+- Pattern visualization
+- Systematic error
+- Model diagnosis
+
+Autocorrelation
+- Temporal correlation
+- Time series residuals
+- Model adequacy
+- Additional information
+
+CALIBRATION ASSESSMENT
+
+Probability calibration evaluation.
+
+CALIBRATION CONCEPT
+
+What calibration means.
+
+Definition
+- Probability accuracy
+- Predicted vs actual rates
+- Confidence reliability
+- Decision support quality
+
+Importance
+- Decision-making
+- Risk assessment
+- Threshold setting
+- Trust establishment
+
+Perfect calibration
+- Predicted equals actual
+- Diagonal on plot
+- Reliable probabilities
+- Ideal outcome
+
+CALIBRATION CURVES
+
+Visual calibration assessment.
+
+Reliability diagram
+- Binned predictions
+- Actual rates per bin
+- Diagonal comparison
+- Calibration visualization
+
+Construction
+- Probability binning
+- Fraction positive
+- Plotting approach
+- Confidence bands
+
+Interpretation
+- Above diagonal underconfident
+- Below diagonal overconfident
+- Calibration direction
+- Bin-level analysis
+
+CALIBRATION METRICS
+
+Quantitative calibration measures.
+
+Brier score
+- Mean squared probability error
+- Proper scoring rule
+- Combined accuracy and calibration
+- Lower is better
+
+Expected Calibration Error
+- Weighted absolute deviation
+- Bin-based calculation
+- Calibration summary
+- Common metric
+
+Maximum Calibration Error
+- Worst bin deviation
+- Reliability focus
+- Conservative measure
+- Risk assessment
+
+CALIBRATION METHODS
+
+Improving calibration.
+
+Platt scaling
+- Sigmoid transformation
+- Logistic regression
+- Parametric approach
+- Simple implementation
+
+Isotonic regression
+- Non-parametric
+- Monotonic constraint
+- Data-driven
+- Flexible correction
+
+Temperature scaling
+- Single parameter
+- Neural network focus
+- Simple and effective
+- Preserves ranking
+
+MODEL MONITORING
+
+Production model assessment.
+
+PERFORMANCE DRIFT
+
+Performance degradation detection.
+
+Concept drift
+- Target relationship change
+- Distribution shift
+- Model degradation
+- Retraining trigger
+
+Performance tracking
+- Metric monitoring
+- Threshold alerting
+- Trend analysis
+- Early detection
+
+Monitoring metrics
+- Accuracy over time
+- Prediction distribution
+- Error patterns
+- Business impact
+
+FEATURE DRIFT
+
+Input distribution change.
+
+Data drift
+- Feature distribution shift
+- Input change
+- Model applicability
+- Quality concern
+
+Detection methods
+- Statistical tests
+- Distribution comparison
+- Threshold-based
+- Automated alerting
+
+Feature monitoring
+- Individual features
+- Correlation changes
+- Missing patterns
+- Value ranges
+
+ALERTING THRESHOLDS
+
+Model alert configuration.
+
+Threshold setting
+- Baseline establishment
+- Acceptable degradation
+- Business alignment
+- Historical context
+
+Alert levels
+- Warning threshold
+- Critical threshold
+- Emergency threshold
+- Response protocol
+
+Response actions
+- Investigation trigger
+- Fallback activation
+- Retraining initiation
+- Stakeholder notification
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for model validation.
+
+VALIDATION WORKFLOW
+
+Standard validation process.
+
+Development phase
+- Data splitting
+- Cross-validation
+- Metric calculation
+- Model selection
+
+Deployment phase
+- Final evaluation
+- Calibration check
+- Baseline establishment
+- Monitoring setup
+
+Production phase
+- Performance tracking
+- Drift detection
+- Alert handling
+- Maintenance triggering
+
+CROSS-AGENT INTEGRATION
+
+Validation outputs for downstream agents.
+
+Outputs to PRF Agent
+- Model performance
+- Calibration status
+- Drift alerts
+- Quality assessment
+
+Outputs to NDS Agent
+- Model confidence
+- Reliability assessment
+- Usage guidance
+- Recalibration triggers
+
+Outputs to ANL Agent
+- Validation results
+- Uncertainty estimates
+- Model comparison
+- Quality metrics
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive model validation methodology

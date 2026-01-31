@@ -1,0 +1,384 @@
+DOCUMENT HEADER
+VERSION - 1.0
+STATUS - Active
+COMPLIANCE - 6-Rule Framework Verified
+LAST UPDATED - January 2026
+CHARACTER COUNT - 14345
+
+PURPOSE
+
+This knowledge base provides the Audience Agent with comprehensive lifetime value prediction methodology including probabilistic models, machine learning approaches, and best practices for customer value forecasting.
+
+LTV PREDICTION FUNDAMENTALS
+
+Understanding customer value forecasting.
+
+LTV CONCEPT
+
+What lifetime value represents.
+
+Definition
+- Total future value
+- Expected customer contribution
+- Discounted cash flows
+- Relationship duration
+
+LTV components
+- Revenue prediction
+- Cost consideration
+- Time horizon
+- Discount factor
+
+Business importance
+- Acquisition investment guidance
+- Retention prioritization
+- Segmentation basis
+- Resource allocation
+
+PREDICTION CHALLENGES
+
+LTV prediction difficulties.
+
+Censoring
+- Incomplete observations
+- Right-censored data
+- Survival consideration
+- Bias risk
+
+Horizon selection
+- Prediction timeframe
+- Business relevance
+- Data availability
+- Accuracy tradeoff
+
+Behavior change
+- Non-stationary patterns
+- External factors
+- Competitive dynamics
+- Market evolution
+
+PROBABILISTIC MODELS
+
+Statistical LTV approaches.
+
+PARETO NBD MODEL
+
+Classic probabilistic model.
+
+Model components
+- Transaction frequency
+- Dropout process
+- Heterogeneity assumption
+- Population parameters
+
+P-NBD assumptions
+- Poisson transaction
+- Exponential dropout
+- Gamma heterogeneity
+- Independence
+
+Parameter estimation
+- Maximum likelihood
+- Individual-level inference
+- Expected transactions
+- Probability alive
+
+BG NBD MODEL
+
+Beta-geometric variant.
+
+BG-NBD differences
+- Discrete transaction
+- Geometric dropout
+- Beta heterogeneity
+- Computational efficiency
+
+Model selection
+- Contractual versus non-contractual
+- Transaction frequency
+- Data characteristics
+- Predictive accuracy
+
+GAMMA-GAMMA MODEL
+
+Monetary value extension.
+
+Monetary modeling
+- Transaction value prediction
+- Combined with frequency
+- Expected CLV calculation
+- Full LTV estimate
+
+Gamma-Gamma assumptions
+- Gamma distributed values
+- Constant over time
+- Independent of frequency
+- Heterogeneity across customers
+
+CLV CALCULATION
+
+Combining models.
+
+Expected transactions
+- From frequency model
+- Probability alive weighted
+- Time horizon bounded
+- Discounted if needed
+
+Expected value
+- Monetary value prediction
+- Transaction value average
+- Margin adjustment
+- Total CLV computation
+
+MACHINE LEARNING APPROACHES
+
+Predictive modeling for LTV.
+
+FEATURE ENGINEERING
+
+LTV prediction features.
+
+Behavioral features
+- Recency metrics
+- Frequency metrics
+- Monetary metrics
+- Engagement patterns
+
+Historical features
+- Past purchase behavior
+- Tenure duration
+- Transaction patterns
+- Trend indicators
+
+External features
+- Demographic data
+- Geographic indicators
+- Acquisition channel
+- First purchase characteristics
+
+REGRESSION MODELS
+
+Continuous value prediction.
+
+Target definition
+- Future value sum
+- Time horizon value
+- Margin-adjusted value
+- Growth-adjusted value
+
+Regression approaches
+- Linear regression baseline
+- Regularized regression
+- Tree-based regression
+- Neural network regression
+
+Model considerations
+- Skewed distribution handling
+- Zero-inflation
+- Censoring accommodation
+- Prediction interval
+
+SURVIVAL-BASED APPROACHES
+
+Churn-adjusted prediction.
+
+Survival modeling
+- Time-to-churn prediction
+- Hazard rate estimation
+- Survival probability
+- Expected tenure
+
+Survival-value integration
+- Expected transactions given survival
+- Value per transaction
+- Combined LTV estimate
+- Cohort considerations
+
+COHORT ANALYSIS
+
+Historical-based LTV estimation.
+
+COHORT DEVELOPMENT
+
+Defining customer cohorts.
+
+Cohort definition
+- Acquisition period
+- First purchase date
+- Customer vintage
+- Common starting point
+
+Cohort tracking
+- Period-by-period value
+- Cumulative value
+- Retention patterns
+- Value curves
+
+CURVE FITTING
+
+Projecting cohort behavior.
+
+Pattern identification
+- Value curve shape
+- Retention curve
+- Spending evolution
+- Maturity pattern
+
+Curve projection
+- Mathematical fitting
+- Trend extrapolation
+- Plateau estimation
+- Terminal value
+
+New cohort application
+- Early behavior observation
+- Curve matching
+- LTV projection
+- Uncertainty estimation
+
+LTV APPLICATION
+
+Using LTV predictions.
+
+SEGMENTATION APPLICATION
+
+LTV-based customer grouping.
+
+Value segments
+- High LTV tier
+- Medium LTV tier
+- Low LTV tier
+- Negative value customers
+
+Segment treatment
+- Investment differentiation
+- Service levels
+- Retention priority
+- Acquisition cost limits
+
+ACQUISITION APPLICATION
+
+LTV in customer acquisition.
+
+Acquisition cost limits
+- LTV-based CAC targets
+- Payback period
+- Breakeven analysis
+- Investment guidance
+
+Channel evaluation
+- LTV by acquisition source
+- Channel value comparison
+- Budget allocation input
+- Optimization guidance
+
+RETENTION APPLICATION
+
+LTV in customer retention.
+
+Retention investment
+- At-risk customer identification
+- Intervention prioritization
+- Treatment cost limits
+- ROI assessment
+
+Churn prevention
+- High LTV churn risk
+- Priority intervention
+- Save rate impact
+- Value preservation
+
+MODEL VALIDATION
+
+Assessing LTV prediction quality.
+
+VALIDATION APPROACHES
+
+Testing prediction accuracy.
+
+Holdout validation
+- Temporal holdout
+- Actual versus predicted
+- Cohort tracking
+- Error measurement
+
+Cross-validation
+- K-fold approach
+- Stability assessment
+- Variance estimation
+- Robust evaluation
+
+ACCURACY METRICS
+
+Measuring prediction quality.
+
+Prediction error
+- MAE calculation
+- MAPE assessment
+- RMSE evaluation
+- Bias detection
+
+Decile analysis
+- Ranking accuracy
+- Value concentration
+- Targeting effectiveness
+- Business utility
+
+AGENT APPLICATION GUIDANCE
+
+Integration patterns for LTV prediction.
+
+PREDICTION WORKFLOW
+
+Standard LTV process.
+
+Data preparation
+- Feature engineering
+- Target calculation
+- Cohort definition
+- Quality validation
+
+Model development
+- Method selection
+- Training execution
+- Validation
+- Calibration
+
+Deployment
+- Score generation
+- Segment creation
+- Integration
+- Monitoring
+
+CROSS-AGENT INTEGRATION
+
+LTV outputs for downstream agents.
+
+Outputs to AUD Agent
+- LTV predictions
+- Value segments
+- Risk scores
+- Feature importance
+
+Outputs to CHA Agent
+- Value-based targeting
+- Acquisition limits
+- Channel LTV comparison
+- Budget guidance
+
+Outputs to ANL Agent
+- Value projections
+- Cohort forecasts
+- Scenario inputs
+- Growth modeling
+
+Outputs to PRF Agent
+- Prediction accuracy
+- Value trends
+- Segment performance
+- Model monitoring
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial release with comprehensive LTV prediction methodology

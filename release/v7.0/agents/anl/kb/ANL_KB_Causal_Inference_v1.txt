@@ -1,0 +1,452 @@
+ANL KNOWLEDGE BASE - CAUSAL INFERENCE v1
+VERSION: 1.0
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+================================================================================
+SECTION 1 - CAUSAL INFERENCE FUNDAMENTALS
+================================================================================
+
+CAUSAL INFERENCE DEFINITION
+
+Causal inference determines whether a treatment (advertising, promotion, campaign) actually caused an observed outcome, rather than merely being correlated with it.
+
+CORRELATION VS CAUSATION
+
+CORRELATION
+- Two variables move together
+- Does not imply one causes the other
+- May be driven by third factor (confounder)
+- Example: Ice cream sales correlate with drowning (both caused by hot weather)
+
+CAUSATION
+- Treatment directly causes outcome change
+- Changing treatment changes outcome
+- Other factors held constant
+- Example: Medication reduces symptoms in clinical trial
+
+WHY CAUSATION MATTERS IN MEDIA
+
+CORRELATION PROBLEM IN ADVERTISING
+- Ads shown to people who would buy anyway
+- Correlation overstates true advertising effect
+- Platform-reported conversions include baseline
+
+CAUSAL QUESTIONS
+- Did this campaign actually increase sales?
+- What is the true incremental effect?
+- Would sales have happened without advertising?
+
+THE FUNDAMENTAL PROBLEM OF CAUSAL INFERENCE
+
+We cannot observe the same unit in both treatment and control states simultaneously.
+
+POTENTIAL OUTCOMES FRAMEWORK
+- Y(1): Outcome if treated
+- Y(0): Outcome if not treated
+- Individual Treatment Effect: Y(1) - Y(0)
+- Problem: We observe only one potential outcome per unit
+
+SOLUTION APPROACHES
+- Randomized experiments (gold standard)
+- Natural experiments (quasi-experimental)
+- Observational methods with assumptions
+
+================================================================================
+SECTION 2 - RANDOMIZED CONTROLLED TRIALS
+================================================================================
+
+RCT FUNDAMENTALS
+
+Randomized Controlled Trials randomly assign units to treatment and control, ensuring groups are comparable on all factors except treatment.
+
+RCT DESIGN
+1. Define population and sample
+2. Randomly assign to treatment vs control
+3. Apply treatment to treatment group only
+4. Measure outcomes in both groups
+5. Calculate Average Treatment Effect
+
+AVERAGE TREATMENT EFFECT (ATE)
+ATE = Mean(Outcome_Treatment) - Mean(Outcome_Control)
+
+RANDOMIZATION BENEFITS
+- Eliminates selection bias
+- Balances known and unknown confounders
+- Provides unbiased causal estimate
+- Enables simple analysis
+
+RCT IN ADVERTISING
+
+USER-LEVEL HOLDOUT
+- Randomly suppress ads to subset of users
+- Compare conversion rates
+- Challenge: Cross-device tracking
+
+GEO RANDOMIZATION
+- Randomly assign regions to treatment/control
+- Compare outcomes across regions
+- Better for measuring total market effect
+
+GHOST BIDDING
+- Bid on impressions but do not serve ads to control
+- Measures true incremental lift
+- Increasingly offered by platforms
+
+STATISTICAL CONSIDERATIONS
+
+SAMPLE SIZE CALCULATION
+Required sample depends on:
+- Baseline conversion rate
+- Minimum detectable effect
+- Desired statistical power (typically 80 percent)
+- Significance level (typically 5 percent)
+
+SAMPLE SIZE FORMULA (SIMPLIFIED)
+N_per_group = 16 x Variance / Effect_Size^2
+
+For proportions:
+N_per_group = 16 x p x (1 - p) / (p1 - p0)^2
+
+Where p is baseline rate, p1 - p0 is expected lift.
+
+MINIMUM DETECTABLE EFFECT (MDE)
+MDE = 2.8 x sqrt(2 x Variance / N)
+
+Smaller samples can only detect larger effects.
+
+================================================================================
+SECTION 3 - DIFFERENCE-IN-DIFFERENCES
+================================================================================
+
+DID METHODOLOGY
+
+Difference-in-Differences compares changes over time between treatment and control groups, accounting for time trends common to both.
+
+DID FORMULA
+DID_Effect = (Treatment_After - Treatment_Before) - (Control_After - Control_Before)
+
+Equivalently:
+DID_Effect = (Treatment_After - Control_After) - (Treatment_Before - Control_Before)
+
+DID ASSUMPTIONS
+
+PARALLEL TRENDS ASSUMPTION
+Treatment and control groups would have followed same trend absent treatment.
+
+CHECKING PARALLEL TRENDS
+- Plot pre-treatment trends for both groups
+- Test for statistically similar pre-treatment slopes
+- Longer pre-period provides better evidence
+
+NO ANTICIPATION
+Treatment group does not change behavior before treatment starts.
+
+NO SPILLOVER
+Treatment does not affect control group outcomes.
+
+DID EXAMPLE
+
+SCENARIO: Evaluate TV campaign impact on sales
+
+DATA STRUCTURE
+- Treatment region: TV campaign launched
+- Control region: No TV campaign
+- Before period: 4 weeks pre-launch
+- After period: 4 weeks post-launch
+
+CALCULATION
+- Treatment Before: 100 units per week
+- Treatment After: 130 units per week
+- Control Before: 80 units per week
+- Control After: 90 units per week
+
+DID = (130 - 100) - (90 - 80) = 30 - 10 = 20 units
+
+INTERPRETATION
+TV campaign caused 20 incremental units per week, after controlling for the 10 unit increase that would have happened anyway (as seen in control).
+
+DID REGRESSION SPECIFICATION
+
+For more rigorous analysis, use regression:
+
+Outcome = B0 + B1(Treat) + B2(Post) + B3(Treat x Post) + Error
+
+Where:
+- B0: Control group baseline
+- B1: Treatment group difference at baseline
+- B2: Time trend for control group
+- B3: DID ESTIMATE (causal effect)
+
+ADVANTAGES OF REGRESSION
+- Adds control variables
+- Provides standard errors
+- Handles multiple periods
+- Accommodates panel data
+
+================================================================================
+SECTION 4 - SYNTHETIC CONTROL METHOD
+================================================================================
+
+SYNTHETIC CONTROL OVERVIEW
+
+When no good control unit exists, synthetic control constructs one by weighting multiple comparison units to match the treated unit pre-treatment.
+
+SYNTHETIC CONTROL CONSTRUCTION
+1. Identify treated unit (e.g., region with campaign)
+2. Identify donor pool (regions without campaign)
+3. Select matching variables
+4. Find weights that minimize pre-treatment difference
+5. Apply weights to post-treatment outcomes
+6. Treatment effect = Treated outcome - Synthetic control outcome
+
+WEIGHT CALCULATION
+Minimize: Sum_t_pre (Y_treated_t - Sum_j (W_j x Y_j_t))^2
+
+Subject to: W_j >= 0 and Sum W_j = 1
+
+Where:
+- Y_treated is outcome for treated unit
+- Y_j is outcome for donor j
+- W_j is weight for donor j
+
+SYNTHETIC CONTROL EXAMPLE
+
+SCENARIO: California launches ad campaign
+
+DONOR POOL
+Other states: Arizona, Nevada, Oregon, Washington, etc.
+
+MATCHING VARIABLES
+- Population
+- Median income
+- Historical sales trends
+- Demographic composition
+
+SYNTHETIC CALIFORNIA
+Weighted combination: 0.4 x Arizona + 0.3 x Nevada + 0.2 x Oregon + 0.1 x Washington
+
+COMPARISON
+Compare actual California outcome to synthetic California to estimate campaign effect.
+
+ADVANTAGES OVER DID
+- Does not require parallel trends assumption
+- Creates closer match through weighting
+- Better for single treated unit
+- Transparent weight selection
+
+LIMITATIONS
+- Requires good donor pool
+- Pre-treatment fit must be tight
+- Assumes weights remain valid post-treatment
+- Cannot use units affected by spillover
+
+================================================================================
+SECTION 5 - REGRESSION DISCONTINUITY
+================================================================================
+
+REGRESSION DISCONTINUITY DESIGN
+
+RDD exploits sharp cutoffs in treatment assignment based on a running variable.
+
+RDD FUNDAMENTALS
+
+RUNNING VARIABLE
+Continuous measure that determines treatment assignment.
+Example: Customers spending above $100 get loyalty discount.
+
+CUTOFF
+Threshold where treatment assignment changes.
+Example: $100 spending threshold.
+
+IDENTIFYING ASSUMPTION
+Units just below and just above cutoff are otherwise similar.
+
+RDD FORMULA
+Treatment_Effect = Limit from above of E(Y | X) - Limit from below of E(Y | X)
+
+At the cutoff point.
+
+RDD APPLICATIONS IN MARKETING
+
+LOYALTY TIER THRESHOLDS
+Compare customers just below vs just above tier qualification.
+
+ELIGIBILITY CUTOFFS
+Compare those just qualifying vs just missing eligibility for promotion.
+
+BUDGET THRESHOLDS
+Compare outcomes at budget change points.
+
+GEO BOUNDARY EFFECTS
+Compare adjacent areas with different media exposure.
+
+RDD ESTIMATION
+
+LOCAL LINEAR REGRESSION
+Fit separate lines on each side of cutoff within bandwidth.
+
+Y = B0 + B1(X - Cutoff) + B2(Treat) + B3(X - Cutoff) x Treat + Error
+
+Where B2 is the discontinuity estimate.
+
+BANDWIDTH SELECTION
+- Narrow bandwidth: Less bias, more variance
+- Wide bandwidth: More bias, less variance
+- Optimal bandwidth balances trade-off
+
+VALIDITY CHECKS
+
+MANIPULATION TEST
+Check for bunching at cutoff (would indicate gaming).
+
+COVARIATE BALANCE
+Verify other characteristics are smooth at cutoff.
+
+PLACEBO CUTOFFS
+Test for effects at non-cutoff points (should find none).
+
+================================================================================
+SECTION 6 - PROPENSITY SCORE METHODS
+================================================================================
+
+PROPENSITY SCORE DEFINITION
+
+Propensity score is the probability of receiving treatment given observed characteristics.
+
+PROPENSITY SCORE FORMULA
+e(X) = P(Treatment = 1 | X)
+
+Estimated using logistic regression:
+log(e / (1-e)) = B0 + B1 X1 + B2 X2 + ... + Bn Xn
+
+PROPENSITY SCORE MATCHING (PSM)
+
+PSM matches treated and control units with similar propensity scores.
+
+MATCHING ALGORITHMS
+
+NEAREST NEIGHBOR
+Match each treated unit to control with closest propensity score.
+
+CALIPER MATCHING
+Match only if propensity scores within specified distance (caliper).
+
+KERNEL MATCHING
+Weight all controls by distance from treated unit.
+
+PSM PROCEDURE
+1. Estimate propensity score for all units
+2. Match treated to control units
+3. Check covariate balance after matching
+4. Estimate treatment effect on matched sample
+
+INVERSE PROBABILITY WEIGHTING (IPW)
+
+IPW weights observations by inverse of treatment probability.
+
+WEIGHTS
+- Treated units: Weight = 1 / e(X)
+- Control units: Weight = 1 / (1 - e(X))
+
+IPW ESTIMATOR
+ATE = Mean(Y x Treat / e) - Mean(Y x (1-Treat) / (1-e))
+
+ADVANTAGES
+- Uses all observations
+- More efficient than matching
+- Easier to implement
+
+LIMITATIONS
+- Sensitive to extreme propensity scores
+- Requires correct propensity model
+- Cannot adjust for unobserved confounders
+
+================================================================================
+SECTION 7 - AGENT APPLICATION GUIDANCE
+================================================================================
+
+METHOD SELECTION GUIDE
+
+USE RCT WHEN
+- Randomization is feasible
+- Budget allows for holdout
+- Need highest confidence estimate
+- Stakes are high
+
+USE DID WHEN
+- Natural treatment/control groups exist
+- Pre-treatment data available
+- Parallel trends plausible
+- Campaign has clear start date
+
+USE SYNTHETIC CONTROL WHEN
+- Single treated unit
+- Good donor pool available
+- Pre-treatment match is tight
+- RCT not feasible
+
+USE RDD WHEN
+- Treatment assigned by cutoff
+- Running variable is continuous
+- Cutoff is sharp
+- Units cannot manipulate assignment
+
+USE PROPENSITY METHODS WHEN
+- Observational data only
+- Rich covariate information
+- Selection on observables plausible
+- Quick analysis needed
+
+INTERPRETING CAUSAL ESTIMATES
+
+STATISTICAL SIGNIFICANCE
+- p-value less than 0.05 typically required
+- Confidence intervals provide range
+- Larger samples reduce uncertainty
+
+PRACTICAL SIGNIFICANCE
+- Effect size matters for business decisions
+- Small but significant effects may not justify cost
+- Calculate ROAS using incremental revenue
+
+GENERALIZABILITY
+- Results apply to study context
+- May not generalize to other markets, times, audiences
+- Consider replication across contexts
+
+COMMON PITFALLS
+
+SELECTION BIAS
+Treatment and control differ systematically.
+Mitigation: Randomization or matching methods.
+
+CONFOUNDING
+Third variable drives both treatment and outcome.
+Mitigation: Control variables, fixed effects.
+
+MEASUREMENT ERROR
+Outcomes measured with noise.
+Mitigation: Larger samples, multiple metrics.
+
+SPILLOVER
+Treatment affects control group.
+Mitigation: Buffer zones, cluster randomization.
+
+REPORTING GUIDANCE
+
+REPORT EFFECT SIZES
+Present point estimates with confidence intervals.
+
+REPORT METHODOLOGY
+Clearly state method and assumptions.
+
+REPORT LIMITATIONS
+Acknowledge threats to validity.
+
+AVOID OVERSTATING
+Causal claims require strong evidence.
+
+================================================================================
+END OF DOCUMENT
+================================================================================

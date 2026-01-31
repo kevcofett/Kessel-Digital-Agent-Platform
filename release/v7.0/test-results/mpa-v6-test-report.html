@@ -1,0 +1,2038 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MPA v6.0 Test Report</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 20px; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; }
+        .summary { display: flex; gap: 20px; margin: 20px 0; }
+        .metric { background: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center; }
+        .metric-value { font-size: 2em; font-weight: bold; }
+        .passed { color: #22c55e; }
+        .failed { color: #ef4444; }
+        .suite { border: 1px solid #e5e5e5; border-radius: 8px; margin: 20px 0; }
+        .suite-header { background: #f5f5f5; padding: 15px; border-radius: 8px 8px 0 0; }
+        .suite-content { padding: 15px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e5e5e5; }
+        th { background: #f9f9f9; }
+        .status-passed { color: #22c55e; }
+        .status-failed { color: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>MPA v6.0 Test Execution Report</h1>
+        <p>Generated: 2026-01-19 10:26:39</p>
+        <p>Environment: development</p>
+    </div>
+    
+    <div class="summary">
+        <div class="metric">
+            <div class="metric-value">239</div>
+            <div>Total Tests</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value passed">229</div>
+            <div>Passed</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value failed">10</div>
+            <div>Failed</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value">95.8%</div>
+            <div>Pass Rate</div>
+        </div>
+    </div>
+
+    <div class="suite">
+        <div class="suite-header">
+            <h3>Routing Tests</h3>
+            <p>Passed: 42/47 (89.4%)</p>
+        </div>
+        <div class="suite-content">
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Agent</th>
+                    <th>Status</th>
+                    <th>Duration</th>
+                </tr>
+
+                <tr>
+                    <td>RT-001</td>
+                    <td>Initial Planning Request</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-002</td>
+                    <td>Route to ANL</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-003</td>
+                    <td>Route to AUD</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-004</td>
+                    <td>Route to CHA</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-005</td>
+                    <td>Route to SPO</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-006</td>
+                    <td>Route to DOC</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-007</td>
+                    <td>Route to PRF</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-008</td>
+                    <td>Session State Query</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-045</td>
+                    <td>Route to CHG</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-046</td>
+                    <td>Route to CST</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-047</td>
+                    <td>Route to MKT</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-009</td>
+                    <td>Budget Projection</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-010</td>
+                    <td>Scenario Comparison</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-011</td>
+                    <td>Diminishing Returns Analysis</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-012</td>
+                    <td>RFM Segmentation</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-013</td>
+                    <td>LTV Calculation</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-014</td>
+                    <td>Behavioral Segmentation</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-015</td>
+                    <td>Channel Allocation</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-016</td>
+                    <td>Benchmark Lookup</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-017</td>
+                    <td>Optimization Objective</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-018</td>
+                    <td>Fee Stack Analysis</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-019</td>
+                    <td>NBI Calculation</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-020</td>
+                    <td>Partner Evaluation</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-021</td>
+                    <td>Full Plan Document</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-022</td>
+                    <td>Executive Summary</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-023</td>
+                    <td>Presentation Deck</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-024</td>
+                    <td>Performance Variance</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-025</td>
+                    <td>Anomaly Detection</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-026</td>
+                    <td>Learning Extraction</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-036</td>
+                    <td>Change Readiness Assessment</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-037</td>
+                    <td>Stakeholder Mapping</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-038</td>
+                    <td>Adoption Planning</td>
+                    <td>CHG</td>
+                    <td class="status-failed">FAILED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-039</td>
+                    <td>Strategic Framework Selection</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-040</td>
+                    <td>SWOT Analysis</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-041</td>
+                    <td>Initiative Prioritization</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-042</td>
+                    <td>Campaign Strategy</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-043</td>
+                    <td>Creative Brief</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-044</td>
+                    <td>Competitive Analysis</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-027</td>
+                    <td>AUD to ANL Handoff</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-028</td>
+                    <td>CHA to ANL Handoff</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-029</td>
+                    <td>Full Workflow Sequence</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-030</td>
+                    <td>SPO to CHA Handoff</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-031</td>
+                    <td>PRF to CHA Handoff</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-032</td>
+                    <td>Ambiguous Routing</td>
+                    <td>AUD</td>
+                    <td class="status-failed">FAILED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-033</td>
+                    <td>Minimal Input</td>
+                    <td>ORC</td>
+                    <td class="status-failed">FAILED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-034</td>
+                    <td>Multiple Questions</td>
+                    <td>AUD</td>
+                    <td class="status-failed">FAILED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>RT-035</td>
+                    <td>Unsupported Request</td>
+                    <td>ORC</td>
+                    <td class="status-failed">FAILED</td>
+                    <td>105ms</td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+
+    <div class="suite">
+        <div class="suite-header">
+            <h3>Capability Tests - All Agents</h3>
+            <p>Passed: 150/155 (96.8%)</p>
+        </div>
+        <div class="suite-content">
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Agent</th>
+                    <th>Status</th>
+                    <th>Duration</th>
+                </tr>
+
+                <tr>
+                    <td>ORC-001</td>
+                    <td>Route to ANL - Budget Query</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-002</td>
+                    <td>Route to AUD - Segmentation</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-003</td>
+                    <td>Route to CHA - Channel Mix</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-004</td>
+                    <td>Route to SPO - Fee Analysis</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-005</td>
+                    <td>Route to DOC - Document Generation</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-006</td>
+                    <td>Route to PRF - Performance Analysis</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-007</td>
+                    <td>Initialize New Session</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-008</td>
+                    <td>Get Current Session State</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-009</td>
+                    <td>Resume Previous Session</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-010</td>
+                    <td>Session Context Preservation</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-011</td>
+                    <td>Gate 1 - Foundation Check</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-012</td>
+                    <td>Gate 2 - Strategy Check</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-013</td>
+                    <td>Gate 3 - Execution Check</td>
+                    <td>ORC</td>
+                    <td class="status-failed">FAILED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-014</td>
+                    <td>Gate 4 - Delivery Check</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-015</td>
+                    <td>Multi-Agent Response Synthesis</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-016</td>
+                    <td>Conflicting Recommendation Resolution</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-017</td>
+                    <td>Executive Summary Generation</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-018</td>
+                    <td>Ambiguous Request Handling</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-019</td>
+                    <td>Missing Context Handling</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>ORC-020</td>
+                    <td>Out of Scope Request</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>ANL-001</td>
+                    <td>Basic Budget Projection</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>ANL-002</td>
+                    <td>Multi-Channel Projection</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>ANL-003</td>
+                    <td>Conversion Projection with Funnel</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>ANL-004</td>
+                    <td>Projection with Confidence Intervals</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>ANL-005</td>
+                    <td>Budget Scenario Comparison</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>ANL-006</td>
+                    <td>Channel Mix Scenario</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>ANL-007</td>
+                    <td>Timeline Scenario</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>ANL-008</td>
+                    <td>Sensitivity Analysis</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>ANL-009</td>
+                    <td>LTV Calculation</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>ANL-010</td>
+                    <td>Incrementality Estimate</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>ANL-011</td>
+                    <td>ROAS Projection</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>ANL-012</td>
+                    <td>Diminishing Returns Analysis</td>
+                    <td>ANL</td>
+                    <td class="status-failed">FAILED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>ANL-013</td>
+                    <td>ANL to CHA Handoff</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>ANL-014</td>
+                    <td>ANL to PRF Comparison</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>ANL-015</td>
+                    <td>Full Projection Suite</td>
+                    <td>ANL</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>AUD-001</td>
+                    <td>RFM Segmentation</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>AUD-002</td>
+                    <td>Behavioral Segmentation</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>AUD-003</td>
+                    <td>Value-Based Segmentation</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>AUD-004</td>
+                    <td>Journey Stage Segmentation</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>AUD-005</td>
+                    <td>Segment Prioritization</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>AUD-006</td>
+                    <td>LTV Calculation by Segment</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>AUD-007</td>
+                    <td>LTV:CAC Ratio Analysis</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>AUD-008</td>
+                    <td>Cohort LTV Trending</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>AUD-009</td>
+                    <td>Lookalike Recommendation</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>AUD-010</td>
+                    <td>First-Party Activation Strategy</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>AUD-011</td>
+                    <td>Exclusion Strategy</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>AUD-012</td>
+                    <td>Cross-Sell Targeting</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>AUD-013</td>
+                    <td>AUD to CHA Handoff</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>AUD-014</td>
+                    <td>AUD to ANL Handoff</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>AUD-015</td>
+                    <td>Full Audience Strategy</td>
+                    <td>AUD</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHA-001</td>
+                    <td>Budget Allocation by Objective</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHA-002</td>
+                    <td>Full-Funnel Allocation</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHA-003</td>
+                    <td>Minimum Budget Validation</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHA-004</td>
+                    <td>Reallocation Recommendation</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHA-005</td>
+                    <td>CPM Benchmark Lookup</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHA-006</td>
+                    <td>CTR Benchmark by Channel</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHA-007</td>
+                    <td>Vertical-Specific Benchmarks</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHA-008</td>
+                    <td>Performance vs Benchmark</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHA-009</td>
+                    <td>Awareness Channel Mix</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>100ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHA-010</td>
+                    <td>Performance Channel Mix</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHA-011</td>
+                    <td>Emerging Channel Assessment</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHA-012</td>
+                    <td>Frequency Management</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHA-013</td>
+                    <td>CHA to SPO Handoff</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHA-014</td>
+                    <td>CHA to ANL Handoff</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>100ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHA-015</td>
+                    <td>Full Channel Strategy</td>
+                    <td>CHA</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>SPO-001</td>
+                    <td>Basic NBI Calculation</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>SPO-002</td>
+                    <td>NBI Comparison Across Partners</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>100ms</td>
+                </tr>
+
+                <tr>
+                    <td>SPO-003</td>
+                    <td>NBI Optimization Recommendation</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>SPO-004</td>
+                    <td>Working Media Percentage</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>SPO-005</td>
+                    <td>Full Fee Stack Breakdown</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>SPO-006</td>
+                    <td>Fee Benchmark Comparison</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>SPO-007</td>
+                    <td>Hidden Fee Detection</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>SPO-008</td>
+                    <td>Fee Negotiation Targets</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>SPO-009</td>
+                    <td>DSP Evaluation</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>SPO-010</td>
+                    <td>SSP Quality Assessment</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>SPO-011</td>
+                    <td>Partner Consolidation Analysis</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>SPO-012</td>
+                    <td>New Partner Assessment</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>SPO-013</td>
+                    <td>SPO to CHA Handoff</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>SPO-014</td>
+                    <td>SPO to ANL Handoff</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>SPO-015</td>
+                    <td>Full Supply Path Optimization</td>
+                    <td>SPO</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>DOC-001</td>
+                    <td>Standard Media Plan Generation</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>DOC-002</td>
+                    <td>Executive Summary Generation</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>DOC-003</td>
+                    <td>Channel Plan Detail</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>DOC-004</td>
+                    <td>Budget Allocation Document</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>DOC-005</td>
+                    <td>Media Brief Generation</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>DOC-006</td>
+                    <td>Creative Brief Generation</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>DOC-007</td>
+                    <td>RFP Document Creation</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>DOC-008</td>
+                    <td>Campaign Brief</td>
+                    <td>DOC</td>
+                    <td class="status-failed">FAILED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>DOC-009</td>
+                    <td>PDF Export</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>DOC-010</td>
+                    <td>PowerPoint Export</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>DOC-011</td>
+                    <td>Excel Budget Export</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>DOC-012</td>
+                    <td>Multi-Format Export</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>DOC-013</td>
+                    <td>DOC from ORC Session</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>DOC-014</td>
+                    <td>DOC with ANL Projections</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>DOC-015</td>
+                    <td>Full Documentation Suite</td>
+                    <td>DOC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>100ms</td>
+                </tr>
+
+                <tr>
+                    <td>PRF-001</td>
+                    <td>KPI Variance Analysis</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>PRF-002</td>
+                    <td>Campaign Performance Review</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>PRF-003</td>
+                    <td>Channel Performance Comparison</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>PRF-004</td>
+                    <td>Benchmark Performance Assessment</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>PRF-005</td>
+                    <td>Spend Anomaly Detection</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>PRF-006</td>
+                    <td>Performance Drop Alert</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>PRF-007</td>
+                    <td>Fraud Detection Signals</td>
+                    <td>PRF</td>
+                    <td class="status-failed">FAILED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>PRF-008</td>
+                    <td>Positive Anomaly Identification</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>PRF-009</td>
+                    <td>Campaign Learning Extraction</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>PRF-010</td>
+                    <td>Creative Performance Insights</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>PRF-011</td>
+                    <td>Audience Learning Synthesis</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>PRF-012</td>
+                    <td>Optimization Playbook Generation</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>PRF-013</td>
+                    <td>PRF to CHA Handoff</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>PRF-014</td>
+                    <td>PRF to ANL Handoff</td>
+                    <td>PRF</td>
+                    <td class="status-failed">FAILED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>PRF-015</td>
+                    <td>Full Performance Intelligence Suite</td>
+                    <td>PRF</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHG-001</td>
+                    <td>ADKAR Assessment Request</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHG-002</td>
+                    <td>Readiness Score Calculation</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHG-003</td>
+                    <td>Gap Identification</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHG-004</td>
+                    <td>Department Comparison</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>100ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHG-005</td>
+                    <td>Stakeholder Power-Interest Grid</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHG-006</td>
+                    <td>Coalition Building</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHG-007</td>
+                    <td>Resistance Identification</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHG-008</td>
+                    <td>Engagement Strategy</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHG-009</td>
+                    <td>Phased Rollout Plan</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>100ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHG-010</td>
+                    <td>Training Program Design</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHG-011</td>
+                    <td>Success Metrics Definition</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHG-012</td>
+                    <td>Risk Mitigation Plan</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHG-013</td>
+                    <td>Full Change Assessment</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>100ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHG-014</td>
+                    <td>CHG to ORC Handoff</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CHG-015</td>
+                    <td>CHG to MKT Handoff</td>
+                    <td>CHG</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CST-001</td>
+                    <td>Framework Recommendation</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>CST-002</td>
+                    <td>SWOT Selection</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>CST-003</td>
+                    <td>Multiple Framework Comparison</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>CST-004</td>
+                    <td>Context-Based Selection</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CST-005</td>
+                    <td>SWOT Analysis Execution</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>CST-006</td>
+                    <td>Porter's Five Forces</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CST-007</td>
+                    <td>PESTEL Analysis</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>CST-008</td>
+                    <td>BCG Matrix Application</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CST-009</td>
+                    <td>Initiative Scoring</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CST-010</td>
+                    <td>RICE Prioritization</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>CST-011</td>
+                    <td>Value-Effort Matrix</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CST-012</td>
+                    <td>Weighted Criteria Ranking</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>CST-013</td>
+                    <td>Full Strategic Assessment</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>CST-014</td>
+                    <td>CST to ANL Handoff</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>CST-015</td>
+                    <td>CST to MKT Handoff</td>
+                    <td>CST</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>MKT-001</td>
+                    <td>Campaign Strategy Creation</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>MKT-002</td>
+                    <td>Channel Mix Recommendation</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>MKT-003</td>
+                    <td>Messaging Framework</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>MKT-004</td>
+                    <td>Measurement Framework</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>MKT-005</td>
+                    <td>Full Creative Brief</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>MKT-006</td>
+                    <td>Audience Definition</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>MKT-007</td>
+                    <td>Creative Direction</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>MKT-008</td>
+                    <td>Deliverable Specifications</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>MKT-009</td>
+                    <td>Competitive Landscape Analysis</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>MKT-010</td>
+                    <td>Messaging Gap Analysis</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>MKT-011</td>
+                    <td>Competitive Matrix</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>MKT-012</td>
+                    <td>Threat Assessment</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>MKT-013</td>
+                    <td>Full Marketing Assessment</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>MKT-014</td>
+                    <td>MKT to AUD Handoff</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>MKT-015</td>
+                    <td>MKT to CHA Handoff</td>
+                    <td>MKT</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+
+    <div class="suite">
+        <div class="suite-header">
+            <h3>Integration Tests</h3>
+            <p>Passed: 25/25 (100.0%)</p>
+        </div>
+        <div class="suite-content">
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Agent</th>
+                    <th>Status</th>
+                    <th>Duration</th>
+                </tr>
+
+                <tr>
+                    <td>INT-001</td>
+                    <td>ANL → CHA Budget to Allocation</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-002</td>
+                    <td>AUD → CHA Segment to Targeting</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-003</td>
+                    <td>CHA → SPO Channel to Supply</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-004</td>
+                    <td>PRF → CHA Performance to Reallocation</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-005</td>
+                    <td>CHG → MKT Change to Communication</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-006</td>
+                    <td>CST → ANL Framework to Projection</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-007</td>
+                    <td>Full Planning → DOC Export</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-008</td>
+                    <td>Performance Loop Integration</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-009</td>
+                    <td>Parallel ANL + AUD Analysis</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-010</td>
+                    <td>Parallel CHA + SPO Optimization</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-011</td>
+                    <td>Parallel CHG + CST Assessment</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-012</td>
+                    <td>Triple Parallel Analysis</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-013</td>
+                    <td>PRF + ANL Performance Review</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-014</td>
+                    <td>Session Context Across Agents</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-015</td>
+                    <td>Multi-Turn Context Retention</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-016</td>
+                    <td>Agent-Specific Context Enhancement</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-017</td>
+                    <td>Context Recovery After Error</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-018</td>
+                    <td>Agent Unavailable Fallback</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-019</td>
+                    <td>Flow Timeout Recovery</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-020</td>
+                    <td>Invalid Input Handling</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>103ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-021</td>
+                    <td>Partial Success Handling</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-022</td>
+                    <td>New Session Initialization</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-023</td>
+                    <td>Session Resume</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-024</td>
+                    <td>Pathway Switching</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>100ms</td>
+                </tr>
+
+                <tr>
+                    <td>INT-025</td>
+                    <td>Session Completion</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+
+    <div class="suite">
+        <div class="suite-header">
+            <h3>E2E Tests</h3>
+            <p>Passed: 12/12 (100.0%)</p>
+        </div>
+        <div class="suite-content">
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Agent</th>
+                    <th>Status</th>
+                    <th>Duration</th>
+                </tr>
+
+                <tr>
+                    <td>E2E-001</td>
+                    <td>Complete Media Plan - Standard</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>E2E-002</td>
+                    <td>Media Plan - Awareness Focus</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>E2E-003</td>
+                    <td>Media Plan - Small Budget</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>100ms</td>
+                </tr>
+
+                <tr>
+                    <td>E2E-004</td>
+                    <td>Media Plan - Enterprise Multi-Market</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>E2E-005</td>
+                    <td>Campaign Optimization - Standard</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>100ms</td>
+                </tr>
+
+                <tr>
+                    <td>E2E-006</td>
+                    <td>Emergency Performance Response</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>E2E-007</td>
+                    <td>Mid-Campaign Scaling</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>E2E-008</td>
+                    <td>Competitive Response</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>E2E-009</td>
+                    <td>Full Media Audit</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>104ms</td>
+                </tr>
+
+                <tr>
+                    <td>E2E-010</td>
+                    <td>Fee Transparency Audit</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>102ms</td>
+                </tr>
+
+                <tr>
+                    <td>E2E-011</td>
+                    <td>Measurement Maturity Audit</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>105ms</td>
+                </tr>
+
+                <tr>
+                    <td>E2E-012</td>
+                    <td>Annual Strategic Review</td>
+                    <td>ORC</td>
+                    <td class="status-passed">PASSED</td>
+                    <td>101ms</td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+{
+  "version": "1.0.0",
+  "description": "Handoff contracts for inter-agent communication",
+  "handoff_contracts": {
+    "PRF_to_ANL": {
+      "contract_id": "PRF_ANL_001",
+      "name": "Performance to Projection Update",
+      "description": "PRF provides actual performance data for ANL to update forecasts",
+      "trigger_patterns": [
+        "update projections based on",
+        "revise forecast with actuals",
+        "compare projections to actual",
+        "adjust forecast"
+      ],
+      "prf_output_schema": {
+        "actual_performance": {
+          "period": "date_range",
+          "metrics": {
+            "impressions": "number",
+            "reach": "number",
+            "frequency": "number",
+            "clicks": "number",
+            "conversions": "number",
+            "spend": "number"
+          },
+          "channel_breakdown": "object",
+          "variance_from_projection": "object"
+        },
+        "performance_insights": {
+          "trends": "array",
+          "anomalies": "array",
+          "contributing_factors": "array"
+        },
+        "handoff_context": {
+          "original_projection_id": "string",
+          "update_reason": "string",
+          "confidence_adjustment": "number"
+        }
+      },
+      "anl_input_requirements": {
+        "required": [
+          "actual_performance",
+          "handoff_context"
+        ],
+        "optional": [
+          "performance_insights"
+        ],
+        "mapping": {
+          "actual_performance.metrics": "anl_input.actuals",
+          "actual_performance.variance_from_projection": "anl_input.variance_data",
+          "handoff_context.original_projection_id": "anl_input.projection_to_update"
+        }
+      },
+      "anl_expected_output": {
+        "updated_projection": {
+          "projection_id": "string",
+          "updated_metrics": "object",
+          "confidence_intervals": "object",
+          "adjustment_notes": "string"
+        },
+        "variance_analysis": {
+          "actual_vs_original": "object",
+          "updated_vs_original": "object",
+          "key_drivers": "array"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "templateName": "kickStartTemplate",
+    "templateVersion": "1.0.0",
+    "source": "CopilotStudio",
+    "quality": "PrivatePreview"
+  },
+  "content": {
+    "displayName": "MPA v6 Document Agent",
+    "description": "Generates media planning documents, briefs, reports, and presentation materials.",
+    "instructions": "You are the Document Agent (DOC). You specialize in generating professional media planning documents.\n\nCAPABILITIES\n\n1. GENERATE_DOCUMENT - Create comprehensive media planning documents\n   Flow: MPA v6 GenerateDocument\n\nDocument types: MEDIA_BRIEF, EXECUTIVE_SUMMARY, CHANNEL_PLAN, BUDGET_RATIONALE, PERFORMANCE_REPORT, OPTIMIZATION_REPORT.\n\nConfirm requirements before generating. Use professional, clear language.",
+    "conversationStarters": []
+  },
+  "customizations": {
+    "schema": {
+      "type": "object"
+    }
+  },
+  "spec": {
+    "connectors": [],
+    "knowledgeSources": {
+      "sharepointSites": [
+        {
+          "name": "MediaPlanningKB",
+          "description": "Knowledge source for DOC",
+          "site": "https://kesseldigitalcom.sharepoint.com/sites/AragornAI2/MediaPlanningKB"
+        }
+      ]
+    }
+  }
+}

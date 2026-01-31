@@ -1,0 +1,408 @@
+VISUAL DECISION TREES FRAMEWORK
+
+PURPOSE
+
+This document defines the visual decision tree system for the Kessel Digital Agent Platform. It covers interactive workflow visualization, decision path rendering, branching logic display, and user navigation through complex planning workflows.
+
+DECISION TREE ARCHITECTURE
+
+CORE CONCEPTS
+
+Decision Tree Structure
+- Root node represents initial planning state
+- Branch nodes represent decision points
+- Leaf nodes represent terminal states or outcomes
+- Edges represent conditions or choices
+
+Node Types
+- Start node marks workflow entry point
+- Decision node presents user with choices
+- Action node executes platform capability
+- Gate node validates prerequisites
+- End node marks workflow completion
+- Merge node combines parallel paths
+
+Edge Types
+- Conditional edge based on user input
+- Default edge for fallback paths
+- Validation edge based on gate results
+- Loop edge for iterative processes
+
+VISUAL REPRESENTATION
+
+Node Rendering
+- Rectangular nodes for actions
+- Diamond nodes for decisions
+- Rounded rectangles for start and end
+- Hexagons for validation gates
+- Circles for merge points
+
+Color Coding
+- Blue for current active node
+- Green for completed nodes
+- Gray for future pending nodes
+- Red for blocked or failed nodes
+- Yellow for nodes requiring attention
+- Purple for optional bypass nodes
+
+Connection Lines
+- Solid lines for primary paths
+- Dashed lines for optional paths
+- Dotted lines for conditional bypasses
+- Animated flow for active progression
+
+MPA WORKFLOW TREES
+
+MEDIA BRIEF WORKFLOW
+
+Stage 1 Objective Setting
+- Root: Campaign initiation
+- Decision: Objective type selection
+- Branches: Awareness, Consideration, Conversion, Retention
+- Action: Objective validation
+- Gate: Budget threshold check
+
+Stage 2 Audience Definition
+- Entry from Stage 1 completion
+- Decision: Audience approach
+- Branches: Existing segments, New build, Lookalike
+- Action: Segment configuration
+- Parallel: Primary and secondary audiences
+
+Stage 3 Channel Strategy
+- Entry from Stage 2 completion
+- Decision: Channel mix approach
+- Branches: Recommended mix, Custom allocation
+- Action: Channel selection interface
+- Gate: Budget allocation validation
+
+Stage 4 Budget Allocation
+- Entry from Stage 3 completion
+- Decision: Optimization goal
+- Branches: Reach maximize, Efficiency maximize, Balanced
+- Action: Budget optimizer execution
+- Loop: Scenario iteration until satisfactory
+
+Stage 5 Performance Framework
+- Entry from Stage 4 completion
+- Decision: KPI hierarchy
+- Branches: Standard metrics, Custom metrics
+- Action: KPI configuration
+- Gate: Measurement feasibility check
+
+PATHWAY DECISION TREES
+
+EXPRESS Pathway Tree
+- Root: Express pathway selection
+- Decision: Has prior brief template
+- Yes Branch: Template retrieval
+- No Branch: Quick builder
+- Action: Streamlined data collection
+- Gate: Minimum viable brief check
+- End: Brief generation
+
+STANDARD Pathway Tree
+- Root: Standard pathway selection
+- Decision: Campaign complexity
+- Simple Branch: Abbreviated workflow
+- Complex Branch: Full workflow
+- Action: Stage-by-stage progression
+- Gates: Each stage completion
+- End: Comprehensive brief
+
+GUIDED Pathway Tree
+- Root: Guided pathway selection
+- Decision: User experience level
+- Novice Branch: Full explanation mode
+- Intermediate Branch: Hints only
+- Action: Interactive tutorial overlay
+- Parallel: Learning track alongside building
+- End: Brief with education completion
+
+AUDIT Pathway Tree
+- Root: Audit pathway selection
+- Decision: Audit scope
+- Full Branch: Complete review
+- Focused Branch: Specific area review
+- Action: Comparison against benchmarks
+- Output: Audit findings and recommendations
+- End: Improvement roadmap
+
+CONSULTING WORKFLOW TREES
+
+FRAMEWORK SELECTION TREE
+
+Framework Category Decision
+- Root: Consulting engagement start
+- Decision: Primary challenge type
+- Branches: Strategic, Operational, Financial, Customer, Organizational
+
+Strategic Branch
+- Decision: Strategic focus
+- Branches: Market entry, Competitive response, Growth planning
+- Action: Framework recommendation
+- Options: Porter, SWOT, PESTEL, Ansoff
+
+Financial Branch
+- Decision: Financial analysis type
+- Branches: Investment decision, Cost analysis, Valuation
+- Action: Framework and model selection
+- Options: NPV, TCO, Monte Carlo, Sensitivity
+
+CHANGE MANAGEMENT TREE
+
+Change Readiness Path
+- Root: Change initiative start
+- Decision: Change magnitude
+- Branches: Incremental, Transformational
+- Action: Readiness assessment
+- Gate: Stakeholder mapping complete
+
+Implementation Path
+- Entry from Readiness
+- Decision: Implementation approach
+- Branches: Big bang, Phased rollout
+- Action: Rollout planning
+- Parallel: Training and communication tracks
+
+Sustainment Path
+- Entry from Implementation
+- Decision: Adoption status
+- Branches: On track, At risk, Critical
+- Action: Intervention planning
+- Loop: Monitor and adjust cycle
+
+INTERACTIVE FEATURES
+
+NODE INTERACTIONS
+
+Click Behaviors
+- Single click selects and highlights
+- Double click expands details panel
+- Right click shows context menu
+- Long press on mobile shows tooltip
+
+Drag Behaviors
+- Drag viewport to pan tree view
+- Drag nodes in edit mode to reposition
+- Drag edges to reconnect paths
+- Pinch to zoom on touch devices
+
+Keyboard Navigation
+- Arrow keys move between nodes
+- Enter key activates selected node
+- Escape key deselects or closes panels
+- Tab key cycles through interactive elements
+
+DETAIL PANELS
+
+Node Detail Panel
+- Node identifier and type
+- Description and purpose
+- Prerequisites and dependencies
+- Available actions
+- Completion status
+- Time estimates
+
+Edge Detail Panel
+- Condition description
+- Probability or frequency
+- User guidance for choice
+- Historical selection data
+
+Progress Panel
+- Current position indicator
+- Completed path history
+- Remaining path preview
+- Time and effort estimates
+
+ZOOM AND NAVIGATION
+
+Zoom Levels
+- Overview shows entire tree
+- Standard shows 3-4 levels
+- Detail shows single path
+- Focus shows single node with context
+
+Navigation Controls
+- Zoom in and out buttons
+- Fit to screen button
+- Center on current node
+- Jump to specific stage
+- Breadcrumb trail navigation
+
+RENDERING SPECIFICATIONS
+
+LAYOUT ALGORITHMS
+
+Tree Layout
+- Top-down orientation default
+- Left-right orientation option
+- Radial layout for complex trees
+- Force-directed for flexible arrangement
+
+Spacing Rules
+- Minimum horizontal gap 100 pixels
+- Minimum vertical gap 60 pixels
+- Edge label positioning centered
+- Node size based on content
+
+RESPONSIVE DESIGN
+
+Desktop Rendering
+- Full tree visible with scroll
+- Multiple panels simultaneously
+- Hover states for previews
+- Right-click context menus
+
+Tablet Rendering
+- Collapsible side panels
+- Touch-friendly node sizes
+- Swipe to navigate between nodes
+- Pinch to zoom tree view
+
+Mobile Rendering
+- Single node focus mode
+- Swipe to progress through path
+- Bottom sheet for details
+- Simplified visualization
+
+ACCESSIBILITY
+
+Screen Reader Support
+- ARIA labels on all nodes
+- Keyboard navigation complete
+- Focus indicators visible
+- Announcements for state changes
+
+Color Accessibility
+- Contrast ratios meet WCAG AA
+- Pattern differentiation available
+- Color blind friendly palette option
+- High contrast mode available
+
+DATA INTEGRATION
+
+STATE MANAGEMENT
+
+Tree State
+- Current node position
+- Visited node history
+- Selected path choices
+- Validation gate results
+- User preferences
+
+Session Persistence
+- State saved to Dataverse
+- Resume from last position
+- Multiple tree instances
+- Cross-device synchronization
+
+Undo and Redo
+- Action history maintained
+- Step back through choices
+- Branch exploration without commitment
+- Clear path to restart
+
+AGENT INTEGRATION
+
+Node to Agent Mapping
+- Each action node maps to agent capability
+- Decision nodes may invoke routing logic
+- Gate nodes call validation prompts
+- Results update tree state
+
+Data Flow
+- User inputs captured at nodes
+- Agent outputs displayed in panels
+- Cumulative data passed along path
+- Final state aggregated at completion
+
+EXPORT AND SHARING
+
+Export Formats
+- PNG image of current view
+- SVG vector for editing
+- PDF document with annotations
+- JSON data structure
+
+Sharing Options
+- Share current position link
+- Share completed path summary
+- Embed in documentation
+- Print-friendly version
+
+IMPLEMENTATION SPECIFICATIONS
+
+FRONTEND FRAMEWORK
+
+React Components
+- TreeContainer main wrapper
+- TreeNode individual node component
+- TreeEdge connection component
+- ControlPanel navigation controls
+- DetailPanel information display
+
+Libraries Used
+- D3.js for layout calculations
+- React Flow for interactive canvas
+- Framer Motion for animations
+- React Spring for transitions
+
+BACKEND SERVICES
+
+Tree Definition API
+- GET trees for available workflows
+- GET tree by id for specific tree
+- POST tree for custom trees
+- PUT tree by id for updates
+
+Tree State API
+- GET state by session for current position
+- POST state for new session
+- PUT state by session for updates
+- DELETE state by session for reset
+
+PERFORMANCE REQUIREMENTS
+
+Render Performance
+- Initial render under 500 milliseconds
+- Node interaction under 100 milliseconds
+- Zoom and pan at 60 frames per second
+- Large trees up to 500 nodes supported
+
+Data Performance
+- State sync under 200 milliseconds
+- Tree definition cache 1 hour
+- Lazy load subtrees on expansion
+- Prefetch likely next nodes
+
+CONFIGURATION OPTIONS
+
+TREE CUSTOMIZATION
+
+Visual Customization
+- Theme selection light or dark
+- Color palette customization
+- Node shape preferences
+- Animation speed control
+
+Behavior Customization
+- Auto-advance on completion
+- Confirmation before navigation
+- Bypass allowed for experts
+- Strict mode for compliance
+
+USER PREFERENCES
+
+Display Preferences
+- Default zoom level
+- Panel positions
+- Notification settings
+- Accessibility options
+
+Workflow Preferences
+- Preferred pathway default
+- Stage completion notifications
+- Progress reminder frequency
+- Summary email preferences

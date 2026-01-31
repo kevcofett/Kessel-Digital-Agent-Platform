@@ -1,0 +1,332 @@
+DOCUMENT: ANL_KB_Incrementality_Methods_v1.txt
+CATEGORY: Analytics Knowledge Base
+TOPICS: incrementality, lift testing, holdout design, geo-experiments, causal inference
+VERSION: 1.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+RELATED: ANL_KB_Analytics_Engine_v1, ANL_KB_Statistical_Tests_v1, PRF_KB_Attribution_Models_v1
+
+ANL INCREMENTALITY METHODS v1
+
+PURPOSE
+
+This document provides methodology for measuring true incremental impact of media investments. Reference when users need to design lift tests, interpret incrementality results, or understand causal measurement approaches.
+
+INCREMENTALITY FUNDAMENTALS
+
+DEFINITION
+
+Incrementality measures the causal impact of media exposure on business outcomes. It answers the question: what would have happened if we had not run this media? The difference between what actually happened and what would have happened without media is the incremental lift.
+
+Key terms:
+- Baseline: Expected outcome without media intervention
+- Lift: Incremental change attributable to media
+- Counterfactual: What would have happened absent the intervention
+- Treatment group: Users exposed to media
+- Control group: Users not exposed to media
+
+WHY INCREMENTALITY MATTERS
+
+Attribution tells you who converted after seeing an ad. Incrementality tells you who converted because of the ad. This distinction is critical for accurate ROI measurement and budget allocation.
+
+Problems with attribution-only measurement:
+- Over-credits channels that intercept existing intent
+- Under-credits channels that build awareness
+- Cannot distinguish correlation from causation
+- Vulnerable to cookie loss and tracking limitations
+- Double-counts users across channels
+
+Incrementality addresses these by measuring actual lift over baseline behavior.
+
+MEASUREMENT APPROACHES
+
+RANDOMIZED CONTROLLED TESTS (RCT)
+
+RCTs are the gold standard for incrementality measurement. They randomly assign users to test and control groups, ensuring the only systematic difference is media exposure.
+
+User-Level Holdouts:
+- Randomly exclude percentage of target audience from exposure
+- Compare conversion rates between exposed and holdout
+- Requires sufficient sample size for statistical significance
+
+Sample size requirements by expected lift:
+- 5% expected lift: minimum 15,000 conversions per cell
+- 10% expected lift: minimum 4,000 conversions per cell
+- 20% expected lift: minimum 1,000 conversions per cell
+- 50% expected lift: minimum 200 conversions per cell
+
+Ghost Bids:
+- Bid in auction but do not serve ad if won
+- User remains in control group
+- Measures true incremental value of impression
+- Supported by some DSPs and platforms
+
+PSA (Public Service Announcement) Tests:
+- Show unrelated PSA to control group
+- Ensures both groups have equal ad exposure experience
+- Controls for ad-awareness effect versus specific creative
+- Useful for video and high-attention formats
+
+Duration guidelines by channel:
+- Paid Search: 2-4 weeks minimum
+- Paid Social: 3-6 weeks minimum
+- Display/Programmatic: 4-8 weeks minimum
+- CTV/Video: 6-12 weeks minimum
+- Upper-funnel awareness: 8-16 weeks minimum
+
+GEO-EXPERIMENTS
+
+Geographic testing compares performance across matched markets where media runs versus markets where it does not run.
+
+Market Matching Methodology:
+- Identify markets with similar characteristics
+- Match on: population, demographics, historical sales, seasonality
+- Randomly assign matched pairs to test and control
+- Run media only in test markets
+- Compare sales lift across market pairs
+
+Minimum market requirements:
+- At least 10 markets in test group
+- At least 10 markets in control group
+- Markets should be comparable in size
+- No spillover between adjacent markets
+
+Synthetic Control Methods:
+- Create weighted combination of control markets
+- Weights chosen to match test market pre-period
+- Useful when perfect matches unavailable
+- Requires stable pre-period for calibration
+
+Seasonality considerations:
+- Account for market-specific seasonal patterns
+- Run tests long enough to capture cycle
+- Avoid tests spanning major holidays unless testing holiday specifically
+- Include pre-period for baseline calibration
+
+MATCHED MARKET TESTING
+
+When randomization is not possible, matching creates comparison groups based on observable characteristics.
+
+Propensity Score Matching:
+- Calculate probability of treatment based on characteristics
+- Match treated and untreated units with similar scores
+- Compare outcomes between matched pairs
+- Assumption: no unmeasured confounders
+
+Difference-in-Differences:
+- Compare pre/post change in test group
+- Compare pre/post change in control group
+- Difference between differences is estimated lift
+- Controls for time trends affecting both groups
+
+When to use vs RCT:
+- RCT preferred when randomization possible
+- Matching useful for observational data
+- Matching useful when RCT impractical at scale
+- Matching requires strong match quality validation
+
+CONVERSION LIFT STUDIES
+
+Major platforms offer built-in lift testing capabilities.
+
+Meta Conversion Lift:
+- Randomizes at user level within Meta ecosystem
+- Measures incremental conversions from Meta ads
+- Requires Meta pixel or CAPI for measurement
+- Minimum 30-day duration recommended
+- Minimum 500 conversions in control group
+
+Google Conversion Lift:
+- Available for YouTube, Display, and Search
+- Uses ghost bids or holdout methodology
+- Integrates with Google Analytics
+- Requires conversion tracking setup
+- 4-week minimum duration
+
+TikTok Conversion Lift:
+- Measures incremental impact of TikTok campaigns
+- User-level randomization
+- Requires TikTok pixel integration
+- Growing capabilities as platform matures
+
+Limitations of platform studies:
+- Measure only that platforms contribution
+- Cannot compare across platforms
+- May have biases toward positive results
+- Limited control over methodology
+- Results may not translate to other measurement
+
+Interpretation guidelines:
+- Consider confidence intervals, not just point estimates
+- Null result does not prove zero lift
+- Look at lift by audience segment
+- Consider impact on different conversion types
+- Compare to historical lift study results
+
+INCREMENTALITY BY CHANNEL
+
+PAID SEARCH
+
+Brand Search:
+- Often low incrementality (users searching brand anyway)
+- Test by holding out matched geos
+- Typical incremental lift: 10-30% of attributed
+- Higher incrementality in conquest scenarios
+
+Non-Brand Search:
+- Generally higher incrementality than brand
+- Category and competitor terms show strongest lift
+- Test via geo holdouts or ghost bids
+- Typical incremental lift: 40-70% of attributed
+
+PAID SOCIAL
+
+Prospecting:
+- Highest incrementality potential in social
+- Reaching users not actively in market
+- Test via holdout groups
+- Typical incremental lift: 50-80% of attributed
+
+Retargeting:
+- Lower incrementality, users already considering
+- Risk of over-attribution from existing intent
+- Test via holdout to quantify true lift
+- Typical incremental lift: 20-40% of attributed
+
+DISPLAY AND PROGRAMMATIC
+
+Prospecting Display:
+- Moderate incrementality, depends on targeting
+- Contextual often shows better incrementality than audience
+- Test via holdouts or matched markets
+- Typical incremental lift: 30-50% of attributed
+
+Retargeting Display:
+- Lowest incrementality in programmatic
+- High risk of claiming organic conversions
+- Essential to measure via holdout
+- Typical incremental lift: 10-30% of attributed
+
+CTV AND VIDEO
+
+Upper-Funnel Video:
+- Hardest to measure but often highest lift
+- Requires longer measurement windows
+- Test via geo experiments
+- Lift may appear in search and direct traffic
+
+Mid-Funnel Video:
+- Moderate measurement difficulty
+- Can use platform lift studies
+- Look for assisted conversion signals
+- Typical measurement window: 14-30 days
+
+RETAIL MEDIA
+
+On-Platform:
+- Generally measurable with closed-loop data
+- High incrementality for new-to-brand
+- Lower incrementality for brand loyalists
+- Test via holdouts within platform
+
+Off-Platform:
+- Harder to measure, similar to display
+- Use matched market or holdout approaches
+- Consider full purchase data when available
+
+INTERPRETING RESULTS
+
+Statistical Significance:
+- 95% confidence minimum for actionable results
+- Look at confidence interval width
+- Narrow interval more trustworthy than wide
+- p-value less than 0.05 standard threshold
+
+Incremental CPA Calculation:
+Incremental CPA = Total Spend / Incremental Conversions
+Where: Incremental Conversions = Total Conversions x (Lift Percent / (1 + Lift Percent))
+
+Example: 1,000 conversions, 25% lift
+Incremental conversions = 1,000 x (0.25 / 1.25) = 200
+If spend = 50,000 dollars
+Incremental CPA = 50,000 / 200 = 250 dollars
+
+Incremental ROAS Calculation:
+Incremental ROAS = (Incremental Revenue - Total Spend) / Total Spend
+Where: Incremental Revenue = Total Revenue x (Lift Percent / (1 + Lift Percent))
+
+Decision Frameworks Based on Results:
+- Positive lift with tight CI: Scale investment
+- Positive lift with wide CI: Continue testing, increase sample
+- Zero lift with tight CI: Reduce investment, reallocate
+- Zero lift with wide CI: Insufficient data, extend test
+- Negative lift: Stop investment, investigate issues
+
+COMMON PITFALLS
+
+Contamination:
+- Control group exposed to media through spillover
+- Adjacent geo markets with media exposure
+- Shared devices between test and control users
+- Mitigation: buffer zones, device graph exclusions
+
+Sample Size Issues:
+- Underpowered tests produce inconclusive results
+- Calculate required sample before starting
+- Extend tests if conversions below minimum
+- Consider pooling data across time periods
+
+Duration Problems:
+- Too short: misses lagged conversions
+- Too long: external factors interfere
+- Match duration to typical purchase cycle
+- Account for consideration period by category
+
+Over-Attribution Risk:
+- Baseline set too low inflates lift
+- Pre-period must be representative
+- Seasonality can distort baseline
+- Validate baseline against historical
+
+Under-Attribution Risk:
+- Measurement window too short
+- Upper-funnel lift appears in other channels
+- Brand search lift not credited to awareness
+- Consider full-funnel impact
+
+IMPLEMENTATION ROADMAP
+
+PHASE 1: FOUNDATION
+- Establish conversion tracking across channels
+- Document current attribution methodology
+- Identify highest-spend channels for testing
+- Calculate required sample sizes
+
+PHASE 2: INITIAL TESTING
+- Run first lift test on top spend channel
+- Use platform-provided tools where available
+- Target minimum viable sample size
+- Document methodology and results
+
+PHASE 3: EXPANSION
+- Add geo-testing for unmeasurable channels
+- Develop consistent testing calendar
+- Compare lift across channels
+- Build incrementality benchmarks
+
+PHASE 4: OPTIMIZATION
+- Incorporate incrementality into planning
+- Adjust budgets based on incremental ROAS
+- Create always-on testing program
+- Update models quarterly with new data
+
+CROSS-REFERENCES
+
+For statistical testing methods: See ANL_KB_Statistical_Tests_v1
+For analytics calculations: See ANL_KB_Analytics_Engine_v1
+For performance analysis: See PRF_KB_Optimization_Triggers_v1
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial creation covering RCT, geo-experiments, platform lift studies, and channel-specific guidance

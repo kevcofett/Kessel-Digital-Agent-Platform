@@ -1,0 +1,405 @@
+PRF KNOWLEDGE BASE - OPTIMIZATION TRIGGERS v1
+VERSION: 1.0
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+================================================================================
+SECTION 1 - OPTIMIZATION TRIGGER FRAMEWORK
+================================================================================
+
+TRIGGER PHILOSOPHY
+
+Optimization triggers are predefined thresholds that signal when campaign performance requires attention. Effective triggers balance sensitivity (catching real issues) with specificity (avoiding false alarms).
+
+TRIGGER CATEGORIES
+
+PACING TRIGGERS
+Monitor spend trajectory against plan to ensure budget utilization aligns with flight dates and objectives.
+
+EFFICIENCY TRIGGERS
+Monitor cost metrics (CPM, CPC, CPA, CAC) against targets to identify efficiency degradation requiring intervention.
+
+ENGAGEMENT TRIGGERS
+Monitor user interaction metrics (CTR, CVR, VCR) to identify creative fatigue, audience mismatch, or conversion path issues.
+
+DELIVERY TRIGGERS
+Monitor impression, reach, and frequency delivery against plan to ensure campaign achieves intended scale and exposure.
+
+QUALITY TRIGGERS
+Monitor viewability, brand safety, and fraud metrics to ensure media quality meets standards.
+
+TRIGGER SEVERITY LEVELS
+
+GREEN - ON TRACK
+- Metric within 10 percent of target
+- No action required
+- Continue monitoring at standard cadence
+
+YELLOW - WARNING
+- Metric 10-25 percent from target
+- Increased monitoring recommended
+- Prepare optimization options
+- Review within 48 hours
+
+ORANGE - ACTION REQUIRED
+- Metric 25-50 percent from target
+- Optimization action needed
+- Implement changes within 24 hours
+- Escalate if trend continues
+
+RED - CRITICAL
+- Metric greater than 50 percent from target
+- Immediate action required
+- Escalate to stakeholders
+- Consider pause if severe
+
+================================================================================
+SECTION 2 - PACING TRIGGERS
+================================================================================
+
+SPEND PACING THRESHOLDS
+
+UNDER-PACING TRIGGERS
+
+PACING INDEX 90-100 PERCENT (GREEN)
+- Status: On track
+- Action: None required
+- Monitoring: Standard cadence
+
+PACING INDEX 80-90 PERCENT (YELLOW)
+- Status: Slightly behind
+- Potential causes: Narrow targeting, conservative bids, low inventory
+- Recommended actions: Review bid levels, Expand audience, Check budget caps
+- Timeline: Review within 48 hours
+
+PACING INDEX 60-80 PERCENT (ORANGE)
+- Status: Significantly behind
+- Potential causes: Targeting too restrictive, Competitive pressure, Platform issues
+- Recommended actions: Broaden targeting, Increase bids 15-25 percent, Add placements
+- Timeline: Action within 24 hours
+
+PACING INDEX BELOW 60 PERCENT (RED)
+- Status: Critical under-delivery
+- Potential causes: Major targeting issue, Budget allocation error, Platform problem
+- Recommended actions: Immediately review setup, Consider audience expansion, Escalate
+- Timeline: Same day action required
+
+OVER-PACING TRIGGERS
+
+PACING INDEX 100-110 PERCENT (GREEN)
+- Status: Slightly ahead
+- Action: Monitor for acceleration
+- Monitoring: Increased frequency
+
+PACING INDEX 110-125 PERCENT (YELLOW)
+- Status: Running hot
+- Potential causes: Broad targeting, High bids, Low competition
+- Recommended actions: Review frequency caps, Tighten targeting, Lower bids 10-15 percent
+- Timeline: Review within 48 hours
+
+PACING INDEX 125-150 PERCENT (ORANGE)
+- Status: Significantly ahead
+- Potential causes: Budget allocation issue, Targeting misconfiguration
+- Recommended actions: Add frequency caps, Narrow audience, Reduce daily budgets
+- Timeline: Action within 24 hours
+
+PACING INDEX ABOVE 150 PERCENT (RED)
+- Status: Critical over-delivery
+- Potential causes: Major configuration issue, Bot traffic, Platform error
+- Recommended actions: Pause and assess, Review for fraud, Check platform status
+- Timeline: Immediate action
+
+PACING CALCULATION
+
+Pacing_Index = (Actual_Spend / Expected_Spend) x 100
+Expected_Spend = Total_Budget x (Days_Elapsed / Total_Days)
+
+For campaigns with flighting:
+Expected_Spend = Sum of (Flight_Budget x Flight_Pacing) for active flights
+
+================================================================================
+SECTION 3 - EFFICIENCY TRIGGERS
+================================================================================
+
+CPM VARIANCE TRIGGERS
+
+CPM VARIANCE 0-15 PERCENT (GREEN)
+- Status: Within normal range
+- Action: Continue monitoring
+- Notes: CPM naturally fluctuates with inventory supply
+
+CPM VARIANCE 15-25 PERCENT ABOVE TARGET (YELLOW)
+- Status: Elevated costs
+- Potential causes: Competitive pressure, Narrow targeting, Premium inventory mix
+- Recommended actions: Review placement targeting, Expand audience, Check bid strategy
+- Timeline: Assess at next optimization cycle
+
+CPM VARIANCE GREATER THAN 25 PERCENT ABOVE TARGET (ORANGE)
+- Status: Significant cost increase
+- Potential causes: Major competitive entry, Algorithm changes, Inventory scarcity
+- Recommended actions: Reallocate to efficient channels, Adjust targeting, Review creative
+- Timeline: Action within 24-48 hours
+
+CPA VARIANCE TRIGGERS
+
+CPA VARIANCE 0-10 PERCENT (GREEN)
+- Status: On target
+- Action: Maintain current approach
+- Notes: Minor variance is expected
+
+CPA VARIANCE 10-20 PERCENT ABOVE TARGET (YELLOW)
+- Status: Elevated acquisition cost
+- Potential causes: Conversion rate decline, CPM increase, Attribution changes
+- Recommended actions: Review full funnel, Check landing page, Assess audience quality
+- Timeline: Review within 48 hours
+
+CPA VARIANCE 20-35 PERCENT ABOVE TARGET (ORANGE)
+- Status: Significant efficiency loss
+- Potential causes: Audience fatigue, Creative burnout, Competitive pressure
+- Recommended actions: Refresh creative, Reallocate budget, Test new audiences
+- Timeline: Action within 24 hours
+
+CPA VARIANCE GREATER THAN 35 PERCENT ABOVE TARGET (RED)
+- Status: Critical efficiency issue
+- Potential causes: Major funnel break, Measurement issue, Campaign misconfiguration
+- Recommended actions: Pause underperforming elements, Full diagnostic, Escalate
+- Timeline: Same day action
+
+ROAS VARIANCE TRIGGERS
+
+ROAS VARIANCE 0-15 PERCENT BELOW TARGET (YELLOW)
+- Status: Slightly below efficiency target
+- Recommended actions: Review attribution, Check AOV trends, Assess product mix
+
+ROAS VARIANCE 15-30 PERCENT BELOW TARGET (ORANGE)
+- Status: Significant efficiency decline
+- Recommended actions: Reallocate to high-ROAS channels, Review audience, Check pricing
+
+ROAS VARIANCE GREATER THAN 30 PERCENT BELOW TARGET (RED)
+- Status: Critical return issue
+- Recommended actions: Pause low performers, Full diagnostic, Stakeholder escalation
+
+================================================================================
+SECTION 4 - ENGAGEMENT TRIGGERS
+================================================================================
+
+CTR VARIANCE TRIGGERS
+
+CTR VARIANCE 0-20 PERCENT (GREEN)
+- Status: Normal performance range
+- Action: Continue monitoring
+- Notes: CTR varies by placement and creative
+
+CTR VARIANCE 20-35 PERCENT BELOW BENCHMARK (YELLOW)
+- Status: Below expected engagement
+- Potential causes: Creative fatigue, Audience mismatch, Poor placement quality
+- Recommended actions: Refresh creative, Review audience targeting, Check viewability
+- Timeline: Review within 48-72 hours
+
+CTR VARIANCE GREATER THAN 35 PERCENT BELOW BENCHMARK (ORANGE)
+- Status: Significant engagement decline
+- Potential causes: Severe creative fatigue, Wrong audience, Brand perception issue
+- Recommended actions: New creative test, Audience refresh, Placement optimization
+- Timeline: Action within 24-48 hours
+
+CREATIVE FATIGUE INDICATORS
+
+DECLINING CTR PATTERN
+- Day 1-3: Normal variance expected during learning
+- Day 4-7: CTR decline greater than 10 percent signals early fatigue
+- Day 8-14: CTR decline greater than 20 percent signals fatigue
+- Day 15 plus: CTR decline greater than 30 percent requires immediate refresh
+
+FREQUENCY AND FATIGUE
+- Frequency 1-3: Optimal engagement zone
+- Frequency 4-6: Diminishing returns begin
+- Frequency 7-10: Creative fatigue likely
+- Frequency greater than 10: Severe fatigue, negative sentiment risk
+
+CVR VARIANCE TRIGGERS
+
+CVR VARIANCE 0-15 PERCENT (GREEN)
+- Status: Normal conversion range
+- Action: Continue optimization
+- Notes: CVR sensitive to landing page and offer
+
+CVR VARIANCE 15-25 PERCENT BELOW TARGET (YELLOW)
+- Status: Below expected conversion
+- Potential causes: Landing page issues, Traffic quality decline, Offer relevance
+- Recommended actions: Check landing page, Review audience segments, Test offers
+- Timeline: Investigate within 48 hours
+
+CVR VARIANCE GREATER THAN 25 PERCENT BELOW TARGET (ORANGE)
+- Status: Significant conversion decline
+- Potential causes: Site issues, Audience mismatch, Competitive offers
+- Recommended actions: Landing page audit, Audience refresh, Competitive review
+- Timeline: Action within 24 hours
+
+================================================================================
+SECTION 5 - DELIVERY TRIGGERS
+================================================================================
+
+IMPRESSION DELIVERY TRIGGERS
+
+IMPRESSION DELIVERY 90-100 PERCENT (GREEN)
+- Status: On track
+- Action: Maintain approach
+
+IMPRESSION DELIVERY 70-90 PERCENT (YELLOW)
+- Status: Under-delivery
+- Recommended actions: Expand targeting, Increase bids, Add inventory sources
+
+IMPRESSION DELIVERY BELOW 70 PERCENT (ORANGE)
+- Status: Significant under-delivery
+- Recommended actions: Major targeting expansion, Budget reallocation, Platform review
+
+REACH DELIVERY TRIGGERS
+
+REACH VS TARGET 90-100 PERCENT (GREEN)
+- Status: Achieving planned reach
+- Action: Continue monitoring
+
+REACH VS TARGET 75-90 PERCENT (YELLOW)
+- Status: Below reach target
+- Recommended actions: Expand targeting, Add platforms, Increase budget
+
+REACH VS TARGET BELOW 75 PERCENT (ORANGE)
+- Status: Significant reach gap
+- Recommended actions: Review targeting strategy, Consider additional channels
+
+FREQUENCY TRIGGERS
+
+FREQUENCY BELOW EFFECTIVE MINIMUM (YELLOW)
+- Issue: Under-exposure, message not landing
+- Recommended actions: Narrow audience, Increase budget, Concentrate media
+
+FREQUENCY ABOVE OPTIMAL RANGE (YELLOW)
+- Issue: Over-exposure, diminishing returns
+- Recommended actions: Expand audience, Add frequency caps, Diversify creative
+
+FREQUENCY EXCEEDS CAP (ORANGE)
+- Issue: Excessive exposure, negative impact risk
+- Recommended actions: Immediate cap enforcement, Audience expansion, Platform review
+
+================================================================================
+SECTION 6 - QUALITY TRIGGERS
+================================================================================
+
+VIEWABILITY TRIGGERS
+
+VIEWABILITY 70 PERCENT PLUS (GREEN)
+- Status: Strong viewability
+- Action: Maintain approach
+
+VIEWABILITY 50-70 PERCENT (YELLOW)
+- Status: Below optimal
+- Recommended actions: Review placement mix, Add viewability targeting, Premium inventory
+
+VIEWABILITY BELOW 50 PERCENT (ORANGE)
+- Status: Poor viewability
+- Recommended actions: Activate viewability optimization, Exclude low-view placements
+
+BRAND SAFETY TRIGGERS
+
+BRAND SAFETY INCIDENT (RED)
+- Status: Immediate attention required
+- Recommended actions: Pause affected placements, Review block lists, Add exclusions
+
+ADJACENCY CONCERNS DETECTED (ORANGE)
+- Status: Potential brand risk
+- Recommended actions: Review placements, Enhance pre-bid blocking, Monitor closely
+
+FRAUD AND IVT TRIGGERS
+
+IVT RATE 0-3 PERCENT (GREEN)
+- Status: Within acceptable range
+- Action: Continue monitoring
+
+IVT RATE 3-5 PERCENT (YELLOW)
+- Status: Elevated invalid traffic
+- Recommended actions: Review inventory sources, Enhance fraud detection
+
+IVT RATE GREATER THAN 5 PERCENT (ORANGE)
+- Status: Significant fraud concern
+- Recommended actions: Exclude sources, Activate pre-bid filtering, Audit supply path
+
+================================================================================
+SECTION 7 - TRIGGER RESPONSE PROTOCOLS
+================================================================================
+
+IMMEDIATE RESPONSE PROTOCOL (RED TRIGGERS)
+
+STEP 1 - STABILIZE
+- Pause affected campaign elements if necessary
+- Document current state and metrics
+- Notify stakeholders
+
+STEP 2 - DIAGNOSE
+- Identify root cause
+- Assess impact scope
+- Determine urgency
+
+STEP 3 - ACT
+- Implement corrective measures
+- Document changes made
+- Set monitoring alerts
+
+STEP 4 - MONITOR
+- Verify correction effectiveness
+- Track recovery trajectory
+- Adjust if needed
+
+STANDARD RESPONSE PROTOCOL (YELLOW AND ORANGE TRIGGERS)
+
+STEP 1 - ASSESS
+- Confirm trigger is valid (not data lag)
+- Understand context and trends
+- Identify potential causes
+
+STEP 2 - PLAN
+- Develop optimization options
+- Estimate impact of each
+- Prioritize by effort and impact
+
+STEP 3 - IMPLEMENT
+- Execute optimization changes
+- Document what was changed
+- Set review checkpoint
+
+STEP 4 - EVALUATE
+- Measure impact after change
+- Compare to pre-optimization baseline
+- Determine if further action needed
+
+================================================================================
+SECTION 8 - TRIGGER FORMULAS
+================================================================================
+
+VARIANCE CALCULATIONS
+
+Variance_Pct = (Actual - Target) / Target x 100
+Absolute_Variance = Actual - Target
+Trending_Variance = (Current_Period - Prior_Period) / Prior_Period x 100
+
+PACING CALCULATIONS
+
+Pacing_Index = Actual_Spend / Expected_Spend x 100
+Days_to_Budget_Exhaustion = Remaining_Budget / Daily_Spend_Rate
+Projected_Final_Spend = Current_Spend + (Daily_Rate x Remaining_Days)
+
+EFFICIENCY CALCULATIONS
+
+Efficiency_Index = Target_CPA / Actual_CPA x 100
+Marginal_Efficiency = Change_in_Conversions / Change_in_Spend
+Performance_Score = Sum of (Metric_i x Weight_i) for all metrics
+
+TRIGGER SCORING
+
+Trigger_Priority = Severity_Score x Impact_Score x Urgency_Score
+Severity_Score: Green=1, Yellow=2, Orange=3, Red=4
+Impact_Score: Low=1, Medium=2, High=3
+Urgency_Score: Monitor=1, Review=2, Action=3, Immediate=4
+
+================================================================================
+END OF DOCUMENT
+================================================================================

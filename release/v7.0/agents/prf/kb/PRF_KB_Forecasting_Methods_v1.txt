@@ -1,0 +1,436 @@
+PRF KNOWLEDGE BASE - FORECASTING METHODS
+
+OVERVIEW
+
+This document provides comprehensive methodology for time series forecasting in marketing performance contexts. Accurate forecasts enable proactive planning, budget allocation, and anomaly detection. This knowledge base covers Prophet, ARIMA, ETS, and ensemble methods with guidance on model selection and uncertainty quantification.
+
+Forecasting is essential for marketing operations. Campaign planning requires predictions of baseline performance. Anomaly detection needs expected values for comparison. Budget optimization depends on forecast accuracy across planning horizons. This document equips the PRF agent with robust forecasting capabilities using multiple methodologies.
+
+PROPHET FORECASTING
+
+DECOMPOSITION FRAMEWORK
+
+Prophet is an additive regression model developed for business forecasting. The model decomposes time series into trend, seasonality, and holiday components. This decomposition makes forecasts interpretable and allows incorporation of domain knowledge.
+
+Prophet model formula:
+- y(t) equals g(t) plus s(t) plus h(t) plus epsilon(t)
+- g(t) is the trend function capturing non-periodic changes
+- s(t) is the seasonality function for periodic patterns
+- h(t) is the holiday effect function
+- epsilon(t) is the error term
+
+Trend component options:
+- Linear trend: constant growth rate
+- Logistic trend: saturating growth with capacity
+- Flat trend: no systematic change
+- Piecewise linear: allows changepoints
+
+Seasonality representation:
+- Fourier series approximation
+- Yearly seasonality with configurable Fourier order
+- Weekly seasonality for day-of-week patterns
+- Custom seasonality for business-specific cycles
+
+TREND CONFIGURATION
+
+Linear trend specification:
+- Model assumes constant growth rate over time
+- Changepoints allow automatic trend shifts
+- Default places 25 potential changepoints in first 80 percent of history
+- Changepoint flexibility controlled by changepoint_prior_scale
+
+Logistic trend specification:
+- Requires capacity (carrying capacity) parameter
+- Models growth that saturates at maximum level
+- Floor parameter sets minimum bound
+- Appropriate for markets with natural limits
+
+Changepoint tuning:
+- Increase changepoint_prior_scale for more flexible trend
+- Decrease for smoother, more stable trend
+- Default value of 0.05 works for most cases
+- Values above 0.5 may overfit to noise
+
+SEASONALITY CONFIGURATION
+
+Built-in seasonalities:
+- Yearly: captures annual patterns with 10 Fourier terms default
+- Weekly: captures day-of-week patterns with 3 Fourier terms default
+- Daily: captures hour-of-day patterns when data is sub-daily
+
+Custom seasonality addition:
+- Specify period in days
+- Set Fourier order (higher = more flexibility)
+- Add multiple custom seasonalities for complex patterns
+- Example: quarterly business cycles with period 91.25
+
+Seasonality mode selection:
+- Additive: seasonality magnitude constant regardless of level
+- Multiplicative: seasonality scales with level
+- Use multiplicative when seasonal swings grow with trend
+
+HOLIDAY EFFECTS
+
+Holiday specification:
+- List holidays with dates
+- Include lower and upper window for extended effects
+- Negative window for pre-holiday effects
+- Positive window for post-holiday effects
+
+Holiday examples for marketing:
+- Black Friday with window minus 3 to plus 1
+- Christmas with window minus 7 to plus 2
+- Back to school periods
+- Industry-specific events
+
+Custom holiday creation:
+- Define recurring annual events
+- Include one-time promotional periods
+- Add competitive events that affect performance
+- Specify regional holidays for geographic markets
+
+ARIMA FORECASTING
+
+MODEL SPECIFICATION
+
+ARIMA stands for AutoRegressive Integrated Moving Average. The model captures temporal dependencies through autoregressive and moving average components. Differencing handles non-stationarity.
+
+ARIMA(p,d,q) components:
+- p: autoregressive order (lags of dependent variable)
+- d: differencing order (times series is differenced)
+- q: moving average order (lags of forecast errors)
+
+Stationarity requirement:
+- ARIMA requires stationary series after differencing
+- Stationarity means constant mean and variance over time
+- Use ADF test to check for unit root
+- d equals 1 usually sufficient for trending series
+
+Seasonal ARIMA extension:
+- SARIMA(p,d,q)(P,D,Q)m notation
+- P,D,Q are seasonal orders
+- m is seasonal period (12 for monthly with yearly pattern)
+- Captures both short-term and seasonal dependencies
+
+ORDER SELECTION
+
+Information criteria approach:
+- Fit models with various (p,d,q) combinations
+- Calculate AIC or BIC for each model
+- Select model minimizing information criterion
+- AIC balances fit and complexity
+
+Auto ARIMA procedure:
+- Start with simple model
+- Systematically add complexity
+- Use stepwise search or grid search
+- Cross-validate on holdout period
+
+Typical starting points:
+- d usually 0, 1, or 2 (rarely higher)
+- p and q typically 0 to 5
+- Start with (1,1,1) for trending series
+- Start with (0,0,0) plus seasonality for stationary series
+
+Diagnostic checks:
+- Residuals should be white noise
+- Ljung-Box test for residual autocorrelation
+- No significant spikes in residual ACF/PACF
+- Normally distributed residuals preferred
+
+FORECASTING WITH ARIMA
+
+Point forecast generation:
+- Use fitted model to predict future values
+- Recursive forecasting for multi-step ahead
+- Each forecast uses previous forecasts as inputs
+- Forecast horizon limited by error accumulation
+
+Prediction intervals:
+- ARIMA provides analytical prediction intervals
+- Intervals widen as horizon increases
+- Assume normally distributed errors
+- Bootstrap intervals for non-normal errors
+
+Practical considerations:
+- Refit model periodically with new data
+- Monitor forecast errors for model drift
+- Consider multiple models for uncertainty
+- Combine with judgment for extreme scenarios
+
+ETS FORECASTING
+
+STATE SPACE FORMULATION
+
+ETS stands for Error, Trend, Seasonality. These exponential smoothing models use state space representation. ETS provides a systematic framework for various smoothing methods.
+
+ETS model taxonomy:
+- Error: additive (A) or multiplicative (M)
+- Trend: none (N), additive (A), additive damped (Ad), multiplicative (M), multiplicative damped (Md)
+- Seasonality: none (N), additive (A), multiplicative (M)
+
+Common ETS specifications:
+- ETS(A,N,N): simple exponential smoothing
+- ETS(A,A,N): Holt linear method
+- ETS(A,Ad,N): damped trend method
+- ETS(A,A,A): Holt-Winters additive
+- ETS(A,A,M): Holt-Winters multiplicative
+
+State space equations:
+- Observation equation relates observed value to states
+- State equations describe state evolution
+- Error term enters observation and state equations
+- Maximum likelihood estimation for parameters
+
+SMOOTHING PARAMETER ESTIMATION
+
+Key smoothing parameters:
+- Alpha: level smoothing (0 to 1)
+- Beta: trend smoothing (0 to 1)
+- Gamma: seasonal smoothing (0 to 1)
+- Phi: trend damping (typically 0.8 to 0.98)
+
+Parameter interpretation:
+- Higher alpha means more weight on recent observations
+- Higher beta means faster trend adaptation
+- Higher gamma means more responsive seasonality
+- Phi below 1 shrinks trend toward zero
+
+Estimation approach:
+- Maximum likelihood estimation
+- Optimize over smoothing parameters
+- Initialize states from early observations
+- Penalize extreme parameter values
+
+MODEL SELECTION
+
+Automatic ETS selection:
+- Fit all relevant ETS models
+- Compare using AIC or BIC
+- Select best model automatically
+- Cross-validate on holdout for confirmation
+
+Model selection guidelines:
+- Use multiplicative seasonality when seasonal amplitude grows
+- Use damped trend for long horizons
+- Simpler models often forecast better
+- Test multiple models when uncertain
+
+Comparison to ARIMA:
+- ETS and ARIMA capture similar patterns
+- ETS more interpretable in business contexts
+- ARIMA better for complex autocorrelation
+- Often produce similar forecasts
+
+ENSEMBLE FORECASTING
+
+COMBINING FORECASTS
+
+Forecast combination improves accuracy and robustness. Different models capture different patterns. Combining reduces reliance on single model assumptions.
+
+Simple averaging:
+- Average forecasts from multiple models
+- Equal weights to all models
+- Surprisingly effective in practice
+- Reduces variance without increasing bias
+
+Weighted averaging:
+- Weight models by historical accuracy
+- Inverse MSE weighting common approach
+- Update weights as new data arrives
+- Normalize weights to sum to one
+
+Optimal combination:
+- Regression-based weight estimation
+- Minimize combined forecast error
+- Can produce negative weights
+- Constrain to positive weights for stability
+
+ENSEMBLE CONSTRUCTION
+
+Model diversity principles:
+- Include models with different assumptions
+- Mix parametric and non-parametric methods
+- Vary forecast horizons and update frequencies
+- Include models from different model families
+
+Recommended ensemble for marketing:
+- Prophet: captures trend, seasonality, holidays
+- ARIMA: captures short-term autocorrelation
+- ETS: captures level and trend dynamics
+- Naive seasonal: benchmark comparison
+
+Weight updating:
+- Track recent performance of each model
+- Increase weight for better performing models
+- Decrease weight for underperforming models
+- Use exponential smoothing for weight updates
+
+FORECAST UNCERTAINTY
+
+Ensemble prediction intervals:
+- Wider intervals from model disagreement
+- Narrower intervals when models agree
+- Bootstrap across models and residuals
+- Quantile averaging for robust intervals
+
+Disagreement as uncertainty signal:
+- High model disagreement indicates uncertainty
+- Low disagreement indicates consensus
+- Flag forecasts with high disagreement
+- Consider scenario planning when uncertain
+
+FORECAST ACCURACY METRICS
+
+ERROR METRICS
+
+Mean Absolute Error (MAE):
+- Average of absolute forecast errors
+- Same units as original data
+- Robust to outliers
+- Appropriate for cost-linear loss
+
+Root Mean Squared Error (RMSE):
+- Square root of average squared errors
+- Penalizes large errors more than MAE
+- Same units as original data
+- Appropriate for quadratic loss
+
+Mean Absolute Percentage Error (MAPE):
+- Average of absolute percentage errors
+- Scale-independent comparison
+- Undefined when actual is zero
+- Asymmetric treatment of over/under forecasts
+
+Mean Absolute Scaled Error (MASE):
+- Compares to naive seasonal forecast
+- MASE below 1 means better than naive
+- Works for any data regardless of scale
+- Handles zeros in actual values
+
+CROSS-VALIDATION FOR FORECASTING
+
+Time series cross-validation:
+- Cannot use random train/test splits
+- Must respect temporal ordering
+- Rolling origin evaluation preferred
+- Expanding window or sliding window
+
+Rolling origin procedure:
+- Define initial training window
+- Forecast one or more steps ahead
+- Add next observation to training
+- Repeat until end of series
+
+Evaluation best practices:
+- Report multiple error metrics
+- Show error by forecast horizon
+- Compare to naive benchmarks
+- Test on multiple time periods
+
+ANOMALY DETECTION INTEGRATION
+
+FORECAST-BASED ANOMALY DETECTION
+
+Anomalies are observations far from forecast. Use prediction intervals to define expected range. Flag observations outside intervals as potential anomalies.
+
+Detection procedure:
+- Generate forecast with prediction intervals
+- Compare actual to forecast
+- Calculate standardized residual
+- Flag if residual exceeds threshold
+
+Threshold selection:
+- 2 standard deviations: approximately 5 percent false positive rate
+- 3 standard deviations: approximately 0.3 percent false positive rate
+- Adjust based on cost of false positives versus misses
+- Use asymmetric thresholds if over/under anomalies differ
+
+INTEGRATION WITH PRF_ANOMALY_DETECT
+
+Forecast residuals feed anomaly detection:
+- PRF_FORECAST generates expected values
+- PRF_ANOMALY_DETECT compares actual to expected
+- Anomaly scores based on deviation magnitude
+- Root cause analysis for significant anomalies
+
+Workflow coordination:
+- Generate forecasts at regular intervals
+- Update as new data arrives
+- Compare actuals to forecasts daily
+- Trigger alerts when thresholds exceeded
+
+IMPLEMENTATION GUIDANCE
+
+DATA PREPARATION
+
+Frequency requirements:
+- Daily data: minimum 2 years for yearly seasonality
+- Weekly data: minimum 2 years for yearly seasonality
+- Monthly data: minimum 3 years recommended
+
+Missing value handling:
+- Prophet handles missing values natively
+- ARIMA requires imputation or interpolation
+- ETS requires complete series
+- Document missing value treatment
+
+Outlier treatment:
+- Identify outliers before modeling
+- Consider removing or capping extreme values
+- Document outlier treatment decisions
+- Evaluate sensitivity to outlier treatment
+
+HORIZON SELECTION
+
+Forecast horizon considerations:
+- Shorter horizons generally more accurate
+- Match horizon to decision timeline
+- Daily forecasts for operational decisions
+- Monthly forecasts for budget planning
+
+Horizon-specific recommendations:
+- 1-7 days: ARIMA often best
+- 1-4 weeks: ETS or ARIMA
+- 1-3 months: Prophet with seasonality
+- 3-12 months: Ensemble with damped trend
+
+Uncertainty growth with horizon:
+- All methods less accurate at longer horizons
+- Widen intervals for longer forecasts
+- Consider scenario planning for long horizons
+- Reforecast frequently for important decisions
+
+MODEL MAINTENANCE
+
+Retraining frequency:
+- Monthly refit for stable series
+- Weekly refit for volatile series
+- Event-triggered refit after regime changes
+- Automated retraining pipelines preferred
+
+Performance monitoring:
+- Track forecast accuracy over time
+- Compare to benchmarks continuously
+- Alert on accuracy degradation
+- Investigate and remediate drift
+
+Model versioning:
+- Document model specifications
+- Track parameter changes over time
+- Maintain model performance history
+- Enable rollback to previous versions
+
+CAPABILITY REFERENCE
+
+This knowledge base supports the following PRF agent capabilities:
+
+PRF_FORECAST_PROPHET - Prophet forecasting with trend, seasonality, and holiday decomposition for business time series
+
+PRF_FORECAST_ARIMA - ARIMA and SARIMA forecasting with automatic order selection and diagnostic testing
+
+PRF_FORECAST_ETS - Exponential smoothing state space models with automatic model selection and smoothing parameter estimation
+
+PRF_FORECAST_ENSEMBLE - Ensemble forecasting combining multiple methods with adaptive weight optimization
+
+END OF DOCUMENT

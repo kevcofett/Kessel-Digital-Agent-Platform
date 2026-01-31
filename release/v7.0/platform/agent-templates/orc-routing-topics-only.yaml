@@ -1,0 +1,390 @@
+# ORC Routing Topics - Add these to the Media Planning Agent
+# Copy and paste into Copilot Studio or use pac copilot commands
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Analytics Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes analytics requests to the Analytics Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToANL
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Analytics Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - analyze budget
+            - budget projection
+            - calculate projection
+            - run scenario
+            - scenario analysis
+            - marginal returns
+            - statistical analysis
+            - financial modeling
+            - forecast performance
+            - compare scenarios
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_ANL
+            activity: |
+              I'll connect you with the MPA v6 Analytics Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_ANL
+            targetBotId: mpa_v6_analytics_agent
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Audience Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes audience requests to the Audience Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToAUD
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Audience Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - segment audience
+            - audience segmentation
+            - targeting strategy
+            - calculate LTV
+            - lifetime value
+            - propensity scoring
+            - customer journey
+            - audience intelligence
+            - build segments
+            - prioritize audiences
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_AUD
+            activity: |
+              I'll connect you with the MPA v6 Audience Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_AUD
+            targetBotId: mpa_v6_audience_agent
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Channel Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes channel requests to the Channel Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToCHA
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Channel Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - channel selection
+            - media mix
+            - budget allocation
+            - emerging channels
+            - calculate allocation
+            - lookup benchmarks
+            - channel strategy
+            - media mix optimization
+            - channel recommendations
+            - optimize channels
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_CHA
+            activity: |
+              I'll connect you with the MPA v6 Channel Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_CHA
+            targetBotId: mpa_v6_channel_agent
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Supply Path Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes supply path requests to the Supply Path Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToSPO
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Supply Path Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - supply path
+            - programmatic optimization
+            - fee analysis
+            - partner evaluation
+            - calculate NBI
+            - net bidder impact
+            - analyze fees
+            - evaluate partner
+            - supply transparency
+            - DSP evaluation
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_SPO
+            activity: |
+              I'll connect you with the MPA v6 Supply Path Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_SPO
+            targetBotId: mpa_v6_supply_path_agent
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Document Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes document requests to the Document Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToDOC
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Document Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - generate document
+            - create brief
+            - media brief
+            - executive summary
+            - channel plan document
+            - budget rationale
+            - performance report
+            - optimization report
+            - export document
+            - create presentation
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_DOC
+            activity: |
+              I'll connect you with the MPA v6 Document Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_DOC
+            targetBotId: mpa_v6_document_agent
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Performance Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes performance requests to the Performance Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToPRF
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Performance Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - analyze performance
+            - campaign performance
+            - detect anomalies
+            - extract learnings
+            - attribution analysis
+            - optimization recommendations
+            - performance monitoring
+            - identify insights
+            - performance trends
+            - campaign analysis
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_PRF
+            activity: |
+              I'll connect you with the MPA v6 Performance Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_PRF
+            targetBotId: mpa_v6_performance_agent
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Change Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes change management requests to the Change Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToCHG
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Change Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - assess readiness
+            - organizational readiness
+            - map stakeholders
+            - stakeholder analysis
+            - plan adoption
+            - rollout plan
+            - change management
+            - adoption strategy
+            - resistance mitigation
+            - change assessment
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_CHG
+            activity: |
+              I'll connect you with the MPA v6 Change Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_CHG
+            targetBotId: mpa_v6_change_agent
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Strategy Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes strategy requests to the Strategy Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToCST
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Strategy Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - select framework
+            - strategic framework
+            - apply analysis
+            - SWOT analysis
+            - Porter Five Forces
+            - prioritize initiatives
+            - RICE scoring
+            - MoSCoW prioritization
+            - strategic consulting
+            - initiative ranking
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_CST
+            activity: |
+              I'll connect you with the MPA v6 Strategy Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_CST
+            targetBotId: mpa_v6_strategy_agent
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Marketing Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes marketing requests to the Marketing Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToMKT
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Marketing Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - create marketing brief
+            - marketing brief
+            - competitive analysis
+            - analyze competitive
+            - develop strategy
+            - marketing strategy
+            - competitive landscape
+            - brand strategy
+            - marketing recommendations
+            - market positioning
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_MKT
+            activity: |
+              I'll connect you with the MPA v6 Marketing Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_MKT
+            targetBotId: mpa_v6_marketing_agent
+

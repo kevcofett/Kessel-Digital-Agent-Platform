@@ -1,0 +1,20 @@
+{
+  "target_file": "agents/prf/flows/AnalyzePerformance.yaml",
+  "section": "handoff_support",
+  "content": {
+    "handoff_configurations": {
+      "ANL": {
+        "enabled": true,
+        "trigger_detection": "detect intent to update/revise projections",
+        "output_transformation": {
+          "wrap_in_handoff_context": true,
+          "include_original_projection_reference": true,
+          "format_for_anl_input": true
+        },
+        "handoff_message": "Transferring performance actuals to Analytics for projection update..."
+      }
+    }
+  },
+  "description": "Add ANL handoff support to AnalyzePerformance flow",
+  "patch_source": "PATCH-007"
+}

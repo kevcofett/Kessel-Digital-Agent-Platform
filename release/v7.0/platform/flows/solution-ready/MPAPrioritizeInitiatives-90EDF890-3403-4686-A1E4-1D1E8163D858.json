@@ -1,0 +1,343 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "b3d7b826-be51-4073-9635-a83458cb15f1"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id",
+                "items"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "method": {
+                  "type": "string",
+                  "enum": [
+                    "weighted_criteria",
+                    "ice",
+                    "rice",
+                    "value_effort"
+                  ],
+                  "default": "weighted_criteria"
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "estimated_value": {
+                        "type": "number"
+                      },
+                      "estimated_effort": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                },
+                "criteria": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "criterion": {
+                        "type": "string"
+                      },
+                      "weight": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                },
+                "constraints": {
+                  "type": "object",
+                  "properties": {
+                    "max_initiatives": {
+                      "type": "integer"
+                    },
+                    "budget_limit": {
+                      "type": "number"
+                    },
+                    "resource_limit": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "method": "@coalesce(triggerBody()?['method'], 'weighted_criteria')",
+            "items": "@triggerBody()?['items']",
+            "criteria": "@triggerBody()?['criteria']",
+            "constraints": "@triggerBody()?['constraints']",
+            "start_time": "@utcNow()"
+          },
+          "metadata": {
+            "operationMetadataId": "d91730c7-461b-494f-b282-255502375486"
+          },
+          "runAfter": {}
+        },
+        "route_method": {
+          "type": "Compose",
+          "inputs": {},
+          "metadata": {
+            "operationMetadataId": "42aaa80f-e1e4-4188-b6a6-20c33afcc227"
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "apply_constraints": {
+          "type": "Compose",
+          "inputs": {
+            "constraints_applied": {
+              "max_initiatives": "@coalesce(outputs('parse_input')?['constraints']?['max_initiatives'], 5)",
+              "budget_limit": "@outputs('parse_input')?['constraints']?['budget_limit']",
+              "resource_limit": "@outputs('parse_input')?['constraints']?['resource_limit']"
+            },
+            "filtered_recommendations": {
+              "tier_1_recommended": [
+                {
+                  "id": "INI002",
+                  "name": "Customer Experience Enhancement",
+                  "recommendation": "Execute immediately",
+                  "rationale": "Highest risk-adjusted return"
+                },
+                {
+                  "id": "INI001",
+                  "name": "Digital Platform Modernization",
+                  "recommendation": "Execute in parallel",
+                  "rationale": "Critical enabler for other initiatives"
+                }
+              ],
+              "tier_2_recommended": [
+                {
+                  "id": "INI004",
+                  "name": "Operational Efficiency Program",
+                  "recommendation": "Start after Tier 1 progress",
+                  "rationale": "Good value, low complexity"
+                }
+              ],
+              "tier_3_defer": [
+                {
+                  "id": "INI003",
+                  "name": "Market Expansion - Region A",
+                  "recommendation": "Defer pending market validation",
+                  "rationale": "High effort, uncertain return"
+                },
+                {
+                  "id": "INI005",
+                  "name": "New Product Development",
+                  "recommendation": "Reconsider scope or approach",
+                  "rationale": "Current plan has unfavorable effort-value ratio"
+                }
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "d5e7e7b0-ae90-4009-9635-ba07216b2734"
+          },
+          "runAfter": {
+            "route_method": [
+              "Succeeded"
+            ]
+          }
+        },
+        "generate_roadmap": {
+          "type": "Compose",
+          "inputs": {
+            "suggested_roadmap": {
+              "q1": {
+                "focus": "Foundation and Quick Wins",
+                "initiatives": [
+                  {
+                    "name": "Customer Experience Enhancement",
+                    "allocation": 40
+                  },
+                  {
+                    "name": "Digital Platform Modernization - Phase 1",
+                    "allocation": 60
+                  }
+                ]
+              },
+              "q2": {
+                "focus": "Continued Development",
+                "initiatives": [
+                  {
+                    "name": "Digital Platform Modernization - Phase 2",
+                    "allocation": 50
+                  },
+                  {
+                    "name": "Operational Efficiency Program",
+                    "allocation": 50
+                  }
+                ]
+              },
+              "q3": {
+                "focus": "Expansion Preparation",
+                "initiatives": [
+                  {
+                    "name": "Digital Platform Modernization - Phase 3",
+                    "allocation": 30
+                  },
+                  {
+                    "name": "Operational Efficiency Program",
+                    "allocation": 40
+                  },
+                  {
+                    "name": "Market Expansion - Planning",
+                    "allocation": 30
+                  }
+                ]
+              },
+              "q4": {
+                "focus": "Scale and Launch",
+                "initiatives": [
+                  {
+                    "name": "Market Expansion - Region A - Execution",
+                    "allocation": 60
+                  },
+                  {
+                    "name": "Optimization and Refinement",
+                    "allocation": 40
+                  }
+                ]
+              }
+            },
+            "resource_requirements": {
+              "total_fte": 25,
+              "peak_fte": 30,
+              "estimated_investment": 5000000
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "5c13f715-68df-4675-87de-08b62ca40b00"
+          },
+          "runAfter": {
+            "apply_constraints": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "CST",
+            "status": "success",
+            "data": {
+              "method_used": "@outputs('parse_input')?['method']",
+              "items_evaluated": "@length(outputs('parse_input')?['items'])",
+              "scoring_results": "@coalesce(outputs('apply_weighted_criteria'), outputs('apply_ice'), outputs('apply_rice'), outputs('apply_value_effort'), outputs('default_method'))",
+              "prioritized_tiers": "@outputs('apply_constraints')?['filtered_recommendations']",
+              "suggested_roadmap": "@outputs('generate_roadmap')?['suggested_roadmap']",
+              "resource_summary": "@outputs('generate_roadmap')?['resource_requirements']"
+            },
+            "confidence": "HIGH",
+            "sources": [
+              "AGENT_KB",
+              "CALCULATION",
+              "INPUT_DATA"
+            ],
+            "recommendations": [
+              "Focus resources on Tier 1 initiatives for maximum impact",
+              "Use quick wins to build momentum and stakeholder confidence",
+              "Revisit Tier 3 items after completing initial phases"
+            ],
+            "follow_up_questions": [
+              "Would you like to apply a different prioritization method?",
+              "Should we develop detailed project plans for top initiatives?",
+              "Do you want to conduct a strategic framework analysis?"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "e1b6c7d7-a4b3-4c56-af3a-16744c61bb8b"
+          },
+          "runAfter": {
+            "generate_roadmap": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": "@outputs('build_response')",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "772ac0b1-123d-42e9-8d68-c0bea213987d"
+          },
+          "runAfter": {}
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,266 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "df15f57b-faf6-4600-9759-e3cea272de84"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id",
+                "segmentation_method"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "segmentation_method": {
+                  "type": "string",
+                  "enum": [
+                    "RFM",
+                    "behavioral",
+                    "demographic",
+                    "custom"
+                  ]
+                },
+                "data_source": {
+                  "type": "string",
+                  "enum": [
+                    "1P",
+                    "2P",
+                    "3P",
+                    "CDP",
+                    "clean_room"
+                  ],
+                  "default": "1P"
+                },
+                "segment_count": {
+                  "type": "integer",
+                  "minimum": 2,
+                  "maximum": 10,
+                  "default": 4
+                },
+                "constraints": {
+                  "type": "object",
+                  "properties": {
+                    "minimum_segment_size": {
+                      "type": "integer"
+                    },
+                    "geographic_focus": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "exclude_segments": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "campaign_context": {
+                  "type": "object",
+                  "properties": {
+                    "objective": {
+                      "type": "string"
+                    },
+                    "budget": {
+                      "type": "number"
+                    },
+                    "timeline_weeks": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "method": "@triggerBody()?['segmentation_method']",
+            "data_source": "@coalesce(triggerBody()?['data_source'], '1P')",
+            "segment_count": "@coalesce(triggerBody()?['segment_count'], 4)",
+            "constraints": "@triggerBody()?['constraints']",
+            "campaign_context": "@triggerBody()?['campaign_context']",
+            "start_time": "@utcNow()"
+          },
+          "metadata": {
+            "operationMetadataId": "acdd4ade-6d87-459e-98e1-036736187ea6"
+          },
+          "runAfter": {}
+        },
+        "check_method": {
+          "type": "Compose",
+          "inputs": {},
+          "metadata": {
+            "operationMetadataId": "4faf8ade-8472-410b-9f8a-20564ca56531"
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "apply_constraints": {
+          "type": "Compose",
+          "inputs": {
+            "original_segments": "@coalesce(outputs('rfm_segmentation'), outputs('behavioral_segmentation'), outputs('demographic_segmentation'), outputs('custom_segmentation'))",
+            "applied_filters": {
+              "minimum_size": "@outputs('parse_input')?['constraints']?['minimum_segment_size']",
+              "geographic": "@outputs('parse_input')?['constraints']?['geographic_focus']",
+              "excluded": "@outputs('parse_input')?['constraints']?['exclude_segments']"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "4b22af28-a306-4ccf-bbce-736aabe63989"
+          },
+          "runAfter": {
+            "check_method": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_sizes": {
+          "type": "Compose",
+          "inputs": {
+            "total_addressable_audience": 10000000,
+            "segments_with_sizes": "@outputs('apply_constraints')?['original_segments']?['segments']",
+            "size_methodology": "percentage_based"
+          },
+          "metadata": {
+            "operationMetadataId": "dd5c8fa4-ddbc-4d3e-9716-ef3264e8831f"
+          },
+          "runAfter": {
+            "apply_constraints": [
+              "Succeeded"
+            ]
+          }
+        },
+        "prioritize_segments": {
+          "type": "Compose",
+          "inputs": {
+            "campaign_objective": "@outputs('parse_input')?['campaign_context']?['objective']",
+            "budget": "@outputs('parse_input')?['campaign_context']?['budget']",
+            "prioritization": {
+              "primary_segments": 2,
+              "secondary_segments": 2,
+              "recommendation": "Focus on primary segments for 70% of budget"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "93a356fa-edb8-46bc-b087-cae65ac72334"
+          },
+          "runAfter": {
+            "calculate_sizes": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "AUD",
+            "status": "success",
+            "data": {
+              "segmentation_method": "@outputs('parse_input')?['method']",
+              "data_source": "@outputs('parse_input')?['data_source']",
+              "segments": "@outputs('calculate_sizes')?['segments_with_sizes']",
+              "total_addressable_audience": "@outputs('calculate_sizes')?['total_addressable_audience']",
+              "prioritization": "@outputs('prioritize_segments')",
+              "methodology_description": "@outputs('apply_constraints')?['original_segments']?['description']"
+            },
+            "confidence": "HIGH",
+            "sources": [
+              "AGENT_KB",
+              "CALCULATION"
+            ],
+            "recommendations": [
+              "Start with primary segments for initial campaign phase",
+              "Use secondary segments for expansion once primary is optimized",
+              "Monitor segment performance to refine targeting"
+            ],
+            "updated_plan_state": {
+              "audience": {
+                "primary_segments": "@take(outputs('calculate_sizes')?['segments_with_sizes'], 2)",
+                "segmentation_method": "@outputs('parse_input')?['method']"
+              }
+            },
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "26414cfa-dc15-439b-86cd-3642568996b1"
+          },
+          "runAfter": {
+            "prioritize_segments": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": "@outputs('build_response')",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "70a567ca-7ca8-4870-8f21-e5485be5fddb"
+          },
+          "runAfter": {}
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

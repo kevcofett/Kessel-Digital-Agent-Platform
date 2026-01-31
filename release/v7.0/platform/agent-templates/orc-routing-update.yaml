@@ -1,0 +1,2380 @@
+kind: BotDefinition
+entity:
+  accessControlPolicy: ChatbotReaders
+  authenticationMode: None
+  authenticationTrigger: AsNeeded
+  configuration:
+    settings:
+      GenerativeActionsEnabled: true
+
+  template: kickStartTemplate-1.0.0
+
+components:
+  - kind: CustomEntityComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Pathway
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.entity.Pathway
+    entity:
+      kind: ClosedListEntity
+      smartMatchingEnabled: true
+      items:
+        - id: fwgyHc
+          displayName: GUIDED
+          synonyms:
+            - assist me
+            - tell me how
+            - show me how
+            - take me through
+            - talk me through
+            - walk me through
+            - help me
+            - Guide me
+
+  - kind: CustomEntityComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: CampaignType
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.entity.CampaignType
+    entity:
+      kind: ClosedListEntity
+      smartMatchingEnabled: true
+      items:
+        - id: SYfILr
+          displayName: Brand
+          synonyms:
+            - Top of funnel
+            - broad reach
+            - awareness campaign
+            - awareness
+            - branding
+            - brand campaign
+
+        - id: kjXqw7
+          displayName: Performance
+          synonyms:
+            - direct
+            - direct mail
+            - direct marketing
+            - conversion
+            - direct response
+            - Performance campaign
+
+        - id: xwC1Og
+          displayName: Hybrid
+          synonyms:
+            - full funnel
+            - mixed
+            - hybrid campaign
+
+        - id: Wprg2x
+          displayName: Launch
+          synonyms:
+            - new brand
+            - new location
+            - new store
+            - New service
+            - new campain
+            - product introduction
+            - new product
+            - Product launch
+
+        - id: jfoqZT
+          displayName: Seasonal
+          synonyms:
+            - Winter
+            - Summer
+            - Spring
+            - Autumn
+            - Fall
+            - Groundhog day
+            - Veterans day
+            - Juneteenth
+            - Martin Luther King Day
+            - Presidents day
+            - Memorial Day
+            - Labor day
+            - Independence day
+            - July 4th
+            - Graduation
+            - Father's day
+            - mother's day
+            - Valentines day
+            - Thanksgiving
+            - Halloween
+            - Hannukah
+            - Christmas
+            - Back to school
+            - Q4
+            - holiday
+            - seasonal campaign
+
+        - id: 3DdWwQ
+          displayName: AlwaysOn
+          synonyms:
+            - ongoing
+            - continuous
+            - evergreen
+            - always on
+            - always
+            - always-on
+
+        - id: TNMPZm
+          displayName: Promotional
+          synonyms:
+            - limited time
+            - overstock
+            - clearance
+            - sweeps
+            - sweepstakes
+            - rebate
+            - discount
+            - sale
+
+        - id: Q5xxGu
+          displayName: Acquisition
+          synonyms:
+            - CAC
+            - screening
+            - appointment booking
+            - appointment
+            - attendance
+            - register
+            - registration
+            - download
+            - app download
+            - booking
+            - ticket
+            - reservation
+            - form fill
+            - entry
+            - application
+            - activation
+            - signups
+            - sign-ups
+            - entries
+            - customers
+            - transactions
+            - orders
+            - new orders
+            - new revenue
+            - new customers
+            - growth
+            - grow
+            - acquire
+
+        - id: YndOL4
+          displayName: Retention
+          synonyms:
+            - repeat order
+            - repeat transaction
+            - repeat purchase
+            - Repeat
+            - Engagement
+            - LCM
+            - lifecycle journey
+            - lifecycle
+            - Onboarding
+            - early month on books
+            - EMOB
+            - non active
+            - active
+            - attrite
+            - attrition
+            - reactivation
+            - loyalty marketing
+            - loyalty
+            - existing customer marketing
+            - retention marketing
+            - ECM
+            - existing customers
+
+  - kind: CustomEntityComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Vertical
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.entity.Vertical
+    entity:
+      kind: ClosedListEntity
+      smartMatchingEnabled: true
+      items:
+        - id: ty3g1O
+          displayName: Retail
+          synonyms:
+            - branches
+            - branch
+            - location
+            - brick and mortar
+            - store
+
+        - id: vED3fO
+          displayName: Ecommerce
+          synonyms:
+            - online retail
+            - online commerce
+            - Online
+            - digital commerce
+            - e-commerce
+
+        - id: fPZ5R2
+          displayName: Automotive
+          synonyms:
+            - Electric
+            - Hybrid vehicle
+            - Hybrid
+            - Electric vehicle
+            - EV
+            - mini van
+            - mid size suv
+            - mid-size suv
+            - midsize suv
+            - Sports utility vehicle
+            - SUV
+            - Truck
+            - OEM
+            - autos
+
+        - id: afkIOf
+          displayName: Finance
+          synonyms:
+            - cobranded credit cards
+            - cobranded cards
+            - Cobrand
+            - Merchant
+            - home equity line of credit
+            - HELOC
+            - Home equity
+            - lines of credit
+            - unsecured loans
+            - Secured loans
+            - Loans
+            - Mortgage
+            - Lending
+            - Lender
+            - Network
+            - Acquirer
+            - Issuer
+            - Payment cards
+            - Wealth
+            - 401(K)
+            - Roth IRA
+            - Roth
+            - IRA
+            - Investment
+            - Deposits
+            - cash Deposits
+            - CDs
+            - savings accounts
+            - checking accounts
+            - debit cards
+            - Credit cards
+            - insurance
+            - Banking
+            - FI
+            - Financial services
+
+        - id: JTcvVO
+          displayName: Healthcare
+          synonyms:
+            - Health insurance
+            - Urgent care
+            - chronic
+            - acute
+            - provider
+            - Payer
+            - private health care
+            - medicate part b
+            - medicare
+            - medicaid
+            - medical
+            - pharma
+            - Health
+
+        - id: zkOeA6
+          displayName: Travel
+          synonyms:
+            - airlines
+            - flight
+            - airfare
+            - ride apps
+            - lyft
+            - uber
+            - taxi
+            - plane
+            - Train
+            - Car
+
+        - id: 9H0i2b
+          displayName: Technology
+          synonyms:
+            - Identity graph
+            - identity
+            - Identity providers
+            - Advertising Technology
+            - Marketing Technology
+            - AdTech
+            - MarTech
+            - Software
+            - Tech
+            - SaaS
+
+        - id: zI8cyT
+          displayName: CPG
+          synonyms:
+            - FMCG
+            - Consumer packaged goods
+
+        - id: EedorO
+          displayName: Education
+          synonyms:
+            - learning
+            - edtech
+            - degree
+            - online degree
+            - online university
+            - university
+            - College
+
+        - id: 2J0vgJ
+          displayName: Government
+          synonyms:
+            - law
+            - Regulation
+            - Provence
+            - county
+            - state
+            - nationa
+            - Federal
+
+        - id: xfopVK
+          displayName: RealEstate
+          synonyms:
+            - Housing
+            - Time-share
+            - Timeshare
+            - Time share
+            - Condos
+            - Apartments
+            - Houses
+            - Land
+            - Property
+            - Real Estate
+
+        - id: bfJcj9
+          displayName: Professional services
+          synonyms:
+            - Consulting Firm
+            - Legal
+            - Agency
+            - Consulting
+            - B2B Services
+            - B2B
+
+        - id: 18YZRM
+          displayName: Restaurants
+          synonyms:
+            - dinner
+            - lunch
+            - breakfast
+            - Coffee
+            - casual dining
+            - fast dining
+            - fast casual
+            - Quick serve restaurants
+            - QSR
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Escalate
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: |-
+      This system topic is triggered when the user indicates they would like to speak to a representative.
+      You can configure how the agent will handle human hand-off scenarios in the agent settings..
+      If your agent does not handle escalations, this topic should be disabled.
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.Escalate
+    dialog:
+      startBehavior: CancelOtherTopics
+      beginDialog:
+        kind: OnEscalate
+        id: main
+        intent:
+          displayName: Escalate
+          includeInOnSelectIntent: false
+          triggerQueries:
+            - Talk to agent
+            - Talk to a person
+            - Talk to someone
+            - Call back
+            - Call customer service
+            - Call me please
+            - Call support
+            - Call technical support
+            - Can an agent call me
+            - Can I call
+            - Can I get in touch with someone else
+            - Can I get real agent support
+            - Can I get transferred to a person to call
+            - Can I have a call in number Or can I be called
+            - Can I have a representative call me
+            - Can I schedule a call
+            - Can I speak to a representative
+            - Can I talk to a human
+            - Can I talk to a human assistant
+            - Can someone call me
+            - Chat with a human
+            - Chat with a representative
+            - Chat with agent
+            - Chat with someone please
+            - Connect me to a live agent
+            - Connect me to a person
+            - Could some one contact me by phone
+            - Customer agent
+            - Customer representative
+            - Customer service
+            - I need a manager to contact me
+            - I need customer service
+            - I need help from a person
+            - I need to speak with a live argent
+            - I need to talk to a specialist please
+            - I want to talk to customer service
+            - I want to proceed with live support
+            - I want to speak with a consultant
+            - I want to speak with a live tech
+            - I would like to speak with an associate
+            - I would like to talk to a technician
+            - Talk with tech support member
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_s39DCt
+            conversationOutcome: Escalated
+            activity: |-
+              Escalating to a representative is not currently configured for this agent, however this is where the agent could provide information about how to get in touch with someone another way.
+
+              Is there anything else I can help you with?
+
+  - kind: GlobalVariableComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: current_gate
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.variable.current_gate
+    variable:
+      name: current_gate
+      scope: User
+      isExternalInitializationAllowed: false
+      initializationTimeoutInMilliseconds: 0
+      isOutputToExternalCallers: false
+
+  - kind: CustomEntityComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: KPI
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Key Performance Indicators
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.entity.KPI
+    entity:
+      kind: ClosedListEntity
+      smartMatchingEnabled: true
+      items:
+        - id: ChjSia
+          displayName: CPM
+          synonyms:
+            - Cost per mille
+            - Cost Per thousand
+
+        - id: hnE7aL
+          displayName: CPC
+          synonyms:
+            - cpc advertising
+            - cpc marketing
+            - Cost per call
+            - Cost per click
+
+        - id: seyIg3
+          displayName: CTR
+          synonyms:
+            - Click through
+            - Clickthrough rate
+            - Click through rate
+
+        - id: MagL8F
+          displayName: CVR
+          synonyms:
+            - conversions
+            - Conversion rate
+            - Conversion
+
+        - id: wTJ5ej
+          displayName: CPA
+          synonyms:
+            - Cost per acquisition
+
+        - id: 1qrw1e
+          displayName: CPO
+          synonyms:
+            - Cost per transaction
+            - Cost Per Order
+
+        - id: fAFQMD
+          displayName: ROAS
+          synonyms:
+            - Return on ad spend
+
+        - id: E0ekJU
+          displayName: CAC
+          synonyms:
+            - Customer acquisition cost
+            - Cost to acquire customers
+
+        - id: 38kpP6
+          displayName: SPC
+          synonyms:
+            - annual sales per customer
+            - Sales per customer
+
+        - id: 10r5oN
+          displayName: LTV
+          synonyms:
+            - Customer life time value
+            - Customer lifetime value
+            - CLV
+            - life time value
+            - Lifetime value
+
+        - id: gxTolV
+          displayName: Viewability
+          synonyms:
+            - bot rate
+            - below the fold
+            - above the fold
+            - viewable ads
+            - Viewable impressions
+
+        - id: Z2iuQr
+          displayName: Reach
+          synonyms:
+            - Unique reqch
+            - Share of wallet
+            - Share of voice
+
+        - id: MFscAB
+          displayName: Frequency
+          synonyms:
+            - avg frequency
+            - Frequency capps
+
+        - id: ILRwp2
+          displayName: Working Media
+          synonyms:
+            - Effective Media
+
+        - id: Ypov6G
+          displayName: SPO
+          synonyms:
+            - advertising fee
+            - Ad tax
+            - Ad fees
+            - supply chain costs
+            - supply path costs
+            - supply path optimization
+
+        - id: CwH9V9
+          displayName: IVT
+          synonyms:
+            - Invalid traffic
+
+        - id: vQMIQL
+          displayName: Fraud
+          synonyms:
+            - Geo masking
+            - Ad injection
+            - Click fraud
+            - ad stacking
+            - Domain spoofing
+            - made for advertising
+            - Domain stuffing
+            - Cookie stuffing
+            - Fraudulant
+
+        - id: d3SjeX
+          displayName: View Through
+          synonyms:
+            - view through %
+            - view through rate
+            - VT
+            - VTR
+            - ViewThrough
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: MPA Search Benchmarks
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.action.MPASearchBenchmarks
+    dialog:
+      kind: TaskDialog
+      action:
+        kind: InvokeFlowTaskAction
+        flowId: 7fb900f5-d8e8-f011-8544-6045bd09a586
+
+      outputMode: All
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Goodbye
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: This topic triggers when the user says goodbye. By default, it does not end the conversation. If you would like to end the conversation when the user says goodbye, you can add an "End of Conversation" action to this topic, or redirect to the "End of Conversation" system topic.
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.Goodbye
+    dialog:
+      startBehavior: CancelOtherTopics
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Goodbye
+          includeInOnSelectIntent: false
+          triggerQueries:
+            - Bye
+            - Bye for now
+            - Bye now
+            - Good bye
+            - No thank you. Goodbye.
+            - See you later
+
+        actions:
+          - kind: Question
+            id: question_zf2HhP
+            variable: Topic.EndConversation
+            prompt: Would you like to end our conversation?
+            entity: BooleanPrebuiltEntity
+
+          - kind: ConditionGroup
+            id: condition_DGc1Wy
+            conditions:
+              - id: condition_DGc1Wy-item-0
+                condition: =Topic.EndConversation = true
+                actions:
+                  - kind: BeginDialog
+                    id: dn94DC
+                    dialog: template-content.topic.EndofConversation
+
+              - id: condition_DGc1Wy-item-1
+                condition: =Topic.EndConversation = false
+                actions:
+                  - kind: SendActivity
+                    id: sendMessage_LdLhmf
+                    activity: Go ahead. I'm listening.
+
+  - kind: CustomEntityComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Budget
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: marketing or advertising budget
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.entity.Budget
+    entity:
+      kind: RegexEntity
+      pattern: \$?\d{1,3}(,?\d{3})*(\.\d{2})?[kKmMbB]?
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Thank you
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: This topic triggers when the user says thank you.
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.Thankyou
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Thank you
+          includeInOnSelectIntent: false
+          triggerQueries:
+            - thanks
+            - thank you
+            - thanks so much
+            - ty
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_9iz6v7
+            activity: You're welcome.
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Conversational boosting
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Create generative answers from knowledge sources.
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.Conversationalboosting
+    dialog:
+      beginDialog:
+        kind: OnUnknownIntent
+        id: main
+        priority: -1
+        actions:
+          - kind: SearchAndSummarizeContent
+            id: search-content
+            variable: Topic.Answer
+            userInput: =System.Activity.Text
+
+          - kind: ConditionGroup
+            id: has-answer-conditions
+            conditions:
+              - id: has-answer
+                condition: =!IsBlank(Topic.Answer)
+                actions:
+                  - kind: EndDialog
+                    id: end-topic
+                    clearTopicQueue: true
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Reset Conversation
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.ResetConversation
+    dialog:
+      startBehavior: UseLatestPublishedContentAndCancelOtherTopics
+      beginDialog:
+        kind: OnSystemRedirect
+        id: main
+        actions:
+          - kind: SendActivity
+            id: sendMessage_OPsT1O
+            activity: What can I help you with?
+
+          - kind: ClearAllVariables
+            id: clearAllVariables_73bTFR
+            variables: ConversationScopedVariables
+
+          - kind: CancelAllDialogs
+            id: cancelAllDialogs_12Gt21
+
+  - kind: GlobalVariableComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: start_date
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.variable.start_date
+    variable:
+      name: start_date
+      scope: User
+      isExternalInitializationAllowed: false
+      initializationTimeoutInMilliseconds: 0
+      isOutputToExternalCallers: false
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: MPA Import Performance
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.action.MPAImportPerformance
+    dialog:
+      kind: TaskDialog
+      action:
+        kind: InvokeFlowTaskAction
+        flowId: 5cdba48f-a8e9-f011-8543-000d3a3320e6
+
+      outputMode: All
+
+  - kind: GlobalVariableComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: vertical
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.variable.vertical
+    variable:
+      name: vertical
+      scope: User
+      isExternalInitializationAllowed: false
+      initializationTimeoutInMilliseconds: 0
+      isOutputToExternalCallers: false
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Conversation Start
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: This system topic triggers when the agent receives an Activity indicating the beginning of a new conversation. If you do not want the agent to initiate the conversation, disable this topic.
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.ConversationStart
+    dialog:
+      beginDialog:
+        kind: OnConversationStart
+        id: main
+        actions:
+          - kind: SendActivity
+            id: sendMessage_M0LuhV
+            activity:
+              text:
+                - Hello, I'm {System.Bot.Name}. How can I help?
+              speak:
+                - Hello and thank you for calling {System.Bot.Name}. Please note that some responses are generated by AI and may require verification for accuracy. How may I help you today?
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Trigger Phrases
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.TriggerPhrases
+    dialog:
+      modelDescription: |-
+        start a new media plan
+        create media plan
+        begin planning
+        new campaign
+        I need to plan a campaign
+        start planning session
+        help me create a media plan
+        help me create a media brief
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent: {}
+        actions:
+          - kind: SendActivity
+            id: sendActivity_PLjXUE
+            activity: |-
+              Hello! I'm the Media Planning Agent, your strategic partner for building comprehensive media plans.
+              I use a systematic 10-step framework with validation gates to ensure your plan is solid:
+              FOUNDATION (Steps 1-3): Client context, objectives, budget
+              STRATEGY (Steps 4-6): Audience, channels, partners
+              TACTICS (Steps 7-9): Measurement, optimization, compliance
+              FINALIZATION (Step 10): Documentation and review
+              Would you like to:
+              1. Start a new media plan
+              2. Continue an existing plan
+              3. Search benchmarks and data
+              4. Get help with commands
+              What would you like to do?
+
+      inputType: {}
+      outputType: {}
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: "Sign in "
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: This system topic triggers when the agent needs to sign in the user or require the user to sign in
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.Signin
+    dialog:
+      beginDialog:
+        kind: OnSignIn
+        id: main
+        actions:
+          - kind: ConditionGroup
+            id: conditionGroup_ypjGKL
+            conditions:
+              - id: conditionItem_7XYIIR
+                condition: =System.SignInReason = SignInReason.SignInRequired
+                actions:
+                  - kind: SendActivity
+                    id: sendMessage_1jHUNO
+                    activity: Hello! To be able to help you, I'll need you to sign in.
+
+          - kind: OAuthInput
+            id: gOjhZA
+            title: Login
+            text: To continue, please login
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: MPA Search Channels
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.action.MPASearchChannels
+    dialog:
+      kind: TaskDialog
+      outputs:
+        - propertyName: status
+
+        - propertyName: count
+
+        - propertyName: channels
+
+        - propertyName: filter_applied
+
+      action:
+        kind: InvokeFlowTaskAction
+        flowId: b284973e-d8e8-f011-8544-6045bd09a586
+
+      outputMode: All
+
+  - kind: GlobalVariableComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: lifecycle_mode
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.variable.lifecycle_mode
+    variable:
+      name: lifecycle_mode
+      scope: User
+      isExternalInitializationAllowed: false
+      initializationTimeoutInMilliseconds: 0
+      isOutputToExternalCallers: false
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Help Menu
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.HelpMenu
+    dialog:
+      modelDescription: |-
+        what can you do
+        show me your menu
+        menu
+        options
+        what are your options
+        what are the options I have to use you
+        commands
+        how does this work
+        what are you capable of
+        Show me your user guide
+        I don't understand how to use this
+        I don't understand how to use you
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent: {}
+        actions:
+          - kind: SendActivity
+            id: sendActivity_qGdx47
+            activity: |-
+              I can help you with:
+              📋 **Planning**
+              • "Start a new media plan" - Begin fresh
+              • "Continue planning" - Pick up where you left off
+              • "Go to step 3" - Jump to a specific step
+              🔍 **Research**
+              • "Search channels" - Find media channels
+              • "Search benchmarks" - Find performance benchmarks
+              ✅ \*\*Validation\*\*
+              • "Validate plan" - Check completion status
+              • "Generate document" - Export your plan
+              📊 **Analysis**
+              • "Import performance" - Add campaign results
+              • "Create post-mortem" - Analyze completed campaigns
+              What would you like to do?
+
+      inputType: {}
+      outputType: {}
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Greeting
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: This topic is triggered when the user greets the agent.
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.Greeting
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Greeting
+          includeInOnSelectIntent: false
+          triggerQueries:
+            - Good afternoon
+            - Good morning
+            - Hello
+            - Hey
+            - Hi
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_abmysR
+            activity:
+              text:
+                - Hello, how can I help you today?
+              speak:
+                - Hello, <break strength="medium" /> how can I help?
+
+          - kind: CancelAllDialogs
+            id: cancelAllDialogs_01At22
+
+  - kind: GlobalVariableComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: campaign_name
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.variable.campaign_name
+    variable:
+      name: campaign_name
+      scope: User
+      isExternalInitializationAllowed: false
+      initializationTimeoutInMilliseconds: 0
+      isOutputToExternalCallers: false
+
+  - kind: GlobalVariableComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: total_budget
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.variable.total_budget
+    variable:
+      name: total_budget
+      scope: User
+      isExternalInitializationAllowed: false
+      initializationTimeoutInMilliseconds: 0
+      isOutputToExternalCallers: false
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: MPA Generate Document
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.action.MPAGenerateDocument
+    dialog:
+      kind: TaskDialog
+      action:
+        kind: InvokeFlowTaskAction
+        flowId: 76280a60-a6e9-f011-8543-000d3a3320e6
+
+      outputMode: All
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: MPA Save Section
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.action.MPASaveSection
+    dialog:
+      kind: TaskDialog
+      action:
+        kind: InvokeFlowTaskAction
+        flowId: c5a57b52-dee8-f011-8544-6045bd060784
+
+      outputMode: All
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Start Over
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.StartOver
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Start Over
+          includeInOnSelectIntent: false
+          triggerQueries:
+            - let's begin again
+            - start over
+            - start again
+            - restart
+
+        actions:
+          - kind: Question
+            id: question_zguoVV
+            alwaysPrompt: false
+            variable: init:Topic.Confirm
+            prompt: Are you sure you want to restart the conversation?
+            entity: BooleanPrebuiltEntity
+
+          - kind: ConditionGroup
+            id: conditionGroup_lvx2zV
+            conditions:
+              - id: conditionItem_sVQtHa
+                condition: =Topic.Confirm = true
+                actions:
+                  - kind: BeginDialog
+                    id: 0YKYsy
+                    dialog: template-content.topic.ResetConversation
+
+            elseActions:
+              - kind: SendActivity
+                id: sendMessage_lk2CyQ
+                activity: Ok. Let's carry on.
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: MPA Create Plan
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.action.MPACreatePlan
+    dialog:
+      kind: TaskDialog
+      outputs:
+        - propertyName: status
+
+        - propertyName: plan_id
+
+        - propertyName: plan_code
+
+        - propertyName: version_id
+
+        - propertyName: version_code
+
+        - propertyName: client_name
+
+        - propertyName: sections_created
+
+        - propertyName: message
+
+      action:
+        kind: InvokeFlowTaskAction
+        flowId: 11f26a37-d5e8-f011-8544-6045bd060784
+
+      outputMode: All
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Search Dynamics 365 knowledge article flow
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.action.SearchDynamics365knowledgearticleflow
+    dialog:
+      kind: TaskDialog
+      outputs:
+        - propertyName: jsonresult
+
+        - propertyName: textresult
+
+        - propertyName: articlecount
+
+      action:
+        kind: InvokeFlowTaskAction
+        flowId: 87023c69-962c-ec11-b6e6-000d3a574957
+
+      outputMode: All
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: On Error
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: This system topic triggers when the agent encounters an error. When using the test chat pane, the full error description is displayed.
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.OnError
+    dialog:
+      startBehavior: UseLatestPublishedContentAndCancelOtherTopics
+      beginDialog:
+        kind: OnError
+        id: main
+        actions:
+          - kind: SetVariable
+            id: setVariable_timestamp
+            variable: init:Topic.CurrentTime
+            value: =Text(Now(), DateTimeFormat.UTC)
+
+          - kind: ConditionGroup
+            id: condition_1
+            conditions:
+              - id: bL4wmY
+                condition: =System.Conversation.InTestMode = true
+                actions:
+                  - kind: SendActivity
+                    id: sendMessage_XJBYMo
+                    activity: |-
+                      Error Message: {System.Error.Message}
+                      Error Code: {System.Error.Code}
+                      Conversation Id: {System.Conversation.Id}
+                      Time (UTC): {Topic.CurrentTime}
+
+            elseActions:
+              - kind: SendActivity
+                id: sendMessage_dZ0gaF
+                activity:
+                  text:
+                    - |-
+                      An error has occurred.
+                      Error code: {System.Error.Code}
+                      Conversation Id: {System.Conversation.Id}
+                      Time (UTC): {Topic.CurrentTime}.
+                  speak:
+                    - An error has occurred, please try again.
+
+          - kind: LogCustomTelemetryEvent
+            id: 9KwEAn
+            eventName: OnErrorLog
+            properties: "={ErrorMessage: System.Error.Message, ErrorCode: System.Error.Code, TimeUTC: Topic.CurrentTime, ConversationId: System.Conversation.Id}"
+
+          - kind: CancelAllDialogs
+            id: NW7NyY
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Fallback
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: This system topic triggers when the user's utterance does not match any existing topics.
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.Fallback
+    dialog:
+      beginDialog:
+        kind: OnUnknownIntent
+        id: main
+        actions:
+          - kind: ConditionGroup
+            id: conditionGroup_LktzXw
+            conditions:
+              - id: conditionItem_tlGIVo
+                condition: =System.FallbackCount < 3
+                actions:
+                  - kind: SendActivity
+                    id: sendMessage_QZreqo
+                    activity: I'm sorry, I'm not sure how to help with that. Can you try rephrasing?
+
+            elseActions:
+              - kind: BeginDialog
+                id: 5aXj5M
+                dialog: template-content.topic.Escalate
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Multiple Topics Matched
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: This system topic triggers when the agent matches multiple Topics with the incoming message and needs to clarify which one should be triggered.
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.MultipleTopicsMatched
+    dialog:
+      beginDialog:
+        kind: OnSelectIntent
+        id: main
+        triggerBehavior: Always
+        actions:
+          - kind: SetVariable
+            id: setVariable_M6434i
+            variable: init:Topic.IntentOptions
+            value: =System.Recognizer.IntentOptions
+
+          - kind: SetTextVariable
+            id: setTextVariable_0
+            variable: Topic.NoneOfTheseDisplayName
+            value: None of these
+
+          - kind: EditTable
+            id: sendMessage_g5Ls09
+            changeType: Add
+            itemsVariable: Topic.IntentOptions
+            value: "={ DisplayName: Topic.NoneOfTheseDisplayName, TopicId: \"NoTopic\", TriggerId: \"NoTrigger\", Score: 1.0 }"
+
+          - kind: Question
+            id: question_zf2HhP
+            interruptionPolicy:
+              allowInterruption: false
+
+            alwaysPrompt: true
+            variable: System.Recognizer.SelectedIntent
+            prompt: "To clarify, did you mean:"
+            entity:
+              kind: DynamicClosedListEntity
+              items: =Topic.IntentOptions
+
+          - kind: ConditionGroup
+            id: conditionGroup_60PuXb
+            conditions:
+              - id: conditionItem_rs7GgM
+                condition: =System.Recognizer.SelectedIntent.TopicId = "NoTopic"
+                actions:
+                  - kind: ReplaceDialog
+                    id: YZXRDb
+                    dialog: template-content.topic.Fallback
+
+  - kind: GlobalVariableComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: current_step1
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.variable.current_step1
+    variable:
+      name: current_step1
+      scope: User
+      isExternalInitializationAllowed: false
+      initializationTimeoutInMilliseconds: 0
+      isOutputToExternalCallers: false
+
+  - kind: CustomEntityComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: LifecycleMode
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.entity.LifecycleMode
+    entity:
+      kind: ClosedListEntity
+      smartMatchingEnabled: true
+      items:
+        - id: sE8ENj
+          displayName: Planning
+          synonyms:
+            - brief
+            - media brief
+            - media plan
+            - create plan
+            - new plan
+            - Planning mode
+
+        - id: 2AYMfj
+          displayName: Infllight
+          synonyms:
+            - make changes
+            - adjust
+            - tweak
+            - optimization
+            - optimize
+            - active
+            - in-flight
+            - in-flight mode
+
+        - id: OEmi2m
+          displayName: Postmortem
+          synonyms:
+            - post campaign analysis
+            - Post campaign
+            - wrap up
+            - review
+            - analysis
+            - post-mortem
+            - post-mortem mode
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: MPA Validate Plan
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.action.MPAValidatePlan
+    dialog:
+      kind: TaskDialog
+      action:
+        kind: InvokeFlowTaskAction
+        flowId: f4264a05-a5e9-f011-8544-6045bd09a586
+
+      outputMode: All
+
+  - kind: GlobalVariableComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: client_id
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.variable.client_id
+    variable:
+      name: client_id
+      scope: User
+      isExternalInitializationAllowed: false
+      initializationTimeoutInMilliseconds: 0
+      isOutputToExternalCallers: false
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: MPA Process Media Brief
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.action.MPAProcessMediaBrief
+    dialog:
+      kind: TaskDialog
+      action:
+        kind: InvokeFlowTaskAction
+        flowId: 5554fcb8-b7e9-f011-8544-6045bd09a586
+
+      outputMode: All
+
+  - kind: GlobalVariableComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: current_pathway
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.variable.current_pathway
+    variable:
+      name: current_pathway
+      scope: User
+      isExternalInitializationAllowed: false
+      initializationTimeoutInMilliseconds: 0
+      isOutputToExternalCallers: false
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: MPA Initialize Session
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.action.MPAInitializeSession
+    dialog:
+      kind: TaskDialog
+      outputs:
+        - propertyName: status
+
+        - propertyName: session_id
+
+        - propertyName: session_code
+
+        - propertyName: session_type
+
+        - propertyName: agent_type
+
+        - propertyName: message
+
+      action:
+        kind: InvokeFlowTaskAction
+        flowId: d0e70b38-dae8-f011-8544-002248084b3a
+
+      outputMode: All
+
+  - kind: GlobalVariableComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: end_date
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.variable.end_date
+    variable:
+      name: end_date
+      scope: User
+      isExternalInitializationAllowed: false
+      initializationTimeoutInMilliseconds: 0
+      isOutputToExternalCallers: false
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: MPA Create PostMortem
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.action.MPACreatePostMortem
+    dialog:
+      kind: TaskDialog
+      action:
+        kind: InvokeFlowTaskAction
+        flowId: 4faec868-abe9-f011-8543-000d3a3320e6
+
+      outputMode: All
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: End of Conversation
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: |-
+      This system topic is only triggered by a redirect action,
+      and guides the user through rating their conversation with the agent.
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.EndofConversation
+    dialog:
+      startBehavior: CancelOtherTopics
+      beginDialog:
+        kind: OnSystemRedirect
+        id: main
+        actions:
+          - kind: Question
+            id: 41d42054-d4cb-4e90-b922-2b16b37fe379
+            conversationOutcome: ResolvedImplied
+            alwaysPrompt: true
+            variable: init:Topic.SurveyResponse
+            prompt: Did that answer your question?
+            entity: BooleanPrebuiltEntity
+
+          - kind: ConditionGroup
+            id: condition-0
+            conditions:
+              - id: condition-0-item-0
+                condition: =Topic.SurveyResponse = true
+                actions:
+                  - kind: CSATQuestion
+                    id: csat_1
+                    conversationOutcome: ResolvedConfirmed
+
+                  - kind: SendActivity
+                    id: sendMessage_8r29O0
+                    activity: Thanks for your feedback.
+
+                  - kind: Question
+                    id: question_1
+                    alwaysPrompt: true
+                    variable: init:Topic.Continue
+                    prompt: Can I help with anything else?
+                    entity: BooleanPrebuiltEntity
+
+                  - kind: ConditionGroup
+                    id: condition-1
+                    conditions:
+                      - id: condition-1-item-0
+                        condition: =Topic.Continue = true
+                        actions:
+                          - kind: SendActivity
+                            id: sendMessage_4eOE6h
+                            activity: Go ahead. I'm listening.
+
+                    elseActions:
+                      - kind: SendActivity
+                        id: yHBz55
+                        activity: Ok, goodbye.
+
+                      - kind: EndConversation
+                        id: jh1GMT
+
+            elseActions:
+              - kind: Question
+                id: PM68ot
+                alwaysPrompt: true
+                variable: init:Topic.TryAgain
+                prompt: Sorry I wasn't able to help better. Would you like to try again?
+                entity: BooleanPrebuiltEntity
+
+              - kind: ConditionGroup
+                id: KNxYBf
+                conditions:
+                  - id: DPveFP
+                    condition: =Topic.TryAgain = false
+                    actions:
+                      - kind: BeginDialog
+                        id: cngqi4
+                        dialog: template-content.topic.Escalate
+
+                elseActions:
+                  - kind: SendActivity
+                    id: GrVHEW
+                    activity: Go ahead. I'm listening.
+
+  - kind: GlobalVariableComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: client_name
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.variable.client_name
+    variable:
+      name: client_name
+      scope: User
+      isExternalInitializationAllowed: false
+      initializationTimeoutInMilliseconds: 0
+      isOutputToExternalCallers: false
+
+  - kind: CustomEntityComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Channel
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Marketing Channels
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.entity.Channel
+    entity:
+      kind: ClosedListEntity
+      smartMatchingEnabled: true
+      items:
+        - id: VDB6nM
+          displayName: LinkedIn
+          synonyms:
+            - industry marketing
+            - B2B social
+            - Linked In
+            - LI
+
+        - id: QACgVY
+          displayName: Programmatic
+          synonyms:
+            - DSP
+            - banner ads
+            - display
+            - programmatic display
+            - header bidding
+            - real time bidding
+            - RTB
+            - programmatic banners
+            - programmatic marketing
+
+        - id: DWehoz
+          displayName: CTV
+          synonyms:
+            - Paramount+
+            - Disney+
+            - Disney
+            - Paramount
+            - Netflix
+            - Apple
+            - Firestick
+            - Roku
+            - Hulu
+            - Streaming TV
+            - OTT
+            - CTV/OTT
+            - Connected tv
+
+        - id: YStY9s
+          displayName: Audio
+          synonyms:
+            - SiriusXM
+            - Sirius XM
+            - Sirius
+            - AM
+            - FM/AM
+            - FM
+            - local radio
+            - broadcast radio
+            - Radio
+
+        - id: 5rHwGr
+          displayName: OOH
+          synonyms:
+            - signs
+            - Signage
+            - truck
+            - taxi
+            - bus
+            - tube
+            - subway
+            - billboard
+            - airport
+            - billboards
+            - out of home
+
+        - id: vIjmeQ
+          displayName: Retail Media
+          synonyms:
+            - MCM
+            - Mastercard Commerce Media
+            - Amazon
+            - Walmart Connect
+            - Roundel
+            - Target Roundel
+            - Direct Deal
+            - Direct Buy
+            - CPG
+            - Private Market Place
+            - PMP
+            - RMN
+            - retail media networks
+
+        - id: sdpxiC
+          displayName: Native
+          synonyms:
+            - Outbrain
+            - Taboola
+            - content
+            - content marketing
+            - inline ads
+            - content discovery
+            - native ads
+
+        - id: 6b77H3
+          displayName: Influencer
+          synonyms:
+            - artists
+            - musicians
+            - athletes
+            - actors
+            - famous
+            - stars
+            - celebrity
+
+        - id: naHONN
+          displayName: Affiliate
+          synonyms:
+            - partner stack
+            - Flexoffers
+            - affiliate marketing
+            - Impact
+            - Avantlink
+            - Share-a-sale
+            - Share a sales
+            - CJ
+            - Commission junction
+
+        - id: xhPJEq
+          displayName: Email
+          synonyms:
+            - SMS
+            - Push
+            - CRM
+            - digital direct
+            - e-mail
+
+        - id: jffG5O
+          displayName: Google
+          synonyms:
+            - GAM
+            - Google ads manager
+            - Alphabet
+
+        - id: HWVSeZ
+          displayName: Bing
+          synonyms:
+            - Microsoft
+
+        - id: 5MlyZz
+          displayName: SEO
+          synonyms:
+            - Connected Commerce
+            - LLM Optimization
+            - AI Optimization
+            - Agent optimization
+            - GEO
+            - AEO
+            - Search engine optimization
+
+        - id: ikj9D3
+          displayName: Streaming
+          synonyms:
+            - Patreon
+
+        - id: 8vSyEM
+          displayName: Partner
+          synonyms:
+            - BandCamp
+
+        - id: qCawY7
+          displayName: Video
+          synonyms:
+            - DV360
+            - Youtube marketing
+            - YouTube ads
+            - You tube Ads
+            - You tube
+            - Youtube
+
+        - id: 0gKvJo
+          displayName: Paid Search
+          synonyms:
+            - SEM
+            - Amazon ads
+            - Amazon shopping
+            - Google shopping
+            - Shopping ads
+            - PMAX
+            - keyword ads
+            - keyword buying
+            - Keywords
+
+        - id: 1NKhgr
+          displayName: Social
+          synonyms:
+            - Blogging
+            - Blogs
+            - Reddit
+            - SC Ads
+            - Snap ads
+            - Snapchat ads
+            - SC
+            - Snap
+            - Snapchat
+            - TT Ads
+            - TT
+            - Tik Tok Ads
+            - TikTok Ads
+            - TikTok
+            - Tik Tok
+            - Threads
+            - Insta Ads
+            - IG ads
+            - Instagram ads
+            - IG
+            - Insta
+            - Instagram
+            - FB Look a like
+            - Facebook Extension
+            - FB extension
+            - Meta ads
+            - FB ads
+            - Facebook ads
+            - FB
+            - Facebook
+            - Meta
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Analytics Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes analytics requests to the Analytics Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToANL
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Analytics Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - analyze budget
+            - budget projection
+            - calculate projection
+            - run scenario
+            - scenario analysis
+            - marginal returns
+            - statistical analysis
+            - financial modeling
+            - forecast performance
+            - compare scenarios
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_ANL
+            activity: |
+              I'll connect you with the MPA v6 Analytics Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_ANL
+            targetBotId: mpa_v6_analytics_agent
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Audience Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes audience requests to the Audience Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToAUD
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Audience Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - segment audience
+            - audience segmentation
+            - targeting strategy
+            - calculate LTV
+            - lifetime value
+            - propensity scoring
+            - customer journey
+            - audience intelligence
+            - build segments
+            - prioritize audiences
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_AUD
+            activity: |
+              I'll connect you with the MPA v6 Audience Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_AUD
+            targetBotId: mpa_v6_audience_agent
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Channel Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes channel requests to the Channel Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToCHA
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Channel Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - channel selection
+            - media mix
+            - budget allocation
+            - emerging channels
+            - calculate allocation
+            - lookup benchmarks
+            - channel strategy
+            - media mix optimization
+            - channel recommendations
+            - optimize channels
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_CHA
+            activity: |
+              I'll connect you with the MPA v6 Channel Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_CHA
+            targetBotId: mpa_v6_channel_agent
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Supply Path Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes supply path requests to the Supply Path Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToSPO
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Supply Path Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - supply path
+            - programmatic optimization
+            - fee analysis
+            - partner evaluation
+            - calculate NBI
+            - net bidder impact
+            - analyze fees
+            - evaluate partner
+            - supply transparency
+            - DSP evaluation
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_SPO
+            activity: |
+              I'll connect you with the MPA v6 Supply Path Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_SPO
+            targetBotId: mpa_v6_supply_path_agent
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Document Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes document requests to the Document Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToDOC
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Document Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - generate document
+            - create brief
+            - media brief
+            - executive summary
+            - channel plan document
+            - budget rationale
+            - performance report
+            - optimization report
+            - export document
+            - create presentation
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_DOC
+            activity: |
+              I'll connect you with the MPA v6 Document Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_DOC
+            targetBotId: mpa_v6_document_agent
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Performance Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes performance requests to the Performance Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToPRF
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Performance Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - analyze performance
+            - campaign performance
+            - detect anomalies
+            - extract learnings
+            - attribution analysis
+            - optimization recommendations
+            - performance monitoring
+            - identify insights
+            - performance trends
+            - campaign analysis
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_PRF
+            activity: |
+              I'll connect you with the MPA v6 Performance Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_PRF
+            targetBotId: mpa_v6_performance_agent
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Change Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes change management requests to the Change Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToCHG
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Change Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - assess readiness
+            - organizational readiness
+            - map stakeholders
+            - stakeholder analysis
+            - plan adoption
+            - rollout plan
+            - change management
+            - adoption strategy
+            - resistance mitigation
+            - change assessment
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_CHG
+            activity: |
+              I'll connect you with the MPA v6 Change Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_CHG
+            targetBotId: mpa_v6_change_agent
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Strategy Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes strategy requests to the Strategy Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToCST
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Strategy Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - select framework
+            - strategic framework
+            - apply analysis
+            - SWOT analysis
+            - Porter Five Forces
+            - prioritize initiatives
+            - RICE scoring
+            - MoSCoW prioritization
+            - strategic consulting
+            - initiative ranking
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_CST
+            activity: |
+              I'll connect you with the MPA v6 Strategy Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_CST
+            targetBotId: mpa_v6_strategy_agent
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Route to Marketing Agent
+    parentBotId: 9b94e258-bde9-f011-8543-000d3a3320e6
+    description: Routes marketing requests to the Marketing Agent
+    shareContext: {}
+    state: Active
+    status: Active
+    publisherUniqueName: DefaultPublisheraragornai
+    schemaName: template-content.topic.RouteToMKT
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Route to Marketing Agent
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - create marketing brief
+            - marketing brief
+            - competitive analysis
+            - analyze competitive
+            - develop strategy
+            - marketing strategy
+            - competitive landscape
+            - brand strategy
+            - marketing recommendations
+            - market positioning
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_route_MKT
+            activity: |
+              I'll connect you with the MPA v6 Marketing Agent for this request.
+
+              Transferring to specialist agent...
+
+          - kind: TransferConversation
+            id: transfer_MKT
+            targetBotId: mpa_v6_marketing_agent
+

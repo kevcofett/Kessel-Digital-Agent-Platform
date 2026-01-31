@@ -1,0 +1,508 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {},
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "method": "POST",
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id",
+                "campaign_objectives"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "campaign_objectives": {
+                  "type": "object",
+                  "properties": {
+                    "primary_goal": {
+                      "type": "string"
+                    },
+                    "target_audience": {
+                      "type": "string"
+                    },
+                    "key_message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "brand_context": {
+                  "type": "object",
+                  "properties": {
+                    "brand_name": {
+                      "type": "string"
+                    },
+                    "brand_values": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "tone_of_voice": {
+                      "type": "string"
+                    },
+                    "visual_identity": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "deliverables": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "budget": {
+                  "type": "number"
+                },
+                "timeline": {
+                  "type": "object",
+                  "properties": {
+                    "brief_due": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "creative_due": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "launch_date": {
+                      "type": "string",
+                      "format": "date"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "245907D9-745D-4ED0-9539-F35FE130AA49"
+          },
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "campaign_objectives": "@triggerBody()?['campaign_objectives']",
+            "brand_context": "@triggerBody()?['brand_context']",
+            "deliverables": "@triggerBody()?['deliverables']",
+            "budget": "@triggerBody()?['budget']",
+            "timeline": "@triggerBody()?['timeline']",
+            "start_time": "@utcNow()"
+          }
+        },
+        "build_overview": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "716A673E-4DB0-43AF-A2E0-A1B6BE58CF2E"
+          },
+          "inputs": {
+            "brief_header": {
+              "project_name": "Q1 Brand Campaign",
+              "brief_version": "1.0",
+              "created_date": "@utcNow()",
+              "status": "Draft"
+            },
+            "project_background": {
+              "business_context": "Company is launching a major initiative to expand market presence and drive growth in target segments.",
+              "campaign_purpose": "Build awareness and consideration among target audience while reinforcing brand positioning.",
+              "success_definition": "Achieve measurable lift in brand awareness and generate qualified leads."
+            },
+            "objectives": {
+              "primary_objective": {
+                "goal": "Drive brand awareness and consideration",
+                "metric": "Brand awareness lift",
+                "target": "15% increase"
+              },
+              "secondary_objectives": [
+                {
+                  "goal": "Generate qualified leads",
+                  "metric": "MQLs",
+                  "target": 500
+                },
+                {
+                  "goal": "Increase website engagement",
+                  "metric": "Session duration",
+                  "target": "20% increase"
+                }
+              ]
+            },
+            "budget_overview": {
+              "total_budget": "@outputs('parse_input')?['budget']",
+              "creative_production": 30,
+              "media_spend": 60,
+              "contingency": 10
+            }
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "define_audience": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "1D71862A-DED6-4612-9A9A-51D4F785F8B5"
+          },
+          "inputs": {
+            "target_audience": {
+              "primary_audience": {
+                "description": "Senior business decision makers at mid-to-large enterprises",
+                "demographics": {
+                  "age_range": "35-55",
+                  "titles": [
+                    "VP/Director level",
+                    "C-Suite"
+                  ],
+                  "industry": "Technology, Financial Services, Healthcare",
+                  "company_size": "500+ employees"
+                },
+                "psychographics": {
+                  "priorities": [
+                    "Business growth",
+                    "Operational efficiency",
+                    "Risk management"
+                  ],
+                  "pain_points": [
+                    "Complexity of digital transformation",
+                    "Resource constraints",
+                    "Vendor fatigue"
+                  ],
+                  "motivations": [
+                    "Career advancement",
+                    "Organizational success",
+                    "Industry recognition"
+                  ]
+                },
+                "media_behaviors": {
+                  "preferred_channels": [
+                    "LinkedIn",
+                    "Industry publications",
+                    "Business podcasts"
+                  ],
+                  "content_preferences": [
+                    "Case studies",
+                    "Data-driven insights",
+                    "Expert perspectives"
+                  ],
+                  "peak_engagement_times": "Business hours, particularly Tuesday-Thursday"
+                }
+              },
+              "secondary_audience": {
+                "description": "Influencers and evaluators within target organizations",
+                "demographics": {
+                  "titles": [
+                    "Manager level",
+                    "Subject matter experts"
+                  ]
+                },
+                "role": "Research, evaluate, and recommend solutions"
+              }
+            },
+            "audience_insights": {
+              "key_insight": "Our audience is time-poor but insight-hungry - they need credible, concise content that demonstrates clear value.",
+              "communication_implication": "Lead with outcomes, support with evidence, respect their time."
+            }
+          },
+          "runAfter": {
+            "build_overview": [
+              "Succeeded"
+            ]
+          }
+        },
+        "develop_creative": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "C0B2FF05-90E8-4247-BC70-E8894E37115A"
+          },
+          "inputs": {
+            "creative_direction": {
+              "big_idea": "Transform Possible",
+              "creative_concept": "Showcase the transformative power of our solutions through real customer success stories and tangible outcomes.",
+              "tone_and_manner": {
+                "tone": "Confident, approachable, expert",
+                "manner": "Professional yet human, data-informed but not cold",
+                "personality": "Trusted advisor, innovative partner"
+              },
+              "visual_direction": {
+                "style": "Modern, clean, professional",
+                "color_palette": "Brand primary with warm accents",
+                "imagery_style": "Real people, authentic moments, dynamic compositions",
+                "typography": "Bold headlines, clean body copy"
+              },
+              "messaging_framework": {
+                "headline_approach": "Outcome-focused, action-oriented",
+                "body_copy_approach": "Clear value proposition, supported by proof points",
+                "cta_approach": "Clear next step, low barrier"
+              },
+              "key_messages": {
+                "primary": "Transform your business with proven solutions",
+                "supporting": [
+                  "500+ successful implementations",
+                  "95% customer satisfaction",
+                  "Average 3x ROI"
+                ]
+              }
+            },
+            "creative_mandatories": {
+              "must_include": [
+                "Brand logo (correct lockup)",
+                "Tagline",
+                "Clear CTA",
+                "Legal disclaimers where required"
+              ],
+              "must_avoid": [
+                "Competitor mentions",
+                "Unsubstantiated claims",
+                "Outdated imagery"
+              ],
+              "brand_guidelines_reference": "Brand Guidelines v3.0"
+            }
+          },
+          "runAfter": {
+            "define_audience": [
+              "Succeeded"
+            ]
+          }
+        },
+        "specify_deliverables": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "CDB8F2DF-B536-4620-90D6-86127F1E0375"
+          },
+          "inputs": {
+            "deliverable_specifications": {
+              "digital_advertising": [
+                {
+                  "format": "Display Banners",
+                  "sizes": [
+                    "300x250",
+                    "728x90",
+                    "160x600",
+                    "300x600"
+                  ],
+                  "quantity": 3,
+                  "versions": "A/B test variants",
+                  "requirements": [
+                    "Under 150KB",
+                    "Static and animated versions",
+                    "Click-through enabled"
+                  ]
+                },
+                {
+                  "format": "Social Media Ads",
+                  "platforms": [
+                    {
+                      "platform": "LinkedIn",
+                      "formats": [
+                        "Single Image 1200x628",
+                        "Carousel 1080x1080",
+                        "Video 1920x1080"
+                      ]
+                    },
+                    {
+                      "platform": "Meta",
+                      "formats": [
+                        "Feed 1080x1080",
+                        "Stories 1080x1920",
+                        "Carousel"
+                      ]
+                    }
+                  ],
+                  "quantity": 5,
+                  "requirements": [
+                    "Platform-specific aspect ratios",
+                    "Text overlay limits"
+                  ]
+                }
+              ],
+              "video": [
+                {
+                  "format": "Hero Video",
+                  "duration": "60 seconds",
+                  "aspect_ratio": "16:9",
+                  "requirements": [
+                    "Captioned",
+                    "Multiple cutdowns (30s, 15s, 6s)"
+                  ]
+                },
+                {
+                  "format": "Social Cutdowns",
+                  "duration": "15 seconds",
+                  "aspect_ratios": [
+                    "16:9",
+                    "1:1",
+                    "9:16"
+                  ]
+                }
+              ],
+              "content_assets": [
+                {
+                  "format": "Landing Page",
+                  "quantity": 1,
+                  "requirements": [
+                    "Responsive design",
+                    "Form integration",
+                    "Thank you page"
+                  ]
+                },
+                {
+                  "format": "Email Templates",
+                  "quantity": 3,
+                  "requirements": [
+                    "Responsive",
+                    "ESP compatible"
+                  ]
+                }
+              ]
+            },
+            "timeline": {
+              "milestones": [
+                {
+                  "milestone": "Brief Approval",
+                  "date": "Week 1"
+                },
+                {
+                  "milestone": "Concepts Presentation",
+                  "date": "Week 2"
+                },
+                {
+                  "milestone": "Creative Revisions",
+                  "date": "Week 3"
+                },
+                {
+                  "milestone": "Final Assets",
+                  "date": "Week 4"
+                },
+                {
+                  "milestone": "Launch",
+                  "date": "Week 5"
+                }
+              ]
+            }
+          },
+          "runAfter": {
+            "develop_creative": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "9D62D242-E326-407E-B5F1-ACEAEEF332CD"
+          },
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "MKT",
+            "status": "success",
+            "data": {
+              "creative_brief": {
+                "project_overview": "@outputs('build_overview')",
+                "target_audience": "@outputs('define_audience')?['target_audience']",
+                "audience_insights": "@outputs('define_audience')?['audience_insights']",
+                "creative_direction": "@outputs('develop_creative')?['creative_direction']",
+                "creative_mandatories": "@outputs('develop_creative')?['creative_mandatories']",
+                "deliverables": "@outputs('specify_deliverables')?['deliverable_specifications']",
+                "timeline": "@outputs('specify_deliverables')?['timeline']"
+              },
+              "brief_summary": {
+                "project": "Q1 Brand Campaign",
+                "objective": "Drive awareness and consideration",
+                "audience": "Senior business decision makers",
+                "big_idea": "Transform Possible",
+                "key_deliverables": [
+                  "Display advertising suite",
+                  "Social media assets",
+                  "Hero video with cutdowns",
+                  "Landing page and email templates"
+                ]
+              }
+            },
+            "confidence": "HIGH",
+            "sources": [
+              "AGENT_KB",
+              "CREATIVE_BRIEF_TEMPLATE",
+              "BRAND_GUIDELINES"
+            ],
+            "recommendations": [
+              "Schedule kickoff meeting with creative team",
+              "Gather additional brand assets and guidelines",
+              "Confirm budget allocation across deliverables"
+            ],
+            "follow_up_questions": [
+              "Would you like to develop a campaign strategy?",
+              "Should we conduct competitive analysis for creative direction?",
+              "Do you need a media plan to accompany this brief?"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "specify_deliverables": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "4DBE27AD-8149-48C6-852C-EBD759B5387A"
+          },
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('build_response')"
+          },
+          "kind": "Http"
+        },
+        "return_error": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "E5244009-23EF-4DC4-BE62-1D779684CD01"
+          },
+          "inputs": {
+            "statusCode": 500,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "request_id": "@outputs('parse_input')?['request_id']",
+              "source_agent": "MKT",
+              "error": true,
+              "code": "BRIEF_ERROR",
+              "message": "Failed to create creative brief"
+            }
+          },
+          "kind": "Http",
+          "operationOptions": "OnError"
+        }
+      }
+    },
+    "state": "Activated"
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,477 @@
+{
+  "version": "1.0.0",
+  "description": "End-to-end workflow tests for complete user journeys",
+  "created": "2026-01-19",
+  "total_tests": 12,
+  "categories": {
+    "planning_pathway": 4,
+    "inflight_pathway": 4,
+    "audit_pathway": 4
+  },
+  "tests": [
+    {
+      "id": "E2E-001",
+      "category": "planning_pathway",
+      "name": "Complete Media Plan - Standard",
+      "description": "Full 10-step planning workflow with all gates",
+      "pathway": "PLANNING",
+      "duration_estimate": "45-60 minutes",
+      "steps": [
+        {
+          "step": 1,
+          "name": "Foundation - Objectives",
+          "agent": "ORC",
+          "user_input": "Start a new media plan for Q2 e-commerce campaign with $500K budget",
+          "expected_outputs": ["session_id", "pathway_confirmation", "objective_capture"],
+          "checkpoint": "objectives_documented"
+        },
+        {
+          "step": 2,
+          "name": "Foundation - Audience",
+          "agent": "AUD",
+          "user_input": "Target high-value customers aged 25-45 in urban areas",
+          "expected_outputs": ["segment_definition", "audience_size", "targeting_strategy"],
+          "checkpoint": "audience_defined"
+        },
+        {
+          "step": 3,
+          "name": "Foundation - Timeline",
+          "agent": "ORC",
+          "user_input": "Campaign runs April 1 - June 30, with a product launch April 15",
+          "expected_outputs": ["flight_dates", "key_milestones", "pacing_strategy"],
+          "gate": "GATE_1_FOUNDATION",
+          "checkpoint": "timeline_set"
+        },
+        {
+          "step": 4,
+          "name": "Strategy - Channel Mix",
+          "agent": "CHA",
+          "user_input": "Recommend optimal channel mix for conversion focus",
+          "expected_outputs": ["channel_allocation", "rationale", "benchmarks"],
+          "checkpoint": "channels_selected"
+        },
+        {
+          "step": 5,
+          "name": "Strategy - Budget Allocation",
+          "agent": "ANL",
+          "user_input": "Project outcomes and allocate budget across channels",
+          "expected_outputs": ["budget_breakdown", "projections", "confidence_intervals"],
+          "gate": "GATE_2_STRATEGY",
+          "checkpoint": "budget_allocated"
+        },
+        {
+          "step": 6,
+          "name": "Execution - Supply Path",
+          "agent": "SPO",
+          "user_input": "Optimize our programmatic supply path",
+          "expected_outputs": ["nbi_score", "partner_recommendations", "fee_analysis"],
+          "checkpoint": "supply_optimized"
+        },
+        {
+          "step": 7,
+          "name": "Execution - Tactics",
+          "agent": "CHA",
+          "user_input": "Define specific tactics for each channel",
+          "expected_outputs": ["tactic_details", "ad_formats", "targeting_parameters"],
+          "gate": "GATE_3_EXECUTION",
+          "checkpoint": "tactics_defined"
+        },
+        {
+          "step": 8,
+          "name": "Delivery - Measurement",
+          "agent": "PRF",
+          "user_input": "Define measurement framework and KPIs",
+          "expected_outputs": ["kpi_definitions", "measurement_plan", "attribution_approach"],
+          "checkpoint": "measurement_defined"
+        },
+        {
+          "step": 9,
+          "name": "Delivery - Optimization",
+          "agent": "PRF",
+          "user_input": "Set optimization rules and triggers",
+          "expected_outputs": ["optimization_rules", "thresholds", "alert_conditions"],
+          "checkpoint": "optimization_rules_set"
+        },
+        {
+          "step": 10,
+          "name": "Delivery - Documentation",
+          "agent": "DOC",
+          "user_input": "Generate the final media plan document",
+          "expected_outputs": ["document_url", "export_formats", "summary"],
+          "gate": "GATE_4_DELIVERY",
+          "checkpoint": "plan_complete"
+        }
+      ],
+      "success_criteria": {
+        "all_steps_complete": true,
+        "all_gates_passed": true,
+        "document_generated": true,
+        "session_status": "completed"
+      },
+      "priority": "P0",
+      "tags": ["e2e", "planning", "full-workflow"]
+    },
+    {
+      "id": "E2E-002",
+      "category": "planning_pathway",
+      "name": "Media Plan - Awareness Focus",
+      "description": "Planning workflow optimized for brand awareness",
+      "pathway": "PLANNING",
+      "context": {
+        "objective": "brand_awareness",
+        "budget": 750000,
+        "vertical": "CPG"
+      },
+      "key_differences": [
+        "Channel mix weighted toward reach/frequency",
+        "Upper funnel KPIs prioritized",
+        "Creative brief emphasis"
+      ],
+      "steps_abbreviated": [
+        "Foundation with awareness objectives",
+        "Audience defined for broad reach",
+        "Channel mix: Video, Display, Social heavy",
+        "Budget allocated for reach optimization",
+        "Measurement focused on brand lift"
+      ],
+      "priority": "P0",
+      "tags": ["e2e", "planning", "awareness"]
+    },
+    {
+      "id": "E2E-003",
+      "category": "planning_pathway",
+      "name": "Media Plan - Small Budget",
+      "description": "Planning workflow for constrained budget",
+      "pathway": "PLANNING",
+      "context": {
+        "objective": "conversion",
+        "budget": 50000,
+        "vertical": "RETAIL"
+      },
+      "key_validations": [
+        "Minimum budget thresholds respected",
+        "Channel consolidation recommended",
+        "Efficiency optimization prioritized"
+      ],
+      "priority": "P1",
+      "tags": ["e2e", "planning", "small-budget"]
+    },
+    {
+      "id": "E2E-004",
+      "category": "planning_pathway",
+      "name": "Media Plan - Enterprise Multi-Market",
+      "description": "Complex enterprise planning with multiple markets",
+      "pathway": "PLANNING",
+      "context": {
+        "objective": "full_funnel",
+        "budget": 5000000,
+        "vertical": "FINSERV",
+        "markets": ["US", "UK", "DE"]
+      },
+      "key_validations": [
+        "Market-specific strategies",
+        "Currency handling",
+        "Regulatory considerations"
+      ],
+      "priority": "P1",
+      "tags": ["e2e", "planning", "enterprise"]
+    },
+    {
+      "id": "E2E-005",
+      "category": "inflight_pathway",
+      "name": "Campaign Optimization - Standard",
+      "description": "In-flight optimization workflow",
+      "pathway": "INFLIGHT",
+      "prerequisites": {
+        "active_campaign": true,
+        "performance_data": true,
+        "days_in_flight": 14
+      },
+      "steps": [
+        {
+          "step": 1,
+          "name": "Performance Review",
+          "agent": "PRF",
+          "user_input": "Review campaign performance vs targets",
+          "expected_outputs": ["performance_summary", "variance_analysis", "alerts"]
+        },
+        {
+          "step": 2,
+          "name": "Anomaly Detection",
+          "agent": "PRF",
+          "user_input": "Identify any performance anomalies",
+          "expected_outputs": ["anomalies", "severity", "affected_areas"]
+        },
+        {
+          "step": 3,
+          "name": "Reallocation Analysis",
+          "agent": "ANL",
+          "user_input": "Model reallocation scenarios",
+          "expected_outputs": ["scenarios", "projected_impact", "recommendations"]
+        },
+        {
+          "step": 4,
+          "name": "Channel Adjustment",
+          "agent": "CHA",
+          "user_input": "Recommend channel budget shifts",
+          "expected_outputs": ["reallocation_plan", "rationale", "expected_improvement"]
+        },
+        {
+          "step": 5,
+          "name": "Optimization Report",
+          "agent": "DOC",
+          "user_input": "Generate optimization report",
+          "expected_outputs": ["report_url", "changes_summary", "next_review_date"]
+        }
+      ],
+      "priority": "P0",
+      "tags": ["e2e", "inflight", "optimization"]
+    },
+    {
+      "id": "E2E-006",
+      "category": "inflight_pathway",
+      "name": "Emergency Performance Response",
+      "description": "Rapid response to severe performance drop",
+      "pathway": "INFLIGHT",
+      "trigger": "CPA increased 50% in 24 hours",
+      "steps": [
+        {
+          "name": "Rapid Diagnosis",
+          "agent": "PRF",
+          "expected_outputs": ["root_cause", "severity_assessment"]
+        },
+        {
+          "name": "Immediate Actions",
+          "agent": "CHA",
+          "expected_outputs": ["pause_recommendations", "budget_holds"]
+        },
+        {
+          "name": "Recovery Plan",
+          "agent": "ANL",
+          "expected_outputs": ["recovery_scenarios", "timeline"]
+        }
+      ],
+      "priority": "P0",
+      "tags": ["e2e", "inflight", "emergency"]
+    },
+    {
+      "id": "E2E-007",
+      "category": "inflight_pathway",
+      "name": "Mid-Campaign Scaling",
+      "description": "Scale successful campaign mid-flight",
+      "pathway": "INFLIGHT",
+      "trigger": "Campaign outperforming by 30%",
+      "steps": [
+        {
+          "name": "Success Analysis",
+          "agent": "PRF",
+          "expected_outputs": ["success_factors", "scalability_assessment"]
+        },
+        {
+          "name": "Budget Increase Modeling",
+          "agent": "ANL",
+          "expected_outputs": ["incremental_projections", "diminishing_returns_point"]
+        },
+        {
+          "name": "Scaling Plan",
+          "agent": "CHA",
+          "expected_outputs": ["scale_strategy", "channel_priorities"]
+        }
+      ],
+      "priority": "P1",
+      "tags": ["e2e", "inflight", "scaling"]
+    },
+    {
+      "id": "E2E-008",
+      "category": "inflight_pathway",
+      "name": "Competitive Response",
+      "description": "Respond to competitive market changes",
+      "pathway": "INFLIGHT",
+      "trigger": "Competitor launched aggressive campaign",
+      "steps": [
+        {
+          "name": "Competitive Analysis",
+          "agent": "MKT",
+          "expected_outputs": ["competitive_assessment", "threat_level"]
+        },
+        {
+          "name": "Strategic Response",
+          "agent": "CST",
+          "expected_outputs": ["response_options", "recommended_approach"]
+        },
+        {
+          "name": "Tactical Adjustment",
+          "agent": "CHA",
+          "expected_outputs": ["budget_shifts", "messaging_changes"]
+        }
+      ],
+      "priority": "P1",
+      "tags": ["e2e", "inflight", "competitive"]
+    },
+    {
+      "id": "E2E-009",
+      "category": "audit_pathway",
+      "name": "Full Media Audit",
+      "description": "Comprehensive audit of existing media program",
+      "pathway": "AUDIT",
+      "scope": "full_program",
+      "steps": [
+        {
+          "step": 1,
+          "name": "Performance Audit",
+          "agent": "PRF",
+          "user_input": "Audit performance across all campaigns",
+          "expected_outputs": ["performance_scorecard", "benchmark_comparison", "gaps"]
+        },
+        {
+          "step": 2,
+          "name": "Channel Efficiency Audit",
+          "agent": "CHA",
+          "user_input": "Audit channel mix efficiency",
+          "expected_outputs": ["channel_assessment", "optimization_opportunities", "waste_identification"]
+        },
+        {
+          "step": 3,
+          "name": "Supply Path Audit",
+          "agent": "SPO",
+          "user_input": "Audit programmatic supply chain",
+          "expected_outputs": ["fee_analysis", "transparency_score", "partner_assessment"]
+        },
+        {
+          "step": 4,
+          "name": "Audience Strategy Audit",
+          "agent": "AUD",
+          "user_input": "Audit targeting effectiveness",
+          "expected_outputs": ["targeting_assessment", "segment_performance", "data_quality"]
+        },
+        {
+          "step": 5,
+          "name": "Learning Extraction",
+          "agent": "PRF",
+          "user_input": "Extract key learnings from audit",
+          "expected_outputs": ["key_learnings", "best_practices", "playbook_updates"]
+        },
+        {
+          "step": 6,
+          "name": "Audit Report",
+          "agent": "DOC",
+          "user_input": "Generate comprehensive audit report",
+          "expected_outputs": ["audit_report_url", "executive_summary", "recommendations"]
+        }
+      ],
+      "priority": "P0",
+      "tags": ["e2e", "audit", "comprehensive"]
+    },
+    {
+      "id": "E2E-010",
+      "category": "audit_pathway",
+      "name": "Fee Transparency Audit",
+      "description": "Focused audit on programmatic fees",
+      "pathway": "AUDIT",
+      "scope": "programmatic_fees",
+      "steps": [
+        {
+          "name": "Fee Stack Analysis",
+          "agent": "SPO",
+          "expected_outputs": ["fee_breakdown", "benchmark_comparison"]
+        },
+        {
+          "name": "Partner Assessment",
+          "agent": "SPO",
+          "expected_outputs": ["partner_scores", "negotiation_opportunities"]
+        },
+        {
+          "name": "Savings Recommendation",
+          "agent": "ANL",
+          "expected_outputs": ["savings_potential", "implementation_roadmap"]
+        }
+      ],
+      "priority": "P1",
+      "tags": ["e2e", "audit", "fees"]
+    },
+    {
+      "id": "E2E-011",
+      "category": "audit_pathway",
+      "name": "Measurement Maturity Audit",
+      "description": "Audit measurement and attribution capabilities",
+      "pathway": "AUDIT",
+      "scope": "measurement",
+      "steps": [
+        {
+          "name": "Current State Assessment",
+          "agent": "PRF",
+          "expected_outputs": ["maturity_score", "capability_gaps"]
+        },
+        {
+          "name": "Attribution Analysis",
+          "agent": "ANL",
+          "expected_outputs": ["attribution_assessment", "incrementality_potential"]
+        },
+        {
+          "name": "Roadmap Development",
+          "agent": "CST",
+          "expected_outputs": ["maturity_roadmap", "investment_requirements"]
+        }
+      ],
+      "priority": "P1",
+      "tags": ["e2e", "audit", "measurement"]
+    },
+    {
+      "id": "E2E-012",
+      "category": "audit_pathway",
+      "name": "Annual Strategic Review",
+      "description": "Year-end comprehensive strategic review",
+      "pathway": "AUDIT",
+      "scope": "annual_review",
+      "steps": [
+        {
+          "name": "Year Performance Summary",
+          "agent": "PRF",
+          "expected_outputs": ["annual_performance", "yoy_comparison"]
+        },
+        {
+          "name": "Strategic Assessment",
+          "agent": "CST",
+          "expected_outputs": ["strategic_assessment", "market_position"]
+        },
+        {
+          "name": "Next Year Planning",
+          "agent": "ANL",
+          "expected_outputs": ["next_year_projections", "budget_recommendations"]
+        },
+        {
+          "name": "Change Readiness",
+          "agent": "CHG",
+          "expected_outputs": ["org_readiness", "capability_gaps"]
+        },
+        {
+          "name": "Annual Report",
+          "agent": "DOC",
+          "expected_outputs": ["annual_report_url", "board_presentation"]
+        }
+      ],
+      "priority": "P1",
+      "tags": ["e2e", "audit", "annual"]
+    }
+  ],
+  "execution_instructions": {
+    "environment": "Copilot Studio test environment",
+    "prerequisites": [
+      "All 10 agents deployed",
+      "All flows connected",
+      "Sample data available",
+      "Document templates configured"
+    ],
+    "pass_criteria": {
+      "P0_tests": "100% workflow completion",
+      "P1_tests": "90% workflow completion"
+    },
+    "metrics_to_capture": [
+      "Total workflow time (minutes)",
+      "Steps completed successfully",
+      "Gates passed",
+      "Document quality score (1-5)",
+      "User experience rating (1-5)"
+    ]
+  }
+}

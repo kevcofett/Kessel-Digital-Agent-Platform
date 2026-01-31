@@ -1,0 +1,150 @@
+{
+  "manifest_version": "1.0.0",
+  "release_version": "6.0.2",
+  "patch_date": "2026-01-19",
+  "description": "Patch set addressing 10 test failures from MPA v6.0 test suite",
+
+  "summary": {
+    "total_failures_addressed": 10,
+    "patches_created": 7,
+    "priority_breakdown": {
+      "P1": 6,
+      "P2": 4
+    },
+    "test_categories": {
+      "routing": 5,
+      "capability": 5
+    }
+  },
+
+  "patches": [
+    {
+      "patch_id": "PATCH-001",
+      "file": "PATCH-001-routing-edge-cases.json",
+      "priority": "P2",
+      "tests_addressed": ["RT-032", "RT-033", "RT-034", "RT-035"],
+      "type": "routing_enhancement",
+      "description": "Fix routing edge cases for ambiguous, minimal, multi-question, and unsupported requests",
+      "files_modified": [
+        "platform/agent-registry.json"
+      ]
+    },
+    {
+      "patch_id": "PATCH-002",
+      "file": "PATCH-002-rt038-adoption-planning.json",
+      "priority": "P1",
+      "tests_addressed": ["RT-038"],
+      "type": "routing_fix",
+      "description": "Fix RT-038 adoption planning routing to CHG agent",
+      "files_modified": [
+        "platform/agent-registry.json",
+        "agents/chg/flows/PlanAdoption.yaml"
+      ]
+    },
+    {
+      "patch_id": "PATCH-003",
+      "file": "PATCH-003-orc013-gate3-execution.json",
+      "priority": "P1",
+      "tests_addressed": ["ORC-013"],
+      "type": "capability_fix",
+      "description": "Fix ORC Gate 3 execution check validation logic",
+      "files_modified": [
+        "agents/orc/flows/UpdateProgress.yaml",
+        "agents/orc/kb/ORC_KB_Workflow_Gates_v1.txt"
+      ]
+    },
+    {
+      "patch_id": "PATCH-004",
+      "file": "PATCH-004-anl012-diminishing-returns.json",
+      "priority": "P1",
+      "tests_addressed": ["ANL-012"],
+      "type": "capability_fix",
+      "description": "Add diminishing returns analysis module to ANL",
+      "files_modified": [
+        "agents/anl/flows/CalculateProjection.yaml",
+        "agents/anl/kb/ANL_KB_Projection_Methods_v1.txt"
+      ]
+    },
+    {
+      "patch_id": "PATCH-005",
+      "file": "PATCH-005-doc008-campaign-brief.json",
+      "priority": "P1",
+      "tests_addressed": ["DOC-008"],
+      "type": "capability_fix",
+      "description": "Add campaign brief template to DOC agent",
+      "files_modified": [
+        "agents/doc/templates/campaign-brief-template.json",
+        "agents/doc/flows/GenerateDocument.yaml"
+      ]
+    },
+    {
+      "patch_id": "PATCH-006",
+      "file": "PATCH-006-prf007-fraud-detection.json",
+      "priority": "P1",
+      "tests_addressed": ["PRF-007"],
+      "type": "capability_fix",
+      "description": "Add fraud detection module to PRF anomaly detection",
+      "files_modified": [
+        "agents/prf/flows/DetectAnomalies.yaml",
+        "agents/prf/kb/PRF_KB_Anomaly_Detection_v1.txt"
+      ]
+    },
+    {
+      "patch_id": "PATCH-007",
+      "file": "PATCH-007-prf014-prf-anl-handoff.json",
+      "priority": "P1",
+      "tests_addressed": ["PRF-014"],
+      "type": "integration_fix",
+      "description": "Fix PRF to ANL handoff contract and schema mapping",
+      "files_modified": [
+        "contracts/INTER_AGENT_CONTRACT_v1.json",
+        "agents/prf/flows/AnalyzePerformance.yaml",
+        "agents/anl/flows/CalculateProjection.yaml"
+      ]
+    }
+  ],
+
+  "test_to_patch_mapping": {
+    "RT-032": "PATCH-001",
+    "RT-033": "PATCH-001",
+    "RT-034": "PATCH-001",
+    "RT-035": "PATCH-001",
+    "RT-038": "PATCH-002",
+    "ORC-013": "PATCH-003",
+    "ANL-012": "PATCH-004",
+    "DOC-008": "PATCH-005",
+    "PRF-007": "PATCH-006",
+    "PRF-014": "PATCH-007"
+  },
+
+  "application_order": [
+    "PATCH-001",
+    "PATCH-002",
+    "PATCH-003",
+    "PATCH-004",
+    "PATCH-005",
+    "PATCH-006",
+    "PATCH-007"
+  ],
+
+  "validation_tests": {
+    "pre_patch": {
+      "expected_failures": 10,
+      "command": "python3 scripts/run-tests.py --type all --filter RT-032,RT-033,RT-034,RT-035,RT-038,ORC-013,ANL-012,DOC-008,PRF-007,PRF-014"
+    },
+    "post_patch": {
+      "expected_failures": 0,
+      "command": "python3 scripts/run-tests.py --type all --filter RT-032,RT-033,RT-034,RT-035,RT-038,ORC-013,ANL-012,DOC-008,PRF-007,PRF-014"
+    }
+  },
+
+  "rollback_instructions": {
+    "method": "git_revert",
+    "commands": [
+      "git checkout HEAD~1 -- platform/agent-registry.json",
+      "git checkout HEAD~1 -- contracts/INTER_AGENT_CONTRACT_v1.json",
+      "git checkout HEAD~1 -- agents/*/flows/*.yaml",
+      "git checkout HEAD~1 -- agents/*/kb/*.txt"
+    ]
+  }
+}

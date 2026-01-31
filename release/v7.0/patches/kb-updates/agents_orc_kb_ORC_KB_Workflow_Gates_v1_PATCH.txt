@@ -1,0 +1,19 @@
+# KB PATCH
+# Target: agents/orc/kb/ORC_KB_Workflow_Gates_v1.txt
+# Section: GATE 3 EXECUTION CHECK
+# Change Type: update
+# Patch Source: PATCH-003
+
+============================================================
+
+GATE 3 EXECUTION CHECK
+
+Gate 3 validates readiness for campaign execution. Required completions include channel selection with budget allocation. Partner identification is recommended but not blocking.
+
+Check these elements:
+- channels_selected: At least one channel must be defined with allocation
+- budget_allocated: Total budget must be set with distribution percentages
+- partners_identified: DSP/SSP partners should be identified (warning if missing)
+- projections_complete: ANL projections should exist (optional)
+
+Output must include gate_status, all check results, and recommendations for any missing items.

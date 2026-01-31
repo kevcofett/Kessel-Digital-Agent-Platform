@@ -1,0 +1,165 @@
+{
+  "template_id": "CAMPAIGN_BRIEF",
+  "template_name": "Campaign Brief",
+  "version": "1.0.0",
+  "description": "Comprehensive campaign brief for stakeholder alignment",
+  "sections": [
+    {
+      "id": "campaign_overview",
+      "title": "Campaign Overview",
+      "required": true,
+      "fields": [
+        {
+          "name": "campaign_name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "campaign_period",
+          "type": "date_range",
+          "required": true
+        },
+        {
+          "name": "campaign_description",
+          "type": "rich_text",
+          "required": true
+        },
+        {
+          "name": "business_context",
+          "type": "rich_text",
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": "objectives",
+      "title": "Campaign Objectives",
+      "required": true,
+      "fields": [
+        {
+          "name": "primary_objective",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "secondary_objectives",
+          "type": "array",
+          "required": false
+        },
+        {
+          "name": "kpis",
+          "type": "kpi_table",
+          "required": true
+        },
+        {
+          "name": "success_criteria",
+          "type": "rich_text",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "target_audience",
+      "title": "Target Audience",
+      "required": true,
+      "fields": [
+        {
+          "name": "primary_audience",
+          "type": "audience_profile",
+          "required": true
+        },
+        {
+          "name": "secondary_audiences",
+          "type": "array",
+          "required": false
+        },
+        {
+          "name": "audience_insights",
+          "type": "rich_text",
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": "tactics",
+      "title": "Campaign Tactics",
+      "required": true,
+      "fields": [
+        {
+          "name": "channel_tactics",
+          "type": "channel_table",
+          "required": true
+        },
+        {
+          "name": "messaging_approach",
+          "type": "rich_text",
+          "required": true
+        },
+        {
+          "name": "creative_requirements",
+          "type": "array",
+          "required": false
+        },
+        {
+          "name": "timeline_phases",
+          "type": "timeline",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "budget",
+      "title": "Budget & Resources",
+      "required": true,
+      "fields": [
+        {
+          "name": "total_budget",
+          "type": "currency",
+          "required": true
+        },
+        {
+          "name": "budget_allocation",
+          "type": "allocation_table",
+          "required": true
+        },
+        {
+          "name": "resource_requirements",
+          "type": "array",
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": "measurement",
+      "title": "Measurement Framework",
+      "required": true,
+      "fields": [
+        {
+          "name": "measurement_approach",
+          "type": "rich_text",
+          "required": true
+        },
+        {
+          "name": "reporting_cadence",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "optimization_triggers",
+          "type": "array",
+          "required": false
+        },
+        {
+          "name": "attribution_model",
+          "type": "text",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output_formats": [
+    "docx",
+    "pdf",
+    "pptx"
+  ]
+}

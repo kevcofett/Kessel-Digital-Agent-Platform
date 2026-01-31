@@ -1,0 +1,109 @@
+{
+  "version": "1.0.0",
+  "description": "Feature flags for MPA v6.0 multi-agent platform deployment",
+  "created": "2026-01-19",
+  "environment": "production",
+  "flags": {
+    "multi_agent_routing": {
+      "enabled": true,
+      "description": "Enable multi-agent routing via ORC orchestrator",
+      "agents_enabled": ["ORC", "ANL", "AUD", "CHA", "SPO", "DOC", "PRF", "CHG", "CST", "MKT"]
+    },
+    "agent_orc": {
+      "enabled": true,
+      "description": "Orchestrator agent - routes requests and manages sessions",
+      "flows": ["RouteToAgent", "InitializeSession", "GetAgentRegistry"]
+    },
+    "agent_anl": {
+      "enabled": true,
+      "description": "Analytics agent - calculations, projections, scenarios",
+      "flows": ["CalculateProjection", "RunScenario"]
+    },
+    "agent_aud": {
+      "enabled": true,
+      "description": "Audience agent - segmentation, LTV, targeting",
+      "flows": ["SegmentAudience", "CalculateLTV"]
+    },
+    "agent_cha": {
+      "enabled": true,
+      "description": "Channel agent - allocation, benchmarks, optimization",
+      "flows": ["LookupBenchmarks", "CalculateAllocation"]
+    },
+    "agent_spo": {
+      "enabled": true,
+      "description": "Supply Path agent - NBI, fees, partner evaluation",
+      "flows": ["CalculateNBI", "AnalyzeFees", "EvaluatePartner"]
+    },
+    "agent_doc": {
+      "enabled": true,
+      "description": "Document agent - generation, exports, formatting",
+      "flows": ["GenerateDocument", "ExportPlan"]
+    },
+    "agent_prf": {
+      "enabled": true,
+      "description": "Performance agent - analysis, anomaly detection, learnings",
+      "flows": ["AnalyzePerformance", "DetectAnomalies", "ExtractLearnings"]
+    },
+    "agent_chg": {
+      "enabled": true,
+      "description": "Change Management agent - readiness, stakeholders, adoption",
+      "flows": ["AssessReadiness", "MapStakeholders", "PlanAdoption"]
+    },
+    "agent_cst": {
+      "enabled": true,
+      "description": "Consulting Strategy agent - frameworks, analysis, prioritization",
+      "flows": ["SelectFramework", "ApplyAnalysis", "PrioritizeInitiatives"]
+    },
+    "agent_mkt": {
+      "enabled": true,
+      "description": "Marketing Strategy agent - campaigns, briefs, competitive",
+      "flows": ["DevelopStrategy", "CreateBrief", "AnalyzeCompetitive"]
+    },
+    "cross_agent_handoff": {
+      "enabled": true,
+      "description": "Enable seamless handoffs between agents",
+      "supported_patterns": [
+        "ANL_to_CHA",
+        "AUD_to_CHA",
+        "CHA_to_SPO",
+        "PRF_to_CHA",
+        "CST_to_CHG",
+        "MKT_to_CHA",
+        "CST_to_MKT",
+        "ANY_to_DOC"
+      ]
+    },
+    "session_management": {
+      "enabled": true,
+      "description": "Track session state across agent interactions",
+      "timeout_minutes": 60,
+      "max_turns_per_session": 100
+    },
+    "dataverse_integration": {
+      "enabled": true,
+      "description": "Store session data in EAP Dataverse",
+      "entities": ["eap_sessions", "eap_agent_responses", "eap_feedback"]
+    },
+    "azure_functions": {
+      "enabled": true,
+      "description": "Azure Functions for document generation",
+      "functions": ["GenerateWordDoc", "GeneratePDF"]
+    },
+    "vertical_solutions": {
+      "enabled": true,
+      "description": "Industry vertical extensions",
+      "verticals": ["retail", "b2b-tech", "financial-services"]
+    }
+  },
+  "rollout": {
+    "percentage": 100,
+    "target_groups": ["all"],
+    "exclusions": []
+  },
+  "monitoring": {
+    "telemetry_enabled": true,
+    "log_level": "info",
+    "alert_on_errors": true,
+    "alert_threshold_percent": 5
+  }
+}

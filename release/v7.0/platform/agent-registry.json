@@ -1,0 +1,371 @@
+{
+  "version": "6.0.2",
+  "updated": "2026-01-19",
+  "agents": [
+    {
+      "code": "ORC",
+      "name": "Orchestrator",
+      "description": "Routes requests to specialist agents, manages session state",
+      "instructionsFile": "ORC_Copilot_Instructions_v1.txt",
+      "kbFiles": [
+        "ORC_KB_Workflow_Gates_v1.txt",
+        "ORC_KB_Error_Handling_v1.txt"
+      ],
+      "flows": [
+        "RouteToAgent",
+        "InitializeSession",
+        "GetAgentRegistry"
+      ],
+      "isRouter": true,
+      "status": "active"
+    },
+    {
+      "code": "ANL",
+      "name": "Analytics",
+      "description": "Calculations, projections, scenario modeling",
+      "instructionsFile": "ANL_Copilot_Instructions_v1.txt",
+      "kbFiles": [
+        "ANL_KB_Analytics_Engine_v1.txt",
+        "ANL_KB_Projection_Methods_v1.txt",
+        "ANL_KB_Scenario_Modeling_v1.txt",
+        "ANL_KB_Statistical_Tests_v1.txt"
+      ],
+      "flows": [
+        "CalculateProjection",
+        "RunScenario"
+      ],
+      "isRouter": false,
+      "status": "active"
+    },
+    {
+      "code": "AUD",
+      "name": "Audience",
+      "description": "Segmentation, LTV, targeting strategy, first-party data",
+      "instructionsFile": "AUD_Copilot_Instructions_v1.txt",
+      "kbFiles": [
+        "AUD_KB_Segmentation_Methods_v1.txt",
+        "AUD_KB_LTV_Models_v1.txt",
+        "AUD_KB_Targeting_Strategy_v1.txt",
+        "AUD_KB_First_Party_Data_v1.txt"
+      ],
+      "flows": [
+        "SegmentAudience",
+        "CalculateLTV"
+      ],
+      "isRouter": false,
+      "status": "active"
+    },
+    {
+      "code": "CHA",
+      "name": "Channel",
+      "description": "Channel selection, allocation, benchmarks",
+      "instructionsFile": "CHA_Copilot_Instructions_v1.txt",
+      "kbFiles": [
+        "CHA_KB_Channel_Registry_v1.txt",
+        "CHA_KB_Channel_Playbooks_v1.txt",
+        "CHA_KB_Allocation_Methods_v1.txt"
+      ],
+      "flows": [
+        "LookupBenchmarks",
+        "CalculateAllocation"
+      ],
+      "isRouter": false,
+      "status": "active"
+    },
+    {
+      "code": "SPO",
+      "name": "SupplyPath",
+      "description": "NBI calculation, fee analysis, partner evaluation",
+      "instructionsFile": "SPO_Copilot_Instructions_v1.txt",
+      "kbFiles": [
+        "SPO_KB_NBI_Calculation_v1.txt",
+        "SPO_KB_Fee_Analysis_v1.txt",
+        "SPO_KB_Partner_Evaluation_v1.txt"
+      ],
+      "flows": [
+        "CalculateNBI",
+        "AnalyzeFees",
+        "EvaluatePartner"
+      ],
+      "isRouter": false,
+      "status": "active"
+    },
+    {
+      "code": "DOC",
+      "name": "Document",
+      "description": "Document generation, formatting, exports",
+      "instructionsFile": "DOC_Copilot_Instructions_v1.txt",
+      "kbFiles": [
+        "DOC_KB_Template_Library_v1.txt",
+        "DOC_KB_Formatting_Rules_v1.txt",
+        "DOC_KB_Export_Specifications_v1.txt"
+      ],
+      "flows": [
+        "GenerateDocument",
+        "ExportPlan"
+      ],
+      "azureFunctions": [
+        "GenerateWordDoc",
+        "GeneratePDF"
+      ],
+      "isRouter": false,
+      "status": "active"
+    },
+    {
+      "code": "PRF",
+      "name": "Performance",
+      "description": "Performance analysis, anomaly detection, learnings",
+      "instructionsFile": "PRF_Copilot_Instructions_v1.txt",
+      "kbFiles": [
+        "PRF_KB_Optimization_Triggers_v1.txt",
+        "PRF_KB_Anomaly_Detection_v1.txt",
+        "PRF_KB_Learning_Extraction_v1.txt"
+      ],
+      "flows": [
+        "AnalyzePerformance",
+        "DetectAnomalies",
+        "ExtractLearnings"
+      ],
+      "isRouter": false,
+      "status": "active"
+    },
+    {
+      "code": "CHG",
+      "name": "ChangeManagement",
+      "description": "Change readiness assessment, stakeholder mapping, adoption planning",
+      "instructionsFile": "CHG_Copilot_Instructions_v1.txt",
+      "kbFiles": [
+        "CHG_KB_Change_Core_v1.txt",
+        "CHG_KB_Stakeholder_Methods_v1.txt",
+        "CHG_KB_Adoption_Planning_v1.txt"
+      ],
+      "flows": [
+        "AssessReadiness",
+        "MapStakeholders",
+        "PlanAdoption"
+      ],
+      "isRouter": false,
+      "status": "active"
+    },
+    {
+      "code": "CST",
+      "name": "ConsultingStrategy",
+      "description": "Strategic framework selection, analysis, initiative prioritization",
+      "instructionsFile": "CST_Copilot_Instructions_v1.txt",
+      "kbFiles": [
+        "CST_KB_Consulting_Core_v1.txt",
+        "CST_KB_Strategic_Frameworks_v1.txt",
+        "CST_KB_Prioritization_Methods_v1.txt",
+        "CST_KB_Industry_Context_v1.txt"
+      ],
+      "flows": [
+        "SelectFramework",
+        "ApplyAnalysis",
+        "PrioritizeInitiatives"
+      ],
+      "isRouter": false,
+      "status": "active"
+    },
+    {
+      "code": "MKT",
+      "name": "MarketingStrategy",
+      "description": "Campaign strategy, creative briefs, brand positioning, GTM planning",
+      "instructionsFile": "MKT_Copilot_Instructions_v1.txt",
+      "kbFiles": [
+        "MKT_KB_Campaign_Strategy_v1.txt",
+        "MKT_KB_Creative_Briefs_v1.txt",
+        "MKT_KB_Brand_Positioning_v1.txt",
+        "MKT_KB_GTM_Planning_v1.txt",
+        "MKT_KB_Competitive_Analysis_v1.txt"
+      ],
+      "flows": [
+        "DevelopStrategy",
+        "CreateBrief",
+        "AnalyzeCompetitive"
+      ],
+      "isRouter": false,
+      "status": "active"
+    }
+  ],
+  "routingKeywords": {
+    "ANL": [
+      "calculate",
+      "projection",
+      "scenario",
+      "forecast",
+      "reach",
+      "frequency",
+      "impressions",
+      "model",
+      "statistical",
+      "significance"
+    ],
+    "AUD": [
+      "segment",
+      "audience",
+      "rfm",
+      "ltv",
+      "lifetime value",
+      "customer",
+      "targeting",
+      "cohort",
+      "cdp",
+      "clean room",
+      "first-party",
+      "millennials",
+      "gen z",
+      "demographic",
+      "reach"
+    ],
+    "CHA": [
+      "channel",
+      "allocation",
+      "budget",
+      "mix",
+      "platform",
+      "cpm",
+      "cpc",
+      "benchmark",
+      "funnel",
+      "awareness",
+      "conversion"
+    ],
+    "SPO": [
+      "nbi",
+      "supply path",
+      "fee",
+      "dsp",
+      "ssp",
+      "programmatic",
+      "exchange",
+      "partner",
+      "working media",
+      "tech tax"
+    ],
+    "DOC": [
+      "document",
+      "export",
+      "generate",
+      "pdf",
+      "word",
+      "excel",
+      "report",
+      "summary",
+      "template",
+      "presentation"
+    ],
+    "PRF": [
+      "performance",
+      "analyze",
+      "anomaly",
+      "learning",
+      "optimize",
+      "trend",
+      "variance",
+      "kpi",
+      "benchmark",
+      "reallocation"
+    ],
+    "CHG": [
+      "change",
+      "readiness",
+      "stakeholder",
+      "adoption",
+      "rollout",
+      "transformation",
+      "resistance",
+      "communication plan",
+      "phased",
+      "adoption plan",
+      "crm",
+      "erp",
+      "system rollout",
+      "implementation plan",
+      "training program",
+      "user adoption",
+      "change initiative"
+    ],
+    "CST": [
+      "framework",
+      "strategic",
+      "prioritize",
+      "initiative",
+      "consulting",
+      "swot",
+      "porter",
+      "pestel",
+      "roadmap",
+      "business case"
+    ],
+    "MKT": [
+      "campaign",
+      "creative",
+      "brief",
+      "positioning",
+      "gtm",
+      "launch",
+      "brand",
+      "messaging",
+      "value proposition",
+      "competitive analysis"
+    ]
+  },
+  "handoffPatterns": {
+    "ANL_to_CHA": "After calculations complete, user needs channel recommendations",
+    "AUD_to_CHA": "After segmentation, user needs channel targeting strategy",
+    "CHA_to_SPO": "After channel selection, user needs supply path optimization",
+    "PRF_to_CHA": "After performance analysis, user needs budget reallocation",
+    "ANY_to_DOC": "User requests document, export, or report generation",
+    "CST_to_CHG": "After strategic planning, user needs change management support",
+    "MKT_to_CHA": "After campaign strategy, user needs channel allocation",
+    "CST_to_MKT": "After strategic framework, user needs marketing strategy development"
+  },
+  "edgeCaseHandling": {
+    "ambiguous_routing": {
+      "description": "Handle requests that could route to multiple agents",
+      "strategy": "primary_with_fallback",
+      "rules": [
+        {
+          "pattern": "reach.*millennials|millennials.*reach|best way to reach",
+          "primary_agent": "AUD",
+          "fallback_agent": "CHA",
+          "rationale": "Audience targeting question routes to AUD first"
+        },
+        {
+          "pattern": "what.*benchmarks.*ltv|ltv.*benchmarks|benchmarks.*projection",
+          "primary_agent": "AUD",
+          "secondary_agents": [
+            "CHA",
+            "ANL"
+          ],
+          "rationale": "Multi-topic questions start with first topic agent"
+        }
+      ]
+    },
+    "minimal_input": {
+      "description": "Handle incomplete or minimal user input",
+      "strategy": "clarification_request",
+      "rules": [
+        {
+          "pattern": "^\\w{1,15}\\??$",
+          "action": "request_clarification",
+          "response_template": "I'd be happy to help with that. Could you please provide more details about what you'd like to know about {{topic}}?"
+        }
+      ]
+    },
+    "unsupported_request": {
+      "description": "Handle requests outside agent capabilities",
+      "strategy": "polite_decline",
+      "keywords": [
+        "book",
+        "purchase",
+        "buy",
+        "order",
+        "reserve",
+        "schedule meeting",
+        "send email"
+      ],
+      "response_template": "I specialize in media planning strategy, analysis, and optimization. While I can't {{action}} directly, I can help you with planning and analysis. What aspect of your media strategy would you like to explore?"
+    }
+  }
+}

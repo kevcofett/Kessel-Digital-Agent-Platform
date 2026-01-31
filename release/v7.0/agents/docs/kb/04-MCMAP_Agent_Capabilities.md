@@ -1,11 +1,11 @@
 # MASTERCARD CONSULTING & MARKETING AGENT PLATFORM (MCMAP)
 # MASTERCARD DEPLOYMENT - AGENT CAPABILITIES REFERENCE
 
-**Document:** 04-MCMAP_Agent_Capabilities.md  
-**Version:** 1.0  
-**Date:** January 23, 2026  
-**Classification:** Mastercard Internal  
-**Status:** Production Ready  
+**Document:** 04-MCMAP_Agent_Capabilities.md
+**Version:** 2.0
+**Date:** January 31, 2026
+**Classification:** Mastercard Internal
+**Status:** Production Ready (v7.0)
 **Audience:** Business Users, Product Owners, Engineering Teams
 
 ---
@@ -23,8 +23,9 @@
 9. [CST - Consulting Strategy Agent](#9-cst---consulting-strategy-agent)
 10. [CHG - Change Management Agent](#10-chg---change-management-agent)
 11. [CA - Consulting Analysis Agent](#11-ca---consulting-analysis-agent)
-12. [Capability Cross-Reference](#12-capability-cross-reference)
-13. [Usage Examples](#13-usage-examples)
+12. [GHA - Growth Hacking Agent (v7.0 NEW)](#12-gha---growth-hacking-agent-v70-new)
+13. [Capability Cross-Reference](#13-capability-cross-reference)
+14. [Usage Examples](#14-usage-examples)
 
 ---
 
@@ -73,7 +74,8 @@ MCMAP employs a multi-agent architecture where specialized agents collaborate to
 | CST | Consulting | CA | Strategic frameworks, prioritization | 4 |
 | CHG | Change | CA | Adoption planning, stakeholders | 3 |
 | CA | Consulting | CA | Strategic analysis, business cases | 3 |
-| **TOTAL** | | | | **36** |
+| **GHA** | **Growth Hacking** | **Growth** | **AARRR lifecycle, growth strategy** | **10** |
+| **TOTAL** | | | | **46** |
 
 ### 1.3 How to Invoke Agents
 
@@ -90,6 +92,7 @@ Users interact with MCMAP through natural language. The Orchestrator (ORC) autom
 | Frameworks, strategy, analysis | CST | "Apply Porter's Five Forces" |
 | Change, adoption, stakeholders | CHG | "Assess organizational readiness" |
 | Business case, consulting | CA | "Create business case for initiative" |
+| **Growth, AARRR, lifecycle** | **GHA** | **"Develop growth strategy for fintech app"** |
 
 ---
 
@@ -143,10 +146,13 @@ performance, attribution              â†’ PRF
 anomaly, optimize, kpi                â†’ PRF
 framework, strategy, porter           â†’ CST
 prioritize, rice, moscow              â†’ CST
-change, adoption, readiness           â†’ CHG
-stakeholder, resistance               â†’ CHG
-business case, consulting             â†’ CA
-workflow, step, gate, help            â†’ ORC (self)
+change, adoption, readiness           â†' CHG
+stakeholder, resistance               â†' CHG
+business case, consulting             â†' CA
+growth, aarrr, lifecycle              â†' GHA
+acquisition, retention, referral      â†' GHA
+north star, viral, growth hack        â†' GHA
+workflow, step, gate, help            â†' ORC (self)
 ```
 
 ---
@@ -517,9 +523,98 @@ workflow, step, gate, help            â†’ ORC (self)
 
 ---
 
-## 12. CAPABILITY CROSS-REFERENCE
+## 12. GHA - GROWTH HACKING AGENT (v7.0 NEW)
 
-### 12.1 Capability by Agent
+### 12.1 Agent Profile
+
+| Attribute | Value |
+|-----------|-------|
+| **Code** | GHA |
+| **Full Name** | Growth Hacking Agent (Aragorn AI) |
+| **Domain** | Growth Strategy |
+| **Primary Function** | AARRR lifecycle optimization, growth strategy orchestration, specialist coordination |
+| **Instructions Size** | 8,000 characters |
+| **KB Files** | 1 Core + 9 Deep Modules |
+
+### 12.2 Responsibilities
+
+- Develop comprehensive growth strategies using AARRR framework
+- Define and validate North Star metrics for growth initiatives
+- Coordinate with specialist agents (ANL, AUD, CHA, DOC) via ORC
+- Apply behavioral psychology frameworks (Hook Model, Fogg Model)
+- Design and recommend growth experiments
+- Analyze competitor growth strategies (fintech/neobank focus)
+- Generate growth projections with compounding effects
+- Provide ICE-scored tactic recommendations by lifecycle stage
+
+### 12.3 Knowledge Base Files
+
+| File | Purpose | Size |
+|------|---------|------|
+| GHA_KB_Growth_Core_v1.txt | Core growth methodology, AARRR framework | ~25K chars |
+| GHA_KB_Specialist_Requests_v1.txt | When/how to request specialist assistance | ~15K chars |
+| GHA_KB_Growth_Workflows_v1.txt | Growth workflow definition, gates | ~18K chars |
+| GHA_KB_Behavioral_Psychology_v1.txt | Hook Model, Fogg Model, cognitive biases | ~20K chars |
+| GHA_KB_Fintech_Growth_v1.txt | Fintech/neobank growth strategies | ~22K chars |
+| GHA_KB_Experiment_Design_v1.txt | A/B testing, cohort analysis methods | ~18K chars |
+| GHA_KB_Growth_Metrics_v1.txt | North Star metrics, growth KPIs | ~15K chars |
+| GHA_KB_Referral_Programs_v1.txt | Viral mechanics, referral design | ~18K chars |
+| GHA_KB_Lifecycle_Tactics_v1.txt | Stage-specific tactics library | ~20K chars |
+| GHA_KB_Competitor_Analysis_v1.txt | Competitive growth intelligence | ~15K chars |
+
+### 12.4 Capabilities
+
+| Capability Code | Name | Description | Input | Output |
+|-----------------|------|-------------|-------|--------|
+| **GHA_AARRR_ANALYZE** | AARRR Lifecycle Analysis | Analyzes customer lifecycle across Acquisition, Activation, Retention, Referral, Revenue stages | business_context, metrics | lifecycle_assessment, stage_opportunities |
+| **GHA_NORTH_STAR** | North Star Definition | Defines and validates primary growth metric | business_model, objectives | north_star_metric, success_criteria |
+| **GHA_FRAMEWORK_SELECT** | Growth Framework Selection | Recommends growth frameworks for context | challenge_type, industry | recommended_frameworks[], rationale |
+| **GHA_TACTIC_RECOMMEND** | Tactic Recommendation | Provides ICE-scored tactics by lifecycle stage | lifecycle_stage, constraints | tactics[], ice_scores, implementation |
+| **GHA_BEHAVIORAL_APPLY** | Behavioral Psychology | Applies Hook Model, Fogg Model, cognitive biases | user_journey, objectives | behavioral_triggers, design_recommendations |
+| **GHA_COMPETITOR_ANALYZE** | Competitor Growth Analysis | Analyzes competitor growth strategies | competitors[], industry | competitive_insights, opportunities |
+| **GHA_EXPERIMENT_DESIGN** | Experiment Design | Designs A/B tests, cohort analysis, painted door tests | hypothesis, success_metric | experiment_plan, sample_size, duration |
+| **GHA_PROJECTION** | Growth Projection | Projects growth outcomes with compounding effects | baseline, tactics[], timeframe | projections{}, scenarios, confidence |
+| **GHA_SPECIALIST_REQUEST** | Specialist Coordination | Requests specialist analysis via ORC | request_type, context | specialist_route, request_payload |
+| **GHA_GROWTH_DOCUMENT** | Growth Plan Documentation | Generates comprehensive growth strategy documents | growth_plan_state | growth_strategy_document |
+
+### 12.5 Supported Growth Frameworks
+
+| Framework | Application | Output |
+|-----------|-------------|--------|
+| AARRR (Pirate Metrics) | Full-funnel lifecycle analysis | Stage-by-stage optimization plan |
+| Hook Model | Habit-forming product design | Trigger-Action-Reward-Investment loop |
+| Fogg Behavior Model | Behavior change design | Motivation-Ability-Prompt analysis |
+| Growth Loops | Sustainable growth mechanics | Self-reinforcing loop design |
+| Jobs-to-Be-Done (JTBD) | Customer motivation analysis | Job map with growth opportunities |
+| ICE Framework | Tactic prioritization | Scored tactic backlog |
+
+### 12.6 Cross-Agent Coordination
+
+GHA can request specialist assistance through ORC:
+
+| Specialist | Request Trigger | Output Used For |
+|------------|-----------------|-----------------|
+| ANL | Need growth projections, ROI/ROAS calculations | Quantifying growth initiatives |
+| AUD | Need segment analysis, LTV tiers | Targeting growth efforts |
+| CHA | Need channel recommendations | Growth channel selection |
+| DOC | Need growth strategy documentation | Final deliverable generation |
+
+### 12.7 Example Queries
+
+| Query | Capability Used | Sample Response |
+|-------|-----------------|-----------------|
+| "Develop a growth strategy for our fintech app" | GHA_AARRR_ANALYZE, GHA_FRAMEWORK_SELECT | Comprehensive AARRR analysis with framework recommendations |
+| "What should our North Star metric be?" | GHA_NORTH_STAR | North Star recommendation with validation criteria |
+| "Design a referral program for credit card activation" | GHA_TACTIC_RECOMMEND, GHA_BEHAVIORAL_APPLY | Referral program design with behavioral triggers |
+| "How do competitors like Nubank grow acquisition?" | GHA_COMPETITOR_ANALYZE | Competitive growth intelligence report |
+| "Project growth impact of proposed tactics" | GHA_PROJECTION | Growth projections with scenarios |
+| "Design an experiment to test onboarding flow" | GHA_EXPERIMENT_DESIGN | A/B test plan with sample size and duration |
+
+---
+
+## 13. CAPABILITY CROSS-REFERENCE
+
+### 13.1 Capability by Agent
 
 | Agent | Capability Count | Capability Codes |
 |-------|------------------|------------------|
@@ -533,24 +628,26 @@ workflow, step, gate, help            â†’ ORC (self)
 | CST | 4 | CST_FRAMEWORK_SELECT, CST_ENGAGEMENT_GUIDE, CST_STRATEGIC_ANALYZE, CST_PRIORITIZE |
 | CHG | 3 | CHG_READINESS, CHG_STAKEHOLDER, CHG_ADOPTION |
 | CA | 3 | CA_BUSINESS_CASE, CA_FINANCIAL_ANALYZE, CA_RECOMMEND |
+| **GHA** | **10** | **GHA_AARRR_ANALYZE, GHA_NORTH_STAR, GHA_FRAMEWORK_SELECT, GHA_TACTIC_RECOMMEND, GHA_BEHAVIORAL_APPLY, GHA_COMPETITOR_ANALYZE, GHA_EXPERIMENT_DESIGN, GHA_PROJECTION, GHA_SPECIALIST_REQUEST, GHA_GROWTH_DOCUMENT** |
 
-### 12.2 Capability by Function
+### 13.2 Capability by Function
 
 | Function | Capabilities |
 |----------|--------------|
-| **Analysis** | ANL_PROJECTION, ANL_SCENARIO_COMPARE, ANL_BAYESIAN, ANL_CAUSAL, CA_FINANCIAL_ANALYZE |
+| **Analysis** | ANL_PROJECTION, ANL_SCENARIO_COMPARE, ANL_BAYESIAN, ANL_CAUSAL, CA_FINANCIAL_ANALYZE, GHA_AARRR_ANALYZE, GHA_COMPETITOR_ANALYZE |
 | **Optimization** | ANL_MARGINAL_RETURN, CHA_CHANNEL_MIX, PRF_OPTIMIZE |
 | **Assessment** | ANL_CONFIDENCE, AUD_LTV_ASSESS, CHA_EMERGING_ASSESS, CHG_READINESS |
 | **Scoring** | AUD_PROPENSITY, SPO_PARTNER_SCORE, SPO_NBI_CALCULATE |
 | **Detection** | PRF_ANOMALY, AUD_IDENTITY |
-| **Generation** | DOC_GENERATE, CA_BUSINESS_CASE, CA_RECOMMEND |
-| **Strategy** | CST_FRAMEWORK_SELECT, CST_STRATEGIC_ANALYZE, CST_PRIORITIZE |
+| **Generation** | DOC_GENERATE, CA_BUSINESS_CASE, CA_RECOMMEND, GHA_GROWTH_DOCUMENT |
+| **Strategy** | CST_FRAMEWORK_SELECT, CST_STRATEGIC_ANALYZE, CST_PRIORITIZE, GHA_FRAMEWORK_SELECT, GHA_TACTIC_RECOMMEND |
+| **Growth** | GHA_NORTH_STAR, GHA_BEHAVIORAL_APPLY, GHA_EXPERIMENT_DESIGN, GHA_PROJECTION, GHA_SPECIALIST_REQUEST |
 
 ---
 
-## 13. USAGE EXAMPLES
+## 14. USAGE EXAMPLES
 
-### 13.1 Media Planning Workflow
+### 14.1 Media Planning Workflow
 
 ```
 USER: "Help me plan a $500K awareness campaign for Q2"
@@ -565,7 +662,7 @@ MCMAP WORKFLOW:
 7. Final output: Channel mix recommendation with projections and brief
 ```
 
-### 13.2 Performance Analysis Workflow
+### 14.2 Performance Analysis Workflow
 
 ```
 USER: "Analyze Q1 performance and identify issues"
@@ -578,7 +675,7 @@ MCMAP WORKFLOW:
 5. Final output: Performance analysis with anomalies and recommendations
 ```
 
-### 13.3 Strategic Consulting Workflow
+### 14.3 Strategic Consulting Workflow
 
 ```
 USER: "Help me build a business case for digital transformation"
@@ -594,8 +691,28 @@ MCMAP WORKFLOW:
 8. Final output: Business case with strategic analysis and change plan
 ```
 
+### 14.4 Growth Strategy Workflow (v7.0 NEW)
+
+```
+USER: "Help me develop a growth strategy for a fintech app"
+
+MCMAP WORKFLOW:
+1. ORC classifies intent â†' Routes to GHA (Growth Strategy)
+2. GHA analyzes AARRR lifecycle using GHA_AARRR_ANALYZE
+3. GHA defines North Star metric using GHA_NORTH_STAR
+4. GHA requests AUD via ORC â†' Segment analysis for growth targeting
+5. GHA requests ANL via ORC â†' Growth projections
+6. GHA requests CHA via ORC â†' Growth channel recommendations
+7. GHA synthesizes specialist contributions
+8. GHA applies behavioral frameworks using GHA_BEHAVIORAL_APPLY
+9. GHA designs experiments using GHA_EXPERIMENT_DESIGN
+10. GHA requests DOC via ORC â†' Growth strategy documentation
+11. Final output: Comprehensive growth strategy with projections and experiments
+```
+
 ---
 
-**Document Version:** 1.0  
-**Classification:** Mastercard Internal  
-**Last Updated:** January 23, 2026
+**Document Version:** 2.0
+**Classification:** Mastercard Internal
+**Last Updated:** January 31, 2026
+**Platform Version:** v7.0 (GHA Integration)

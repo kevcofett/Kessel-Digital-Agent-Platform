@@ -1,11 +1,11 @@
 # MASTERCARD CONSULTING & MARKETING AGENT PLATFORM (MCMAP)
 # MASTERCARD DEPLOYMENT - SYSTEM ARCHITECTURE SPECIFICATION
 
-**Document:** 02-MCMAP_System_Architecture.md  
-**Version:** 1.0  
-**Date:** January 23, 2026  
-**Classification:** Mastercard Internal  
-**Status:** Production Ready  
+**Document:** 02-MCMAP_System_Architecture.md
+**Version:** 2.0
+**Date:** January 31, 2026
+**Classification:** Mastercard Internal
+**Status:** Production Ready (v7.0)
 **Audience:** Engineering, Architecture, Integration Teams
 
 ---
@@ -44,12 +44,12 @@ MCMAP operates within Mastercard's Microsoft Power Platform environment, providi
 â”‚  â”‚              â”‚         â”‚  â”‚   Copilot Studio Agents     â”‚ â”‚              â”‚
 â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜         â”‚  â”‚   (ORC, ANL, AUD, CHA,      â”‚ â”‚              â”‚
 â”‚                           â”‚  â”‚    SPO, DOC, PRF, CST,      â”‚ â”‚              â”‚
-â”‚                           â”‚  â”‚    CHG, CA)                 â”‚ â”‚              â”‚
+â"‚                           â"‚  â"‚    CHG, CA, GHA)            â"‚ â"‚              â"‚
 â”‚                           â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â”‚              â”‚
 â”‚                           â”‚                â”‚                  â”‚              â”‚
 â”‚                           â”‚                â–¼                  â”‚              â”‚
 â”‚                           â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”‚              â”‚
-â”‚                           â”‚  â”‚   AI Builder Prompts (26)   â”‚ â”‚              â”‚
+â”‚                           â”‚  â”‚   AI Builder Prompts (36)   â”‚ â”‚              â”‚
 â”‚                           â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â”‚              â”‚
 â”‚                           â”‚                â”‚                  â”‚              â”‚
 â”‚                           â”‚                â–¼                  â”‚              â”‚
@@ -64,7 +64,7 @@ MCMAP operates within Mastercard's Microsoft Power Platform environment, providi
 â”‚                    â–¼                       â–¼                       â–¼        â”‚
 â”‚           â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”        â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”        â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”‚
 â”‚           â”‚  DATAVERSE   â”‚        â”‚  SHAREPOINT  â”‚        â”‚   AZURE AD   â”‚ â”‚
-â”‚           â”‚ (14 Tables)  â”‚        â”‚  (37+ KB     â”‚        â”‚   (AuthN/    â”‚ â”‚
+â”‚           â”‚ (14 Tables)  â”‚        â”‚  (80+ KB     â”‚        â”‚   (AuthN/    â”‚ â”‚
 â”‚           â”‚              â”‚        â”‚   Files)     â”‚        â”‚    AuthZ)    â”‚ â”‚
 â”‚           â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜        â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜        â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â”‚
 â”‚                                                                              â”‚
@@ -75,12 +75,12 @@ MCMAP operates within Mastercard's Microsoft Power Platform environment, providi
 
 | Metric | Value | Notes |
 |--------|-------|-------|
-| Total Agents | 10 | 7 MPA + 3 CA |
-| Total KB Files | 37+ | Across all agents |
-| Instruction Space | 80,000 chars | 8K Ã— 10 agents |
-| AI Builder Prompts | 26 | Registered in eap_prompt |
-| Dataverse Tables | 14 | EAP (8) + MPA (6) |
-| Power Automate Flows | 5 | Core orchestration flows |
+| Total Agents | 11 | 7 MPA + 3 CA + 1 Growth (GHA) |
+| Total KB Files | 80+ | Across all agents |
+| Instruction Space | 88,000 chars | 8K x 11 agents |
+| AI Builder Prompts | 36 | 26 base + 10 GHA (v7.0) |
+| Dataverse Tables | 15 | EAP (8) + MPA (6) + Growth (1) |
+| Power Automate Flows | 8 | 5 core + 3 GHA flows |
 | SharePoint Libraries | 1 | Knowledge Base hosting |
 
 ### 1.3 Technology Stack Summary
@@ -116,7 +116,7 @@ MCMAP operates within Mastercard's Microsoft Power Platform environment, providi
 
 | ADR ID | Decision | Rationale | Status |
 |--------|----------|-----------|--------|
-| ADR-001 | 10 agents maximum | Routing complexity increases exponentially | Approved |
+| ADR-001 | 11 agents maximum | Routing complexity increases exponentially | Approved |
 | ADR-002 | Deep modules per agent | Retrieval precision; focused content beats mega-documents | Approved |
 | ADR-003 | Routing in Dataverse | Deterministic routing beats RAG-based routing | Approved |
 | ADR-004 | AI Builder primary compute | Works in both DLP and non-DLP environments | Approved |
@@ -196,7 +196,7 @@ MCMAP operates within Mastercard's Microsoft Power Platform environment, providi
 â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”‚
 â”‚  â”‚                         SHAREPOINT                                     â”‚ â”‚
 â”‚  â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”‚ â”‚
-â”‚  â”‚  â”‚  KNOWLEDGE BASE LIBRARY (37+ Files)                             â”‚  â”‚ â”‚
+â”‚  â”‚  â”‚  KNOWLEDGE BASE LIBRARY (80+ Files)                             â”‚  â”‚ â”‚
 â”‚  â”‚  â”‚  - Agent Instructions (10 files, 8K chars each)                 â”‚  â”‚ â”‚
 â”‚  â”‚  â”‚  - Core KB Files (10 files, 20-25K chars each)                  â”‚  â”‚ â”‚
 â”‚  â”‚  â”‚  - Deep Module KB Files (17+ files, 15-25K chars each)          â”‚  â”‚ â”‚
@@ -213,7 +213,7 @@ MCMAP operates within Mastercard's Microsoft Power Platform environment, providi
 | Component | Specification |
 |-----------|---------------|
 | **Technology** | Microsoft Copilot Studio |
-| **Instance Count** | 10 agents |
+| **Instance Count** | 11 agents |
 | **Instructions Limit** | 8,000 characters per agent |
 | **Knowledge Source** | SharePoint document library |
 | **Topics** | 3-5 topics per agent |
@@ -240,6 +240,7 @@ MCMAP operates within Mastercard's Microsoft Power Platform environment, providi
 | Performance (PRF_*) | 4 | Attribution, anomaly detection |
 | Document (DOC_*) | 3 | Document generation, templates |
 | Orchestrator (ORC_*) | 2 | Intent classification, validation |
+| **Growth (GHA_*)** | **10** | **AARRR lifecycle, growth strategy, experiments** |
 
 ---
 
@@ -259,6 +260,7 @@ MCMAP operates within Mastercard's Microsoft Power Platform environment, providi
 | CST | Consulting Strategy | CA | 8K chars | 1 | 3 |
 | CHG | Change Management | CA | 8K chars | 1 | 2 |
 | CA | Consulting Agent | CA | 8K chars | 1 | 3 |
+| **GHA** | **Growth Hacking** | **Growth** | **8K chars** | **1** | **9** |
 
 ### 4.2 Agent Interaction Flow
 
@@ -711,7 +713,7 @@ POWER PLATFORM SOLUTIONS
 â”‚  â”œâ”€â”€ Components                                                             â”‚
 â”‚  â”‚   â”œâ”€â”€ Dataverse Tables (14)                                              â”‚
 â”‚  â”‚   â”œâ”€â”€ Power Automate Flows (5)                                           â”‚
-â”‚  â”‚   â”œâ”€â”€ AI Builder Prompts (26)                                            â”‚
+â”‚  â”‚   â”œâ”€â”€ AI Builder Prompts (36)                                            â”‚
 â”‚  â”‚   â””â”€â”€ Environment Variables                                              â”‚
 â”‚  â””â”€â”€ Dependencies                                                           â”‚
 â”‚      â”œâ”€â”€ Dataverse (built-in)                                               â”‚
@@ -756,13 +758,13 @@ DEPLOYMENT ORDER
        â””â”€â”€ Enable flows
 
 5. SHAREPOINT KB
-   â””â”€â”€ Upload 37+ KB files
+   â””â”€â”€ Upload 80+ KB files
        â””â”€â”€ Create document library
        â””â”€â”€ Upload files
        â””â”€â”€ Verify accessibility
 
 6. COPILOT STUDIO AGENTS
-   â””â”€â”€ Create and configure 10 agents
+   â””â”€â”€ Create and configure 11 agents
        â””â”€â”€ Import agent definitions
        â””â”€â”€ Link knowledge sources
        â””â”€â”€ Configure topics

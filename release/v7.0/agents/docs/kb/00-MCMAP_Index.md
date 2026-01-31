@@ -11,9 +11,9 @@ Quick reference for navigating MCMAP documentation.
 | 01 | Executive Summary | 57K | Strategic value, platform overview, extensibility |
 | 02 | System Architecture | 90K | Technical stack, component layers, integration |
 | 03 | Security Compliance | 55K | DLP, data provenance, audit controls |
-| 04 | Agent Capabilities | 31K | 10 agents, 36 capabilities, invocation |
-| 05 | Data Architecture | 53K | 14 Dataverse tables, schema, relationships |
-| 06 | AI Builder Integration | 53K | 26 prompts, configuration, GPT settings |
+| 04 | Agent Capabilities | 40K | 11 agents, 46 capabilities, invocation (v7.0 GHA) |
+| 05 | Data Architecture | 53K | 15 Dataverse tables, schema, relationships |
+| 06 | AI Builder Integration | 60K | 36 prompts, configuration, GPT settings (v7.0 GHA) |
 | 07 | Operational Runbook | 37K | Support tiers, maintenance, incidents |
 | 08 | Quality Assurance | 51K | Testing framework, Braintrust, scorers |
 | 09 | Future Use Cases | 25K | Strategic opportunities, $6.7-12B TAM |
@@ -31,6 +31,9 @@ Quick reference for navigating MCMAP documentation.
 | How many agents? | 04 | 1.2 |
 | What can ANL do? | 04 | 3 (Analytics) |
 | What can AUD do? | 04 | 4 (Audience) |
+| What can GHA do? | 04 | 12 (Growth Hacking - v7.0) |
+| Growth strategy? | 04 | 12 (GHA) |
+| AARRR lifecycle? | 04 | 12 (GHA) |
 | Platform stack? | 02 | 2.1 |
 | DLP compliance? | 03 | 3.1 |
 | Data provenance? | 03 | 11 |
@@ -91,6 +94,11 @@ Quick reference for navigating MCMAP documentation.
 | Capability | 04, 06, 02 |
 | Channel | 04 (CHA), 01 |
 | Consulting | 04 (CST, CHG, CA), 09 |
+| Growth Strategy | 04 (GHA), 01 |
+| AARRR | 04 (GHA) |
+| Growth Hacking | 04 (GHA), 09 |
+| Lifecycle | 04 (GHA, AUD) |
+| North Star | 04 (GHA) |
 | Dataverse | 05, 02 |
 | DLP | 03, 01, 02 |
 | Framework | 04 (CST), Glossary |
@@ -137,5 +145,6 @@ Quick reference for navigating MCMAP documentation.
 
 ---
 
-**Document Version:** 1.0
-**Last Updated:** January 24, 2026
+**Document Version:** 2.0
+**Last Updated:** January 31, 2026
+**Platform Version:** v7.0 (GHA Integration)

@@ -566,16 +566,16 @@ workflow, step, gate, help            â†' ORC (self)
 
 | Capability Code | Name | Description | Input | Output |
 |-----------------|------|-------------|-------|--------|
-| **GHA_AARRR_ANALYZE** | AARRR Lifecycle Analysis | Analyzes customer lifecycle across Acquisition, Activation, Retention, Referral, Revenue stages | business_context, metrics | lifecycle_assessment, stage_opportunities |
-| **GHA_NORTH_STAR** | North Star Definition | Defines and validates primary growth metric | business_model, objectives | north_star_metric, success_criteria |
+| **GHA_INTENT_CLASSIFY** | Intent Classification | Classifies growth-related user intents | user_message | intent_type, confidence |
+| **GHA_LIFECYCLE_ANALYZE** | AARRR Lifecycle Analysis | Analyzes customer lifecycle across Acquisition, Activation, Retention, Referral, Revenue stages | business_context, metrics | lifecycle_assessment, stage_opportunities |
+| **GHA_NORTH_STAR_DEFINE** | North Star Definition | Defines and validates primary growth metric | business_model, objectives | north_star_metric, success_criteria |
 | **GHA_FRAMEWORK_SELECT** | Growth Framework Selection | Recommends growth frameworks for context | challenge_type, industry | recommended_frameworks[], rationale |
 | **GHA_TACTIC_RECOMMEND** | Tactic Recommendation | Provides ICE-scored tactics by lifecycle stage | lifecycle_stage, constraints | tactics[], ice_scores, implementation |
-| **GHA_BEHAVIORAL_APPLY** | Behavioral Psychology | Applies Hook Model, Fogg Model, cognitive biases | user_journey, objectives | behavioral_triggers, design_recommendations |
-| **GHA_COMPETITOR_ANALYZE** | Competitor Growth Analysis | Analyzes competitor growth strategies | competitors[], industry | competitive_insights, opportunities |
+| **GHA_PSYCHOLOGY_APPLY** | Behavioral Psychology | Applies Hook Model, Fogg Model, cognitive biases | user_journey, objectives | behavioral_triggers, design_recommendations |
+| **GHA_COMPETITOR_GROWTH** | Competitor Growth Analysis | Analyzes competitor growth strategies | competitors[], industry | competitive_insights, opportunities |
 | **GHA_EXPERIMENT_DESIGN** | Experiment Design | Designs A/B tests, cohort analysis, painted door tests | hypothesis, success_metric | experiment_plan, sample_size, duration |
-| **GHA_PROJECTION** | Growth Projection | Projects growth outcomes with compounding effects | baseline, tactics[], timeframe | projections{}, scenarios, confidence |
-| **GHA_SPECIALIST_REQUEST** | Specialist Coordination | Requests specialist analysis via ORC | request_type, context | specialist_route, request_payload |
-| **GHA_GROWTH_DOCUMENT** | Growth Plan Documentation | Generates comprehensive growth strategy documents | growth_plan_state | growth_strategy_document |
+| **GHA_GROWTH_PROJECT** | Growth Projection | Projects growth outcomes with compounding effects | baseline, tactics[], timeframe | projections{}, scenarios, confidence |
+| **GHA_GROWTH_SYNTHESIZE** | Growth Plan Synthesis | Synthesizes comprehensive growth strategy documents | growth_plan_state | growth_strategy_document |
 
 ### 12.5 Supported Growth Frameworks
 
@@ -603,11 +603,11 @@ GHA can request specialist assistance through ORC:
 
 | Query | Capability Used | Sample Response |
 |-------|-----------------|-----------------|
-| "Develop a growth strategy for our fintech app" | GHA_AARRR_ANALYZE, GHA_FRAMEWORK_SELECT | Comprehensive AARRR analysis with framework recommendations |
-| "What should our North Star metric be?" | GHA_NORTH_STAR | North Star recommendation with validation criteria |
-| "Design a referral program for credit card activation" | GHA_TACTIC_RECOMMEND, GHA_BEHAVIORAL_APPLY | Referral program design with behavioral triggers |
-| "How do competitors like Nubank grow acquisition?" | GHA_COMPETITOR_ANALYZE | Competitive growth intelligence report |
-| "Project growth impact of proposed tactics" | GHA_PROJECTION | Growth projections with scenarios |
+| "Develop a growth strategy for our fintech app" | GHA_LIFECYCLE_ANALYZE, GHA_FRAMEWORK_SELECT | Comprehensive AARRR analysis with framework recommendations |
+| "What should our North Star metric be?" | GHA_NORTH_STAR_DEFINE | North Star recommendation with validation criteria |
+| "Design a referral program for credit card activation" | GHA_TACTIC_RECOMMEND, GHA_PSYCHOLOGY_APPLY | Referral program design with behavioral triggers |
+| "How do competitors like Nubank grow acquisition?" | GHA_COMPETITOR_GROWTH | Competitive growth intelligence report |
+| "Project growth impact of proposed tactics" | GHA_GROWTH_PROJECT | Growth projections with scenarios |
 | "Design an experiment to test onboarding flow" | GHA_EXPERIMENT_DESIGN | A/B test plan with sample size and duration |
 
 ---
@@ -628,20 +628,20 @@ GHA can request specialist assistance through ORC:
 | CST | 4 | CST_FRAMEWORK_SELECT, CST_ENGAGEMENT_GUIDE, CST_STRATEGIC_ANALYZE, CST_PRIORITIZE |
 | CHG | 3 | CHG_READINESS, CHG_STAKEHOLDER, CHG_ADOPTION |
 | CA | 3 | CA_BUSINESS_CASE, CA_FINANCIAL_ANALYZE, CA_RECOMMEND |
-| **GHA** | **10** | **GHA_AARRR_ANALYZE, GHA_NORTH_STAR, GHA_FRAMEWORK_SELECT, GHA_TACTIC_RECOMMEND, GHA_BEHAVIORAL_APPLY, GHA_COMPETITOR_ANALYZE, GHA_EXPERIMENT_DESIGN, GHA_PROJECTION, GHA_SPECIALIST_REQUEST, GHA_GROWTH_DOCUMENT** |
+| **GHA** | **10** | **GHA_LIFECYCLE_ANALYZE, GHA_NORTH_STAR_DEFINE, GHA_FRAMEWORK_SELECT, GHA_TACTIC_RECOMMEND, GHA_PSYCHOLOGY_APPLY, GHA_COMPETITOR_GROWTH, GHA_EXPERIMENT_DESIGN, GHA_GROWTH_PROJECT, GHA_INTENT_CLASSIFY, GHA_GROWTH_SYNTHESIZE** |
 
 ### 13.2 Capability by Function
 
 | Function | Capabilities |
 |----------|--------------|
-| **Analysis** | ANL_PROJECTION, ANL_SCENARIO_COMPARE, ANL_BAYESIAN, ANL_CAUSAL, CA_FINANCIAL_ANALYZE, GHA_AARRR_ANALYZE, GHA_COMPETITOR_ANALYZE |
+| **Analysis** | ANL_PROJECTION, ANL_SCENARIO_COMPARE, ANL_BAYESIAN, ANL_CAUSAL, CA_FINANCIAL_ANALYZE, GHA_LIFECYCLE_ANALYZE, GHA_COMPETITOR_GROWTH |
 | **Optimization** | ANL_MARGINAL_RETURN, CHA_CHANNEL_MIX, PRF_OPTIMIZE |
 | **Assessment** | ANL_CONFIDENCE, AUD_LTV_ASSESS, CHA_EMERGING_ASSESS, CHG_READINESS |
 | **Scoring** | AUD_PROPENSITY, SPO_PARTNER_SCORE, SPO_NBI_CALCULATE |
 | **Detection** | PRF_ANOMALY, AUD_IDENTITY |
-| **Generation** | DOC_GENERATE, CA_BUSINESS_CASE, CA_RECOMMEND, GHA_GROWTH_DOCUMENT |
+| **Generation** | DOC_GENERATE, CA_BUSINESS_CASE, CA_RECOMMEND, GHA_GROWTH_SYNTHESIZE |
 | **Strategy** | CST_FRAMEWORK_SELECT, CST_STRATEGIC_ANALYZE, CST_PRIORITIZE, GHA_FRAMEWORK_SELECT, GHA_TACTIC_RECOMMEND |
-| **Growth** | GHA_NORTH_STAR, GHA_BEHAVIORAL_APPLY, GHA_EXPERIMENT_DESIGN, GHA_PROJECTION, GHA_SPECIALIST_REQUEST |
+| **Growth** | GHA_NORTH_STAR_DEFINE, GHA_PSYCHOLOGY_APPLY, GHA_EXPERIMENT_DESIGN, GHA_GROWTH_PROJECT, GHA_INTENT_CLASSIFY |
 
 ---
 
@@ -698,13 +698,13 @@ USER: "Help me develop a growth strategy for a fintech app"
 
 MCMAP WORKFLOW:
 1. ORC classifies intent â†' Routes to GHA (Growth Strategy)
-2. GHA analyzes AARRR lifecycle using GHA_AARRR_ANALYZE
-3. GHA defines North Star metric using GHA_NORTH_STAR
+2. GHA analyzes AARRR lifecycle using GHA_LIFECYCLE_ANALYZE
+3. GHA defines North Star metric using GHA_NORTH_STAR_DEFINE
 4. GHA requests AUD via ORC â†' Segment analysis for growth targeting
 5. GHA requests ANL via ORC â†' Growth projections
 6. GHA requests CHA via ORC â†' Growth channel recommendations
 7. GHA synthesizes specialist contributions
-8. GHA applies behavioral frameworks using GHA_BEHAVIORAL_APPLY
+8. GHA applies behavioral frameworks using GHA_PSYCHOLOGY_APPLY
 9. GHA designs experiments using GHA_EXPERIMENT_DESIGN
 10. GHA requests DOC via ORC â†' Growth strategy documentation
 11. Final output: Comprehensive growth strategy with projections and experiments

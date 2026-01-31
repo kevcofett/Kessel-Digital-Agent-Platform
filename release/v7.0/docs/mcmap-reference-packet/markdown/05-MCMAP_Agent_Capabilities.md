@@ -47,28 +47,32 @@
 MCMAP employs a multi-agent architecture where specialized agents collaborate to provide comprehensive media planning and strategic consulting support:
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                      MCMAP AGENT ECOSYSTEM                                    â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                              â”‚
-â”‚                        â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                                       â”‚
-â”‚                        â”‚     ORC     â”‚                                       â”‚
-â”‚                        â”‚ Orchestratorâ”‚                                       â”‚
-â”‚                        â””â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”˜                                       â”‚
-â”‚                               â”‚                                              â”‚
-â”‚          â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                        â”‚
-â”‚          â”‚                    â”‚                    â”‚                        â”‚
-â”‚          â–¼                    â–¼                    â–¼                        â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                 â”‚
-â”‚  â”‚   MPA DOMAIN  â”‚   â”‚   CA DOMAIN   â”‚   â”‚   SUPPORT     â”‚                 â”‚
-â”‚  â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤   â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤   â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤                 â”‚
-â”‚  â”‚ ANL Analytics â”‚   â”‚ CST Strategy  â”‚   â”‚ DOC Document  â”‚                 â”‚
-â”‚  â”‚ AUD Audience  â”‚   â”‚ CHG Change    â”‚   â”‚ PRF Perform   â”‚                 â”‚
-â”‚  â”‚ CHA Channel   â”‚   â”‚ CA  Analysis  â”‚   â”‚               â”‚                 â”‚
-â”‚  â”‚ SPO Supply    â”‚   â”‚               â”‚   â”‚               â”‚                 â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                 â”‚
-â”‚                                                                              â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++------------------------------------------------------------------------------+
+|                      MCMAP AGENT ECOSYSTEM v7.0                              |
++------------------------------------------------------------------------------+
+|                                                                              |
+|                          +---------------+                                   |
+|                          |      ORC      |                                   |
+|                          |  Orchestrator |                                   |
+|                          +-------+-------+                                   |
+|                                  |                                           |
+|        +------------+------------+------------+------------+                 |
+|        |            |            |            |            |                 |
+|        v            v            v            v            v                 |
+| +-----------+ +-----------+ +-----------+ +-----------+ +-----------+       |
+| |    MPA    | |     CA    | |  SUPPORT  | |   GROWTH  | |   INFRA   |       |
+| +-----------+ +-----------+ +-----------+ +-----------+ +-----------+       |
+| | ANL       | | CST       | | DOC       | | GHA       | | DVO       |       |
+| | AUD       | | CHG       | | PRF       | |           | | DTA*      |       |
+| | CHA       | | MKT       | | DOCS      | |           | |           |       |
+| | SPO       | |           | |           | |           | |           |       |
+| +-----------+ +-----------+ +-----------+ +-----------+ +-----------+       |
+|                                                                              |
+| EXTERNAL INTEGRATIONS (Pending):                                             |
+| MMM | MMO | TAL | DYN | RMN | SES | MEI | SAL                                |
+|                                                                              |
+| * DTA pending Databricks workspace provisioning                              |
++------------------------------------------------------------------------------+
 ```
 
 ### 1.2 Agent Inventory Summary
@@ -168,26 +172,26 @@ Users interact with MCMAP through natural language. The Orchestrator (ORC) autom
 ```
 INTENT KEYWORD MAPPING
 
-Keywords                              â†’ Agent
-â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-budget, projection, forecast          â†’ ANL
-calculate, model, scenario            â†’ ANL
-audience, segment, target             â†’ AUD
-persona, ltv, lifetime value          â†’ AUD
-channel, media, mix                   â†’ CHA
-allocation, spend distribution        â†’ CHA
-programmatic, ssp, dsp                â†’ SPO
-fee, supply path, partner             â†’ SPO
-document, export, report              â†’ DOC
-brief, presentation                   â†’ DOC
-performance, attribution              â†’ PRF
-anomaly, optimize, kpi                â†’ PRF
-framework, strategy, porter           â†’ CST
-prioritize, rice, moscow              â†’ CST
-change, adoption, readiness           â†’ CHG
-stakeholder, resistance               â†’ CHG
-business case, consulting             â†’ CA
-workflow, step, gate, help            â†’ ORC (self)
+Keywords                              -> Agent
+----------------------------------------------
+budget, projection, forecast          -> ANL
+calculate, model, scenario            -> ANL
+audience, segment, target             -> AUD
+persona, ltv, lifetime value          -> AUD
+channel, media, mix                   -> CHA
+allocation, spend distribution        -> CHA
+programmatic, ssp, dsp                -> SPO
+fee, supply path, partner             -> SPO
+document, export, report              -> DOC
+brief, presentation                   -> DOC
+performance, attribution              -> PRF
+anomaly, optimize, kpi                -> PRF
+framework, strategy, porter           -> CST
+prioritize, rice, moscow              -> CST
+change, adoption, readiness           -> CHG
+stakeholder, resistance               -> CHG
+business case, consulting             -> CA
+workflow, step, gate, help            -> ORC (self)
 ```
 
 ---
@@ -886,22 +890,22 @@ Key requirements include:
 ### 16.3 Integration Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    MCMAP ↔ DATABRICKS INTEGRATION                   │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  ┌─────────────┐         ┌─────────────┐         ┌─────────────┐  │
-│  │    MCMAP    │  ──►    │     DTA     │  ──►    │  Databricks │  │
-│  │   Agents    │         │    Agent    │         │  Unity Cat  │  │
-│  └─────────────┘         └─────────────┘         └─────────────┘  │
-│                                                                     │
-│  Data Flow:                                                         │
-│  • Telemetry → Delta Lake (mcmap_telemetry)                        │
-│  • Sessions → Delta Lake (mcmap_session_snapshots)                 │
-│  • Audit → Delta Lake (mcmap_audit_events)                         │
-│  • Documents → Delta Lake (mcmap_generated_documents)              │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    MCMAP <-> DATABRICKS INTEGRATION                 |
++---------------------------------------------------------------------+
+|                                                                     |
+|  +-------------+         +-------------+         +-------------+    |
+|  |    MCMAP    |  --->   |     DTA     |  --->   |  Databricks |    |
+|  |   Agents    |         |    Agent    |         |  Unity Cat  |    |
+|  +-------------+         +-------------+         +-------------+    |
+|                                                                     |
+|  Data Flow:                                                         |
+|  - Telemetry -> Delta Lake (mcmap_telemetry)                        |
+|  - Sessions -> Delta Lake (mcmap_session_snapshots)                 |
+|  - Audit -> Delta Lake (mcmap_audit_events)                         |
+|  - Documents -> Delta Lake (mcmap_generated_documents)              |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ### 16.4 Activation Requirements
@@ -985,7 +989,7 @@ For detailed Databricks integration specifications, see:
 USER: "Help me plan a $500K awareness campaign for Q2"
 
 MCMAP WORKFLOW:
-1. ORC classifies intent â†’ Routes to CHA for channel strategy
+1. ORC classifies intent -> Routes to CHA for channel strategy
 2. CHA recommends channel mix using CHA_CHANNEL_MIX
 3. ORC routes to ANL for projections
 4. ANL generates projections using ANL_PROJECTION
@@ -1000,7 +1004,7 @@ MCMAP WORKFLOW:
 USER: "Analyze Q1 performance and identify issues"
 
 MCMAP WORKFLOW:
-1. ORC classifies intent â†’ Routes to PRF
+1. ORC classifies intent -> Routes to PRF
 2. PRF detects anomalies using PRF_ANOMALY
 3. PRF analyzes attribution using PRF_ATTRIBUTION
 4. PRF recommends optimizations using PRF_OPTIMIZE
@@ -1013,7 +1017,7 @@ MCMAP WORKFLOW:
 USER: "Help me build a business case for digital transformation"
 
 MCMAP WORKFLOW:
-1. ORC classifies intent → Routes to CST for framework
+1. ORC classifies intent -> Routes to CST for framework
 2. CST selects framework using CST_FRAMEWORK_SELECT
 3. CST applies analysis using CST_STRATEGIC_ANALYZE
 4. ORC routes to MKT for go-to-market strategy
@@ -1029,7 +1033,7 @@ MCMAP WORKFLOW:
 USER: "Help me improve our user activation funnel"
 
 MCMAP WORKFLOW:
-1. ORC classifies intent → Routes to GHA for growth analysis
+1. ORC classifies intent -> Routes to GHA for growth analysis
 2. GHA analyzes funnel using GHA_FUNNEL_ANALYZE
 3. GHA designs experiments using GHA_EXPERIMENT_DESIGN
 4. GHA models growth scenarios using GHA_GROWTH_MODEL
@@ -1044,7 +1048,7 @@ MCMAP WORKFLOW:
 USER: "Deploy the latest release to staging environment"
 
 MCMAP WORKFLOW:
-1. ORC classifies intent → Routes to DVO for deployment
+1. ORC classifies intent -> Routes to DVO for deployment
 2. DVO validates deployment prerequisites
 3. DVO orchestrates deployment using DVO_DEPLOY
 4. DVO monitors deployment using DVO_MONITOR

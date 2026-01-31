@@ -199,10 +199,10 @@ When ORC routes to DOCS for executive content:
 
 ### Check If Content Is Protected
 
-1. Is it a CEO Brief or C-Suite brief (00-A through 00-D)? → **Protected**
-2. Is it the Investment Proposal (09A)? → **Protected**
-3. Is Full ABAC Mode enabled? → Check mcmap_access_rules.yaml for additional rules
-4. Otherwise → **Not Protected**
+1. Is it a CEO Brief or C-Suite brief (00-A through 00-D)? -> **Protected**
+2. Is it the Investment Proposal (09A)? -> **Protected**
+3. Is Full ABAC Mode enabled? -> Check mcmap_access_rules.yaml for additional rules
+4. Otherwise -> **Not Protected**
 
 ### Handle Access Denial
 

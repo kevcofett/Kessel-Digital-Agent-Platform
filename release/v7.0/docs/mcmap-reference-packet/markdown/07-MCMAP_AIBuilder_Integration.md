@@ -30,41 +30,41 @@
 AI Builder Custom Prompts serve as the universal computation layer for MCMAP, providing analytical processing that works within Mastercard's DLP-restricted environment without requiring HTTP connectors or external APIs.
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                     AI BUILDER IN MCMAP                          â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                 â”‚
-â”‚  User Query                                                     â”‚
-â”‚      â”‚                                                          â”‚
-â”‚      â–¼                                                          â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                                             â”‚
-â”‚  â”‚ Copilot Agent â”‚  (10 Agents, 8K chars each)                 â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”˜                                             â”‚
-â”‚          â”‚                                                      â”‚
-â”‚          â–¼                                                      â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                                 â”‚
-â”‚  â”‚ Capability Dispatcher Flow â”‚  (Routes to implementation)    â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                                 â”‚
-â”‚              â”‚                                                  â”‚
-â”‚              â–¼                                                  â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                                 â”‚
-â”‚  â”‚ eap_capability_impl Table â”‚  (Lookup implementation)        â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                                 â”‚
-â”‚              â”‚                                                  â”‚
-â”‚              â–¼                                                  â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                                 â”‚
-â”‚  â”‚   AI Builder Prompt       â”‚  (26 Custom Prompts)            â”‚
-â”‚  â”‚   - Structured Input      â”‚                                 â”‚
-â”‚  â”‚   - JSON Output           â”‚                                 â”‚
-â”‚  â”‚   - Low Temperature       â”‚                                 â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                                 â”‚
-â”‚              â”‚                                                  â”‚
-â”‚              â–¼                                                  â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                                 â”‚
-â”‚  â”‚   Telemetry Logging       â”‚  (eap_telemetry table)          â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                                 â”‚
-â”‚                                                                 â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++-----------------------------------------------------------------+
+|                     AI BUILDER IN MCMAP                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|  User Query                                                     |
+|      |                                                          |
+|      v                                                          |
+|  +---------------+                                             |
+|  | Copilot Agent |  (10 Agents, 8K chars each)                 |
+|  +-------+-------+                                             |
+|          |                                                      |
+|          v                                                      |
+|  +---------------------------+                                 |
+|  | Capability Dispatcher Flow |  (Routes to implementation)    |
+|  +-----------+---------------+                                 |
+|              |                                                  |
+|              v                                                  |
+|  +---------------------------+                                 |
+|  | eap_capability_impl Table |  (Lookup implementation)        |
+|  +-----------+---------------+                                 |
+|              |                                                  |
+|              v                                                  |
+|  +---------------------------+                                 |
+|  |   AI Builder Prompt       |  (26 Custom Prompts)            |
+|  |   - Structured Input      |                                 |
+|  |   - JSON Output           |                                 |
+|  |   - Low Temperature       |                                 |
+|  +-----------+---------------+                                 |
+|              |                                                  |
+|              v                                                  |
+|  +---------------------------+                                 |
+|  |   Telemetry Logging       |  (eap_telemetry table)          |
+|  +---------------------------+                                 |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### 1.2 Key Benefits
@@ -178,26 +178,26 @@ All prompts are registered in the `eap_prompt` Dataverse table:
 Every AI Builder prompt follows this structure:
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    PROMPT STRUCTURE                             â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                 â”‚
-â”‚  SYSTEM MESSAGE                                                 â”‚
-â”‚  â”œâ”€â”€ Role Definition                                            â”‚
-â”‚  â”œâ”€â”€ Methodology/Framework                                      â”‚
-â”‚  â”œâ”€â”€ Output Requirements                                        â”‚
-â”‚  â”œâ”€â”€ Constraints                                                â”‚
-â”‚  â””â”€â”€ Output Schema (JSON)                                       â”‚
-â”‚                                                                 â”‚
-â”‚  USER MESSAGE TEMPLATE                                          â”‚
-â”‚  â”œâ”€â”€ Input Variables ({{variable}} syntax)                      â”‚
-â”‚  â””â”€â”€ Context Data (JSON blocks)                                 â”‚
-â”‚                                                                 â”‚
-â”‚  FEW-SHOT EXAMPLES (2-3)                                        â”‚
-â”‚  â”œâ”€â”€ Example Input                                              â”‚
-â”‚  â””â”€â”€ Example Output                                             â”‚
-â”‚                                                                 â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++-----------------------------------------------------------------+
+|                    PROMPT STRUCTURE                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|  SYSTEM MESSAGE                                                 |
+|  +-- Role Definition                                            |
+|  +-- Methodology/Framework                                      |
+|  +-- Output Requirements                                        |
+|  +-- Constraints                                                |
+|  +-- Output Schema (JSON)                                       |
+|                                                                 |
+|  USER MESSAGE TEMPLATE                                          |
+|  +-- Input Variables ({{variable}} syntax)                      |
+|  +-- Context Data (JSON blocks)                                 |
+|                                                                 |
+|  FEW-SHOT EXAMPLES (2-3)                                        |
+|  +-- Example Input                                              |
+|  +-- Example Output                                             |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### 3.2 Standard Output Format
@@ -266,7 +266,7 @@ When prompts cannot complete successfully:
 | Component | Content |
 |-----------|---------|
 | Role | Marketing analytics expert specializing in media effectiveness measurement |
-| Methodology | Logarithmic response curves: Response = k Ã— ln(1 + Spend/c) |
+| Methodology | Logarithmic response curves: Response = k x ln(1 + Spend/c) |
 | Key Outputs | Marginal returns at current, +10%, +25%, +50% spend levels |
 | Constraints | Never recommend allocations exceeding stated budget |
 
@@ -738,40 +738,40 @@ MCMAP uses 5 core Power Automate flows:
 **Flow Diagram:**
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                MPA_Capability_Dispatcher                        â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                 â”‚
-â”‚  HTTP Request Trigger                                           â”‚
-â”‚  â”œâ”€â”€ capability_code: string                                    â”‚
-â”‚  â”œâ”€â”€ session_id: string                                         â”‚
-â”‚  â””â”€â”€ parameters_json: object                                    â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  Query eap_environment_config                                   â”‚
-â”‚  â””â”€â”€ Get environment_code (MASTERCARD)                          â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  Query eap_capability_implementation                            â”‚
-â”‚  â””â”€â”€ Filter: capability_code AND environment_code               â”‚
-â”‚  â””â”€â”€ Order: priority_order ASC                                  â”‚
-â”‚  â””â”€â”€ Top: 1 (highest priority enabled)                          â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  Switch on implementation_type                                  â”‚
-â”‚  â”œâ”€â”€ AI_BUILDER_PROMPT â†’ Call MPA_Impl_AIBuilder               â”‚
-â”‚  â”œâ”€â”€ DATAVERSE_LOGIC â†’ Execute inline Dataverse query          â”‚
-â”‚  â””â”€â”€ POWER_FX â†’ Execute Power Fx expression                    â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  Call MPA_Telemetry_Logger                                      â”‚
-â”‚  â””â”€â”€ Log execution details                                      â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  HTTP Response                                                  â”‚
-â”‚  â””â”€â”€ Return result_json                                         â”‚
-â”‚                                                                 â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++-----------------------------------------------------------------+
+|                MPA_Capability_Dispatcher                        |
++-----------------------------------------------------------------+
+|                                                                 |
+|  HTTP Request Trigger                                           |
+|  +-- capability_code: string                                    |
+|  +-- session_id: string                                         |
+|  +-- parameters_json: object                                    |
+|         |                                                       |
+|         v                                                       |
+|  Query eap_environment_config                                   |
+|  +-- Get environment_code (MASTERCARD)                          |
+|         |                                                       |
+|         v                                                       |
+|  Query eap_capability_implementation                            |
+|  +-- Filter: capability_code AND environment_code               |
+|  +-- Order: priority_order ASC                                  |
+|  +-- Top: 1 (highest priority enabled)                          |
+|         |                                                       |
+|         v                                                       |
+|  Switch on implementation_type                                  |
+|  +-- AI_BUILDER_PROMPT -> Call MPA_Impl_AIBuilder               |
+|  +-- DATAVERSE_LOGIC -> Execute inline Dataverse query          |
+|  +-- POWER_FX -> Execute Power Fx expression                    |
+|         |                                                       |
+|         v                                                       |
+|  Call MPA_Telemetry_Logger                                      |
+|  +-- Log execution details                                      |
+|         |                                                       |
+|         v                                                       |
+|  HTTP Response                                                  |
+|  +-- Return result_json                                         |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 **Key Actions:**
@@ -879,39 +879,39 @@ MCMAP uses 5 core Power Automate flows:
 The Capability Abstraction Layer (CAL) enables the same agent code to route to different implementations based on environment configuration.
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚              CAPABILITY ABSTRACTION LAYER                       â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                 â”‚
-â”‚  Agent Request                                                  â”‚
-â”‚  â””â”€â”€ capability_code: ANL_MARGINAL_RETURN                       â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                           â”‚
-â”‚  â”‚    Capability Dispatcher        â”‚                           â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                           â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                           â”‚
-â”‚  â”‚ Query eap_capability_impl       â”‚                           â”‚
-â”‚  â”‚ WHERE capability_code = X       â”‚                           â”‚
-â”‚  â”‚   AND environment = MASTERCARD  â”‚                           â”‚
-â”‚  â”‚   AND is_enabled = true         â”‚                           â”‚
-â”‚  â”‚ ORDER BY priority_order         â”‚                           â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                           â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                           â”‚
-â”‚  â”‚ Implementation Types:           â”‚                           â”‚
-â”‚  â”‚ â”œâ”€â”€ AI_BUILDER_PROMPT          â”‚  (All capabilities)       â”‚
-â”‚  â”‚ â”œâ”€â”€ DATAVERSE_LOGIC            â”‚  (Lookups, CRUD)          â”‚
-â”‚  â”‚ â””â”€â”€ POWER_FX                   â”‚  (Simple calculations)    â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                           â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  Route to Implementation â†’ Execute â†’ Return Result              â”‚
-â”‚                                                                 â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++-----------------------------------------------------------------+
+|              CAPABILITY ABSTRACTION LAYER                       |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Agent Request                                                  |
+|  +-- capability_code: ANL_MARGINAL_RETURN                       |
+|         |                                                       |
+|         v                                                       |
+|  +---------------------------------+                           |
+|  |    Capability Dispatcher        |                           |
+|  +---------------------------------+                           |
+|         |                                                       |
+|         v                                                       |
+|  +---------------------------------+                           |
+|  | Query eap_capability_impl       |                           |
+|  | WHERE capability_code = X       |                           |
+|  |   AND environment = MASTERCARD  |                           |
+|  |   AND is_enabled = true         |                           |
+|  | ORDER BY priority_order         |                           |
+|  +---------------------------------+                           |
+|         |                                                       |
+|         v                                                       |
+|  +---------------------------------+                           |
+|  | Implementation Types:           |                           |
+|  | +-- AI_BUILDER_PROMPT          |  (All capabilities)       |
+|  | +-- DATAVERSE_LOGIC            |  (Lookups, CRUD)          |
+|  | +-- POWER_FX                   |  (Simple calculations)    |
+|  +---------------------------------+                           |
+|         |                                                       |
+|         v                                                       |
+|  Route to Implementation -> Execute -> Return Result              |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### 6.2 Implementation Registration
@@ -1007,27 +1007,27 @@ Flows use connection references for environment-independent deployment:
 
 ## 8. Integration Patterns
 
-### 8.1 Copilot Studio â†’ Flow Integration
+### 8.1 Copilot Studio -> Flow Integration
 
 Copilot agents invoke flows using the Power Automate action:
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚            COPILOT â†’ FLOW INTEGRATION                           â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                 â”‚
-â”‚  Copilot Studio Agent                                           â”‚
-â”‚  â””â”€â”€ Topic: Calculate Projections                               â”‚
-â”‚       â””â”€â”€ Power Automate Action                                 â”‚
-â”‚            â”œâ”€â”€ Flow: MPA_Capability_Dispatcher                  â”‚
-â”‚            â”œâ”€â”€ Input:                                           â”‚
-â”‚            â”‚   â””â”€â”€ capability_code: ANL_PROJECTION              â”‚
-â”‚            â”‚   â””â”€â”€ session_id: {sessionId}                      â”‚
-â”‚            â”‚   â””â”€â”€ parameters_json: {budget, channels, ...}     â”‚
-â”‚            â””â”€â”€ Output:                                          â”‚
-â”‚                â””â”€â”€ result_json: {projections, confidence, ...}  â”‚
-â”‚                                                                 â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++-----------------------------------------------------------------+
+|            COPILOT -> FLOW INTEGRATION                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Copilot Studio Agent                                           |
+|  +-- Topic: Calculate Projections                               |
+|       +-- Power Automate Action                                 |
+|            +-- Flow: MPA_Capability_Dispatcher                  |
+|            +-- Input:                                           |
+|            |   +-- capability_code: ANL_PROJECTION              |
+|            |   +-- session_id: {sessionId}                      |
+|            |   +-- parameters_json: {budget, channels, ...}     |
+|            +-- Output:                                          |
+|                +-- result_json: {projections, confidence, ...}  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### 8.2 Teams Integration

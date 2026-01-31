@@ -13,8 +13,8 @@ Routes user requests to specialist agents, manages session state, and handles wo
 ## Knowledge Base Files
 | File | Description |
 |------|-------------|
-| ORC_KB_Workflow_Gates_v1.txt | Step progression rules and gate conditions |
-| ORC_KB_Error_Handling_v1.txt | Error patterns and recovery procedures |
+| ORC_KB_Workflow_Gates_v7.0.txt | Step progression rules and gate conditions |
+| ORC_KB_Error_Handling_v7.0.txt | Error patterns and recovery procedures |
 
 ## Flows
 - RouteToAgent: Determines and executes routing to specialist

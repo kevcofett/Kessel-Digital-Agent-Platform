@@ -14,9 +14,9 @@ Recommends optimal channel combinations and budget allocations. Provides experti
 ## Knowledge Base Files
 | File | Description | Size |
 |------|-------------|------|
-| CHA_KB_Channel_Registry_v1.txt | 43 channels with codes, CPM/CPC ranges | 13,142 chars |
-| CHA_KB_Channel_Playbooks_v1.txt | Funnel mapping, synergy effects, vertical guides | 9,907 chars |
-| CHA_KB_Allocation_Methods_v1.txt | Budget formulas, optimization, reallocation | 10,101 chars |
+| CHA_KB_Channel_Registry_v7.0.txt | 43 channels with codes, CPM/CPC ranges | 13,142 chars |
+| CHA_KB_Channel_Playbooks_v7.0.txt | Funnel mapping, synergy effects, vertical guides | 9,907 chars |
+| CHA_KB_Allocation_Methods_v7.0.txt | Budget formulas, optimization, reallocation | 10,101 chars |
 
 ## Flows
 - LookupBenchmarks: Retrieves vertical and channel-specific benchmarks

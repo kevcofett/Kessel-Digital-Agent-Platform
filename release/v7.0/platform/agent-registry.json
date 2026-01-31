@@ -1,15 +1,20 @@
 {
-  "version": "6.0.2",
-  "updated": "2026-01-19",
+  "version": "7.0.0",
+  "updated": "2026-01-31",
   "agents": [
     {
       "code": "ORC",
       "name": "Orchestrator",
       "description": "Routes requests to specialist agents, manages session state",
-      "instructionsFile": "ORC_Copilot_Instructions_v1.txt",
+      "instructionsFile": "ORC_Copilot_Instructions_v7.0.txt",
       "kbFiles": [
-        "ORC_KB_Workflow_Gates_v1.txt",
-        "ORC_KB_Error_Handling_v1.txt"
+        "ORC_KB_Context_Preservation_v7.0.txt",
+        "ORC_KB_Conversation_Patterns_v7.0.txt",
+        "ORC_KB_Cross_Domain_v7.0.txt",
+        "ORC_KB_Error_Handling_v7.0.txt",
+        "ORC_KB_GHA_Integration_v7.0.txt",
+        "ORC_KB_Routing_Logic_v7.0.txt",
+        "ORC_KB_Workflow_Gates_v7.0.txt"
       ],
       "flows": [
         "RouteToAgent",
@@ -23,12 +28,30 @@
       "code": "ANL",
       "name": "Analytics",
       "description": "Calculations, projections, scenario modeling",
-      "instructionsFile": "ANL_Copilot_Instructions_v1.txt",
+      "instructionsFile": "ANL_Copilot_Instructions_v7.0.txt",
       "kbFiles": [
-        "ANL_KB_Analytics_Engine_v1.txt",
-        "ANL_KB_Projection_Methods_v1.txt",
-        "ANL_KB_Scenario_Modeling_v1.txt",
-        "ANL_KB_Statistical_Tests_v1.txt"
+        "ANL_KB_Analytics_Engine_v7.0.txt",
+        "ANL_KB_Budget_Pacing_v7.0.txt",
+        "ANL_KB_Causal_Inference_v7.0.txt",
+        "ANL_KB_Competitive_Analysis_v7.0.txt",
+        "ANL_KB_Competitive_Intelligence_v7.0.txt",
+        "ANL_KB_Confidence_Intervals_v7.0.txt",
+        "ANL_KB_Cross_Channel_Optimization_v7.0.txt",
+        "ANL_KB_Diminishing_Returns_v7.0.txt",
+        "ANL_KB_Financial_Investment_v7.0.txt",
+        "ANL_KB_Forecasting_Methods_v7.0.txt",
+        "ANL_KB_Incrementality_Methods_v7.0.txt",
+        "ANL_KB_ML_Budget_Optimization_v7.0.txt",
+        "ANL_KB_ML_Forecasting_v7.0.txt",
+        "ANL_KB_ML_Models_v7.0.txt",
+        "ANL_KB_MMM_Advanced_v7.0.txt",
+        "ANL_KB_MMM_Data_Requirements_v7.0.txt",
+        "ANL_KB_Projection_Methods_v7.0.txt",
+        "ANL_KB_Reach_Frequency_v7.0.txt",
+        "ANL_KB_Scenario_Modeling_v7.0.txt",
+        "ANL_KB_Sensitivity_Analysis_v7.0.txt",
+        "ANL_KB_Statistical_Significance_v7.0.txt",
+        "ANL_KB_Statistical_Tests_v7.0.txt"
       ],
       "flows": [
         "CalculateProjection",
@@ -41,12 +64,34 @@
       "code": "AUD",
       "name": "Audience",
       "description": "Segmentation, LTV, targeting strategy, first-party data",
-      "instructionsFile": "AUD_Copilot_Instructions_v1.txt",
+      "instructionsFile": "AUD_Copilot_Instructions_v7.0.txt",
       "kbFiles": [
-        "AUD_KB_Segmentation_Methods_v1.txt",
-        "AUD_KB_LTV_Models_v1.txt",
-        "AUD_KB_Targeting_Strategy_v1.txt",
-        "AUD_KB_First_Party_Data_v1.txt"
+        "AUD_KB_Audience_Lifecycle_v7.0.txt",
+        "AUD_KB_Audience_Overlap_v7.0.txt",
+        "AUD_KB_Behavioral_Scoring_v7.0.txt",
+        "AUD_KB_Card_Portfolio_Resolution_v7.0.txt",
+        "AUD_KB_Cluster_Analysis_v7.0.txt",
+        "AUD_KB_Clustering_Algorithms_v7.0.txt",
+        "AUD_KB_Contextual_Targeting_v7.0.txt",
+        "AUD_KB_First_Party_Data_v7.0.txt",
+        "AUD_KB_Household_Resolution_v7.0.txt",
+        "AUD_KB_Identity_Graph_Algorithms_v7.0.txt",
+        "AUD_KB_Identity_Resolution_v7.0.txt",
+        "AUD_KB_LTV_Models_v7.0.txt",
+        "AUD_KB_LTV_Prediction_v7.0.txt",
+        "AUD_KB_Lookalike_Modeling_v7.0.txt",
+        "AUD_KB_Lookalike_Strategy_v7.0.txt",
+        "AUD_KB_ML_Lookalike_Modeling_v7.0.txt",
+        "AUD_KB_ML_Models_v7.0.txt",
+        "AUD_KB_ML_Propensity_Scoring_v7.0.txt",
+        "AUD_KB_Next_Best_Action_v7.0.txt",
+        "AUD_KB_Privacy_Compliance_v7.0.txt",
+        "AUD_KB_Propensity_Modeling_v7.0.txt",
+        "AUD_KB_Propensity_Models_v7.0.txt",
+        "AUD_KB_RFM_Analysis_v7.0.txt",
+        "AUD_KB_Segmentation_Methods_v7.0.txt",
+        "AUD_KB_Targeting_Strategy_v7.0.txt",
+        "AUD_KB_Zero_Party_Data_v7.0.txt"
       ],
       "flows": [
         "SegmentAudience",
@@ -59,11 +104,21 @@
       "code": "CHA",
       "name": "Channel",
       "description": "Channel selection, allocation, benchmarks",
-      "instructionsFile": "CHA_Copilot_Instructions_v1.txt",
+      "instructionsFile": "CHA_Copilot_Instructions_v7.0.txt",
       "kbFiles": [
-        "CHA_KB_Channel_Registry_v1.txt",
-        "CHA_KB_Channel_Playbooks_v1.txt",
-        "CHA_KB_Allocation_Methods_v1.txt"
+        "CHA_KB_Allocation_Methods_v7.0.txt",
+        "CHA_KB_Automated_Bidding_v7.0.txt",
+        "CHA_KB_Channel_Playbooks_v7.0.txt",
+        "CHA_KB_Channel_Registry_v7.0.txt",
+        "CHA_KB_Cross_Channel_Frequency_v7.0.txt",
+        "CHA_KB_Emerging_Channels_v7.0.txt",
+        "CHA_KB_Flighting_Optimization_v7.0.txt",
+        "CHA_KB_Google_Ads_Guide_v7.0.txt",
+        "CHA_KB_LinkedIn_B2B_Guide_v7.0.txt",
+        "CHA_KB_ML_Models_v7.0.txt",
+        "CHA_KB_Meta_Ads_Guide_v7.0.txt",
+        "CHA_KB_Programmatic_DSP_Guide_v7.0.txt",
+        "CHA_KB_Response_Curves_v7.0.txt"
       ],
       "flows": [
         "LookupBenchmarks",
@@ -76,11 +131,23 @@
       "code": "SPO",
       "name": "SupplyPath",
       "description": "NBI calculation, fee analysis, partner evaluation",
-      "instructionsFile": "SPO_Copilot_Instructions_v1.txt",
+      "instructionsFile": "SPO_Copilot_Instructions_v7.0.txt",
       "kbFiles": [
-        "SPO_KB_NBI_Calculation_v1.txt",
-        "SPO_KB_Fee_Analysis_v1.txt",
-        "SPO_KB_Partner_Evaluation_v1.txt"
+        "SPO_KB_Auction_Dynamics_v7.0.txt",
+        "SPO_KB_Bid_Landscape_v7.0.txt",
+        "SPO_KB_Brand_Safety_v7.0.txt",
+        "SPO_KB_Carbon_Measurement_v7.0.txt",
+        "SPO_KB_Cost_Benchmarks_v7.0.txt",
+        "SPO_KB_Fee_Analysis_v7.0.txt",
+        "SPO_KB_Header_Bidding_v7.0.txt",
+        "SPO_KB_Hidden_Fees_v7.0.txt",
+        "SPO_KB_Margin_Analysis_v7.0.txt",
+        "SPO_KB_NBI_Calculation_v7.0.txt",
+        "SPO_KB_Partner_Evaluation_v7.0.txt",
+        "SPO_KB_Quality_Score_Framework_v7.0.txt",
+        "SPO_KB_Sustainability_v7.0.txt",
+        "SPO_KB_Verification_ROI_Analysis_v7.0.txt",
+        "SPO_KB_Working_Media_v7.0.txt"
       ],
       "flows": [
         "CalculateNBI",
@@ -94,11 +161,15 @@
       "code": "DOC",
       "name": "Document",
       "description": "Document generation, formatting, exports",
-      "instructionsFile": "DOC_Copilot_Instructions_v1.txt",
+      "instructionsFile": "DOC_Copilot_Instructions_v7.0.txt",
       "kbFiles": [
-        "DOC_KB_Template_Library_v1.txt",
-        "DOC_KB_Formatting_Rules_v1.txt",
-        "DOC_KB_Export_Specifications_v1.txt"
+        "DOC_KB_Consulting_Templates_v7.0.txt",
+        "DOC_KB_Document_Automation_v7.0.txt",
+        "DOC_KB_Executive_Summaries_v7.0.txt",
+        "DOC_KB_Export_Specifications_v7.0.txt",
+        "DOC_KB_Formatting_Rules_v7.0.txt",
+        "DOC_KB_Template_Library_v7.0.txt",
+        "DOC_KB_Visualization_Guide_v7.0.txt"
       ],
       "flows": [
         "GenerateDocument",
@@ -115,11 +186,38 @@
       "code": "PRF",
       "name": "Performance",
       "description": "Performance analysis, anomaly detection, learnings",
-      "instructionsFile": "PRF_Copilot_Instructions_v1.txt",
+      "instructionsFile": "PRF_Copilot_Instructions_v7.0.txt",
       "kbFiles": [
-        "PRF_KB_Optimization_Triggers_v1.txt",
-        "PRF_KB_Anomaly_Detection_v1.txt",
-        "PRF_KB_Learning_Extraction_v1.txt"
+        "PRF_KB_AB_Testing_Methods_v7.0.txt",
+        "PRF_KB_Advanced_Attribution_v7.0.txt",
+        "PRF_KB_Advanced_Experiment_Designs_v7.0.txt",
+        "PRF_KB_Alert_Thresholds_v7.0.txt",
+        "PRF_KB_Anomaly_Detection_ML_v7.0.txt",
+        "PRF_KB_Anomaly_Detection_v7.0.txt",
+        "PRF_KB_Attention_Measurement_Scientific_v7.0.txt",
+        "PRF_KB_Attention_Metrics_v7.0.txt",
+        "PRF_KB_Attribution_Models_v7.0.txt",
+        "PRF_KB_Clean_Room_Analytics_v7.0.txt",
+        "PRF_KB_Creative_Fatigue_v7.0.txt",
+        "PRF_KB_Creative_Testing_v7.0.txt",
+        "PRF_KB_Cross_Platform_Deduplication_v7.0.txt",
+        "PRF_KB_Forecasting_Accuracy_v7.0.txt",
+        "PRF_KB_Forecasting_ML_v7.0.txt",
+        "PRF_KB_Forecasting_Methods_v7.0.txt",
+        "PRF_KB_Incrementality_Methods_v7.0.txt",
+        "PRF_KB_Learning_Extraction_v7.0.txt",
+        "PRF_KB_MFA_Detection_v7.0.txt",
+        "PRF_KB_ML_Anomaly_Detection_v7.0.txt",
+        "PRF_KB_ML_Models_v7.0.txt",
+        "PRF_KB_ML_Performance_Optimization_v7.0.txt",
+        "PRF_KB_Model_Validation_Framework_v7.0.txt",
+        "PRF_KB_Multi_Touch_Attribution_Scientific_v7.0.txt",
+        "PRF_KB_Optimization_Triggers_v7.0.txt",
+        "PRF_KB_Performance_Metrics_v7.0.txt",
+        "PRF_KB_Privacy_Measurement_v7.0.txt",
+        "PRF_KB_Trend_Detection_v7.0.txt",
+        "PRF_KB_Variance_Analysis_v7.0.txt",
+        "PRF_KB_Viewability_Deep_Dive_v7.0.txt"
       ],
       "flows": [
         "AnalyzePerformance",
@@ -133,11 +231,11 @@
       "code": "CHG",
       "name": "ChangeManagement",
       "description": "Change readiness assessment, stakeholder mapping, adoption planning",
-      "instructionsFile": "CHG_Copilot_Instructions_v1.txt",
+      "instructionsFile": "CHG_Copilot_Instructions_v7.0.txt",
       "kbFiles": [
-        "CHG_KB_Change_Core_v1.txt",
-        "CHG_KB_Stakeholder_Methods_v1.txt",
-        "CHG_KB_Adoption_Planning_v1.txt"
+        "CHG_KB_Adoption_Planning_v7.0.txt",
+        "CHG_KB_Change_Core_v7.0.txt",
+        "CHG_KB_Stakeholder_Methods_v7.0.txt"
       ],
       "flows": [
         "AssessReadiness",
@@ -151,12 +249,12 @@
       "code": "CST",
       "name": "ConsultingStrategy",
       "description": "Strategic framework selection, analysis, initiative prioritization",
-      "instructionsFile": "CST_Copilot_Instructions_v1.txt",
+      "instructionsFile": "CST_Copilot_Instructions_v7.0.txt",
       "kbFiles": [
-        "CST_KB_Consulting_Core_v1.txt",
-        "CST_KB_Strategic_Frameworks_v1.txt",
-        "CST_KB_Prioritization_Methods_v1.txt",
-        "CST_KB_Industry_Context_v1.txt"
+        "CST_KB_Consulting_Core_v7.0.txt",
+        "CST_KB_Industry_Context_v7.0.txt",
+        "CST_KB_Prioritization_Methods_v7.0.txt",
+        "CST_KB_Strategic_Frameworks_v7.0.txt"
       ],
       "flows": [
         "SelectFramework",
@@ -170,13 +268,15 @@
       "code": "MKT",
       "name": "MarketingStrategy",
       "description": "Campaign strategy, creative briefs, brand positioning, GTM planning",
-      "instructionsFile": "MKT_Copilot_Instructions_v1.txt",
+      "instructionsFile": "MKT_Copilot_Instructions_v7.0.txt",
       "kbFiles": [
-        "MKT_KB_Campaign_Strategy_v1.txt",
-        "MKT_KB_Creative_Briefs_v1.txt",
-        "MKT_KB_Brand_Positioning_v1.txt",
-        "MKT_KB_GTM_Planning_v1.txt",
-        "MKT_KB_Competitive_Analysis_v1.txt"
+        "MKT_KB_Brand_Positioning_v7.0.txt",
+        "MKT_KB_Campaign_Strategy_v7.0.txt",
+        "MKT_KB_Competitive_Analysis_v7.0.txt",
+        "MKT_KB_Competitive_Intelligence_v7.0.txt",
+        "MKT_KB_Competitive_Positioning_v7.0.txt",
+        "MKT_KB_Creative_Briefs_v7.0.txt",
+        "MKT_KB_GTM_Planning_v7.0.txt"
       ],
       "flows": [
         "DevelopStrategy",
@@ -185,6 +285,130 @@
       ],
       "isRouter": false,
       "status": "active"
+    },
+    {
+      "code": "GHA",
+      "name": "GrowthHacking",
+      "description": "AARRR funnel optimization, lifecycle stages, viral mechanics, retention strategy",
+      "instructionsFile": "GHA_Copilot_Instructions_v7.0.txt",
+      "kbFiles": [
+        "GHA_KB_Behavioral_Psychology_v7.0.txt",
+        "GHA_KB_Campaign_Patterns_v7.0.txt",
+        "GHA_KB_Competitor_Benchmarks_v7.0.txt",
+        "GHA_KB_Error_Handling_v7.0.txt",
+        "GHA_KB_Fintech_Cases_v7.0.txt",
+        "GHA_KB_Frameworks_v7.0.txt",
+        "GHA_KB_Growth_Architecture_v7.0.txt",
+        "GHA_KB_Growth_Channels_v7.0.txt",
+        "GHA_KB_Growth_KPIs_v7.0.txt",
+        "GHA_KB_Growth_Workflows_v7.0.txt",
+        "GHA_KB_Learning_Extraction_v7.0.txt",
+        "GHA_KB_Proactive_Intelligence_v7.0.txt",
+        "GHA_KB_Specialist_Requests_v7.0.txt"
+      ],
+      "flows": [
+        "GetGrowthState",
+        "UpdateGrowthProgress",
+        "RequestSpecialistViaORC"
+      ],
+      "isRouter": false,
+      "status": "active"
+    },
+    {
+      "code": "MMM",
+      "name": "MediaMixModeling",
+      "domain": "Measurement",
+      "description": "Enterprise MMM agent - pending integration",
+      "instructionsFile": null,
+      "kbFiles": [],
+      "flows": [],
+      "isRouter": false,
+      "status": "pending_external",
+      "externalTeam": "MMM Team"
+    },
+    {
+      "code": "MMO",
+      "name": "MediaMixOptimization",
+      "domain": "Optimization",
+      "description": "Enterprise MMO agent - pending integration",
+      "instructionsFile": null,
+      "kbFiles": [],
+      "flows": [],
+      "isRouter": false,
+      "status": "pending_external",
+      "externalTeam": "MMO Team"
+    },
+    {
+      "code": "TAL",
+      "name": "TestAndLearn",
+      "domain": "Experimentation",
+      "description": "A/B testing, MVT, and incrementality testing - pending integration",
+      "instructionsFile": null,
+      "kbFiles": [],
+      "flows": [],
+      "isRouter": false,
+      "status": "pending_external",
+      "externalTeam": "Test & Learn Team"
+    },
+    {
+      "code": "DYN",
+      "name": "DynamicYield",
+      "domain": "Personalization",
+      "description": "Content and experience personalization - pending integration",
+      "instructionsFile": null,
+      "kbFiles": [],
+      "flows": [],
+      "isRouter": false,
+      "status": "pending_external",
+      "externalTeam": "Dynamic Yield Team"
+    },
+    {
+      "code": "RMN",
+      "name": "RetailMediaNetworks",
+      "domain": "Retail Media",
+      "description": "Retail media network strategy and execution - pending integration",
+      "instructionsFile": null,
+      "kbFiles": [],
+      "flows": [],
+      "isRouter": false,
+      "status": "pending_external",
+      "externalTeam": "MCM Team"
+    },
+    {
+      "code": "SES",
+      "name": "SessionMLoyalty",
+      "domain": "Loyalty",
+      "description": "Loyalty strategy and program optimization - pending integration",
+      "instructionsFile": null,
+      "kbFiles": [],
+      "flows": [],
+      "isRouter": false,
+      "status": "pending_external",
+      "externalTeam": "Session M Team"
+    },
+    {
+      "code": "MEI",
+      "name": "MastercardEconomicsInstitute",
+      "domain": "Economics Data",
+      "description": "Spending insights and economics data - pending integration",
+      "instructionsFile": null,
+      "kbFiles": [],
+      "flows": [],
+      "isRouter": false,
+      "status": "pending_external",
+      "externalTeam": "MEI Team"
+    },
+    {
+      "code": "SAL",
+      "name": "SalesAILeads",
+      "domain": "Sales",
+      "description": "Sales AI for leads - pending integration",
+      "instructionsFile": null,
+      "kbFiles": [],
+      "flows": [],
+      "isRouter": false,
+      "status": "pending_external",
+      "externalTeam": "Sales AI Team"
     }
   ],
   "routingKeywords": {
@@ -308,6 +532,21 @@
       "messaging",
       "value proposition",
       "competitive analysis"
+    ],
+    "GHA": [
+      "growth",
+      "lifecycle",
+      "aarrr",
+      "referral",
+      "retention",
+      "activation",
+      "viral",
+      "reactivation",
+      "north star",
+      "growth hacking",
+      "acquisition",
+      "engagement",
+      "churn"
     ]
   },
   "handoffPatterns": {
@@ -318,7 +557,14 @@
     "ANY_to_DOC": "User requests document, export, or report generation",
     "CST_to_CHG": "After strategic planning, user needs change management support",
     "MKT_to_CHA": "After campaign strategy, user needs channel allocation",
-    "CST_to_MKT": "After strategic framework, user needs marketing strategy development"
+    "CST_to_MKT": "After strategic framework, user needs marketing strategy development",
+    "GHA_to_CHA": "After growth strategy, user needs channel allocation for acquisition",
+    "GHA_to_CST": "After growth analysis, user needs consulting framework for initiative",
+    "GHA_to_CHG": "After growth plan, user needs change management for implementation",
+    "GHA_to_ANL": "After growth strategy, user needs projections and ROI calculations",
+    "GHA_to_AUD": "After lifecycle analysis, user needs segmentation strategy",
+    "GHA_to_DOC": "After growth plan complete, user needs documentation export",
+    "MKT_to_GHA": "After campaign strategy, user needs growth mechanics integration"
   },
   "edgeCaseHandling": {
     "ambiguous_routing": {

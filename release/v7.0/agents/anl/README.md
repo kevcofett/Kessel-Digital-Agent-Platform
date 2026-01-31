@@ -14,10 +14,10 @@ Performs calculations, projections, and scenario modeling for media planning. Ha
 ## Knowledge Base Files
 | File | Description | Size |
 |------|-------------|------|
-| ANL_KB_Analytics_Engine_v1.txt | Core formulas, RFM, LTV, decile analysis | 35,967 chars |
-| ANL_KB_Projection_Methods_v1.txt | Forecasting and projection approaches | 10,209 chars |
-| ANL_KB_Scenario_Modeling_v1.txt | What-if analysis and scenario planning | 9,286 chars |
-| ANL_KB_Statistical_Tests_v1.txt | Significance testing and confidence intervals | 11,042 chars |
+| ANL_KB_Analytics_Engine_v7.0.txt | Core formulas, RFM, LTV, decile analysis | 35,967 chars |
+| ANL_KB_Projection_Methods_v7.0.txt | Forecasting and projection approaches | 10,209 chars |
+| ANL_KB_Scenario_Modeling_v7.0.txt | What-if analysis and scenario planning | 9,286 chars |
+| ANL_KB_Statistical_Tests_v7.0.txt | Significance testing and confidence intervals | 11,042 chars |
 
 ## Flows
 - CalculateProjection: Executes reach/frequency/impression calculations

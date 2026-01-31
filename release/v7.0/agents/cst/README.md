@@ -91,10 +91,10 @@ Scores and ranks initiatives using RICE, Weighted Matrix, or MoSCoW methods. Sho
 
 | File | Size | Description |
 |------|------|-------------|
-| CST_KB_Consulting_Core_v1.txt | ~22K | Core consulting methodology and engagement phases |
-| CST_KB_Strategic_Frameworks_v1.txt | ~25K | SWOT, Porter, PESTEL, BCG, Ansoff, Value Chain |
-| CST_KB_Prioritization_Methods_v1.txt | ~18K | RICE, MoSCoW, Weighted Matrix, Eisenhower |
-| CST_KB_Industry_Context_v1.txt | ~15K | Industry-specific framework applications |
+| CST_KB_Consulting_Core_v7.0.txt | ~22K | Core consulting methodology and engagement phases |
+| CST_KB_Strategic_Frameworks_v7.0.txt | ~25K | SWOT, Porter, PESTEL, BCG, Ansoff, Value Chain |
+| CST_KB_Prioritization_Methods_v7.0.txt | ~18K | RICE, MoSCoW, Weighted Matrix, Eisenhower |
+| CST_KB_Industry_Context_v7.0.txt | ~15K | Industry-specific framework applications |
 
 ## Framework Categories (ca_framework table)
 

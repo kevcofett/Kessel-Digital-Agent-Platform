@@ -18,17 +18,17 @@ The Marketing Strategy Agent (MKT) provides expertise in campaign strategy devel
 
 | File | Size | Content |
 |------|------|---------|
-| MKT_KB_Campaign_Strategy_v1.txt | 10,419 chars | Campaign planning frameworks, objective setting, measurement |
-| MKT_KB_Creative_Briefs_v1.txt | 10,627 chars | Brief structure, insight development, proposition crafting |
-| MKT_KB_Brand_Positioning_v1.txt | 10,370 chars | Positioning frameworks, statement development, research |
-| MKT_KB_GTM_Planning_v1.txt | 9,493 chars | Go-to-market methodology, pricing, channel strategy |
-| MKT_KB_Competitive_Analysis_v1.txt | 10,183 chars | Porter's forces, SWOT, perceptual mapping, win/loss |
+| MKT_KB_Campaign_Strategy_v7.0.txt | 10,419 chars | Campaign planning frameworks, objective setting, measurement |
+| MKT_KB_Creative_Briefs_v7.0.txt | 10,627 chars | Brief structure, insight development, proposition crafting |
+| MKT_KB_Brand_Positioning_v7.0.txt | 10,370 chars | Positioning frameworks, statement development, research |
+| MKT_KB_GTM_Planning_v7.0.txt | 9,493 chars | Go-to-market methodology, pricing, channel strategy |
+| MKT_KB_Competitive_Analysis_v7.0.txt | 10,183 chars | Porter's forces, SWOT, perceptual mapping, win/loss |
 
 **Total KB:** 51,092 characters
 
 ## Instructions
 
-- File: `MKT_Copilot_Instructions_v1.txt`
+- File: `MKT_Copilot_Instructions_v7.0.txt`
 - Size: 5,567 characters (within 8,000 limit)
 - Compliance: 6-Rule compliant (ALL-CAPS headers, hyphens-only, ASCII)
 
@@ -71,7 +71,7 @@ Upload all 5 KB files to SharePoint knowledge base folder.
 
 ### Copilot Studio Setup
 1. Create new agent "MKT - Marketing Strategy"
-2. Copy instructions from `MKT_Copilot_Instructions_v1.txt`
+2. Copy instructions from `MKT_Copilot_Instructions_v7.0.txt`
 3. Add all 5 KB files as knowledge sources
 4. Add EAP shared KB files
 5. Save and Publish

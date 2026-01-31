@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  GHA AI Builder Prompts - Dataverse eap_prompt Table Data
+  Version: 7.0.0.0
+  Date: 2026-01-31
+
+  This file contains prompt registration data for the 10 GHA AI Builder prompts.
+  Import into eap_prompt table via Dataverse data import or solution deployment.
+-->
+<eap_prompts>
+
+  <eap_prompt>
+    <prompt_code>GHA_IntentClassify</prompt_code>
+    <prompt_name>Classify Growth Intent</prompt_name>
+    <agent_code>GHA</agent_code>
+    <capability_code>GHA_INTENT_CLASSIFY</capability_code>
+    <version>7.0</version>
+    <description>Classify growth-specific user intent, determine AARRR stage focus, and route to appropriate workflow.</description>
+    <temperature>0.1</temperature>
+    <max_tokens>800</max_tokens>
+    <timeout_seconds>15</timeout_seconds>
+    <is_active>true</is_active>
+    <input_parameters>
+      <parameter name="user_message" type="Text" required="true" />
+      <parameter name="session_context_json" type="Text" required="false" />
+    </input_parameters>
+  </eap_prompt>
+
+  <eap_prompt>
+    <prompt_code>GHA_FrameworkSelect</prompt_code>
+    <prompt_name>Select Growth Framework</prompt_name>
+    <agent_code>GHA</agent_code>
+    <capability_code>GHA_FRAMEWORK_SELECT</capability_code>
+    <version>7.0</version>
+    <description>Select and apply appropriate growth framework (AARRR, Hook Model, Growth Loops, etc.) based on business context.</description>
+    <temperature>0.2</temperature>
+    <max_tokens>1500</max_tokens>
+    <timeout_seconds>30</timeout_seconds>
+    <is_active>true</is_active>
+    <input_parameters>
+      <parameter name="business_context_json" type="Text" required="true" />
+      <parameter name="growth_objectives" type="Text" required="true" />
+      <parameter name="constraints_json" type="Text" required="false" />
+      <parameter name="growth_stage" type="Text" required="false" />
+    </input_parameters>
+  </eap_prompt>
+
+  <eap_prompt>
+    <prompt_code>GHA_LifecycleAnalyze</prompt_code>
+    <prompt_name>Analyze AARRR Lifecycle</prompt_name>
+    <agent_code>GHA</agent_code>
+    <capability_code>GHA_LIFECYCLE_ANALYZE</capability_code>
+    <version>7.0</version>
+    <description>Analyze AARRR funnel stages to identify bottlenecks, health scores, and optimization opportunities.</description>
+    <temperature>0.2</temperature>
+    <max_tokens>2500</max_tokens>
+    <timeout_seconds>45</timeout_seconds>
+    <is_active>true</is_active>
+    <input_parameters>
+      <parameter name="funnel_data_json" type="Text" required="true" />
+      <parameter name="business_context" type="Text" required="true" />
+      <parameter name="time_period" type="Text" required="true" />
+      <parameter name="baseline_data_json" type="Text" required="false" />
+    </input_parameters>
+  </eap_prompt>
+
+  <eap_prompt>
+    <prompt_code>GHA_NorthStarDefine</prompt_code>
+    <prompt_name>Define North Star Metric</prompt_name>
+    <agent_code>GHA</agent_code>
+    <capability_code>GHA_NORTH_STAR_DEFINE</capability_code>
+    <version>7.0</version>
+    <description>Help define and validate appropriate North Star metric with supporting input/output metrics framework.</description>
+    <temperature>0.3</temperature>
+    <max_tokens>2000</max_tokens>
+    <timeout_seconds>30</timeout_seconds>
+    <is_active>true</is_active>
+    <input_parameters>
+      <parameter name="business_model" type="Text" required="true" />
+      <parameter name="product_description" type="Text" required="true" />
+      <parameter name="current_metrics_json" type="Text" required="false" />
+      <parameter name="growth_objectives" type="Text" required="true" />
+      <parameter name="value_proposition" type="Text" required="true" />
+    </input_parameters>
+  </eap_prompt>
+
+  <eap_prompt>
+    <prompt_code>GHA_TacticRecommend</prompt_code>
+    <prompt_name>Recommend Growth Tactics</prompt_name>
+    <agent_code>GHA</agent_code>
+    <capability_code>GHA_TACTIC_RECOMMEND</capability_code>
+    <version>7.0</version>
+    <description>Recommend specific, prioritized growth tactics by AARRR lifecycle stage with ICE scoring.</description>
+    <temperature>0.3</temperature>
+    <max_tokens>2500</max_tokens>
+    <timeout_seconds>45</timeout_seconds>
+    <is_active>true</is_active>
+    <input_parameters>
+      <parameter name="target_stage" type="Text" required="true" />
+      <parameter name="business_context_json" type="Text" required="true" />
+      <parameter name="current_metrics_json" type="Text" required="false" />
+      <parameter name="resources_json" type="Text" required="false" />
+      <parameter name="constraints" type="Text" required="false" />
+      <parameter name="previous_tactics_json" type="Text" required="false" />
+    </input_parameters>
+  </eap_prompt>
+
+  <eap_prompt>
+    <prompt_code>GHA_PsychologyApply</prompt_code>
+    <prompt_name>Apply Behavioral Psychology</prompt_name>
+    <agent_code>GHA</agent_code>
+    <capability_code>GHA_PSYCHOLOGY_APPLY</capability_code>
+    <version>7.0</version>
+    <description>Apply psychological principles (Hook Model, Fogg Model, cognitive biases) to design ethical growth mechanics.</description>
+    <temperature>0.3</temperature>
+    <max_tokens>2500</max_tokens>
+    <timeout_seconds>45</timeout_seconds>
+    <is_active>true</is_active>
+    <input_parameters>
+      <parameter name="target_behavior" type="Text" required="true" />
+      <parameter name="user_context_json" type="Text" required="true" />
+      <parameter name="user_journey_json" type="Text" required="false" />
+      <parameter name="constraints" type="Text" required="false" />
+      <parameter name="ethical_boundaries" type="Text" required="false" />
+    </input_parameters>
+  </eap_prompt>
+
+  <eap_prompt>
+    <prompt_code>GHA_CompetitorGrowth</prompt_code>
+    <prompt_name>Analyze Competitor Growth</prompt_name>
+    <agent_code>GHA</agent_code>
+    <capability_code>GHA_COMPETITOR_GROWTH</capability_code>
+    <version>7.0</version>
+    <description>Analyze competitor growth strategies with fintech/neobank focus, identifying learnable tactics and differentiation opportunities.</description>
+    <temperature>0.3</temperature>
+    <max_tokens>3000</max_tokens>
+    <timeout_seconds>60</timeout_seconds>
+    <is_active>true</is_active>
+    <input_parameters>
+      <parameter name="competitors_list" type="Text" required="true" />
+      <parameter name="business_context_json" type="Text" required="true" />
+      <parameter name="current_approach" type="Text" required="false" />
+      <parameter name="specific_questions" type="Text" required="false" />
+      <parameter name="market_segment" type="Text" required="true" />
+    </input_parameters>
+  </eap_prompt>
+
+  <eap_prompt>
+    <prompt_code>GHA_ExperimentDesign</prompt_code>
+    <prompt_name>Design Growth Experiment</prompt_name>
+    <agent_code>GHA</agent_code>
+    <capability_code>GHA_EXPERIMENT_DESIGN</capability_code>
+    <version>7.0</version>
+    <description>Design rigorous growth experiments with hypothesis formulation, sample size calculation, and success criteria.</description>
+    <temperature>0.3</temperature>
+    <max_tokens>2500</max_tokens>
+    <timeout_seconds>45</timeout_seconds>
+    <is_active>true</is_active>
+    <input_parameters>
+      <parameter name="hypothesis_idea" type="Text" required="true" />
+      <parameter name="target_metric" type="Text" required="true" />
+      <parameter name="baseline_data_json" type="Text" required="false" />
+      <parameter name="traffic_estimate" type="Text" required="true" />
+      <parameter name="constraints" type="Text" required="false" />
+      <parameter name="previous_experiments_json" type="Text" required="false" />
+    </input_parameters>
+  </eap_prompt>
+
+  <eap_prompt>
+    <prompt_code>GHA_GrowthProject</prompt_code>
+    <prompt_name>Project Growth Outcomes</prompt_name>
+    <agent_code>GHA</agent_code>
+    <capability_code>GHA_GROWTH_PROJECT</capability_code>
+    <version>7.0</version>
+    <description>Project growth outcomes by AARRR stage with scenario analysis (pessimistic/base/optimistic) and compounding effects.</description>
+    <temperature>0.2</temperature>
+    <max_tokens>3000</max_tokens>
+    <timeout_seconds>45</timeout_seconds>
+    <is_active>true</is_active>
+    <input_parameters>
+      <parameter name="current_metrics_json" type="Text" required="true" />
+      <parameter name="tactics_json" type="Text" required="true" />
+      <parameter name="time_horizon" type="Text" required="true" />
+      <parameter name="historical_data_json" type="Text" required="false" />
+      <parameter name="market_context" type="Text" required="false" />
+      <parameter name="north_star_metric" type="Text" required="true" />
+    </input_parameters>
+  </eap_prompt>
+
+  <eap_prompt>
+    <prompt_code>GHA_GrowthSynthesize</prompt_code>
+    <prompt_name>Synthesize Growth Strategy</prompt_name>
+    <agent_code>GHA</agent_code>
+    <capability_code>GHA_GROWTH_SYNTHESIZE</capability_code>
+    <version>7.0</version>
+    <description>Synthesize specialist contributions (ANL, AUD, CHA) into unified growth strategy with conflict resolution and handoff context.</description>
+    <temperature>0.4</temperature>
+    <max_tokens>4000</max_tokens>
+    <timeout_seconds>60</timeout_seconds>
+    <is_active>true</is_active>
+    <input_parameters>
+      <parameter name="growth_context_json" type="Text" required="true" />
+      <parameter name="anl_contribution_json" type="Text" required="false" />
+      <parameter name="aud_contribution_json" type="Text" required="false" />
+      <parameter name="cha_contribution_json" type="Text" required="false" />
+      <parameter name="user_preferences_json" type="Text" required="false" />
+      <parameter name="original_request" type="Text" required="true" />
+    </input_parameters>
+  </eap_prompt>
+
+</eap_prompts>

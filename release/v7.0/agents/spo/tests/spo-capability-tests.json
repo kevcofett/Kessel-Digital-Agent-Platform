@@ -1,0 +1,191 @@
+{
+  "version": "1.0.0",
+  "description": "Capability tests for SPO (Supply Path Optimization) Agent",
+  "created": "2026-01-19",
+  "agent": {
+    "code": "SPO",
+    "name": "Supply Path Optimization",
+    "capabilities": ["nbi_calculation", "fee_analysis", "partner_evaluation", "supply_path_transparency", "inventory_quality"]
+  },
+  "total_tests": 15,
+  "categories": {
+    "nbi_calculation": 4,
+    "fee_analysis": 4,
+    "partner_evaluation": 4,
+    "integration": 3
+  },
+  "tests": [
+    {
+      "id": "SPO-001",
+      "category": "nbi_calculation",
+      "name": "Basic NBI Calculation",
+      "input": "Calculate Net Bidder Index for our programmatic buy",
+      "expected_flow": "CalculateNBI",
+      "expected_output_contains": ["nbi_score", "fee_breakdown", "working_media_percent"],
+      "priority": "P0",
+      "tags": ["nbi", "calculation"]
+    },
+    {
+      "id": "SPO-002",
+      "category": "nbi_calculation",
+      "name": "NBI Comparison Across Partners",
+      "input": "Compare NBI scores across TTD, DV360, and Xandr",
+      "expected_flow": "CalculateNBI",
+      "expected_output_contains": ["partner_nbi_scores", "ranking", "fee_comparison"],
+      "priority": "P0",
+      "tags": ["nbi", "comparison"]
+    },
+    {
+      "id": "SPO-003",
+      "category": "nbi_calculation",
+      "name": "NBI Optimization Recommendation",
+      "input": "How can we improve our NBI from 0.65 to 0.75?",
+      "expected_flow": "CalculateNBI",
+      "expected_output_contains": ["improvement_opportunities", "fee_reduction_targets", "estimated_savings"],
+      "priority": "P1",
+      "tags": ["nbi", "optimization"]
+    },
+    {
+      "id": "SPO-004",
+      "category": "nbi_calculation",
+      "name": "Working Media Percentage",
+      "input": "What percentage of our spend reaches working media?",
+      "expected_flow": "CalculateNBI",
+      "expected_output_contains": ["working_media_percent", "non_working_breakdown", "industry_benchmark"],
+      "priority": "P1",
+      "tags": ["nbi", "working-media"]
+    },
+    {
+      "id": "SPO-005",
+      "category": "fee_analysis",
+      "name": "Full Fee Stack Breakdown",
+      "input": "Break down our complete programmatic fee stack",
+      "expected_flow": "AnalyzeFees",
+      "expected_output_contains": ["dsp_fees", "ssp_fees", "data_fees", "tech_fees", "total_take_rate"],
+      "priority": "P0",
+      "tags": ["fees", "breakdown"]
+    },
+    {
+      "id": "SPO-006",
+      "category": "fee_analysis",
+      "name": "Fee Benchmark Comparison",
+      "input": "How do our fees compare to industry benchmarks?",
+      "expected_flow": "AnalyzeFees",
+      "expected_output_contains": ["benchmark_comparison", "above_below_market", "fee_percentiles"],
+      "priority": "P0",
+      "tags": ["fees", "benchmark"]
+    },
+    {
+      "id": "SPO-007",
+      "category": "fee_analysis",
+      "name": "Hidden Fee Detection",
+      "input": "Identify any hidden or duplicative fees in our supply chain",
+      "expected_flow": "AnalyzeFees",
+      "expected_output_contains": ["hidden_fees", "duplicative_charges", "transparency_score"],
+      "priority": "P1",
+      "tags": ["fees", "transparency"]
+    },
+    {
+      "id": "SPO-008",
+      "category": "fee_analysis",
+      "name": "Fee Negotiation Targets",
+      "input": "Which fees should we prioritize for renegotiation?",
+      "expected_flow": "AnalyzeFees",
+      "expected_output_contains": ["negotiation_priorities", "savings_potential", "leverage_points"],
+      "priority": "P1",
+      "tags": ["fees", "negotiation"]
+    },
+    {
+      "id": "SPO-009",
+      "category": "partner_evaluation",
+      "name": "DSP Evaluation",
+      "input": "Evaluate The Trade Desk for our programmatic needs",
+      "expected_flow": "EvaluatePartner",
+      "expected_output_contains": ["partner_score", "strengths", "weaknesses", "fee_structure"],
+      "priority": "P0",
+      "tags": ["partner", "dsp"]
+    },
+    {
+      "id": "SPO-010",
+      "category": "partner_evaluation",
+      "name": "SSP Quality Assessment",
+      "input": "Assess supply quality from our top SSP partners",
+      "expected_flow": "EvaluatePartner",
+      "expected_output_contains": ["ssp_quality_scores", "fraud_rates", "viewability_rates"],
+      "priority": "P0",
+      "tags": ["partner", "ssp"]
+    },
+    {
+      "id": "SPO-011",
+      "category": "partner_evaluation",
+      "name": "Partner Consolidation Analysis",
+      "input": "Should we consolidate from 5 DSPs to 2?",
+      "expected_flow": "EvaluatePartner",
+      "expected_output_contains": ["consolidation_recommendation", "efficiency_gains", "capability_gaps"],
+      "priority": "P1",
+      "tags": ["partner", "consolidation"]
+    },
+    {
+      "id": "SPO-012",
+      "category": "partner_evaluation",
+      "name": "New Partner Assessment",
+      "input": "Evaluate Amazon DSP as a potential new partner",
+      "expected_flow": "EvaluatePartner",
+      "expected_output_contains": ["partner_profile", "fit_assessment", "integration_requirements"],
+      "priority": "P1",
+      "tags": ["partner", "evaluation"]
+    },
+    {
+      "id": "SPO-013",
+      "category": "integration",
+      "name": "SPO to CHA Handoff",
+      "input": "Based on supply path analysis, adjust channel recommendations",
+      "expected_flow": "CalculateNBI",
+      "expected_behavior": "SPO provides supply analysis, CHA adjusts allocation",
+      "secondary_agent": "CHA",
+      "priority": "P0",
+      "tags": ["integration", "handoff"]
+    },
+    {
+      "id": "SPO-014",
+      "category": "integration",
+      "name": "SPO to ANL Handoff",
+      "input": "Factor supply path efficiency into budget projections",
+      "expected_flow": "AnalyzeFees",
+      "expected_behavior": "SPO provides fee data, ANL updates projections",
+      "secondary_agent": "ANL",
+      "priority": "P1",
+      "tags": ["integration", "handoff"]
+    },
+    {
+      "id": "SPO-015",
+      "category": "integration",
+      "name": "Full Supply Path Optimization",
+      "input": "Complete supply path analysis: NBI, fees, and partner evaluation",
+      "expected_flow": "CalculateNBI",
+      "expected_output_contains": ["nbi_analysis", "fee_breakdown", "partner_recommendations"],
+      "secondary_flow": "AnalyzeFees",
+      "tertiary_flow": "EvaluatePartner",
+      "priority": "P1",
+      "tags": ["integration", "comprehensive"]
+    }
+  ],
+  "execution_instructions": {
+    "environment": "Copilot Studio test environment",
+    "prerequisites": [
+      "SPO agent deployed",
+      "All 3 SPO flows connected",
+      "Partner data seeded"
+    ],
+    "pass_criteria": {
+      "P0_tests": "100% pass required",
+      "P1_tests": "90% pass required"
+    },
+    "metrics_to_capture": [
+      "Response time (ms)",
+      "NBI calculation accuracy",
+      "Fee analysis completeness (1-5)",
+      "Partner evaluation quality (1-5)"
+    ]
+  }
+}

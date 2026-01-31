@@ -1,0 +1,245 @@
+ORC KNOWLEDGE BASE - CROSS-DOMAIN HANDOFF PROTOCOLS
+
+OVERVIEW
+
+This knowledge base defines how ORC manages handoffs between major agent domains: Growth Hacking Agent (GHA), Media Planning Agent (MPA), and Consulting Agent (CA). Cross-domain handoffs enable growth strategies to inform media plans and consulting projects while preserving context across the workflow.
+
+DOMAIN DEFINITIONS
+
+GHA Domain - Growth Strategy
+- Primary focus: Growth marketing strategy using AARRR funnel and behavioral frameworks
+- Output: Growth plans with North Star metrics, lifecycle priorities, tactics, and projections
+- Downstream consumers: MPA for media execution, CA for strategic frameworks
+
+MPA Domain - Media Planning
+- Primary focus: Media strategy, channel allocation, audience targeting, measurement
+- Input from GHA: Growth context including segments, priorities, and projections
+- Output: Complete media plans with budget allocation and execution guidelines
+
+CA Domain - Consulting Strategy
+- Primary focus: Strategic frameworks, prioritization, change management
+- Input from GHA: Growth strategy context, business model, tactics
+- Output: Consulting frameworks, assessment documents, change plans
+
+HANDOFF TRIGGER CONDITIONS
+
+GHA to MPA Handoff triggers when:
+- Growth plan reaches Step 8 (Documentation Complete)
+- User explicitly requests media plan development
+- User asks to execute or implement the growth strategy
+- User mentions budget allocation or channel execution
+- User asks how to activate the growth tactics
+
+Trigger keywords: media plan, execute, implement, activate, budget allocation, channel execution, campaign development, ad spend
+
+GHA to CA Handoff triggers when:
+- Growth plan reaches Step 8 (Documentation Complete)
+- User requests strategic framework around growth initiative
+- User asks about organizational change required for growth
+- User mentions stakeholder alignment or adoption planning
+- User asks to assess maturity or readiness
+
+Trigger keywords: framework, strategic, organizational, stakeholder, adoption, maturity assessment, change management, transformation
+
+MPA to CA Handoff triggers when:
+- Media plan reaches Step 10 (Documentation Complete)
+- User requests consulting analysis of media strategy
+- User asks about organizational readiness for media transformation
+
+CA to MPA Handoff triggers when:
+- Consulting project identifies media planning needs
+- Strategic framework includes marketing execution requirements
+- Change plan identifies communication campaign needs
+
+HANDOFF CONTEXT FIELDS
+
+GHA to MPA Context includes:
+- north_star_metric: Selected growth metric with baseline and target
+- priority_stages: Array of priority AARRR lifecycle stages
+- audience_segments: Growth segment definitions from AUD analysis
+- channel_strategy: Growth channel recommendations from CHA analysis
+- projections: Financial projections from ANL analysis
+- tactics: Selected growth tactics with psychological principles
+- business_model: Business model context and growth stage
+
+GHA to CA Context includes:
+- north_star_metric: Growth metric for strategic alignment
+- business_model: Business model and competitive context
+- growth_stage: Current growth stage assessment
+- tactics: Growth tactics requiring organizational support
+- priority_stages: Lifecycle priorities for framework development
+- projections: Investment requirements and expected outcomes
+
+MPA to CA Context includes:
+- plan_state: Full media plan state
+- budget_summary: Total budget and allocation
+- channel_mix: Selected channels and rationale
+- audience_strategy: Targeting approach
+- measurement_framework: KPIs and attribution model
+
+HANDOFF EXECUTION PROCESS
+
+Step 1 - Detect Handoff Opportunity
+When source domain workflow completes or user request indicates cross-domain need:
+- Identify source domain and current state
+- Identify target domain based on user intent
+- Verify source domain has necessary context
+
+Step 2 - Prepare Handoff Context
+Extract relevant fields from source domain state:
+- Select context fields defined for this handoff type
+- Include session reference for audit trail
+- Preserve source domain identifiers
+
+Step 3 - Offer Handoff to User
+Present explicit handoff options:
+- Explain what downstream work is available
+- Describe what context will carry forward
+- Allow user to accept, decline, or modify scope
+
+Step 4 - Execute Handoff
+If user accepts:
+- Route to target domain with handoff context
+- Initialize target domain workflow at Step 1
+- Store cross-reference between domain sessions
+
+Step 5 - Confirm Context Receipt
+Target domain confirms context availability:
+- Acknowledge received context
+- Summarize how prior work informs current workflow
+- Begin target domain workflow
+
+HANDOFF MESSAGE TEMPLATES
+
+GHA Complete - Offer MPA:
+Your growth strategy is complete with the following elements ready for media planning:
+- North Star metric: [metric name] with target of [target value]
+- Priority lifecycle stages: [stage list]
+- Target segments defined for [segment count] audiences
+- Channel recommendations for [channel list]
+- Projected outcomes with [scenario summary]
+
+Would you like to develop a media plan that implements this growth approach? The growth context will inform audience targeting, channel selection, and measurement strategy.
+
+GHA Complete - Offer CA:
+Your growth strategy is complete. Key elements available for consulting framework development:
+- Business model: [model type] at [growth stage] stage
+- North Star metric: [metric name]
+- Priority initiatives: [tactic summary]
+- Investment requirements: [budget summary]
+
+Would you like to build a strategic framework around this growth initiative? This could include maturity assessment, prioritization framework, or change management planning.
+
+MPA Complete - Offer CA:
+Your media plan is complete. If your organization needs support with:
+- Strategic assessment of media capabilities
+- Change management for media transformation
+- Stakeholder alignment for media investment
+
+Would you like to develop a consulting framework to support this media initiative?
+
+CONTEXT AUTO-POPULATION
+
+When routing requests after a handoff, ORC automatically includes cross-domain context:
+
+If GHA work exists and routing to MPA domain:
+- Include growth_context in specialist request
+- AUD receives segment context from growth plan
+- CHA receives priority stages and channel strategy from growth plan
+- ANL receives projections context and North Star targets
+
+If GHA work exists and routing to CA domain:
+- Include growth_context in specialist request
+- CST receives business model and strategic context
+- CHG receives organizational context and tactics requiring adoption
+
+Context Population Rules:
+- Only populate from completed domain work (workflow gate 4)
+- Preserve original domain state (do not overwrite)
+- Include source reference for traceability
+- Allow target domain to override if user provides new input
+
+SESSION STATE MANAGEMENT
+
+Cross-domain sessions maintain separate state per domain:
+- eap_sessions: Main session with plan_state for MPA
+- eap_growth_sessions: Growth session with growth_plan_state for GHA
+- Cross-reference via session_id and growth_session_id
+
+State Coexistence:
+- User can have growth plan AND media plan in same session
+- User can have growth plan AND consulting project in same session
+- Each domain state is independent but linked
+- Context flows between domains without overwriting
+
+State Cleanup:
+- Domain states persist until session ends
+- Partial domain work preserved if user switches domains
+- User can resume any domain work from session context
+
+MULTI-DOMAIN WORKFLOW PATTERNS
+
+Growth to Media Execution:
+1. User requests growth strategy
+2. ORC routes to GHA, GHA completes 8-step workflow
+3. GHA requests specialists via ORC (ANL, AUD, CHA, DOC)
+4. ORC offers MPA handoff at growth completion
+5. User accepts, ORC routes to MPA with growth context
+6. MPA builds media plan informed by growth strategy
+7. MPA requests specialists (ANL, AUD, CHA, SPO, DOC, PRF)
+8. Complete media plan with growth alignment
+
+Growth to Consulting Framework:
+1. User requests growth strategy
+2. ORC routes to GHA, GHA completes 8-step workflow
+3. ORC offers CA handoff at growth completion
+4. User accepts, ORC routes to CA with growth context
+5. CST builds strategic framework around growth initiative
+6. CHG develops change plan for growth adoption
+7. DOC generates consulting deliverables
+
+Full Transformation (Growth to Media to Consulting):
+1. Complete growth strategy in GHA
+2. Handoff to MPA for media execution planning
+3. Handoff to CA for organizational change support
+4. All three domain contexts inform the complete transformation
+
+AUDIT AND TRACEABILITY
+
+Cross-domain handoffs are logged in eap_routing_logs:
+- eap_handoff_type: CROSS_DOMAIN
+- eap_source_domain: GHA, MPA, or CA
+- eap_target_domain: GHA, MPA, or CA
+- eap_context_transferred: JSON summary of context fields
+- eap_user_accepted: Boolean indicating user acceptance
+
+Handoff Chain Visible:
+- USER to ORC: Initial request
+- ORC to GHA: Growth strategy development
+- GHA to ORC to ANL: Specialist request during growth
+- GHA complete to ORC: Handoff offer
+- ORC to MPA: Media plan with growth context
+- Full chain traceable via session_id
+
+ERROR HANDLING
+
+Handoff Failure Scenarios:
+
+Source domain incomplete:
+- Do not offer handoff until source workflow complete
+- Inform user of remaining steps before handoff available
+
+Context transfer failure:
+- Log error with context details
+- Offer manual context entry option
+- Proceed with partial context if user accepts
+
+Target domain unavailable:
+- Return error to user with explanation
+- Offer alternative domain or retry option
+- Preserve source domain state
+
+User declines handoff:
+- Acknowledge user preference
+- Preserve source domain state for future handoff
+- Continue conversation in current domain or general ORC mode

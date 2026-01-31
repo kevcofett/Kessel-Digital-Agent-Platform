@@ -1,0 +1,586 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "8d0da4bb-5e05-4d41-9555-9b740e114afb"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id",
+                "change_description"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "change_description": {
+                  "type": "string",
+                  "description": "Description of the change initiative"
+                },
+                "stakeholder_list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "role": {
+                        "type": "string"
+                      },
+                      "department": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "scope": {
+                  "type": "string",
+                  "enum": [
+                    "department",
+                    "division",
+                    "enterprise"
+                  ],
+                  "default": "department"
+                },
+                "change_type": {
+                  "type": "string",
+                  "enum": [
+                    "technology",
+                    "process",
+                    "organizational",
+                    "cultural",
+                    "strategic"
+                  ],
+                  "default": "technology"
+                }
+              }
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "change_description": "@triggerBody()?['change_description']",
+            "stakeholder_list": "@triggerBody()?['stakeholder_list']",
+            "scope": "@coalesce(triggerBody()?['scope'], 'department')",
+            "change_type": "@coalesce(triggerBody()?['change_type'], 'technology')",
+            "start_time": "@utcNow()"
+          },
+          "metadata": {
+            "operationMetadataId": "e4774ee6-43aa-474c-a0a1-c29546ec0a0b"
+          },
+          "runAfter": {}
+        },
+        "identify_stakeholders": {
+          "type": "Compose",
+          "inputs": {
+            "stakeholder_categories": {
+              "sponsors": {
+                "description": "Executive leaders who authorize and fund the change",
+                "typical_roles": [
+                  "C-Suite Executive",
+                  "VP/SVP",
+                  "Business Unit Head"
+                ],
+                "identified": [
+                  {
+                    "name": "Executive Sponsor",
+                    "role": "Chief Digital Officer",
+                    "department": "Executive",
+                    "power": 5,
+                    "interest": 5,
+                    "current_stance": "champion"
+                  }
+                ]
+              },
+              "change_agents": {
+                "description": "Leaders responsible for driving change implementation",
+                "typical_roles": [
+                  "Program Manager",
+                  "Change Lead",
+                  "Department Head"
+                ],
+                "identified": [
+                  {
+                    "name": "Change Lead",
+                    "role": "Director of Transformation",
+                    "department": "PMO",
+                    "power": 4,
+                    "interest": 5,
+                    "current_stance": "champion"
+                  },
+                  {
+                    "name": "IT Lead",
+                    "role": "IT Director",
+                    "department": "IT",
+                    "power": 4,
+                    "interest": 4,
+                    "current_stance": "supporter"
+                  }
+                ]
+              },
+              "influencers": {
+                "description": "Key individuals who shape opinions across the organization",
+                "typical_roles": [
+                  "Senior Manager",
+                  "Team Lead",
+                  "Subject Matter Expert"
+                ],
+                "identified": [
+                  {
+                    "name": "Operations Manager",
+                    "role": "Senior Operations Manager",
+                    "department": "Operations",
+                    "power": 3,
+                    "interest": 4,
+                    "current_stance": "neutral"
+                  },
+                  {
+                    "name": "Finance Lead",
+                    "role": "Finance Manager",
+                    "department": "Finance",
+                    "power": 3,
+                    "interest": 3,
+                    "current_stance": "skeptic"
+                  }
+                ]
+              },
+              "impacted_users": {
+                "description": "End users directly affected by the change",
+                "typical_roles": [
+                  "Individual Contributor",
+                  "Analyst",
+                  "Specialist"
+                ],
+                "identified": [
+                  {
+                    "name": "Frontline Staff",
+                    "role": "Various",
+                    "department": "Multiple",
+                    "power": 2,
+                    "interest": 5,
+                    "current_stance": "mixed",
+                    "estimated_count": 150
+                  }
+                ]
+              }
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "af9fc976-5660-472d-9580-609556e4657b"
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "create_power_interest_grid": {
+          "type": "Compose",
+          "inputs": {
+            "grid_quadrants": {
+              "high_power_high_interest": {
+                "label": "Key Players",
+                "strategy": "Manage Closely",
+                "engagement_level": "Collaborate",
+                "communication_frequency": "Weekly or more",
+                "stakeholders": [
+                  "Executive Sponsor",
+                  "Change Lead"
+                ]
+              },
+              "high_power_low_interest": {
+                "label": "Keep Satisfied",
+                "strategy": "Keep Informed",
+                "engagement_level": "Consult",
+                "communication_frequency": "Bi-weekly",
+                "stakeholders": []
+              },
+              "low_power_high_interest": {
+                "label": "Keep Informed",
+                "strategy": "Show Consideration",
+                "engagement_level": "Involve",
+                "communication_frequency": "Weekly",
+                "stakeholders": [
+                  "Frontline Staff",
+                  "Operations Manager"
+                ]
+              },
+              "low_power_low_interest": {
+                "label": "Monitor",
+                "strategy": "Monitor with minimal effort",
+                "engagement_level": "Inform",
+                "communication_frequency": "Monthly",
+                "stakeholders": [
+                  "Finance Lead"
+                ]
+              }
+            },
+            "visualization_data": {
+              "x_axis": "Interest Level (1-5)",
+              "y_axis": "Power Level (1-5)"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "6de9116a-9b5d-45ec-9100-d109ad05aeaa"
+          },
+          "runAfter": {
+            "identify_stakeholders": [
+              "Succeeded"
+            ]
+          }
+        },
+        "assess_influence": {
+          "type": "Compose",
+          "inputs": {
+            "influence_analysis": {
+              "champions": {
+                "count": 2,
+                "members": [
+                  "Executive Sponsor",
+                  "Change Lead"
+                ],
+                "leverage_strategy": "Activate as visible advocates and decision escalation path"
+              },
+              "supporters": {
+                "count": 1,
+                "members": [
+                  "IT Lead"
+                ],
+                "leverage_strategy": "Engage for technical credibility and peer influence"
+              },
+              "neutral": {
+                "count": 1,
+                "members": [
+                  "Operations Manager"
+                ],
+                "conversion_strategy": "Demonstrate operational benefits and involve in design"
+              },
+              "skeptics": {
+                "count": 1,
+                "members": [
+                  "Finance Lead"
+                ],
+                "conversion_strategy": "Present ROI data and address cost concerns directly"
+              },
+              "resistors": {
+                "count": 0,
+                "members": [],
+                "mitigation_strategy": "N/A"
+              }
+            },
+            "influence_map": {
+              "key_relationships": [
+                {
+                  "from": "Executive Sponsor",
+                  "to": "Operations Manager",
+                  "influence_type": "hierarchical",
+                  "strength": "strong"
+                },
+                {
+                  "from": "Change Lead",
+                  "to": "IT Lead",
+                  "influence_type": "collaborative",
+                  "strength": "strong"
+                },
+                {
+                  "from": "Operations Manager",
+                  "to": "Frontline Staff",
+                  "influence_type": "hierarchical",
+                  "strength": "moderate"
+                }
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "d8a423a4-e669-4e1e-a993-e7c3ccd0069e"
+          },
+          "runAfter": {
+            "create_power_interest_grid": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_engagement_strategies": {
+          "type": "Compose",
+          "inputs": {
+            "stakeholder_strategies": [
+              {
+                "stakeholder": "Executive Sponsor",
+                "quadrant": "Key Player",
+                "current_stance": "Champion",
+                "engagement_strategy": {
+                  "approach": "Collaborate and leverage",
+                  "objectives": [
+                    "Maintain visible sponsorship",
+                    "Leverage for resistance escalation",
+                    "Secure ongoing resources"
+                  ],
+                  "tactics": [
+                    "Weekly steering committee updates",
+                    "Monthly all-hands communication",
+                    "Quick wins celebration participation"
+                  ],
+                  "communication_preference": "Executive summary with key decisions",
+                  "meeting_frequency": "Weekly 30-min check-in"
+                }
+              },
+              {
+                "stakeholder": "Operations Manager",
+                "quadrant": "Keep Informed",
+                "current_stance": "Neutral",
+                "engagement_strategy": {
+                  "approach": "Convert through involvement",
+                  "objectives": [
+                    "Address operational concerns",
+                    "Gain input on implementation approach",
+                    "Convert to supporter"
+                  ],
+                  "tactics": [
+                    "Include in working group",
+                    "Pilot program participation",
+                    "Regular one-on-ones with Change Lead"
+                  ],
+                  "communication_preference": "Practical details with operational impact",
+                  "meeting_frequency": "Bi-weekly"
+                }
+              },
+              {
+                "stakeholder": "Finance Lead",
+                "quadrant": "Monitor",
+                "current_stance": "Skeptic",
+                "engagement_strategy": {
+                  "approach": "Address concerns with data",
+                  "objectives": [
+                    "Provide ROI evidence",
+                    "Address cost concerns",
+                    "Gain budget support"
+                  ],
+                  "tactics": [
+                    "Present business case with financials",
+                    "Monthly ROI tracking reports",
+                    "Invite to success milestone reviews"
+                  ],
+                  "communication_preference": "Data-driven with financial metrics",
+                  "meeting_frequency": "Monthly"
+                }
+              },
+              {
+                "stakeholder": "Frontline Staff",
+                "quadrant": "Keep Informed",
+                "current_stance": "Mixed",
+                "engagement_strategy": {
+                  "approach": "Inform and involve",
+                  "objectives": [
+                    "Build awareness and understanding",
+                    "Address WIIFM questions",
+                    "Prepare for transition"
+                  ],
+                  "tactics": [
+                    "Town hall presentations",
+                    "Training sessions",
+                    "Feedback channels",
+                    "Champion network engagement"
+                  ],
+                  "communication_preference": "Clear, practical, role-specific",
+                  "meeting_frequency": "Bi-weekly updates"
+                }
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9f73f8f8-85a8-4e73-833c-1e0a4d1d6dfb"
+          },
+          "runAfter": {
+            "assess_influence": [
+              "Succeeded"
+            ]
+          }
+        },
+        "create_communication_plan": {
+          "type": "Compose",
+          "inputs": {
+            "communication_matrix": [
+              {
+                "audience": "Executive Sponsors",
+                "message_themes": [
+                  "Strategic alignment",
+                  "Investment protection",
+                  "Milestone achievements"
+                ],
+                "channels": [
+                  "Steering committee",
+                  "Executive briefings"
+                ],
+                "frequency": "Weekly",
+                "owner": "Change Lead"
+              },
+              {
+                "audience": "Change Agents",
+                "message_themes": [
+                  "Implementation progress",
+                  "Issue resolution",
+                  "Resource needs"
+                ],
+                "channels": [
+                  "Working sessions",
+                  "Teams channel"
+                ],
+                "frequency": "Daily/Weekly",
+                "owner": "Change Lead"
+              },
+              {
+                "audience": "Influencers",
+                "message_themes": [
+                  "Benefits realization",
+                  "Input opportunities",
+                  "Progress updates"
+                ],
+                "channels": [
+                  "Manager meetings",
+                  "Email updates"
+                ],
+                "frequency": "Bi-weekly",
+                "owner": "Change Lead"
+              },
+              {
+                "audience": "Impacted Users",
+                "message_themes": [
+                  "What is changing",
+                  "Timeline and support",
+                  "Training availability"
+                ],
+                "channels": [
+                  "Town halls",
+                  "Email",
+                  "Intranet"
+                ],
+                "frequency": "Weekly during transition",
+                "owner": "Communications Team"
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "869b82fb-89d2-4ac0-a376-3c9dbd4a0e84"
+          },
+          "runAfter": {
+            "build_engagement_strategies": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "CHG",
+            "status": "success",
+            "data": {
+              "change_context": {
+                "description": "@outputs('parse_input')?['change_description']",
+                "scope": "@outputs('parse_input')?['scope']",
+                "type": "@outputs('parse_input')?['change_type']"
+              },
+              "stakeholder_map": {
+                "categories": "@outputs('identify_stakeholders')?['stakeholder_categories']",
+                "total_stakeholders": 6,
+                "total_impacted_users": 150
+              },
+              "power_interest_grid": "@outputs('create_power_interest_grid')?['grid_quadrants']",
+              "influence_analysis": "@outputs('assess_influence')?['influence_analysis']",
+              "influence_network": "@outputs('assess_influence')?['influence_map']",
+              "engagement_strategies": "@outputs('build_engagement_strategies')?['stakeholder_strategies']",
+              "communication_plan": "@outputs('create_communication_plan')?['communication_matrix']"
+            },
+            "confidence": "HIGH",
+            "sources": [
+              "AGENT_KB",
+              "STAKEHOLDER_ANALYSIS"
+            ],
+            "recommendations": [
+              "Focus immediate efforts on converting neutral Operations Manager",
+              "Leverage Executive Sponsor for visible change advocacy",
+              "Address Finance Lead concerns with data-driven business case",
+              "Establish champion network among frontline staff"
+            ],
+            "follow_up_questions": [
+              "Would you like to create a detailed change readiness assessment?",
+              "Should we develop a resistance management plan?",
+              "Do you want to create an adoption plan with this stakeholder mapping?"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "634617bc-b7f3-4b2d-b2a3-bffe3e01d4bc"
+          },
+          "runAfter": {
+            "create_communication_plan": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": "@outputs('build_response')",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "b9000e77-ee48-4631-8dee-b2c795e391e2"
+          },
+          "runAfter": {}
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

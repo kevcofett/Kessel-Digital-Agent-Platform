@@ -1,0 +1,190 @@
+{
+  "version": "1.0.0",
+  "description": "Capability tests for CHA (Channel Strategy) Agent",
+  "created": "2026-01-19",
+  "agent": {
+    "code": "CHA",
+    "name": "Channel Strategy",
+    "capabilities": ["channel_recommendation", "budget_allocation", "benchmark_lookup", "mix_optimization", "platform_expertise"]
+  },
+  "total_tests": 15,
+  "categories": {
+    "allocation": 4,
+    "benchmarks": 4,
+    "recommendations": 4,
+    "integration": 3
+  },
+  "tests": [
+    {
+      "id": "CHA-001",
+      "category": "allocation",
+      "name": "Budget Allocation by Objective",
+      "input": "Allocate $500K budget across channels for a conversion-focused campaign",
+      "expected_flow": "CalculateAllocation",
+      "expected_output_contains": ["channel_allocation", "percentage_split", "rationale"],
+      "priority": "P0",
+      "tags": ["allocation", "budget"]
+    },
+    {
+      "id": "CHA-002",
+      "category": "allocation",
+      "name": "Full-Funnel Allocation",
+      "input": "Allocate budget across awareness, consideration, and conversion stages",
+      "expected_flow": "CalculateAllocation",
+      "expected_output_contains": ["funnel_allocation", "stage_budgets", "channel_per_stage"],
+      "priority": "P0",
+      "tags": ["allocation", "funnel"]
+    },
+    {
+      "id": "CHA-003",
+      "category": "allocation",
+      "name": "Minimum Budget Validation",
+      "input": "Check if our $50K budget meets minimum thresholds for recommended channels",
+      "expected_flow": "CalculateAllocation",
+      "expected_output_contains": ["minimum_thresholds", "viable_channels", "budget_constraints"],
+      "priority": "P1",
+      "tags": ["allocation", "validation"]
+    },
+    {
+      "id": "CHA-004",
+      "category": "allocation",
+      "name": "Reallocation Recommendation",
+      "input": "Recommend budget reallocation based on mid-campaign performance",
+      "expected_flow": "CalculateAllocation",
+      "expected_output_contains": ["current_allocation", "recommended_changes", "expected_impact"],
+      "priority": "P1",
+      "tags": ["allocation", "optimization"]
+    },
+    {
+      "id": "CHA-005",
+      "category": "benchmarks",
+      "name": "CPM Benchmark Lookup",
+      "input": "What are typical CPMs for Display advertising in Retail?",
+      "expected_flow": "LookupBenchmarks",
+      "expected_output_contains": ["cpm_range", "p25", "p50", "p75", "vertical"],
+      "priority": "P0",
+      "tags": ["benchmark", "cpm"]
+    },
+    {
+      "id": "CHA-006",
+      "category": "benchmarks",
+      "name": "CTR Benchmark by Channel",
+      "input": "Show CTR benchmarks across Search, Social, and Display",
+      "expected_flow": "LookupBenchmarks",
+      "expected_output_contains": ["channel_benchmarks", "ctr_ranges", "industry_context"],
+      "priority": "P0",
+      "tags": ["benchmark", "ctr"]
+    },
+    {
+      "id": "CHA-007",
+      "category": "benchmarks",
+      "name": "Vertical-Specific Benchmarks",
+      "input": "Get Financial Services benchmarks for all channels",
+      "expected_flow": "LookupBenchmarks",
+      "expected_output_contains": ["vertical_benchmarks", "channel_breakdown", "kpi_ranges"],
+      "priority": "P1",
+      "tags": ["benchmark", "vertical"]
+    },
+    {
+      "id": "CHA-008",
+      "category": "benchmarks",
+      "name": "Performance vs Benchmark",
+      "input": "How does our 0.8% CTR compare to industry benchmarks for Search?",
+      "expected_flow": "LookupBenchmarks",
+      "expected_output_contains": ["comparison", "percentile_rank", "assessment"],
+      "priority": "P1",
+      "tags": ["benchmark", "comparison"]
+    },
+    {
+      "id": "CHA-009",
+      "category": "recommendations",
+      "name": "Awareness Channel Mix",
+      "input": "Recommend channel mix for brand awareness campaign",
+      "expected_flow": "CalculateAllocation",
+      "expected_output_contains": ["recommended_channels", "awareness_focus", "reach_optimization"],
+      "priority": "P0",
+      "tags": ["recommendation", "awareness"]
+    },
+    {
+      "id": "CHA-010",
+      "category": "recommendations",
+      "name": "Performance Channel Mix",
+      "input": "Recommend channels optimized for direct response and conversions",
+      "expected_flow": "CalculateAllocation",
+      "expected_output_contains": ["recommended_channels", "conversion_focus", "roi_optimization"],
+      "priority": "P0",
+      "tags": ["recommendation", "performance"]
+    },
+    {
+      "id": "CHA-011",
+      "category": "recommendations",
+      "name": "Emerging Channel Assessment",
+      "input": "Should we allocate budget to CTV and Retail Media?",
+      "expected_flow": "CalculateAllocation",
+      "expected_output_contains": ["channel_assessment", "test_budget", "success_criteria"],
+      "priority": "P1",
+      "tags": ["recommendation", "emerging"]
+    },
+    {
+      "id": "CHA-012",
+      "category": "recommendations",
+      "name": "Frequency Management",
+      "input": "How should we manage cross-channel frequency caps?",
+      "expected_flow": "CalculateAllocation",
+      "expected_output_contains": ["frequency_caps", "channel_coordination", "saturation_thresholds"],
+      "priority": "P1",
+      "tags": ["recommendation", "frequency"]
+    },
+    {
+      "id": "CHA-013",
+      "category": "integration",
+      "name": "CHA to SPO Handoff",
+      "input": "Based on this channel mix, optimize our programmatic supply path",
+      "expected_flow": "CalculateAllocation",
+      "expected_behavior": "CHA recommends channels, SPO optimizes supply",
+      "secondary_agent": "SPO",
+      "priority": "P0",
+      "tags": ["integration", "handoff"]
+    },
+    {
+      "id": "CHA-014",
+      "category": "integration",
+      "name": "CHA to ANL Handoff",
+      "input": "Project outcomes for this channel allocation",
+      "expected_flow": "CalculateAllocation",
+      "expected_behavior": "CHA provides allocation, ANL projects outcomes",
+      "secondary_agent": "ANL",
+      "priority": "P1",
+      "tags": ["integration", "handoff"]
+    },
+    {
+      "id": "CHA-015",
+      "category": "integration",
+      "name": "Full Channel Strategy",
+      "input": "Develop complete channel strategy with allocation and benchmarks",
+      "expected_flow": "CalculateAllocation",
+      "expected_output_contains": ["channel_mix", "allocation", "benchmarks", "recommendations"],
+      "secondary_flow": "LookupBenchmarks",
+      "priority": "P1",
+      "tags": ["integration", "comprehensive"]
+    }
+  ],
+  "execution_instructions": {
+    "environment": "Copilot Studio test environment",
+    "prerequisites": [
+      "CHA agent deployed",
+      "CalculateAllocation and LookupBenchmarks flows connected",
+      "Benchmark data seeded"
+    ],
+    "pass_criteria": {
+      "P0_tests": "100% pass required",
+      "P1_tests": "90% pass required"
+    },
+    "metrics_to_capture": [
+      "Response time (ms)",
+      "Allocation accuracy vs best practices",
+      "Benchmark data accuracy",
+      "Recommendation quality (1-5)"
+    ]
+  }
+}

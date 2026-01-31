@@ -1,0 +1,514 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {},
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "method": "POST",
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id",
+                "challenge_type"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "challenge_type": {
+                  "type": "string",
+                  "description": "Type of strategic challenge"
+                },
+                "challenge_description": {
+                  "type": "string",
+                  "description": "Detailed description of the challenge"
+                },
+                "industry": {
+                  "type": "string",
+                  "default": "general"
+                },
+                "complexity": {
+                  "type": "string",
+                  "enum": [
+                    "low",
+                    "medium",
+                    "high"
+                  ],
+                  "default": "medium"
+                },
+                "time_horizon": {
+                  "type": "string",
+                  "enum": [
+                    "short_term",
+                    "medium_term",
+                    "long_term"
+                  ],
+                  "default": "medium_term"
+                },
+                "data_availability": {
+                  "type": "string",
+                  "enum": [
+                    "limited",
+                    "moderate",
+                    "comprehensive"
+                  ],
+                  "default": "moderate"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "E1C22D3A-695A-4EA6-A24E-1751F48AA539"
+          },
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "challenge_type": "@triggerBody()?['challenge_type']",
+            "challenge_description": "@triggerBody()?['challenge_description']",
+            "industry": "@coalesce(triggerBody()?['industry'], 'general')",
+            "complexity": "@coalesce(triggerBody()?['complexity'], 'medium')",
+            "time_horizon": "@coalesce(triggerBody()?['time_horizon'], 'medium_term')",
+            "data_availability": "@coalesce(triggerBody()?['data_availability'], 'moderate')",
+            "start_time": "@utcNow()"
+          }
+        },
+        "load_frameworks": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "23E94C67-5354-4409-A3D2-CBF51CF1343C"
+          },
+          "inputs": {
+            "frameworks": {
+              "SWOT": {
+                "name": "SWOT Analysis",
+                "category": "situational_analysis",
+                "description": "Strengths, Weaknesses, Opportunities, Threats assessment",
+                "best_for": [
+                  "strategic_planning",
+                  "competitive_positioning",
+                  "capability_assessment"
+                ],
+                "complexity_level": "low",
+                "data_requirements": "limited",
+                "time_to_complete": "1-2 hours",
+                "outputs": [
+                  "Internal strengths and weaknesses",
+                  "External opportunities and threats",
+                  "Strategic implications"
+                ]
+              },
+              "PESTEL": {
+                "name": "PESTEL Analysis",
+                "category": "environmental_analysis",
+                "description": "Political, Economic, Social, Technological, Environmental, Legal factors",
+                "best_for": [
+                  "market_entry",
+                  "environmental_scanning",
+                  "scenario_planning"
+                ],
+                "complexity_level": "medium",
+                "data_requirements": "moderate",
+                "time_to_complete": "2-4 hours",
+                "outputs": [
+                  "Macro-environmental factors",
+                  "Impact assessment",
+                  "Trend analysis"
+                ]
+              },
+              "PORTER_FIVE_FORCES": {
+                "name": "Porter's Five Forces",
+                "category": "competitive_analysis",
+                "description": "Industry competitive dynamics analysis",
+                "best_for": [
+                  "industry_analysis",
+                  "competitive_strategy",
+                  "market_attractiveness"
+                ],
+                "complexity_level": "medium",
+                "data_requirements": "moderate",
+                "time_to_complete": "3-5 hours",
+                "outputs": [
+                  "Competitive intensity assessment",
+                  "Industry attractiveness",
+                  "Strategic positioning options"
+                ]
+              },
+              "BCG_MATRIX": {
+                "name": "BCG Growth-Share Matrix",
+                "category": "portfolio_analysis",
+                "description": "Portfolio analysis based on market growth and share",
+                "best_for": [
+                  "portfolio_management",
+                  "resource_allocation",
+                  "investment_decisions"
+                ],
+                "complexity_level": "medium",
+                "data_requirements": "comprehensive",
+                "time_to_complete": "2-4 hours",
+                "outputs": [
+                  "Portfolio classification",
+                  "Investment priorities",
+                  "Divestment candidates"
+                ]
+              },
+              "ANSOFF_MATRIX": {
+                "name": "Ansoff Growth Matrix",
+                "category": "growth_strategy",
+                "description": "Product-market growth strategy options",
+                "best_for": [
+                  "growth_strategy",
+                  "market_expansion",
+                  "product_development"
+                ],
+                "complexity_level": "low",
+                "data_requirements": "limited",
+                "time_to_complete": "1-2 hours",
+                "outputs": [
+                  "Growth strategy options",
+                  "Risk assessment",
+                  "Resource requirements"
+                ]
+              },
+              "VALUE_CHAIN": {
+                "name": "Value Chain Analysis",
+                "category": "operational_analysis",
+                "description": "Primary and support activities analysis",
+                "best_for": [
+                  "cost_optimization",
+                  "competitive_advantage",
+                  "operational_improvement"
+                ],
+                "complexity_level": "high",
+                "data_requirements": "comprehensive",
+                "time_to_complete": "4-8 hours",
+                "outputs": [
+                  "Activity mapping",
+                  "Cost drivers",
+                  "Value creation opportunities"
+                ]
+              },
+              "MCKINSEY_7S": {
+                "name": "McKinsey 7S Framework",
+                "category": "organizational_analysis",
+                "description": "Organizational alignment analysis",
+                "best_for": [
+                  "organizational_change",
+                  "merger_integration",
+                  "strategy_implementation"
+                ],
+                "complexity_level": "high",
+                "data_requirements": "comprehensive",
+                "time_to_complete": "4-8 hours",
+                "outputs": [
+                  "Alignment assessment",
+                  "Gap analysis",
+                  "Change priorities"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "match_frameworks": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "0CF4BD69-3CCB-4B97-8C18-D53E3B6CA72E"
+          },
+          "inputs": {
+            "challenge_keywords": {
+              "growth": [
+                "ANSOFF_MATRIX",
+                "BCG_MATRIX",
+                "PORTER_FIVE_FORCES"
+              ],
+              "competitive": [
+                "PORTER_FIVE_FORCES",
+                "SWOT",
+                "VALUE_CHAIN"
+              ],
+              "market_entry": [
+                "PESTEL",
+                "PORTER_FIVE_FORCES",
+                "SWOT"
+              ],
+              "strategic_planning": [
+                "SWOT",
+                "PESTEL",
+                "ANSOFF_MATRIX"
+              ],
+              "portfolio": [
+                "BCG_MATRIX",
+                "ANSOFF_MATRIX"
+              ],
+              "organizational": [
+                "MCKINSEY_7S",
+                "VALUE_CHAIN"
+              ],
+              "cost_optimization": [
+                "VALUE_CHAIN",
+                "BCG_MATRIX"
+              ],
+              "default": [
+                "SWOT",
+                "PORTER_FIVE_FORCES",
+                "PESTEL"
+              ]
+            },
+            "matched_frameworks": [
+              {
+                "framework_code": "SWOT",
+                "fit_score": 92,
+                "fit_rationale": "Excellent starting point for situational assessment",
+                "recommended_order": 1
+              },
+              {
+                "framework_code": "PORTER_FIVE_FORCES",
+                "fit_score": 85,
+                "fit_rationale": "Strong fit for understanding competitive dynamics",
+                "recommended_order": 2
+              },
+              {
+                "framework_code": "PESTEL",
+                "fit_score": 78,
+                "fit_rationale": "Valuable for understanding external environment",
+                "recommended_order": 3
+              }
+            ]
+          },
+          "runAfter": {
+            "load_frameworks": [
+              "Succeeded"
+            ]
+          }
+        },
+        "assess_complexity": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "D2F73C80-50CB-40DE-A323-07AA1E458496"
+          },
+          "inputs": {
+            "requested_complexity": "@outputs('parse_input')?['complexity']",
+            "data_availability": "@outputs('parse_input')?['data_availability']",
+            "adjusted_recommendations": [
+              {
+                "framework_code": "SWOT",
+                "complexity_fit": "excellent",
+                "data_fit": "excellent",
+                "adjusted_score": 92,
+                "feasibility_notes": "Can be completed with available data"
+              },
+              {
+                "framework_code": "PORTER_FIVE_FORCES",
+                "complexity_fit": "good",
+                "data_fit": "good",
+                "adjusted_score": 83,
+                "feasibility_notes": "May require some market research"
+              },
+              {
+                "framework_code": "PESTEL",
+                "complexity_fit": "good",
+                "data_fit": "good",
+                "adjusted_score": 76,
+                "feasibility_notes": "Secondary research typically sufficient"
+              }
+            ]
+          },
+          "runAfter": {
+            "match_frameworks": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_guidance": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "0C6BBE51-27EC-4EF1-8668-9A3063F0C86C"
+          },
+          "inputs": {
+            "primary_recommendation": {
+              "framework": "SWOT",
+              "rationale": "Best balance of insight depth and practical applicability for your challenge",
+              "application_steps": [
+                {
+                  "step": 1,
+                  "action": "Gather internal data on capabilities and performance",
+                  "duration": "30 minutes",
+                  "participants": "Leadership team"
+                },
+                {
+                  "step": 2,
+                  "action": "Brainstorm strengths and weaknesses",
+                  "duration": "45 minutes",
+                  "participants": "Cross-functional team"
+                },
+                {
+                  "step": 3,
+                  "action": "Research external opportunities and threats",
+                  "duration": "1 hour",
+                  "participants": "Strategy team"
+                },
+                {
+                  "step": 4,
+                  "action": "Synthesize findings and identify strategic implications",
+                  "duration": "30 minutes",
+                  "participants": "Leadership team"
+                }
+              ],
+              "expected_outputs": [
+                "Prioritized list of strengths to leverage",
+                "Key weaknesses to address",
+                "Opportunities to pursue",
+                "Threats to mitigate",
+                "Strategic options matrix"
+              ],
+              "success_factors": [
+                "Honest assessment without defensiveness",
+                "External perspective inclusion",
+                "Action-oriented conclusions"
+              ]
+            },
+            "secondary_recommendations": [
+              {
+                "framework": "PORTER_FIVE_FORCES",
+                "use_case": "Deep dive into competitive dynamics"
+              },
+              {
+                "framework": "PESTEL",
+                "use_case": "Environmental scanning before market decisions"
+              }
+            ],
+            "combination_suggestion": {
+              "recommended_sequence": [
+                "Start with SWOT for initial assessment",
+                "Follow with Porter's for competitive deep-dive",
+                "Add PESTEL if external factors warrant"
+              ],
+              "combined_value": "Comprehensive strategic view from internal to external"
+            }
+          },
+          "runAfter": {
+            "assess_complexity": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "metadata": {
+            "operationMetadataId": "8D7FE22A-192A-4F45-B6BB-344BBBC24D76"
+          },
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "CST",
+            "status": "success",
+            "data": {
+              "challenge_context": {
+                "type": "@outputs('parse_input')?['challenge_type']",
+                "description": "@outputs('parse_input')?['challenge_description']",
+                "industry": "@outputs('parse_input')?['industry']",
+                "complexity": "@outputs('parse_input')?['complexity']"
+              },
+              "framework_recommendations": {
+                "primary": "@outputs('build_guidance')?['primary_recommendation']",
+                "alternatives": "@outputs('build_guidance')?['secondary_recommendations']",
+                "combination": "@outputs('build_guidance')?['combination_suggestion']"
+              },
+              "framework_scores": "@outputs('assess_complexity')?['adjusted_recommendations']",
+              "framework_library": {
+                "total_available": 7,
+                "evaluated": 3,
+                "categories": [
+                  "situational_analysis",
+                  "environmental_analysis",
+                  "competitive_analysis"
+                ]
+              }
+            },
+            "confidence": "HIGH",
+            "sources": [
+              "AGENT_KB",
+              "FRAMEWORK_LIBRARY"
+            ],
+            "recommendations": [
+              "Start with SWOT analysis as foundation",
+              "Consider Porter's Five Forces for competitive insight",
+              "Schedule 2-3 hour strategy session for initial analysis"
+            ],
+            "follow_up_questions": [
+              "Would you like me to apply the recommended framework?",
+              "Should we prioritize initiatives based on the analysis?",
+              "Do you need a facilitation guide for the strategy session?"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "build_guidance": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "4ABAF6D7-1C01-427C-94B6-983B79F79B69"
+          },
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('build_response')"
+          },
+          "kind": "Http"
+        },
+        "return_error": {
+          "type": "Response",
+          "metadata": {
+            "operationMetadataId": "D235D3F6-984C-4B52-9643-F4538E78BC08"
+          },
+          "inputs": {
+            "statusCode": 500,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "request_id": "@outputs('parse_input')?['request_id']",
+              "source_agent": "CST",
+              "error": true,
+              "code": "FRAMEWORK_SELECTION_ERROR",
+              "message": "Failed to select framework"
+            }
+          },
+          "kind": "Http",
+          "operationOptions": "OnError"
+        }
+      }
+    },
+    "state": "Activated"
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,619 @@
+REAL-TIME BENCHMARKS FRAMEWORK
+
+PURPOSE
+
+This document defines the real-time benchmark integration system for the Kessel Digital Agent Platform. It covers live industry benchmark APIs, dynamic threshold adjustment, competitive intelligence feeds, and automated benchmark refresh mechanisms.
+
+BENCHMARK ARCHITECTURE
+
+DATA SOURCES
+
+Primary Benchmark Providers
+- Industry association published benchmarks
+- Platform-specific performance standards
+- Third-party measurement providers
+- Internal historical performance data
+
+Data Categories
+- Media performance benchmarks CTR, VTR, CPM
+- Conversion benchmarks CVR, CPA, ROAS
+- Engagement benchmarks time on site, bounce rate
+- Audience benchmarks reach, frequency, overlap
+
+Refresh Frequencies
+- Real-time for platform metrics
+- Daily for conversion benchmarks
+- Weekly for industry aggregates
+- Monthly for strategic benchmarks
+- Quarterly for annual planning benchmarks
+
+API INTEGRATION
+
+BENCHMARK RETRIEVAL API
+
+Endpoint Structure
+- Base URL configurable per environment
+- Authentication via API key header
+- Rate limiting per minute and daily
+- Response caching for efficiency
+
+Request Parameters
+- vertical_code: Industry vertical identifier
+- channel_code: Media channel identifier
+- metric_code: Specific metric requested
+- geography_code: Market geography
+- time_period: Reporting period
+- audience_segment: Target segment filter
+
+Response Format
+- benchmark_value: Central benchmark figure
+- percentile_25: Lower quartile value
+- percentile_75: Upper quartile value
+- sample_size: Data points in calculation
+- last_updated: Timestamp of data freshness
+- confidence_score: Data quality indicator
+
+PLATFORM-SPECIFIC APIS
+
+Google Ads Benchmarks
+- Search CTR by industry and position
+- Display CTR by format and placement
+- Video VTR by length and format
+- Shopping ROAS by category
+- App install CPI by category
+
+Meta Ads Benchmarks
+- Feed CTR by objective and vertical
+- Stories engagement rates
+- Reels completion rates
+- Lead form conversion rates
+- Catalog ROAS by category
+
+LinkedIn Benchmarks
+- Sponsored content CTR by format
+- Message response rates by industry
+- Lead gen form completion rates
+- Video view rates by duration
+- Follower growth benchmarks
+
+Programmatic Benchmarks
+- Display viewability by format
+- Video completion by length
+- Native engagement by context
+- CTV completion rates
+- Audio listen-through rates
+
+BENCHMARK CATEGORIES
+
+MEDIA PERFORMANCE BENCHMARKS
+
+Click Performance
+- Search CTR by position
+- Display CTR by format
+- Social CTR by platform
+- Video CTR by placement
+- Native CTR by context
+
+View Performance
+- Video view rate by length
+- Viewability by format
+- Completion rate by length
+- Attention metrics emerging
+- Brand lift correlation
+
+Cost Efficiency
+- CPM by channel and format
+- CPC by vertical and intent
+- CPV by length and platform
+- CPCV completed view cost
+- CPE engagement cost
+
+CONVERSION BENCHMARKS
+
+E-commerce Conversion
+- Product page conversion rate
+- Cart abandonment rate
+- Checkout completion rate
+- Average order value
+- Revenue per session
+
+Lead Generation
+- Landing page conversion rate
+- Form completion rate
+- MQL to SQL conversion
+- SQL to opportunity rate
+- Opportunity to close rate
+
+App Engagement
+- Install to registration rate
+- Registration to activation
+- Day 1 retention rate
+- Day 7 retention rate
+- Day 30 retention rate
+
+AUDIENCE BENCHMARKS
+
+Reach Efficiency
+- Reach per thousand impressions
+- Unique reach percentage
+- Incremental reach rate
+- Cross-platform deduplication
+- Addressable audience match
+
+Frequency Management
+- Optimal frequency by objective
+- Frequency to conversion curve
+- Diminishing returns threshold
+- Cross-channel frequency
+- Frequency cap compliance
+
+Targeting Precision
+- Audience match rate
+- Lookalike expansion quality
+- Contextual relevance score
+- Intent signal accuracy
+- First-party data coverage
+
+VERTICAL-SPECIFIC BENCHMARKS
+
+FINANCIAL SERVICES BENCHMARKS
+
+Acquisition Metrics
+- Credit card acquisition CPA
+- Checking account CPA
+- Loan application rate
+- Investment account CPA
+- Insurance quote rate
+
+Engagement Metrics
+- Digital banking login rate
+- Mobile app engagement
+- Cross-sell acceptance rate
+- Retention rate by product
+- NPS by segment
+
+HEALTHCARE BENCHMARKS
+
+Patient Acquisition
+- Patient acquisition cost
+- Appointment booking rate
+- Telehealth adoption rate
+- Prescription refill rate
+- Patient portal activation
+
+Engagement Metrics
+- Healthcare content engagement
+- Symptom checker completion
+- Provider search conversion
+- Insurance verification rate
+- Patient satisfaction score
+
+B2B BENCHMARKS
+
+Lead Generation
+- MQL cost by industry
+- Demo request rate
+- Content download rate
+- Webinar registration rate
+- Free trial conversion
+
+Sales Cycle
+- Average sales cycle length
+- Lead to opportunity rate
+- Opportunity win rate
+- Contract value by segment
+- Expansion revenue rate
+
+RETAIL BENCHMARKS
+
+Commerce Metrics
+- Product page view rate
+- Add to cart rate
+- Cart abandonment rate
+- Purchase conversion rate
+- Average order value
+
+Customer Metrics
+- Customer acquisition cost
+- Repeat purchase rate
+- Customer lifetime value
+- Loyalty program enrollment
+- Review submission rate
+
+DIRECT BENCHMARK DATA VALUES
+
+This section provides actual benchmark values for immediate use in calculations and scenario generation. Agents MUST use these values when budget or KPI targets are provided.
+
+APP INSTALL BENCHMARKS BY VERTICAL
+
+FINTECH AND FINANCIAL SERVICES
+- General fintech apps broad targeting: 25-45 CPI
+- Banking and neobank apps: 30-50 CPI
+- Investment and trading apps: 35-60 CPI
+- Remittance and money transfer apps: 40-70 CPI
+- Insurance apps: 45-75 CPI
+- Cryptocurrency apps: 50-80 CPI
+- BNPL apps: 35-55 CPI
+
+RETAIL AND ECOMMERCE
+- General retail apps: 15-35 CPI
+- Fashion and apparel: 20-40 CPI
+- Grocery and food delivery: 25-45 CPI
+- Marketplace apps: 20-40 CPI
+- Quick commerce: 30-50 CPI
+
+TRAVEL AND HOSPITALITY
+- Travel booking apps: 25-50 CPI
+- Airline apps: 30-55 CPI
+- Hotel apps: 25-45 CPI
+- Rideshare apps: 20-40 CPI
+
+GAMING
+- Casual games: 1-5 CPI
+- Mid-core games: 3-10 CPI
+- Hardcore games: 8-20 CPI
+- Casino and social casino: 30-80 CPI
+
+HEALTH AND FITNESS
+- Fitness apps: 15-35 CPI
+- Mental health apps: 25-50 CPI
+- Telehealth apps: 40-70 CPI
+- Nutrition apps: 20-40 CPI
+
+AUDIENCE TARGETING COST MODIFIERS
+
+DEMOGRAPHIC TARGETING PREMIUMS
+- Broad US targeting: Base rate no premium
+- Age 18-24 only: Plus 5-15 percent premium
+- Age 55 plus only: Plus 10-20 percent premium
+- High income HHI 150K plus: Plus 15-30 percent premium
+
+ETHNIC AND DIASPORA TARGETING PREMIUMS
+- Hispanic Latino general: Plus 0-10 percent vs base
+- Hispanic Latino Spanish-preferred: Plus 5-15 percent vs base
+- Asian diaspora general: Plus 15-25 percent premium due to smaller inventory
+- Chinese diaspora: Plus 20-30 percent premium
+- Indian diaspora: Plus 15-25 percent premium
+- Filipino diaspora: Plus 10-20 percent premium
+- African diaspora: Plus 20-35 percent premium due to limited inventory
+- Caribbean diaspora: Plus 15-25 percent premium
+- Middle Eastern diaspora: Plus 20-30 percent premium
+
+GEOGRAPHIC TARGETING PREMIUMS
+- Top 10 DMAs only: Plus 10-20 percent premium
+- Rural areas only: Plus 5-15 percent premium
+- Single state: Plus 0-10 percent depending on state
+- International markets: Varies significantly by country
+
+CREATIVE AND FORMAT CONSIDERATIONS
+- Multilingual creative testing: Plus 10-15 percent additional budget for testing
+- Video creative requirement: Plus 5-10 percent for production amortization
+- Dynamic creative optimization: Plus 5-10 percent for technology
+
+SEASONAL ADJUSTMENT FACTORS
+
+Q1 JANUARY TO MARCH
+- January: Minus 10-20 percent CPMs post-holiday
+- February: Base rate
+- March: Plus 5-10 percent end of quarter
+
+Q2 APRIL TO JUNE
+- April: Base rate
+- May: Plus 5-10 percent
+- June: Base to plus 5 percent
+
+Q3 JULY TO SEPTEMBER
+- July: Minus 5-10 percent summer slowdown
+- August: Minus 5-10 percent back to school varies
+- September: Plus 5-15 percent ramp up
+
+Q4 OCTOBER TO DECEMBER
+- October: Plus 10-20 percent holiday ramp
+- November: Plus 25-40 percent Black Friday Cyber Monday
+- December: Plus 20-35 percent holiday peak then sharp drop post-25th
+
+CONVERSION AND LEAD GEN BENCHMARKS BY VERTICAL
+
+FINANCIAL SERVICES LEAD GEN
+- Credit card applications: 35-75 CPA
+- Personal loan applications: 50-120 CPA
+- Mortgage leads: 75-200 CPA
+- Insurance quotes: 25-60 CPA
+- Investment account opens: 80-180 CPA
+
+B2B LEAD GEN
+- Content download: 15-40 CPL
+- Webinar registration: 30-80 CPL
+- Demo request: 75-200 CPL
+- Free trial signup: 50-150 CPL
+- Contact form submission: 40-100 CPL
+
+ECOMMERCE ACQUISITION
+- New customer acquisition: 25-75 CAC
+- First purchase: 30-80 CPA
+- Subscription signup: 40-120 CPA
+- Loyalty program enrollment: 15-40 CPA
+
+HEALTHCARE
+- Patient acquisition: 100-300 CPA
+- Telehealth appointment: 50-150 CPA
+- Prescription transfer: 30-80 CPA
+
+CPM BENCHMARKS BY CHANNEL AND FORMAT
+
+SOCIAL MEDIA
+- Meta feed placements: 7-18 CPM
+- Meta stories: 5-12 CPM
+- Meta reels: 4-10 CPM
+- Instagram feed: 8-20 CPM
+- TikTok in-feed: 4-10 CPM
+- LinkedIn feed: 25-45 CPM
+- Twitter X feed: 6-15 CPM
+- Pinterest: 5-15 CPM
+- Snapchat: 6-12 CPM
+
+PROGRAMMATIC DISPLAY
+- Open exchange standard display: 2-8 CPM
+- PMP curated inventory: 8-15 CPM
+- Programmatic guaranteed: 12-25 CPM
+
+VIDEO
+- YouTube TrueView: 15-35 CPM
+- Online video OLV: 12-28 CPM
+- CTV streaming: 20-40 CPM
+- CTV premium live sports: 35-65 CPM
+
+SEARCH
+- Google search average: 15-50 CPM equivalent
+- Bing search: 10-35 CPM equivalent
+- Shopping ads: 10-40 CPM
+
+RETAIL MEDIA
+- Amazon sponsored products: 8-20 CPM
+- Amazon DSP: 12-35 CPM
+- Walmart Connect: 10-25 CPM
+- Target Roundel: 12-28 CPM
+
+BENCHMARK CONFIDENCE LEVELS
+
+When using these benchmarks agents should communicate confidence:
+- HIGH confidence: Benchmarks for major platforms and common verticals
+- MEDIUM confidence: Benchmarks for niche verticals or emerging channels
+- LOW confidence: Benchmarks for new formats or limited data categories
+
+Always state: Based on industry benchmarks with CONFIDENCE LEVEL. Will refine with campaign-specific data.
+
+DYNAMIC THRESHOLD ADJUSTMENT
+
+ADAPTIVE BENCHMARKING
+
+Performance Tier Assignment
+- Top quartile performers above 75th percentile
+- Above average between 50th and 75th
+- Below average between 25th and 50th
+- Improvement needed below 25th percentile
+
+Dynamic Goal Setting
+- Historical performance baseline
+- Industry benchmark comparison
+- Competitive intelligence overlay
+- Seasonal adjustment factors
+- Growth trajectory targets
+
+Alert Threshold Configuration
+- Critical alert below 10th percentile
+- Warning alert below 25th percentile
+- Opportunity alert above 90th percentile
+- Custom thresholds by metric
+
+CONTEXTUAL ADJUSTMENT
+
+Seasonal Adjustment
+- Holiday shopping lift factors
+- Summer slowdown factors
+- Back to school patterns
+- Industry-specific cycles
+- Event-driven adjustments
+
+Economic Adjustment
+- Recession impact factors
+- Inflation adjustment
+- Consumer confidence correlation
+- Market volatility impact
+- Competitive intensity shifts
+
+COMPETITIVE INTELLIGENCE
+
+COMPETITIVE BENCHMARKING
+
+Share of Voice
+- Paid media share of voice
+- Organic search visibility
+- Social share of voice
+- Display impression share
+- Video share of voice
+
+Competitive Metrics
+- Competitor spend estimates
+- Competitor audience overlap
+- Competitor creative analysis
+- Competitor channel mix
+- Competitor messaging themes
+
+MARKET INTELLIGENCE
+
+Industry Trends
+- Channel spend growth rates
+- Format adoption curves
+- Audience behavior shifts
+- Technology adoption rates
+- Privacy impact assessment
+
+Emerging Benchmarks
+- Connected TV standards
+- Retail media benchmarks
+- Attention metrics standards
+- Carbon footprint benchmarks
+- Accessibility compliance
+
+CACHING AND PERFORMANCE
+
+CACHE STRATEGY
+
+Cache Tiers
+- L1 in-memory for hot data
+- L2 distributed cache for warm data
+- L3 persistent store for cold data
+- Origin API for cache miss
+
+Cache Expiration
+- Real-time metrics 5 minutes
+- Daily metrics 4 hours
+- Weekly metrics 24 hours
+- Monthly metrics 7 days
+- Quarterly metrics 30 days
+
+Cache Invalidation
+- Time-based expiration primary
+- Event-based invalidation for updates
+- Manual purge capability
+- Stale-while-revalidate pattern
+
+PERFORMANCE OPTIMIZATION
+
+Request Optimization
+- Batch requests where possible
+- Parallel requests for multiple metrics
+- Compression for large responses
+- Connection pooling for efficiency
+
+Response Optimization
+- Partial response for selective fields
+- Pagination for large result sets
+- Delta updates where available
+- Streaming for real-time feeds
+
+DATA QUALITY
+
+QUALITY INDICATORS
+
+Confidence Scoring
+- Sample size adequacy
+- Data recency score
+- Source reliability rating
+- Statistical significance
+- Outlier detection flag
+
+Data Validation
+- Range validation for values
+- Trend consistency check
+- Cross-source validation
+- Anomaly detection
+- Historical pattern match
+
+FALLBACK MECHANISMS
+
+Primary Source Unavailable
+- Use cached historical data
+- Use alternate data source
+- Use industry average fallback
+- Alert user to data limitations
+- Log for provider notification
+
+Data Quality Issues
+- Flag low confidence data
+- Show confidence intervals
+- Recommend sample size increase
+- Suggest alternate metrics
+- Document data limitations
+
+AGENT INTEGRATION
+
+BENCHMARK-AWARE RESPONSES
+
+ANL Agent Integration
+- Budget recommendations against benchmarks
+- Performance projections with confidence
+- Scenario comparisons to industry
+- ROI estimates with benchmark context
+
+AUD Agent Integration
+- Audience sizing against benchmarks
+- Targeting efficiency comparison
+- Reach and frequency standards
+- Segment performance expectations
+
+CHA Agent Integration
+- Channel mix against category norms
+- Platform selection with benchmarks
+- Budget allocation optimization
+- Creative format recommendations
+
+PRF Agent Integration
+- Performance dashboards with benchmarks
+- Anomaly detection against norms
+- Attribution with industry context
+- Optimization recommendations
+
+BENCHMARK DISPLAY
+
+Visualization Standards
+- Green for above benchmark
+- Yellow for at benchmark
+- Red for below benchmark
+- Gray for insufficient data
+
+Comparison Formats
+- Percentage of benchmark
+- Percentile ranking
+- Index versus benchmark
+- Trend versus benchmark
+- Gap analysis display
+
+IMPLEMENTATION SPECIFICATIONS
+
+API ENDPOINTS
+
+Benchmark Retrieval
+- GET /benchmarks for discovery
+- GET /benchmarks/{metric} for specific
+- GET /benchmarks/category/{category} for group
+- GET /benchmarks/vertical/{vertical} for industry
+
+Benchmark Metadata
+- GET /benchmarks/sources for providers
+- GET /benchmarks/freshness for status
+- GET /benchmarks/coverage for availability
+- GET /benchmarks/quality for scores
+
+CONFIGURATION
+
+Environment Configuration
+- API base URL by environment
+- Authentication credentials
+- Rate limit settings
+- Cache configuration
+- Fallback behavior
+
+User Configuration
+- Preferred benchmark sources
+- Custom threshold overrides
+- Alert notification settings
+- Display preferences
+- Export format preferences
+
+MONITORING
+
+Operational Monitoring
+- API availability tracking
+- Response time monitoring
+- Error rate tracking
+- Cache hit rate monitoring
+- Rate limit utilization
+
+Data Quality Monitoring
+- Freshness monitoring
+- Completeness tracking
+- Accuracy validation
+- Consistency checking
+- Anomaly alerting

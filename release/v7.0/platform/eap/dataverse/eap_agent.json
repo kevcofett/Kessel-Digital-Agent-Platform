@@ -1,0 +1,312 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EAP Agent Registry Table",
+  "description": "Dataverse table definition for the multi-agent registry. Stores configuration and status for all 10 agents in the MPA architecture.",
+  "table_name": "eap_agent",
+  "display_name": "Agent",
+  "plural_name": "Agents",
+  "schema_name": "eap_agent",
+  "primary_column": "eap_agentid",
+  "ownership_type": "Organization",
+  "table_type": "Standard",
+  "columns": [
+    {
+      "name": "eap_agentid",
+      "display_name": "Agent ID",
+      "schema_name": "eap_agentid",
+      "type": "uniqueidentifier",
+      "required": true,
+      "description": "Primary key - auto-generated GUID"
+    },
+    {
+      "name": "eap_agent_code",
+      "display_name": "Agent Code",
+      "schema_name": "eap_agent_code",
+      "type": "text",
+      "max_length": 10,
+      "required": true,
+      "description": "3-letter agent code (ORC, ANL, AUD, CHA, SPO, DOC, PRF)",
+      "indexed": true
+    },
+    {
+      "name": "eap_agent_name",
+      "display_name": "Agent Name",
+      "schema_name": "eap_agent_name",
+      "type": "text",
+      "max_length": 100,
+      "required": true,
+      "description": "Human-readable agent name"
+    },
+    {
+      "name": "eap_agent_description",
+      "display_name": "Description",
+      "schema_name": "eap_agent_description",
+      "type": "multiline_text",
+      "max_length": 2000,
+      "required": false,
+      "description": "Detailed description of agent capabilities and responsibilities"
+    },
+    {
+      "name": "eap_agent_copilot_id",
+      "display_name": "Copilot ID",
+      "schema_name": "eap_agent_copilot_id",
+      "type": "text",
+      "max_length": 100,
+      "required": false,
+      "description": "Microsoft Copilot Studio bot ID for this agent"
+    },
+    {
+      "name": "eap_agent_endpoint",
+      "display_name": "Endpoint URL",
+      "schema_name": "eap_agent_endpoint",
+      "type": "text",
+      "max_length": 500,
+      "required": false,
+      "description": "HTTP endpoint URL for direct agent invocation"
+    },
+    {
+      "name": "eap_agent_status",
+      "display_name": "Status",
+      "schema_name": "eap_agent_status",
+      "type": "choice",
+      "required": true,
+      "default_value": 2,
+      "choices": [
+        { "value": 1, "label": "Active" },
+        { "value": 2, "label": "Inactive" },
+        { "value": 3, "label": "Maintenance" },
+        { "value": 4, "label": "Deprecated" }
+      ],
+      "description": "Current operational status of the agent"
+    },
+    {
+      "name": "eap_agent_version",
+      "display_name": "Version",
+      "schema_name": "eap_agent_version",
+      "type": "text",
+      "max_length": 20,
+      "required": false,
+      "description": "Semantic version of the agent (e.g., 1.0.0)"
+    },
+    {
+      "name": "eap_agent_capabilities",
+      "display_name": "Capabilities",
+      "schema_name": "eap_agent_capabilities",
+      "type": "multiline_text",
+      "max_length": 10000,
+      "required": false,
+      "description": "JSON array of capability strings describing what this agent can do"
+    },
+    {
+      "name": "eap_agent_request_types",
+      "display_name": "Request Types",
+      "schema_name": "eap_agent_request_types",
+      "type": "multiline_text",
+      "max_length": 5000,
+      "required": false,
+      "description": "JSON array of supported request type strings"
+    },
+    {
+      "name": "eap_agent_routing_priority",
+      "display_name": "Routing Priority",
+      "schema_name": "eap_agent_routing_priority",
+      "type": "integer",
+      "min_value": 1,
+      "max_value": 100,
+      "default_value": 50,
+      "required": false,
+      "description": "Priority for routing decisions (1=highest, 100=lowest)"
+    },
+    {
+      "name": "eap_agent_timeout_ms",
+      "display_name": "Timeout (ms)",
+      "schema_name": "eap_agent_timeout_ms",
+      "type": "integer",
+      "min_value": 1000,
+      "max_value": 300000,
+      "default_value": 30000,
+      "required": false,
+      "description": "Default timeout in milliseconds for requests to this agent"
+    },
+    {
+      "name": "eap_agent_fallback_agent",
+      "display_name": "Fallback Agent",
+      "schema_name": "eap_agent_fallback_agent",
+      "type": "text",
+      "max_length": 10,
+      "required": false,
+      "description": "Agent code to use if this agent is unavailable"
+    },
+    {
+      "name": "eap_agent_kb_source",
+      "display_name": "Knowledge Base Source",
+      "schema_name": "eap_agent_kb_source",
+      "type": "text",
+      "max_length": 500,
+      "required": false,
+      "description": "SharePoint URL or path to the agent's knowledge base files"
+    },
+    {
+      "name": "eap_agent_created_on",
+      "display_name": "Created On",
+      "schema_name": "eap_agent_created_on",
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp when the agent record was created"
+    },
+    {
+      "name": "eap_agent_modified_on",
+      "display_name": "Modified On",
+      "schema_name": "eap_agent_modified_on",
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp when the agent record was last modified"
+    }
+  ],
+  "relationships": [
+    {
+      "name": "eap_agent_routing_logs",
+      "type": "one_to_many",
+      "related_table": "eap_routing_log",
+      "description": "Routing decisions involving this agent"
+    },
+    {
+      "name": "eap_agent_capabilities_map",
+      "type": "one_to_many",
+      "related_table": "eap_agent_capability",
+      "description": "Detailed capability mappings for this agent"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_agent_code",
+      "columns": ["eap_agent_code"],
+      "unique": true
+    },
+    {
+      "name": "idx_agent_status",
+      "columns": ["eap_agent_status"]
+    }
+  ],
+  "seed_data": [
+    {
+      "eap_agent_code": "ORC",
+      "eap_agent_name": "Orchestrator Agent",
+      "eap_agent_description": "Routes user requests to specialist agents and synthesizes final responses. Acts as the central coordinator for the multi-agent system.",
+      "eap_agent_status": 2,
+      "eap_agent_version": "1.0.0",
+      "eap_agent_routing_priority": 1,
+      "eap_agent_timeout_ms": 60000,
+      "eap_agent_request_types": "[\"ROUTE_REQUEST\", \"SYNTHESIZE_RESPONSE\", \"GET_SESSION_STATE\", \"UPDATE_PROGRESS\"]",
+      "eap_agent_capabilities": "[\"intent_classification\", \"specialist_routing\", \"response_synthesis\", \"session_management\", \"workflow_progression\"]"
+    },
+    {
+      "eap_agent_code": "ANL",
+      "eap_agent_name": "Analytics & Forecasting Agent",
+      "eap_agent_description": "Calculates projections, runs scenarios, and validates statistical significance for media planning decisions.",
+      "eap_agent_status": 2,
+      "eap_agent_version": "1.0.0",
+      "eap_agent_routing_priority": 10,
+      "eap_agent_timeout_ms": 45000,
+      "eap_agent_fallback_agent": "ORC",
+      "eap_agent_request_types": "[\"CALCULATE_PROJECTION\", \"RUN_SCENARIO\", \"VALIDATE_STATISTICS\", \"CALCULATE_LTV\", \"COMPARE_SCENARIOS\", \"CALCULATE_INCREMENTALITY\"]",
+      "eap_agent_capabilities": "[\"budget_projection\", \"scenario_modeling\", \"statistical_validation\", \"ltv_calculation\", \"forecasting\", \"incrementality_analysis\"]"
+    },
+    {
+      "eap_agent_code": "AUD",
+      "eap_agent_name": "Audience Intelligence Agent",
+      "eap_agent_description": "Segments audiences, models LTV, and recommends targeting strategies based on first-party and third-party data.",
+      "eap_agent_status": 2,
+      "eap_agent_version": "1.0.0",
+      "eap_agent_routing_priority": 10,
+      "eap_agent_timeout_ms": 30000,
+      "eap_agent_fallback_agent": "ORC",
+      "eap_agent_request_types": "[\"SEGMENT_AUDIENCE\", \"BUILD_PERSONA\", \"RECOMMEND_TARGETING\", \"CALCULATE_AUDIENCE_SIZE\", \"ANALYZE_OVERLAP\", \"PRIORITIZE_SEGMENTS\"]",
+      "eap_agent_capabilities": "[\"rfm_segmentation\", \"behavioral_segmentation\", \"persona_building\", \"ltv_modeling\", \"targeting_strategy\", \"audience_sizing\"]"
+    },
+    {
+      "eap_agent_code": "CHA",
+      "eap_agent_name": "Channel Strategy Agent",
+      "eap_agent_description": "Optimizes channel mix, calculates budget allocations, and provides industry benchmarks for media channel selection.",
+      "eap_agent_status": 2,
+      "eap_agent_version": "1.0.0",
+      "eap_agent_routing_priority": 10,
+      "eap_agent_timeout_ms": 30000,
+      "eap_agent_fallback_agent": "ORC",
+      "eap_agent_request_types": "[\"RECOMMEND_CHANNELS\", \"CALCULATE_ALLOCATION\", \"LOOKUP_BENCHMARKS\", \"EVALUATE_MIX\", \"OPTIMIZE_ALLOCATION\", \"GET_CHANNEL_DETAILS\"]",
+      "eap_agent_capabilities": "[\"channel_recommendation\", \"budget_allocation\", \"benchmark_lookup\", \"mix_optimization\", \"platform_expertise\"]"
+    },
+    {
+      "eap_agent_code": "SPO",
+      "eap_agent_name": "Supply Path Optimization Agent",
+      "eap_agent_description": "Analyzes supply path fees, evaluates partner performance, and calculates Net Benefit Index for programmatic transparency.",
+      "eap_agent_status": 2,
+      "eap_agent_version": "1.0.0",
+      "eap_agent_routing_priority": 20,
+      "eap_agent_timeout_ms": 30000,
+      "eap_agent_fallback_agent": "ORC",
+      "eap_agent_request_types": "[\"ANALYZE_SUPPLY_PATH\", \"CALCULATE_NBI\", \"EVALUATE_PARTNERS\", \"OPTIMIZE_PATH\", \"COMPARE_PATHS\"]",
+      "eap_agent_capabilities": "[\"fee_analysis\", \"partner_evaluation\", \"nbi_calculation\", \"supply_path_optimization\", \"transparency_reporting\"]"
+    },
+    {
+      "eap_agent_code": "DOC",
+      "eap_agent_name": "Document Generation Agent",
+      "eap_agent_description": "Generates media plans, creative briefs, and presentation decks in various formats (DOCX, PDF, PPTX).",
+      "eap_agent_status": 2,
+      "eap_agent_version": "1.0.0",
+      "eap_agent_routing_priority": 30,
+      "eap_agent_timeout_ms": 60000,
+      "eap_agent_fallback_agent": "ORC",
+      "eap_agent_request_types": "[\"GENERATE_PLAN\", \"GENERATE_BRIEF\", \"GENERATE_SUMMARY\", \"EXPORT_DOCUMENT\", \"UPDATE_SECTION\"]",
+      "eap_agent_capabilities": "[\"plan_generation\", \"brief_generation\", \"summary_generation\", \"document_export\", \"template_management\"]"
+    },
+    {
+      "eap_agent_code": "PRF",
+      "eap_agent_name": "Performance Intelligence Agent",
+      "eap_agent_description": "Analyzes campaign performance, detects anomalies, and extracts learnings for optimization recommendations.",
+      "eap_agent_status": 2,
+      "eap_agent_version": "1.0.0",
+      "eap_agent_routing_priority": 20,
+      "eap_agent_timeout_ms": 45000,
+      "eap_agent_fallback_agent": "ORC",
+      "eap_agent_request_types": "[\"ANALYZE_PERFORMANCE\", \"DETECT_ANOMALIES\", \"EXTRACT_LEARNINGS\", \"RECOMMEND_OPTIMIZATION\", \"FORECAST_PERFORMANCE\"]",
+      "eap_agent_capabilities": "[\"performance_analysis\", \"anomaly_detection\", \"learning_extraction\", \"optimization_recommendation\", \"trend_analysis\"]"
+    },
+    {
+      "eap_agent_code": "CHG",
+      "eap_agent_name": "Change Management Agent",
+      "eap_agent_description": "Assesses organizational readiness for change, maps stakeholders with power-interest analysis, and creates adoption plans for transformation initiatives.",
+      "eap_agent_status": 1,
+      "eap_agent_version": "1.0.0",
+      "eap_agent_routing_priority": 25,
+      "eap_agent_timeout_ms": 30000,
+      "eap_agent_fallback_agent": "ORC",
+      "eap_agent_request_types": "[\"ASSESS_READINESS\", \"MAP_STAKEHOLDERS\", \"PLAN_ADOPTION\", \"MEASURE_ADOPTION\", \"IDENTIFY_RESISTANCE\"]",
+      "eap_agent_capabilities": "[\"change_readiness\", \"stakeholder_analysis\", \"adoption_planning\", \"resistance_management\", \"communication_planning\"]"
+    },
+    {
+      "eap_agent_code": "CST",
+      "eap_agent_name": "Consulting Strategy Agent",
+      "eap_agent_description": "Selects and applies strategic frameworks, conducts analysis using proven methodologies, and prioritizes initiatives using RICE, weighted matrices, and MoSCoW methods.",
+      "eap_agent_status": 1,
+      "eap_agent_version": "1.0.0",
+      "eap_agent_routing_priority": 20,
+      "eap_agent_timeout_ms": 45000,
+      "eap_agent_fallback_agent": "ORC",
+      "eap_agent_request_types": "[\"SELECT_FRAMEWORK\", \"APPLY_ANALYSIS\", \"PRIORITIZE_INITIATIVES\", \"GUIDE_ENGAGEMENT\", \"SYNTHESIZE_INSIGHTS\"]",
+      "eap_agent_capabilities": "[\"framework_selection\", \"strategic_analysis\", \"initiative_prioritization\", \"engagement_guidance\", \"insight_synthesis\"]"
+    },
+    {
+      "eap_agent_code": "MKT",
+      "eap_agent_name": "Marketing Strategy Agent",
+      "eap_agent_description": "Develops comprehensive campaign strategies, creates structured creative briefs, defines brand positioning frameworks, and builds go-to-market plans.",
+      "eap_agent_status": 1,
+      "eap_agent_version": "1.0.0",
+      "eap_agent_routing_priority": 20,
+      "eap_agent_timeout_ms": 45000,
+      "eap_agent_fallback_agent": "ORC",
+      "eap_agent_request_types": "[\"DEVELOP_STRATEGY\", \"CREATE_BRIEF\", \"DEFINE_POSITIONING\", \"PLAN_GTM\", \"ANALYZE_COMPETITIVE\"]",
+      "eap_agent_capabilities": "[\"campaign_strategy\", \"creative_brief\", \"brand_positioning\", \"gtm_planning\", \"competitive_analysis\"]"
+    }
+  ]
+}

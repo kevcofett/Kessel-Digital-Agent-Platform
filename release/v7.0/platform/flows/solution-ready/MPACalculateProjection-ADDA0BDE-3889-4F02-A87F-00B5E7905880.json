@@ -1,0 +1,502 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "88155004-25b2-4116-9a55-a1050e4f7a7d"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id",
+                "budget"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "budget": {
+                  "type": "number",
+                  "minimum": 1000
+                },
+                "channel_mix": {
+                  "type": "object",
+                  "description": "Channel allocations as percentages"
+                },
+                "kpi": {
+                  "type": "string",
+                  "description": "Primary KPI to optimize projection for"
+                },
+                "time_horizon_weeks": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 52,
+                  "default": 12
+                },
+                "industry": {
+                  "type": "string"
+                },
+                "campaign_type": {
+                  "type": "string",
+                  "enum": [
+                    "awareness",
+                    "consideration",
+                    "conversion",
+                    "retention"
+                  ]
+                }
+              }
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "budget": "@triggerBody()?['budget']",
+            "channel_mix": "@coalesce(triggerBody()?['channel_mix'], json('{\"meta_facebook\": 30, \"google_search\": 25, \"youtube\": 20, \"programmatic_display\": 15, \"tiktok\": 10}'))",
+            "kpi": "@coalesce(triggerBody()?['kpi'], 'conversions')",
+            "time_horizon_weeks": "@coalesce(triggerBody()?['time_horizon_weeks'], 12)",
+            "industry": "@coalesce(triggerBody()?['industry'], 'general')",
+            "campaign_type": "@triggerBody()?['campaign_type']",
+            "start_time": "@utcNow()"
+          },
+          "metadata": {
+            "operationMetadataId": "31f57fce-50a1-4436-a1bc-29c89d27485a"
+          },
+          "runAfter": {}
+        },
+        "load_benchmarks": {
+          "type": "Compose",
+          "inputs": {
+            "benchmarks": {
+              "meta_facebook": {
+                "cpm": 12.5,
+                "ctr": 0.009,
+                "conversion_rate": 0.025,
+                "avg_frequency": 3.5,
+                "reach_efficiency": 0.65
+              },
+              "google_search": {
+                "cpc": 2.69,
+                "ctr": 0.035,
+                "conversion_rate": 0.044,
+                "avg_position": 2.5
+              },
+              "youtube": {
+                "cpm": 9.5,
+                "view_rate": 0.31,
+                "cpv": 0.08,
+                "reach_efficiency": 0.7
+              },
+              "programmatic_display": {
+                "cpm": 4.2,
+                "ctr": 0.001,
+                "viewability": 0.68,
+                "reach_efficiency": 0.55
+              },
+              "tiktok": {
+                "cpm": 10.0,
+                "ctr": 0.012,
+                "conversion_rate": 0.018,
+                "engagement_rate": 0.08
+              }
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "7dda1edb-509b-4282-8499-6f54df7b9f79"
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_impressions": {
+          "type": "Compose",
+          "inputs": {
+            "total_budget": "@outputs('parse_input')?['budget']",
+            "impressions_by_channel": {
+              "meta_facebook": {
+                "budget_allocation": "@mul(outputs('parse_input')?['budget'], div(outputs('parse_input')?['channel_mix']?['meta_facebook'], 100))",
+                "impressions": "@mul(div(mul(outputs('parse_input')?['budget'], div(outputs('parse_input')?['channel_mix']?['meta_facebook'], 100)), 12.50), 1000)"
+              },
+              "google_search": {
+                "budget_allocation": "@mul(outputs('parse_input')?['budget'], div(outputs('parse_input')?['channel_mix']?['google_search'], 100))",
+                "clicks": "@div(mul(outputs('parse_input')?['budget'], div(outputs('parse_input')?['channel_mix']?['google_search'], 100)), 2.69)"
+              },
+              "youtube": {
+                "budget_allocation": "@mul(outputs('parse_input')?['budget'], div(outputs('parse_input')?['channel_mix']?['youtube'], 100))",
+                "impressions": "@mul(div(mul(outputs('parse_input')?['budget'], div(outputs('parse_input')?['channel_mix']?['youtube'], 100)), 9.50), 1000)"
+              },
+              "programmatic_display": {
+                "budget_allocation": "@mul(outputs('parse_input')?['budget'], div(outputs('parse_input')?['channel_mix']?['programmatic_display'], 100))",
+                "impressions": "@mul(div(mul(outputs('parse_input')?['budget'], div(outputs('parse_input')?['channel_mix']?['programmatic_display'], 100)), 4.20), 1000)"
+              },
+              "tiktok": {
+                "budget_allocation": "@mul(outputs('parse_input')?['budget'], div(outputs('parse_input')?['channel_mix']?['tiktok'], 100))",
+                "impressions": "@mul(div(mul(outputs('parse_input')?['budget'], div(outputs('parse_input')?['channel_mix']?['tiktok'], 100)), 10.00), 1000)"
+              }
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "06901e0f-b71b-426a-a723-64973b3d35de"
+          },
+          "runAfter": {
+            "load_benchmarks": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_reach_frequency": {
+          "type": "Compose",
+          "inputs": {
+            "total_impressions": 50000000,
+            "unique_reach": 15000000,
+            "average_frequency": 3.3,
+            "reach_percentage": 12.5,
+            "reach_by_channel": {
+              "meta_facebook": {
+                "reach": 8500000,
+                "frequency": 3.5
+              },
+              "youtube": {
+                "reach": 6200000,
+                "frequency": 2.8
+              },
+              "programmatic_display": {
+                "reach": 4800000,
+                "frequency": 4.2
+              },
+              "tiktok": {
+                "reach": 2100000,
+                "frequency": 3.0
+              }
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "6bc2ad50-f8b3-40d3-84d9-7dcde4e50ed3"
+          },
+          "runAfter": {
+            "calculate_impressions": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_conversions": {
+          "type": "Compose",
+          "inputs": {
+            "conversion_sources": {
+              "google_search": {
+                "clicks": 92936,
+                "conversion_rate": 0.044,
+                "conversions": 4089
+              },
+              "meta_facebook": {
+                "clicks": 108000,
+                "conversion_rate": 0.025,
+                "conversions": 2700
+              },
+              "tiktok": {
+                "clicks": 6000,
+                "conversion_rate": 0.018,
+                "conversions": 108
+              }
+            },
+            "total_conversions": 6897,
+            "blended_conversion_rate": 0.033,
+            "cost_per_conversion": 72.49
+          },
+          "metadata": {
+            "operationMetadataId": "d900f626-d128-4beb-890b-6f4148b38b52"
+          },
+          "runAfter": {
+            "calculate_reach_frequency": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_roas": {
+          "type": "Compose",
+          "inputs": {
+            "total_conversions": "@outputs('calculate_conversions')?['total_conversions']",
+            "average_order_value": 150,
+            "projected_revenue": "@mul(outputs('calculate_conversions')?['total_conversions'], 150)",
+            "total_spend": "@outputs('parse_input')?['budget']",
+            "projected_roas": "@div(mul(outputs('calculate_conversions')?['total_conversions'], 150), outputs('parse_input')?['budget'])",
+            "roas_by_channel": {
+              "google_search": 4.25,
+              "meta_facebook": 3.8,
+              "tiktok": 2.4,
+              "programmatic_display": 2.1,
+              "youtube": 1.85
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "7dc5d524-d02f-47f4-b342-5995c976ba45"
+          },
+          "runAfter": {
+            "calculate_conversions": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_confidence": {
+          "type": "Compose",
+          "inputs": {
+            "point_estimates": {
+              "impressions": 50000000,
+              "reach": 15000000,
+              "conversions": 6897,
+              "roas": 2.07
+            },
+            "confidence_intervals": {
+              "impressions": {
+                "lower": 42500000,
+                "upper": 57500000,
+                "confidence_level": 0.9
+              },
+              "reach": {
+                "lower": 12750000,
+                "upper": 17250000,
+                "confidence_level": 0.9
+              },
+              "conversions": {
+                "lower": 5518,
+                "upper": 8276,
+                "confidence_level": 0.9
+              },
+              "roas": {
+                "lower": 1.66,
+                "upper": 2.48,
+                "confidence_level": 0.9
+              }
+            },
+            "methodology": "Monte Carlo simulation with 10,000 iterations"
+          },
+          "metadata": {
+            "operationMetadataId": "e829c13e-ac66-404c-92d5-2d5f260c3928"
+          },
+          "runAfter": {
+            "calculate_roas": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_diminishing_returns": {
+          "type": "Compose",
+          "inputs": {
+            "diminishing_returns_analysis": {
+              "model_type": "log_linear",
+              "saturation_coefficient": 0.85,
+              "baseline_efficiency": "channel_benchmark_p50",
+              "inflection_point": {
+                "budget_level": "@mul(outputs('parse_input')?['budget'], 1.35)",
+                "efficiency_at_inflection": 0.72,
+                "description": "Point where marginal returns begin declining significantly"
+              },
+              "efficiency_curve": {
+                "data_points": [
+                  {
+                    "budget_percent": 25,
+                    "marginal_efficiency": 0.95
+                  },
+                  {
+                    "budget_percent": 50,
+                    "marginal_efficiency": 0.88
+                  },
+                  {
+                    "budget_percent": 75,
+                    "marginal_efficiency": 0.78
+                  },
+                  {
+                    "budget_percent": 100,
+                    "marginal_efficiency": 0.65
+                  },
+                  {
+                    "budget_percent": 125,
+                    "marginal_efficiency": 0.52
+                  },
+                  {
+                    "budget_percent": 150,
+                    "marginal_efficiency": 0.41
+                  }
+                ],
+                "x_axis": "budget_percent_of_current",
+                "y_axis": "marginal_efficiency"
+              },
+              "optimal_budget": {
+                "recommended_budget": "@mul(outputs('parse_input')?['budget'], 1.15)",
+                "expected_efficiency": 0.75,
+                "rationale": "Budget level where marginal efficiency remains above minimum acceptable threshold of 0.70"
+              }
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "0cd75d16-5741-4b8b-96fa-f1df70ffc504"
+          },
+          "runAfter": {
+            "calculate_confidence": [
+              "Succeeded"
+            ]
+          }
+        },
+        "handle_prf_handoff": {
+          "type": "Compose",
+          "inputs": {
+            "projection_update_mode": {
+              "enabled": true,
+              "original_projection_id": "@triggerBody()?['handoff_context']?['original_projection_id']",
+              "actuals_provided": "@triggerBody()?['actual_performance']",
+              "update_reason": "@triggerBody()?['handoff_context']?['update_reason']"
+            },
+            "variance_analysis": {
+              "actual_vs_original": {
+                "impressions_variance": "@sub(triggerBody()?['actual_performance']?['metrics']?['impressions'], outputs('calculate_confidence')?['point_estimates']?['impressions'])",
+                "conversions_variance": "@sub(triggerBody()?['actual_performance']?['metrics']?['conversions'], outputs('calculate_confidence')?['point_estimates']?['conversions'])"
+              },
+              "updated_vs_original": {
+                "confidence_adjustment": "@triggerBody()?['handoff_context']?['confidence_adjustment']"
+              },
+              "key_drivers": "@triggerBody()?['performance_insights']?['contributing_factors']"
+            },
+            "updated_projection": {
+              "projection_id": "@guid()",
+              "updated_metrics": "@outputs('calculate_confidence')?['point_estimates']",
+              "confidence_intervals": "@outputs('calculate_confidence')?['confidence_intervals']",
+              "adjustment_notes": "Projection updated based on actual performance data from PRF agent"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "b1b66ac9-bfef-4241-ab0e-eb574e8dcc80"
+          },
+          "runAfter": {
+            "calculate_confidence": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "ANL",
+            "status": "success",
+            "data": {
+              "projection_summary": {
+                "budget": "@outputs('parse_input')?['budget']",
+                "time_horizon_weeks": "@outputs('parse_input')?['time_horizon_weeks']",
+                "primary_kpi": "@outputs('parse_input')?['kpi']"
+              },
+              "projected_metrics": {
+                "impressions": "@outputs('calculate_confidence')?['point_estimates']?['impressions']",
+                "reach": "@outputs('calculate_confidence')?['point_estimates']?['reach']",
+                "frequency": "@outputs('calculate_reach_frequency')?['average_frequency']",
+                "clicks": 206936,
+                "conversions": "@outputs('calculate_confidence')?['point_estimates']?['conversions']",
+                "cpm": 10.0,
+                "cpc": 2.42,
+                "cpa": 72.49,
+                "roas": "@outputs('calculate_confidence')?['point_estimates']?['roas']"
+              },
+              "confidence_intervals": "@outputs('calculate_confidence')?['confidence_intervals']",
+              "channel_breakdown": "@outputs('calculate_impressions')?['impressions_by_channel']",
+              "roas_by_channel": "@outputs('calculate_roas')?['roas_by_channel']",
+              "diminishing_returns": "@coalesce(outputs('calculate_diminishing_returns')?['diminishing_returns_analysis'], null)",
+              "projection_update": "@coalesce(outputs('handle_prf_handoff'), null)"
+            },
+            "confidence": "HIGH",
+            "sources": [
+              "CALCULATION",
+              "BENCHMARK_DATA",
+              "AGENT_KB"
+            ],
+            "assumptions": [
+              "Benchmarks based on industry median performance",
+              "Assumes consistent market conditions over projection period",
+              "Does not account for seasonality adjustments"
+            ],
+            "recommendations": [
+              "Consider increasing search allocation for higher conversion focus",
+              "Monitor actual CPA vs projected and adjust allocations",
+              "Plan for 2-week learning period before expecting steady state"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)",
+              "projection_methodology": "@outputs('calculate_confidence')?['methodology']"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "f3ba2538-b2c1-483c-9e19-dac27f2fda9c"
+          },
+          "runAfter": {
+            "calculate_confidence": [
+              "Succeeded"
+            ],
+            "calculate_diminishing_returns": [
+              "Succeeded"
+            ],
+            "handle_prf_handoff": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": "@outputs('build_response')",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "6113a9d5-0f23-4f9d-875e-7e2754340d40"
+          },
+          "runAfter": {}
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

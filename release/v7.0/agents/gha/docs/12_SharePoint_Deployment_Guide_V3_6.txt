@@ -1,0 +1,414 @@
+SHAREPOINT DEPLOYMENT GUIDE V3.6
+==================================
+Complete Folder Structure and Document Placement
+December 2025
+
+VERSION
+=======
+Version: 3.6
+Updated: December 2025
+Status: Production Ready
+Purpose: SharePoint deployment instructions for V3.6 release
+
+DEPLOYMENT OVERVIEW
+===================
+This guide details the exact folder structure and document placement required for deploying Aragorn AI V3.6 to SharePoint environment.
+
+MANDATORY REQUIREMENTS
+======================
+- All folders must be created in specified hierarchy
+- All documents must be placed in correct folders
+- All documents must be .txt format
+- CoPilot custom instructions deployed separately
+- Folder permissions set according to user roles
+
+SHAREPOINT ROOT STRUCTURE
+==========================
+
+Root Location: Aragorn_AI_V3.6
++-- 01_Core_System
++-- 02_Enhancement_Modules
++-- 03_Framework_Library
++-- 04_User_Resources
++-- 05_Documentation
+
+FOLDER 1: CORE SYSTEM (CRITICAL)
+=================================
+Location: Aragorn_AI_V3.6 slash 01_Core_System
+Purpose: Essential system files required for operation
+Access: All authenticated users (Read)
+Priority: Deploy FIRST
+
+Files Required in This Folder:
+-------------------------------
+1. 08_Prompt_Execution_Engine_V3.6.txt (12.7 KB)
+   Priority: 1 (MUST LOAD FIRST)
+   Description: STEP 0 and Main Workflow complete logic
+   Status: CRITICAL - System will not function without this
+
+2. 07_Aragorn_AI_Profile_V3.6.txt (11 KB)
+   Priority: 2 (MUST LOAD SECOND)
+   Description: Agent identity, behavior, communication style
+   Status: CRITICAL - Required for consistent behavior
+
+Deployment Notes:
+- These files MUST be accessible before any user interaction
+- Set folder to auto-sync if using offline access
+- Verify both files load successfully after deployment
+- Monitor access logs for loading confirmation
+
+FOLDER 2: ENHANCEMENT MODULES (REQUIRED)
+=========================================
+Location: Aragorn_AI_V3.6 slash 02_Enhancement_Modules
+Purpose: All 29 enhancement implementations
+Access: All authenticated users (Read)
+Priority: Deploy SECOND
+
+Files Required in This Folder:
+-------------------------------
+1. 02_Stability_Enhancements_V3.6.txt (8.0 KB)
+   Module: S (Stability)
+   Features: 4 (Health Check, Auto-Recovery, Overflow Protection, Graceful Degradation)
+   Auto-loads: When health issue, error, or context gt 60pct
+   Status: CRITICAL for production stability
+
+2. 03_Enhancement_Modules_E_Q_U_P3_V3.6.txt (13.8 KB)
+   Modules: E, Q, U, P3
+   Features: 25 total
+   - Module E (8 efficiency features)
+   - Module Q (3 quality features)
+   - Module U (9 UX features)
+   - Module P3 (5 power user features)
+   Auto-loads: Per individual module triggers
+   Status: REQUIRED for full functionality
+
+Deployment Notes:
+- Both files must be accessible for on-demand module loading
+- Monitor module loading success rates
+- Verify auto-loading triggers work correctly
+
+FOLDER 3: FRAMEWORK LIBRARY (REQUIRED)
+=======================================
+Location: Aragorn_AI_V3.6 slash 03_Framework_Library
+Purpose: 32 consulting frameworks organized in 5 packs
+Access: Role-based (see Access Control section)
+Priority: Deploy THIRD
+
+Files Required in This Folder:
+-------------------------------
+1. 09_Framework_Library_System_V3.6.txt (12.8 KB)
+   Frameworks: 32 total (29 standard plus 3 custom slots)
+   Packs: 5 specialized packs
+   - Pack 1 (Domain-Specific): 4 frameworks - Expert/Admin only
+   - Pack 2 (Strategic Analysis): 8 frameworks - Standard and above
+   - Pack 3 (Operations Organization): 5 frameworks - Advanced and above
+   - Pack 4 (Problem-Solving): 5 frameworks - All roles
+   - Pack 5 (Customer Market): 7 frameworks - Standard and above
+   Status: REQUIRED for framework functionality
+
+Deployment Notes:
+- Implement role-based access restrictions
+- Pack 1 requires Expert or Administrator role
+- Monitor framework usage analytics
+- Verify pack loading mechanisms work
+
+FOLDER 4: USER RESOURCES (RECOMMENDED)
+=======================================
+Location: Aragorn_AI_V3.6 slash 04_User_Resources
+Purpose: User guides, preferences, and quick references
+Access: All authenticated users (Read)
+Priority: Deploy FOURTH
+
+Files Required in This Folder:
+-------------------------------
+1. 10_User_Preferences_Guide_V3.6.txt (9.6 KB)
+   Purpose: User customization and preferences
+   Contents: Execution modes, output formats, framework preferences, presets
+   Status: RECOMMENDED for user experience
+
+2. 11_Quick_Reference_Cards_V3.6.txt (10.7 KB)
+   Purpose: Quick command and capability reference
+   Contents: 10 reference cards covering all commands and features
+   Status: RECOMMENDED for user productivity
+
+Deployment Notes:
+- Make easily discoverable for new users
+- Consider pinning to top of folder
+- Include in onboarding materials
+
+FOLDER 5: DOCUMENTATION (HELPFUL)
+==================================
+Location: Aragorn_AI_V3.6 slash 05_Documentation
+Purpose: System documentation, guides, and release notes
+Access: All authenticated users (Read)
+Priority: Deploy FIFTH
+
+Files Required in This Folder:
+-------------------------------
+1. 00_COMPLETE_INDEX_V3.6.txt (9.9 KB)
+   Purpose: Comprehensive package index and deployment guide
+   Status: Essential reference document
+
+2. 00_README_V3.6.txt (7.3 KB)
+   Purpose: Package overview and quick navigation
+   Status: Starting point for understanding system
+
+3. 04_Quick_Start_Guide_V3.6.txt (4.3 KB)
+   Purpose: 15-minute deployment instructions
+   Status: Essential for initial deployment
+
+4. 05_Architecture_Overview_V3.6.txt (5.8 KB)
+   Purpose: Technical architecture and design principles
+   Status: Important for system understanding
+
+5. 06_Complete_Release_Notes_V3.6.txt (11.7 KB)
+   Purpose: Complete V3.6 release information
+   Status: Important for version tracking
+
+6. 12_SharePoint_Deployment_Guide_V3.6.txt (THIS FILE)
+   Purpose: SharePoint deployment instructions
+   Status: Required for deployment process
+
+Deployment Notes:
+- Organize by intended audience (technical vs business users)
+- Make searchable and easily accessible
+- Update with any deployment-specific notes
+
+COPILOT CUSTOM INSTRUCTIONS (SEPARATE)
+=======================================
+Location: CoPilot Interface (NOT SharePoint)
+File: 01_CoPilot_Core_Instructions_V3.6.txt
+Size: 5915 characters (26pct under 8K limit)
+Deployment Method: Copy and paste into CoPilot custom instructions field
+
+Instructions:
+1. Open CoPilot settings
+2. Navigate to Custom Instructions
+3. Copy ENTIRE contents of 01_CoPilot_Core_Instructions_V3.6.txt
+4. Paste into custom instructions field
+5. Save
+6. Verify character count shows under 8000
+7. Test with: system health command
+
+CRITICAL: This file is NOT deployed to SharePoint
+CRITICAL: This file MUST be under 8000 characters (currently 5915)
+CRITICAL: This file references SharePoint documents by name
+
+ACCESS CONTROL MATRIX
+======================
+
+Folder Access by User Role:
+
+01_Core_System:
+- Novice: Read
+- Standard: Read
+- Advanced: Read
+- Expert: Read
+- Administrator: Read Write
+
+02_Enhancement_Modules:
+- Novice: Read (limited modules)
+- Standard: Read
+- Advanced: Read
+- Expert: Read
+- Administrator: Read Write
+
+03_Framework_Library:
+- Novice: Read (Pack 4 only)
+- Standard: Read (Packs 2, 4, 5)
+- Advanced: Read (Packs 2, 3, 4, 5)
+- Expert: Read (All packs)
+- Administrator: Read Write (All packs plus custom)
+
+04_User_Resources:
+- All roles: Read
+
+05_Documentation:
+- All roles: Read
+- Administrator: Read Write
+
+DEPLOYMENT CHECKLIST
+=====================
+
+Pre-Deployment:
+[ ] SharePoint site created: Aragorn_AI_V3.6
+[ ] All 5 folders created in root
+[ ] Folder permissions configured per Access Control Matrix
+[ ] All 13 documents extracted from ZIP
+[ ] All documents verified as .txt format
+
+Folder 1 Deployment (Core System):
+[ ] Navigate to: Aragorn_AI_V3.6 slash 01_Core_System
+[ ] Upload: 08_Prompt_Execution_Engine_V3.6.txt
+[ ] Upload: 07_Aragorn_AI_Profile_V3.6.txt
+[ ] Verify: Both files accessible
+[ ] Set: Folder permissions (All users Read)
+
+Folder 2 Deployment (Enhancement Modules):
+[ ] Navigate to: Aragorn_AI_V3.6 slash 02_Enhancement_Modules
+[ ] Upload: 02_Stability_Enhancements_V3.6.txt
+[ ] Upload: 03_Enhancement_Modules_E_Q_U_P3_V3.6.txt
+[ ] Verify: Both files accessible
+[ ] Set: Folder permissions (All users Read)
+
+Folder 3 Deployment (Framework Library):
+[ ] Navigate to: Aragorn_AI_V3.6 slash 03_Framework_Library
+[ ] Upload: 09_Framework_Library_System_V3.6.txt
+[ ] Verify: File accessible
+[ ] Set: Role-based permissions (Pack 1 restrictions)
+
+Folder 4 Deployment (User Resources):
+[ ] Navigate to: Aragorn_AI_V3.6 slash 04_User_Resources
+[ ] Upload: 10_User_Preferences_Guide_V3.6.txt
+[ ] Upload: 11_Quick_Reference_Cards_V3.6.txt
+[ ] Verify: Both files accessible
+[ ] Consider: Pin to top for visibility
+
+Folder 5 Deployment (Documentation):
+[ ] Navigate to: Aragorn_AI_V3.6 slash 05_Documentation
+[ ] Upload: 00_COMPLETE_INDEX_V3.6.txt
+[ ] Upload: 00_README_V3.6.txt
+[ ] Upload: 04_Quick_Start_Guide_V3.6.txt
+[ ] Upload: 05_Architecture_Overview_V3.6.txt
+[ ] Upload: 06_Complete_Release_Notes_V3.6.txt
+[ ] Upload: 12_SharePoint_Deployment_Guide_V3.6.txt (this file)
+[ ] Verify: All files accessible
+[ ] Set: Folder permissions (All users Read)
+
+CoPilot Custom Instructions:
+[ ] Open: CoPilot settings
+[ ] Navigate: Custom Instructions section
+[ ] Copy: 01_CoPilot_Core_Instructions_V3.6.txt ENTIRE contents
+[ ] Paste: Into custom instructions field
+[ ] Verify: Character count under 8000 (should show 5915)
+[ ] Save: Custom instructions
+[ ] Test: Run system health command
+
+Post-Deployment Verification:
+[ ] Test: Load Priority 1 document (08_Prompt_Execution_Engine_V3.6.txt)
+[ ] Test: Load Priority 2 document (07_Aragorn_AI_Profile_V3.6.txt)
+[ ] Test: Module auto-loading (type: q for Quick Mode)
+[ ] Test: Framework pack loading (type: show frameworks)
+[ ] Test: Command recognition (type: show loaded)
+[ ] Test: Status command (type: status)
+[ ] Verify: All 29 enhancements accessible
+[ ] Verify: All 32 frameworks accessible (per role)
+[ ] Monitor: System health for 24 hours
+[ ] Collect: User feedback on accessibility
+
+FOLDER STRUCTURE DIAGRAM
+=========================
+
+Aragorn_AI_V3.6 (Root)
+|
++-- 01_Core_System (2 files - CRITICAL)
+|   +-- 07_Aragorn_AI_Profile_V3.6.txt (Priority 2)
+|   +-- 08_Prompt_Execution_Engine_V3.6.txt (Priority 1)
+|
++-- 02_Enhancement_Modules (2 files - REQUIRED)
+|   +-- 02_Stability_Enhancements_V3.6.txt (Module S)
+|   +-- 03_Enhancement_Modules_E_Q_U_P3_V3.6.txt (Modules E Q U P3)
+|
++-- 03_Framework_Library (1 file - REQUIRED)
+|   +-- 09_Framework_Library_System_V3.6.txt (32 frameworks 5 packs)
+|
++-- 04_User_Resources (2 files - RECOMMENDED)
+|   +-- 10_User_Preferences_Guide_V3.6.txt
+|   +-- 11_Quick_Reference_Cards_V3.6.txt
+|
++-- 05_Documentation (6 files - HELPFUL)
+    +-- 00_COMPLETE_INDEX_V3.6.txt
+    +-- 00_README_V3.6.txt
+    +-- 04_Quick_Start_Guide_V3.6.txt
+    +-- 05_Architecture_Overview_V3.6.txt
+    +-- 06_Complete_Release_Notes_V3.6.txt
+    +-- 12_SharePoint_Deployment_Guide_V3.6.txt
+
+SEPARATE DEPLOYMENT:
+CoPilot Interface: 01_CoPilot_Core_Instructions_V3.6.txt (5915 chars)
+
+TROUBLESHOOTING
+===============
+
+Issue: Cannot access Core System documents
+Solution: Verify folder permissions set to Read for All authenticated users
+
+Issue: Module auto-loading not working
+Solution: Verify Enhancement Modules folder accessible, check file paths in CoPilot instructions
+
+Issue: Framework packs not loading
+Solution: Verify Framework Library accessible, check role-based permissions correct
+
+Issue: CoPilot instructions too long
+Solution: Verify using 01_CoPilot_Core_Instructions_V3.6.txt (5915 chars), not full documentation
+
+Issue: Priority 1 or 2 documents not loading
+Solution: Verify Core System folder accessible first, check document names exactly match references
+
+Issue: User cannot access specific framework pack
+Solution: Verify user role permissions, Pack 1 requires Expert or Administrator role
+
+SUPPORT CONTACTS
+================
+SharePoint Administrator: Configure folder structure and permissions
+System Administrator: Verify document versions and content
+Technical Support: Troubleshoot loading and access issues
+User Training: Provide onboarding and usage guidance
+
+VERSION COMPATIBILITY
+=====================
+V3.6 Release: December 2025
+Compatible With: CoPilot custom instructions (8000 char limit)
+Previous Version: V3.4 (superseded)
+Upgrade Path: Fresh deployment recommended
+
+All V3.6 documents must be deployed together
+Mix of V3.4 and V3.6 documents will cause errors
+Verify all documents show V3.6 or V3.6 in version metadata
+
+DEPLOYMENT TIMELINE
+===================
+Estimated Time: 30-45 minutes total
+
+Folder creation: 5 minutes
+File uploads: 15-20 minutes
+Permission configuration: 5-10 minutes
+CoPilot instructions deployment: 2 minutes
+Testing and verification: 10-15 minutes
+
+Recommended: Deploy during low-usage period
+Recommended: Have rollback plan ready
+Recommended: Test with small user group first
+
+SUCCESS METRICS
+===============
+Post-Deployment Targets:
+
+System Health:
+- Core document load success: 100pct
+- Module auto-load success: gt 95pct
+- Framework pack load success: gt 95pct
+
+User Access:
+- Document accessibility: 100pct
+- Role-based restrictions working: 100pct
+- No permission errors: 100pct
+
+Performance:
+- Document load time: lt 2 seconds
+- Module load time: lt 3 seconds
+- Framework pack load time: lt 5 seconds
+
+User Satisfaction:
+- Can find documents easily: gt 90pct
+- System performs as expected: gt 95pct
+- No deployment-related issues: gt 95pct
+
+END OF SHAREPOINT DEPLOYMENT GUIDE
+===================================
+Version: V3.6
+Status: Production Ready
+Purpose: Complete SharePoint deployment instructions
+Updated: December 2025
+
+Deploy with confidence - Follow this guide for successful V3.6 deployment!

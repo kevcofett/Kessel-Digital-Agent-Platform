@@ -1,0 +1,372 @@
+USER PREFERENCES GUIDE V3.6
+============================
+Customize Your Consulting Agent Experience
+
+VERSION
+=======
+Version: 3.6
+Previous: 3.0
+Updated: December 2025
+Status: Production Ready
+
+PURPOSE
+=======
+Enable users to customize agent behavior, set defaults, save presets
+Reduce repetitive setup, streamline workflows, personalize experience
+
+PREFERENCE CATEGORIES
+======================
+
+1. EXECUTION MODE PREFERENCES
+2. OUTPUT FORMAT PREFERENCES
+3. FRAMEWORK PREFERENCES
+4. COMMUNICATION PREFERENCES
+5. QUALITY PREFERENCES
+6. PRESET WORKFLOWS
+
+EXECUTION MODE PREFERENCES
+===========================
+
+Default Mode:
+- Quick Mode: Minimal explanations, smart defaults, streamlined
+- Full Mode: Detailed explanations, all steps visible (DEFAULT)
+- Expert Mode: No explanations unless requested, maximum control
+
+Set Command: set default mode quick|full|expert
+View Command: show preferences
+
+Quick Mode Preferences:
+- Auto-apply smart defaults: ON|OFF
+- Skip Step 6-8 confirmations: ON|OFF
+- Framework auto-select threshold: 90pct|95pct
+- Minimal explanations: ON|OFF
+
+Full Mode Preferences:
+- Show all validation checkpoints: ON|OFF
+- Detailed step explanations: ON|OFF
+- Framework recommendations: Always|When uncertain
+- Progress indicators: ON|OFF
+
+Expert Mode Preferences:
+- Direct framework access: ON|OFF
+- Override all defaults: ON|OFF
+- Explanation triggers: Never|On request|Errors only
+- Advanced commands enabled: ON|OFF
+
+OUTPUT FORMAT PREFERENCES
+==========================
+
+Default Format:
+- Markdown (default)
+- Word docx
+- PowerPoint structure
+- JSON YAML
+- Plain text
+
+Set Command: set default format markdown|docx|pptx|json|text
+View Command: show format preferences
+
+Format-Specific Options:
+
+Markdown:
+- Include table of contents: ON|OFF
+- Code block style: Fenced|Indented
+- Heading levels: 1-6
+- List style: Bullets|Numbers|Mixed
+
+Word docx:
+- Style template: Professional|Consulting|Executive
+- Heading styles: ON|OFF
+- Track changes: ON|OFF
+- Comments enabled: ON|OFF
+
+PowerPoint:
+- Slide template: Standard|Executive|Technical
+- Sections enabled: ON|OFF
+- Animations: ON|OFF
+- Notes included: ON|OFF
+
+FRAMEWORK PREFERENCES
+======================
+
+Default Framework Packs:
+- Always load: Pack 2 (Strategic) and Pack 4 (Problem-Solving)
+- Load on demand: Other packs
+- Never load: None (all available)
+
+Set Command: set default packs 2,4 OR set auto-load pack 2
+View Command: show framework preferences
+
+Framework Selection:
+- Auto-select threshold: 90pct|95pct|Never
+- Show top N recommendations: 1|2|3|5
+- Application mode: Guided|Independent
+- Document outputs: Always|On request
+
+Industry Context:
+- Primary industry: Financial Services|Retail|CPG|QSR|Travel|Other
+- Secondary industries: List
+- Industry knowledge auto-apply: ON|OFF
+
+COMMUNICATION PREFERENCES
+==========================
+
+Tone:
+- Professional (default)
+- Technical
+- Executive
+- Educational
+- Mixed
+
+Explanation Depth:
+- Minimal: Just decisions
+- Standard: Decisions plus brief rationale
+- Detailed: Complete reasoning
+- Adaptive: Match to complexity
+
+Technical Level:
+- Business audience (less technical)
+- Mixed audience (balanced)
+- Technical audience (more technical)
+- Expert audience (maximum technical depth)
+
+Set Commands:
+- set tone professional|technical|executive|educational
+- set explanation depth minimal|standard|detailed
+- set technical level business|mixed|technical|expert
+
+QUALITY PREFERENCES
+====================
+
+Optimization Level:
+- Comprehensive: Full detail, all sections (default)
+- Balanced: Key points plus supporting detail
+- Concise: Essential information only
+- Custom: User specifies each time
+
+Validation:
+- Run all quality checks: Always|On request
+- Cross-section consistency: Auto|Manual
+- Requirements verification: Auto|Manual
+- Regression detection: ON|OFF
+
+Documentation:
+- Include executive summary: Always|Complex only
+- Show confidence levels: Always|When lt 90pct
+- Document assumptions: Always|When significant
+- Include appendix: Auto|On request
+
+Set Commands:
+- set optimization comprehensive|balanced|concise
+- set validation auto|manual
+- set documentation full|standard|minimal
+
+PRESET WORKFLOWS
+=================
+
+Create Custom Presets:
+Save combination of preferences for specific scenarios
+
+Examples:
+- Quick Analysis: Quick mode, Concise output, Problem-Solving pack, Minimal explanation
+- Strategic Planning: Full mode, Comprehensive output, Strategic pack, Detailed explanation
+- Executive Briefing: Expert mode, Balanced output, Strategic plus Customer packs, Executive tone
+
+Create Preset:
+save preset name
+- Mode: quick|full|expert
+- Format: markdown|docx|pptx|json|text
+- Packs: List of pack numbers
+- Tone: professional|technical|executive
+- Optimization: comprehensive|balanced|concise
+
+Load Preset:
+load preset name
+
+Manage Presets:
+- show presets: List all saved presets
+- delete preset name: Remove preset
+- update preset name: Modify existing preset
+
+SESSION PREFERENCES
+===================
+
+Auto-Save:
+- Session auto-save: ON|OFF (default ON)
+- Auto-save frequency: Every 10|20|30 commands
+- Max saved sessions: 5|10|20
+
+Context Management:
+- Context monitoring: ON|OFF (default ON)
+- Compression threshold: 60pct|75pct|85pct
+- Auto-compress: ON|OFF (default ON at 85pct)
+
+Status Display:
+- Show context usage: Always|Warning only|Never
+- Show loaded modules: Always|On change|Never
+- Progress indicators: Always|Long tasks only|Never
+
+MODULE PREFERENCES
+==================
+
+Auto-Load Modules:
+- Module S (Stability): Auto|Manual|Always loaded
+- Module E (Efficiency): Auto|Manual|Never
+- Module Q (Quality): Auto|Manual|Never
+- Module U (UX): Auto|Manual|Always loaded
+- Module P3 (Power): Auto|Manual|Never
+
+Set Command: set module S auto|manual|always
+View Command: show module preferences
+
+Enhancement Preferences:
+- Smart framework auto-select (E1): ON|OFF
+- Session compression (E2): ON|OFF
+- Duplicate elimination (E3): ON|OFF
+- Quick mode (U.1.1): Available|Default|Disabled
+- Context indicators (U.1.2): ON|OFF
+- Undo capability (U1): ON|OFF
+
+ROLE-BASED DEFAULTS
+====================
+
+Preferences adapt to user role:
+
+Novice Defaults:
+- Mode: Full (with extra guidance)
+- Explanation: Detailed
+- Validation: Always run
+- Framework packs: Pack 4 only
+- Technical level: Business audience
+
+Standard Defaults:
+- Mode: Full
+- Explanation: Standard
+- Validation: Auto
+- Framework packs: Pack 2, Pack 4, Pack 5
+- Technical level: Mixed audience
+
+Advanced Defaults:
+- Mode: Full or Quick
+- Explanation: Standard
+- Validation: Auto
+- Framework packs: Pack 2, Pack 3, Pack 4, Pack 5
+- Technical level: Technical audience
+
+Expert Defaults:
+- Mode: Expert or Quick
+- Explanation: Minimal
+- Validation: On request
+- Framework packs: All packs
+- Technical level: Expert audience
+
+Administrator Defaults:
+- Mode: Expert
+- Explanation: Minimal
+- Validation: Manual control
+- Framework packs: All packs plus custom
+- Technical level: Expert audience
+
+PREFERENCE COMMANDS
+===================
+
+View Commands:
+- show preferences: All current preferences
+- show mode preferences: Mode settings only
+- show format preferences: Format settings only
+- show framework preferences: Framework settings
+- show quality preferences: Quality settings
+- show presets: Saved preset list
+
+Set Commands:
+- set default mode quick|full|expert
+- set default format markdown|docx|pptx
+- set default packs 2,4,5
+- set tone professional|technical|executive
+- set optimization comprehensive|balanced|concise
+- set auto-load module S always|auto|manual
+
+Preset Commands:
+- save preset name: Create new preset
+- load preset name: Apply saved preset
+- update preset name: Modify preset
+- delete preset name: Remove preset
+- show presets: List all presets
+
+Reset Commands:
+- reset preferences: Return to role defaults
+- reset mode: Reset mode preferences only
+- reset format: Reset format preferences only
+- reset all: Complete reset to system defaults
+
+PREFERENCE PERSISTENCE
+======================
+
+Preferences Save:
+- Automatically saved after each change
+- Persist across sessions
+- Associated with user role
+- Can be exported imported
+
+Preference Scope:
+- User-level: Personal preferences
+- Role-level: Defaults for role
+- Session-level: Temporary for current session only
+
+Preference Priority:
+1. Session-level (temporary overrides)
+2. User-level (personal preferences)
+3. Role-level (role defaults)
+4. System-level (global defaults)
+
+BEST PRACTICES
+==============
+
+Getting Started:
+1. Use role defaults initially
+2. Adjust as you learn preferences
+3. Create presets for common scenarios
+4. Experiment with different settings
+
+For Efficiency:
+1. Set default mode to Quick once comfortable
+2. Enable auto-load for frequently used modules
+3. Create presets for repetitive tasks
+4. Use framework pack defaults
+
+For Quality:
+1. Keep validation on Auto
+2. Enable all quality checks
+3. Include executive summaries always
+4. Document confidence levels
+
+For Customization:
+1. Match technical level to audience
+2. Choose appropriate tone
+3. Select optimal output format
+4. Configure communication depth
+
+TROUBLESHOOTING
+===============
+
+Preferences Not Saving:
+- Check: User permissions sufficient
+- Verify: Preferences command syntax correct
+- Try: Reset then reapply preferences
+
+Presets Not Loading:
+- Check: Preset name spelled correctly
+- Verify: Preset exists (show presets)
+- Try: Recreate preset if corrupted
+
+Defaults Not Applying:
+- Check: Session overrides active
+- Verify: Role permissions allow settings
+- Try: Reset preferences to clear conflicts
+
+VERSION INFO
+============
+Version: V3.6
+Status: Production Ready
+Integration: Complete with V3.6 ecosystem
+Updated: December 2025

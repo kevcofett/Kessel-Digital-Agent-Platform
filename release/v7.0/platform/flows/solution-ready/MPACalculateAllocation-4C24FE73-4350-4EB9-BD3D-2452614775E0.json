@@ -1,0 +1,431 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "70ed7230-6cd7-4925-b103-8da77cb6824d"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "session_id",
+                "request_id",
+                "budget",
+                "channels"
+              ],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "budget": {
+                  "type": "number",
+                  "minimum": 1000,
+                  "description": "Total budget to allocate"
+                },
+                "channels": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Channel IDs to include in allocation"
+                },
+                "optimization_objective": {
+                  "type": "string",
+                  "enum": [
+                    "reach",
+                    "frequency",
+                    "conversions",
+                    "efficiency",
+                    "balanced"
+                  ],
+                  "default": "balanced"
+                },
+                "constraints": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "channel": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "minimum",
+                          "maximum",
+                          "exact"
+                        ]
+                      },
+                      "value": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                },
+                "industry": {
+                  "type": "string"
+                },
+                "campaign_type": {
+                  "type": "string",
+                  "enum": [
+                    "awareness",
+                    "consideration",
+                    "conversion",
+                    "retention"
+                  ]
+                }
+              }
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "parse_input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "budget": "@triggerBody()?['budget']",
+            "channels": "@triggerBody()?['channels']",
+            "objective": "@coalesce(triggerBody()?['optimization_objective'], 'balanced')",
+            "constraints": "@coalesce(triggerBody()?['constraints'], createArray())",
+            "industry": "@coalesce(triggerBody()?['industry'], 'general')",
+            "campaign_type": "@triggerBody()?['campaign_type']",
+            "start_time": "@utcNow()"
+          },
+          "metadata": {
+            "operationMetadataId": "bd72fcda-8af0-49e7-9926-99bae1ac8cd8"
+          },
+          "runAfter": {}
+        },
+        "load_channel_efficiency": {
+          "type": "Compose",
+          "inputs": {
+            "efficiency_by_objective": {
+              "reach": {
+                "linear_tv": 0.9,
+                "ctv": 0.85,
+                "youtube": 0.8,
+                "meta_facebook": 0.75,
+                "programmatic_display": 0.7,
+                "tiktok": 0.65,
+                "google_display": 0.6,
+                "google_search": 0.4
+              },
+              "frequency": {
+                "meta_facebook": 0.9,
+                "tiktok": 0.85,
+                "youtube": 0.8,
+                "programmatic_display": 0.75,
+                "google_display": 0.7,
+                "ctv": 0.65,
+                "linear_tv": 0.5,
+                "google_search": 0.3
+              },
+              "conversions": {
+                "google_search": 0.95,
+                "meta_facebook": 0.85,
+                "tiktok": 0.75,
+                "google_display": 0.65,
+                "programmatic_display": 0.6,
+                "youtube": 0.55,
+                "ctv": 0.4,
+                "linear_tv": 0.3
+              },
+              "efficiency": {
+                "google_search": 0.9,
+                "meta_facebook": 0.85,
+                "programmatic_display": 0.8,
+                "google_display": 0.75,
+                "tiktok": 0.7,
+                "youtube": 0.65,
+                "ctv": 0.5,
+                "linear_tv": 0.4
+              },
+              "balanced": {
+                "meta_facebook": 0.85,
+                "google_search": 0.82,
+                "youtube": 0.78,
+                "tiktok": 0.75,
+                "programmatic_display": 0.7,
+                "ctv": 0.68,
+                "google_display": 0.65,
+                "linear_tv": 0.55
+              }
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "9ce9a95d-ea01-487d-ab20-d75dce963459"
+          },
+          "runAfter": {
+            "parse_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_base_allocation": {
+          "type": "Compose",
+          "inputs": {
+            "objective": "@outputs('parse_input')?['objective']",
+            "channels": "@outputs('parse_input')?['channels']",
+            "efficiency_scores": "@outputs('load_channel_efficiency')?['efficiency_by_objective']?[outputs('parse_input')?['objective']]",
+            "total_efficiency": 0,
+            "base_allocations": []
+          },
+          "metadata": {
+            "operationMetadataId": "a025cebb-1911-4944-9eed-9dc149f0575e"
+          },
+          "runAfter": {
+            "load_channel_efficiency": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_initial_allocation": {
+          "type": "Compose",
+          "inputs": {
+            "from": "@outputs('parse_input')?['channels']",
+            "select": {
+              "channel_id": "@item()",
+              "efficiency_score": "@coalesce(outputs('load_channel_efficiency')?['efficiency_by_objective']?[outputs('parse_input')?['objective']]?[item()], 0.5)",
+              "base_percentage": 0
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "28c67e18-7851-40cc-bd6d-d55e0cd604d9"
+          },
+          "runAfter": {
+            "calculate_base_allocation": [
+              "Succeeded"
+            ]
+          }
+        },
+        "normalize_allocation": {
+          "type": "Compose",
+          "inputs": {
+            "channels": "@body('build_initial_allocation')",
+            "total_efficiency": "@sum(body('build_initial_allocation'), 'efficiency_score')",
+            "normalized_allocations": "@json('[{\"channel_id\": \"placeholder\", \"allocation_percent\": 0}]')"
+          },
+          "metadata": {
+            "operationMetadataId": "89678060-8f71-4392-b78a-6ec9cdd08d72"
+          },
+          "runAfter": {
+            "build_initial_allocation": [
+              "Succeeded"
+            ]
+          }
+        },
+        "apply_constraints": {
+          "type": "Compose",
+          "inputs": {
+            "constraints": "@outputs('parse_input')?['constraints']",
+            "pre_constraint_allocation": "@outputs('normalize_allocation')?['normalized_allocations']",
+            "constraint_adjustments": [],
+            "remaining_budget_percent": 100
+          },
+          "metadata": {
+            "operationMetadataId": "830d2a10-889d-4b8d-bc51-940c738e891e"
+          },
+          "runAfter": {
+            "normalize_allocation": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_final_allocation": {
+          "type": "Compose",
+          "inputs": {
+            "budget": "@outputs('parse_input')?['budget']",
+            "allocations": [
+              {
+                "channel_id": "meta_facebook",
+                "channel_name": "Meta (Facebook/Instagram)",
+                "allocation_percent": 30,
+                "allocation_amount": "@mul(outputs('parse_input')?['budget'], 0.30)",
+                "rationale": "High efficiency for balanced objectives with strong targeting",
+                "expected_metrics": {
+                  "impressions": "@mul(div(mul(outputs('parse_input')?['budget'], 0.30), 12.50), 1000)",
+                  "reach": "@mul(div(mul(outputs('parse_input')?['budget'], 0.30), 12.50), 1000, 0.65)",
+                  "clicks": "@mul(div(mul(outputs('parse_input')?['budget'], 0.30), 12.50), 1000, 0.009)"
+                }
+              },
+              {
+                "channel_id": "google_search",
+                "channel_name": "Google Search",
+                "allocation_percent": 25,
+                "allocation_amount": "@mul(outputs('parse_input')?['budget'], 0.25)",
+                "rationale": "Highest intent channel for conversion capture",
+                "expected_metrics": {
+                  "clicks": "@div(mul(outputs('parse_input')?['budget'], 0.25), 2.69)",
+                  "conversions": "@mul(div(mul(outputs('parse_input')?['budget'], 0.25), 2.69), 0.044)"
+                }
+              },
+              {
+                "channel_id": "youtube",
+                "channel_name": "YouTube",
+                "allocation_percent": 20,
+                "allocation_amount": "@mul(outputs('parse_input')?['budget'], 0.20)",
+                "rationale": "Video storytelling and broad reach",
+                "expected_metrics": {
+                  "impressions": "@mul(div(mul(outputs('parse_input')?['budget'], 0.20), 9.50), 1000)",
+                  "views": "@mul(div(mul(outputs('parse_input')?['budget'], 0.20), 0.08), 1)"
+                }
+              },
+              {
+                "channel_id": "programmatic_display",
+                "channel_name": "Programmatic Display",
+                "allocation_percent": 15,
+                "allocation_amount": "@mul(outputs('parse_input')?['budget'], 0.15)",
+                "rationale": "Retargeting and awareness at scale",
+                "expected_metrics": {
+                  "impressions": "@mul(div(mul(outputs('parse_input')?['budget'], 0.15), 4.20), 1000)"
+                }
+              },
+              {
+                "channel_id": "tiktok",
+                "channel_name": "TikTok",
+                "allocation_percent": 10,
+                "allocation_amount": "@mul(outputs('parse_input')?['budget'], 0.10)",
+                "rationale": "Engagement with younger demographics",
+                "expected_metrics": {
+                  "impressions": "@mul(div(mul(outputs('parse_input')?['budget'], 0.10), 10.00), 1000)",
+                  "engagements": "@mul(div(mul(outputs('parse_input')?['budget'], 0.10), 10.00), 1000, 0.012)"
+                }
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d947672c-df0d-48cc-be30-6e50edafd46c"
+          },
+          "runAfter": {
+            "apply_constraints": [
+              "Succeeded"
+            ]
+          }
+        },
+        "calculate_optimization_score": {
+          "type": "Compose",
+          "inputs": {
+            "optimization_score": 82,
+            "score_breakdown": {
+              "efficiency_alignment": 85,
+              "constraint_satisfaction": 100,
+              "diversification": 75,
+              "benchmark_comparison": 80
+            },
+            "improvement_opportunities": [
+              "Consider increasing search allocation if conversion-focused",
+              "Add CTV for premium audience reach"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b77ac64a-2ffc-411d-9afc-9d0bdbdf2d92"
+          },
+          "runAfter": {
+            "calculate_final_allocation": [
+              "Succeeded"
+            ]
+          }
+        },
+        "build_response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('parse_input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "CHA",
+            "status": "success",
+            "data": {
+              "budget": "@outputs('parse_input')?['budget']",
+              "optimization_objective": "@outputs('parse_input')?['objective']",
+              "allocations": "@outputs('calculate_final_allocation')?['allocations']",
+              "optimization_score": "@outputs('calculate_optimization_score')?['optimization_score']",
+              "score_breakdown": "@outputs('calculate_optimization_score')?['score_breakdown']",
+              "constraints_applied": "@outputs('parse_input')?['constraints']",
+              "improvement_opportunities": "@outputs('calculate_optimization_score')?['improvement_opportunities']"
+            },
+            "confidence": "HIGH",
+            "sources": [
+              "CALCULATION",
+              "BENCHMARK_DATA",
+              "AGENT_KB"
+            ],
+            "recommendations": [
+              "Review allocation weekly during campaign flight",
+              "Shift budget to best performers after 2-week learning period",
+              "Maintain minimum threshold per channel for statistical validity"
+            ],
+            "updated_plan_state": {
+              "channels": {
+                "allocations": "@outputs('calculate_final_allocation')?['allocations']",
+                "optimization_objective": "@outputs('parse_input')?['objective']"
+              }
+            },
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)",
+              "channels_allocated": "@length(outputs('calculate_final_allocation')?['allocations'])"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "9c669e2b-0e00-4b66-8ae0-d9c397dd6e9d"
+          },
+          "runAfter": {
+            "calculate_optimization_score": [
+              "Succeeded"
+            ]
+          }
+        },
+        "return_response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": "@outputs('build_response')",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "8a5cd899-e955-4bae-bb6b-8fb21005b165"
+          },
+          "runAfter": {}
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

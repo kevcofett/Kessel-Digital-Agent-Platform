@@ -1,0 +1,24 @@
+{
+  "target_file": "agents/chg/flows/PlanAdoption.yaml",
+  "section": "triggers",
+  "content": {
+    "triggers": {
+      "intent_patterns": [
+        "create.*adoption plan",
+        "phased.*rollout",
+        "rollout.*plan",
+        "implementation.*plan",
+        "adoption.*strategy",
+        "user.*training",
+        "change.*rollout"
+      ],
+      "entity_extraction": {
+        "system_name": "extract system/tool being rolled out",
+        "timeline": "extract desired timeline",
+        "scope": "extract organizational scope"
+      }
+    }
+  },
+  "description": "Add additional trigger phrases for PlanAdoption flow",
+  "patch_source": "PATCH-002"
+}

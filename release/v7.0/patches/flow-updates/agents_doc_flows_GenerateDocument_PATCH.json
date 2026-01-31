@@ -1,0 +1,40 @@
+{
+  "target_file": "agents/doc/flows/GenerateDocument.yaml",
+  "section": "document_types",
+  "content": {
+    "document_types": {
+      "existing": [
+        "MEDIA_PLAN",
+        "EXECUTIVE_SUMMARY",
+        "CHANNEL_DETAIL",
+        "BUDGET_BREAKDOWN"
+      ],
+      "add": {
+        "CAMPAIGN_BRIEF": {
+          "template_file": "templates/campaign-brief-template.json",
+          "trigger_phrases": [
+            "campaign brief",
+            "comprehensive brief",
+            "launch brief",
+            "Q1 brief",
+            "Q2 brief",
+            "Q3 brief",
+            "Q4 brief"
+          ],
+          "required_context": [
+            "campaign_name",
+            "objectives",
+            "budget"
+          ],
+          "optional_context": [
+            "audience_segments",
+            "channel_allocation",
+            "timeline"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Register campaign brief template in GenerateDocument flow",
+  "patch_source": "PATCH-005"
+}

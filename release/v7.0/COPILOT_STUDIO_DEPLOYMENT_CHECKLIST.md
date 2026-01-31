@@ -1,8 +1,9 @@
 # Multi-Agent Copilot Studio Deployment Checklist
 
-**Version:** 2.0.0
-**Date:** January 22, 2026
+**Version:** 3.0.0
+**Date:** January 31, 2026
 **Branch:** deploy/mastercard
+**Platform Version:** v7.0 (GHA Integration)
 
 ---
 
@@ -24,6 +25,7 @@
 | **CHG** | Claude Sonnet 4.5 | OFF | OFF | OFF | Medium |
 | **CST** | Claude Sonnet 4.5 | OFF | OFF | OFF | Medium |
 | **MKT** | Claude Sonnet 4.5 | ON | OFF | OFF | Medium |
+| **GHA** | Claude Opus 4.5 | ON | OFF | ON | Medium |
 
 ### Settings Location in Copilot Studio UI
 
@@ -67,6 +69,7 @@ Deploy agents in this order to ensure dependencies are met:
 8. **CHG** (Change Management) - No dependencies
 9. **CST** (Customer Strategy) - No dependencies
 10. **MKT** (Marketing) - No dependencies
+11. **GHA** (Growth Hacking) - v7.0 NEW, requires ORC routing updates
 
 ---
 
@@ -434,6 +437,63 @@ Upload the following files to agent knowledge base:
 
 ---
 
+## 11. GHA (Growth Hacking Agent) - v7.0 NEW
+
+### 11.1 Create Agent
+
+1. Name: `Growth Hacking Agent`
+2. Description: `Growth strategy orchestration with AARRR lifecycle optimization`
+3. Agent Code: `GHA`
+
+### 11.2 Configure AI Settings
+
+| Setting | Value |
+|---------|-------|
+| Model | **Claude Opus 4.5** |
+| Web Search | **ON** |
+| General Knowledge | **OFF** |
+| Deep Reasoning | **ON** |
+| Content Moderation | **Medium** |
+
+### 11.3 Configure Instructions
+
+1. Open file: `release/v7.0/agents/gha/instructions/01_CoPilot_Core_Instructions_V3_6_REVISED.txt`
+2. Copy content
+3. Paste into Instructions field
+
+### 11.4 Upload Knowledge Base
+
+| File | Size | Description |
+|------|------|-------------|
+| `GHA_KB_Growth_Core_v1.txt` | ~25KB | Core growth methodology, AARRR |
+| `GHA_KB_Specialist_Requests_v1.txt` | ~15KB | Specialist coordination |
+| `GHA_KB_Growth_Workflows_v1.txt` | ~18KB | Growth workflow definition |
+| `GHA_KB_Behavioral_Psychology_v1.txt` | ~20KB | Hook Model, Fogg Model |
+| `GHA_KB_Fintech_Growth_v1.txt` | ~22KB | Fintech/neobank strategies |
+| `GHA_KB_Experiment_Design_v1.txt` | ~18KB | A/B testing, cohort analysis |
+| `GHA_KB_Growth_Metrics_v1.txt` | ~15KB | North Star metrics, KPIs |
+| `GHA_KB_Referral_Programs_v1.txt` | ~18KB | Viral mechanics, referral design |
+| `GHA_KB_Lifecycle_Tactics_v1.txt` | ~20KB | Stage-specific tactics |
+| `GHA_KB_Competitor_Analysis_v1.txt` | ~15KB | Competitive intelligence |
+
+### 11.5 Connect Power Automate Flows
+
+| Flow Name | Purpose |
+|-----------|---------|
+| GetGrowthState | Retrieve growth session state |
+| UpdateGrowthProgress | Update growth workflow progress |
+| RequestSpecialistViaORC | Request specialist assistance |
+
+### 11.6 Validation Checklist
+
+- [ ] AI settings configured per table above (note: Deep Reasoning ON, Model Opus 4.5)
+- [ ] All 10 KB files uploaded and indexed
+- [ ] All 3 GHA flows connected and tested
+- [ ] Test: "Help me develop a growth strategy for a fintech app"
+- [ ] Verify: Routes through ORC correctly, requests specialists as needed
+
+---
+
 ## Post-Deployment Validation
 
 ### System Test
@@ -472,5 +532,5 @@ help me create a media plan for Nike. They have $250,000 to acquire new customer
 
 ---
 
-**Document Version:** 2.0.0
-**Last Updated:** January 22, 2026
+**Document Version:** 3.0.0 (v7.0 GHA Integration)
+**Last Updated:** January 31, 2026

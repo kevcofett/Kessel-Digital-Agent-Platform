@@ -504,9 +504,9 @@ For each agent (example: GHA):
 
 | Agent | Instruction File | Character Count |
 |-------|------------------|-----------------|
-| ORC | ORC_Copilot_Instructions_v3_CORRECTED.txt | ~6,157 |
+| ORC | ORC_Copilot_Instructions_v3.txt | ~6,157 |
 | ANL | ANL_Copilot_Instructions_v1.txt | ~6,500 |
-| AUD | AUD_Copilot_Instructions_v2_CORRECTED.txt | ~6,767 |
+| AUD | AUD_Copilot_Instructions_v2.txt | ~6,767 |
 | CHA | CHA_Copilot_Instructions_v1.txt | ~6,200 |
 | SPO | SPO_Copilot_Instructions_v1.txt | ~6,400 |
 | DOC | DOC_Copilot_Instructions_v1.txt | ~5,800 |
@@ -514,7 +514,7 @@ For each agent (example: GHA):
 | CHG | CHG_Copilot_Instructions_v1.txt | ~5,900 |
 | CST | CST_Copilot_Instructions_v1.txt | ~6,300 |
 | MKT | MKT_Copilot_Instructions_v1.txt | ~6,000 |
-| GHA | 01_CoPilot_Core_Instructions_V3_6_REVISED.txt | ~7,500 |
+| GHA | GHA_Copilot_Instructions_v1.txt | ~6,847 |
 
 ---
 

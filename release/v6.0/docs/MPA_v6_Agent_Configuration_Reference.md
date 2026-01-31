@@ -191,8 +191,8 @@ This document provides the authoritative configuration settings for all 10 agent
 
 | Agent | Current Instruction File | Character Count |
 |-------|-------------------------|-----------------|
-| ORC | ORC_Copilot_Instructions_v3_CORRECTED.txt | 6,157 |
-| AUD | AUD_Copilot_Instructions_v2_CORRECTED.txt | 6,767 |
+| ORC | ORC_Copilot_Instructions_v3.txt | 6,157 |
+| AUD | AUD_Copilot_Instructions_v2.txt | 6,767 |
 | CHA | CHA_Copilot_Instructions_v1.txt | Pending update |
 | ANL | ANL_Copilot_Instructions_v1.txt | Pending update |
 | SPO | SPO_Copilot_Instructions_v1.txt | Pending update |
@@ -211,7 +211,7 @@ This document provides the authoritative configuration settings for all 10 agent
 For each agent, verify these settings in Copilot Studio:
 
 ### 5.1 Overview Tab
-- [ ] Instructions updated to _CORRECTED version (or pending update)
+- [ ] Instructions updated to current version
 - [ ] Web Search toggle set per table above
 
 ### 5.2 Settings Tab (Knowledge)

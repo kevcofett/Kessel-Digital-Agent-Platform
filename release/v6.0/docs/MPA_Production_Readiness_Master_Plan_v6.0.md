@@ -631,7 +631,7 @@ Create test JSON files for CHG, CST, MKT agent capabilities.
 ### Owner: DESKTOP
 
 Update all documentation to reflect 10-agent architecture:
-- MPA_v6_Architecture.md
+- MPA_Architecture_v6.0.md
 - MPA_v6_Approved_File_List.md
 - KDAP_Quick_Reference.md
 - README.md

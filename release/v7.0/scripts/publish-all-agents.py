@@ -8,15 +8,15 @@ import time
 
 # All agents to publish (schema names)
 AGENTS = [
-    "mpa_v6_analytics_agent",
-    "mpa_v6_audience_agent",
-    "mpa_v6_channel_agent",
-    "mpa_v6_supply_path_agent",
-    "mpa_v6_document_agent",
-    "mpa_v6_performance_agent",
-    "mpa_v6_change_agent",
-    "mpa_v6_strategy_agent",
-    "mpa_v6_marketing_agent"
+    "mpa_analytics_agent",
+    "mpa_audience_agent",
+    "mpa_channel_agent",
+    "mpa_supply_path_agent",
+    "mpa_document_agent",
+    "mpa_performance_agent",
+    "mpa_change_agent",
+    "mpa_strategy_agent",
+    "mpa_marketing_agent"
 ]
 
 

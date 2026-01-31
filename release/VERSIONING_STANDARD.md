@@ -1,117 +1,136 @@
 # KDAP File Versioning Standard
 
-## Version: 1.0
+## Version: 2.0
 ## Effective: January 2026
 ## Applies to: v6.0 and v7.0 releases
 
 ---
 
-## Naming Convention
+## CRITICAL RULE: Version Position
 
-### Standard Format
+**Version numbers MUST be at the END of the filename, immediately before the file extension.**
+
+### Correct Format
 ```
-[AGENT]_[DocumentType]_v[MAJOR].[MINOR].txt
+[FileName]_v[MAJOR].[MINOR][extension]
 ```
 
-### Examples
-- `ORC_Copilot_Instructions_v1.txt` - Initial version
-- `ORC_Copilot_Instructions_v1.1.txt` - Minor revision
-- `ORC_Copilot_Instructions_v2.txt` - Major revision
+### Incorrect vs Correct Examples
+
+| INCORRECT (version in middle) | CORRECT (version at end) |
+|-------------------------------|--------------------------|
+| `MPA_v6_Architecture.md` | `MPA_Architecture_v6.0.md` |
+| `MPA_v6_Dataverse_Schema.md` | `MPA_Dataverse_Schema_v6.0.md` |
+| `mpa_v6_analytics_agent-template.json` | `mpa_analytics_agent-template_v6.0.json` |
+
+---
+
+## File Type Conventions
+
+### Agent Instructions
+```
+[AGENT]_Copilot_Instructions_v[MAJOR].[MINOR].txt
+```
+Examples:
+- `ORC_Copilot_Instructions_v3.0.txt` - Initial v3
+- `ORC_Copilot_Instructions_v3.1.txt` - Minor update to v3
+- `AUD_Copilot_Instructions_v2.0.txt`
+
+### Knowledge Base Files
+```
+[AGENT]_KB_[Topic]_v[MAJOR].[MINOR].txt
+```
+Examples:
+- `GHA_KB_Frameworks_v1.0.txt`
+- `ANL_KB_Scenarios_v1.1.txt`
+
+### Architecture Documents
+```
+MPA_[Topic]_v[MAJOR].[MINOR].md
+```
+Examples:
+- `MPA_Architecture_v6.0.md`
+- `MPA_Dataverse_Schema_v6.0.md`
+- `MPA_AI_Builder_Prompts_v6.1.md`
+
+### Agent Templates
+```
+MPA_[Agent]_Agent_v[MAJOR].[MINOR].yaml
+```
+Examples:
+- `MPA_Analytics_Agent_v6.0.yaml`
+- `MPA_Audience_Agent_v6.0.yaml`
+
+### Workflow Files
+```
+[WorkflowName]_v[MAJOR].[MINOR].json
+```
+Examples:
+- `CalculateAllocation_v6.0.json`
+- `RouteToSpecialist_v6.0.json`
+
+### MCMAP Reference Documents
+```
+[NUMBER]-MCMAP_[Topic]_v[MAJOR].[MINOR].md
+```
+Examples:
+- `01-MCMAP_Executive_Summary_v7.0.md`
+- `04-MCMAP_Agent_Capabilities_v7.1.md`
 
 ---
 
 ## Version Numbering Rules
 
-### Major Version (v1, v2, v3)
-- Increment for significant structural changes
-- New capabilities or major rewrites
+### Major Version (vX.0)
+- Used for initial release in a version folder
+- Significant structural changes
 - Breaking changes to functionality
+- New capabilities or major rewrites
 
-### Minor Version (v1.1, v1.2)
-- Increment for corrections, clarifications
+### Minor Version (vX.1, vX.2, etc.)
+- Single document corrections or clarifications
 - Bug fixes or small enhancements
 - Non-breaking changes
+- Content updates within same architecture
+
+### Version Matching Release Folder
+- Files in `release/v6.0/` should use `_v6.0`, `_v6.1`, `_v6.2`
+- Files in `release/v7.0/` should use `_v7.0`, `_v7.1`, `_v7.2`
 
 ---
 
 ## Prohibited Naming Patterns
 
-The following suffixes are NOT allowed in production files:
-
 | Prohibited | Correct Alternative |
 |------------|---------------------|
-| `_CORRECTED` | Increment minor version (v1.1) |
-| `_REVISED` | Increment minor version (v1.1) |
-| `_FINAL` | Remove suffix entirely |
-| `_Final` | Remove suffix entirely |
+| `_CORRECTED` | Increment minor version (v6.1) |
+| `_REVISED` | Increment minor version (v6.1) |
+| `_FINAL` | Remove suffix - current IS final |
+| `_Final` | Remove suffix - current IS final |
 | `_updated` | Increment version number |
-| `_H1H2` | Archive as variant, keep main version |
-| `_v2_CORRECTED` | Rename to `_v2` (correction replaces original) |
+| `_H1H2` | Archive as variant |
+| `MPA_v6_[Topic].md` | `MPA_[Topic]_v6.0.md` |
+| `[name]_v6_[rest]` | `[name]_[rest]_v6.0` |
 
 ---
 
 ## Directory Structure
 
 ### Active Files
-Each directory should contain ONLY the current production version:
+Each directory contains ONLY the current production version:
 ```
 agents/orc/instructions/
-└── ORC_Copilot_Instructions_v3.txt    (current version only)
+└── ORC_Copilot_Instructions_v3.0.txt    (current only)
 ```
 
 ### Archive Structure
-Previous versions must be moved to archive folders:
+Previous versions moved to archive folders:
 ```
 agents/orc/instructions/
-├── ORC_Copilot_Instructions_v3.txt    (current)
+├── ORC_Copilot_Instructions_v3.0.txt    (current)
 └── archive/
-    ├── ORC_Copilot_Instructions_v1.txt
-    └── ORC_Copilot_Instructions_v2.txt
-```
-
----
-
-## File Type Conventions
-
-### Instructions Files
-```
-[AGENT]_Copilot_Instructions_v[VERSION].txt
-```
-
-### Knowledge Base Files
-```
-[AGENT]_KB_[Topic]_v[VERSION].txt
-```
-
-### Architecture Documents
-```
-MPA_v[RELEASE]_[Topic].md
-```
-Note: No `_Final` suffix - the current file IS the final version.
-
-### Reference Documents
-```
-[NUMBER]-MCMAP_[Topic].md
-```
-
----
-
-## Version History Tracking
-
-Each file should contain a version history section:
-
-```
-VERSION HISTORY
-
-Version 3 - January 2026
-- Added GHA routing integration
-- Updated specialist coordination
-
-Version 2 - December 2025
-- Added CA domain support
-
-Version 1 - November 2025
-- Initial release
+    ├── ORC_Copilot_Instructions_v1.0.txt
+    └── ORC_Copilot_Instructions_v2.0.txt
 ```
 
 ---
@@ -120,18 +139,44 @@ Version 1 - November 2025
 
 When updating to proper versioning:
 
-1. Identify current production version (highest number or _CORRECTED)
-2. Rename to clean version number (remove suffix)
+1. Identify files with version in wrong position (e.g., `MPA_v6_*`)
+2. Rename to correct format: `[name]_v[X].[Y].[ext]`
 3. Move older versions to archive/ subfolder
 4. Update all references in documentation
-5. Regenerate DOCX versions if applicable
+5. Commit with descriptive message
+
+### Example Migration
+```
+BEFORE: MPA_v6_Architecture.md
+AFTER:  MPA_Architecture_v6.0.md
+
+BEFORE: mpa_v6_analytics_agent-template.json
+AFTER:  mpa_analytics_agent-template_v6.0.json
+```
+
+---
+
+## Version History Tracking
+
+Each file should contain version history:
+
+```
+VERSION HISTORY
+
+v6.1 - January 2026
+- Added GHA routing integration
+- Updated specialist coordination
+
+v6.0 - December 2025
+- Initial v6.0 release
+```
 
 ---
 
 ## Archive Retention
 
 - All previous versions retained in archive/
-- Archive organized by version: `archive/` or `archive/v[X]/`
+- Archive organized by major version: `archive/v6/`, `archive/v7/`
 - Archived files preserve original names for traceability
 
 ---

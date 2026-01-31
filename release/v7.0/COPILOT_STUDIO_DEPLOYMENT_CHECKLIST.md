@@ -457,24 +457,24 @@ Upload the following files to agent knowledge base:
 
 ### 11.3 Configure Instructions
 
-1. Open file: `release/v7.0/agents/gha/instructions/01_CoPilot_Core_Instructions_V3_6_REVISED.txt`
-2. Copy content
+1. Open file: `release/v7.0/agents/gha/instructions/GHA_Copilot_Instructions_v1.txt`
+2. Copy content (~7.5K characters)
 3. Paste into Instructions field
 
 ### 11.4 Upload Knowledge Base
 
 | File | Size | Description |
 |------|------|-------------|
-| `GHA_KB_Growth_Core_v1.txt` | ~25KB | Core growth methodology, AARRR |
-| `GHA_KB_Specialist_Requests_v1.txt` | ~15KB | Specialist coordination |
-| `GHA_KB_Growth_Workflows_v1.txt` | ~18KB | Growth workflow definition |
-| `GHA_KB_Behavioral_Psychology_v1.txt` | ~20KB | Hook Model, Fogg Model |
-| `GHA_KB_Fintech_Growth_v1.txt` | ~22KB | Fintech/neobank strategies |
-| `GHA_KB_Experiment_Design_v1.txt` | ~18KB | A/B testing, cohort analysis |
-| `GHA_KB_Growth_Metrics_v1.txt` | ~15KB | North Star metrics, KPIs |
-| `GHA_KB_Referral_Programs_v1.txt` | ~18KB | Viral mechanics, referral design |
-| `GHA_KB_Lifecycle_Tactics_v1.txt` | ~20KB | Stage-specific tactics |
-| `GHA_KB_Competitor_Analysis_v1.txt` | ~15KB | Competitive intelligence |
+| `GHA_KB_Growth_Workflows_v1.txt` | ~10KB | 8-step workflow, 4 gates |
+| `GHA_KB_Specialist_Requests_v1.txt` | ~7KB | Specialist coordination via ORC |
+| `GHA_KB_Frameworks_v1.txt` | ~10KB | 32 growth frameworks (AARRR, Hook Model, etc.) |
+| `GHA_KB_Behavioral_Psychology_v1.txt` | ~3KB | Psychological principles for growth tactics |
+| `GHA_KB_Growth_Channels_v1.txt` | ~3KB | Growth channel taxonomy |
+| `GHA_KB_Competitor_Benchmarks_v1.txt` | ~5KB | Benchmark data for growth metrics |
+| `GHA_KB_Growth_KPIs_v1.txt` | ~1KB | KPI definitions |
+| `GHA_KB_Fintech_Cases_v1.txt` | ~10KB | Credit card/fintech growth case studies |
+| `GHA_KB_Growth_Architecture_v1.txt` | ~11KB | Growth architecture patterns |
+| `GHA_KB_Campaign_Patterns_v1.txt` | ~2KB | Growth campaign structures |
 
 ### 11.5 Connect Power Automate Flows
 

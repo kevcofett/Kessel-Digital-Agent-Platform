@@ -1289,7 +1289,7 @@ Kessel-Digital-Agent-Platform/
 â”‚
 â””â”€â”€ docs/
     â”œâ”€â”€ architecture/
-    â”‚   â”œâ”€â”€ MPA_v6_Architecture_Final.md
+    â”‚   â”œâ”€â”€ MPA_v6_Architecture.md
     â”‚   â”œâ”€â”€ MPA_v6_Dataverse_Schema.md
     â”‚   â”œâ”€â”€ MPA_v6_AI_Builder_Prompts.md
     â”‚   â””â”€â”€ MPA_v6_Azure_Functions.md

@@ -189,7 +189,7 @@ CHG, CST, and MKT agents have NO Power Automate flows defined.
 
 | Document | Size | Purpose |
 |----------|------|---------|
-| MPA_v6_Architecture_Final.md | 88KB | Authoritative architecture |
+| MPA_v6_Architecture.md | 88KB | Authoritative architecture |
 | MPA_v6_Dataverse_Schema.md | 54KB | Schema definitions |
 | MPA_v6_AI_Builder_Prompts.md | 58KB | AI Builder prompts |
 | MPA_v6_Azure_Functions.md | 82KB | Azure Functions spec |

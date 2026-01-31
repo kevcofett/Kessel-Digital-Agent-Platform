@@ -16,7 +16,7 @@ echo ""
 
 # Architecture files
 echo "Copying architecture files..."
-cp "$DOWNLOADS_PATH/MPA_v6_Architecture_Final.md" "$REPO_PATH/release/v6.0/docs/architecture/" 2>/dev/null && echo "✓ MPA_v6_Architecture_Final.md" || echo "✗ MPA_v6_Architecture_Final.md - not found in Downloads"
+cp "$DOWNLOADS_PATH/MPA_v6_Architecture.md" "$REPO_PATH/release/v6.0/docs/architecture/" 2>/dev/null && echo "✓ MPA_v6_Architecture.md" || echo "✗ MPA_v6_Architecture.md - not found in Downloads"
 cp "$DOWNLOADS_PATH/MPA_v6_Dataverse_Schema.md" "$REPO_PATH/release/v6.0/docs/architecture/" 2>/dev/null && echo "✓ MPA_v6_Dataverse_Schema.md" || echo "✗ MPA_v6_Dataverse_Schema.md - not found"
 cp "$DOWNLOADS_PATH/MPA_v6_AI_Builder_Prompts.md" "$REPO_PATH/release/v6.0/docs/architecture/" 2>/dev/null && echo "✓ MPA_v6_AI_Builder_Prompts.md" || echo "✗ MPA_v6_AI_Builder_Prompts.md - not found"
 cp "$DOWNLOADS_PATH/MPA_v6_Azure_Functions.md" "$REPO_PATH/release/v6.0/docs/architecture/" 2>/dev/null && echo "✓ MPA_v6_Azure_Functions.md" || echo "✗ MPA_v6_Azure_Functions.md - not found"

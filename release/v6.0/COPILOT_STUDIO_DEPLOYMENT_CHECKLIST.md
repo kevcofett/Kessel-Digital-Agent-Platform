@@ -94,7 +94,7 @@ Deploy agents in this order to ensure dependencies are met:
 ### 1.3 Configure Instructions
 
 1. Navigate to agent settings → Instructions
-2. Open file: `release/v6.0/agents/orc/instructions/ORC_Copilot_Instructions_v3_CORRECTED.txt`
+2. Open file: `release/v6.0/agents/orc/instructions/ORC_Copilot_Instructions_v3.txt`
 3. Copy entire content (6,157 characters)
 4. Paste into Instructions field
 5. Click Save
@@ -119,7 +119,7 @@ Upload the following files to agent knowledge base:
 ### 1.6 Validation Checklist
 
 - [ ] AI settings configured per table above
-- [ ] Instructions saved without error (v3_CORRECTED)
+- [ ] Instructions saved without error (v3)
 - [ ] Both KB files indexed and ready
 - [ ] All 3 flows connected and tested
 - [ ] Test: "Help me create a media plan" → Should ask clarifying questions, NOT auto-route
@@ -146,7 +146,7 @@ Upload the following files to agent knowledge base:
 
 ### 2.3 Configure Instructions
 
-1. Open file: `release/v6.0/agents/aud/instructions/AUD_Copilot_Instructions_v2_CORRECTED.txt`
+1. Open file: `release/v6.0/agents/aud/instructions/AUD_Copilot_Instructions_v2.txt`
 2. Copy content (6,767 characters)
 3. Paste into Instructions field
 
@@ -168,7 +168,7 @@ Upload the following files to agent knowledge base:
 ### 2.6 Validation Checklist
 
 - [ ] AI settings configured per table above
-- [ ] Instructions saved (v2_CORRECTED)
+- [ ] Instructions saved (v2)
 - [ ] Response under 400 words, prose only, no bullets
 - [ ] Test: "Segment our customers using RFM analysis"
 

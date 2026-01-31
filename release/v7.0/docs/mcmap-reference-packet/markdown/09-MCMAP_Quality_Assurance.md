@@ -38,52 +38,52 @@
 ### 1.2 Quality Gates
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    QUALITY GATES                                â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                 â”‚
-â”‚  GATE 1: Development                                            â”‚
-â”‚  â”œâ”€â”€ Unit tests pass                                            â”‚
-â”‚  â”œâ”€â”€ Code review approved                                       â”‚
-â”‚  â””â”€â”€ Prompt validation pass                                     â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  GATE 2: Integration                                            â”‚
-â”‚  â”œâ”€â”€ Integration tests pass                                     â”‚
-â”‚  â”œâ”€â”€ Flow execution success                                     â”‚
-â”‚  â””â”€â”€ Capability tests pass                                      â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  GATE 3: Staging                                                â”‚
-â”‚  â”œâ”€â”€ Regression suite pass (100%)                               â”‚
-â”‚  â”œâ”€â”€ Performance benchmarks met                                 â”‚
-â”‚  â””â”€â”€ UAT sign-off (if applicable)                              â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  GATE 4: Production                                             â”‚
-â”‚  â”œâ”€â”€ Smoke tests pass                                           â”‚
-â”‚  â”œâ”€â”€ Telemetry baseline established                             â”‚
-â”‚  â””â”€â”€ Rollback plan verified                                     â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  GATE 5: Post-Deployment                                        â”‚
-â”‚  â”œâ”€â”€ Error rate within threshold                                â”‚
-â”‚  â”œâ”€â”€ Performance within SLA                                     â”‚
-â”‚  â””â”€â”€ User feedback positive                                     â”‚
-â”‚                                                                 â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++-----------------------------------------------------------------+
+|                    QUALITY GATES                                |
++-----------------------------------------------------------------+
+|                                                                 |
+|  GATE 1: Development                                            |
+|  +-- Unit tests pass                                            |
+|  +-- Code review approved                                       |
+|  +-- Prompt validation pass                                     |
+|         |                                                       |
+|         v                                                       |
+|  GATE 2: Integration                                            |
+|  +-- Integration tests pass                                     |
+|  +-- Flow execution success                                     |
+|  +-- Capability tests pass                                      |
+|         |                                                       |
+|         v                                                       |
+|  GATE 3: Staging                                                |
+|  +-- Regression suite pass (100%)                               |
+|  +-- Performance benchmarks met                                 |
+|  +-- UAT sign-off (if applicable)                              |
+|         |                                                       |
+|         v                                                       |
+|  GATE 4: Production                                             |
+|  +-- Smoke tests pass                                           |
+|  +-- Telemetry baseline established                             |
+|  +-- Rollback plan verified                                     |
+|         |                                                       |
+|         v                                                       |
+|  GATE 5: Post-Deployment                                        |
+|  +-- Error rate within threshold                                |
+|  +-- Performance within SLA                                     |
+|  +-- User feedback positive                                     |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### 1.3 Quality Metrics Summary
 
 | Metric | Target | Current | Status |
 |--------|--------|---------|--------|
-| Test Pass Rate | 100% | 100% | âœ… |
-| Code Coverage | > 80% | 87% | âœ… |
-| Regression Pass | 100% | 100% | âœ… |
-| Performance SLA | 95% | 97.2% | âœ… |
-| Defect Escape Rate | < 2% | 0.8% | âœ… |
-| Mean Time to Detect | < 15 min | 8 min | âœ… |
+| Test Pass Rate | 100% | 100% | ... |
+| Code Coverage | > 80% | 87% | ... |
+| Regression Pass | 100% | 100% | ... |
+| Performance SLA | 95% | 97.2% | ... |
+| Defect Escape Rate | < 2% | 0.8% | ... |
+| Mean Time to Detect | < 15 min | 8 min | ... |
 
 ---
 
@@ -92,25 +92,25 @@
 ### 2.1 Test Pyramid
 
 ```
-                    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                    â”‚   E2E Tests   â”‚  (10%)
-                    â”‚   Manual UAT  â”‚
-                    â””â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”˜
-                            â”‚
-                    â”Œâ”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”
-                    â”‚  Integration  â”‚  (30%)
-                    â”‚    Tests      â”‚
-                    â””â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”˜
-                            â”‚
-            â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-            â”‚        Capability Tests       â”‚  (40%)
-            â”‚   (AI Builder + Flow Tests)   â”‚
-            â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                            â”‚
-    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-    â”‚              Unit Tests                       â”‚  (20%)
-    â”‚    (Prompt Validation, Schema Tests)         â”‚
-    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                    +---------------+
+                    |   E2E Tests   |  (10%)
+                    |   Manual UAT  |
+                    +-------+-------+
+                            |
+                    +-------+-------+
+                    |  Integration  |  (30%)
+                    |    Tests      |
+                    +-------+-------+
+                            |
+            +---------------+---------------+
+            |        Capability Tests       |  (40%)
+            |   (AI Builder + Flow Tests)   |
+            +---------------+---------------+
+                            |
+    +-----------------------+-----------------------+
+    |              Unit Tests                       |  (20%)
+    |    (Prompt Validation, Schema Tests)         |
+    +-----------------------------------------------+
 ```
 
 ### 2.2 Test Environments
@@ -209,11 +209,11 @@
 
 | Scenario | Components Tested | Success Criteria |
 |----------|-------------------|------------------|
-| Session Lifecycle | Flow â†’ Dataverse â†’ Agent | Session created, persisted, retrievable |
-| Capability Dispatch | Agent â†’ Flow â†’ AI Builder â†’ Response | Correct response returned |
-| Telemetry Logging | All flows â†’ eap_telemetry | Events logged with correct data |
-| KB Retrieval | Agent â†’ SharePoint â†’ Response | Relevant KB content cited |
-| Multi-Agent | ORC â†’ ANL â†’ DOC | Complete workflow executes |
+| Session Lifecycle | Flow -> Dataverse -> Agent | Session created, persisted, retrievable |
+| Capability Dispatch | Agent -> Flow -> AI Builder -> Response | Correct response returned |
+| Telemetry Logging | All flows -> eap_telemetry | Events logged with correct data |
+| KB Retrieval | Agent -> SharePoint -> Response | Relevant KB content cited |
+| Multi-Agent | ORC -> ANL -> DOC | Complete workflow executes |
 
 **Sample Integration Test:**
 
@@ -316,30 +316,30 @@ All test cases are stored in the `eap_test_case` Dataverse table:
 ### 4.2 Test Case Lifecycle
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                 TEST CASE LIFECYCLE                             â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                 â”‚
-â”‚  DRAFT                                                          â”‚
-â”‚  â””â”€â”€ Test case created, not yet validated                       â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  REVIEW                                                         â”‚
-â”‚  â””â”€â”€ Test case reviewed by QA lead                             â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  ACTIVE                                                         â”‚
-â”‚  â””â”€â”€ Test case included in regression suite                    â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼ (if obsolete)                                         â”‚
-â”‚  DEPRECATED                                                     â”‚
-â”‚  â””â”€â”€ Test case excluded but retained for history               â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼ (if deleted)                                          â”‚
-â”‚  ARCHIVED                                                       â”‚
-â”‚  â””â”€â”€ Soft delete, retained for audit                           â”‚
-â”‚                                                                 â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++-----------------------------------------------------------------+
+|                 TEST CASE LIFECYCLE                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|  DRAFT                                                          |
+|  +-- Test case created, not yet validated                       |
+|         |                                                       |
+|         v                                                       |
+|  REVIEW                                                         |
+|  +-- Test case reviewed by QA lead                             |
+|         |                                                       |
+|         v                                                       |
+|  ACTIVE                                                         |
+|  +-- Test case included in regression suite                    |
+|         |                                                       |
+|         v (if obsolete)                                         |
+|  DEPRECATED                                                     |
+|  +-- Test case excluded but retained for history               |
+|         |                                                       |
+|         v (if deleted)                                          |
+|  ARCHIVED                                                       |
+|  +-- Soft delete, retained for audit                           |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### 4.3 Test Case Creation Guidelines
@@ -390,34 +390,34 @@ All test cases are stored in the `eap_test_case` Dataverse table:
 ### 5.1 Test Automation Architecture
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                TEST AUTOMATION ARCHITECTURE                     â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                 â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”   â”‚
-â”‚  â”‚                 BRAINTRUST PLATFORM                      â”‚   â”‚
-â”‚  â”‚  â”œâ”€â”€ Test orchestration                                  â”‚   â”‚
-â”‚  â”‚  â”œâ”€â”€ LLM-based evaluation scorers                       â”‚   â”‚
-â”‚  â”‚  â””â”€â”€ Performance dashboards                              â”‚   â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜   â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”   â”‚
-â”‚  â”‚                 PYTHON TEST HARNESS                      â”‚   â”‚
-â”‚  â”‚  â”œâ”€â”€ pytest framework                                    â”‚   â”‚
-â”‚  â”‚  â”œâ”€â”€ API clients (Dataverse, AI Builder)                â”‚   â”‚
-â”‚  â”‚  â””â”€â”€ Result reporting                                    â”‚   â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜   â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”   â”‚
-â”‚  â”‚                 POWER AUTOMATE TESTS                     â”‚   â”‚
-â”‚  â”‚  â”œâ”€â”€ Test execution flow                                 â”‚   â”‚
-â”‚  â”‚  â”œâ”€â”€ Dataverse test case reader                         â”‚   â”‚
-â”‚  â”‚  â””â”€â”€ Result writer                                       â”‚   â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜   â”‚
-â”‚                                                                 â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++-----------------------------------------------------------------+
+|                TEST AUTOMATION ARCHITECTURE                     |
++-----------------------------------------------------------------+
+|                                                                 |
+|  +---------------------------------------------------------+   |
+|  |                 BRAINTRUST PLATFORM                      |   |
+|  |  +-- Test orchestration                                  |   |
+|  |  +-- LLM-based evaluation scorers                       |   |
+|  |  +-- Performance dashboards                              |   |
+|  +---------------------------------------------------------+   |
+|         |                                                       |
+|         v                                                       |
+|  +---------------------------------------------------------+   |
+|  |                 PYTHON TEST HARNESS                      |   |
+|  |  +-- pytest framework                                    |   |
+|  |  +-- API clients (Dataverse, AI Builder)                |   |
+|  |  +-- Result reporting                                    |   |
+|  +---------------------------------------------------------+   |
+|         |                                                       |
+|         v                                                       |
+|  +---------------------------------------------------------+   |
+|  |                 POWER AUTOMATE TESTS                     |   |
+|  |  +-- Test execution flow                                 |   |
+|  |  +-- Dataverse test case reader                         |   |
+|  |  +-- Result writer                                       |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### 5.2 Braintrust Evaluation Scorers
@@ -470,37 +470,37 @@ def response_accuracy(input: str, output: str, expected: dict) -> float:
 **Power Automate Test Runner:**
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    TEST EXECUTION FLOW                          â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                 â”‚
-â”‚  Trigger: Scheduled (nightly) OR Manual                         â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  Query eap_test_case                                            â”‚
-â”‚  â””â”€â”€ Filter: is_active = true, environment = MASTERCARD         â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  For Each test_case:                                            â”‚
-â”‚  â”œâ”€â”€ Setup: Create test session                                â”‚
-â”‚  â”œâ”€â”€ Execute: Send input to agent/capability                   â”‚
-â”‚  â”œâ”€â”€ Capture: Record response                                   â”‚
-â”‚  â”œâ”€â”€ Validate: Compare to expected                             â”‚
-â”‚  â”œâ”€â”€ Score: Calculate pass/fail                                â”‚
-â”‚  â””â”€â”€ Record: Update last_run_* fields                          â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  Generate Summary Report                                        â”‚
-â”‚  â”œâ”€â”€ Total tests run                                            â”‚
-â”‚  â”œâ”€â”€ Pass/Fail counts                                           â”‚
-â”‚  â”œâ”€â”€ Failed test details                                        â”‚
-â”‚  â””â”€â”€ Execution time                                             â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  Alert on Failures                                              â”‚
-â”‚  â””â”€â”€ Send to Teams: MCMAP-Test-Alerts                           â”‚
-â”‚                                                                 â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++-----------------------------------------------------------------+
+|                    TEST EXECUTION FLOW                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Trigger: Scheduled (nightly) OR Manual                         |
+|         |                                                       |
+|         v                                                       |
+|  Query eap_test_case                                            |
+|  +-- Filter: is_active = true, environment = MASTERCARD         |
+|         |                                                       |
+|         v                                                       |
+|  For Each test_case:                                            |
+|  +-- Setup: Create test session                                |
+|  +-- Execute: Send input to agent/capability                   |
+|  +-- Capture: Record response                                   |
+|  +-- Validate: Compare to expected                             |
+|  +-- Score: Calculate pass/fail                                |
+|  +-- Record: Update last_run_* fields                          |
+|         |                                                       |
+|         v                                                       |
+|  Generate Summary Report                                        |
+|  +-- Total tests run                                            |
+|  +-- Pass/Fail counts                                           |
+|  +-- Failed test details                                        |
+|  +-- Execution time                                             |
+|         |                                                       |
+|         v                                                       |
+|  Alert on Failures                                              |
+|  +-- Send to Teams: MCMAP-Test-Alerts                           |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### 5.4 Test Result Reporting
@@ -732,33 +732,33 @@ Execute immediately after deployment:
 **Smoke Test Flow:**
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    SMOKE TEST FLOW                              â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                 â”‚
-â”‚  Start: Post-deployment trigger                                 â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  Test 1: Ping each agent                                        â”‚
-â”‚  â””â”€â”€ Expected: "Hello" response from each                       â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  Test 2: Intent classification                                  â”‚
-â”‚  â””â”€â”€ Send "Help me plan my budget" â†’ Expect ANL routing        â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  Test 3: Execute capability                                     â”‚
-â”‚  â””â”€â”€ Call ANL_MARGINAL_RETURN â†’ Expect JSON result             â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  Test 4: Verify telemetry                                       â”‚
-â”‚  â””â”€â”€ Query eap_telemetry â†’ Expect new records                  â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  Result: Pass all â†’ Deployment successful                       â”‚
-â”‚          Fail any â†’ Alert and prepare rollback                  â”‚
-â”‚                                                                 â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++-----------------------------------------------------------------+
+|                    SMOKE TEST FLOW                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Start: Post-deployment trigger                                 |
+|         |                                                       |
+|         v                                                       |
+|  Test 1: Ping each agent                                        |
+|  +-- Expected: "Hello" response from each                       |
+|         |                                                       |
+|         v                                                       |
+|  Test 2: Intent classification                                  |
+|  +-- Send "Help me plan my budget" -> Expect ANL routing        |
+|         |                                                       |
+|         v                                                       |
+|  Test 3: Execute capability                                     |
+|  +-- Call ANL_MARGINAL_RETURN -> Expect JSON result             |
+|         |                                                       |
+|         v                                                       |
+|  Test 4: Verify telemetry                                       |
+|  +-- Query eap_telemetry -> Expect new records                  |
+|         |                                                       |
+|         v                                                       |
+|  Result: Pass all -> Deployment successful                       |
+|          Fail any -> Alert and prepare rollback                  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### 8.3 Post-Deployment Monitoring
@@ -841,11 +841,11 @@ Track weekly/monthly:
 
 | Metric | Week 1 | Week 2 | Week 3 | Week 4 | Trend |
 |--------|--------|--------|--------|--------|-------|
-| Test Pass Rate | 98.5% | 99.2% | 100% | 100% | â†‘ |
-| Error Rate | 1.2% | 0.9% | 0.8% | 0.7% | â†“ |
-| P95 Latency | 4.8s | 4.5s | 4.2s | 4.0s | â†“ |
-| User Satisfaction | 88% | 90% | 91% | 92% | â†‘ |
-| Defects Found | 5 | 3 | 2 | 1 | â†“ |
+| Test Pass Rate | 98.5% | 99.2% | 100% | 100% | -> |
+| Error Rate | 1.2% | 0.9% | 0.8% | 0.7% | " |
+| P95 Latency | 4.8s | 4.5s | 4.2s | 4.0s | " |
+| User Satisfaction | 88% | 90% | 91% | 92% | -> |
+| Defects Found | 5 | 3 | 2 | 1 | " |
 
 ---
 
@@ -854,36 +854,36 @@ Track weekly/monthly:
 ### 10.1 Test Improvement Process
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚              CONTINUOUS IMPROVEMENT CYCLE                       â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                 â”‚
-â”‚  ANALYZE                                                        â”‚
-â”‚  â”œâ”€â”€ Review defect escapes                                      â”‚
-â”‚  â”œâ”€â”€ Identify test gaps                                         â”‚
-â”‚  â””â”€â”€ Analyze failure patterns                                   â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  PLAN                                                           â”‚
-â”‚  â”œâ”€â”€ Prioritize improvements                                    â”‚
-â”‚  â”œâ”€â”€ Design new test cases                                      â”‚
-â”‚  â””â”€â”€ Update test strategy                                       â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  IMPLEMENT                                                      â”‚
-â”‚  â”œâ”€â”€ Add/modify test cases                                      â”‚
-â”‚  â”œâ”€â”€ Update automation                                          â”‚
-â”‚  â””â”€â”€ Enhance tooling                                            â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  MEASURE                                                        â”‚
-â”‚  â”œâ”€â”€ Track effectiveness                                        â”‚
-â”‚  â”œâ”€â”€ Monitor metrics                                            â”‚
-â”‚  â””â”€â”€ Gather feedback                                            â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–º (return to ANALYZE)                    â”‚
-â”‚                                                                 â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++-----------------------------------------------------------------+
+|              CONTINUOUS IMPROVEMENT CYCLE                       |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ANALYZE                                                        |
+|  +-- Review defect escapes                                      |
+|  +-- Identify test gaps                                         |
+|  +-- Analyze failure patterns                                   |
+|         |                                                       |
+|         v                                                       |
+|  PLAN                                                           |
+|  +-- Prioritize improvements                                    |
+|  +-- Design new test cases                                      |
+|  +-- Update test strategy                                       |
+|         |                                                       |
+|         v                                                       |
+|  IMPLEMENT                                                      |
+|  +-- Add/modify test cases                                      |
+|  +-- Update automation                                          |
+|  +-- Enhance tooling                                            |
+|         |                                                       |
+|         v                                                       |
+|  MEASURE                                                        |
+|  +-- Track effectiveness                                        |
+|  +-- Monitor metrics                                            |
+|  +-- Gather feedback                                            |
+|         |                                                       |
+|         +--------------> (return to ANALYZE)                    |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### 10.2 Defect Prevention

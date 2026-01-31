@@ -493,7 +493,7 @@ All KB files must comply with the 6-Rule Framework:
 | Rule | Requirement | Validation |
 |------|-------------|------------|
 | 1 | ALL-CAPS section headers | Regex: ^[A-Z][A-Z0-9 ]+$ |
-| 2 | Hyphens only for lists (no bullets) | No â€¢, â—, â—‹, â˜… characters |
+| 2 | Hyphens only for lists (no bullets) | No bullet point characters allowed |
 | 3 | ASCII characters only | No Unicode special chars |
 | 4 | Zero visual dependencies | No emoji, tables, formatting |
 | 5 | Mandatory language patterns | Required phrases per section |

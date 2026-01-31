@@ -10,6 +10,7 @@ The DOCS agent is a lightweight chatbot that helps Mastercard employees discover
 - **Numbered Navigation**: Topics 1-11 for quick access to major areas
 - **Terminology Lookup**: Ask "what does X mean" for glossary definitions
 - **Document Citations**: Responses reference specific documents and sections
+- **Access Control**: ABAC integration with Mastercard Directory for protected content
 - **ORC Integration**: Seamlessly routes from/to planning workflows
 
 ## Persona Descriptions
@@ -20,8 +21,25 @@ The DOCS agent is a lightweight chatbot that helps Mastercard employees discover
 | Senior Leadership | B | Capabilities, architecture, integration, roadmap |
 | Operations | C | Workflows, how-to, troubleshooting, support contacts |
 
-## Knowledge Base
+## Agent Files (v7.0)
 
+### Instructions
+| File | Description |
+|------|-------------|
+| DOCS_Instructions_v7.0.txt | Core agent instructions for Copilot Studio |
+
+### Knowledge Base
+| File | Description |
+|------|-------------|
+| DOCS_KB_ABAC_Summary_v7.0.txt | ABAC system quick reference |
+| DOCS_KB_Access_Control_Reference_v7.0.txt | Access control implementation guide |
+
+### Flows
+| File | Description |
+|------|-------------|
+| DOCS_Check_Content_Access_v7.0.yaml | Verify user permissions for protected content |
+
+### Documentation Library
 | File | Description |
 |------|-------------|
 | 00-MCMAP_Glossary.md | 100+ terms and acronyms |
@@ -40,24 +58,32 @@ The DOCS agent is a lightweight chatbot that helps Mastercard employees discover
 ## Deployment Steps
 
 1. **Upload Instructions**
-   - File: instructions/DOCS_Instructions_v5.txt
+   - File: instructions/DOCS_Instructions_v7.0.txt
    - Target: Copilot Studio agent instructions
-   - Verify: Character count < 8,000
+   - Verify: Character count within 7,500-7,999 limit
 
 2. **Configure KB Sources**
-   - Upload all files from kb/ folder to SharePoint
+   - Upload DOCS_KB_ABAC_Summary_v7.0.txt to SharePoint
+   - Upload DOCS_KB_Access_Control_Reference_v7.0.txt to SharePoint
+   - Upload all files from kb/md/ folder to SharePoint
    - Link SharePoint folder as Copilot knowledge source
    - Enable generative answers
 
-3. **Add ORC Routing**
+3. **Configure Flows**
+   - Import DOCS_Check_Content_Access_v7.0.yaml to Power Automate
+   - Configure Dataverse connections for eap_user_profile and eap_access_rule tables
+   - Test flow with sample user and content identifiers
+
+4. **Add ORC Routing**
    - Add DOCS triggers to ORC agent
    - Triggers: "documentation", "architecture", "glossary", "define", "what does X mean"
    - Configure handoff protocol
 
-4. **Test Scenarios**
+5. **Test Scenarios**
    - Test persona selection (A/B/C)
    - Test numbered navigation (1-11)
    - Test terminology lookups
+   - Test access control for protected content
    - Test ORC handoff and return
 
 ## Usage Examples
@@ -82,6 +108,11 @@ DOCS: [Provides Future Use Cases summary appropriate to selected persona]
 User: What does CAL mean?
 DOCS: CAL = Capability Abstraction Layer. It is the architecture pattern that separates capability definitions from implementations, enabling platform portability...
 
+**Access-controlled content:**
+
+User: Show me the CEO Brief
+DOCS: [Checks access via MCMAP_Check_Content_Access flow, returns content if authorized or denial message if not]
+
 ## Contact
 
 Kevin Bauer (kevin.bauer@mastercard.com) - All inquiries
@@ -90,6 +121,7 @@ Kevin Bauer (kevin.bauer@mastercard.com) - All inquiries
 
 | Version | Date | Changes |
 |---------|------|---------|
+| v7.0 | Jan 31, 2026 | KDAP v7.0 compliance, standardized KB naming, added flow documentation |
 | v5 | Jan 24, 2026 | Added persona-based responses, Future Use Cases |
 | v4 | Jan 24, 2026 | Added glossary, ORC integration |
 | v1-v3 | Jan 2026 | Initial development |

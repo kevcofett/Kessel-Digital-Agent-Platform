@@ -1,0 +1,131 @@
+DOCS CHECK CONTENT ACCESS FLOW v7.0
+VERSION 7.0
+STATUS Production Ready
+COMPLIANCE KDAP v7.0 Agent Standard
+
+------------------------------------------------------------
+
+FLOW IDENTITY
+
+Name: DOCS_Check_Content_Access
+Domain: Access Control
+Function: Verify user permissions for protected documentation content
+Trigger: User requests protected executive or sensitive content
+
+------------------------------------------------------------
+
+TRIGGER CONDITIONS
+
+This flow activates when user requests access to protected content:
+- CEO Brief (00-MCMAP_CEO_Brief)
+- C-Suite Role Briefs (00-A through 00-D)
+- Investment Proposal (09A-MCMAP_Investment_Proposal)
+- Content with ABAC restrictions when Full ABAC Mode enabled
+
+------------------------------------------------------------
+
+INPUT PARAMETERS
+
+user_id
+Type: String
+Required: Yes
+Description: Microsoft Directory user identifier
+Source: System.User.Id from Copilot session context
+
+content_identifier
+Type: String
+Required: Yes
+Description: Document identifier being requested
+Format: Document filename without extension
+Example: 00-MCMAP_CEO_Brief
+
+------------------------------------------------------------
+
+PROCESSING STEPS
+
+STEP 1 RETRIEVE USER PROFILE
+Action: Query eap_user_profile table in Dataverse
+Filter: user_id equals input user_id
+Retrieve: employee_level, department, division, region, security_groups
+Error: If profile not found return access_denied with message Profile sync required
+
+STEP 2 LOOKUP CONTENT ACCESS RULE
+Action: Query eap_access_rule table in Dataverse
+Filter: content_identifier equals input content_identifier AND rule_active equals true
+Retrieve: required_level, required_department, required_groups, condition_type
+
+STEP 3 EVALUATE ACCESS CONDITIONS
+If no rule exists: Return access_granted (content is unrestricted)
+If rule exists: Evaluate user attributes against rule conditions
+
+Condition Types:
+- LEVEL_REQUIRED: Check employee_level IN required_level list
+- DEPARTMENT_REQUIRED: Check department IN required_department list
+- GROUP_REQUIRED: Check security_groups contains required_groups
+- COMBINED: All specified conditions must be satisfied
+
+STEP 4 RETURN ACCESS DECISION
+If conditions satisfied: Return access_granted with content_authorized true
+If conditions not satisfied: Return access_denied with denial_message
+
+------------------------------------------------------------
+
+OUTPUT PARAMETERS
+
+access_granted
+Type: Boolean
+Description: True if user has permission to view content
+
+content_authorized
+Type: Boolean
+Description: Same as access_granted for compatibility
+
+denial_message
+Type: String
+Description: User-friendly message when access denied
+Template: This content requires specific access permissions based on your role in the organization. To request access say request access and I will help submit your request to the Platform team.
+
+rule_matched
+Type: String
+Description: Identifier of rule that was evaluated
+Example: EXEC_CONTENT_RULE_001
+
+------------------------------------------------------------
+
+ERROR HANDLING
+
+PROFILE_NOT_FOUND
+Return: access_denied
+Message: Unable to verify your access level. Please try again or contact support.
+Action: Log error for investigation
+
+RULE_EVALUATION_ERROR
+Return: access_denied
+Message: Unable to verify content permissions at this time.
+Action: Default to deny, log error
+
+DATAVERSE_UNAVAILABLE
+Return: access_denied
+Message: System temporarily unavailable. Please try again shortly.
+Action: Retry with exponential backoff up to 3 attempts
+
+------------------------------------------------------------
+
+SECURITY REQUIREMENTS
+
+NEVER return specific rule conditions to users
+NEVER reveal email addresses in denial messages
+NEVER expose attribute values that would grant access
+ALWAYS log access attempts for audit trail
+ALWAYS default to deny when errors occur
+
+------------------------------------------------------------
+
+RELATED FLOWS
+
+DOCS_Access_Request_v7.0: Process user access requests
+DOCS_User_Profile_Sync_v7.0: Sync user attributes from directory
+
+------------------------------------------------------------
+
+END OF DOCS CHECK CONTENT ACCESS FLOW v7.0

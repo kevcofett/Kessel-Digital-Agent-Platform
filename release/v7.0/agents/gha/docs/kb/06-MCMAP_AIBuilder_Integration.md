@@ -1,8 +1,8 @@
 # MCMAP AI Builder & Integration Specification
 
-**Document:** 06-MCMAP_AIBuilder_Integration.md  
-**Version:** 1.0  
-**Date:** January 23, 2026  
+**Document:** 06-MCMAP_AIBuilder_Integration.md
+**Version:** 7.0
+**Date:** January 31, 2026  
 **Classification:** Mastercard Internal - Technical Reference  
 **Audience:** Engineering Teams, Platform Architects, Integration Developers
 
@@ -53,7 +53,7 @@ AI Builder Custom Prompts serve as the universal computation layer for MCMAP, pr
 â”‚              â”‚                                                  â”‚
 â”‚              â–¼                                                  â”‚
 â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                                 â”‚
-â”‚  â”‚   AI Builder Prompt       â”‚  (26 Custom Prompts)            â”‚
+â”‚  â”‚   AI Builder Prompt       â”‚  (36 Custom Prompts - v7.0)            â”‚
 â”‚  â”‚   - Structured Input      â”‚                                 â”‚
 â”‚  â”‚   - JSON Output           â”‚                                 â”‚
 â”‚  â”‚   - Low Temperature       â”‚                                 â”‚
@@ -94,7 +94,7 @@ AI Builder Custom Prompts serve as the universal computation layer for MCMAP, pr
 
 ### 2.1 Complete Prompt Registry
 
-MCMAP uses 26 AI Builder Custom Prompts organized by agent domain:
+MCMAP uses 36 AI Builder Custom Prompts organized by agent domain (v7.0 adds 10 GHA prompts):
 
 | Agent | Prompt Code | Prompt Name | Purpose | Temperature |
 |-------|-------------|-------------|---------|-------------|
@@ -124,6 +124,16 @@ MCMAP uses 26 AI Builder Custom Prompts organized by agent domain:
 | **PRF** | PRF_Optimize | Optimization Recommender | Recommend optimizations | 0.3 |
 | **ORC** | ORC_IntentClassify | Intent Classification | Classify user intent for routing | 0.1 |
 | **ORC** | ORC_GateValidate | Gate Validation | Validate workflow gate completion | 0.1 |
+| **GHA** | GHA_IntentClassify | Classify Growth Intent | Classify growth-specific intent and AARRR stage | 0.1 |
+| **GHA** | GHA_FrameworkSelect | Select Growth Framework | Select appropriate growth framework | 0.2 |
+| **GHA** | GHA_LifecycleAnalyze | Analyze AARRR Lifecycle | Analyze funnel stages for optimization | 0.2 |
+| **GHA** | GHA_NorthStarDefine | Define North Star Metric | Define and validate North Star metrics | 0.3 |
+| **GHA** | GHA_TacticRecommend | Recommend Growth Tactics | Recommend tactics by lifecycle stage | 0.3 |
+| **GHA** | GHA_PsychologyApply | Apply Behavioral Psychology | Apply psychological principles to growth | 0.3 |
+| **GHA** | GHA_CompetitorGrowth | Analyze Competitor Growth | Analyze competitor growth strategies | 0.3 |
+| **GHA** | GHA_ExperimentDesign | Design Growth Experiment | Design experiments with success criteria | 0.3 |
+| **GHA** | GHA_GrowthProject | Project Growth Outcomes | Project outcomes by AARRR stage | 0.2 |
+| **GHA** | GHA_GrowthSynthesize | Synthesize Growth Strategy | Synthesize specialist contributions | 0.4 |
 
 ### 2.2 Prompt Registration Table
 
@@ -691,6 +701,159 @@ When prompts cannot complete successfully:
 ```
 
 **Configuration:** Temperature: 0.1 | Max Tokens: 500 | Timeout: 15s
+
+---
+
+### 4.7 GHA Agent Prompts (Growth Hacking - v7.0)
+
+GHA (Growth Hacking Agent) is a Growth Strategy Orchestrator added in v7.0. It uses 10 specialized prompts for growth strategy development, AARRR lifecycle optimization, and multi-agent coordination.
+
+#### GHA_IntentClassify Prompt
+
+**Purpose:** Classify growth-specific user intent and determine AARRR stage focus.
+
+**Capability Code:** GHA_INTENT_CLASSIFY
+
+**Classification Categories:**
+- FULL_GROWTH_STRATEGY: Comprehensive growth plan
+- LIFECYCLE_OPTIMIZATION: AARRR funnel improvement
+- ACQUISITION_FOCUS through REVENUE_FOCUS: Stage-specific optimization
+- FRAMEWORK_REQUEST: Growth framework application
+- EXPERIMENT_DESIGN: Growth experiment creation
+
+**Configuration:** Temperature: 0.1 | Max Tokens: 800 | Timeout: 15s
+
+---
+
+#### GHA_LifecycleAnalyze Prompt
+
+**Purpose:** Analyze AARRR funnel stages to identify bottlenecks and opportunities.
+
+**Capability Code:** GHA_LIFECYCLE_ANALYZE
+
+**Analysis Components:**
+- Stage health assessment (Acquisition, Activation, Retention, Referral, Revenue)
+- Conversion rates between stages
+- Bottleneck identification and severity scoring
+- Opportunity prioritization by impact and effort
+
+**Configuration:** Temperature: 0.2 | Max Tokens: 2500 | Timeout: 45s
+
+---
+
+#### GHA_NorthStarDefine Prompt
+
+**Purpose:** Help define and validate appropriate North Star metrics for growth focus.
+
+**Capability Code:** GHA_NORTH_STAR_DEFINE
+
+**Framework:**
+- Value reflection (measures customer value)
+- Leading indicator (predicts future growth)
+- Actionable (teams can influence)
+- Input/output metric hierarchy
+
+**Configuration:** Temperature: 0.3 | Max Tokens: 2000 | Timeout: 30s
+
+---
+
+#### GHA_TacticRecommend Prompt
+
+**Purpose:** Recommend specific, prioritized growth tactics by lifecycle stage.
+
+**Capability Code:** GHA_TACTIC_RECOMMEND
+
+**Tactic Categories:**
+- Acquisition: Content, paid, viral, partnerships, PLG
+- Activation: Onboarding, personalization, value acceleration
+- Retention: Engagement loops, feature education, community
+- Referral: Incentive programs, viral mechanics, advocacy
+- Revenue: Pricing, expansion, conversion optimization
+
+**Configuration:** Temperature: 0.3 | Max Tokens: 2500 | Timeout: 45s
+
+---
+
+#### GHA_PsychologyApply Prompt
+
+**Purpose:** Apply psychological principles and behavioral design to growth mechanics.
+
+**Capability Code:** GHA_PSYCHOLOGY_APPLY
+
+**Frameworks Applied:**
+- Hook Model (Trigger, Action, Variable Reward, Investment)
+- Fogg Behavior Model (B = MAP)
+- Cognitive biases (loss aversion, social proof, scarcity)
+- Habit formation principles
+
+**Configuration:** Temperature: 0.3 | Max Tokens: 2500 | Timeout: 45s
+
+---
+
+#### GHA_CompetitorGrowth Prompt
+
+**Purpose:** Analyze competitor growth strategies with fintech/neobank focus.
+
+**Capability Code:** GHA_COMPETITOR_GROWTH
+
+**Analysis Areas:**
+- Growth model identification (paid, viral, content, PLG)
+- AARRR analysis by competitor
+- Fintech-specific patterns (referral bonuses, gamification, rewards)
+- Differentiation opportunities
+
+**Configuration:** Temperature: 0.3 | Max Tokens: 3000 | Timeout: 60s
+
+---
+
+#### GHA_ExperimentDesign Prompt
+
+**Purpose:** Design rigorous growth experiments with hypothesis and success criteria.
+
+**Capability Code:** GHA_EXPERIMENT_DESIGN
+
+**Design Components:**
+- Hypothesis formulation (falsifiable, measurable)
+- Experiment type selection (A/B, cohort, holdout, painted door)
+- Sample size calculation and duration
+- Metric hierarchy (primary, secondary, guardrail)
+- Decision criteria (ship, iterate, kill)
+
+**Configuration:** Temperature: 0.3 | Max Tokens: 2500 | Timeout: 45s
+
+---
+
+#### GHA_GrowthProject Prompt
+
+**Purpose:** Project growth outcomes by AARRR stage with scenario analysis.
+
+**Capability Code:** GHA_GROWTH_PROJECT
+
+**Projection Components:**
+- Baseline projections (without changes)
+- Tactic impact modeling (optimistic/base/pessimistic)
+- Compounding effects between stages
+- North Star metric trajectory
+- Investment requirements and ROI
+
+**Configuration:** Temperature: 0.2 | Max Tokens: 3000 | Timeout: 45s
+
+---
+
+#### GHA_GrowthSynthesize Prompt
+
+**Purpose:** Synthesize specialist contributions into unified growth strategy.
+
+**Capability Code:** GHA_GROWTH_SYNTHESIZE
+
+**Synthesis Components:**
+- Integration of ANL (projections), AUD (segments), CHA (channels)
+- Unified narrative creation
+- Conflict resolution between specialists
+- Confidence aggregation
+- Handoff context for MPA/CA domains
+
+**Configuration:** Temperature: 0.4 | Max Tokens: 4000 | Timeout: 60s
 
 ---
 

@@ -174,11 +174,11 @@ workflow, step, gate, help            â†' ORC (self)
 
 | File | Purpose | Size |
 |------|---------|------|
-| ANL_KB_Analytics_Core_v1.txt | Core methodology, principles | ~25K chars |
-| ANL_KB_MMM_Methods_v1.txt | Media Mix Modeling methodology | ~20K chars |
-| ANL_KB_Bayesian_Inference_v1.txt | Bayesian priors, posteriors, uncertainty | ~18K chars |
-| ANL_KB_Causal_Incrementality_v1.txt | Causal ML, lift measurement | ~20K chars |
-| ANL_KB_Budget_Optimization_v1.txt | Marginal returns, response curves | ~22K chars |
+| ANL_KB_Analytics_Core_v7.0.txt | Core methodology, principles | ~25K chars |
+| ANL_KB_MMM_Methods_v7.0.txt | Media Mix Modeling methodology | ~20K chars |
+| ANL_KB_Bayesian_Inference_v7.0.txt | Bayesian priors, posteriors, uncertainty | ~18K chars |
+| ANL_KB_Causal_Incrementality_v7.0.txt | Causal ML, lift measurement | ~20K chars |
+| ANL_KB_Budget_Optimization_v7.0.txt | Marginal returns, response curves | ~22K chars |
 
 ### 3.3 Capabilities
 
@@ -219,11 +219,11 @@ workflow, step, gate, help            â†' ORC (self)
 
 | File | Purpose | Size |
 |------|---------|------|
-| AUD_KB_Audience_Core_v1.txt | Core audience methodology | ~25K chars |
-| AUD_KB_Identity_Resolution_v1.txt | Graph algorithms, entity matching | ~18K chars |
-| AUD_KB_LTV_Modeling_v1.txt | Cohort analysis, survival models | ~20K chars |
-| AUD_KB_Propensity_ML_v1.txt | ML classifiers, scoring | ~18K chars |
-| AUD_KB_Journey_Orchestration_v1.txt | State models, NBA, sequencing | ~22K chars |
+| AUD_KB_Audience_Core_v7.0.txt | Core audience methodology | ~25K chars |
+| AUD_KB_Identity_Resolution_v7.0.txt | Graph algorithms, entity matching | ~18K chars |
+| AUD_KB_LTV_Modeling_v7.0.txt | Cohort analysis, survival models | ~20K chars |
+| AUD_KB_Propensity_ML_v7.0.txt | ML classifiers, scoring | ~18K chars |
+| AUD_KB_Journey_Orchestration_v7.0.txt | State models, NBA, sequencing | ~22K chars |
 
 ### 4.3 Capabilities
 
@@ -263,10 +263,10 @@ workflow, step, gate, help            â†' ORC (self)
 
 | File | Purpose | Size |
 |------|---------|------|
-| CHA_KB_Channel_Core_v1.txt | Core channel methodology | ~25K chars |
-| CHA_KB_Allocation_Methods_v1.txt | Budget distribution approaches | ~18K chars |
-| CHA_KB_Emerging_Channels_v1.txt | AI advertising, retail media, CTV | ~20K chars |
-| CHA_KB_Brand_Performance_v1.txt | Funnel balance, brand vs. activation | ~18K chars |
+| CHA_KB_Channel_Core_v7.0.txt | Core channel methodology | ~25K chars |
+| CHA_KB_Allocation_Methods_v7.0.txt | Budget distribution approaches | ~18K chars |
+| CHA_KB_Emerging_Channels_v7.0.txt | AI advertising, retail media, CTV | ~20K chars |
+| CHA_KB_Brand_Performance_v7.0.txt | Funnel balance, brand vs. activation | ~18K chars |
 
 ### 5.3 Capabilities
 
@@ -303,9 +303,9 @@ workflow, step, gate, help            â†' ORC (self)
 
 | File | Purpose | Size |
 |------|---------|------|
-| SPO_KB_Supply_Core_v1.txt | Core SPO methodology | ~25K chars |
-| SPO_KB_Fee_Analysis_v1.txt | Fee waterfall, DSP/SSP breakdown | ~20K chars |
-| SPO_KB_Partner_Evaluation_v1.txt | Vendor assessment, NBI calculation | ~18K chars |
+| SPO_KB_Supply_Core_v7.0.txt | Core SPO methodology | ~25K chars |
+| SPO_KB_Fee_Analysis_v7.0.txt | Fee waterfall, DSP/SSP breakdown | ~20K chars |
+| SPO_KB_Partner_Evaluation_v7.0.txt | Vendor assessment, NBI calculation | ~18K chars |
 
 ### 6.3 Capabilities
 
@@ -342,8 +342,8 @@ workflow, step, gate, help            â†' ORC (self)
 
 | File | Purpose | Size |
 |------|---------|------|
-| DOC_KB_Document_Core_v1.txt | Core document methodology | ~25K chars |
-| DOC_KB_Export_Formats_v1.txt | DOCX/PDF/PPTX specifications | ~15K chars |
+| DOC_KB_Document_Core_v7.0.txt | Core document methodology | ~25K chars |
+| DOC_KB_Export_Formats_v7.0.txt | DOCX/PDF/PPTX specifications | ~15K chars |
 
 ### 7.3 Capabilities
 
@@ -382,10 +382,10 @@ workflow, step, gate, help            â†' ORC (self)
 
 | File | Purpose | Size |
 |------|---------|------|
-| PRF_KB_Performance_Core_v1.txt | Core performance methodology | ~25K chars |
-| PRF_KB_Attribution_Methods_v1.txt | MTA, Shapley, path analysis | ~20K chars |
-| PRF_KB_Incrementality_Testing_v1.txt | Geo tests, holdouts | ~18K chars |
-| PRF_KB_Anomaly_Detection_v1.txt | Statistical methods, ML detection | ~18K chars |
+| PRF_KB_Performance_Core_v7.0.txt | Core performance methodology | ~25K chars |
+| PRF_KB_Attribution_Methods_v7.0.txt | MTA, Shapley, path analysis | ~20K chars |
+| PRF_KB_Incrementality_Testing_v7.0.txt | Geo tests, holdouts | ~18K chars |
+| PRF_KB_Anomaly_Detection_v7.0.txt | Statistical methods, ML detection | ~18K chars |
 
 ### 8.3 Capabilities
 
@@ -424,10 +424,10 @@ workflow, step, gate, help            â†' ORC (self)
 
 | File | Purpose | Size |
 |------|---------|------|
-| CST_KB_Consulting_Core_v1.txt | Core consulting methodology | ~25K chars |
-| CST_KB_Strategic_Frameworks_v1.txt | Porter's, McKinsey, BCG, etc. | ~22K chars |
-| CST_KB_Prioritization_Methods_v1.txt | RICE, weighted matrix, MoSCoW | ~18K chars |
-| CST_KB_Industry_Context_v1.txt | Industry-specific guidance | ~15K chars |
+| CST_KB_Consulting_Core_v7.0.txt | Core consulting methodology | ~25K chars |
+| CST_KB_Strategic_Frameworks_v7.0.txt | Porter's, McKinsey, BCG, etc. | ~22K chars |
+| CST_KB_Prioritization_Methods_v7.0.txt | RICE, weighted matrix, MoSCoW | ~18K chars |
+| CST_KB_Industry_Context_v7.0.txt | Industry-specific guidance | ~15K chars |
 
 ### 9.3 Capabilities
 
@@ -468,9 +468,9 @@ workflow, step, gate, help            â†' ORC (self)
 
 | File | Purpose | Size |
 |------|---------|------|
-| CHG_KB_Change_Core_v1.txt | Core change methodology | ~25K chars |
-| CHG_KB_Stakeholder_Methods_v1.txt | Stakeholder mapping and engagement | ~18K chars |
-| CHG_KB_Adoption_Planning_v1.txt | Adoption planning and measurement | ~18K chars |
+| CHG_KB_Change_Core_v7.0.txt | Core change methodology | ~25K chars |
+| CHG_KB_Stakeholder_Methods_v7.0.txt | Stakeholder mapping and engagement | ~18K chars |
+| CHG_KB_Adoption_Planning_v7.0.txt | Adoption planning and measurement | ~18K chars |
 
 ### 10.3 Capabilities
 
@@ -508,10 +508,10 @@ workflow, step, gate, help            â†' ORC (self)
 
 | File | Purpose | Size |
 |------|---------|------|
-| CA_KB_Analysis_Core_v1.txt | Core analysis methodology | ~25K chars |
-| CA_KB_Business_Case_v1.txt | Business case development | ~20K chars |
-| CA_KB_Financial_Analysis_v1.txt | Financial modeling guidance | ~18K chars |
-| CA_KB_Recommendation_v1.txt | Recommendation formulation | ~15K chars |
+| CA_KB_Analysis_Core_v7.0.txt | Core analysis methodology | ~25K chars |
+| CA_KB_Business_Case_v7.0.txt | Business case development | ~20K chars |
+| CA_KB_Financial_Analysis_v7.0.txt | Financial modeling guidance | ~18K chars |
+| CA_KB_Recommendation_v7.0.txt | Recommendation formulation | ~15K chars |
 
 ### 11.3 Capabilities
 
@@ -551,16 +551,16 @@ workflow, step, gate, help            â†' ORC (self)
 
 | File | Purpose | Size |
 |------|---------|------|
-| GHA_KB_Growth_Core_v1.txt | Core growth methodology, AARRR framework | ~25K chars |
-| GHA_KB_Specialist_Requests_v1.txt | When/how to request specialist assistance | ~15K chars |
-| GHA_KB_Growth_Workflows_v1.txt | Growth workflow definition, gates | ~18K chars |
-| GHA_KB_Behavioral_Psychology_v1.txt | Hook Model, Fogg Model, cognitive biases | ~20K chars |
-| GHA_KB_Fintech_Growth_v1.txt | Fintech/neobank growth strategies | ~22K chars |
-| GHA_KB_Experiment_Design_v1.txt | A/B testing, cohort analysis methods | ~18K chars |
-| GHA_KB_Growth_Metrics_v1.txt | North Star metrics, growth KPIs | ~15K chars |
-| GHA_KB_Referral_Programs_v1.txt | Viral mechanics, referral design | ~18K chars |
-| GHA_KB_Lifecycle_Tactics_v1.txt | Stage-specific tactics library | ~20K chars |
-| GHA_KB_Competitor_Analysis_v1.txt | Competitive growth intelligence | ~15K chars |
+| GHA_KB_Growth_Core_v7.0.txt | Core growth methodology, AARRR framework | ~25K chars |
+| GHA_KB_Specialist_Requests_v7.0.txt | When/how to request specialist assistance | ~15K chars |
+| GHA_KB_Growth_Workflows_v7.0.txt | Growth workflow definition, gates | ~18K chars |
+| GHA_KB_Behavioral_Psychology_v7.0.txt | Hook Model, Fogg Model, cognitive biases | ~20K chars |
+| GHA_KB_Fintech_Growth_v7.0.txt | Fintech/neobank growth strategies | ~22K chars |
+| GHA_KB_Experiment_Design_v7.0.txt | A/B testing, cohort analysis methods | ~18K chars |
+| GHA_KB_Growth_Metrics_v7.0.txt | North Star metrics, growth KPIs | ~15K chars |
+| GHA_KB_Referral_Programs_v7.0.txt | Viral mechanics, referral design | ~18K chars |
+| GHA_KB_Lifecycle_Tactics_v7.0.txt | Stage-specific tactics library | ~20K chars |
+| GHA_KB_Competitor_Analysis_v7.0.txt | Competitive growth intelligence | ~15K chars |
 
 ### 12.4 Capabilities
 

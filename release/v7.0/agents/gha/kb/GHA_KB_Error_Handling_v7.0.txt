@@ -1,0 +1,167 @@
+GHA ERROR HANDLING v7.0
+VERSION: 7.0
+STATUS: Production Ready
+COMPLIANCE: KDAP v7.0 Agent Standard
+
+------------------------------------------------------------
+
+GRACEFUL DEGRADATION LEVELS
+
+GHA implements 3-level graceful degradation aligned with ORC patterns. When specialist agents are unavailable, GHA degrades gracefully while maintaining user value.
+
+LEVEL 1 - RETRY WITH EXTENDED TIMEOUT
+
+- Increase timeout from 15 seconds to 45 seconds
+- Log retry attempt to eap_session_logs with timestamp and context
+- Continue processing if specialist responds within extended window
+- Maximum 2 retry attempts before escalating to Level 2
+
+LEVEL 2 - USE CACHED RESPONSE
+
+- Check eap_growth_state for recent specialist output
+- Apply cached response if less than 24 hours old
+- Disclose cache usage explicitly in response to user
+- Format: Based on cached specialist response from less than 24 hours - recommend fresh validation for critical decisions
+- Update cache timestamp when new responses received
+
+LEVEL 3 - GENERAL GUIDANCE FALLBACK
+
+- Provide framework-based guidance from GHA KB files
+- Mark confidence as VERY LOW in response
+- Recommend manual validation by user
+- State: Specialist unavailable - providing KB-based guidance with limited confidence
+
+------------------------------------------------------------
+
+SPECIALIST FALLBACK MATRIX
+
+ANL UNAVAILABLE
+
+When ANL is unavailable for projections or calculations:
+- Provide growth estimate using GHA_KB_Competitor_Benchmarks
+- Apply industry benchmark ranges instead of custom projection
+- State: Based on industry benchmarks, not custom projection - recommend ANL validation when available
+- Confidence: VERY LOW
+- Recommend specific ANL request for user to retry later
+
+AUD UNAVAILABLE
+
+When AUD is unavailable for segmentation:
+- Use standard AARRR lifecycle segments from GHA_KB_Growth_Workflows
+- Apply general persona archetypes from behavioral psychology
+- State: Using generalized lifecycle segments - recommend AUD segmentation for precision targeting
+- Confidence: LOW
+- Provide segment definitions from KB for user reference
+
+CHA UNAVAILABLE
+
+When CHA is unavailable for channel recommendations:
+- Recommend channels from GHA_KB_Growth_Channels taxonomy
+- Apply framework-based selection criteria
+- State: Framework-based recommendation, not data-driven optimization - recommend CHA analysis when available
+- Confidence: LOW
+- Include channel selection rationale from KB
+
+DOC UNAVAILABLE
+
+When DOC is unavailable for documentation:
+- Output structured text directly in response
+- Format using GHA growth plan template structure
+- State: Manual formatting recommended for final deliverable
+- Confidence: MEDIUM
+- Provide exportable text format
+
+------------------------------------------------------------
+
+ERROR CATEGORIES
+
+SPECIALIST_UNAVAILABLE
+
+Definition: Agent does not respond within initial timeout window
+Detection: No response received after 15 second timeout
+Recovery: Execute Level 1 retry with extended timeout
+
+SPECIALIST_TIMEOUT
+
+Definition: Agent response exceeds extended threshold
+Detection: No response after 45 second extended timeout
+Recovery: Execute Level 2 cache lookup
+
+SPECIALIST_ERROR
+
+Definition: Agent returns error response or malformed output
+Detection: Response contains error codes or invalid format
+Recovery: Log error details then execute Level 2 or Level 3
+
+ROUTING_FAILURE
+
+Definition: Cannot determine appropriate specialist agent
+Detection: Intent classification confidence below 40 percent
+Recovery: Ask user clarifying question or provide general guidance
+
+------------------------------------------------------------
+
+ERROR RECOVERY WORKFLOW
+
+STEP 1 - DETECT FAILURE
+
+Identify error category based on response characteristics
+Log error type and context to session
+
+STEP 2 - LOG ERROR CONTEXT
+
+Record: timestamp, specialist requested, error category, user query context
+Store in eap_session_logs for pattern analysis
+
+STEP 3 - ATTEMPT LEVEL 1
+
+If first failure: retry with extended 45 second timeout
+If retry succeeds: continue normal processing
+If retry fails: proceed to Level 2
+
+STEP 4 - ATTEMPT LEVEL 2
+
+Check eap_growth_state for cached specialist response
+If cache hit less than 24 hours: apply cached response with disclosure
+If cache miss or stale: proceed to Level 3
+
+STEP 5 - EXECUTE LEVEL 3
+
+Provide KB-based guidance with VERY LOW confidence
+Recommend user retry specialist request later
+Complete response with available information
+
+STEP 6 - DISCLOSE DEGRADATION
+
+Always inform user of degradation level in response
+Provide specific recommendation for obtaining full-confidence answer
+
+------------------------------------------------------------
+
+DISCLOSURE TEMPLATES
+
+LEVEL 1 DISCLOSURE
+
+Specialist response delayed - retrying with extended timeout. Please wait.
+
+LEVEL 2 DISCLOSURE
+
+Specialist currently unavailable. Applying cached response from less than 24 hours ago. For critical decisions recommend requesting fresh specialist analysis.
+
+LEVEL 3 DISCLOSURE
+
+Specialist unavailable and no recent cache available. Providing framework-based guidance with limited confidence. This answer uses general patterns from GHA knowledge base. Recommend specialist consultation for validation.
+
+------------------------------------------------------------
+
+PROACTIVE ERROR PREVENTION
+
+GHA monitors specialist availability patterns to prevent errors:
+- Track specialist response times across sessions
+- Identify degraded specialist performance proactively
+- Suggest alternative approaches when patterns indicate issues
+- Cache frequently requested specialist outputs preemptively
+
+------------------------------------------------------------
+
+END OF GHA ERROR HANDLING v7.0

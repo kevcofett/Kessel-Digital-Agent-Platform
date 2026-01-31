@@ -425,55 +425,55 @@ All capabilities are registered in the `eap_capability` Dataverse table:
 SHAREPOINT: /sites/MCMAP/Shared Documents/Knowledge Base/
 
 â”œâ”€â”€ instructions/                    # Agent instruction files (10 files)
-â”‚   â”œâ”€â”€ ORC_Copilot_Instructions_v1.txt
-â”‚   â”œâ”€â”€ ANL_Copilot_Instructions_v1.txt
-â”‚   â”œâ”€â”€ AUD_Copilot_Instructions_v1.txt
-â”‚   â”œâ”€â”€ CHA_Copilot_Instructions_v1.txt
-â”‚   â”œâ”€â”€ SPO_Copilot_Instructions_v1.txt
-â”‚   â”œâ”€â”€ DOC_Copilot_Instructions_v1.txt
-â”‚   â”œâ”€â”€ PRF_Copilot_Instructions_v1.txt
-â”‚   â”œâ”€â”€ CST_Copilot_Instructions_v1.txt
-â”‚   â”œâ”€â”€ CHG_Copilot_Instructions_v1.txt
-â”‚   â””â”€â”€ CA_Copilot_Instructions_v1.txt
+â”‚   â”œâ”€â”€ ORC_Copilot_Instructions_v7.0.txt
+â”‚   â”œâ”€â”€ ANL_Copilot_Instructions_v7.0.txt
+â”‚   â”œâ”€â”€ AUD_Copilot_Instructions_v7.0.txt
+â”‚   â”œâ”€â”€ CHA_Copilot_Instructions_v7.0.txt
+â”‚   â”œâ”€â”€ SPO_Copilot_Instructions_v7.0.txt
+â”‚   â”œâ”€â”€ DOC_Copilot_Instructions_v7.0.txt
+â”‚   â”œâ”€â”€ PRF_Copilot_Instructions_v7.0.txt
+â”‚   â”œâ”€â”€ CST_Copilot_Instructions_v7.0.txt
+â”‚   â”œâ”€â”€ CHG_Copilot_Instructions_v7.0.txt
+â”‚   â””â”€â”€ CA_Copilot_Instructions_v7.0.txt
 â”‚
 â”œâ”€â”€ core/                            # Core KB files (10 files)
-â”‚   â”œâ”€â”€ ORC_KB_Routing_Logic_v1.txt
-â”‚   â”œâ”€â”€ ANL_KB_Analytics_Core_v1.txt
-â”‚   â”œâ”€â”€ AUD_KB_Audience_Core_v1.txt
-â”‚   â”œâ”€â”€ CHA_KB_Channel_Core_v1.txt
-â”‚   â”œâ”€â”€ SPO_KB_Supply_Core_v1.txt
-â”‚   â”œâ”€â”€ DOC_KB_Document_Core_v1.txt
-â”‚   â”œâ”€â”€ PRF_KB_Performance_Core_v1.txt
-â”‚   â”œâ”€â”€ CST_KB_Consulting_Core_v1.txt
-â”‚   â”œâ”€â”€ CHG_KB_Change_Core_v1.txt
-â”‚   â””â”€â”€ CA_KB_Analysis_Core_v1.txt
+â”‚   â”œâ”€â”€ ORC_KB_Routing_Logic_v7.0.txt
+â”‚   â”œâ”€â”€ ANL_KB_Analytics_Core_v7.0.txt
+â”‚   â”œâ”€â”€ AUD_KB_Audience_Core_v7.0.txt
+â”‚   â”œâ”€â”€ CHA_KB_Channel_Core_v7.0.txt
+â”‚   â”œâ”€â”€ SPO_KB_Supply_Core_v7.0.txt
+â”‚   â”œâ”€â”€ DOC_KB_Document_Core_v7.0.txt
+â”‚   â”œâ”€â”€ PRF_KB_Performance_Core_v7.0.txt
+â”‚   â”œâ”€â”€ CST_KB_Consulting_Core_v7.0.txt
+â”‚   â”œâ”€â”€ CHG_KB_Change_Core_v7.0.txt
+â”‚   â””â”€â”€ CA_KB_Analysis_Core_v7.0.txt
 â”‚
 â”œâ”€â”€ deep-modules/                    # Deep module KB files (17+ files)
-â”‚   â”œâ”€â”€ ANL_KB_MMM_Methods_v1.txt
-â”‚   â”œâ”€â”€ ANL_KB_Bayesian_Inference_v1.txt
-â”‚   â”œâ”€â”€ ANL_KB_Causal_Incrementality_v1.txt
-â”‚   â”œâ”€â”€ ANL_KB_Budget_Optimization_v1.txt
-â”‚   â”œâ”€â”€ AUD_KB_Identity_Resolution_v1.txt
-â”‚   â”œâ”€â”€ AUD_KB_LTV_Modeling_v1.txt
-â”‚   â”œâ”€â”€ AUD_KB_Propensity_ML_v1.txt
-â”‚   â”œâ”€â”€ AUD_KB_Journey_Orchestration_v1.txt
-â”‚   â”œâ”€â”€ CHA_KB_Allocation_Methods_v1.txt
-â”‚   â”œâ”€â”€ CHA_KB_Emerging_Channels_v1.txt
-â”‚   â”œâ”€â”€ CHA_KB_Brand_Performance_v1.txt
-â”‚   â”œâ”€â”€ SPO_KB_Fee_Analysis_v1.txt
-â”‚   â”œâ”€â”€ SPO_KB_Partner_Evaluation_v1.txt
-â”‚   â”œâ”€â”€ PRF_KB_Attribution_Methods_v1.txt
-â”‚   â”œâ”€â”€ PRF_KB_Incrementality_Testing_v1.txt
-â”‚   â”œâ”€â”€ PRF_KB_Anomaly_Detection_v1.txt
-â”‚   â””â”€â”€ DOC_KB_Export_Formats_v1.txt
+â”‚   â”œâ”€â”€ ANL_KB_MMM_Methods_v7.0.txt
+â”‚   â”œâ”€â”€ ANL_KB_Bayesian_Inference_v7.0.txt
+â”‚   â”œâ”€â”€ ANL_KB_Causal_Incrementality_v7.0.txt
+â”‚   â”œâ”€â”€ ANL_KB_Budget_Optimization_v7.0.txt
+â”‚   â”œâ”€â”€ AUD_KB_Identity_Resolution_v7.0.txt
+â”‚   â”œâ”€â”€ AUD_KB_LTV_Modeling_v7.0.txt
+â”‚   â”œâ”€â”€ AUD_KB_Propensity_ML_v7.0.txt
+â”‚   â”œâ”€â”€ AUD_KB_Journey_Orchestration_v7.0.txt
+â”‚   â”œâ”€â”€ CHA_KB_Allocation_Methods_v7.0.txt
+â”‚   â”œâ”€â”€ CHA_KB_Emerging_Channels_v7.0.txt
+â”‚   â”œâ”€â”€ CHA_KB_Brand_Performance_v7.0.txt
+â”‚   â”œâ”€â”€ SPO_KB_Fee_Analysis_v7.0.txt
+â”‚   â”œâ”€â”€ SPO_KB_Partner_Evaluation_v7.0.txt
+â”‚   â”œâ”€â”€ PRF_KB_Attribution_Methods_v7.0.txt
+â”‚   â”œâ”€â”€ PRF_KB_Incrementality_Testing_v7.0.txt
+â”‚   â”œâ”€â”€ PRF_KB_Anomaly_Detection_v7.0.txt
+â”‚   â””â”€â”€ DOC_KB_Export_Formats_v7.0.txt
 â”‚
 â””â”€â”€ shared/                          # EAP shared KB files (6 files)
-    â”œâ”€â”€ EAP_KB_Data_Provenance_v1.txt
-    â”œâ”€â”€ EAP_KB_Confidence_Levels_v1.txt
-    â”œâ”€â”€ EAP_KB_Error_Handling_v1.txt
-    â”œâ”€â”€ EAP_KB_Formatting_Standards_v1.txt
-    â”œâ”€â”€ EAP_KB_Strategic_Principles_v1.txt
-    â””â”€â”€ EAP_KB_Communication_Contract_v1.txt
+    â”œâ”€â”€ EAP_KB_Data_Provenance_v7.0.txt
+    â”œâ”€â”€ EAP_KB_Confidence_Levels_v7.0.txt
+    â”œâ”€â”€ EAP_KB_Error_Handling_v7.0.txt
+    â”œâ”€â”€ EAP_KB_Formatting_Standards_v7.0.txt
+    â”œâ”€â”€ EAP_KB_Strategic_Principles_v7.0.txt
+    â””â”€â”€ EAP_KB_Communication_Contract_v7.0.txt
 ```
 
 ### 6.2 KB File Specifications

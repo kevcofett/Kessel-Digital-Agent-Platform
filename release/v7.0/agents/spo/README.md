@@ -14,9 +14,9 @@ Analyzes programmatic supply paths, calculates net bid impressions (NBI), and ev
 ## Knowledge Base Files
 | File | Description | Size |
 |------|-------------|------|
-| SPO_KB_NBI_Calculation_v1.txt | NBI formulas and working media calculations | 10,695 chars |
-| SPO_KB_Fee_Analysis_v1.txt | Fee structures across programmatic stack | 11,631 chars |
-| SPO_KB_Partner_Evaluation_v1.txt | DSP/SSP evaluation criteria | 12,800 chars |
+| SPO_KB_NBI_Calculation_v7.0.txt | NBI formulas and working media calculations | 10,695 chars |
+| SPO_KB_Fee_Analysis_v7.0.txt | Fee structures across programmatic stack | 11,631 chars |
+| SPO_KB_Partner_Evaluation_v7.0.txt | DSP/SSP evaluation criteria | 12,800 chars |
 
 ## Flows
 - CalculateNBI: Computes net bid impression from gross CPM

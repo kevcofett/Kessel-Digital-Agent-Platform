@@ -14,10 +14,10 @@ Handles customer segmentation, lifetime value modeling, and targeting strategy. 
 ## Knowledge Base Files
 | File | Description | Size |
 |------|-------------|------|
-| AUD_KB_Segmentation_Methods_v1.txt | RFM, behavioral, and value-based segmentation | 9,946 chars |
-| AUD_KB_LTV_Models_v1.txt | LTV calculation methodologies | 10,271 chars |
-| AUD_KB_Targeting_Strategy_v1.txt | Audience targeting best practices | 9,253 chars |
-| AUD_KB_First_Party_Data_v1.txt | CDP, clean rooms, privacy compliance | 11,214 chars |
+| AUD_KB_Segmentation_Methods_v7.0.txt | RFM, behavioral, and value-based segmentation | 9,946 chars |
+| AUD_KB_LTV_Models_v7.0.txt | LTV calculation methodologies | 10,271 chars |
+| AUD_KB_Targeting_Strategy_v7.0.txt | Audience targeting best practices | 9,253 chars |
+| AUD_KB_First_Party_Data_v7.0.txt | CDP, clean rooms, privacy compliance | 11,214 chars |
 
 ## Flows
 - SegmentAudience: Applies segmentation methodology to customer data

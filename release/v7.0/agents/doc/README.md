@@ -14,9 +14,9 @@ Generates formatted documents, exports, and reports from media planning data. Ha
 ## Knowledge Base Files
 | File | Description | Size |
 |------|-------------|------|
-| DOC_KB_Template_Library_v1.txt | Available templates and structure definitions | 11,919 chars |
-| DOC_KB_Formatting_Rules_v1.txt | Formatting standards and style guides | 8,028 chars |
-| DOC_KB_Export_Specifications_v1.txt | File format specifications and requirements | 6,795 chars |
+| DOC_KB_Template_Library_v7.0.txt | Available templates and structure definitions | 11,919 chars |
+| DOC_KB_Formatting_Rules_v7.0.txt | Formatting standards and style guides | 8,028 chars |
+| DOC_KB_Export_Specifications_v7.0.txt | File format specifications and requirements | 6,795 chars |
 
 ## Flows
 - GenerateDocument: Creates formatted document from plan data

@@ -85,9 +85,9 @@ Creates comprehensive adoption and rollout plans. Includes phased approach, trai
 
 | File | Size | Description |
 |------|------|-------------|
-| CHG_KB_Change_Core_v1.txt | ~20K | Kotter, ADKAR, Lewin, Bridges, McKinsey 7-S |
-| CHG_KB_Stakeholder_Methods_v1.txt | ~17K | Power/Interest grid, RACI, resistance management |
-| CHG_KB_Adoption_Planning_v1.txt | ~18K | Rollout strategy, training, sustainment, metrics |
+| CHG_KB_Change_Core_v7.0.txt | ~20K | Kotter, ADKAR, Lewin, Bridges, McKinsey 7-S |
+| CHG_KB_Stakeholder_Methods_v7.0.txt | ~17K | Power/Interest grid, RACI, resistance management |
+| CHG_KB_Adoption_Planning_v7.0.txt | ~18K | Rollout strategy, training, sustainment, metrics |
 
 ## Change Management Models
 

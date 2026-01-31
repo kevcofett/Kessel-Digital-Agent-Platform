@@ -21,16 +21,19 @@ Orchestrates growth strategy development using AARRR lifecycle optimization, beh
 
 | File | Description | Size |
 |------|-------------|------|
-| GHA_KB_Growth_Workflows_v1.txt | 8-step workflow, 4 gates | ~10KB |
-| GHA_KB_Specialist_Requests_v1.txt | Specialist coordination via ORC | ~7KB |
-| GHA_KB_Frameworks_v1.txt | 32 growth frameworks | ~10KB |
-| GHA_KB_Behavioral_Psychology_v1.txt | Psychological principles | ~3KB |
-| GHA_KB_Growth_Channels_v1.txt | Growth channel taxonomy | ~3KB |
-| GHA_KB_Competitor_Benchmarks_v1.txt | Benchmark data | ~5KB |
-| GHA_KB_Growth_KPIs_v1.txt | KPI definitions | ~1KB |
-| GHA_KB_Fintech_Cases_v1.txt | Credit card/fintech cases | ~10KB |
-| GHA_KB_Growth_Architecture_v1.txt | Architecture patterns | ~11KB |
-| GHA_KB_Campaign_Patterns_v1.txt | Campaign structures | ~2KB |
+| GHA_KB_Growth_Workflows_v7.0.txt | 8-step workflow, 4 gates | ~10KB |
+| GHA_KB_Specialist_Requests_v7.0.txt | Specialist coordination via ORC | ~7KB |
+| GHA_KB_Frameworks_v7.0.txt | 32 growth frameworks | ~10KB |
+| GHA_KB_Behavioral_Psychology_v7.0.txt | Psychological principles | ~3KB |
+| GHA_KB_Growth_Channels_v7.0.txt | Growth channel taxonomy | ~3KB |
+| GHA_KB_Competitor_Benchmarks_v7.0.txt | Benchmark data | ~5KB |
+| GHA_KB_Growth_KPIs_v7.0.txt | KPI definitions | ~1KB |
+| GHA_KB_Fintech_Cases_v7.0.txt | Credit card/fintech cases | ~10KB |
+| GHA_KB_Growth_Architecture_v7.0.txt | Architecture patterns | ~11KB |
+| GHA_KB_Campaign_Patterns_v7.0.txt | Campaign structures | ~2KB |
+| GHA_KB_Error_Handling_v7.0.txt | Graceful failover patterns | ~4KB |
+| GHA_KB_Learning_Extraction_v7.0.txt | Self-referential learning | ~5KB |
+| GHA_KB_Proactive_Intelligence_v7.0.txt | Proactive triggers | ~4KB |
 
 ## Flows
 
@@ -74,6 +77,6 @@ growth strategy, growth marketing, AARRR, lifecycle, acquisition, activation, re
 
 ## Version History
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0 | January 2026 | Initial KDAP v7.0 release with standardized naming |
+| Version | Date         | Changes                                                           |
+|---------|--------------|-------------------------------------------------------------------|
+| 7.0     | January 2026 | KDAP v7.0 release with standardized naming, enhanced capabilities |

@@ -14,9 +14,9 @@ Analyzes campaign performance, detects anomalies, and extracts learnings. Provid
 ## Knowledge Base Files
 | File | Description | Size |
 |------|-------------|------|
-| PRF_KB_Optimization_Triggers_v1.txt | Threshold-based optimization rules | 14,174 chars |
-| PRF_KB_Anomaly_Detection_v1.txt | Statistical anomaly detection methods | 13,062 chars |
-| PRF_KB_Learning_Extraction_v1.txt | Post-mortem analysis and insight capture | 13,044 chars |
+| PRF_KB_Optimization_Triggers_v7.0.txt | Threshold-based optimization rules | 14,174 chars |
+| PRF_KB_Anomaly_Detection_v7.0.txt | Statistical anomaly detection methods | 13,062 chars |
+| PRF_KB_Learning_Extraction_v7.0.txt | Post-mortem analysis and insight capture | 13,044 chars |
 
 ## Flows
 - AnalyzePerformance: Compares metrics to benchmarks and targets

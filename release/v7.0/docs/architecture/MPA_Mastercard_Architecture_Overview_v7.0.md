@@ -1058,8 +1058,8 @@ When deployed to Mastercard environment:
 
 | Document | Location |
 |----------|----------|
-| Dataverse Schema | `release/v6.0/docs/architecture/MPA_v6_Dataverse_Schema.md` |
-| AI Builder Prompts | `release/v6.0/docs/architecture/MPA_v6_AI_Builder_Prompts.md` |
+| Dataverse Schema | `release/v6.0/docs/architecture/MPA_Dataverse_Schema_v7.0.md` |
+| AI Builder Prompts | `release/v6.0/docs/architecture/MPA_AI_Builder_Prompts_v7.0.md` |
 | Deployment Instructions | `release/v6.0/docs/VSCODE_DEPLOYMENT_INSTRUCTIONS.md` |
 | Conversational Topic Guide | `docs/MPA_v7_Conversational_Topic_Guide.md` |
 | Manual Deployment Plan | `release/v6.0/docs/MASTERCARD_MANUAL_DEPLOYMENT_PLAN.md` |

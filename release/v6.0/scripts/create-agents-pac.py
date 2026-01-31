@@ -45,7 +45,7 @@ BASE_TEMPLATE = {
 AGENTS = [
     {
         "code": "ANL",
-        "schemaName": "mpa_v6_analytics_agent",
+        "schemaName": "mpa_analytics_agent",
         "displayName": "MPA v6 Analytics Agent",
         "description": "Handles budget projections, scenario analysis, marginal returns, statistical calculations, and financial modeling for media planning.",
         "instructions": """You are the Analytics Agent (ANL) for the Media Planning Agent platform. You specialize in quantitative analysis, budget optimization, statistical methods, and performance forecasting.
@@ -97,7 +97,7 @@ BEHAVIORAL GUIDELINES
     },
     {
         "code": "AUD",
-        "schemaName": "mpa_v6_audience_agent",
+        "schemaName": "mpa_audience_agent",
         "displayName": "MPA v6 Audience Agent",
         "description": "Handles audience segmentation, targeting strategy, LTV modeling, propensity scoring, and customer journey orchestration.",
         "instructions": """You are the Audience Agent (AUD) for the Media Planning Agent platform. You specialize in audience intelligence, segmentation, targeting strategy, and customer journey orchestration.
@@ -139,7 +139,7 @@ BEHAVIORAL GUIDELINES
     },
     {
         "code": "CHA",
-        "schemaName": "mpa_v6_channel_agent",
+        "schemaName": "mpa_channel_agent",
         "displayName": "MPA v6 Channel Agent",
         "description": "Handles channel selection, media mix optimization, budget allocation, and emerging channel evaluation.",
         "instructions": """You are the Channel Agent (CHA) for the Media Planning Agent platform. You specialize in channel strategy, media mix optimization, and emerging channel evaluation.
@@ -177,7 +177,7 @@ BEHAVIORAL GUIDELINES
     },
     {
         "code": "SPO",
-        "schemaName": "mpa_v6_supply_path_agent",
+        "schemaName": "mpa_supply_path_agent",
         "displayName": "MPA v6 Supply Path Agent",
         "description": "Handles programmatic optimization, fee analysis, partner evaluation, and supply path transparency.",
         "instructions": """You are the Supply Path Optimization Agent (SPO) for the Media Planning Agent platform. You specialize in programmatic advertising efficiency, fee transparency, and partner evaluation.
@@ -220,7 +220,7 @@ BEHAVIORAL GUIDELINES
     },
     {
         "code": "DOC",
-        "schemaName": "mpa_v6_document_agent",
+        "schemaName": "mpa_document_agent",
         "displayName": "MPA v6 Document Agent",
         "description": "Generates media planning documents, briefs, reports, and presentation materials.",
         "instructions": """You are the Document Agent (DOC) for the Media Planning Agent platform. You specialize in generating professional media planning documents from session data and user inputs.
@@ -259,7 +259,7 @@ BEHAVIORAL GUIDELINES
     },
     {
         "code": "PRF",
-        "schemaName": "mpa_v6_performance_agent",
+        "schemaName": "mpa_performance_agent",
         "displayName": "MPA v6 Performance Agent",
         "description": "Monitors campaign performance, detects anomalies, analyzes attribution, and recommends optimizations.",
         "instructions": """You are the Performance Agent (PRF) for the Media Planning Agent platform. You specialize in campaign performance monitoring, attribution analysis, and optimization recommendations.
@@ -302,7 +302,7 @@ BEHAVIORAL GUIDELINES
     },
     {
         "code": "CHG",
-        "schemaName": "mpa_v6_change_agent",
+        "schemaName": "mpa_change_agent",
         "displayName": "MPA v6 Change Agent",
         "description": "Assesses organizational change readiness, maps stakeholders, and plans adoption strategies.",
         "instructions": """You are the Change Management Agent (CHG) for the Media Planning Agent platform. You help organizations navigate change, assess readiness, manage stakeholders, and plan successful adoption.
@@ -356,7 +356,7 @@ BEHAVIORAL GUIDELINES
     },
     {
         "code": "CST",
-        "schemaName": "mpa_v6_strategy_agent",
+        "schemaName": "mpa_strategy_agent",
         "displayName": "MPA v6 Strategy Agent",
         "description": "Guides strategic consulting engagements, recommends frameworks, and prioritizes initiatives using RICE, MoSCoW, and weighted matrices.",
         "instructions": """You are the Consulting Strategy Agent (CST) for the Media Planning Agent platform. You guide users through strategic consulting engagements, recommend analytical frameworks, and help prioritize initiatives.
@@ -408,7 +408,7 @@ BEHAVIORAL GUIDELINES
     },
     {
         "code": "MKT",
-        "schemaName": "mpa_v6_marketing_agent",
+        "schemaName": "mpa_marketing_agent",
         "displayName": "MPA v6 Marketing Agent",
         "description": "Creates marketing briefs, analyzes competitive landscape, and develops marketing strategies.",
         "instructions": """You are the Marketing Agent (MKT) for the Media Planning Agent platform. You specialize in marketing strategy, competitive analysis, and brief development.

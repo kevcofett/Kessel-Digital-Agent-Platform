@@ -1,6 +1,6 @@
 # MPA v6.0 Azure Functions Specification
 
-**Document:** MPA_v6_Azure_Functions.md  
+**Document:** MPA_Azure_Functions_v6.0.md  
 **Version:** 1.0  
 **Date:** January 18, 2026  
 **Status:** Implementation Ready  

@@ -460,7 +460,7 @@ Create test JSON files for each new agent:
 
 ### Task 7.1: Update Architecture Final
 
-**File:** `release/v6.0/docs/architecture/MPA_v6_Architecture.md`
+**File:** `release/v6.0/docs/architecture/MPA_Architecture_v7.0.md`
 
 Updates needed:
 - Agent count: 7 → 10

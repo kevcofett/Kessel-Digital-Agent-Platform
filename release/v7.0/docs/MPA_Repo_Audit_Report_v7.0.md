@@ -189,11 +189,11 @@ CHG, CST, and MKT agents have NO Power Automate flows defined.
 
 | Document | Size | Purpose |
 |----------|------|---------|
-| MPA_v6_Architecture.md | 88KB | Authoritative architecture |
-| MPA_v6_Dataverse_Schema.md | 54KB | Schema definitions |
-| MPA_v6_AI_Builder_Prompts.md | 58KB | AI Builder prompts |
-| MPA_v6_Azure_Functions.md | 82KB | Azure Functions spec |
-| MPA_v6_CA_Framework_Expansion.md | 30KB | CA expansion plan |
+| MPA_Architecture_v7.0.md | 88KB | Authoritative architecture |
+| MPA_Dataverse_Schema_v7.0.md | 54KB | Schema definitions |
+| MPA_AI_Builder_Prompts_v7.0.md | 58KB | AI Builder prompts |
+| MPA_Azure_Functions_v7.0.md | 82KB | Azure Functions spec |
+| MPA_CA_Framework_Expansion_v7.0.md | 30KB | CA expansion plan |
 | MPA_v6_Integrated_Model_Expansion.md | 33KB | Model expansion |
 | MPA_v6_Architecture_Pivot_v2.md | 24KB | Superseded pivot |
 | MPA_v6_Unified_Build_Plan.md | 52KB | Build plan |

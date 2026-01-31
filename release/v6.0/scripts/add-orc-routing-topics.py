@@ -30,7 +30,7 @@ ROUTING_TOPICS = [
             "forecast performance",
             "compare scenarios"
         ],
-        "targetAgent": "mpa_v6_analytics_agent",
+        "targetAgent": "mpa_analytics_agent",
         "targetAgentName": "MPA v6 Analytics Agent"
     },
     {
@@ -50,7 +50,7 @@ ROUTING_TOPICS = [
             "build segments",
             "prioritize audiences"
         ],
-        "targetAgent": "mpa_v6_audience_agent",
+        "targetAgent": "mpa_audience_agent",
         "targetAgentName": "MPA v6 Audience Agent"
     },
     {
@@ -70,7 +70,7 @@ ROUTING_TOPICS = [
             "channel recommendations",
             "optimize channels"
         ],
-        "targetAgent": "mpa_v6_channel_agent",
+        "targetAgent": "mpa_channel_agent",
         "targetAgentName": "MPA v6 Channel Agent"
     },
     {
@@ -90,7 +90,7 @@ ROUTING_TOPICS = [
             "supply transparency",
             "DSP evaluation"
         ],
-        "targetAgent": "mpa_v6_supply_path_agent",
+        "targetAgent": "mpa_supply_path_agent",
         "targetAgentName": "MPA v6 Supply Path Agent"
     },
     {
@@ -110,7 +110,7 @@ ROUTING_TOPICS = [
             "export document",
             "create presentation"
         ],
-        "targetAgent": "mpa_v6_document_agent",
+        "targetAgent": "mpa_document_agent",
         "targetAgentName": "MPA v6 Document Agent"
     },
     {
@@ -130,7 +130,7 @@ ROUTING_TOPICS = [
             "performance trends",
             "campaign analysis"
         ],
-        "targetAgent": "mpa_v6_performance_agent",
+        "targetAgent": "mpa_performance_agent",
         "targetAgentName": "MPA v6 Performance Agent"
     },
     {
@@ -150,7 +150,7 @@ ROUTING_TOPICS = [
             "resistance mitigation",
             "change assessment"
         ],
-        "targetAgent": "mpa_v6_change_agent",
+        "targetAgent": "mpa_change_agent",
         "targetAgentName": "MPA v6 Change Agent"
     },
     {
@@ -170,7 +170,7 @@ ROUTING_TOPICS = [
             "strategic consulting",
             "initiative ranking"
         ],
-        "targetAgent": "mpa_v6_strategy_agent",
+        "targetAgent": "mpa_strategy_agent",
         "targetAgentName": "MPA v6 Strategy Agent"
     },
     {
@@ -190,7 +190,7 @@ ROUTING_TOPICS = [
             "marketing recommendations",
             "market positioning"
         ],
-        "targetAgent": "mpa_v6_marketing_agent",
+        "targetAgent": "mpa_marketing_agent",
         "targetAgentName": "MPA v6 Marketing Agent"
     }
 ]

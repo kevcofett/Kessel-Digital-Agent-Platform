@@ -870,7 +870,7 @@ All AI Builder prompts are registered in the eap_prompt table for version contro
 
 ### 9.2 Prompt Specifications
 
-See separate document: **MPA_v6_AI_Builder_Prompts.md**
+See separate document: **MPA_AI_Builder_Prompts_v7.0.md**
 
 ### 9.3 AI Builder Best Practices
 
@@ -899,7 +899,7 @@ See separate document: **MPA_v6_AI_Builder_Prompts.md**
 
 ### 10.2 Function Architecture
 
-See separate document: **MPA_v6_Azure_Functions.md**
+See separate document: **MPA_Azure_Functions_v7.0.md**
 
 ---
 
@@ -1289,10 +1289,10 @@ Kessel-Digital-Agent-Platform/
 â”‚
 â””â”€â”€ docs/
     â”œâ”€â”€ architecture/
-    â”‚   â”œâ”€â”€ MPA_v6_Architecture.md
-    â”‚   â”œâ”€â”€ MPA_v6_Dataverse_Schema.md
-    â”‚   â”œâ”€â”€ MPA_v6_AI_Builder_Prompts.md
-    â”‚   â””â”€â”€ MPA_v6_Azure_Functions.md
+    â”‚   â”œâ”€â”€ MPA_Architecture_v7.0.md
+    â”‚   â”œâ”€â”€ MPA_Dataverse_Schema_v7.0.md
+    â”‚   â”œâ”€â”€ MPA_AI_Builder_Prompts_v7.0.md
+    â”‚   â””â”€â”€ MPA_Azure_Functions_v7.0.md
     â”‚
     â”œâ”€â”€ operations/
     â”‚   â”œâ”€â”€ VSCODE_Instructions.md
@@ -1444,9 +1444,9 @@ Kessel-Digital-Agent-Platform/
 
 ### Appendix B: Related Documents
 
-- MPA_v6_Dataverse_Schema.md - Complete table specifications
-- MPA_v6_AI_Builder_Prompts.md - Detailed prompt specifications
-- MPA_v6_Azure_Functions.md - Function specifications (Personal)
+- MPA_Dataverse_Schema_v7.0.md - Complete table specifications
+- MPA_AI_Builder_Prompts_v7.0.md - Detailed prompt specifications
+- MPA_Azure_Functions_v7.0.md - Function specifications (Personal)
 - VSCODE_Instructions.md - Repository and deployment operations
 - DESKTOP_Instructions.md - Content creation instructions
 

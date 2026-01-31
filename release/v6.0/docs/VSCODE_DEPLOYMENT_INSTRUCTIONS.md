@@ -772,7 +772,7 @@ actions:
 
 ### 5.1 Prompt Inventory
 
-Reference: `docs/architecture/MPA_v6_AI_Builder_Prompts.md`
+Reference: `docs/architecture/MPA_AI_Builder_Prompts_v6.0.md`
 
 | Agent | Prompt Code | Purpose |
 |-------|-------------|---------|

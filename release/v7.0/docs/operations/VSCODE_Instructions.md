@@ -50,10 +50,10 @@ This document provides complete instructions for VS Code Claude to:
 ### 1.3 Document Dependencies
 
 Read these documents before proceeding:
-- **MPA_v6_Architecture.md** - Complete architecture specification
-- **MPA_v6_Dataverse_Schema.md** - Database schema details
-- **MPA_v6_AI_Builder_Prompts.md** - Prompt specifications
-- **MPA_v6_Azure_Functions.md** - Function specifications (Personal only)
+- **MPA_Architecture_v7.0.md** - Complete architecture specification
+- **MPA_Dataverse_Schema_v7.0.md** - Database schema details
+- **MPA_AI_Builder_Prompts_v7.0.md** - Prompt specifications
+- **MPA_Azure_Functions_v7.0.md** - Function specifications (Personal only)
 
 ---
 
@@ -904,7 +904,7 @@ AI Builder Custom Prompts are created in the Power Platform maker portal.
 
 1. Navigate to **AI Builder** > **Explore** > **Custom prompts**
 2. Click **Create custom prompt**
-3. Enter prompt details from MPA_v6_AI_Builder_Prompts.md:
+3. Enter prompt details from MPA_AI_Builder_Prompts_v7.0.md:
    - Name: e.g., `ANL_MarginalReturn_Prompt`
    - Description: From prompt specification
    - System message: From `system_message` field
@@ -981,7 +981,7 @@ cd mpa-functions
 mkdir -p shared anl_functions aud_functions cha_functions spo_functions prf_functions tests
 
 # Copy shared utilities
-# (Files from MPA_v6_Azure_Functions.md)
+# (Files from MPA_Azure_Functions_v7.0.md)
 ```
 
 ### 8.2 Create Function App in Azure

@@ -41,29 +41,29 @@ MCMAP consists of these operational components:
 ### 1.2 Operations Model
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    MCMAP OPERATIONS MODEL                        â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                 â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”         â”‚
-â”‚  â”‚   L1        â”‚    â”‚   L2        â”‚    â”‚   L3        â”‚         â”‚
-â”‚  â”‚  Support    â”‚â”€â”€â”€â–¶â”‚  Support    â”‚â”€â”€â”€â–¶â”‚  Engineeringâ”‚         â”‚
-â”‚  â”‚             â”‚    â”‚             â”‚    â”‚             â”‚         â”‚
-â”‚  â”‚ - Triage    â”‚    â”‚ - Diagnosis â”‚    â”‚ - Root Causeâ”‚         â”‚
-â”‚  â”‚ - Known     â”‚    â”‚ - Config    â”‚    â”‚ - Code Fix  â”‚         â”‚
-â”‚  â”‚   Issues    â”‚    â”‚   Changes   â”‚    â”‚ - Deploy    â”‚         â”‚
-â”‚  â”‚ - User Help â”‚    â”‚ - Restart   â”‚    â”‚ - Architect â”‚         â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜         â”‚
-â”‚        â”‚                  â”‚                  â”‚                  â”‚
-â”‚        â–¼                  â–¼                  â–¼                  â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”   â”‚
-â”‚  â”‚              MONITORING & ALERTING                      â”‚   â”‚
-â”‚  â”‚  - Power Platform Admin Center                          â”‚   â”‚
-â”‚  â”‚  - Dataverse Telemetry Queries                          â”‚   â”‚
-â”‚  â”‚  - Teams Alert Channel                                  â”‚   â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜   â”‚
-â”‚                                                                 â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++-----------------------------------------------------------------+
+|                    MCMAP OPERATIONS MODEL                        |
++-----------------------------------------------------------------+
+|                                                                 |
+|  +-------------+    +-------------+    +-------------+         |
+|  |   L1        |    |   L2        |    |   L3        |         |
+|  |  Support    |----||  Support    |----||  Engineering|         |
+|  |             |    |             |    |             |         |
+|  | - Triage    |    | - Diagnosis |    | - Root Cause|         |
+|  | - Known     |    | - Config    |    | - Code Fix  |         |
+|  |   Issues    |    |   Changes   |    | - Deploy    |         |
+|  | - User Help |    | - Restart   |    | - Architect |         |
+|  +-------------+    +-------------+    +-------------+         |
+|        |                  |                  |                  |
+|        v                  v                  v                  |
+|  +---------------------------------------------------------+   |
+|  |              MONITORING & ALERTING                      |   |
+|  |  - Power Platform Admin Center                          |   |
+|  |  - Dataverse Telemetry Queries                          |   |
+|  |  - Teams Alert Channel                                  |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### 1.3 Operating Hours
@@ -93,31 +93,31 @@ MCMAP consists of these operational components:
 ### 2.1 Monitoring Architecture
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    MONITORING LAYERS                            â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                 â”‚
-â”‚  LAYER 1: Platform Health                                       â”‚
-â”‚  â”œâ”€â”€ Power Platform Admin Center                                â”‚
-â”‚  â”œâ”€â”€ Service Health Dashboard                                   â”‚
-â”‚  â””â”€â”€ Capacity metrics                                           â”‚
-â”‚                                                                 â”‚
-â”‚  LAYER 2: Application Telemetry                                 â”‚
-â”‚  â”œâ”€â”€ eap_telemetry table (custom)                              â”‚
-â”‚  â”œâ”€â”€ Capability success/failure rates                           â”‚
-â”‚  â””â”€â”€ Execution time metrics                                     â”‚
-â”‚                                                                 â”‚
-â”‚  LAYER 3: User Experience                                       â”‚
-â”‚  â”œâ”€â”€ User feedback (thumbs up/down)                            â”‚
-â”‚  â”œâ”€â”€ Session completion rates                                   â”‚
-â”‚  â””â”€â”€ Error rates by user                                        â”‚
-â”‚                                                                 â”‚
-â”‚  LAYER 4: Business Metrics                                      â”‚
-â”‚  â”œâ”€â”€ Daily active users                                         â”‚
-â”‚  â”œâ”€â”€ Capability usage distribution                              â”‚
-â”‚  â””â”€â”€ Document generation volume                                 â”‚
-â”‚                                                                 â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++-----------------------------------------------------------------+
+|                    MONITORING LAYERS                            |
++-----------------------------------------------------------------+
+|                                                                 |
+|  LAYER 1: Platform Health                                       |
+|  +-- Power Platform Admin Center                                |
+|  +-- Service Health Dashboard                                   |
+|  +-- Capacity metrics                                           |
+|                                                                 |
+|  LAYER 2: Application Telemetry                                 |
+|  +-- eap_telemetry table (custom)                              |
+|  +-- Capability success/failure rates                           |
+|  +-- Execution time metrics                                     |
+|                                                                 |
+|  LAYER 3: User Experience                                       |
+|  +-- User feedback (thumbs up/down)                            |
+|  +-- Session completion rates                                   |
+|  +-- Error rates by user                                        |
+|                                                                 |
+|  LAYER 4: Business Metrics                                      |
+|  +-- Daily active users                                         |
+|  +-- Capability usage distribution                              |
+|  +-- Document generation volume                                 |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### 2.2 Key Metrics & Thresholds
@@ -194,7 +194,7 @@ Order By: route_count DESC
 
 **Critical Alert:**
 ```
-ðŸ”´ CRITICAL: MCMAP Platform Alert
+[!] CRITICAL: MCMAP Platform Alert
 
 Metric: Capability Success Rate
 Current: 92.3%
@@ -213,7 +213,7 @@ Runbook: Section 6.2 - AI Builder Failures
 
 **Warning Alert:**
 ```
-ðŸŸ¡ WARNING: MCMAP Performance Degradation
+[*] WARNING: MCMAP Performance Degradation
 
 Metric: Average Response Time
 Current: 6.2 seconds
@@ -254,45 +254,45 @@ Runbook: Section 6.3 - Performance Issues
 ### 3.2 Incident Response Workflow
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                 INCIDENT RESPONSE WORKFLOW                      â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                 â”‚
-â”‚  DETECTION                                                      â”‚
-â”‚  â”œâ”€â”€ Alert triggered OR user report                            â”‚
-â”‚  â””â”€â”€ ServiceNow ticket created                                  â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  TRIAGE (L1 - 15 min)                                          â”‚
-â”‚  â”œâ”€â”€ Classify severity                                          â”‚
-â”‚  â”œâ”€â”€ Check known issues                                         â”‚
-â”‚  â””â”€â”€ Assign to appropriate team                                 â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  DIAGNOSIS (L2 - varies by severity)                           â”‚
-â”‚  â”œâ”€â”€ Review telemetry                                           â”‚
-â”‚  â”œâ”€â”€ Check component health                                     â”‚
-â”‚  â””â”€â”€ Identify affected scope                                    â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  CONTAINMENT                                                    â”‚
-â”‚  â”œâ”€â”€ Isolate affected component if possible                    â”‚
-â”‚  â”œâ”€â”€ Enable fallback mechanisms                                 â”‚
-â”‚  â””â”€â”€ Communicate status to stakeholders                         â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  RESOLUTION                                                     â”‚
-â”‚  â”œâ”€â”€ Apply fix (config change, restart, deploy)                â”‚
-â”‚  â”œâ”€â”€ Verify resolution                                          â”‚
-â”‚  â””â”€â”€ Monitor for recurrence                                     â”‚
-â”‚         â”‚                                                       â”‚
-â”‚         â–¼                                                       â”‚
-â”‚  POST-INCIDENT                                                  â”‚
-â”‚  â”œâ”€â”€ Document root cause                                        â”‚
-â”‚  â”œâ”€â”€ Create follow-up tickets                                   â”‚
-â”‚  â””â”€â”€ Update runbook if needed                                   â”‚
-â”‚                                                                 â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++-----------------------------------------------------------------+
+|                 INCIDENT RESPONSE WORKFLOW                      |
++-----------------------------------------------------------------+
+|                                                                 |
+|  DETECTION                                                      |
+|  +-- Alert triggered OR user report                            |
+|  +-- ServiceNow ticket created                                  |
+|         |                                                       |
+|         v                                                       |
+|  TRIAGE (L1 - 15 min)                                          |
+|  +-- Classify severity                                          |
+|  +-- Check known issues                                         |
+|  +-- Assign to appropriate team                                 |
+|         |                                                       |
+|         v                                                       |
+|  DIAGNOSIS (L2 - varies by severity)                           |
+|  +-- Review telemetry                                           |
+|  +-- Check component health                                     |
+|  +-- Identify affected scope                                    |
+|         |                                                       |
+|         v                                                       |
+|  CONTAINMENT                                                    |
+|  +-- Isolate affected component if possible                    |
+|  +-- Enable fallback mechanisms                                 |
+|  +-- Communicate status to stakeholders                         |
+|         |                                                       |
+|         v                                                       |
+|  RESOLUTION                                                     |
+|  +-- Apply fix (config change, restart, deploy)                |
+|  +-- Verify resolution                                          |
+|  +-- Monitor for recurrence                                     |
+|         |                                                       |
+|         v                                                       |
+|  POST-INCIDENT                                                  |
+|  +-- Document root cause                                        |
+|  +-- Create follow-up tickets                                   |
+|  +-- Update runbook if needed                                   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### 3.3 Incident Communication Template

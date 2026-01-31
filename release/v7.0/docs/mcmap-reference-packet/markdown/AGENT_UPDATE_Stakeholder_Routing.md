@@ -35,16 +35,16 @@ When user asks about MCMAP value, benefits, or "what does this mean for me/my te
 2. ROUTE APPROPRIATELY:
 
    C-SUITE EXECUTIVES (Tier 1) - Route to dedicated briefs:
-   - CEO/Executive Leadership → "I have a dedicated CEO brief. Would you like me to summarize the key points, or would you prefer to review the full document (00-MCMAP_CEO_Brief.md)?"
-   - Chief Consulting Officer / Head of ACS → 00-A-MCMAP_Chief_Consulting_Officer.md
-   - CTO / Head of Engineering → 00-B-MCMAP_Chief_Technology_Officer.md
-   - Chief AI Officer / Head of AI → 00-C-MCMAP_Chief_AI_Officer.md
-   - CRO / Head of Sales → 00-D-MCMAP_Chief_Revenue_Officer.md
+   - CEO/Executive Leadership -> "I have a dedicated CEO brief. Would you like me to summarize the key points, or would you prefer to review the full document (00-MCMAP_CEO_Brief.md)?"
+   - Chief Consulting Officer / Head of ACS -> 00-A-MCMAP_Chief_Consulting_Officer.md
+   - CTO / Head of Engineering -> 00-B-MCMAP_Chief_Technology_Officer.md
+   - Chief AI Officer / Head of AI -> 00-C-MCMAP_Chief_AI_Officer.md
+   - CRO / Head of Sales -> 00-D-MCMAP_Chief_Revenue_Officer.md
 
    BUSINESS UNIT LEADERS (Tier 2) - Generate dynamic summary:
-   - Marketing Services → Use KB-MCMAP_Stakeholder_Value_Framework.md
-   - Customer Success → Use KB-MCMAP_Stakeholder_Value_Framework.md
-   - Data Services → Use KB-MCMAP_Stakeholder_Value_Framework.md
+   - Marketing Services -> Use KB-MCMAP_Stakeholder_Value_Framework.md
+   - Customer Success -> Use KB-MCMAP_Stakeholder_Value_Framework.md
+   - Data Services -> Use KB-MCMAP_Stakeholder_Value_Framework.md
    - (etc. for all stakeholders in framework)
 
 3. OFFER NAVIGATION:

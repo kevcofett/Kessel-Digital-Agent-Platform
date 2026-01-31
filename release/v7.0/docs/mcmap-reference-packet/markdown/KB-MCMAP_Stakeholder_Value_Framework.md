@@ -19,11 +19,11 @@ This framework provides structured value propositions for MCMAP across all Maste
 ### TIER 1: C-SUITE EXECUTIVES
 
 Dedicated briefs available (00-A through 00-D):
-- Chief Executive Officer → 00-MCMAP_CEO_Brief.md
-- Chief Consulting Officer → 00-A-MCMAP_Chief_Consulting_Officer.md
-- Chief Technology Officer → 00-B-MCMAP_Chief_Technology_Officer.md
-- Chief AI Officer → 00-C-MCMAP_Chief_AI_Officer.md
-- Chief Revenue Officer → 00-D-MCMAP_Chief_Revenue_Officer.md
+- Chief Executive Officer -> 00-MCMAP_CEO_Brief.md
+- Chief Consulting Officer -> 00-A-MCMAP_Chief_Consulting_Officer.md
+- Chief Technology Officer -> 00-B-MCMAP_Chief_Technology_Officer.md
+- Chief AI Officer -> 00-C-MCMAP_Chief_AI_Officer.md
+- Chief Revenue Officer -> 00-D-MCMAP_Chief_Revenue_Officer.md
 
 ### TIER 2: BUSINESS UNIT LEADERS
 
@@ -175,7 +175,7 @@ When a stakeholder asks for their perspective, generate a summary using this str
 |------------|--------|
 | Data product positioning | AI-powered recommendations increase attach rates |
 | Benchmark integration | 708+ benchmarks from real campaign performance |
-| Industry context | 15 verticals with channel × KPI benchmarks |
+| Industry context | 15 verticals with channel x KPI benchmarks |
 | SpendingPulse integration | Real-time economic context in recommendations |
 
 **Key Metrics:**

@@ -19,7 +19,7 @@ This document provides requirements and guidelines for external teams integratin
 MCMAP uses a hub-and-spoke architecture where the Orchestrator (ORC) routes user requests to specialist agents based on intent classification:
 
 ```
-User Request → ORC (Orchestrator) → Specialist Agent → Response
+User Request -> ORC (Orchestrator) -> Specialist Agent -> Response
 ```
 
 ### Agent Communication

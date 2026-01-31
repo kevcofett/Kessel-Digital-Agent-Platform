@@ -1,17 +1,18 @@
 # MASTERCARD CONSULTING & MARKETING AGENT PLATFORM (MCMAP)
 # MASTERCARD DEPLOYMENT - AGENT CAPABILITIES REFERENCE
 
-**Document:** 04-MCMAP_Agent_Capabilities.md  
-**Version:** 1.0  
-**Date:** January 23, 2026  
-**Classification:** Mastercard Internal  
-**Status:** Production Ready  
+**Document:** 05-MCMAP_Agent_Capabilities.md
+**Version:** 7.0
+**Date:** January 31, 2026
+**Classification:** Mastercard Internal
+**Status:** Production Ready
 **Audience:** Business Users, Product Owners, Engineering Teams
 
 ---
 
 ## TABLE OF CONTENTS
 
+### Active Internal Agents
 1. [Agent System Overview](#1-agent-system-overview)
 2. [ORC - Orchestrator Agent](#2-orc---orchestrator-agent)
 3. [ANL - Analytics Agent](#3-anl---analytics-agent)
@@ -22,9 +23,20 @@
 8. [PRF - Performance Intelligence Agent](#8-prf---performance-intelligence-agent)
 9. [CST - Consulting Strategy Agent](#9-cst---consulting-strategy-agent)
 10. [CHG - Change Management Agent](#10-chg---change-management-agent)
-11. [CA - Consulting Analysis Agent](#11-ca---consulting-analysis-agent)
-12. [Capability Cross-Reference](#12-capability-cross-reference)
-13. [Usage Examples](#13-usage-examples)
+11. [MKT - Marketing Strategy Agent](#11-mkt---marketing-strategy-agent)
+12. [GHA - Growth Hacking Agent](#12-gha---growth-hacking-agent)
+13. [DOCS - Documentation Assistant Agent](#13-docs---documentation-assistant-agent)
+14. [DVO - DevOps Agent](#14-dvo---devops-agent)
+
+### Pending External Agents
+15. [External Agent Integrations](#15-external-agent-integrations)
+
+### Pending Infrastructure Agents
+16. [DTA - Data Analytics Agent](#16-dta---data-analytics-agent)
+
+### Reference
+17. [Capability Cross-Reference](#17-capability-cross-reference)
+18. [Usage Examples](#18-usage-examples)
 
 ---
 
@@ -61,6 +73,8 @@ MCMAP employs a multi-agent architecture where specialized agents collaborate to
 
 ### 1.2 Agent Inventory Summary
 
+#### Active Internal Agents (13)
+
 | Code | Name | Domain | Primary Function | Capabilities |
 |------|------|--------|------------------|--------------|
 | ORC | Orchestrator | Platform | Intent routing, session management | 2 |
@@ -72,8 +86,32 @@ MCMAP employs a multi-agent architecture where specialized agents collaborate to
 | PRF | Performance | Support | Attribution, anomaly detection | 4 |
 | CST | Consulting | CA | Strategic frameworks, prioritization | 4 |
 | CHG | Change | CA | Adoption planning, stakeholders | 3 |
-| CA | Consulting | CA | Strategic analysis, business cases | 3 |
-| **TOTAL** | | | | **36** |
+| MKT | Marketing | CA | Marketing strategy, go-to-market | 4 |
+| GHA | Growth Hacking | Growth | AARRR funnel, viral mechanics, lifecycle | 5 |
+| DOCS | Documentation | Support | Platform documentation, KB management | 3 |
+| DVO | DevOps | Infrastructure | Deployment orchestration, CI/CD | 4 |
+| **TOTAL ACTIVE** | | | | **49** |
+
+#### Pending External Agents (8)
+
+| Code | Name | Domain | External Team | Status |
+|------|------|--------|---------------|--------|
+| MMM | Media Mix Modeling | Measurement | MMM Team | Pending Integration |
+| MMO | Media Mix Optimization | Optimization | MMO Team | Pending Integration |
+| TAL | Test & Learn | Experimentation | Test & Learn Team | Pending Integration |
+| DYN | Dynamic Yield | Personalization | Dynamic Yield Team | Pending Integration |
+| RMN | Retail Media Networks | Retail Media | MCM Team | Pending Integration |
+| SES | Session M Loyalty | Loyalty | Session M Team | Pending Integration |
+| MEI | MC Economics Institute | Economics Data | MEI Team | Pending Integration |
+| SAL | Sales AI Leads | Sales | Sales AI Team | Pending Integration |
+
+#### Pending Infrastructure Agents (1)
+
+| Code | Name | Domain | Dependency | Status |
+|------|------|--------|------------|--------|
+| DTA | Data Analytics | Analytics | Databricks Workspace | Pending Databricks |
+
+**Platform Total: 22 Agents (13 Active + 8 External Pending + 1 Infrastructure Pending)**
 
 ### 1.3 How to Invoke Agents
 
@@ -89,7 +127,10 @@ Users interact with MCMAP through natural language. The Orchestrator (ORC) autom
 | Performance, attribution | PRF | "Detect anomalies in campaign data" |
 | Frameworks, strategy, analysis | CST | "Apply Porter's Five Forces" |
 | Change, adoption, stakeholders | CHG | "Assess organizational readiness" |
-| Business case, consulting | CA | "Create business case for initiative" |
+| Marketing, go-to-market, positioning | MKT | "Develop go-to-market strategy" |
+| Growth, viral, funnel, AARRR | GHA | "Optimize our activation funnel" |
+| Platform docs, help, KB | DOCS | "How do I use the ANL agent?" |
+| Deploy, CI/CD, infrastructure | DVO | "Deploy the latest release to staging" |
 
 ---
 
@@ -485,16 +526,16 @@ workflow, step, gate, help            â†’ ORC (self)
 
 ---
 
-## 11. CA - CONSULTING ANALYSIS AGENT
+## 11. MKT - MARKETING STRATEGY AGENT
 
 ### 11.1 Agent Profile
 
 | Attribute | Value |
 |-----------|-------|
-| **Code** | CA |
-| **Full Name** | Consulting Analysis Agent |
-| **Domain** | Business Analysis |
-| **Primary Function** | Business case development, strategic analysis |
+| **Code** | MKT |
+| **Full Name** | Marketing Strategy Agent |
+| **Domain** | Consulting & Advisory (CA) |
+| **Primary Function** | Marketing strategy, go-to-market planning, positioning, brand strategy |
 | **Instructions Size** | 8,000 characters |
 | **KB Files** | 1 Core + 3 Deep Modules |
 
@@ -502,24 +543,386 @@ workflow, step, gate, help            â†’ ORC (self)
 
 | File | Purpose | Size |
 |------|---------|------|
-| CA_KB_Analysis_Core_v1.txt | Core analysis methodology | ~25K chars |
-| CA_KB_Business_Case_v1.txt | Business case development | ~20K chars |
-| CA_KB_Financial_Analysis_v1.txt | Financial modeling guidance | ~18K chars |
-| CA_KB_Recommendation_v1.txt | Recommendation formulation | ~15K chars |
+| MKT_KB_Marketing_Core_v1.txt | Core marketing methodology | ~25K chars |
+| MKT_KB_GTM_Strategy_v1.txt | Go-to-market planning | ~20K chars |
+| MKT_KB_Brand_Positioning_v1.txt | Brand and positioning frameworks | ~18K chars |
+| MKT_KB_Competitive_Analysis_v1.txt | Competitive intelligence methods | ~18K chars |
 
 ### 11.3 Capabilities
 
 | Capability Code | Name | Description | Input | Output |
 |-----------------|------|-------------|-------|--------|
-| **CA_BUSINESS_CASE** | Business Case Development | Creates structured business case | initiative, financials | business_case_document |
-| **CA_FINANCIAL_ANALYZE** | Financial Analysis | Performs financial analysis | financial_data | npv, roi, payback, sensitivity |
-| **CA_RECOMMEND** | Recommendation Formulation | Formulates actionable recommendations | analysis_findings | recommendations[], rationale |
+| **MKT_GTM_PLAN** | Go-to-Market Planning | Creates comprehensive GTM strategy | product, market, timeline | gtm_plan, milestones, metrics |
+| **MKT_POSITIONING** | Brand Positioning | Develops brand positioning strategy | brand, competitors, audience | positioning_statement, differentiation |
+| **MKT_COMPETITIVE** | Competitive Analysis | Analyzes competitive landscape | market, competitors[] | competitive_matrix, opportunities |
+| **MKT_CAMPAIGN_STRATEGY** | Campaign Strategy | Develops integrated campaign strategies | objectives, budget, audience | campaign_framework, channel_mix |
+
+### 11.4 Example Queries
+
+| Query | Capability Used | Sample Response |
+|-------|-----------------|-----------------|
+| "Develop a go-to-market strategy for our new product" | MKT_GTM_PLAN | Comprehensive GTM plan with phases |
+| "How should we position against competitors?" | MKT_POSITIONING | Positioning statement with differentiation |
+| "Analyze our competitive landscape" | MKT_COMPETITIVE | Competitive matrix with strategic opportunities |
 
 ---
 
-## 12. CAPABILITY CROSS-REFERENCE
+## 12. GHA - GROWTH HACKING AGENT
 
-### 12.1 Capability by Agent
+### 12.1 Agent Profile
+
+| Attribute | Value |
+|-----------|-------|
+| **Code** | GHA |
+| **Full Name** | Growth Hacking Agent |
+| **Domain** | Growth |
+| **Primary Function** | AARRR funnel optimization, viral mechanics, lifecycle management, growth experiments |
+| **Instructions Size** | 8,000 characters |
+| **KB Files** | 1 Core + 4 Deep Modules |
+
+### 12.2 Knowledge Base Files
+
+| File | Purpose | Size |
+|------|---------|------|
+| GHA_KB_Growth_Core_v1.txt | Core growth methodology | ~25K chars |
+| GHA_KB_AARRR_Funnel_v1.txt | AARRR pirate metrics framework | ~20K chars |
+| GHA_KB_Viral_Mechanics_v1.txt | Viral loops, k-factor optimization | ~18K chars |
+| GHA_KB_Lifecycle_v1.txt | Customer lifecycle management | ~20K chars |
+| GHA_KB_Experimentation_v1.txt | A/B testing, rapid experimentation | ~18K chars |
+
+### 12.3 Capabilities
+
+| Capability Code | Name | Description | Input | Output |
+|-----------------|------|-------------|-------|--------|
+| **GHA_FUNNEL_ANALYZE** | Funnel Analysis | Analyzes AARRR funnel performance | funnel_data, stage | drop_off_points, opportunities |
+| **GHA_VIRAL_DESIGN** | Viral Mechanic Design | Designs viral growth mechanics | product, audience | viral_loops[], k_factor_estimate |
+| **GHA_LIFECYCLE_OPTIMIZE** | Lifecycle Optimization | Optimizes customer lifecycle stages | lifecycle_data | stage_recommendations, triggers |
+| **GHA_EXPERIMENT_DESIGN** | Experiment Design | Designs growth experiments | hypothesis, metrics | experiment_plan, success_criteria |
+| **GHA_GROWTH_MODEL** | Growth Modeling | Models growth scenarios | inputs, assumptions | growth_projections, levers |
+
+### 12.4 AARRR Framework Support
+
+| Stage | Focus | Key Metrics |
+|-------|-------|-------------|
+| **A**cquisition | Getting users | CAC, traffic sources, conversion rate |
+| **A**ctivation | First value delivery | Time to value, activation rate, aha moment |
+| **R**etention | Keeping users engaged | DAU/MAU, churn rate, cohort retention |
+| **R**eferral | Users inviting others | K-factor, viral coefficient, NPS |
+| **R**evenue | Monetization | LTV, ARPU, conversion to paid |
+
+### 12.5 Example Queries
+
+| Query | Capability Used | Sample Response |
+|-------|-----------------|-----------------|
+| "Analyze our activation funnel" | GHA_FUNNEL_ANALYZE | Funnel analysis with drop-off points |
+| "Design a viral referral program" | GHA_VIRAL_DESIGN | Viral loop design with k-factor estimate |
+| "How can we improve retention?" | GHA_LIFECYCLE_OPTIMIZE | Retention recommendations with triggers |
+
+---
+
+## 13. DOCS - DOCUMENTATION ASSISTANT AGENT
+
+### 13.1 Agent Profile
+
+| Attribute | Value |
+|-----------|-------|
+| **Code** | DOCS |
+| **Full Name** | Documentation Assistant Agent |
+| **Domain** | Support |
+| **Primary Function** | Platform documentation, knowledge base management, user assistance |
+| **Instructions Size** | 8,000 characters |
+| **KB Files** | Platform documentation, agent references |
+
+### 13.2 Knowledge Base Files
+
+| File | Purpose | Size |
+|------|---------|------|
+| DOCS_KB_Platform_Guide_v1.txt | Platform usage documentation | ~30K chars |
+| DOCS_KB_Agent_Reference_v1.txt | Agent capability reference | ~25K chars |
+| DOCS_KB_FAQ_v1.txt | Frequently asked questions | ~20K chars |
+
+### 13.3 Capabilities
+
+| Capability Code | Name | Description | Input | Output |
+|-----------------|------|-------------|-------|--------|
+| **DOCS_EXPLAIN** | Capability Explanation | Explains agent capabilities and usage | agent_code, capability | explanation, examples |
+| **DOCS_GUIDE** | Usage Guidance | Provides step-by-step usage guidance | task, context | guidance_steps, tips |
+| **DOCS_FAQ** | FAQ Response | Answers common platform questions | question | answer, related_topics |
+
+### 13.4 Example Queries
+
+| Query | Capability Used | Sample Response |
+|-------|-----------------|-----------------|
+| "How do I use the ANL agent?" | DOCS_EXPLAIN | ANL capabilities with usage examples |
+| "Walk me through creating a media plan" | DOCS_GUIDE | Step-by-step media planning guidance |
+| "What agents are available?" | DOCS_FAQ | Agent inventory with descriptions |
+
+---
+
+## 14. DVO - DEVOPS AGENT
+
+### 14.1 Agent Profile
+
+| Attribute | Value |
+|-----------|-------|
+| **Code** | DVO |
+| **Full Name** | DevOps Agent |
+| **Domain** | Infrastructure |
+| **Primary Function** | Deployment orchestration, CI/CD automation, infrastructure management |
+| **Instructions Size** | 8,000 characters |
+| **KB Files** | 1 Core + 3 Deep Modules |
+
+### 14.2 Knowledge Base Files
+
+| File | Purpose | Size |
+|------|---------|------|
+| DVO_KB_DevOps_Core_v1.txt | Core DevOps methodology | ~25K chars |
+| DVO_KB_Deployment_v1.txt | Deployment patterns and procedures | ~22K chars |
+| DVO_KB_CICD_v1.txt | CI/CD pipeline configuration | ~20K chars |
+| DVO_KB_Infrastructure_v1.txt | Infrastructure as code patterns | ~18K chars |
+
+### 14.3 Capabilities
+
+| Capability Code | Name | Description | Input | Output |
+|-----------------|------|-------------|-------|--------|
+| **DVO_DEPLOY** | Deployment Orchestration | Orchestrates deployments via natural language | target_env, version, options | deployment_status, logs |
+| **DVO_PIPELINE** | Pipeline Management | Manages CI/CD pipeline execution | pipeline_id, action | pipeline_status, artifacts |
+| **DVO_INFRA** | Infrastructure Management | Manages infrastructure resources | resource_type, action | resource_status, details |
+| **DVO_MONITOR** | Deployment Monitoring | Monitors deployment health and metrics | deployment_id | health_status, metrics, alerts |
+
+### 14.4 Supported Platforms
+
+| Platform | Capabilities |
+|----------|--------------|
+| Azure DevOps | Pipelines, releases, artifacts |
+| GitHub Actions | Workflows, deployments |
+| Power Platform | Solution deployment, environment management |
+| Kubernetes | Pod management, scaling, rollouts |
+
+### 14.5 Example Queries
+
+| Query | Capability Used | Sample Response |
+|-------|-----------------|-----------------|
+| "Deploy the latest release to staging" | DVO_DEPLOY | Deployment orchestration with status |
+| "Run the CI pipeline for main branch" | DVO_PIPELINE | Pipeline execution status |
+| "Check the health of production deployment" | DVO_MONITOR | Health status with metrics |
+
+---
+
+## 15. EXTERNAL AGENT INTEGRATIONS
+
+### 15.1 Overview
+
+MCMAP is designed to integrate with external team agents through a standardized inter-agent contract. These integrations enable specialized capabilities from external systems while maintaining MCMAP's orchestration and governance.
+
+### 15.2 External Agent Inventory
+
+| Code | Name | External Team | Integration Type | Status |
+|------|------|---------------|------------------|--------|
+| MMM | Media Mix Modeling | MMM Team | File-based | Pending |
+| MMO | Media Mix Optimization | MMO Team | File-based | Pending |
+| TAL | Test & Learn | Test & Learn Team | File-based | Pending |
+| DYN | Dynamic Yield | Dynamic Yield Team | API | Pending |
+| RMN | Retail Media Networks | MCM Team | File-based | Pending |
+| SES | Session M Loyalty | Session M Team | API | Pending |
+| MEI | MC Economics Institute | MEI Team | File-based | Pending |
+| SAL | Sales AI Leads | Sales AI Team | API | Pending |
+
+### 15.3 MMM - Media Mix Modeling Agent (Pending)
+
+| Attribute | Value |
+|-----------|-------|
+| **Code** | MMM |
+| **Domain** | Measurement |
+| **External Team** | MMM Team |
+| **Integration Type** | File-based (Parquet/Delta) |
+| **Primary Function** | Media mix modeling results, channel attribution, ROI analysis |
+
+**Expected Capabilities:**
+- MMM_CONTRIBUTION - Channel contribution analysis
+- MMM_ROI - Return on investment by channel
+- MMM_SATURATION - Saturation curve analysis
+
+### 15.4 MMO - Media Mix Optimization Agent (Pending)
+
+| Attribute | Value |
+|-----------|-------|
+| **Code** | MMO |
+| **Domain** | Optimization |
+| **External Team** | MMO Team |
+| **Integration Type** | File-based (Parquet/Delta) |
+| **Primary Function** | Budget optimization recommendations based on MMM insights |
+
+**Expected Capabilities:**
+- MMO_OPTIMIZE - Budget optimization recommendations
+- MMO_SCENARIO - Scenario modeling for budget allocation
+- MMO_CONSTRAINT - Constraint-based optimization
+
+### 15.5 TAL - Test & Learn Agent (Pending)
+
+| Attribute | Value |
+|-----------|-------|
+| **Code** | TAL |
+| **Domain** | Experimentation |
+| **External Team** | Test & Learn Team |
+| **Integration Type** | File-based |
+| **Primary Function** | Experiment design, execution tracking, results analysis |
+
+**Expected Capabilities:**
+- TAL_DESIGN - Experiment design and setup
+- TAL_ANALYZE - Experiment results analysis
+- TAL_RECOMMEND - Test recommendations based on results
+
+### 15.6 DYN - Dynamic Yield Agent (Pending)
+
+| Attribute | Value |
+|-----------|-------|
+| **Code** | DYN |
+| **Domain** | Personalization |
+| **External Team** | Dynamic Yield Team |
+| **Integration Type** | API |
+| **Primary Function** | Personalization recommendations, A/B test results, experience optimization |
+
+**Expected Capabilities:**
+- DYN_PERSONALIZE - Personalization recommendations
+- DYN_EXPERIENCE - Experience optimization insights
+- DYN_SEGMENT - Dynamic segment analysis
+
+### 15.7 RMN - Retail Media Networks Agent (Pending)
+
+| Attribute | Value |
+|-----------|-------|
+| **Code** | RMN |
+| **Domain** | Retail Media |
+| **External Team** | MCM Team |
+| **Integration Type** | File-based |
+| **Primary Function** | Retail media network performance, shopper insights, attribution |
+
+**Expected Capabilities:**
+- RMN_PERFORMANCE - Retail media performance analysis
+- RMN_SHOPPER - Shopper insight integration
+- RMN_ATTRIBUTION - Retail media attribution
+
+### 15.8 SES - Session M Loyalty Agent (Pending)
+
+| Attribute | Value |
+|-----------|-------|
+| **Code** | SES |
+| **Domain** | Loyalty |
+| **External Team** | Session M Team |
+| **Integration Type** | API |
+| **Primary Function** | Loyalty program insights, member analytics, engagement optimization |
+
+**Expected Capabilities:**
+- SES_LOYALTY - Loyalty program analysis
+- SES_MEMBER - Member analytics and segmentation
+- SES_ENGAGEMENT - Engagement optimization recommendations
+
+### 15.9 MEI - Mastercard Economics Institute Agent (Pending)
+
+| Attribute | Value |
+|-----------|-------|
+| **Code** | MEI |
+| **Domain** | Economics Data |
+| **External Team** | MEI Team |
+| **Integration Type** | File-based |
+| **Primary Function** | Economic indicators, spending insights, market trends |
+
+**Expected Capabilities:**
+- MEI_ECONOMIC - Economic indicator analysis
+- MEI_SPENDING - Spending insight integration
+- MEI_TRENDS - Market trend analysis
+
+### 15.10 SAL - Sales AI Leads Agent (Pending)
+
+| Attribute | Value |
+|-----------|-------|
+| **Code** | SAL |
+| **Domain** | Sales |
+| **External Team** | Sales AI Team |
+| **Integration Type** | API |
+| **Primary Function** | Lead scoring, sales intelligence, opportunity analysis |
+
+**Expected Capabilities:**
+- SAL_SCORE - Lead scoring and prioritization
+- SAL_INTELLIGENCE - Sales intelligence insights
+- SAL_OPPORTUNITY - Opportunity analysis and recommendations
+
+### 15.11 Integration Requirements
+
+For detailed integration requirements, see **EXTERNAL_AGENT_INTEGRATION_REQUIREMENTS_v7.0.md**.
+
+Key requirements include:
+- Inter-agent contract compliance (JSON schema)
+- Data format standards (Parquet, Delta, JSON)
+- Authentication and authorization
+- Error handling and retry logic
+- Telemetry and audit logging
+
+---
+
+## 16. DTA - DATA ANALYTICS AGENT (PENDING DATABRICKS)
+
+### 16.1 Agent Profile
+
+| Attribute | Value |
+|-----------|-------|
+| **Code** | DTA |
+| **Full Name** | Data Analytics Agent |
+| **Domain** | Analytics Infrastructure |
+| **Primary Function** | Databricks integration, data lake queries, advanced analytics |
+| **Status** | Pending - Requires Databricks workspace |
+| **Dependency** | Databricks Unity Catalog workspace provisioning |
+
+### 16.2 Planned Capabilities
+
+| Capability Code | Name | Description | Status |
+|-----------------|------|-------------|--------|
+| **DTA_QUERY** | Data Lake Query | Executes queries against Databricks Delta Lake | Pending |
+| **DTA_ANALYTICS** | Advanced Analytics | Performs advanced analytics using Databricks SQL | Pending |
+| **DTA_EXPORT** | Data Export | Exports MCMAP data to Databricks for analysis | Pending |
+| **DTA_REPORT** | Analytics Reporting | Generates reports from Databricks analytics | Pending |
+
+### 16.3 Integration Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    MCMAP ↔ DATABRICKS INTEGRATION                   │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  ┌─────────────┐         ┌─────────────┐         ┌─────────────┐  │
+│  │    MCMAP    │  ──►    │     DTA     │  ──►    │  Databricks │  │
+│  │   Agents    │         │    Agent    │         │  Unity Cat  │  │
+│  └─────────────┘         └─────────────┘         └─────────────┘  │
+│                                                                     │
+│  Data Flow:                                                         │
+│  • Telemetry → Delta Lake (mcmap_telemetry)                        │
+│  • Sessions → Delta Lake (mcmap_session_snapshots)                 │
+│  • Audit → Delta Lake (mcmap_audit_events)                         │
+│  • Documents → Delta Lake (mcmap_generated_documents)              │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### 16.4 Activation Requirements
+
+The DTA agent will be activated when:
+1. Databricks workspace is provisioned
+2. Unity Catalog is configured with MCMAP schemas
+3. Service principal authentication is established
+4. Network connectivity is verified
+5. Delta Lake tables are created per schema specifications
+
+For detailed Databricks integration specifications, see:
+- **DATABRICKS_INTEGRATION_SPEC_v7.0.md**
+- **DATABRICKS_CONFIG_v7.0.md**
+- **DATABRICKS_SETUP_GUIDE_v7.0.md**
+
+---
+
+## 17. CAPABILITY CROSS-REFERENCE
+
+### 17.1 Capability by Agent (Active Internal)
 
 | Agent | Capability Count | Capability Codes |
 |-------|------------------|------------------|
@@ -532,25 +935,51 @@ workflow, step, gate, help            â†’ ORC (self)
 | PRF | 4 | PRF_ANOMALY, PRF_ATTRIBUTION, PRF_INCREMENTALITY, PRF_OPTIMIZE |
 | CST | 4 | CST_FRAMEWORK_SELECT, CST_ENGAGEMENT_GUIDE, CST_STRATEGIC_ANALYZE, CST_PRIORITIZE |
 | CHG | 3 | CHG_READINESS, CHG_STAKEHOLDER, CHG_ADOPTION |
-| CA | 3 | CA_BUSINESS_CASE, CA_FINANCIAL_ANALYZE, CA_RECOMMEND |
+| MKT | 4 | MKT_GTM_PLAN, MKT_POSITIONING, MKT_COMPETITIVE, MKT_CAMPAIGN_STRATEGY |
+| GHA | 5 | GHA_FUNNEL_ANALYZE, GHA_VIRAL_DESIGN, GHA_LIFECYCLE_OPTIMIZE, GHA_EXPERIMENT_DESIGN, GHA_GROWTH_MODEL |
+| DOCS | 3 | DOCS_EXPLAIN, DOCS_GUIDE, DOCS_FAQ |
+| DVO | 4 | DVO_DEPLOY, DVO_PIPELINE, DVO_INFRA, DVO_MONITOR |
+| **TOTAL** | **49** | |
 
-### 12.2 Capability by Function
+### 17.2 Capability by Agent (Pending External)
+
+| Agent | Expected Capabilities | Status |
+|-------|----------------------|--------|
+| MMM | MMM_CONTRIBUTION, MMM_ROI, MMM_SATURATION | Pending Integration |
+| MMO | MMO_OPTIMIZE, MMO_SCENARIO, MMO_CONSTRAINT | Pending Integration |
+| TAL | TAL_DESIGN, TAL_ANALYZE, TAL_RECOMMEND | Pending Integration |
+| DYN | DYN_PERSONALIZE, DYN_EXPERIENCE, DYN_SEGMENT | Pending Integration |
+| RMN | RMN_PERFORMANCE, RMN_SHOPPER, RMN_ATTRIBUTION | Pending Integration |
+| SES | SES_LOYALTY, SES_MEMBER, SES_ENGAGEMENT | Pending Integration |
+| MEI | MEI_ECONOMIC, MEI_SPENDING, MEI_TRENDS | Pending Integration |
+| SAL | SAL_SCORE, SAL_INTELLIGENCE, SAL_OPPORTUNITY | Pending Integration |
+
+### 17.3 Capability by Agent (Pending Infrastructure)
+
+| Agent | Expected Capabilities | Status |
+|-------|----------------------|--------|
+| DTA | DTA_QUERY, DTA_ANALYTICS, DTA_EXPORT, DTA_REPORT | Pending Databricks |
+
+### 17.4 Capability by Function
 
 | Function | Capabilities |
 |----------|--------------|
-| **Analysis** | ANL_PROJECTION, ANL_SCENARIO_COMPARE, ANL_BAYESIAN, ANL_CAUSAL, CA_FINANCIAL_ANALYZE |
-| **Optimization** | ANL_MARGINAL_RETURN, CHA_CHANNEL_MIX, PRF_OPTIMIZE |
+| **Analysis** | ANL_PROJECTION, ANL_SCENARIO_COMPARE, ANL_BAYESIAN, ANL_CAUSAL, GHA_FUNNEL_ANALYZE, MKT_COMPETITIVE |
+| **Optimization** | ANL_MARGINAL_RETURN, CHA_CHANNEL_MIX, PRF_OPTIMIZE, GHA_LIFECYCLE_OPTIMIZE |
 | **Assessment** | ANL_CONFIDENCE, AUD_LTV_ASSESS, CHA_EMERGING_ASSESS, CHG_READINESS |
 | **Scoring** | AUD_PROPENSITY, SPO_PARTNER_SCORE, SPO_NBI_CALCULATE |
 | **Detection** | PRF_ANOMALY, AUD_IDENTITY |
-| **Generation** | DOC_GENERATE, CA_BUSINESS_CASE, CA_RECOMMEND |
-| **Strategy** | CST_FRAMEWORK_SELECT, CST_STRATEGIC_ANALYZE, CST_PRIORITIZE |
+| **Generation** | DOC_GENERATE, MKT_GTM_PLAN, MKT_CAMPAIGN_STRATEGY |
+| **Strategy** | CST_FRAMEWORK_SELECT, CST_STRATEGIC_ANALYZE, CST_PRIORITIZE, MKT_POSITIONING |
+| **Growth** | GHA_VIRAL_DESIGN, GHA_EXPERIMENT_DESIGN, GHA_GROWTH_MODEL |
+| **Infrastructure** | DVO_DEPLOY, DVO_PIPELINE, DVO_INFRA, DVO_MONITOR |
+| **Documentation** | DOCS_EXPLAIN, DOCS_GUIDE, DOCS_FAQ |
 
 ---
 
-## 13. USAGE EXAMPLES
+## 18. USAGE EXAMPLES
 
-### 13.1 Media Planning Workflow
+### 18.1 Media Planning Workflow
 
 ```
 USER: "Help me plan a $500K awareness campaign for Q2"
@@ -565,7 +994,7 @@ MCMAP WORKFLOW:
 7. Final output: Channel mix recommendation with projections and brief
 ```
 
-### 13.2 Performance Analysis Workflow
+### 18.2 Performance Analysis Workflow
 
 ```
 USER: "Analyze Q1 performance and identify issues"
@@ -578,24 +1007,52 @@ MCMAP WORKFLOW:
 5. Final output: Performance analysis with anomalies and recommendations
 ```
 
-### 13.3 Strategic Consulting Workflow
+### 18.3 Strategic Consulting Workflow
 
 ```
 USER: "Help me build a business case for digital transformation"
 
 MCMAP WORKFLOW:
-1. ORC classifies intent â†’ Routes to CST for framework
+1. ORC classifies intent → Routes to CST for framework
 2. CST selects framework using CST_FRAMEWORK_SELECT
 3. CST applies analysis using CST_STRATEGIC_ANALYZE
-4. ORC routes to CA for business case
-5. CA builds case using CA_BUSINESS_CASE
+4. ORC routes to MKT for go-to-market strategy
+5. MKT develops GTM plan using MKT_GTM_PLAN
 6. ORC routes to CHG for change plan
 7. CHG assesses readiness using CHG_READINESS
 8. Final output: Business case with strategic analysis and change plan
 ```
 
+### 18.4 Growth Optimization Workflow
+
+```
+USER: "Help me improve our user activation funnel"
+
+MCMAP WORKFLOW:
+1. ORC classifies intent → Routes to GHA for growth analysis
+2. GHA analyzes funnel using GHA_FUNNEL_ANALYZE
+3. GHA designs experiments using GHA_EXPERIMENT_DESIGN
+4. GHA models growth scenarios using GHA_GROWTH_MODEL
+5. ORC routes to DOC for documentation
+6. DOC generates growth report using DOC_GENERATE
+7. Final output: Funnel analysis with experiments and growth projections
+```
+
+### 18.5 DevOps Deployment Workflow
+
+```
+USER: "Deploy the latest release to staging environment"
+
+MCMAP WORKFLOW:
+1. ORC classifies intent → Routes to DVO for deployment
+2. DVO validates deployment prerequisites
+3. DVO orchestrates deployment using DVO_DEPLOY
+4. DVO monitors deployment using DVO_MONITOR
+5. Final output: Deployment status with health metrics
+```
+
 ---
 
-**Document Version:** 1.0  
-**Classification:** Mastercard Internal  
-**Last Updated:** January 23, 2026
+**Document Version:** 7.0
+**Classification:** Mastercard Internal
+**Last Updated:** January 31, 2026

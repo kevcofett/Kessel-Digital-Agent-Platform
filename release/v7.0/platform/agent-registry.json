@@ -1,5 +1,5 @@
 {
-  "version": "7.0.0",
+  "version": "7.0.2",
   "updated": "2026-01-31",
   "agents": [
     {
@@ -315,6 +315,51 @@
       "status": "active"
     },
     {
+      "code": "DVO",
+      "name": "DevOps",
+      "description": "Natural language deployment orchestration for v7.0 agents with enterprise security",
+      "instructionsFile": "DVO_Copilot_Instructions_v1.txt",
+      "kbFiles": [
+        "DVO_KB_Deployment_Patterns_v1.txt",
+        "DVO_KB_Platform_Configs_v1.txt",
+        "DVO_KB_Rollback_Procedures_v1.txt",
+        "DVO_KB_Enterprise_Security_v1.txt",
+        "DVO_KB_CAAT_Integration_v1.txt"
+      ],
+      "flows": [
+        "DeployAgent",
+        "CheckStatus",
+        "RollbackDeployment",
+        "ApprovalWorkflow",
+        "ValidateDeployment"
+      ],
+      "routingKeywords": [
+        "deploy",
+        "deployment",
+        "release",
+        "rollback",
+        "status",
+        "health",
+        "promote",
+        "staging",
+        "production",
+        "devops",
+        "infrastructure"
+      ],
+      "handoffPatterns": {
+        "toORC": ["orchestration needed", "multi-agent task"],
+        "fromORC": ["deploy request", "deployment task", "release agent"]
+      },
+      "capabilities": {
+        "enterprise": true,
+        "environments": ["development", "staging", "production"],
+        "platforms": ["langchain", "fastapi", "copilot_studio", "azure_functions"],
+        "features": ["rbac", "policy_enforcement", "audit_logging", "siem_export"]
+      },
+      "isRouter": false,
+      "status": "active"
+    },
+    {
       "code": "MMM",
       "name": "MediaMixModeling",
       "domain": "Measurement",
@@ -409,6 +454,41 @@
       "isRouter": false,
       "status": "pending_external",
       "externalTeam": "Sales AI Team"
+    },
+    {
+      "code": "DTA",
+      "name": "DataAnalytics",
+      "domain": "Analytics",
+      "description": "Databricks data analytics agent - pending Databricks integration",
+      "instructionsFile": null,
+      "kbFiles": [],
+      "flows": [],
+      "capabilities": [
+        "Query Databricks SQL for usage analytics",
+        "Generate performance reports from telemetry",
+        "Provide cross-platform benchmark comparisons",
+        "Historical data retrieval and analysis"
+      ],
+      "dataSources": [
+        "DATABRICKS_DELTA",
+        "DATABRICKS_ANALYTICS"
+      ],
+      "routingKeywords": [
+        "analytics",
+        "usage report",
+        "performance dashboard",
+        "telemetry analysis",
+        "historical data",
+        "platform metrics",
+        "databricks"
+      ],
+      "isRouter": false,
+      "status": "pending_databricks",
+      "dependencies": {
+        "infrastructure": "Databricks workspace",
+        "schemas": "mcmap.v7 Delta Lake tables",
+        "access": "Service principal with SELECT on mcmap catalog"
+      }
     }
   ],
   "routingKeywords": {
@@ -547,6 +627,22 @@
       "acquisition",
       "engagement",
       "churn"
+    ],
+    "DVO": [
+      "deploy",
+      "deployment",
+      "release",
+      "rollback",
+      "promote",
+      "staging",
+      "production",
+      "devops",
+      "infrastructure",
+      "health check",
+      "status",
+      "langchain",
+      "fastapi",
+      "approval"
     ]
   },
   "handoffPatterns": {
@@ -564,7 +660,10 @@
     "GHA_to_ANL": "After growth strategy, user needs projections and ROI calculations",
     "GHA_to_AUD": "After lifecycle analysis, user needs segmentation strategy",
     "GHA_to_DOC": "After growth plan complete, user needs documentation export",
-    "MKT_to_GHA": "After campaign strategy, user needs growth mechanics integration"
+    "MKT_to_GHA": "After campaign strategy, user needs growth mechanics integration",
+    "ORC_to_DVO": "User requests agent deployment, release, or infrastructure operation",
+    "DVO_to_ORC": "After deployment complete, return to orchestrator for next task",
+    "ANY_to_DVO": "User requests deployment, rollback, or status check for any agent"
   },
   "edgeCaseHandling": {
     "ambiguous_routing": {

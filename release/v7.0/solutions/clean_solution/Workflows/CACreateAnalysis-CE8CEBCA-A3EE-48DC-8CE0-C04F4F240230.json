@@ -1,0 +1,67 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {"defaultValue": {}, "type": "Object"},
+        "$authentication": {"defaultValue": {}, "type": "SecureObject"}
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "session_id": {"type": "string", "description": "Session ID"},
+                "analysis_type": {"type": "string", "description": "Type of analysis"},
+                "framework_used": {"type": "string", "description": "Framework applied"},
+                "findings": {"type": "string", "description": "Analysis findings"}
+              },
+              "required": ["session_id", "analysis_type"]
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "InitializeAnalysisId": {
+          "runAfter": {},
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [{"name": "analysis_id", "type": "string", "value": "@{guid()}"}]
+          }
+        },
+        "SuccessResponse": {
+          "runAfter": {"InitializeAnalysisId": ["Succeeded"]},
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "Success",
+              "analysis_id": "@{variables('analysis_id')}",
+              "analysis_type": "@{triggerBody()?['analysis_type']}",
+              "created_at": "@{utcNow()}"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{d10f9624-b3a3-4ac3-ae1a-671f72d5301a}</savedqueryid>
+    <layoutxml>
+      <grid name="mpa_planversions" jump="mpa_versionname" select="1" icon="1" preview="1">
+        <row name="mpa_planversion" id="mpa_planversionid">
+          <cell name="mpa_versionname" width="300" />
+          <cell name="createdon" width="125" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>2</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="mpa_planversion">
+          <attribute name="mpa_planversionid" />
+          <attribute name="mpa_versionname" />
+          <attribute name="createdon" />
+          <order attribute="mpa_versionname" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Plan Version Associated View" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

@@ -1,0 +1,596 @@
+PRF KNOWLEDGE BASE - ANOMALY DETECTION v1
+VERSION: 1.0
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+================================================================================
+SECTION 1 - ANOMALY DETECTION FUNDAMENTALS
+================================================================================
+
+ANOMALY DEFINITION
+
+An anomaly is a data point or pattern that deviates significantly from expected behavior. In campaign performance, anomalies signal potential issues requiring investigation or opportunities for optimization.
+
+ANOMALY CATEGORIES
+
+POINT ANOMALIES
+Single data points that deviate significantly from the norm.
+Examples: Spike in CPA on a single day, unusual CTR on one placement
+
+CONTEXTUAL ANOMALIES
+Data points that are anomalous in a specific context but not globally.
+Examples: Low weekend performance for B2B campaigns, Holiday traffic patterns
+
+COLLECTIVE ANOMALIES
+Groups of related data points that together form an anomalous pattern.
+Examples: Gradual CTR decline over multiple days, Systematic underperformance in one region
+
+DETECTION APPROACHES
+
+STATISTICAL METHODS
+Use mathematical measures to identify outliers based on distribution assumptions.
+
+THRESHOLD-BASED METHODS
+Compare values against predefined acceptable ranges.
+
+TREND-BASED METHODS
+Identify deviations from established patterns or trajectories.
+
+COMPARATIVE METHODS
+Compare performance across similar segments to find outliers.
+
+================================================================================
+SECTION 2 - STATISTICAL ANOMALY DETECTION
+================================================================================
+
+Z-SCORE METHOD
+
+The Z-score measures how many standard deviations a data point is from the mean.
+
+FORMULA
+Z_Score = (Value - Mean) / Standard_Deviation
+
+INTERPRETATION
+- Z less than -2 or Z greater than 2: Potential anomaly (95 percent confidence)
+- Z less than -3 or Z greater than 3: Likely anomaly (99 percent confidence)
+- Z less than -4 or Z greater than 4: Definite anomaly (99.99 percent confidence)
+
+APPLICATION GUIDANCE
+- Requires normally distributed data
+- Minimum 30 data points for reliable calculation
+- Recalculate mean and standard deviation periodically
+- Exclude known outliers from baseline calculation
+
+EXAMPLE CALCULATION
+Historical CPA: Mean = $50, StdDev = $8
+Today CPA: $72
+Z_Score = (72 - 50) / 8 = 2.75
+Result: Anomaly detected (greater than 2 standard deviations)
+
+INTERQUARTILE RANGE (IQR) METHOD
+
+IQR method is robust to outliers and does not assume normal distribution.
+
+FORMULA
+IQR = Q3 - Q1 (75th percentile minus 25th percentile)
+Lower_Bound = Q1 - (1.5 x IQR)
+Upper_Bound = Q3 + (1.5 x IQR)
+
+INTERPRETATION
+- Values below Lower_Bound: Low anomaly
+- Values above Upper_Bound: High anomaly
+- Multiplier 1.5 is standard; use 3.0 for extreme outliers only
+
+APPLICATION GUIDANCE
+- Works with non-normal distributions
+- More conservative than Z-score method
+- Good for skewed data common in advertising
+- Median-based, less sensitive to extreme values
+
+MOVING AVERAGE DEVIATION
+
+Compares current values to recent moving average.
+
+FORMULA
+Moving_Average = Sum of (Value_i) / N for last N periods
+Deviation_Pct = (Current - Moving_Average) / Moving_Average x 100
+
+INTERPRETATION
+- Deviation greater than 20 percent: Investigate
+- Deviation greater than 35 percent: Likely anomaly
+- Deviation greater than 50 percent: Definite anomaly
+
+APPLICATION GUIDANCE
+- Window size (N) depends on data granularity
+- Daily data: 7-day moving average
+- Hourly data: 24-hour moving average
+- Adjusts naturally to trends
+
+================================================================================
+SECTION 3 - PATTERN-BASED ANOMALY DETECTION
+================================================================================
+
+DAY-OF-WEEK PATTERNS
+
+Many advertising metrics follow predictable day-of-week patterns.
+
+TYPICAL PATTERNS
+
+B2C RETAIL
+- High: Thursday, Friday, Saturday
+- Low: Monday, Tuesday
+- CTR variance: 20-30 percent between peak and trough
+
+B2B
+- High: Tuesday, Wednesday, Thursday
+- Low: Saturday, Sunday
+- CTR variance: 50-70 percent between weekday and weekend
+
+ENTERTAINMENT
+- High: Friday, Saturday, Sunday
+- Low: Monday, Tuesday
+- Conversion variance: 30-50 percent
+
+DETECTING DAY-OF-WEEK ANOMALIES
+Compare to same day in prior weeks, not prior days.
+Anomaly = Current_Day_Value significantly differs from Same_Day_Historical_Average
+
+HOUR-OF-DAY PATTERNS
+
+Performance varies by time of day, especially for real-time campaigns.
+
+TYPICAL PATTERNS
+
+CONSUMER MOBILE
+- Morning peak: 7-9 AM
+- Lunch peak: 12-1 PM
+- Evening peak: 7-10 PM
+- Low: 2-5 AM
+
+B2B DESKTOP
+- Peak: 9 AM - 5 PM local time
+- Low: Evenings and early morning
+
+STREAMING AND CTV
+- Peak: 7-11 PM (primetime)
+- Low: Morning and afternoon
+
+DETECTING HOURLY ANOMALIES
+Compare to same hour historical performance.
+Account for timezone differences in data.
+
+SEASONALITY PATTERNS
+
+Longer-term cycles affecting performance.
+
+COMMON SEASONAL FACTORS
+- Q4 retail surge (November-December)
+- Back-to-school (August-September)
+- Summer slowdown (June-August for B2B)
+- Post-holiday decline (January)
+
+ADJUSTING FOR SEASONALITY
+Compare to same period prior year when available.
+Use seasonal indices to normalize current performance.
+Flag anomalies only after seasonal adjustment.
+
+================================================================================
+SECTION 4 - COMPARATIVE ANOMALY DETECTION
+================================================================================
+
+CROSS-SEGMENT COMPARISON
+
+Compare performance across similar segments to identify outliers.
+
+SEGMENT TYPES FOR COMPARISON
+- Geographic regions
+- Audience segments
+- Creative variants
+- Placement categories
+- Device types
+
+DETECTION METHOD
+1. Calculate metric for each segment
+2. Compute mean and standard deviation across segments
+3. Flag segments with Z-score greater than 2 or less than -2
+4. Investigate flagged segments
+
+EXAMPLE
+Five regions with CPAs: $45, $48, $52, $49, $85
+Mean = $55.8, StdDev = $16.2
+Region 5 Z-score = (85 - 55.8) / 16.2 = 1.8
+Result: Borderline anomaly, worth investigating
+
+BENCHMARK COMPARISON
+
+Compare to external or historical benchmarks.
+
+BENCHMARK SOURCES
+- Industry averages by vertical
+- Platform-provided benchmarks
+- Historical campaign performance
+- Competitive intelligence
+
+ANOMALY THRESHOLD
+Performance greater than 30 percent from benchmark: Flag for review
+Performance greater than 50 percent from benchmark: Definite anomaly
+
+TREND COMPARISON
+
+Compare current trend to historical trends.
+
+DETECTION METHOD
+1. Calculate trend line for recent period (7-14 days)
+2. Calculate trend line for comparison period
+3. Compare slope and intercept
+4. Flag significant deviations in trajectory
+
+TREND ANOMALY SIGNALS
+- Slope sign change (positive to negative or vice versa)
+- Slope magnitude change greater than 50 percent
+- Sudden acceleration or deceleration
+
+================================================================================
+SECTION 5 - ANOMALY INVESTIGATION PROTOCOL
+================================================================================
+
+INVESTIGATION FRAMEWORK
+
+When an anomaly is detected, follow structured investigation.
+
+STEP 1 - VERIFY THE ANOMALY
+
+Questions to ask:
+- Is the data accurate and complete?
+- Is there a known data lag or reporting issue?
+- Has the metric definition changed?
+- Is this a data quality issue vs true anomaly?
+
+Common false positives:
+- Data processing delays
+- Timezone mismatches
+- Sampling or estimation in reports
+- API errors or incomplete syncs
+
+STEP 2 - SCOPE THE IMPACT
+
+Determine breadth of anomaly:
+- Single placement or campaign-wide?
+- One metric or multiple metrics affected?
+- One time period or ongoing?
+- Isolated or correlated with other changes?
+
+Impact assessment:
+- Budget at risk
+- KPI trajectory impact
+- Brand reputation risk
+- Measurement validity risk
+
+STEP 3 - IDENTIFY ROOT CAUSE
+
+Internal causes to check:
+- Campaign changes made (bids, targeting, budgets)
+- Creative changes or rotations
+- Landing page updates
+- Tracking or tagging changes
+- Budget reallocation
+
+External causes to check:
+- Platform algorithm updates
+- Competitive activity changes
+- Seasonality or calendar events
+- Macro environment changes
+- Publisher inventory changes
+
+STEP 4 - DETERMINE RESPONSE
+
+Response options by cause:
+
+INTERNAL CAUSE IDENTIFIED
+- Revert change if negative impact
+- Amplify change if positive impact
+- Document and monitor
+
+EXTERNAL CAUSE IDENTIFIED
+- Adapt strategy to new reality
+- Communicate with stakeholders
+- Adjust expectations and targets
+
+CAUSE UNKNOWN
+- Increase monitoring frequency
+- Set up specific alerts
+- Gather more data before acting
+- Consider small test changes
+
+================================================================================
+SECTION 6 - ANOMALY TYPES BY METRIC
+================================================================================
+
+CPM ANOMALIES
+
+SUDDEN CPM SPIKE
+Potential causes:
+- Competitive pressure increase
+- Inventory supply reduction
+- Targeting became more competitive
+- Platform auction changes
+
+Investigation priority:
+- Check auction insights if available
+- Review competitive reports
+- Assess targeting changes
+- Monitor for sustained pattern
+
+SUDDEN CPM DROP
+Potential causes:
+- Competitive retreat
+- Inventory quality decline
+- Targeting expanded unintentionally
+- Platform issue
+
+Investigation priority:
+- Check inventory quality metrics
+- Review viewability and safety
+- Verify targeting settings
+
+CTR ANOMALIES
+
+CTR SUDDEN DECLINE
+Potential causes:
+- Creative fatigue
+- Audience mismatch
+- Placement quality decline
+- Ad serving issue
+
+Investigation priority:
+- Check creative rotation
+- Review audience overlap
+- Assess placement performance
+- Verify ads are rendering correctly
+
+CTR SUDDEN INCREASE
+Potential causes:
+- Creative resonance
+- Improved targeting
+- Bot or fraud activity
+- Reporting anomaly
+
+Investigation priority:
+- Verify with conversion data
+- Check traffic quality metrics
+- Review for unusual patterns
+
+CONVERSION ANOMALIES
+
+CONVERSION RATE DROP
+Potential causes:
+- Landing page issue
+- Site performance problem
+- Tracking breakage
+- Traffic quality decline
+- Offer or pricing change
+
+Investigation priority:
+- Test conversion path manually
+- Check site performance metrics
+- Verify tracking implementation
+- Review traffic source quality
+
+CONVERSION SPIKE
+Potential causes:
+- Successful optimization
+- Promotional activity
+- Tracking double-counting
+- Attribution window change
+
+Investigation priority:
+- Verify conversions are legitimate
+- Check for duplicates
+- Review attribution settings
+
+================================================================================
+SECTION 7 - AUTOMATED ALERTING CONFIGURATION
+================================================================================
+
+ALERT DESIGN PRINCIPLES
+
+PRINCIPLE 1 - ACTIONABLE ALERTS ONLY
+Every alert should have a clear potential action. Informational alerts create noise.
+
+PRINCIPLE 2 - RIGHT URGENCY LEVEL
+Match alert urgency to actual business impact. Not everything is critical.
+
+PRINCIPLE 3 - SUFFICIENT CONTEXT
+Include enough information in alert to enable quick triage.
+
+PRINCIPLE 4 - AVOID ALERT FATIGUE
+Too many alerts leads to ignored alerts. Tune thresholds to minimize false positives.
+
+RECOMMENDED ALERT CONFIGURATION
+
+CRITICAL ALERTS (Immediate)
+- CPA greater than 2x target for 24 hours
+- Brand safety incident
+- Spend greater than 150 percent of daily budget
+- IVT rate greater than 10 percent
+
+HIGH PRIORITY ALERTS (Same Day)
+- CPA greater than 50 percent above target for 48 hours
+- CTR decline greater than 40 percent sustained
+- Pacing greater than 30 percent off target
+- Conversion tracking failure detected
+
+MEDIUM PRIORITY ALERTS (Next Business Day)
+- Efficiency metrics 25-50 percent from target
+- Engagement decline 25-40 percent
+- Frequency exceeding caps
+- Quality metrics below threshold
+
+LOW PRIORITY ALERTS (Weekly Review)
+- Minor variances 10-25 percent
+- Trending patterns worth watching
+- Optimization opportunities identified
+
+================================================================================
+SECTION 8 - FRAUD DETECTION SIGNALS
+================================================================================
+
+FRAUD DETECTION OVERVIEW
+
+Fraud detection identifies potential invalid traffic (IVT) and suspicious patterns that may indicate ad fraud. This is a specialized form of anomaly detection focused on protecting media investment.
+
+FRAUD INDICATOR TYPES
+
+CLICK FRAUD
+Artificially generated clicks to deplete budget or inflate metrics.
+Indicators: CTR significantly above benchmark (greater than 150 percent of P95), click-to-conversion collapse, uniform click timing patterns.
+
+BOT TRAFFIC
+Non-human traffic from automated scripts or botnets.
+Indicators: Extremely short session duration (less than 2 seconds), uniform session patterns (standard deviation less than 0.5 seconds), geographic anomalies.
+
+INVALID TRAFFIC
+Traffic that does not represent genuine user interest.
+Indicators: High impressions with near-zero conversions (conversion rate less than 0.001 percent), single source concentration (greater than 50 percent from one source).
+
+SUSPICIOUS SOURCE
+Traffic sources exhibiting questionable patterns.
+Indicators: Disproportionate traffic from single publisher, unfamiliar referrers, mismatched geographic targeting.
+
+FRAUD DETECTION RULES
+
+RULE FRAUD_001 - Abnormal CTR Pattern
+Description: CTR significantly above channel benchmark
+Threshold: CTR greater than benchmark_p95 multiplied by 1.5
+Severity: HIGH
+Indicator Type: Click fraud
+
+RULE FRAUD_002 - Geographic Mismatch
+Description: Traffic from unexpected geographies
+Threshold: Geographic distribution differs more than 30 percent from target
+Severity: MEDIUM
+Indicator Type: Bot traffic
+
+RULE FRAUD_003 - Session Duration Anomaly
+Description: Extremely short or uniform session durations
+Threshold: Average session duration less than 2 seconds OR session duration standard deviation less than 0.5 seconds
+Severity: HIGH
+Indicator Type: Bot traffic
+
+RULE FRAUD_004 - Conversion Rate Collapse
+Description: High traffic volume with near-zero conversions
+Threshold: Impressions greater than 10000 AND conversion rate less than 0.001 percent
+Severity: CRITICAL
+Indicator Type: Invalid traffic
+
+RULE FRAUD_005 - Source Concentration
+Description: Disproportionate traffic from single source
+Threshold: Single source percentage greater than 50 percent
+Severity: MEDIUM
+Indicator Type: Suspicious source
+
+FRAUD RISK SCORING
+
+Risk score is calculated using weighted sum of triggered rules.
+
+SEVERITY WEIGHTS
+Critical: 40 points
+High: 25 points
+Medium: 15 points
+Low: 5 points
+
+RISK LEVEL THRESHOLDS
+Low Risk: 0 to 25 points
+Moderate Risk: 26 to 50 points
+High Risk: 51 to 75 points
+Critical Risk: 76 to 100 points
+
+FRAUD DETECTION OUTPUT SCHEMA
+
+When analyzing for fraud signals, output must include:
+
+fraud_indicators: Array of detected indicators with indicator_type, rule_triggered, severity, evidence, and recommendation for each.
+
+risk_score: Object containing overall_score (0 to 100), risk_level (low, moderate, high, critical), and confidence percentage.
+
+affected_sources: Array of sources with source_name, source_type, traffic_volume, fraud_probability percentage, and recommended_action.
+
+FRAUD INVESTIGATION GUIDANCE
+
+When fraud signals detected:
+1. Verify data accuracy before acting
+2. Cross-reference with verification partners (IAS, DoubleVerify, MOAT)
+3. Document evidence before making changes
+4. Consider incremental response before full blocking
+
+RECOMMENDED ACTIONS BY RISK LEVEL
+
+LOW RISK: Monitor closely, increase reporting frequency
+MODERATE RISK: Implement source-level caps, enable enhanced verification
+HIGH RISK: Pause suspicious sources, request vendor investigation
+CRITICAL RISK: Immediate pause of affected campaigns, escalate to leadership
+
+================================================================================
+SECTION 9 - ANOMALY DETECTION FORMULAS
+================================================================================
+
+STATISTICAL FORMULAS
+
+Z_Score = (X - Mean) / StdDev
+IQR = Q3 - Q1
+Lower_Fence = Q1 - (1.5 x IQR)
+Upper_Fence = Q3 + (1.5 x IQR)
+Moving_Average = Sum(X_i) / N for i = 1 to N
+Deviation_Pct = (Current - Baseline) / Baseline x 100
+
+TREND FORMULAS
+
+Slope = (N x Sum(XY) - Sum(X) x Sum(Y)) / (N x Sum(X^2) - (Sum(X))^2)
+Trend_Direction = Sign(Slope)
+Trend_Strength = Absolute(Slope) / Baseline_Mean
+
+COMPARISON FORMULAS
+
+Segment_Z = (Segment_Value - Cross_Segment_Mean) / Cross_Segment_StdDev
+Benchmark_Deviation = (Actual - Benchmark) / Benchmark x 100
+Period_Change = (Current_Period - Prior_Period) / Prior_Period x 100
+
+================================================================================
+SECTION 10 - PRF TO ANL HANDOFF PROTOCOL
+================================================================================
+
+HANDOFF TRIGGER PATTERNS
+
+Detect intent to update projections based on actual performance when user requests:
+- Update projections based on actual performance
+- Revise forecast with actuals
+- Compare projections to actual results
+- Adjust forecast based on campaign data
+
+HANDOFF OUTPUT REQUIREMENTS
+
+When handing off to ANL for projection updates, PRF must provide:
+
+actual_performance: Object containing:
+- period: Date range of actual data
+- metrics: impressions, reach, frequency, clicks, conversions, spend
+- channel_breakdown: Performance by channel
+- variance_from_projection: Calculated variance from original projections
+
+performance_insights: Object containing:
+- trends: Array of identified trends
+- anomalies: Array of detected anomalies
+- contributing_factors: Array of factors affecting performance
+
+handoff_context: Object containing:
+- original_projection_id: Reference to the projection being updated
+- update_reason: Why the update is needed
+- confidence_adjustment: Suggested adjustment to confidence intervals
+
+HANDOFF MESSAGE
+
+When transferring to ANL, display: Transferring performance actuals to Analytics for projection update.
+
+================================================================================
+END OF DOCUMENT
+================================================================================

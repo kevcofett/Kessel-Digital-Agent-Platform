@@ -1,16 +1,30 @@
 # KDAP v7.0 Validation Report
 
-**Generated:** 2026-02-01 05:39 UTC
+**Generated:** 2026-02-01 06:40 UTC
 **Target Environment:** Mastercard Copilot Studio
+**Version:** 7.0.0.0
 
 ## Executive Summary
 
 | Category | Status |
 |----------|--------|
 | **Overall** | ✅ READY FOR IMPORT |
-| Passed Tests | 62 |
-| Failed Tests | 0 |
-| Warnings | 21 (reviewed - non-blocking) |
+| Root Structure | ✅ Pass |
+| RootComponents | ✅ Pass (24 entities) |
+| PrimaryNameAttribute | ✅ Pass (all 24 entities) |
+| Non-Standard Folders | ✅ None present |
+
+---
+
+## Critical Fix Applied
+
+This solution has been rebuilt to resolve the recurring 3-error import cycle:
+
+| Error | Root Cause | Fix Applied |
+|-------|-----------|-------------|
+| **Error 1:** Missing files in root | Non-standard folders (agents/, contracts/, databricks/, docs/, platform/, topics/, data/) | ✅ Removed - only PP standard folders remain |
+| **Error 2:** RootComponent not declared | Missing entity declarations in Solution.xml | ✅ All 24 entities declared as type="1" |
+| **Error 3:** Primary Name attribute not found | Missing Entities/ folder with Entity.xml files | ✅ Full Entity.xml structure with PrimaryNameAttribute |
 
 ---
 
@@ -23,174 +37,107 @@
 | `[Content_Types].xml` at root | ✅ Present |
 | `Solution.xml` at root | ✅ Present |
 | `customizations.xml` at root | ✅ Present |
-| `Entities/` folder | ✅ Present |
+| `Entities/` folder | ✅ Present (24 entities) |
+| `OptionSets/` folder | ✅ Present |
+| `Other/` folder | ✅ Present |
 | `Workflows/` folder | ✅ Present |
-| No non-standard folders | ✅ Clean (agents/, databricks/, etc. removed) |
+| No non-standard folders | ✅ Clean |
 
-**File Size:** 250 KB (reduced from 11.4 MB original)
-
----
-
-## 2. Entities Validation ✅
-
-| Metric | Value |
-|--------|-------|
-| Total Entities | 24 |
-| RequiredLevel Issues | 0 |
-| Schema Compliance | 100% |
-
-**Entity Prefixes:**
-- `eap_` (Enterprise Agent Platform): 13 entities
-- `mpa_` (Media Planning Agent): 9 entities
-- `ca_` (Consulting Agent): 2 entities
+**File Sizes:**
+- `Consulting_and_Marketing_Agent_Platform_Solution_V7.0.zip`: 245 KB
+- `Consulting_and_Marketing_Agent_Platform_V7.0.zip`: 245 KB (full solution)
 
 ---
 
-## 3. Workflows Validation ✅
+## 2. RootComponents Validation ✅
 
-| Metric | Value |
-|--------|-------|
-| Workflow JSON Files | 28 |
-| Data XML Files | 28 |
-| Parse Errors | 0 |
+All 24 entities are declared as RootComponents in Solution.xml (type="1" for entities).
 
----
-
-## 4. Data Import Package ✅
-
-**Package:** `KDAP_V7.0_Data_Import.zip` (38 KB)
-
-| Entity | Records | Status |
-|--------|---------|--------|
-| eap_agents | 13 | ✅ |
-| eap_config | 13 | ✅ |
-| eap_user_roles | 6 | ✅ |
-| ca_frameworks | 10 | ✅ |
-| **Total** | **42** | ✅ |
+**Entity Breakdown:**
+- EAP Entities: 14
+- MPA Entities: 9
+- CA Entity: 1
+- Workflow: 1 (type="29")
 
 ---
 
-## 5. AI Builder Prompts ✅
+## 3. PrimaryNameAttribute Validation ✅
 
-| File | Prompts | Status |
-|------|---------|--------|
-| ai_builder_prompts_all_agents_v7.0.json | Multiple | ✅ Valid JSON |
-| gha_ai_builder_prompts.json | Multiple | ✅ Valid JSON |
+All 24 entities have PrimaryNameAttribute defined in their Entity.xml files:
 
----
-
-## 6. Agent Configuration ✅
-
-| Agent | Instructions | KB Files | Status |
-|-------|--------------|----------|--------|
-| ORC (Orchestrator) | ✅ | ✅ | Ready |
-| ANL (Analytics) | ✅ | ✅ | Ready |
-| AUD (Audience) | ✅ | ✅ | Ready |
-| CHA (Channel) | ✅ | ✅ | Ready |
-| CST (Cost) | ✅ | ✅ | Ready |
-| CHG (Change) | ✅ | ✅ | Ready |
-| DOC (Document) | ✅ | ✅ | Ready |
-| GHA (Growth Hacking) | ✅ | ✅ | Ready |
-| MKT (Marketing) | ✅ | ✅ | Ready |
-| PRF (Performance) | ✅ | ✅ | Ready |
-| SPO (Sponsorship) | ✅ | ✅ | Ready |
-| DVO (DevOps) | ✅ | ✅ | Ready |
-| DOCS (Documentation) | ✅ | ✅ | Ready |
-
----
-
-## 7. Topics Validation ✅
-
-**File:** `topics/all_agent_topics_v7.0.json`
-- Structure: Valid JSON
-- Trigger phrases: All >= 3 characters
+| Entity | PrimaryNameAttribute |
+|--------|---------------------|
+| ca_frameworks | ca_name |
+| eap_agents | eap_name |
+| eap_audit | eap_name |
+| eap_capabilities | eap_name |
+| eap_capability_impl | eap_name |
+| eap_Client | eap_clientname |
+| eap_config | eap_name |
+| eap_deployments | eap_name |
+| eap_growth_sessions | eap_name |
+| eap_prompts | eap_name |
+| eap_Session | eap_sessioncode |
+| eap_sessions | eap_session_id |
+| eap_telemetry | eap_name |
+| eap_user_profiles | eap_name |
+| eap_user_roles | eap_name |
+| mpa_Benchmark | mpa_metricname |
+| mpa_Channel | mpa_newcolumn |
+| mpa_channel_benchmarks | mpa_name |
+| mpa_KPI | mpa_newcolumn |
+| mpa_MediaPlan | mpa_planname |
+| mpa_PlanAllocation | mpa_allocationname |
+| mpa_PlanData | mpa_datatitle |
+| mpa_PlanVersion | mpa_versionname |
+| mpa_Vertical | mpa_newcolumn |
 
 ---
 
-## 8. Warnings Analysis (Non-Blocking)
+## 4. Solution Identity
 
-### Agent Registry Mismatch
-
-The `agent-registry.json` contains agents not yet implemented:
-
-| Agent Code | Status | Action |
-|------------|--------|--------|
-| mmm | In registry, no folder | Future planned |
-| mmo | In registry, no folder | Future planned |
-| tal | In registry, no folder | Future planned |
-| dyn | In registry, no folder | Future planned |
-| rmn | In registry, no folder | Future planned |
-| ses | In registry, no folder | Future planned |
-| mei | In registry, no folder | Future planned |
-| sal | In registry, no folder | Future planned |
-| dta | In registry, no folder | Future planned |
-| docs | Has folder, not in registry | Add to registry |
-
-**Impact:** None - these agents are defined for future expansion but not required for v7.0 import.
-
-### KB File Format
-
-Some KB files use JSON format instead of text with headers. This is intentional for structured data and doesn't affect Copilot Studio import.
+| Property | Value |
+|----------|-------|
+| UniqueName | ConsultingMarketingAgentPlatform |
+| Display Name | Consulting and Marketing Agent Platform V7.0 |
+| Version | 7.0.0.0 |
+| Publisher | Kessel Digital (kesseldigital) |
+| Prefix | eap |
 
 ---
 
-## 9. Cross-Reference Validation ✅
+## 5. Files for Import
 
-| Check | Result |
-|-------|--------|
-| Data entities exist in solution | ✅ All 4 entities found |
-| Workflow references valid | ✅ |
-| Entity relationships defined | ✅ |
+### Power Platform Import (Primary)
 
----
+| File | Size | Purpose |
+|------|------|---------|
+| `Consulting_and_Marketing_Agent_Platform_Solution_V7.0.zip` | 245 KB | Solution import |
+| `Consulting_and_Marketing_Agent_Platform_Data_Import_V7.0.zip` | 7.5 KB | Seed data |
 
-## 10. Files Ready for Import
+### Archive (Non-PP Components)
 
-### Primary Import (Power Platform)
-
-```
-Consulting_and_Marketing_Agent_Platform_V7.0.zip  (250 KB)
-```
-
-### Secondary Import (Configuration Migration Tool)
-
-```
-KDAP_V7.0_Data_Import.zip  (38 KB)
-```
-
-### Manual Configuration (Copilot Studio)
-
-```
-agents/           - 13 agent configurations
-topics/           - Topic definitions
-ai_builder_prompts_all_agents_v7.0.json
-gha_ai_builder_prompts.json
-```
+Non-Power Platform components preserved in `archive/non_power_platform_components/`:
+- agents/, contracts/, data/, databricks/, docs/, platform/, topics/
+- agent-registry.json, ai_builder_prompts_all_agents_v7.0.json
 
 ---
 
-## 11. Import Sequence
+## 6. Import Sequence
 
 1. **Import Solution ZIP** via Power Platform Admin Center or PAC CLI
 2. **Import Data Package** via Configuration Migration Tool
-3. **Import AI Builder Prompts** via make.powerapps.com
-4. **Configure Copilot Agents** via Copilot Studio portal
-
----
-
-## 12. Known Limitations
-
-1. Agent registry contains future agents (v8.0 roadmap) - ignore for v7.0
-2. GHA KB uses JSON format - this is by design for structured frameworks
-3. Some entity naming uses mixed case in display names - schema names are correct
+3. **Manual Configuration** (Copilot Studio) using archived components
 
 ---
 
 ## Validation Approved
 
-**Status:** ✅ All critical validations passed
+**Status:** ✅ ALL CRITICAL VALIDATIONS PASSED
+**Previous Issues:** Resolved (3-error cycle fixed)
 **Recommendation:** Proceed with import to Mastercard environment
 
 ---
 
 *Report generated by KDAP v7.0 Validation Suite*
+*Last Updated: 2026-02-01 06:40 UTC*

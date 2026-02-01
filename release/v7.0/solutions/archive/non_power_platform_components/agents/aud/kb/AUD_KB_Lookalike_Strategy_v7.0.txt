@@ -1,0 +1,311 @@
+DOCUMENT: AUD_KB_Lookalike_Strategy_v7.0.txt
+CATEGORY: Audience Knowledge Base
+TOPICS: lookalike audiences, seed quality, expansion, modeling, prospecting
+VERSION: 1.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+RELATED: AUD_KB_Segmentation_Methods_v1, AUD_KB_Targeting_Strategy_v1, AUD_KB_LTV_Models_v1
+
+AUD LOOKALIKE STRATEGY v1
+
+PURPOSE
+
+This document provides comprehensive guidance on lookalike audience strategy. Reference when users ask about seed audience creation, expansion rates, platform-specific approaches, or lookalike optimization.
+
+LOOKALIKE FUNDAMENTALS
+
+DEFINITION
+
+Lookalike audiences are prospecting audiences built by finding new users who share characteristics with a seed audience of known valuable customers. The platform analyzes the seed to identify patterns and finds similar users who have not yet engaged with the brand.
+
+HOW LOOKALIKES WORK
+
+Platform modeling process:
+- Analyze seed audience characteristics and behaviors
+- Identify statistically significant patterns
+- Score non-seed users on similarity
+- Create ranked audience based on similarity scores
+- Apply expansion rate to determine audience size
+
+Model inputs vary by platform but typically include:
+- Demographic attributes
+- Interest signals and affinities
+- Behavioral patterns
+- Purchase history where available
+- Engagement signals
+- Device and platform usage
+
+SEED AUDIENCE STRATEGY
+
+SEED QUALITY PRINCIPLES
+
+The seed determines the signal. A high-quality seed produces high-quality lookalikes. Quality factors include:
+
+Outcome Clarity:
+- Seeds should represent a clear, valuable outcome
+- Purchasers outperform engagers as seeds
+- High-LTV customers outperform all customers
+- Recent converters outperform historical converters
+
+Signal Strength:
+- Seed must be large enough for pattern detection
+- Seed must be distinct from general population
+- Avoid overly broad seeds that dilute signal
+- Avoid overly narrow seeds that limit patterns
+
+MINIMUM SEED SIZES
+
+Platform requirements and recommendations:
+
+Meta:
+- Minimum: 100 users
+- Recommended: 1,000-50,000 users
+- Optimal: 5,000-20,000 users
+- Diminishing returns above 50,000
+
+Google:
+- Minimum: 100 users for Display
+- Minimum: 1,000 users for Search
+- Recommended: 5,000+ users
+- Optimal quality around 10,000-30,000
+
+TikTok:
+- Minimum: 100 users
+- Recommended: 1,000+ users
+- Performs well with smaller seeds due to algorithm
+
+LinkedIn:
+- Minimum: 300 matched users
+- Recommended: 1,000+ users
+- Company-based seeds often outperform individual
+
+Programmatic DSPs:
+- Minimum: 1,000 users typically
+- Recommended: 10,000+ for stable modeling
+- Varies by DSP and data partner
+
+SEED COMPOSITION RECOMMENDATIONS
+
+Best seed types by objective:
+
+For Customer Acquisition:
+- High-LTV purchasers (top 20 percent by value)
+- Multi-purchasers (2+ transactions)
+- Recent purchasers (last 90 days)
+- Full-price purchasers (not discount-driven)
+
+For Lead Generation:
+- Qualified leads that converted to customers
+- High-engagement leads (multiple touchpoints)
+- Recent qualified leads
+
+For App Install:
+- High-engagement users (DAU/MAU)
+- Users who completed key actions
+- Users with high session duration
+- Paying users if freemium model
+
+For Awareness:
+- Brand engagers (video viewers, site visitors)
+- Email subscribers with high engagement
+- Social followers with engagement history
+
+SEEDS TO AVOID
+
+Poor seed choices that dilute quality:
+- All website visitors (too broad)
+- Single-page viewers (low intent)
+- Bounced users (negative signal)
+- Old data (outdated patterns)
+- Mixed intent audiences
+- Heavy discount buyers only
+
+EXPANSION RATE STRATEGY
+
+EXPANSION RATE FUNDAMENTALS
+
+Expansion rate determines audience size relative to platform population. Lower expansion rates mean higher similarity to seed but smaller reach.
+
+Trade-offs:
+- Lower expansion: Higher precision, lower reach, higher CPM
+- Higher expansion: Lower precision, higher reach, lower CPM
+
+EXPANSION RATE RECOMMENDATIONS
+
+By objective:
+
+Prospecting for High-Value Customers:
+- Start at 1 percent expansion
+- Test 1 percent vs 2 percent vs 3 percent
+- Rarely exceed 3 percent for value focus
+
+Prospecting for Volume:
+- Start at 3-5 percent expansion
+- Test up to 10 percent
+- Monitor efficiency closely at higher rates
+
+Awareness Building:
+- 5-10 percent expansion acceptable
+- Prioritize reach over precision
+- Expect lower efficiency metrics
+
+PLATFORM-SPECIFIC EXPANSION GUIDANCE
+
+Meta:
+- 1 percent: Highest precision, smallest reach (~2M users in US)
+- 1-3 percent: Best for performance campaigns
+- 3-5 percent: Balanced prospecting
+- 5-10 percent: Broad prospecting, expect efficiency loss
+- Beyond 10 percent: Rarely recommended
+
+Google:
+- Similar Audiences are percentage-based
+- Start with similar to converters segment
+- Layer with bid modifiers for control
+- Test expansion with Performance Max
+
+TikTok:
+- Algorithm is more aggressive
+- Broader expansions often work
+- 3-5 percent good starting point
+- Creative quality matters more than precision
+
+LinkedIn:
+- Smaller professional population
+- 1-3 percent recommended
+- Company-based lookalikes often better
+- Test individual vs company seeds
+
+LAYERED EXPANSION TESTING
+
+Recommended test structure:
+
+Phase 1: Precision Testing
+- Seed audience direct (if targetable)
+- 1 percent lookalike
+- 2 percent lookalike
+- Measure CPA and LTV differences
+
+Phase 2: Scale Testing
+- Best performer from Phase 1
+- 3 percent lookalike
+- 5 percent lookalike
+- Identify efficiency breakpoint
+
+Phase 3: Efficiency Frontier
+- Run winning expansion rates
+- Layer with interest or behavioral targeting
+- Test exclusions and suppressions
+
+REFRESH AND MAINTENANCE
+
+WHEN TO REFRESH SEEDS
+
+Refresh triggers:
+- Performance decline (20 percent+ CPA increase)
+- Seed age exceeds 90 days
+- Business model or product changes
+- New high-value customer cohorts available
+- Seasonal shifts in customer behavior
+
+REFRESH CADENCE BY BUSINESS TYPE
+
+E-commerce:
+- Monthly refresh for high-velocity
+- Quarterly refresh for standard
+- Pre-season refresh for seasonal peaks
+
+Subscription:
+- Quarterly refresh typical
+- Refresh when churn patterns change
+- Separate seeds for acquisition vs retention
+
+B2B:
+- Quarterly to semi-annual refresh
+- Refresh after major wins or losses
+- Align with sales cycle changes
+
+REFRESH BEST PRACTICES
+
+Refresh process:
+- Pull updated seed based on recent performance
+- Compare new seed to previous seed overlap
+- Gradual transition if overlap is low
+- A/B test old vs new if significant change
+- Document seed changes and rationale
+
+ADVANCED LOOKALIKE STRATEGIES
+
+VALUE-BASED LOOKALIKES
+
+Create tiered lookalikes by customer value:
+- Top 10 percent LTV seed for premium prospecting
+- Top 25 percent LTV seed for standard prospecting
+- Compare performance of value tiers
+- Allocate budget by efficiency
+
+EXCLUSION LAYERING
+
+Improve efficiency with exclusions:
+- Exclude existing customers
+- Exclude recent site visitors (for net new)
+- Exclude low-value behavioral patterns
+- Exclude competitor employees if B2B
+
+LOOKALIKE STACKING
+
+Combine lookalikes strategically:
+- Union of multiple value-based lookalikes
+- Intersection of lookalike with interest targeting
+- Sequential lookalikes through funnel
+
+INTERNATIONAL CONSIDERATIONS
+
+Cross-border lookalikes:
+- Source country seed vs target country seed
+- Local seeds preferred when available
+- Cultural and behavioral differences matter
+- Platform modeling varies by region
+
+PERFORMANCE MEASUREMENT
+
+KEY METRICS
+
+Track for each lookalike:
+- CPA vs seed audience CPA
+- LTV of acquired customers
+- Conversion rate by expansion rate
+- Efficiency frontier (CPA vs scale)
+
+BENCHMARKING
+
+Expected performance patterns:
+- 1 percent lookalike: 80-120 percent of seed CPA
+- 3 percent lookalike: 100-150 percent of seed CPA
+- 5 percent lookalike: 120-180 percent of seed CPA
+- 10 percent lookalike: 150-250 percent of seed CPA
+
+Performance varies significantly by vertical and platform.
+
+DIAGNOSTIC SIGNALS
+
+Lookalike issues to investigate:
+- Lookalike underperforming broad targeting: Seed quality issue
+- Rapid performance decay: Audience saturation
+- High CPM with low conversion: Wrong expansion rate
+- Performance flat across expansions: Weak seed signal
+
+CROSS-REFERENCES
+
+For segmentation methods: See AUD_KB_Segmentation_Methods_v1
+For targeting strategy: See AUD_KB_Targeting_Strategy_v1
+For LTV modeling: See AUD_KB_LTV_Models_v1
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial creation
+- Seed quality principles and sizing
+- Expansion rate strategy by platform
+- Refresh and maintenance guidance
+- Advanced strategies and measurement

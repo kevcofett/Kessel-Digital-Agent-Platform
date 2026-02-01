@@ -1,0 +1,169 @@
+DVO KB PLATFORM CONFIGURATIONS V7.0
+
+ENVIRONMENT CONFIGURATION
+
+DEVELOPMENT ENVIRONMENT
+- Purpose rapid iteration and testing
+- Approval required none
+- Minimum role developer
+- Auto-rollback disabled
+- Health check optional
+- Telemetry sampling 10 percent
+
+STAGING ENVIRONMENT
+- Purpose pre-production validation
+- Approval required none
+- Minimum role operator
+- Auto-rollback enabled
+- Health check required
+- Telemetry sampling 100 percent
+
+PRODUCTION ENVIRONMENT
+- Purpose live user-facing deployment
+- Approval required dual approver
+- Minimum role release_manager
+- Auto-rollback enabled
+- Health check required
+- Telemetry sampling 100 percent
+
+PLATFORM-SPECIFIC CONFIGURATIONS
+
+LANGCHAIN PLATFORM
+- Model provider Azure OpenAI
+- Temperature 0.1
+- Max tokens 4096
+- Memory type buffer window
+- Tool timeout 30 seconds
+
+FASTAPI PLATFORM
+- Workers per pod 4
+- Request timeout 60 seconds
+- Max concurrent requests 100
+- Health endpoint /health
+- Metrics endpoint /metrics
+
+COPILOT STUDIO PLATFORM
+- Solution prefix eap
+- Publisher kesseldigital
+- Environment type production
+- KB max size 36000 characters
+- Instructions max size 8000 characters
+
+AZURE FUNCTIONS PLATFORM
+- Runtime dotnet-isolated
+- Plan consumption
+- Timeout 5 minutes
+- Max instances 10
+- Instance memory 1536 MB
+
+FEATURE FLAGS
+
+DEPLOYMENT FEATURES
+- deploy_langchain enabled default
+- deploy_fastapi enabled default
+- deploy_copilot enabled fallback manual
+- deploy_functions enabled default
+
+ENVIRONMENT FEATURES
+- deploy_to_production enabled requires approval
+- deploy_to_staging enabled default
+- deploy_to_development enabled default
+
+OPERATIONAL FEATURES
+- auto_rollback enabled default
+- kb_sync enabled fallback degrade
+- health_check enabled required
+- integration_tests enabled default
+
+ADVANCED FEATURES
+- parallel_deploy disabled default
+- blue_green_deploy disabled default
+- canary_deploy disabled default
+
+CONNECTION STRINGS
+
+DATAVERSE CONNECTION
+- Environment URL from config
+- Authentication managed identity
+- Retry policy exponential backoff
+- Timeout 30 seconds
+
+AZURE OPENAI CONNECTION
+- Endpoint from Key Vault
+- API key from Key Vault
+- API version 2024-02-15-preview
+- Deployment name gpt-4o
+
+REDIS CONNECTION
+- Host from config
+- Port 6380
+- SSL enabled
+- Password from Key Vault
+
+POSTGRESQL CONNECTION
+- Host from config
+- Database dvo_state
+- SSL mode require
+- Connection pool 20
+
+RESOURCE LIMITS
+
+AGENT RESOURCES
+- Memory limit 2Gi
+- CPU limit 1 core
+- Replica count 2 minimum
+- Max replicas 10
+
+API GATEWAY RESOURCES
+- Memory limit 1Gi
+- CPU limit 500m
+- Replica count 2 minimum
+- Max replicas 5
+
+RATE LIMITS
+- Requests per minute 60
+- Deployments per hour 10
+- Rollbacks per hour 5
+- Status checks unlimited
+
+TIMEOUT CONFIGURATIONS
+
+DEPLOYMENT TIMEOUTS
+- Validation timeout 5 minutes
+- Deployment timeout 15 minutes
+- Health check timeout 2 minutes
+- Rollback timeout 10 minutes
+
+API TIMEOUTS
+- Request timeout 60 seconds
+- Long-running operation 15 minutes
+- Polling interval 10 seconds
+- Max poll attempts 90
+
+APPROVAL TIMEOUTS
+- Approval request expiry 24 hours
+- Reminder notification 4 hours
+- Auto-cancel threshold 48 hours
+
+MONITORING CONFIGURATION
+
+METRICS COLLECTION
+- Deployment success rate
+- Deployment duration
+- Rollback frequency
+- Error rate by agent
+- Health check failures
+
+ALERTING THRESHOLDS
+- Error rate greater than 5 percent critical
+- Deployment duration greater than 10 minutes warning
+- Health check failure immediate alert
+- Rollback triggered immediate alert
+
+LOG RETENTION
+- Application logs 30 days
+- Audit logs 365 days
+- Deployment logs 90 days
+- Error logs 180 days
+
+VERSION 7.0

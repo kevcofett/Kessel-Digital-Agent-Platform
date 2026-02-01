@@ -1,13 +1,287 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "base_year_revenue": {
+                  "type": "number"
+                },
+                "projection_years": {
+                  "type": "integer"
+                },
+                "growth_assumptions": {
+                  "type": "object"
+                },
+                "scenario_type": {
+                  "type": "string",
+                  "enum": ["conservative", "base", "optimistic"]
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "base_year_revenue": "@coalesce(triggerBody()?['base_year_revenue'], 10000000)",
+            "projection_years": "@coalesce(triggerBody()?['projection_years'], 5)",
+            "growth_assumptions": "@coalesce(triggerBody()?['growth_assumptions'], json('{}'))",
+            "scenario_type": "@coalesce(triggerBody()?['scenario_type'], 'base')",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Define_Growth_Scenarios": {
+          "type": "Compose",
+          "inputs": {
+            "scenarios": {
+              "conservative": {
+                "revenue_growth_rate": 0.05,
+                "margin_improvement": 0.005,
+                "new_client_rate": 0.10,
+                "churn_rate": 0.08,
+                "description": "Lower growth, stable market conditions"
+              },
+              "base": {
+                "revenue_growth_rate": 0.10,
+                "margin_improvement": 0.01,
+                "new_client_rate": 0.15,
+                "churn_rate": 0.05,
+                "description": "Expected growth based on current trajectory"
+              },
+              "optimistic": {
+                "revenue_growth_rate": 0.18,
+                "margin_improvement": 0.02,
+                "new_client_rate": 0.25,
+                "churn_rate": 0.03,
+                "description": "Accelerated growth, favorable market conditions"
+              }
+            },
+            "selected_scenario": "@outputs('Parse_Input')?['scenario_type']"
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Calculate_Revenue_Projections": {
+          "type": "Compose",
+          "inputs": {
+            "revenue_projections": {
+              "base_year": {
+                "year": 0,
+                "revenue": "@outputs('Parse_Input')?['base_year_revenue']",
+                "growth_rate": 0
+              },
+              "year_1": {
+                "year": 1,
+                "revenue": "@mul(outputs('Parse_Input')?['base_year_revenue'], 1.10)",
+                "growth_rate": 10
+              },
+              "year_2": {
+                "year": 2,
+                "revenue": "@mul(outputs('Parse_Input')?['base_year_revenue'], 1.21)",
+                "growth_rate": 10
+              },
+              "year_3": {
+                "year": 3,
+                "revenue": "@mul(outputs('Parse_Input')?['base_year_revenue'], 1.331)",
+                "growth_rate": 10
+              },
+              "year_4": {
+                "year": 4,
+                "revenue": "@mul(outputs('Parse_Input')?['base_year_revenue'], 1.4641)",
+                "growth_rate": 10
+              },
+              "year_5": {
+                "year": 5,
+                "revenue": "@mul(outputs('Parse_Input')?['base_year_revenue'], 1.61051)",
+                "growth_rate": 10
+              }
+            },
+            "cagr": 10,
+            "total_projected_revenue": "@mul(outputs('Parse_Input')?['base_year_revenue'], 6.10551)"
+          },
+          "runAfter": {
+            "Define_Growth_Scenarios": ["Succeeded"]
+          }
+        },
+        "Calculate_Margin_Projections": {
+          "type": "Compose",
+          "inputs": {
+            "margin_projections": {
+              "base_margin": 24,
+              "year_1": { "margin": 25, "nbi": "@mul(mul(outputs('Parse_Input')?['base_year_revenue'], 1.10), 0.25)" },
+              "year_2": { "margin": 26, "nbi": "@mul(mul(outputs('Parse_Input')?['base_year_revenue'], 1.21), 0.26)" },
+              "year_3": { "margin": 27, "nbi": "@mul(mul(outputs('Parse_Input')?['base_year_revenue'], 1.331), 0.27)" },
+              "year_4": { "margin": 28, "nbi": "@mul(mul(outputs('Parse_Input')?['base_year_revenue'], 1.4641), 0.28)" },
+              "year_5": { "margin": 29, "nbi": "@mul(mul(outputs('Parse_Input')?['base_year_revenue'], 1.61051), 0.29)" }
+            },
+            "margin_improvement_drivers": [
+              "Operational efficiency gains",
+              "Improved revenue mix toward high-margin services",
+              "Scale benefits on overhead"
+            ]
+          },
+          "runAfter": {
+            "Calculate_Revenue_Projections": ["Succeeded"]
+          }
+        },
+        "Build_Scenario_Comparison": {
+          "type": "Compose",
+          "inputs": {
+            "scenario_comparison": {
+              "year_5_outcomes": {
+                "conservative": {
+                  "revenue": "@mul(outputs('Parse_Input')?['base_year_revenue'], 1.27628)",
+                  "nbi": "@mul(mul(outputs('Parse_Input')?['base_year_revenue'], 1.27628), 0.265)",
+                  "cagr": 5
+                },
+                "base": {
+                  "revenue": "@mul(outputs('Parse_Input')?['base_year_revenue'], 1.61051)",
+                  "nbi": "@mul(mul(outputs('Parse_Input')?['base_year_revenue'], 1.61051), 0.29)",
+                  "cagr": 10
+                },
+                "optimistic": {
+                  "revenue": "@mul(outputs('Parse_Input')?['base_year_revenue'], 2.28776)",
+                  "nbi": "@mul(mul(outputs('Parse_Input')?['base_year_revenue'], 2.28776), 0.34)",
+                  "cagr": 18
+                }
+              },
+              "key_sensitivities": [
+                { "factor": "Growth rate +/- 2%", "revenue_impact": 800000 },
+                { "factor": "Margin +/- 1%", "nbi_impact": 161000 },
+                { "factor": "Churn rate +/- 2%", "revenue_impact": 500000 }
+              ]
+            }
+          },
+          "runAfter": {
+            "Calculate_Margin_Projections": ["Succeeded"]
+          }
+        },
+        "Generate_Investment_Requirements": {
+          "type": "Compose",
+          "inputs": {
+            "investment_plan": {
+              "required_investments": [
+                {
+                  "category": "Technology",
+                  "amount": 500000,
+                  "timing": "Year 1-2",
+                  "purpose": "Platform modernization and automation"
+                },
+                {
+                  "category": "Talent",
+                  "amount": 750000,
+                  "timing": "Year 1-3",
+                  "purpose": "Strategic hires and capability building"
+                },
+                {
+                  "category": "Market Development",
+                  "amount": 300000,
+                  "timing": "Year 2-4",
+                  "purpose": "New client acquisition and market expansion"
+                }
+              ],
+              "total_investment": 1550000,
+              "payback_period_years": 2.5,
+              "roi": 3.2
+            }
+          },
+          "runAfter": {
+            "Build_Scenario_Comparison": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "SPO",
+            "status": "success",
+            "data": {
+              "projection_summary": {
+                "base_year_revenue": "@outputs('Parse_Input')?['base_year_revenue']",
+                "projection_years": "@outputs('Parse_Input')?['projection_years']",
+                "scenario_type": "@outputs('Parse_Input')?['scenario_type']"
+              },
+              "growth_scenarios": "@outputs('Define_Growth_Scenarios')?['scenarios']",
+              "revenue_projections": "@outputs('Calculate_Revenue_Projections')?['revenue_projections']",
+              "margin_projections": "@outputs('Calculate_Margin_Projections')?['margin_projections']",
+              "scenario_comparison": "@outputs('Build_Scenario_Comparison')?['scenario_comparison']",
+              "investment_plan": "@outputs('Generate_Investment_Requirements')?['investment_plan']"
+            },
+            "confidence": "MEDIUM",
+            "sources": ["FINANCIAL_MODEL", "GROWTH_ASSUMPTIONS", "AGENT_KB"],
+            "recommendations": [
+              "Invest in technology to support growth trajectory",
+              "Build talent pipeline for scaling operations",
+              "Monitor key assumptions quarterly and adjust"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Generate_Investment_Requirements": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

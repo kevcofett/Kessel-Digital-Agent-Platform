@@ -1,13 +1,354 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "vision": {
+                  "type": "string"
+                },
+                "mission": {
+                  "type": "string"
+                },
+                "strategic_context": {
+                  "type": "object"
+                },
+                "planning_horizon": {
+                  "type": "string",
+                  "enum": ["1_year", "3_year", "5_year"]
+                },
+                "focus_areas": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "vision": "@coalesce(triggerBody()?['vision'], 'To be the leading provider in our market')",
+            "mission": "@coalesce(triggerBody()?['mission'], 'Delivering exceptional value to customers through innovation')",
+            "strategic_context": "@coalesce(triggerBody()?['strategic_context'], json('{}'))",
+            "planning_horizon": "@coalesce(triggerBody()?['planning_horizon'], '3_year')",
+            "focus_areas": "@coalesce(triggerBody()?['focus_areas'], createArray('growth', 'innovation', 'operational_excellence', 'talent'))",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Conduct_Strategic_Analysis": {
+          "type": "Compose",
+          "inputs": {
+            "situation_analysis": {
+              "internal_assessment": {
+                "strengths": [
+                  "Strong brand recognition",
+                  "Experienced leadership team",
+                  "Solid financial position",
+                  "Loyal customer base"
+                ],
+                "weaknesses": [
+                  "Legacy technology infrastructure",
+                  "Limited digital capabilities",
+                  "Slow decision-making processes",
+                  "Skills gaps in emerging areas"
+                ]
+              },
+              "external_assessment": {
+                "opportunities": [
+                  "Growing market demand",
+                  "Digital transformation trends",
+                  "Strategic partnership potential",
+                  "New market segments"
+                ],
+                "threats": [
+                  "Increasing competition",
+                  "Technology disruption",
+                  "Regulatory changes",
+                  "Economic uncertainty"
+                ]
+              },
+              "competitive_position": {
+                "market_share": "18%",
+                "position": "Strong challenger",
+                "differentiation": "Quality and service",
+                "competitive_advantage": "Customer relationships"
+              }
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Define_Strategic_Pillars": {
+          "type": "Compose",
+          "inputs": {
+            "strategic_pillars": {
+              "pillar_1_growth": {
+                "name": "Accelerate Growth",
+                "description": "Drive sustainable revenue growth through market expansion and customer acquisition",
+                "strategic_objectives": [
+                  { "objective": "Increase market share by 5%", "timeline": "3 years", "kpi": "Market share percentage" },
+                  { "objective": "Expand into 2 new markets", "timeline": "2 years", "kpi": "New market revenue" },
+                  { "objective": "Grow customer base by 30%", "timeline": "3 years", "kpi": "Active customer count" }
+                ],
+                "key_initiatives": [
+                  "Market expansion program",
+                  "Customer acquisition campaigns",
+                  "Strategic partnerships"
+                ]
+              },
+              "pillar_2_innovation": {
+                "name": "Drive Innovation",
+                "description": "Foster a culture of innovation to develop differentiated products and services",
+                "strategic_objectives": [
+                  { "objective": "Launch 3 new products/services", "timeline": "3 years", "kpi": "New product revenue" },
+                  { "objective": "Increase R&D investment to 8% of revenue", "timeline": "2 years", "kpi": "R&D spend ratio" },
+                  { "objective": "Achieve 20% revenue from new offerings", "timeline": "3 years", "kpi": "New product revenue share" }
+                ],
+                "key_initiatives": [
+                  "Innovation lab establishment",
+                  "Digital product development",
+                  "Customer co-creation program"
+                ]
+              },
+              "pillar_3_excellence": {
+                "name": "Operational Excellence",
+                "description": "Optimize operations to improve efficiency, quality, and customer experience",
+                "strategic_objectives": [
+                  { "objective": "Improve operational efficiency by 20%", "timeline": "3 years", "kpi": "Cost-to-revenue ratio" },
+                  { "objective": "Achieve 95% customer satisfaction", "timeline": "2 years", "kpi": "CSAT score" },
+                  { "objective": "Reduce time-to-market by 40%", "timeline": "3 years", "kpi": "Average launch cycle time" }
+                ],
+                "key_initiatives": [
+                  "Process automation program",
+                  "Quality improvement initiative",
+                  "Customer experience transformation"
+                ]
+              },
+              "pillar_4_talent": {
+                "name": "Build Talent Capability",
+                "description": "Attract, develop, and retain top talent to support strategic objectives",
+                "strategic_objectives": [
+                  { "objective": "Improve employee engagement to 80%", "timeline": "2 years", "kpi": "Engagement score" },
+                  { "objective": "Reduce voluntary turnover to under 10%", "timeline": "2 years", "kpi": "Turnover rate" },
+                  { "objective": "Build digital skills across 60% of workforce", "timeline": "3 years", "kpi": "Digital skills certification" }
+                ],
+                "key_initiatives": [
+                  "Leadership development program",
+                  "Digital skills academy",
+                  "Employee value proposition refresh"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Conduct_Strategic_Analysis": ["Succeeded"]
+          }
+        },
+        "Create_Strategy_Roadmap": {
+          "type": "Compose",
+          "inputs": {
+            "strategic_roadmap": {
+              "year_1": {
+                "theme": "Foundation Building",
+                "priorities": [
+                  "Establish innovation capabilities",
+                  "Launch operational excellence program",
+                  "Begin talent transformation"
+                ],
+                "key_milestones": [
+                  "Innovation lab operational",
+                  "Process automation Phase 1 complete",
+                  "Leadership program launched"
+                ],
+                "investment_allocation": {
+                  "growth": 25,
+                  "innovation": 30,
+                  "excellence": 30,
+                  "talent": 15
+                }
+              },
+              "year_2": {
+                "theme": "Acceleration",
+                "priorities": [
+                  "Scale growth initiatives",
+                  "Launch first new products",
+                  "Expand market presence"
+                ],
+                "key_milestones": [
+                  "First new market entry",
+                  "2 new products launched",
+                  "Efficiency gains realized"
+                ],
+                "investment_allocation": {
+                  "growth": 35,
+                  "innovation": 25,
+                  "excellence": 25,
+                  "talent": 15
+                }
+              },
+              "year_3": {
+                "theme": "Sustained Leadership",
+                "priorities": [
+                  "Consolidate market position",
+                  "Optimize and scale",
+                  "Build sustainable advantage"
+                ],
+                "key_milestones": [
+                  "Market share target achieved",
+                  "Full product portfolio complete",
+                  "Talent transformation complete"
+                ],
+                "investment_allocation": {
+                  "growth": 40,
+                  "innovation": 20,
+                  "excellence": 25,
+                  "talent": 15
+                }
+              }
+            },
+            "governance_model": {
+              "review_cadence": "Quarterly strategy reviews",
+              "steering_committee": "Executive leadership team",
+              "progress_reporting": "Monthly dashboards",
+              "adjustment_process": "Semi-annual strategy refresh"
+            }
+          },
+          "runAfter": {
+            "Define_Strategic_Pillars": ["Succeeded"]
+          }
+        },
+        "Define_Success_Metrics": {
+          "type": "Compose",
+          "inputs": {
+            "balanced_scorecard": {
+              "financial_perspective": {
+                "metrics": [
+                  { "name": "Revenue Growth", "target": "15% CAGR", "current": "8%" },
+                  { "name": "Profit Margin", "target": "18%", "current": "14%" },
+                  { "name": "ROIC", "target": "15%", "current": "12%" }
+                ]
+              },
+              "customer_perspective": {
+                "metrics": [
+                  { "name": "Customer Satisfaction", "target": "95%", "current": "82%" },
+                  { "name": "Net Promoter Score", "target": "50", "current": "35" },
+                  { "name": "Customer Retention", "target": "92%", "current": "85%" }
+                ]
+              },
+              "internal_process_perspective": {
+                "metrics": [
+                  { "name": "Operational Efficiency", "target": "20% improvement", "current": "baseline" },
+                  { "name": "Time to Market", "target": "40% reduction", "current": "baseline" },
+                  { "name": "Quality Score", "target": "98%", "current": "94%" }
+                ]
+              },
+              "learning_growth_perspective": {
+                "metrics": [
+                  { "name": "Employee Engagement", "target": "80%", "current": "68%" },
+                  { "name": "Digital Skills Certification", "target": "60%", "current": "25%" },
+                  { "name": "Innovation Index", "target": "Top quartile", "current": "Average" }
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Create_Strategy_Roadmap": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "CST",
+            "status": "success",
+            "data": {
+              "strategy_summary": {
+                "vision": "@outputs('Parse_Input')?['vision']",
+                "mission": "@outputs('Parse_Input')?['mission']",
+                "planning_horizon": "@outputs('Parse_Input')?['planning_horizon']",
+                "focus_areas": "@outputs('Parse_Input')?['focus_areas']"
+              },
+              "situation_analysis": "@outputs('Conduct_Strategic_Analysis')?['situation_analysis']",
+              "strategic_pillars": "@outputs('Define_Strategic_Pillars')?['strategic_pillars']",
+              "strategic_roadmap": "@outputs('Create_Strategy_Roadmap')?['strategic_roadmap']",
+              "governance_model": "@outputs('Create_Strategy_Roadmap')?['governance_model']",
+              "success_metrics": "@outputs('Define_Success_Metrics')?['balanced_scorecard']"
+            },
+            "confidence": "HIGH",
+            "sources": ["STRATEGY_FRAMEWORK", "BEST_PRACTICES", "AGENT_KB"],
+            "recommendations": [
+              "Validate strategy with key stakeholders",
+              "Develop detailed initiative plans for Year 1",
+              "Establish governance and review mechanisms"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Define_Success_Metrics": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

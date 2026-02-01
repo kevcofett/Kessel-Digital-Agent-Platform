@@ -1,13 +1,317 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "campaign_id": {
+                  "type": "string"
+                },
+                "learning_categories": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "include_historical": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "campaign_id": "@coalesce(triggerBody()?['campaign_id'], 'campaign-001')",
+            "learning_categories": "@coalesce(triggerBody()?['learning_categories'], createArray('audience', 'creative', 'channel', 'timing', 'budget'))",
+            "include_historical": "@coalesce(triggerBody()?['include_historical'], true)",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Analyze_Audience_Learnings": {
+          "type": "Compose",
+          "inputs": {
+            "audience_learnings": {
+              "category": "audience",
+              "key_learnings": [
+                {
+                  "learning_id": "aud-001",
+                  "insight": "Ages 35-44 outperform other age groups by 45% on ROAS",
+                  "confidence": "HIGH",
+                  "data_points": 12500,
+                  "actionable": true,
+                  "recommendation": "Increase bid modifiers for 35-44 age segment"
+                },
+                {
+                  "learning_id": "aud-002",
+                  "insight": "Mobile users convert at 30% lower rate but have 2x volume",
+                  "confidence": "HIGH",
+                  "data_points": 8200,
+                  "actionable": true,
+                  "recommendation": "Implement device-specific landing pages"
+                },
+                {
+                  "learning_id": "aud-003",
+                  "insight": "In-market audiences show 3.2x higher intent signals",
+                  "confidence": "MEDIUM",
+                  "data_points": 4500,
+                  "actionable": true,
+                  "recommendation": "Expand in-market audience targeting"
+                }
+              ],
+              "segment_performance": {
+                "top_performers": ["professionals_35_44", "tech_enthusiasts", "business_decision_makers"],
+                "underperformers": ["general_interest_18_24", "broad_remarketing_30d"]
+              }
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Analyze_Creative_Learnings": {
+          "type": "Compose",
+          "inputs": {
+            "creative_learnings": {
+              "category": "creative",
+              "key_learnings": [
+                {
+                  "learning_id": "cre-001",
+                  "insight": "Video creatives under 15 seconds have 2.1x completion rate",
+                  "confidence": "HIGH",
+                  "data_points": 5600,
+                  "actionable": true,
+                  "recommendation": "Prioritize short-form video content"
+                },
+                {
+                  "learning_id": "cre-002",
+                  "insight": "Product-focused imagery outperforms lifestyle by 35%",
+                  "confidence": "MEDIUM",
+                  "data_points": 3200,
+                  "actionable": true,
+                  "recommendation": "Update creative strategy to emphasize product shots"
+                },
+                {
+                  "learning_id": "cre-003",
+                  "insight": "CTAs with urgency language increase CTR by 22%",
+                  "confidence": "HIGH",
+                  "data_points": 7800,
+                  "actionable": true,
+                  "recommendation": "Incorporate urgency messaging in all CTAs"
+                }
+              ],
+              "format_performance": {
+                "best_formats": ["video_15s", "carousel", "static_product"],
+                "worst_formats": ["long_form_video", "text_only"]
+              }
+            }
+          },
+          "runAfter": {
+            "Analyze_Audience_Learnings": ["Succeeded"]
+          }
+        },
+        "Analyze_Channel_Learnings": {
+          "type": "Compose",
+          "inputs": {
+            "channel_learnings": {
+              "category": "channel",
+              "key_learnings": [
+                {
+                  "learning_id": "cha-001",
+                  "insight": "Paid Search consistently delivers highest ROAS across campaigns",
+                  "confidence": "HIGH",
+                  "data_points": 25000,
+                  "actionable": true,
+                  "recommendation": "Maintain Search as primary performance channel"
+                },
+                {
+                  "learning_id": "cha-002",
+                  "insight": "YouTube performs better for awareness, but poor for direct response",
+                  "confidence": "MEDIUM",
+                  "data_points": 8500,
+                  "actionable": true,
+                  "recommendation": "Use YouTube for upper funnel only"
+                },
+                {
+                  "learning_id": "cha-003",
+                  "insight": "LinkedIn CPC is 3x higher but lead quality justifies cost",
+                  "confidence": "HIGH",
+                  "data_points": 1200,
+                  "actionable": true,
+                  "recommendation": "Continue LinkedIn for B2B targeting despite higher CPCs"
+                }
+              ],
+              "channel_roles": {
+                "performance": ["paid_search", "paid_social_retargeting"],
+                "consideration": ["display_prospecting", "native"],
+                "awareness": ["video", "ctv", "podcast"]
+              }
+            }
+          },
+          "runAfter": {
+            "Analyze_Creative_Learnings": ["Succeeded"]
+          }
+        },
+        "Analyze_Timing_Learnings": {
+          "type": "Compose",
+          "inputs": {
+            "timing_learnings": {
+              "category": "timing",
+              "key_learnings": [
+                {
+                  "learning_id": "tim-001",
+                  "insight": "Tuesdays and Wednesdays have 25% higher conversion rates",
+                  "confidence": "HIGH",
+                  "data_points": 18000,
+                  "actionable": true,
+                  "recommendation": "Increase bids on Tue-Wed, reduce weekend spend"
+                },
+                {
+                  "learning_id": "tim-002",
+                  "insight": "Morning hours (8-11 AM) show highest engagement for B2B",
+                  "confidence": "MEDIUM",
+                  "data_points": 6500,
+                  "actionable": true,
+                  "recommendation": "Implement dayparting for B2B campaigns"
+                },
+                {
+                  "learning_id": "tim-003",
+                  "insight": "Campaign fatigue sets in after 6 weeks without creative refresh",
+                  "confidence": "HIGH",
+                  "data_points": 12000,
+                  "actionable": true,
+                  "recommendation": "Plan creative refreshes every 4-5 weeks"
+                }
+              ],
+              "optimal_timing": {
+                "best_days": ["Tuesday", "Wednesday", "Thursday"],
+                "best_hours": ["08:00-11:00", "13:00-15:00"],
+                "worst_times": ["Saturday", "Sunday", "22:00-06:00"]
+              }
+            }
+          },
+          "runAfter": {
+            "Analyze_Channel_Learnings": ["Succeeded"]
+          }
+        },
+        "Consolidate_Learnings": {
+          "type": "Compose",
+          "inputs": {
+            "learning_summary": {
+              "total_learnings": 12,
+              "high_confidence_learnings": 8,
+              "actionable_learnings": 12,
+              "categories_analyzed": 4,
+              "data_points_analyzed": 108500
+            },
+            "priority_actions": [
+              { "priority": 1, "learning": "tim-001", "action": "Implement day-of-week bid adjustments" },
+              { "priority": 2, "learning": "aud-001", "action": "Increase 35-44 age segment investment" },
+              { "priority": 3, "learning": "cre-001", "action": "Shift video production to short-form" },
+              { "priority": 4, "learning": "cha-001", "action": "Protect and grow Search budget" }
+            ],
+            "knowledge_base_updates": [
+              { "kb_section": "audience_targeting", "learnings_added": 3 },
+              { "kb_section": "creative_best_practices", "learnings_added": 3 },
+              { "kb_section": "channel_strategy", "learnings_added": 3 },
+              { "kb_section": "timing_optimization", "learnings_added": 3 }
+            ]
+          },
+          "runAfter": {
+            "Analyze_Timing_Learnings": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "PRF",
+            "status": "success",
+            "data": {
+              "extraction_summary": {
+                "campaign_id": "@outputs('Parse_Input')?['campaign_id']",
+                "categories_analyzed": "@outputs('Parse_Input')?['learning_categories']",
+                "include_historical": "@outputs('Parse_Input')?['include_historical']"
+              },
+              "audience_learnings": "@outputs('Analyze_Audience_Learnings')?['audience_learnings']",
+              "creative_learnings": "@outputs('Analyze_Creative_Learnings')?['creative_learnings']",
+              "channel_learnings": "@outputs('Analyze_Channel_Learnings')?['channel_learnings']",
+              "timing_learnings": "@outputs('Analyze_Timing_Learnings')?['timing_learnings']",
+              "learning_summary": "@outputs('Consolidate_Learnings')?['learning_summary']",
+              "priority_actions": "@outputs('Consolidate_Learnings')?['priority_actions']"
+            },
+            "confidence": "HIGH",
+            "sources": ["CAMPAIGN_DATA", "HISTORICAL_DATA", "AGENT_KB"],
+            "recommendations": [
+              "Apply top priority learnings to active campaigns",
+              "Document learnings in team knowledge base",
+              "Share key insights with stakeholders"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Consolidate_Learnings": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

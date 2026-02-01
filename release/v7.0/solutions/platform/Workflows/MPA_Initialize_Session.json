@@ -1,13 +1,113 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared_commondataserviceforapps",
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_dataverse"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["client_id", "session_type"],
+              "properties": {
+                "client_id": { "type": "string" },
+                "session_type": { "type": "string", "enum": ["MEDIA_PLAN", "CONSULTING", "GROWTH_HACKING"] },
+                "user_id": { "type": "string" },
+                "environment": { "type": "string", "default": "MASTERCARD" }
+              }
+            },
+            "method": "POST"
+          }
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "client_id": "@triggerBody()?['client_id']",
+            "session_type": "@triggerBody()?['session_type']",
+            "user_id": "@coalesce(triggerBody()?['user_id'], 'system')",
+            "environment": "@coalesce(triggerBody()?['environment'], 'MASTERCARD')",
+            "session_id": "@guid()",
+            "timestamp": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Create_Session_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "eap_sessions",
+              "item/eap_session_id": "@outputs('Parse_Input')?['session_id']",
+              "item/eap_client_id": "@outputs('Parse_Input')?['client_id']",
+              "item/eap_session_type": "@outputs('Parse_Input')?['session_type']",
+              "item/eap_status": "active",
+              "item/eap_workflow_step": 1,
+              "item/eap_workflow_gate": 0,
+              "item/eap_plan_state": "{}"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": { "Parse_Input": ["Succeeded"] }
+        },
+        "Initialize_Memory": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@outputs('Parse_Input')?['session_id']",
+            "conversation_history": [],
+            "plan_context": {},
+            "routing_history": [],
+            "active_agents": ["ORC"]
+          },
+          "runAfter": { "Create_Session_Record": ["Succeeded"] }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": { "Content-Type": "application/json" },
+            "body": {
+              "success": true,
+              "session_id": "@outputs('Parse_Input')?['session_id']",
+              "session_type": "@outputs('Parse_Input')?['session_type']",
+              "workflow_state": { "current_step": 1, "current_gate": 0 },
+              "memory_context": "@outputs('Initialize_Memory')"
+            }
+          },
+          "runAfter": { "Initialize_Memory": ["Succeeded"] }
+        }
+      }
     }
   }
 }

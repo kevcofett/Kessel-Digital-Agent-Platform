@@ -1,13 +1,303 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "initiative_name": {
+                  "type": "string"
+                },
+                "stakeholder_groups": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "analysis_depth": {
+                  "type": "string",
+                  "enum": ["basic", "detailed", "comprehensive"]
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "initiative_name": "@coalesce(triggerBody()?['initiative_name'], 'MPA Implementation')",
+            "stakeholder_groups": "@coalesce(triggerBody()?['stakeholder_groups'], createArray('executives', 'managers', 'practitioners', 'support_teams'))",
+            "analysis_depth": "@coalesce(triggerBody()?['analysis_depth'], 'detailed')",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Define_Stakeholder_Categories": {
+          "type": "Compose",
+          "inputs": {
+            "stakeholder_matrix": {
+              "high_power_high_interest": {
+                "label": "Key Players",
+                "strategy": "Manage Closely",
+                "engagement_level": "Partner",
+                "communication_frequency": "Weekly"
+              },
+              "high_power_low_interest": {
+                "label": "Keep Satisfied",
+                "strategy": "Keep Satisfied",
+                "engagement_level": "Consult",
+                "communication_frequency": "Monthly"
+              },
+              "low_power_high_interest": {
+                "label": "Keep Informed",
+                "strategy": "Keep Informed",
+                "engagement_level": "Involve",
+                "communication_frequency": "Bi-weekly"
+              },
+              "low_power_low_interest": {
+                "label": "Monitor",
+                "strategy": "Monitor",
+                "engagement_level": "Inform",
+                "communication_frequency": "As needed"
+              }
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Map_Stakeholders": {
+          "type": "Compose",
+          "inputs": {
+            "stakeholder_map": [
+              {
+                "group": "Executive Leadership",
+                "role": "Executive Sponsor",
+                "power": "HIGH",
+                "interest": "HIGH",
+                "category": "Key Players",
+                "current_stance": "Supportive",
+                "influence_type": "Decision maker",
+                "engagement_approach": "Weekly steering committee, executive briefings"
+              },
+              {
+                "group": "Media Planning Directors",
+                "role": "Primary Users",
+                "power": "MEDIUM",
+                "interest": "HIGH",
+                "category": "Keep Informed",
+                "current_stance": "Neutral",
+                "influence_type": "Opinion leader",
+                "engagement_approach": "Hands-on training, pilot participation, feedback sessions"
+              },
+              {
+                "group": "IT Department",
+                "role": "Technical Enabler",
+                "power": "HIGH",
+                "interest": "MEDIUM",
+                "category": "Keep Satisfied",
+                "current_stance": "Neutral",
+                "influence_type": "Technical gatekeeper",
+                "engagement_approach": "Technical reviews, integration planning, security reviews"
+              },
+              {
+                "group": "Finance Team",
+                "role": "Budget Approver",
+                "power": "HIGH",
+                "interest": "LOW",
+                "category": "Keep Satisfied",
+                "current_stance": "Cautious",
+                "influence_type": "Resource controller",
+                "engagement_approach": "ROI reporting, budget tracking, cost-benefit updates"
+              },
+              {
+                "group": "Media Planners",
+                "role": "End Users",
+                "power": "LOW",
+                "interest": "HIGH",
+                "category": "Keep Informed",
+                "current_stance": "Mixed",
+                "influence_type": "Adoption driver",
+                "engagement_approach": "Training, support resources, champion network"
+              },
+              {
+                "group": "Clients",
+                "role": "Beneficiaries",
+                "power": "MEDIUM",
+                "interest": "MEDIUM",
+                "category": "Keep Informed",
+                "current_stance": "Interested",
+                "influence_type": "External validation",
+                "engagement_approach": "Capability presentations, value demonstrations"
+              }
+            ]
+          },
+          "runAfter": {
+            "Define_Stakeholder_Categories": ["Succeeded"]
+          }
+        },
+        "Analyze_Influence_Network": {
+          "type": "Compose",
+          "inputs": {
+            "influence_analysis": {
+              "champions": [
+                { "name": "Executive Sponsor", "influence_reach": "Organization-wide", "leverage": "Vision and resources" },
+                { "name": "Early Adopter Directors", "influence_reach": "Team-level", "leverage": "Peer influence" }
+              ],
+              "potential_resistors": [
+                { "group": "Some Media Planners", "concern": "Workflow disruption", "mitigation": "Show efficiency gains" },
+                { "group": "Finance Team", "concern": "ROI uncertainty", "mitigation": "Provide clear metrics" }
+              ],
+              "neutral_influencers": [
+                { "group": "IT Department", "opportunity": "Convert to champions through technical involvement" }
+              ]
+            },
+            "coalition_building": {
+              "priority_1": "Secure executive sponsorship visibility",
+              "priority_2": "Build early adopter champion network",
+              "priority_3": "Address finance concerns with ROI data"
+            }
+          },
+          "runAfter": {
+            "Map_Stakeholders": ["Succeeded"]
+          }
+        },
+        "Generate_Engagement_Plan": {
+          "type": "Compose",
+          "inputs": {
+            "engagement_plan": {
+              "phase_1_awareness": {
+                "duration": "Weeks 1-2",
+                "activities": [
+                  "Executive announcement",
+                  "All-hands introduction",
+                  "Initial stakeholder meetings"
+                ],
+                "key_messages": [
+                  "Why we are making this change",
+                  "What it means for you",
+                  "How we will support you"
+                ]
+              },
+              "phase_2_understanding": {
+                "duration": "Weeks 3-6",
+                "activities": [
+                  "Detailed briefings by group",
+                  "Q&A sessions",
+                  "Pilot team selection"
+                ],
+                "key_messages": [
+                  "How the system works",
+                  "Timeline and milestones",
+                  "Training and support available"
+                ]
+              },
+              "phase_3_commitment": {
+                "duration": "Weeks 7-10",
+                "activities": [
+                  "Training programs",
+                  "Pilot execution",
+                  "Feedback collection"
+                ],
+                "key_messages": [
+                  "Early wins and successes",
+                  "How feedback is being addressed",
+                  "Roadmap for full rollout"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Analyze_Influence_Network": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "CHG",
+            "status": "success",
+            "data": {
+              "mapping_summary": {
+                "initiative": "@outputs('Parse_Input')?['initiative_name']",
+                "stakeholders_mapped": "@length(outputs('Map_Stakeholders')?['stakeholder_map'])",
+                "analysis_depth": "@outputs('Parse_Input')?['analysis_depth']"
+              },
+              "stakeholder_matrix": "@outputs('Define_Stakeholder_Categories')?['stakeholder_matrix']",
+              "stakeholder_map": "@outputs('Map_Stakeholders')?['stakeholder_map']",
+              "influence_analysis": "@outputs('Analyze_Influence_Network')?['influence_analysis']",
+              "coalition_building": "@outputs('Analyze_Influence_Network')?['coalition_building']",
+              "engagement_plan": "@outputs('Generate_Engagement_Plan')?['engagement_plan']"
+            },
+            "confidence": "HIGH",
+            "sources": ["STAKEHOLDER_ANALYSIS", "BEST_PRACTICES", "AGENT_KB"],
+            "recommendations": [
+              "Focus on converting neutral IT stakeholders to champions",
+              "Address finance concerns proactively with ROI data",
+              "Build champion network among early adopter planners"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Generate_Engagement_Plan": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

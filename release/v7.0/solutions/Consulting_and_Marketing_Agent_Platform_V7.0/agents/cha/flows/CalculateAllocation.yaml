@@ -162,7 +162,7 @@ steps:
     inputs:
       channels: "@body('build_initial_allocation')"
       total_efficiency: "@sum(body('build_initial_allocation'), 'efficiency_score')"
-      normalized_allocations: "@json('[{\"channel_id\": \"placeholder\", \"allocation_percent\": 0}]')"
+      normalized_allocations: "@body('build_initial_allocation')"
     run_after: build_initial_allocation
 
   # Step 6: Apply constraints

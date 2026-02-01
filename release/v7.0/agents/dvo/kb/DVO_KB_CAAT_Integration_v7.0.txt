@@ -207,26 +207,26 @@ BACKWARD COMPATIBILITY
 DVO INTEGRATION
 
 DEPLOY COMMAND FLOW
-1. DVO receives deploy request
-2. Load agent spec for target agents
-3. Call CAAT translator for target platform
-4. Receive deployment artifacts
-5. Execute platform-specific deployment
-6. Verify deployment success
-7. Update version tracking
+- DVO receives deploy request
+- Load agent spec for target agents
+- Call CAAT translator for target platform
+- Receive deployment artifacts
+- Execute platform-specific deployment
+- Verify deployment success
+- Update version tracking
 
 VALIDATE COMMAND FLOW
-1. DVO receives validate request
-2. Load agent spec
-3. Call CAAT validator
-4. Report constraint violations
-5. Suggest fixes if applicable
+- DVO receives validate request
+- Load agent spec
+- Call CAAT validator
+- Report constraint violations
+- Suggest fixes if applicable
 
 MULTI-PLATFORM DEPLOY
-1. Parse target platforms from request
-2. Translate to each platform
-3. Deploy in dependency order
-4. Verify all platforms
-5. Rollback all on any failure
+- Parse target platforms from request
+- Translate to each platform
+- Deploy in dependency order
+- Verify all platforms
+- Rollback all on any failure
 
 VERSION 7.0

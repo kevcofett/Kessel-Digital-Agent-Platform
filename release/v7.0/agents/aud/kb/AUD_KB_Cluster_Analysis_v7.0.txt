@@ -48,11 +48,11 @@ K-MEANS ALGORITHM
 K-means partitions customers into K clusters by minimizing within-cluster variance.
 
 ALGORITHM STEPS
-1. Choose number of clusters K
-2. Initialize K cluster centers randomly
-3. Assign each customer to nearest center
-4. Recalculate centers as cluster means
-5. Repeat steps 3-4 until convergence
+- Choose number of clusters K
+- Initialize K cluster centers randomly
+- Assign each customer to nearest center
+- Recalculate centers as cluster means
+- Repeat steps 3-4 until convergence
 
 DISTANCE CALCULATION
 Euclidean distance commonly used:
@@ -79,18 +79,18 @@ Result: Range from 0 to 1
 CHOOSING NUMBER OF CLUSTERS (K)
 
 ELBOW METHOD
-1. Run K-means for K = 2 through K = 15
-2. Calculate within-cluster sum of squares (WCSS) for each K
-3. Plot WCSS against K
-4. Find elbow point where improvement diminishes
+- Run K-means for K = 2 through K = 15
+- Calculate within-cluster sum of squares (WCSS) for each K
+- Plot WCSS against K
+- Find elbow point where improvement diminishes
 
 SILHOUETTE ANALYSIS
-1. Calculate silhouette score for each customer
-2. Silhouette = (b - a) / max(a, b)
+- Calculate silhouette score for each customer
+- Silhouette = (b - a) / max(a, b)
    Where: a = avg distance to same cluster, b = avg distance to nearest other cluster
-3. Average across customers
-4. Higher average silhouette indicates better clustering
-5. Optimal K maximizes average silhouette
+- Average across customers
+- Higher average silhouette indicates better clustering
+- Optimal K maximizes average silhouette
 
 PRACTICAL GUIDELINES
 - Start with K = 5 to 8 for customer segmentation
@@ -107,10 +107,10 @@ HIERARCHICAL CLUSTERING OVERVIEW
 Hierarchical clustering builds a tree of clusters (dendrogram) showing relationships between customers and groups at multiple levels.
 
 AGGLOMERATIVE APPROACH (BOTTOM-UP)
-1. Start with each customer as own cluster
-2. Merge two most similar clusters
-3. Repeat until single cluster remains
-4. Cut dendrogram at desired level
+- Start with each customer as own cluster
+- Merge two most similar clusters
+- Repeat until single cluster remains
+- Cut dendrogram at desired level
 
 LINKAGE METHODS
 
@@ -201,9 +201,9 @@ EXAMPLE CLUSTER NAMES
 CLUSTER STABILITY ANALYSIS
 
 STABILITY TESTING
-1. Run clustering on random 80 percent samples multiple times
-2. Measure how consistently customers are assigned to same cluster
-3. Stability score = percent consistent assignment
+- Run clustering on random 80 percent samples multiple times
+- Measure how consistently customers are assigned to same cluster
+- Stability score = percent consistent assignment
 
 INTERPRETATION
 - Stability above 80 percent: Robust clusters

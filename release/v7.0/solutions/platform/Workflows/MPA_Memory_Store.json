@@ -1,13 +1,111 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared_commondataserviceforapps",
+        "runtimeSource": "embedded",
+        "connection": { "connectionReferenceLogicalName": "mpa_dataverse" },
+        "api": { "name": "shared_commondataserviceforapps" }
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": { "defaultValue": {}, "type": "Object" },
+        "$authentication": { "defaultValue": {}, "type": "SecureObject" }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "memory_type", "data"],
+              "properties": {
+                "session_id": { "type": "string", "format": "uuid" },
+                "memory_type": { "type": "string", "enum": ["conversation", "entity", "plan_state", "routing", "contribution"] },
+                "data": { "type": "object" },
+                "merge_strategy": { "type": "string", "enum": ["replace", "merge", "append"], "default": "merge" }
+              }
+            },
+            "method": "POST"
+          }
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "memory_type": "@triggerBody()?['memory_type']",
+            "data": "@triggerBody()?['data']",
+            "merge_strategy": "@coalesce(triggerBody()?['merge_strategy'], 'merge')",
+            "timestamp": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Get_Session": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "eap_sessions",
+              "recordId": "@outputs('Parse_Input')?['session_id']"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": { "Parse_Input": ["Succeeded"] }
+        },
+        "Build_Updated_Memory": {
+          "type": "Compose",
+          "inputs": {
+            "memory_type": "@outputs('Parse_Input')?['memory_type']",
+            "updated_data": "@outputs('Parse_Input')?['data']",
+            "stored_at": "@outputs('Parse_Input')?['timestamp']"
+          },
+          "runAfter": { "Get_Session": ["Succeeded"] }
+        },
+        "Update_Session": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "UpdateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "eap_sessions",
+              "recordId": "@outputs('Parse_Input')?['session_id']",
+              "item/eap_plan_state": "@string(outputs('Build_Updated_Memory'))",
+              "item/modifiedon": "@outputs('Parse_Input')?['timestamp']"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": { "Build_Updated_Memory": ["Succeeded"] }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": { "Content-Type": "application/json" },
+            "body": {
+              "success": true,
+              "session_id": "@outputs('Parse_Input')?['session_id']",
+              "memory_type": "@outputs('Parse_Input')?['memory_type']",
+              "stored_at": "@outputs('Parse_Input')?['timestamp']"
+            }
+          },
+          "runAfter": { "Update_Session": ["Succeeded"] }
+        }
+      }
     }
   }
 }

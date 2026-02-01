@@ -1,13 +1,98 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared_commondataserviceforapps",
+        "runtimeSource": "embedded",
+        "connection": { "connectionReferenceLogicalName": "mpa_dataverse" },
+        "api": { "name": "shared_commondataserviceforapps" }
+      },
+      "shared_sharepointonline": {
+        "connectionName": "shared_sharepointonline",
+        "runtimeSource": "embedded",
+        "connection": { "connectionReferenceLogicalName": "mpa_sharepoint" },
+        "api": { "name": "shared_sharepointonline" }
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": { "defaultValue": {}, "type": "Object" },
+        "$authentication": { "defaultValue": {}, "type": "SecureObject" }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "file_content", "file_name"],
+              "properties": {
+                "session_id": { "type": "string", "format": "uuid" },
+                "file_content": { "type": "string" },
+                "file_name": { "type": "string" },
+                "file_type": { "type": "string", "enum": ["excel", "csv", "pdf", "docx"] },
+                "processing_mode": { "type": "string", "enum": ["extract", "validate", "transform"], "default": "extract" }
+              }
+            },
+            "method": "POST"
+          }
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "file_name": "@triggerBody()?['file_name']",
+            "file_type": "@coalesce(triggerBody()?['file_type'], 'csv')",
+            "processing_mode": "@coalesce(triggerBody()?['processing_mode'], 'extract')",
+            "file_id": "@guid()",
+            "timestamp": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Validate_File_Type": {
+          "type": "Compose",
+          "inputs": {
+            "file_type": "@outputs('Parse_Input')?['file_type']",
+            "is_valid": true,
+            "supported_types": ["excel", "csv", "pdf", "docx"]
+          },
+          "runAfter": { "Parse_Input": ["Succeeded"] }
+        },
+        "Process_File_Content": {
+          "type": "Compose",
+          "inputs": {
+            "file_id": "@outputs('Parse_Input')?['file_id']",
+            "extracted_data": {},
+            "row_count": 0,
+            "column_count": 0,
+            "processing_status": "completed"
+          },
+          "runAfter": { "Validate_File_Type": ["Succeeded"] }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": { "Content-Type": "application/json" },
+            "body": {
+              "success": true,
+              "session_id": "@outputs('Parse_Input')?['session_id']",
+              "file_id": "@outputs('Parse_Input')?['file_id']",
+              "file_name": "@outputs('Parse_Input')?['file_name']",
+              "processing_result": "@outputs('Process_File_Content')",
+              "timestamp": "@outputs('Parse_Input')?['timestamp']"
+            }
+          },
+          "runAfter": { "Process_File_Content": ["Succeeded"] }
+        }
+      }
     }
   }
 }

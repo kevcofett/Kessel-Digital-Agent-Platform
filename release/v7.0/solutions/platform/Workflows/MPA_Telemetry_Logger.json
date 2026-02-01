@@ -1,13 +1,96 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared_commondataserviceforapps",
+        "runtimeSource": "embedded",
+        "connection": { "connectionReferenceLogicalName": "mpa_dataverse" },
+        "api": { "name": "shared_commondataserviceforapps" }
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": { "defaultValue": {}, "type": "Object" },
+        "$authentication": { "defaultValue": {}, "type": "SecureObject" }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "event_type", "agent_code"],
+              "properties": {
+                "session_id": { "type": "string", "format": "uuid" },
+                "event_type": { "type": "string", "enum": ["ROUTING", "CAPABILITY_INVOKE", "CAPABILITY_SUCCESS", "CAPABILITY_FAILURE", "SESSION_START", "SESSION_END", "ERROR"] },
+                "agent_code": { "type": "string" },
+                "capability_code": { "type": "string" },
+                "duration_ms": { "type": "integer" },
+                "metadata": { "type": "object" }
+              }
+            },
+            "method": "POST"
+          }
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "event_type": "@triggerBody()?['event_type']",
+            "agent_code": "@triggerBody()?['agent_code']",
+            "capability_code": "@coalesce(triggerBody()?['capability_code'], '')",
+            "duration_ms": "@coalesce(triggerBody()?['duration_ms'], 0)",
+            "metadata": "@coalesce(triggerBody()?['metadata'], json('{}'))",
+            "telemetry_id": "@guid()",
+            "timestamp": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Create_Telemetry_Record": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "eap_telemetry",
+              "item/eap_name": "@concat(outputs('Parse_Input')?['event_type'], ': ', outputs('Parse_Input')?['agent_code'])",
+              "item/session_id": "@outputs('Parse_Input')?['session_id']",
+              "item/event_type": "@outputs('Parse_Input')?['event_type']",
+              "item/agent_code": "@outputs('Parse_Input')?['agent_code']",
+              "item/capability_code": "@outputs('Parse_Input')?['capability_code']",
+              "item/timestamp": "@outputs('Parse_Input')?['timestamp']",
+              "item/duration_ms": "@outputs('Parse_Input')?['duration_ms']"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": { "Parse_Input": ["Succeeded"] }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": { "Content-Type": "application/json" },
+            "body": {
+              "success": true,
+              "telemetry_id": "@outputs('Parse_Input')?['telemetry_id']",
+              "session_id": "@outputs('Parse_Input')?['session_id']",
+              "event_type": "@outputs('Parse_Input')?['event_type']",
+              "logged_at": "@outputs('Parse_Input')?['timestamp']"
+            }
+          },
+          "runAfter": { "Create_Telemetry_Record": ["Succeeded"] }
+        }
+      }
     }
   }
 }

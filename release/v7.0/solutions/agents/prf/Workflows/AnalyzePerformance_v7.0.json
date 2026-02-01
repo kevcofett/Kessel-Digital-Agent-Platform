@@ -1,13 +1,292 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "campaign_id": {
+                  "type": "string"
+                },
+                "date_range": {
+                  "type": "object",
+                  "properties": {
+                    "start_date": { "type": "string", "format": "date" },
+                    "end_date": { "type": "string", "format": "date" }
+                  }
+                },
+                "metrics": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "comparison_type": {
+                  "type": "string",
+                  "enum": ["period_over_period", "benchmark", "target", "none"]
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "campaign_id": "@coalesce(triggerBody()?['campaign_id'], 'campaign-001')",
+            "date_range": "@coalesce(triggerBody()?['date_range'], json('{\"start_date\": \"2024-01-01\", \"end_date\": \"2024-01-31\"}'))",
+            "metrics": "@coalesce(triggerBody()?['metrics'], createArray('impressions', 'clicks', 'conversions', 'spend', 'roas'))",
+            "comparison_type": "@coalesce(triggerBody()?['comparison_type'], 'target')",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Load_Performance_Data": {
+          "type": "Compose",
+          "inputs": {
+            "performance_data": {
+              "campaign_id": "@outputs('Parse_Input')?['campaign_id']",
+              "period": "@outputs('Parse_Input')?['date_range']",
+              "aggregate_metrics": {
+                "impressions": 15234567,
+                "clicks": 182456,
+                "conversions": 4521,
+                "spend": 485000,
+                "revenue": 1825000
+              },
+              "calculated_metrics": {
+                "ctr": 0.012,
+                "cpc": 2.66,
+                "cpa": 107.28,
+                "cvr": 0.0248,
+                "roas": 3.76
+              },
+              "daily_trend": [
+                { "date": "2024-01-01", "impressions": 485000, "clicks": 5800, "spend": 15500 },
+                { "date": "2024-01-15", "impressions": 520000, "clicks": 6200, "spend": 16200 },
+                { "date": "2024-01-31", "impressions": 495000, "clicks": 5950, "spend": 15800 }
+              ]
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Compare_To_Targets": {
+          "type": "Compose",
+          "inputs": {
+            "target_comparison": {
+              "targets": {
+                "impressions": { "target": 14000000, "actual": 15234567, "variance": 8.82, "status": "exceeding" },
+                "clicks": { "target": 168000, "actual": 182456, "variance": 8.60, "status": "exceeding" },
+                "conversions": { "target": 5000, "actual": 4521, "variance": -9.58, "status": "below" },
+                "spend": { "target": 500000, "actual": 485000, "variance": -3.00, "status": "under_budget" },
+                "roas": { "target": 4.00, "actual": 3.76, "variance": -6.00, "status": "below" }
+              },
+              "overall_status": "on_track",
+              "pacing": {
+                "budget_pacing": 97,
+                "days_remaining": 0,
+                "projected_spend": 485000
+              }
+            }
+          },
+          "runAfter": {
+            "Load_Performance_Data": ["Succeeded"]
+          }
+        },
+        "Analyze_Channel_Performance": {
+          "type": "Compose",
+          "inputs": {
+            "channel_breakdown": {
+              "paid_search": {
+                "spend": 145500,
+                "spend_share": 30,
+                "impressions": 2285500,
+                "clicks": 68537,
+                "conversions": 1583,
+                "ctr": 0.030,
+                "cpc": 2.12,
+                "cpa": 91.90,
+                "roas": 4.25,
+                "performance_index": 112
+              },
+              "paid_social": {
+                "spend": 121250,
+                "spend_share": 25,
+                "impressions": 4570370,
+                "clicks": 41115,
+                "conversions": 1085,
+                "ctr": 0.009,
+                "cpc": 2.95,
+                "cpa": 111.75,
+                "roas": 3.50,
+                "performance_index": 95
+              },
+              "display": {
+                "spend": 97000,
+                "spend_share": 20,
+                "impressions": 6093827,
+                "clicks": 36563,
+                "conversions": 768,
+                "ctr": 0.006,
+                "cpc": 2.65,
+                "cpa": 126.30,
+                "roas": 2.80,
+                "performance_index": 82
+              },
+              "video": {
+                "spend": 72750,
+                "spend_share": 15,
+                "impressions": 1523457,
+                "clicks": 22852,
+                "conversions": 678,
+                "ctr": 0.015,
+                "cpc": 3.18,
+                "cpa": 107.30,
+                "roas": 3.65,
+                "performance_index": 98
+              },
+              "native": {
+                "spend": 48500,
+                "spend_share": 10,
+                "impressions": 761413,
+                "clicks": 13389,
+                "conversions": 407,
+                "ctr": 0.018,
+                "cpc": 3.62,
+                "cpa": 119.16,
+                "roas": 3.20,
+                "performance_index": 88
+              }
+            }
+          },
+          "runAfter": {
+            "Compare_To_Targets": ["Succeeded"]
+          }
+        },
+        "Generate_Insights": {
+          "type": "Compose",
+          "inputs": {
+            "insights": {
+              "key_findings": [
+                {
+                  "type": "positive",
+                  "insight": "Paid Search outperforming with 112 performance index and 4.25 ROAS",
+                  "impact": "high",
+                  "recommendation": "Consider increasing budget allocation"
+                },
+                {
+                  "type": "negative",
+                  "insight": "Display underperforming with 82 performance index and highest CPA",
+                  "impact": "high",
+                  "recommendation": "Review targeting and creative strategy"
+                },
+                {
+                  "type": "neutral",
+                  "insight": "Conversion rate below target by 9.58%",
+                  "impact": "medium",
+                  "recommendation": "Optimize landing pages and conversion funnel"
+                }
+              ],
+              "trend_analysis": {
+                "impressions_trend": "stable",
+                "click_trend": "slightly_increasing",
+                "conversion_trend": "declining",
+                "spend_trend": "stable"
+              },
+              "optimization_opportunities": [
+                "Shift 5% budget from Display to Paid Search",
+                "Implement A/B testing on underperforming creatives",
+                "Review audience targeting on Paid Social"
+              ]
+            }
+          },
+          "runAfter": {
+            "Analyze_Channel_Performance": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "PRF",
+            "status": "success",
+            "data": {
+              "analysis_summary": {
+                "campaign_id": "@outputs('Parse_Input')?['campaign_id']",
+                "date_range": "@outputs('Parse_Input')?['date_range']",
+                "comparison_type": "@outputs('Parse_Input')?['comparison_type']"
+              },
+              "performance_data": "@outputs('Load_Performance_Data')?['performance_data']",
+              "target_comparison": "@outputs('Compare_To_Targets')?['target_comparison']",
+              "channel_performance": "@outputs('Analyze_Channel_Performance')?['channel_breakdown']",
+              "insights": "@outputs('Generate_Insights')?['insights']"
+            },
+            "confidence": "HIGH",
+            "sources": ["CAMPAIGN_DATA", "BENCHMARK_DATA", "AGENT_KB"],
+            "recommendations": "@outputs('Generate_Insights')?['insights']?['optimization_opportunities']",
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Generate_Insights": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

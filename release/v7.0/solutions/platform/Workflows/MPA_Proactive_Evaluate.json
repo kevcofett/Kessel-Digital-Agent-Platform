@@ -1,13 +1,96 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared_commondataserviceforapps",
+        "runtimeSource": "embedded",
+        "connection": { "connectionReferenceLogicalName": "mpa_dataverse" },
+        "api": { "name": "shared_commondataserviceforapps" }
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": { "defaultValue": {}, "type": "Object" },
+        "$authentication": { "defaultValue": {}, "type": "SecureObject" }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "agent_code"],
+              "properties": {
+                "session_id": { "type": "string", "format": "uuid" },
+                "agent_code": { "type": "string" },
+                "context": { "type": "object" },
+                "max_triggers": { "type": "integer", "default": 2 }
+              }
+            },
+            "method": "POST"
+          }
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "agent_code": "@triggerBody()?['agent_code']",
+            "context": "@coalesce(triggerBody()?['context'], json('{}'))",
+            "max_triggers": "@coalesce(triggerBody()?['max_triggers'], 2)",
+            "timestamp": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Get_Active_Triggers": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "eap_proactive_triggers",
+              "$filter": "eap_agent_code eq '@{outputs('Parse_Input')?['agent_code']}' and eap_is_active eq true",
+              "$orderby": "eap_priority asc"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": { "Parse_Input": ["Succeeded"] }
+        },
+        "Evaluate_Triggers": {
+          "type": "Compose",
+          "inputs": {
+            "triggers_evaluated": "@length(outputs('Get_Active_Triggers')?['body/value'])",
+            "matched_triggers": [],
+            "evaluation_timestamp": "@outputs('Parse_Input')?['timestamp']"
+          },
+          "runAfter": { "Get_Active_Triggers": ["Succeeded"] }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": { "Content-Type": "application/json" },
+            "body": {
+              "success": true,
+              "session_id": "@outputs('Parse_Input')?['session_id']",
+              "agent_code": "@outputs('Parse_Input')?['agent_code']",
+              "triggers_evaluated": "@outputs('Evaluate_Triggers')?['triggers_evaluated']",
+              "matched_triggers": "@outputs('Evaluate_Triggers')?['matched_triggers']",
+              "timestamp": "@outputs('Parse_Input')?['timestamp']"
+            }
+          },
+          "runAfter": { "Evaluate_Triggers": ["Succeeded"] }
+        }
+      }
     }
   }
 }

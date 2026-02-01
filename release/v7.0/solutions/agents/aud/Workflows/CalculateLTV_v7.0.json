@@ -1,13 +1,248 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id", "segment_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "segment_id": {
+                  "type": "string"
+                },
+                "average_order_value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "purchase_frequency": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "customer_lifespan_years": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "retention_rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "discount_rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "acquisition_cost": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "segment_id": "@triggerBody()?['segment_id']",
+            "average_order_value": "@coalesce(triggerBody()?['average_order_value'], 150)",
+            "purchase_frequency": "@coalesce(triggerBody()?['purchase_frequency'], 3.2)",
+            "customer_lifespan_years": "@coalesce(triggerBody()?['customer_lifespan_years'], 3)",
+            "retention_rate": "@coalesce(triggerBody()?['retention_rate'], 0.75)",
+            "discount_rate": "@coalesce(triggerBody()?['discount_rate'], 0.10)",
+            "acquisition_cost": "@coalesce(triggerBody()?['acquisition_cost'], 45)",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Calculate_Annual_Value": {
+          "type": "Compose",
+          "inputs": {
+            "annual_revenue": "@mul(outputs('Parse_Input')?['average_order_value'], outputs('Parse_Input')?['purchase_frequency'])",
+            "gross_margin_percent": 0.45,
+            "annual_gross_profit": "@mul(mul(outputs('Parse_Input')?['average_order_value'], outputs('Parse_Input')?['purchase_frequency']), 0.45)"
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Calculate_Simple_LTV": {
+          "type": "Compose",
+          "inputs": {
+            "simple_ltv": "@mul(outputs('Calculate_Annual_Value')?['annual_revenue'], outputs('Parse_Input')?['customer_lifespan_years'])",
+            "methodology": "Simple multiplication of annual value by lifespan"
+          },
+          "runAfter": {
+            "Calculate_Annual_Value": ["Succeeded"]
+          }
+        },
+        "Calculate_NPV_LTV": {
+          "type": "Compose",
+          "inputs": {
+            "annual_value": "@outputs('Calculate_Annual_Value')?['annual_revenue']",
+            "discount_rate": "@outputs('Parse_Input')?['discount_rate']",
+            "retention_rate": "@outputs('Parse_Input')?['retention_rate']",
+            "npv_ltv": "@div(outputs('Calculate_Annual_Value')?['annual_revenue'], sub(add(1, outputs('Parse_Input')?['discount_rate']), outputs('Parse_Input')?['retention_rate']))",
+            "methodology": "Net Present Value model accounting for retention and discount rates"
+          },
+          "runAfter": {
+            "Calculate_Simple_LTV": ["Succeeded"]
+          }
+        },
+        "Calculate_Profit_LTV": {
+          "type": "Compose",
+          "inputs": {
+            "annual_gross_profit": "@outputs('Calculate_Annual_Value')?['annual_gross_profit']",
+            "profit_based_ltv": "@mul(outputs('Calculate_Annual_Value')?['annual_gross_profit'], outputs('Parse_Input')?['customer_lifespan_years'])",
+            "net_ltv_after_acquisition": "@sub(mul(outputs('Calculate_Annual_Value')?['annual_gross_profit'], outputs('Parse_Input')?['customer_lifespan_years']), outputs('Parse_Input')?['acquisition_cost'])",
+            "ltv_to_cac_ratio": "@div(mul(outputs('Calculate_Annual_Value')?['annual_gross_profit'], outputs('Parse_Input')?['customer_lifespan_years']), outputs('Parse_Input')?['acquisition_cost'])"
+          },
+          "runAfter": {
+            "Calculate_NPV_LTV": ["Succeeded"]
+          }
+        },
+        "Evaluate_LTV_Health": {
+          "type": "Compose",
+          "inputs": {
+            "ltv_cac_ratio": "@outputs('Calculate_Profit_LTV')?['ltv_to_cac_ratio']",
+            "health_assessment": "@if(greater(outputs('Calculate_Profit_LTV')?['ltv_to_cac_ratio'], 5), 'EXCELLENT', if(greater(outputs('Calculate_Profit_LTV')?['ltv_to_cac_ratio'], 3), 'HEALTHY', if(greater(outputs('Calculate_Profit_LTV')?['ltv_to_cac_ratio'], 1), 'MARGINAL', 'UNHEALTHY')))",
+            "benchmark_comparison": {
+              "excellent_threshold": 5.0,
+              "healthy_threshold": 3.0,
+              "marginal_threshold": 1.0
+            },
+            "recommendations": {
+              "EXCELLENT": "Segment highly profitable - consider increasing acquisition spend",
+              "HEALTHY": "Segment performing well - maintain current strategy",
+              "MARGINAL": "Review acquisition costs and retention programs",
+              "UNHEALTHY": "Immediate action needed - reduce CAC or improve retention"
+            }
+          },
+          "runAfter": {
+            "Calculate_Profit_LTV": ["Succeeded"]
+          }
+        },
+        "Generate_Improvement_Opportunities": {
+          "type": "Compose",
+          "inputs": {
+            "opportunities": [
+              {
+                "lever": "Increase Purchase Frequency",
+                "impact": "@mul(mul(outputs('Parse_Input')?['average_order_value'], 0.5), outputs('Parse_Input')?['customer_lifespan_years'])",
+                "description": "Increasing frequency by 0.5 purchases per year"
+              },
+              {
+                "lever": "Increase Average Order Value",
+                "impact": "@mul(mul(25, outputs('Parse_Input')?['purchase_frequency']), outputs('Parse_Input')?['customer_lifespan_years'])",
+                "description": "Increasing AOV by $25"
+              },
+              {
+                "lever": "Improve Retention Rate",
+                "impact": "@mul(outputs('Calculate_Annual_Value')?['annual_revenue'], 0.5)",
+                "description": "Improving retention by 10 percentage points"
+              },
+              {
+                "lever": "Reduce Acquisition Cost",
+                "impact": "@mul(outputs('Parse_Input')?['acquisition_cost'], 0.20)",
+                "description": "Reducing CAC by 20%"
+              }
+            ]
+          },
+          "runAfter": {
+            "Evaluate_LTV_Health": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "AUD",
+            "status": "success",
+            "data": {
+              "segment_id": "@outputs('Parse_Input')?['segment_id']",
+              "ltv_calculations": {
+                "simple_ltv": "@outputs('Calculate_Simple_LTV')?['simple_ltv']",
+                "npv_ltv": "@outputs('Calculate_NPV_LTV')?['npv_ltv']",
+                "profit_based_ltv": "@outputs('Calculate_Profit_LTV')?['profit_based_ltv']",
+                "net_ltv": "@outputs('Calculate_Profit_LTV')?['net_ltv_after_acquisition']"
+              },
+              "input_metrics": {
+                "average_order_value": "@outputs('Parse_Input')?['average_order_value']",
+                "purchase_frequency": "@outputs('Parse_Input')?['purchase_frequency']",
+                "customer_lifespan_years": "@outputs('Parse_Input')?['customer_lifespan_years']",
+                "retention_rate": "@outputs('Parse_Input')?['retention_rate']",
+                "acquisition_cost": "@outputs('Parse_Input')?['acquisition_cost']"
+              },
+              "health_assessment": "@outputs('Evaluate_LTV_Health')?['health_assessment']",
+              "ltv_cac_ratio": "@outputs('Calculate_Profit_LTV')?['ltv_to_cac_ratio']",
+              "improvement_opportunities": "@outputs('Generate_Improvement_Opportunities')?['opportunities']"
+            },
+            "confidence": "HIGH",
+            "sources": ["CALCULATION", "SEGMENT_DATA", "AGENT_KB"],
+            "recommendations": [
+              "@outputs('Evaluate_LTV_Health')?['recommendations']?[outputs('Evaluate_LTV_Health')?['health_assessment']]"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Generate_Improvement_Opportunities": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

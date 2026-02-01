@@ -1,13 +1,87 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared_commondataserviceforapps",
+        "runtimeSource": "embedded",
+        "connection": { "connectionReferenceLogicalName": "mpa_dataverse" },
+        "api": { "name": "shared_commondataserviceforapps" }
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": { "defaultValue": {}, "type": "Object" },
+        "$authentication": { "defaultValue": {}, "type": "SecureObject" }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id"],
+              "properties": {
+                "session_id": { "type": "string", "format": "uuid" },
+                "initial_context": { "type": "object" },
+                "ttl_minutes": { "type": "integer", "default": 60 }
+              }
+            },
+            "method": "POST"
+          }
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "initial_context": "@coalesce(triggerBody()?['initial_context'], json('{}'))",
+            "ttl_minutes": "@coalesce(triggerBody()?['ttl_minutes'], 60)",
+            "timestamp": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Initialize_Memory_Structure": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@outputs('Parse_Input')?['session_id']",
+            "memory": {
+              "conversation_turns": [],
+              "entity_extractions": {},
+              "plan_state": {},
+              "routing_history": [],
+              "agent_contributions": {},
+              "user_preferences": {}
+            },
+            "context": "@outputs('Parse_Input')?['initial_context']",
+            "metadata": {
+              "created_at": "@outputs('Parse_Input')?['timestamp']",
+              "ttl_minutes": "@outputs('Parse_Input')?['ttl_minutes']",
+              "expires_at": "@addMinutes(utcNow(), outputs('Parse_Input')?['ttl_minutes'])"
+            }
+          },
+          "runAfter": { "Parse_Input": ["Succeeded"] }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": { "Content-Type": "application/json" },
+            "body": {
+              "success": true,
+              "session_id": "@outputs('Parse_Input')?['session_id']",
+              "memory_initialized": true,
+              "structure": "@outputs('Initialize_Memory_Structure')"
+            }
+          },
+          "runAfter": { "Initialize_Memory_Structure": ["Succeeded"] }
+        }
+      }
     }
   }
 }

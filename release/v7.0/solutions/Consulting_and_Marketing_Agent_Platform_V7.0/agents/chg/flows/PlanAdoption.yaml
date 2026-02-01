@@ -1,0 +1,475 @@
+# PlanAdoption Power Automate Flow Definition
+# Version: 1.0.0
+# Agent: CHG (Change Management)
+# Description: Creates change adoption and rollout plans with phases and success metrics
+
+name: PlanAdoption
+description: >
+  HTTP-triggered flow that creates comprehensive adoption plans for change
+  initiatives including phases, activities, milestones, and success metrics.
+  Supports phased rollouts and sustainability planning.
+
+trigger:
+  type: HTTP
+  method: POST
+  schema:
+    type: object
+    required:
+      - session_id
+      - request_id
+      - change_description
+    properties:
+      session_id:
+        type: string
+        format: uuid
+      request_id:
+        type: string
+        format: uuid
+      change_description:
+        type: string
+        description: Description of the change initiative
+      timeline_weeks:
+        type: integer
+        minimum: 4
+        maximum: 52
+        default: 12
+      rollout_approach:
+        type: string
+        enum: [big_bang, phased, pilot_then_scale]
+        default: phased
+      constraints:
+        type: object
+        properties:
+          budget:
+            type: number
+          resources:
+            type: array
+            items:
+              type: string
+          dependencies:
+            type: array
+            items:
+              type: string
+      success_criteria:
+        type: array
+        items:
+          type: string
+
+# Intent patterns that should trigger this flow
+intent_patterns:
+  primary_triggers:
+    - "create.*adoption plan"
+    - "phased.*rollout"
+    - "rollout.*plan"
+    - "implementation.*plan"
+    - "adoption.*strategy"
+    - "user.*training"
+    - "change.*rollout"
+    - "rolling out.*system"
+    - "deploy.*to users"
+  keyword_triggers:
+    - "phased"
+    - "adoption plan"
+    - "rollout plan"
+    - "implementation plan"
+    - "training program"
+    - "user adoption"
+    - "change initiative"
+    - "system rollout"
+  system_keywords:
+    - "CRM"
+    - "ERP"
+    - "HR system"
+    - "collaboration tools"
+    - "new software"
+    - "new process"
+  entity_extraction:
+    system_name: "Extract the system or tool being rolled out"
+    timeline: "Extract desired timeline if specified"
+    scope: "Extract organizational scope (department, division, company-wide)"
+
+environment_variables:
+  EAP_DATAVERSE_URL:
+    description: EAP Dataverse environment URL
+    required: true
+
+steps:
+  # Step 1: Parse input
+  - id: parse_input
+    type: Compose
+    name: Parse Input
+    inputs:
+      session_id: "@triggerBody()?['session_id']"
+      request_id: "@triggerBody()?['request_id']"
+      change_description: "@triggerBody()?['change_description']"
+      timeline_weeks: "@coalesce(triggerBody()?['timeline_weeks'], 12)"
+      rollout_approach: "@coalesce(triggerBody()?['rollout_approach'], 'phased')"
+      constraints: "@triggerBody()?['constraints']"
+      success_criteria: "@triggerBody()?['success_criteria']"
+      start_time: "@utcNow()"
+
+  # Step 2: Define adoption phases
+  - id: define_phases
+    type: Compose
+    name: Define Adoption Phases
+    inputs:
+      rollout_approach: "@outputs('parse_input')?['rollout_approach']"
+      phases:
+        - phase_number: 1
+          phase_name: "Prepare"
+          duration_weeks: 3
+          start_week: 1
+          end_week: 3
+          objectives:
+            - "Establish change infrastructure"
+            - "Complete stakeholder mapping"
+            - "Develop communication plan"
+            - "Create training materials"
+          key_activities:
+            - activity: "Form change team"
+              owner: "Change Lead"
+              week: 1
+              deliverable: "Team charter and RACI"
+            - activity: "Conduct stakeholder analysis"
+              owner: "Change Lead"
+              week: 1
+              deliverable: "Stakeholder map"
+            - activity: "Develop communication plan"
+              owner: "Communications"
+              week: 2
+              deliverable: "Communication calendar"
+            - activity: "Design training curriculum"
+              owner: "Training Lead"
+              week: 2
+              deliverable: "Training plan"
+            - activity: "Establish feedback channels"
+              owner: "Change Lead"
+              week: 3
+              deliverable: "Feedback mechanism"
+          milestone: "Change infrastructure ready"
+          success_criteria:
+            - "Change team staffed and aligned"
+            - "Stakeholder map complete"
+            - "Communication plan approved"
+        - phase_number: 2
+          phase_name: "Pilot"
+          duration_weeks: 3
+          start_week: 4
+          end_week: 6
+          objectives:
+            - "Test change with pilot group"
+            - "Validate training effectiveness"
+            - "Gather feedback and refine"
+            - "Build success stories"
+          key_activities:
+            - activity: "Select pilot group"
+              owner: "Change Lead"
+              week: 4
+              deliverable: "Pilot group list"
+            - activity: "Deliver pilot training"
+              owner: "Training Lead"
+              week: 4
+              deliverable: "Trained pilot users"
+            - activity: "Support pilot execution"
+              owner: "Support Team"
+              week: 5
+              deliverable: "Support logs"
+            - activity: "Collect pilot feedback"
+              owner: "Change Lead"
+              week: 6
+              deliverable: "Feedback report"
+            - activity: "Refine approach based on learnings"
+              owner: "Change Lead"
+              week: 6
+              deliverable: "Refined rollout plan"
+          milestone: "Pilot successfully completed"
+          success_criteria:
+            - "Pilot users achieving 80%+ proficiency"
+            - "Critical issues identified and resolved"
+            - "Success stories documented"
+        - phase_number: 3
+          phase_name: "Deploy"
+          duration_weeks: 4
+          start_week: 7
+          end_week: 10
+          objectives:
+            - "Roll out to all users"
+            - "Deliver comprehensive training"
+            - "Provide intensive support"
+            - "Monitor adoption metrics"
+          key_activities:
+            - activity: "Execute phased rollout"
+              owner: "Change Lead"
+              week: 7
+              deliverable: "Rollout waves complete"
+            - activity: "Deliver training to all users"
+              owner: "Training Lead"
+              week: 7
+              deliverable: "All users trained"
+            - activity: "Activate support model"
+              owner: "Support Lead"
+              week: 7
+              deliverable: "Support operational"
+            - activity: "Monitor adoption metrics"
+              owner: "Change Lead"
+              week: 8
+              deliverable: "Adoption dashboard"
+            - activity: "Address resistance pockets"
+              owner: "Change Lead"
+              week: 9
+              deliverable: "Resistance resolved"
+          milestone: "Full deployment complete"
+          success_criteria:
+            - "All users trained and active"
+            - "Support volumes manageable"
+            - "70%+ adoption rate achieved"
+        - phase_number: 4
+          phase_name: "Sustain"
+          duration_weeks: 2
+          start_week: 11
+          end_week: 12
+          objectives:
+            - "Transition to business as usual"
+            - "Establish continuous improvement"
+            - "Measure and report outcomes"
+            - "Celebrate and recognize"
+          key_activities:
+            - activity: "Transition to BAU support"
+              owner: "Support Lead"
+              week: 11
+              deliverable: "BAU model active"
+            - activity: "Implement reinforcement program"
+              owner: "Change Lead"
+              week: 11
+              deliverable: "Recognition program"
+            - activity: "Conduct benefits realization review"
+              owner: "Change Lead"
+              week: 12
+              deliverable: "Benefits report"
+            - activity: "Document lessons learned"
+              owner: "Change Lead"
+              week: 12
+              deliverable: "Lessons learned doc"
+          milestone: "Sustainable adoption achieved"
+          success_criteria:
+            - "85%+ sustained adoption rate"
+            - "Benefits targets on track"
+            - "Continuous improvement active"
+    run_after: parse_input
+
+  # Step 3: Define success metrics
+  - id: define_metrics
+    type: Compose
+    name: Define Success Metrics
+    inputs:
+      adoption_metrics:
+        - metric_name: "Adoption Rate"
+          description: "Percentage of users actively using the new system/process"
+          target: 85
+          measurement_method: "System login/usage analytics"
+          frequency: "Weekly"
+          owner: "Change Lead"
+        - metric_name: "Proficiency Rate"
+          description: "Percentage of users meeting proficiency standards"
+          target: 80
+          measurement_method: "Assessment scores and task completion"
+          frequency: "Bi-weekly"
+          owner: "Training Lead"
+        - metric_name: "Support Volume"
+          description: "Number of support tickets related to change"
+          target: "Declining trend"
+          measurement_method: "Ticket tracking system"
+          frequency: "Weekly"
+          owner: "Support Lead"
+        - metric_name: "User Satisfaction"
+          description: "User satisfaction with change and support"
+          target: 4.0
+          measurement_method: "Survey (1-5 scale)"
+          frequency: "Monthly"
+          owner: "Change Lead"
+        - metric_name: "Process Compliance"
+          description: "Adherence to new process/system standards"
+          target: 90
+          measurement_method: "Quality audits"
+          frequency: "Monthly"
+          owner: "Operations"
+      business_metrics:
+        - metric_name: "Productivity"
+          description: "Time to complete key tasks"
+          target: "15% improvement"
+          baseline: "Pre-change measurement"
+          frequency: "Monthly"
+        - metric_name: "Error Rate"
+          description: "Reduction in errors/rework"
+          target: "25% reduction"
+          baseline: "Pre-change measurement"
+          frequency: "Monthly"
+        - metric_name: "Cost Savings"
+          description: "Realized cost savings"
+          target: "Per business case"
+          baseline: "Pre-change costs"
+          frequency: "Quarterly"
+    run_after: define_phases
+
+  # Step 4: Create rollout waves
+  - id: create_rollout_waves
+    type: Compose
+    name: Create Rollout Waves
+    inputs:
+      rollout_strategy:
+        approach: "@outputs('parse_input')?['rollout_approach']"
+        rationale: "Phased approach allows learning and adjustment while managing risk"
+      waves:
+        - wave_number: 1
+          wave_name: "Early Adopters"
+          timing: "Week 7"
+          user_count: 30
+          percentage: 20
+          selection_criteria:
+            - "Change champions"
+            - "Tech-savvy users"
+            - "Volunteers"
+          support_ratio: "1:10"
+        - wave_number: 2
+          wave_name: "Main Deployment"
+          timing: "Week 8"
+          user_count: 75
+          percentage: 50
+          selection_criteria:
+            - "Core user base"
+            - "Medium complexity roles"
+          support_ratio: "1:15"
+        - wave_number: 3
+          wave_name: "Final Wave"
+          timing: "Week 9-10"
+          user_count: 45
+          percentage: 30
+          selection_criteria:
+            - "Remaining users"
+            - "Complex roles"
+            - "Remote locations"
+          support_ratio: "1:15"
+      wave_criteria:
+        proceed_to_next_wave:
+          - "Current wave adoption > 70%"
+          - "Critical issues resolved"
+          - "Support volumes manageable"
+        rollback_triggers:
+          - "Major system outage"
+          - "Critical defect affecting > 50% users"
+          - "Adoption < 40% after 2 weeks"
+    run_after: define_metrics
+
+  # Step 5: Build sustainability plan
+  - id: build_sustainability
+    type: Compose
+    name: Build Sustainability Plan
+    inputs:
+      sustainability_elements:
+        governance:
+          - element: "Change Governance Board"
+            purpose: "Oversee sustained adoption and continuous improvement"
+            frequency: "Monthly"
+            members:
+              - "Executive Sponsor"
+              - "Change Lead"
+              - "Operations Lead"
+        reinforcement:
+          - element: "Recognition Program"
+            purpose: "Celebrate adoption achievements"
+            activities:
+              - "Monthly adoption champions"
+              - "Success story features"
+              - "Performance recognition"
+          - element: "Performance Integration"
+            purpose: "Embed change in performance management"
+            activities:
+              - "Include in job descriptions"
+              - "Add to performance objectives"
+              - "Skills in competency model"
+        continuous_improvement:
+          - element: "Feedback Loop"
+            purpose: "Capture ongoing improvement opportunities"
+            mechanisms:
+              - "Regular surveys"
+              - "Suggestion system"
+              - "User group meetings"
+          - element: "Optimization Reviews"
+            purpose: "Identify and implement improvements"
+            frequency: "Quarterly"
+        knowledge_management:
+          - element: "Documentation"
+            artifacts:
+              - "Process documentation"
+              - "Training materials"
+              - "FAQs and troubleshooting"
+          - element: "Knowledge Transfer"
+            approach: "Train-the-trainer model for sustainability"
+    run_after: create_rollout_waves
+
+  # Step 6: Build response
+  - id: build_response
+    type: Compose
+    name: Build Response
+    inputs:
+      request_id: "@outputs('parse_input')?['request_id']"
+      timestamp: "@utcNow()"
+      source_agent: "CHG"
+      status: "success"
+      data:
+        change_context:
+          description: "@outputs('parse_input')?['change_description']"
+          timeline_weeks: "@outputs('parse_input')?['timeline_weeks']"
+          rollout_approach: "@outputs('parse_input')?['rollout_approach']"
+        adoption_plan:
+          phases: "@outputs('define_phases')?['phases']"
+          total_phases: 4
+          total_duration_weeks: 12
+        rollout_waves: "@outputs('create_rollout_waves')?['waves']"
+        wave_criteria: "@outputs('create_rollout_waves')?['wave_criteria']"
+        success_metrics:
+          adoption_metrics: "@outputs('define_metrics')?['adoption_metrics']"
+          business_metrics: "@outputs('define_metrics')?['business_metrics']"
+        sustainability_plan: "@outputs('build_sustainability')?['sustainability_elements']"
+      confidence: "HIGH"
+      sources:
+        - "AGENT_KB"
+        - "CHANGE_METHODOLOGY"
+      recommendations:
+        - "Start with change infrastructure activities immediately"
+        - "Identify and engage pilot group early"
+        - "Establish metrics tracking before pilot begins"
+        - "Plan celebration milestones to maintain momentum"
+      follow_up_questions:
+        - "Would you like to assess readiness before proceeding?"
+        - "Should we map stakeholders for this initiative?"
+        - "Do you want to create detailed training materials?"
+      metadata:
+        processing_time_ms: "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+    run_after: build_sustainability
+
+  # Step 7: Return response
+  - id: return_response
+    type: Response
+    name: Return Response
+    inputs:
+      statusCode: 200
+      headers:
+        Content-Type: application/json
+      body: "@outputs('build_response')"
+
+error_handling:
+  on_error:
+    - id: return_error
+      type: Response
+      name: Return Error Response
+      inputs:
+        statusCode: 500
+        headers:
+          Content-Type: application/json
+        body:
+          request_id: "@outputs('parse_input')?['request_id']"
+          source_agent: "CHG"
+          error: true
+          code: "ADOPTION_PLANNING_ERROR"
+          message: "Failed to create adoption plan"

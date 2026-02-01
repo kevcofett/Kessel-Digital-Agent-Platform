@@ -1,0 +1,208 @@
+ORCHESTRATOR ERROR HANDLING REFERENCE
+
+This document defines error handling patterns for the Orchestrator Agent when specialist agents fail, timeout, or return unexpected responses.
+
+ERROR CATEGORIES
+
+Errors fall into four categories:
+- SPECIALIST_UNAVAILABLE: Target agent cannot be reached
+- SPECIALIST_TIMEOUT: Agent did not respond within time limit
+- SPECIALIST_ERROR: Agent returned error response
+- ROUTING_FAILURE: Unable to determine correct specialist
+
+SPECIALIST UNAVAILABLE ERRORS
+
+When a specialist agent cannot be reached:
+
+DETECTION
+- HTTP connection failure to agent endpoint
+- Agent registry shows status INACTIVE or MAINTENANCE
+- Copilot Studio returns service unavailable
+
+RESPONSE PROTOCOL
+- Do not expose technical failure to user
+- Acknowledge the request was understood
+- Explain that the specific analysis is temporarily unavailable
+- Offer alternative approaches or manual workarounds
+- Log the failure for system monitoring
+
+FALLBACK BEHAVIORS BY AGENT
+
+ANL Unavailable:
+- Provide general projection guidance without specific calculations
+- Reference benchmark ranges from knowledge base
+- Recommend user consult historical data
+- Offer to retry when service restored
+
+AUD Unavailable:
+- Discuss audience strategy conceptually
+- Reference standard segmentation frameworks
+- Suggest user provide existing audience research
+- Offer general targeting principles
+
+CHA Unavailable:
+- Provide channel overview from knowledge base
+- Reference industry benchmark ranges
+- Recommend balanced allocation starting points
+- Offer to refine when service restored
+
+SPO Unavailable:
+- Discuss supply path concepts generally
+- Reference typical fee structures
+- Recommend transparency best practices
+- Offer partner evaluation criteria
+
+DOC Unavailable:
+- Provide plan summary in conversation
+- Offer structured text output
+- Recommend manual document creation
+- Save plan state for later generation
+
+PRF Unavailable:
+- Discuss performance concepts generally
+- Reference optimization frameworks
+- Recommend standard monitoring practices
+- Offer manual analysis guidance
+
+SPECIALIST TIMEOUT ERRORS
+
+When a specialist does not respond within the configured timeout:
+
+DETECTION
+- Response not received within timeout_ms from request options
+- Partial response received but incomplete
+- Connection dropped mid-response
+
+RESPONSE PROTOCOL
+- Acknowledge the delay to user
+- Explain that complex analysis is taking longer
+- Offer to continue with available information
+- Provide option to wait or proceed
+
+TIMEOUT THRESHOLDS
+- Standard requests: 30 seconds
+- Complex calculations: 60 seconds
+- Document generation: 120 seconds
+- Batch operations: 300 seconds
+
+RETRY LOGIC
+- First timeout: Retry once automatically
+- Second timeout: Inform user and offer options
+- Third timeout: Mark specialist as degraded
+- Log all timeouts for pattern analysis
+
+SPECIALIST ERROR RESPONSES
+
+When a specialist returns an error response:
+
+DETECTION
+- Response status field equals ERROR
+- Error code and message present in response
+- Recovery options may be provided
+
+COMMON ERROR CODES
+
+INVALID_INPUT: Request parameters failed validation
+- Review request construction
+- Check for missing required fields
+- Verify data types match schema
+
+INSUFFICIENT_CONTEXT: Not enough session data
+- Gather additional information from user
+- Check if prerequisite steps completed
+- Verify session state is current
+
+CALCULATION_FAILURE: Unable to compute result
+- Simplify the request parameters
+- Break into smaller sub-requests
+- Use fallback estimation methods
+
+DATA_UNAVAILABLE: Required reference data missing
+- Check data source connectivity
+- Use cached or default values
+- Inform user of data limitations
+
+QUOTA_EXCEEDED: Rate limit or resource limit hit
+- Wait and retry after delay
+- Reduce request complexity
+- Queue for later processing
+
+ERROR RESPONSE HANDLING
+- Parse error code and message
+- Check for recovery_options in response
+- Apply suggested recovery if available
+- If no recovery possible, use fallback behavior
+
+ROUTING FAILURE ERRORS
+
+When the orchestrator cannot determine the correct specialist:
+
+DETECTION
+- Intent classification returns low confidence
+- Multiple specialists seem equally appropriate
+- User request is ambiguous or incomplete
+
+RESPONSE PROTOCOL
+- Ask clarifying questions to understand intent
+- Present options if multiple specialists could help
+- Never guess or route randomly
+- Log ambiguous requests for training improvement
+
+CLARIFICATION STRATEGIES
+
+For ambiguous budget questions:
+- Ask if user wants projections (ANL) or allocation (CHA)
+
+For ambiguous audience questions:
+- Ask if user wants segmentation (AUD) or targeting by channel (CHA)
+
+For ambiguous performance questions:
+- Ask if user wants optimization (PRF) or measurement setup (ORC Step 7)
+
+GRACEFUL DEGRADATION
+
+When multiple failures occur, degrade gracefully:
+
+LEVEL 1 - SINGLE SPECIALIST DOWN
+- Use fallback for that specialist
+- Continue normal operation otherwise
+- Monitor for recovery
+
+LEVEL 2 - MULTIPLE SPECIALISTS DOWN
+- Notify user of reduced capabilities
+- Focus on available specialists
+- Offer to save progress for later
+
+LEVEL 3 - CRITICAL FAILURE
+- Preserve all session state
+- Provide plan summary to user
+- Recommend returning later
+- Escalate to system administrators
+
+USER COMMUNICATION PRINCIPLES
+
+When errors occur, communicate clearly:
+- Never blame the user
+- Never expose technical details
+- Always offer alternatives
+- Always preserve user progress
+- Always maintain professional tone
+
+ERROR LOGGING REQUIREMENTS
+
+All errors must be logged with:
+- Timestamp of occurrence
+- Session ID and user context
+- Error category and code
+- Request that triggered error
+- Response or lack thereof
+- Recovery action taken
+- Outcome of recovery attempt
+
+RECOVERY VERIFICATION
+
+After any error recovery:
+- Verify session state integrity
+- Confirm user can continue workflow
+- Check that no data was lost
+- Update specialist status if needed

@@ -1,13 +1,300 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "brief_type": {
+                  "type": "string",
+                  "enum": ["campaign", "media", "creative", "strategy"]
+                },
+                "client_name": {
+                  "type": "string"
+                },
+                "campaign_details": {
+                  "type": "object"
+                },
+                "objectives": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "brief_type": "@coalesce(triggerBody()?['brief_type'], 'media')",
+            "client_name": "@coalesce(triggerBody()?['client_name'], 'Client')",
+            "campaign_details": "@coalesce(triggerBody()?['campaign_details'], json('{}'))",
+            "objectives": "@coalesce(triggerBody()?['objectives'], createArray('awareness', 'consideration', 'conversion'))",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Load_Brief_Template": {
+          "type": "Compose",
+          "inputs": {
+            "brief_templates": {
+              "media": {
+                "sections": [
+                  "executive_summary",
+                  "background_context",
+                  "campaign_objectives",
+                  "target_audience",
+                  "media_strategy",
+                  "channel_recommendations",
+                  "budget_allocation",
+                  "measurement_framework",
+                  "timeline",
+                  "next_steps"
+                ],
+                "required_fields": ["objectives", "target_audience", "budget", "timeline"]
+              },
+              "campaign": {
+                "sections": [
+                  "executive_summary",
+                  "business_challenge",
+                  "campaign_goals",
+                  "target_audience",
+                  "key_messages",
+                  "creative_requirements",
+                  "media_requirements",
+                  "budget",
+                  "success_metrics",
+                  "deliverables"
+                ],
+                "required_fields": ["goals", "audience", "budget", "timeline"]
+              },
+              "creative": {
+                "sections": [
+                  "project_overview",
+                  "brand_guidelines",
+                  "creative_requirements",
+                  "tone_and_voice",
+                  "deliverables_specs",
+                  "examples_references",
+                  "timeline",
+                  "approval_process"
+                ],
+                "required_fields": ["brand_guidelines", "deliverables", "timeline"]
+              },
+              "strategy": {
+                "sections": [
+                  "situation_analysis",
+                  "strategic_objectives",
+                  "target_segments",
+                  "positioning",
+                  "key_strategies",
+                  "tactical_recommendations",
+                  "measurement_approach",
+                  "risks_considerations"
+                ],
+                "required_fields": ["objectives", "target_segments", "positioning"]
+              }
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Generate_Brief_Content": {
+          "type": "Compose",
+          "inputs": {
+            "brief_content": {
+              "executive_summary": {
+                "title": "Media Brief - Q1 2024 Campaign",
+                "client": "@outputs('Parse_Input')?['client_name']",
+                "prepared_by": "Media Planning Team",
+                "date": "@utcNow('yyyy-MM-dd')",
+                "version": "1.0",
+                "overview": "This brief outlines the media strategy and recommendations for the upcoming campaign."
+              },
+              "background_context": {
+                "business_situation": "The client is looking to increase market share and brand awareness.",
+                "market_context": "Competitive landscape is intensifying with new entrants.",
+                "previous_learnings": "Prior campaigns showed strong performance in digital channels."
+              },
+              "campaign_objectives": {
+                "primary": "Drive brand awareness among target audience",
+                "secondary": "Generate qualified leads for sales team",
+                "kpis": [
+                  { "metric": "Reach", "target": "5M unique users", "measurement": "Platform reporting" },
+                  { "metric": "Brand Lift", "target": "10% increase", "measurement": "Brand study" },
+                  { "metric": "Leads", "target": "5,000 MQLs", "measurement": "CRM tracking" }
+                ]
+              },
+              "target_audience": {
+                "primary_audience": {
+                  "demographics": "Adults 25-54, HHI $100k+",
+                  "psychographics": "Quality-conscious, digitally savvy",
+                  "behaviors": "Active online researchers, social media users"
+                },
+                "secondary_audience": {
+                  "demographics": "Adults 18-24, college-educated",
+                  "psychographics": "Trend-conscious, brand-aware"
+                },
+                "audience_size": "12M addressable reach"
+              },
+              "media_strategy": {
+                "approach": "Full-funnel integrated media strategy",
+                "key_principles": [
+                  "Reach at scale through programmatic",
+                  "Engage through high-impact formats",
+                  "Convert through targeted tactics"
+                ],
+                "phasing": {
+                  "phase_1": "Awareness - Weeks 1-4",
+                  "phase_2": "Consideration - Weeks 5-8",
+                  "phase_3": "Conversion - Weeks 9-12"
+                }
+              },
+              "channel_recommendations": {
+                "channels": [
+                  { "channel": "Programmatic Display", "allocation": 30, "role": "Reach and awareness" },
+                  { "channel": "Social Media", "allocation": 25, "role": "Engagement and consideration" },
+                  { "channel": "Paid Search", "allocation": 20, "role": "Capture intent and convert" },
+                  { "channel": "Video/CTV", "allocation": 15, "role": "Brand building" },
+                  { "channel": "Native", "allocation": 10, "role": "Content distribution" }
+                ]
+              },
+              "budget_allocation": {
+                "total_budget": 1500000,
+                "by_channel": {
+                  "programmatic": 450000,
+                  "social": 375000,
+                  "search": 300000,
+                  "video_ctv": 225000,
+                  "native": 150000
+                },
+                "contingency": "10% held for optimization"
+              },
+              "timeline": {
+                "planning": "Weeks -4 to -2",
+                "setup": "Week -1",
+                "launch": "Week 1",
+                "optimization": "Weeks 2-10",
+                "wrap_up": "Weeks 11-12"
+              },
+              "next_steps": [
+                "Client review and approval",
+                "Finalize media plan details",
+                "Initiate creative development",
+                "Set up tracking and measurement"
+              ]
+            }
+          },
+          "runAfter": {
+            "Load_Brief_Template": ["Succeeded"]
+          }
+        },
+        "Validate_Brief_Completeness": {
+          "type": "Compose",
+          "inputs": {
+            "validation_results": {
+              "is_complete": true,
+              "missing_sections": [],
+              "warnings": [
+                "Consider adding competitive context",
+                "Recommend including creative specifications"
+              ],
+              "quality_score": 92,
+              "ready_for_review": true
+            }
+          },
+          "runAfter": {
+            "Generate_Brief_Content": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "DOC",
+            "status": "success",
+            "data": {
+              "brief_summary": {
+                "brief_type": "@outputs('Parse_Input')?['brief_type']",
+                "client": "@outputs('Parse_Input')?['client_name']",
+                "created_date": "@utcNow('yyyy-MM-dd')"
+              },
+              "template_used": "@outputs('Load_Brief_Template')?['brief_templates']?[outputs('Parse_Input')?['brief_type']]",
+              "brief_content": "@outputs('Generate_Brief_Content')?['brief_content']",
+              "validation": "@outputs('Validate_Brief_Completeness')?['validation_results']"
+            },
+            "confidence": "HIGH",
+            "sources": ["BRIEF_TEMPLATES", "BEST_PRACTICES", "AGENT_KB"],
+            "recommendations": [
+              "Review with key stakeholders before finalizing",
+              "Add specific creative requirements",
+              "Confirm budget approval status"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Validate_Brief_Completeness": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

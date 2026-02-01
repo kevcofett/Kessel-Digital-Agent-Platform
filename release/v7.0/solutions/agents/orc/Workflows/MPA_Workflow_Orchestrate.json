@@ -1,13 +1,245 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "workflow_type": {
+                  "type": "string",
+                  "enum": ["media_planning", "performance_review", "strategy_development", "document_creation"]
+                },
+                "user_message": {
+                  "type": "string"
+                },
+                "context": {
+                  "type": "object"
+                },
+                "execution_mode": {
+                  "type": "string",
+                  "enum": ["sequential", "parallel", "adaptive"]
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "workflow_type": "@coalesce(triggerBody()?['workflow_type'], 'media_planning')",
+            "user_message": "@coalesce(triggerBody()?['user_message'], '')",
+            "context": "@coalesce(triggerBody()?['context'], json('{}'))",
+            "execution_mode": "@coalesce(triggerBody()?['execution_mode'], 'adaptive')",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Load_Workflow_Definitions": {
+          "type": "Compose",
+          "inputs": {
+            "workflows": {
+              "media_planning": {
+                "name": "Media Planning Workflow",
+                "description": "End-to-end media planning from brief to final plan",
+                "phases": [
+                  { "phase": "discovery", "agents": ["ORC"], "required": true },
+                  { "phase": "audience_analysis", "agents": ["AUD"], "required": true },
+                  { "phase": "benchmark_research", "agents": ["CHA"], "required": true },
+                  { "phase": "budget_allocation", "agents": ["ANL"], "required": true },
+                  { "phase": "scenario_modeling", "agents": ["ANL"], "required": false },
+                  { "phase": "timeline_creation", "agents": ["ORC"], "required": true },
+                  { "phase": "document_generation", "agents": ["DOC"], "required": true }
+                ],
+                "estimated_duration_minutes": 45,
+                "parallel_phases": ["audience_analysis", "benchmark_research"]
+              },
+              "performance_review": {
+                "name": "Performance Review Workflow",
+                "description": "Campaign performance analysis and optimization",
+                "phases": [
+                  { "phase": "data_collection", "agents": ["ORC"], "required": true },
+                  { "phase": "performance_analysis", "agents": ["PRF"], "required": true },
+                  { "phase": "anomaly_detection", "agents": ["ANL"], "required": true },
+                  { "phase": "learning_extraction", "agents": ["PRF"], "required": true },
+                  { "phase": "optimization_recommendations", "agents": ["PRF", "ANL"], "required": true },
+                  { "phase": "report_generation", "agents": ["DOC"], "required": true }
+                ],
+                "estimated_duration_minutes": 30,
+                "parallel_phases": []
+              },
+              "strategy_development": {
+                "name": "Strategy Development Workflow",
+                "description": "Strategic planning and initiative prioritization",
+                "phases": [
+                  { "phase": "context_gathering", "agents": ["ORC"], "required": true },
+                  { "phase": "framework_selection", "agents": ["CST"], "required": true },
+                  { "phase": "strategy_development", "agents": ["CST"], "required": true },
+                  { "phase": "initiative_prioritization", "agents": ["CST"], "required": true },
+                  { "phase": "change_planning", "agents": ["CHG"], "required": false },
+                  { "phase": "document_creation", "agents": ["DOC"], "required": true }
+                ],
+                "estimated_duration_minutes": 60,
+                "parallel_phases": []
+              },
+              "document_creation": {
+                "name": "Document Creation Workflow",
+                "description": "Create media planning documents",
+                "phases": [
+                  { "phase": "brief_creation", "agents": ["DOC"], "required": true },
+                  { "phase": "content_gathering", "agents": ["ORC"], "required": true },
+                  { "phase": "document_generation", "agents": ["DOC"], "required": true },
+                  { "phase": "review_validation", "agents": ["DOC"], "required": true }
+                ],
+                "estimated_duration_minutes": 20,
+                "parallel_phases": []
+              }
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Initialize_Workflow_State": {
+          "type": "Compose",
+          "inputs": {
+            "workflow_state": {
+              "workflow_id": "@guid()",
+              "workflow_type": "@outputs('Parse_Input')?['workflow_type']",
+              "session_id": "@outputs('Parse_Input')?['session_id']",
+              "status": "initialized",
+              "started_at": "@utcNow()",
+              "current_phase_index": 0,
+              "completed_phases": [],
+              "failed_phases": [],
+              "skipped_phases": []
+            },
+            "execution_plan": {
+              "mode": "@outputs('Parse_Input')?['execution_mode']",
+              "total_phases": "@length(outputs('Load_Workflow_Definitions')?['workflows']?[outputs('Parse_Input')?['workflow_type']]?['phases'])",
+              "estimated_completion": "@addMinutes(utcNow(), outputs('Load_Workflow_Definitions')?['workflows']?[outputs('Parse_Input')?['workflow_type']]?['estimated_duration_minutes'])"
+            }
+          },
+          "runAfter": {
+            "Load_Workflow_Definitions": ["Succeeded"]
+          }
+        },
+        "Plan_Execution_Sequence": {
+          "type": "Compose",
+          "inputs": {
+            "execution_sequence": {
+              "sequential_phases": [
+                { "order": 1, "phase": "discovery", "agent": "ORC", "status": "ready" },
+                { "order": 2, "phase": "audience_analysis", "agent": "AUD", "status": "pending" },
+                { "order": 3, "phase": "benchmark_research", "agent": "CHA", "status": "pending" },
+                { "order": 4, "phase": "budget_allocation", "agent": "ANL", "status": "pending" },
+                { "order": 5, "phase": "timeline_creation", "agent": "ORC", "status": "pending" },
+                { "order": 6, "phase": "document_generation", "agent": "DOC", "status": "pending" }
+              ],
+              "parallel_groups": [
+                { "group": 1, "phases": ["audience_analysis", "benchmark_research"], "can_parallelize": true }
+              ]
+            },
+            "agent_availability": {
+              "ORC": { "status": "available", "load": 0.2 },
+              "ANL": { "status": "available", "load": 0.1 },
+              "AUD": { "status": "available", "load": 0.0 },
+              "CHA": { "status": "available", "load": 0.1 },
+              "DOC": { "status": "available", "load": 0.0 }
+            }
+          },
+          "runAfter": {
+            "Initialize_Workflow_State": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "ORC",
+            "status": "success",
+            "data": {
+              "orchestration_summary": {
+                "workflow_type": "@outputs('Parse_Input')?['workflow_type']",
+                "execution_mode": "@outputs('Parse_Input')?['execution_mode']",
+                "session_id": "@outputs('Parse_Input')?['session_id']"
+              },
+              "workflow_definition": "@outputs('Load_Workflow_Definitions')?['workflows']?[outputs('Parse_Input')?['workflow_type']]",
+              "workflow_state": "@outputs('Initialize_Workflow_State')?['workflow_state']",
+              "execution_plan": "@outputs('Initialize_Workflow_State')?['execution_plan']",
+              "execution_sequence": "@outputs('Plan_Execution_Sequence')?['execution_sequence']",
+              "agent_availability": "@outputs('Plan_Execution_Sequence')?['agent_availability']"
+            },
+            "confidence": "HIGH",
+            "sources": ["WORKFLOW_DEFINITIONS", "AGENT_REGISTRY", "AGENT_KB"],
+            "recommendations": [
+              "Monitor workflow execution progress",
+              "Be ready to handle phase failures",
+              "Consider parallelization for efficiency"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Plan_Execution_Sequence": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

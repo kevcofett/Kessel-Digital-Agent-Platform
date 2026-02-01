@@ -1,0 +1,367 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "b1c2d3e4-5f6a-7b8c-9d0e-1f2a3b4c5d6e"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "description": "Session ID from eap_session"
+                },
+                "message_id": {
+                  "type": "string",
+                  "description": "Optional message identifier"
+                },
+                "feedback_type": {
+                  "type": "string",
+                  "description": "POSITIVE, NEGATIVE, NEUTRAL, or CORRECTION"
+                },
+                "feedback_text": {
+                  "type": "string",
+                  "description": "Optional explanation"
+                },
+                "kb_files_used": {
+                  "type": "array",
+                  "description": "KB files referenced"
+                },
+                "agent_response": {
+                  "type": "string",
+                  "description": "The response being rated"
+                },
+                "user_query": {
+                  "type": "string",
+                  "description": "Original user message"
+                },
+                "agent_type": {
+                  "type": "string",
+                  "description": "MPA, CA, or EAP"
+                }
+              },
+              "required": [
+                "session_id",
+                "feedback_type",
+                "agent_type"
+              ]
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "InitializeFeedbackTypeCode": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "c2d3e4f5-6a7b-8c9d-0e1f-2a3b4c5d6e7f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varFeedbackTypeCode",
+                "type": "integer",
+                "value": 100000000
+              }
+            ]
+          }
+        },
+        "InitializeAgentTypeCode": {
+          "runAfter": {
+            "InitializeFeedbackTypeCode": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d3e4f5a6-7b8c-9d0e-1f2a-3b4c5d6e7f8a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varAgentTypeCode",
+                "type": "integer",
+                "value": 100000000
+              }
+            ]
+          }
+        },
+        "SwitchFeedbackType": {
+          "runAfter": {
+            "InitializeAgentTypeCode": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e4f5a6b7-8c9d-0e1f-2a3b-4c5d6e7f8a9b"
+          },
+          "type": "Switch",
+          "expression": "@triggerBody()?['feedback_type']",
+          "cases": {
+            "POSITIVE": {
+              "case": "POSITIVE",
+              "actions": {
+                "SetFeedbackPositive": {
+                  "runAfter": {},
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "varFeedbackTypeCode",
+                    "value": 100000000
+                  }
+                }
+              }
+            },
+            "NEGATIVE": {
+              "case": "NEGATIVE",
+              "actions": {
+                "SetFeedbackNegative": {
+                  "runAfter": {},
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "varFeedbackTypeCode",
+                    "value": 100000001
+                  }
+                }
+              }
+            },
+            "NEUTRAL": {
+              "case": "NEUTRAL",
+              "actions": {
+                "SetFeedbackNeutral": {
+                  "runAfter": {},
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "varFeedbackTypeCode",
+                    "value": 100000002
+                  }
+                }
+              }
+            },
+            "CORRECTION": {
+              "case": "CORRECTION",
+              "actions": {
+                "SetFeedbackCorrection": {
+                  "runAfter": {},
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "varFeedbackTypeCode",
+                    "value": 100000003
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "actions": {}
+          }
+        },
+        "SwitchAgentType": {
+          "runAfter": {
+            "SwitchFeedbackType": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f5a6b7c8-9d0e-1f2a-3b4c-5d6e7f8a9b0c"
+          },
+          "type": "Switch",
+          "expression": "@triggerBody()?['agent_type']",
+          "cases": {
+            "MPA": {
+              "case": "MPA",
+              "actions": {
+                "SetAgentMPA": {
+                  "runAfter": {},
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "varAgentTypeCode",
+                    "value": 100000000
+                  }
+                }
+              }
+            },
+            "CA": {
+              "case": "CA",
+              "actions": {
+                "SetAgentCA": {
+                  "runAfter": {},
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "varAgentTypeCode",
+                    "value": 100000001
+                  }
+                }
+              }
+            },
+            "EAP": {
+              "case": "EAP",
+              "actions": {
+                "SetAgentEAP": {
+                  "runAfter": {},
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "varAgentTypeCode",
+                    "value": 100000002
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "actions": {}
+          }
+        },
+        "CreateFeedbackRecord": {
+          "runAfter": {
+            "SwitchAgentType": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a6b7c8d9-0e1f-2a3b-4c5d-6e7f8a9b0c1d"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_feedbacks",
+              "item/mpa_sessionid": "@triggerBody()?['session_id']",
+              "item/mpa_messageid": "@triggerBody()?['message_id']",
+              "item/mpa_feedbacktype": "@variables('varFeedbackTypeCode')",
+              "item/mpa_feedbacktext": "@triggerBody()?['feedback_text']",
+              "item/mpa_userquery": "@triggerBody()?['user_query']",
+              "item/mpa_agentresponse": "@triggerBody()?['agent_response']",
+              "item/mpa_kbfilesused": "@if(empty(triggerBody()?['kb_files_used']), null, string(triggerBody()?['kb_files_used']))",
+              "item/mpa_agenttype": "@variables('varAgentTypeCode')",
+              "item/mpa_createdat": "@utcNow()"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "ConditionHasKBFiles": {
+          "runAfter": {
+            "CreateFeedbackRecord": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b7c8d9e0-1f2a-3b4c-5d6e-7f8a9b0c1d2e"
+          },
+          "type": "Condition",
+          "expression": {
+            "and": [
+              {
+                "not": {
+                  "equals": [
+                    "@triggerBody()?['kb_files_used']",
+                    null
+                  ]
+                }
+              },
+              {
+                "greater": [
+                  "@length(coalesce(triggerBody()?['kb_files_used'], json('[]')))",
+                  0
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "ForEachKBFile": {
+              "foreach": "@triggerBody()?['kb_files_used']",
+              "actions": {
+                "CreateKBUsageRecord": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "CreateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "mpa_kbusages",
+                      "item/mpa_kbfilename": "@items('ForEachKBFile')",
+                      "item/mpa_sessionid": "@triggerBody()?['session_id']",
+                      "item/mpa_querytext": "@triggerBody()?['user_query']",
+                      "item/mpa_feedbackreceived": "@if(equals(variables('varFeedbackTypeCode'), 100000000), 100000001, if(equals(variables('varFeedbackTypeCode'), 100000001), 100000002, 100000000))",
+                      "item/mpa_agenttype": "@variables('varAgentTypeCode')",
+                      "item/mpa_usedat": "@utcNow()"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {},
+              "type": "Foreach",
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 5
+                }
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          }
+        },
+        "SuccessResponse": {
+          "runAfter": {
+            "ConditionHasKBFiles": [
+              "Succeeded",
+              "Skipped"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c8d9e0f1-2a3b-4c5d-6e7f-8a9b0c1d2e3f"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "Success",
+              "feedback_id": "@{outputs('CreateFeedbackRecord')?['body/mpa_feedbackid']}",
+              "kb_files_tracked": "@{length(coalesce(triggerBody()?['kb_files_used'], json('[]')))}"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,13 +1,216 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "include_history": {
+                  "type": "boolean"
+                },
+                "include_context": {
+                  "type": "boolean"
+                },
+                "include_progress": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "include_history": "@coalesce(triggerBody()?['include_history'], true)",
+            "include_context": "@coalesce(triggerBody()?['include_context'], true)",
+            "include_progress": "@coalesce(triggerBody()?['include_progress'], true)",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Retrieve_Session_Core": {
+          "type": "Compose",
+          "inputs": {
+            "session": {
+              "session_id": "@outputs('Parse_Input')?['session_id']",
+              "status": "active",
+              "created_at": "2024-01-15T10:30:00Z",
+              "last_activity": "@utcNow()",
+              "user_id": "user-12345",
+              "channel": "copilot",
+              "environment": "production"
+            },
+            "session_metadata": {
+              "total_interactions": 15,
+              "total_agent_calls": 8,
+              "session_duration_minutes": 45,
+              "tokens_used": 12500
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Retrieve_Conversation_Context": {
+          "type": "Compose",
+          "inputs": {
+            "context": {
+              "current_topic": "media_planning",
+              "client_context": {
+                "client_name": "Acme Corporation",
+                "industry": "technology",
+                "campaign_type": "brand_awareness"
+              },
+              "working_data": {
+                "budget": 1500000,
+                "timeline_weeks": 12,
+                "target_channels": ["paid_search", "paid_social", "display", "video"]
+              },
+              "agent_memory": {
+                "last_agent": "ANL",
+                "pending_tasks": ["budget_allocation", "timeline_creation"],
+                "completed_tasks": ["audience_segmentation", "benchmark_lookup"]
+              }
+            }
+          },
+          "runAfter": {
+            "Retrieve_Session_Core": ["Succeeded"]
+          }
+        },
+        "Retrieve_Conversation_History": {
+          "type": "Compose",
+          "inputs": {
+            "history": {
+              "recent_interactions": [
+                {
+                  "turn_id": 15,
+                  "timestamp": "@addMinutes(utcNow(), -5)",
+                  "user_message": "Can you allocate the budget across channels?",
+                  "agent_response": "I'll analyze the optimal budget allocation...",
+                  "agent_used": "ANL"
+                },
+                {
+                  "turn_id": 14,
+                  "timestamp": "@addMinutes(utcNow(), -10)",
+                  "user_message": "What are the industry benchmarks for our campaigns?",
+                  "agent_response": "Based on technology industry benchmarks...",
+                  "agent_used": "CHA"
+                },
+                {
+                  "turn_id": 13,
+                  "timestamp": "@addMinutes(utcNow(), -15)",
+                  "user_message": "Help me segment our target audience",
+                  "agent_response": "I've identified 4 key audience segments...",
+                  "agent_used": "AUD"
+                }
+              ],
+              "conversation_summary": "User is planning a brand awareness campaign for a technology client with a $1.5M budget over 12 weeks."
+            }
+          },
+          "runAfter": {
+            "Retrieve_Conversation_Context": ["Succeeded"]
+          }
+        },
+        "Retrieve_Progress_State": {
+          "type": "Compose",
+          "inputs": {
+            "progress": {
+              "workflow_stage": "planning",
+              "completed_phases": [
+                { "phase": "discovery", "completed_at": "@addMinutes(utcNow(), -30)", "success": true },
+                { "phase": "audience_analysis", "completed_at": "@addMinutes(utcNow(), -20)", "success": true }
+              ],
+              "current_phase": {
+                "phase": "budget_allocation",
+                "started_at": "@addMinutes(utcNow(), -5)",
+                "progress_percentage": 60
+              },
+              "pending_phases": [
+                { "phase": "timeline_creation", "estimated_duration_minutes": 10 },
+                { "phase": "document_generation", "estimated_duration_minutes": 15 }
+              ],
+              "overall_progress": 45
+            }
+          },
+          "runAfter": {
+            "Retrieve_Conversation_History": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@guid()",
+            "timestamp": "@utcNow()",
+            "source_agent": "ORC",
+            "status": "success",
+            "data": {
+              "session": "@outputs('Retrieve_Session_Core')?['session']",
+              "session_metadata": "@outputs('Retrieve_Session_Core')?['session_metadata']",
+              "context": "@if(equals(outputs('Parse_Input')?['include_context'], true), outputs('Retrieve_Conversation_Context')?['context'], null)",
+              "history": "@if(equals(outputs('Parse_Input')?['include_history'], true), outputs('Retrieve_Conversation_History')?['history'], null)",
+              "progress": "@if(equals(outputs('Parse_Input')?['include_progress'], true), outputs('Retrieve_Progress_State')?['progress'], null)"
+            },
+            "confidence": "HIGH",
+            "sources": ["SESSION_STORE", "MEMORY_STORE", "AGENT_KB"],
+            "recommendations": [],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Retrieve_Progress_State": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

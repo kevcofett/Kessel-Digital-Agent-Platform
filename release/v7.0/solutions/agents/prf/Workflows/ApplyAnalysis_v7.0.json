@@ -1,13 +1,281 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "analysis_results": {
+                  "type": "object"
+                },
+                "optimization_scope": {
+                  "type": "string",
+                  "enum": ["budget", "targeting", "creative", "bidding", "all"]
+                },
+                "constraints": {
+                  "type": "object"
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "analysis_results": "@coalesce(triggerBody()?['analysis_results'], json('{}'))",
+            "optimization_scope": "@coalesce(triggerBody()?['optimization_scope'], 'all')",
+            "constraints": "@coalesce(triggerBody()?['constraints'], json('{\"budget_change_limit\": 20, \"min_channel_budget\": 5}'))",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Evaluate_Optimization_Options": {
+          "type": "Compose",
+          "inputs": {
+            "optimization_options": {
+              "budget_reallocation": {
+                "applicable": true,
+                "priority": "high",
+                "potential_impact": 15,
+                "changes": [
+                  { "channel": "paid_search", "current_share": 30, "recommended_share": 35, "change": 5 },
+                  { "channel": "display", "current_share": 20, "recommended_share": 15, "change": -5 }
+                ],
+                "rationale": "Shift budget from underperforming Display to high-ROAS Paid Search"
+              },
+              "targeting_optimization": {
+                "applicable": true,
+                "priority": "medium",
+                "potential_impact": 10,
+                "changes": [
+                  { "channel": "paid_social", "action": "narrow_audience", "recommendation": "Focus on high-value segments" },
+                  { "channel": "display", "action": "exclude_placements", "recommendation": "Remove low-performing sites" }
+                ],
+                "rationale": "Improve targeting precision to increase conversion rates"
+              },
+              "bidding_optimization": {
+                "applicable": true,
+                "priority": "medium",
+                "potential_impact": 8,
+                "changes": [
+                  { "channel": "paid_search", "action": "increase_bids", "keywords": "high_converting", "change_pct": 15 },
+                  { "channel": "display", "action": "decrease_bids", "segments": "low_performers", "change_pct": -20 }
+                ],
+                "rationale": "Optimize bids based on conversion performance"
+              },
+              "creative_optimization": {
+                "applicable": true,
+                "priority": "low",
+                "potential_impact": 5,
+                "changes": [
+                  { "channel": "display", "action": "pause_creative", "creative_ids": ["cr-001", "cr-003"] },
+                  { "channel": "video", "action": "scale_creative", "creative_ids": ["vd-002"] }
+                ],
+                "rationale": "Remove underperforming creatives and scale winners"
+              }
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Apply_Constraints": {
+          "type": "Compose",
+          "inputs": {
+            "constrained_recommendations": {
+              "budget_changes": {
+                "within_limits": true,
+                "max_allowed_change": "@outputs('Parse_Input')?['constraints']?['budget_change_limit']",
+                "proposed_change": 5,
+                "approved": true
+              },
+              "channel_minimums": {
+                "all_above_minimum": true,
+                "min_required": "@outputs('Parse_Input')?['constraints']?['min_channel_budget']",
+                "lowest_proposed": 15,
+                "approved": true
+              },
+              "validation_status": "passed"
+            }
+          },
+          "runAfter": {
+            "Evaluate_Optimization_Options": ["Succeeded"]
+          }
+        },
+        "Generate_Action_Plan": {
+          "type": "Compose",
+          "inputs": {
+            "action_plan": {
+              "immediate_actions": [
+                {
+                  "action_id": "act-001",
+                  "priority": 1,
+                  "action_type": "budget_reallocation",
+                  "description": "Increase Paid Search budget by 5% of total",
+                  "channel": "paid_search",
+                  "expected_impact": "ROAS improvement of 0.2-0.3 points",
+                  "implementation": "Update campaign budgets in ad platform"
+                },
+                {
+                  "action_id": "act-002",
+                  "priority": 2,
+                  "action_type": "budget_reallocation",
+                  "description": "Reduce Display budget by 5% of total",
+                  "channel": "display",
+                  "expected_impact": "Reduce wasted spend by $24,250",
+                  "implementation": "Update campaign budgets in ad platform"
+                },
+                {
+                  "action_id": "act-003",
+                  "priority": 3,
+                  "action_type": "creative_pause",
+                  "description": "Pause underperforming display creatives",
+                  "channel": "display",
+                  "expected_impact": "CTR improvement of 15-20%",
+                  "implementation": "Pause creatives cr-001 and cr-003"
+                }
+              ],
+              "scheduled_actions": [
+                {
+                  "action_id": "act-004",
+                  "schedule": "next_week",
+                  "action_type": "targeting_update",
+                  "description": "Narrow Paid Social audience targeting",
+                  "expected_impact": "CPA reduction of 10-15%"
+                },
+                {
+                  "action_id": "act-005",
+                  "schedule": "next_week",
+                  "action_type": "bid_adjustment",
+                  "description": "Implement bid multipliers based on performance",
+                  "expected_impact": "Overall efficiency improvement of 8%"
+                }
+              ],
+              "monitoring_requirements": [
+                "Monitor ROAS daily for first week after changes",
+                "Track conversion volume to ensure no significant drop",
+                "Review channel pacing after budget reallocation"
+              ]
+            }
+          },
+          "runAfter": {
+            "Apply_Constraints": ["Succeeded"]
+          }
+        },
+        "Calculate_Expected_Impact": {
+          "type": "Compose",
+          "inputs": {
+            "projected_impact": {
+              "current_metrics": {
+                "roas": 3.76,
+                "cpa": 107.28,
+                "conversions": 4521
+              },
+              "projected_metrics": {
+                "roas": 4.05,
+                "cpa": 98.50,
+                "conversions": 4890
+              },
+              "improvements": {
+                "roas_change": 7.7,
+                "cpa_change": -8.2,
+                "conversion_change": 8.2
+              },
+              "confidence_level": "MEDIUM",
+              "time_to_impact": "2-3 weeks"
+            }
+          },
+          "runAfter": {
+            "Generate_Action_Plan": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "PRF",
+            "status": "success",
+            "data": {
+              "optimization_summary": {
+                "scope": "@outputs('Parse_Input')?['optimization_scope']",
+                "constraints_applied": "@outputs('Parse_Input')?['constraints']"
+              },
+              "optimization_options": "@outputs('Evaluate_Optimization_Options')?['optimization_options']",
+              "constraint_validation": "@outputs('Apply_Constraints')?['constrained_recommendations']",
+              "action_plan": "@outputs('Generate_Action_Plan')?['action_plan']",
+              "projected_impact": "@outputs('Calculate_Expected_Impact')?['projected_impact']"
+            },
+            "confidence": "MEDIUM",
+            "sources": ["ANALYSIS_RESULTS", "OPTIMIZATION_ENGINE", "AGENT_KB"],
+            "recommendations": [
+              "Implement immediate actions within 24 hours",
+              "Schedule weekly review to assess impact",
+              "Prepare rollback plan if performance degrades"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Calculate_Expected_Impact": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

@@ -1,13 +1,287 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "segmentation_type": {
+                  "type": "string",
+                  "enum": ["behavioral", "demographic", "psychographic", "value_based", "lifecycle"]
+                },
+                "campaign_objective": {
+                  "type": "string",
+                  "enum": ["awareness", "consideration", "conversion", "retention"]
+                },
+                "target_audience_description": {
+                  "type": "string"
+                },
+                "budget": {
+                  "type": "number"
+                },
+                "industry": {
+                  "type": "string"
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "segmentation_type": "@coalesce(triggerBody()?['segmentation_type'], 'behavioral')",
+            "campaign_objective": "@coalesce(triggerBody()?['campaign_objective'], 'consideration')",
+            "target_audience_description": "@triggerBody()?['target_audience_description']",
+            "budget": "@coalesce(triggerBody()?['budget'], 500000)",
+            "industry": "@coalesce(triggerBody()?['industry'], 'general')",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Load_Segment_Templates": {
+          "type": "Compose",
+          "inputs": {
+            "segment_templates": {
+              "behavioral": {
+                "segments": [
+                  {
+                    "id": "BEH-001",
+                    "name": "High-Intent Browsers",
+                    "description": "Users who visited product pages 3+ times in last 30 days",
+                    "estimated_reach": 250000,
+                    "conversion_propensity": "HIGH",
+                    "recommended_channels": ["paid_search", "retargeting", "email"]
+                  },
+                  {
+                    "id": "BEH-002",
+                    "name": "Cart Abandoners",
+                    "description": "Users who added to cart but did not purchase in last 14 days",
+                    "estimated_reach": 75000,
+                    "conversion_propensity": "VERY_HIGH",
+                    "recommended_channels": ["retargeting", "email", "sms"]
+                  },
+                  {
+                    "id": "BEH-003",
+                    "name": "Content Engagers",
+                    "description": "Users who consumed 3+ pieces of content in last 30 days",
+                    "estimated_reach": 180000,
+                    "conversion_propensity": "MEDIUM",
+                    "recommended_channels": ["social", "content", "video"]
+                  }
+                ]
+              },
+              "value_based": {
+                "segments": [
+                  {
+                    "id": "VAL-001",
+                    "name": "High-Value Customers",
+                    "description": "Top 20% by LTV, repeat purchasers",
+                    "estimated_reach": 50000,
+                    "ltv_index": 3.5,
+                    "recommended_channels": ["email", "loyalty", "exclusive_offers"]
+                  },
+                  {
+                    "id": "VAL-002",
+                    "name": "Growth Potential",
+                    "description": "Mid-tier customers with high engagement signals",
+                    "estimated_reach": 120000,
+                    "ltv_index": 1.8,
+                    "recommended_channels": ["cross_sell", "upsell", "social"]
+                  },
+                  {
+                    "id": "VAL-003",
+                    "name": "At-Risk Customers",
+                    "description": "Previously active customers with declining engagement",
+                    "estimated_reach": 80000,
+                    "ltv_index": 0.8,
+                    "recommended_channels": ["win_back", "email", "special_offers"]
+                  }
+                ]
+              },
+              "lifecycle": {
+                "segments": [
+                  {
+                    "id": "LFC-001",
+                    "name": "New Prospects",
+                    "description": "First-time site visitors in awareness phase",
+                    "estimated_reach": 500000,
+                    "funnel_stage": "awareness",
+                    "recommended_channels": ["display", "social", "video"]
+                  },
+                  {
+                    "id": "LFC-002",
+                    "name": "Active Considerers",
+                    "description": "Engaged users comparing options",
+                    "estimated_reach": 150000,
+                    "funnel_stage": "consideration",
+                    "recommended_channels": ["search", "reviews", "comparison"]
+                  },
+                  {
+                    "id": "LFC-003",
+                    "name": "Ready to Buy",
+                    "description": "High-intent users ready for conversion",
+                    "estimated_reach": 40000,
+                    "funnel_stage": "decision",
+                    "recommended_channels": ["search", "retargeting", "offers"]
+                  }
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Select_Relevant_Segments": {
+          "type": "Compose",
+          "inputs": {
+            "segmentation_type": "@outputs('Parse_Input')?['segmentation_type']",
+            "selected_segments": "@outputs('Load_Segment_Templates')?['segment_templates']?[outputs('Parse_Input')?['segmentation_type']]?['segments']",
+            "total_segments": 3
+          },
+          "runAfter": {
+            "Load_Segment_Templates": ["Succeeded"]
+          }
+        },
+        "Calculate_Segment_Sizing": {
+          "type": "Compose",
+          "inputs": {
+            "total_addressable_reach": 1500000,
+            "segment_breakdown": {
+              "primary_segment": {
+                "reach": 250000,
+                "share_of_total": 16.7,
+                "recommended_budget_share": 40
+              },
+              "secondary_segment": {
+                "reach": 150000,
+                "share_of_total": 10.0,
+                "recommended_budget_share": 35
+              },
+              "tertiary_segment": {
+                "reach": 100000,
+                "share_of_total": 6.7,
+                "recommended_budget_share": 25
+              }
+            },
+            "overlap_estimate_percent": 15
+          },
+          "runAfter": {
+            "Select_Relevant_Segments": ["Succeeded"]
+          }
+        },
+        "Generate_Targeting_Strategy": {
+          "type": "Compose",
+          "inputs": {
+            "targeting_approach": {
+              "primary_strategy": "Layered targeting with behavioral and intent signals",
+              "lookalike_recommendation": "Create 1-3% lookalikes from high-value customers",
+              "exclusion_strategy": "Exclude recent purchasers and bounced users",
+              "frequency_caps": {
+                "display": 5,
+                "video": 3,
+                "social": 7
+              }
+            },
+            "platform_specific_tactics": {
+              "meta": "Custom audiences + interest layering",
+              "google": "In-market + affinity audiences",
+              "programmatic": "Third-party data segments + contextual",
+              "linkedin": "Job title + company size targeting"
+            }
+          },
+          "runAfter": {
+            "Calculate_Segment_Sizing": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "AUD",
+            "status": "success",
+            "data": {
+              "segmentation_summary": {
+                "type": "@outputs('Parse_Input')?['segmentation_type']",
+                "objective": "@outputs('Parse_Input')?['campaign_objective']",
+                "total_segments": "@outputs('Select_Relevant_Segments')?['total_segments']"
+              },
+              "recommended_segments": "@outputs('Select_Relevant_Segments')?['selected_segments']",
+              "sizing_analysis": "@outputs('Calculate_Segment_Sizing')",
+              "targeting_strategy": "@outputs('Generate_Targeting_Strategy')?['targeting_approach']",
+              "platform_tactics": "@outputs('Generate_Targeting_Strategy')?['platform_specific_tactics']"
+            },
+            "confidence": "HIGH",
+            "sources": ["SEGMENT_TEMPLATES", "AUDIENCE_DATA", "AGENT_KB"],
+            "recommendations": [
+              "Start with primary segment for initial testing",
+              "Implement proper measurement for segment performance",
+              "Refresh audience definitions quarterly"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Generate_Targeting_Strategy": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

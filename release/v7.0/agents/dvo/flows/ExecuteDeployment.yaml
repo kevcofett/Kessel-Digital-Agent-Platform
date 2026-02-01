@@ -1,0 +1,214 @@
+# ExecuteDeployment Power Automate Flow Definition
+# Version: 1.0.0
+# Agent: DVO (DevOps Agent)
+# Description: Executes approved deployment and monitors progress
+
+name: ExecuteDeployment
+description: >
+  HTTP-triggered flow that executes an approved deployment, monitors progress,
+  runs health checks, and updates deployment status in Dataverse.
+
+trigger:
+  type: HTTP
+  method: POST
+  schema:
+    type: object
+    required:
+      - session_id
+      - deployment_code
+    properties:
+      session_id:
+        type: string
+        format: uuid
+        description: Current session identifier
+      deployment_code:
+        type: string
+        description: Deployment code to execute
+      approved_by:
+        type: string
+        description: User ID who approved the deployment
+
+environment_variables:
+  EAP_DATAVERSE_URL:
+    description: EAP Dataverse environment URL
+    required: true
+  DVO_COPILOT_ENDPOINT:
+    description: DevOps Agent Copilot Studio endpoint URL
+    required: true
+  DEPLOYMENT_WEBHOOK_URL:
+    description: Webhook URL for deployment notifications
+    required: false
+
+steps:
+  # Step 1: Parse input
+  - id: parse_input
+    type: Compose
+    name: Parse Input
+    inputs:
+      session_id: "@triggerBody()?['session_id']"
+      deployment_code: "@triggerBody()?['deployment_code']"
+      approved_by: "@triggerBody()?['approved_by']"
+      request_id: "@guid()"
+      timestamp: "@utcNow()"
+
+  # Step 2: Get deployment record
+  - id: get_deployment
+    type: HTTP
+    name: Get Deployment Record
+    inputs:
+      method: GET
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_deployments?$filter=eap_deployment_code eq '@{outputs('parse_input')?['deployment_code']}'"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+    run_after: parse_input
+
+  # Step 3: Validate deployment status
+  - id: check_status
+    type: Condition
+    name: Check Deployment Status
+    expression:
+      equals:
+        - "@first(body('get_deployment')?['value'])?['eap_status']"
+        - "approved"
+    run_after: get_deployment
+
+  # Step 4a: Update status to in_progress
+  - id: update_in_progress
+    type: HTTP
+    name: Update Status to In Progress
+    condition: check_status.true
+    inputs:
+      method: PATCH
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_deployments(@{first(body('get_deployment')?['value'])?['eap_deploymentid']})"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_status: "in_progress"
+        eap_approved_by: "@outputs('parse_input')?['approved_by']"
+        eap_started_at: "@utcNow()"
+        eap_deployment_log: "@concat('[{\"timestamp\":\"', utcNow(), '\",\"action\":\"DEPLOYMENT_STARTED\",\"message\":\"Deployment execution initiated\"}]')"
+    run_after: check_status
+
+  # Step 5: Execute deployment steps for each agent
+  - id: deploy_agents
+    type: ForEach
+    name: Deploy Agents
+    condition: check_status.true
+    foreach: "@split(first(body('get_deployment')?['value'])?['eap_agents'], ',')"
+    actions:
+      - id: deploy_single_agent
+        type: HTTP
+        name: Deploy Single Agent
+        inputs:
+          method: POST
+          uri: "@{variables('DVO_COPILOT_ENDPOINT')}/api/deploy"
+          headers:
+            Content-Type: application/json
+          body:
+            agent_code: "@items('deploy_agents')"
+            environment: "@first(body('get_deployment')?['value'])?['eap_environment']"
+            version: "@first(body('get_deployment')?['value'])?['eap_version_to']"
+            deployment_code: "@outputs('parse_input')?['deployment_code']"
+        timeout: PT5M
+    run_after: update_in_progress
+
+  # Step 6: Run health checks
+  - id: health_check
+    type: HTTP
+    name: Run Health Checks
+    condition: check_status.true
+    inputs:
+      method: POST
+      uri: "@{variables('DVO_COPILOT_ENDPOINT')}/api/health-check"
+      headers:
+        Content-Type: application/json
+      body:
+        deployment_code: "@outputs('parse_input')?['deployment_code']"
+        agents: "@split(first(body('get_deployment')?['value'])?['eap_agents'], ',')"
+        environment: "@first(body('get_deployment')?['value'])?['eap_environment']"
+    run_after: deploy_agents
+    timeout: PT2M
+
+  # Step 7: Update deployment status based on health check
+  - id: update_final_status
+    type: HTTP
+    name: Update Final Status
+    condition: check_status.true
+    inputs:
+      method: PATCH
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_deployments(@{first(body('get_deployment')?['value'])?['eap_deploymentid']})"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_status: "@if(equals(body('health_check')?['status'], 'healthy'), 'completed', 'failed')"
+        eap_completed_at: "@utcNow()"
+        eap_health_check_passed: "@equals(body('health_check')?['status'], 'healthy')"
+    run_after: health_check
+
+  # Step 8: Log completion
+  - id: log_completion
+    type: HTTP
+    name: Log Deployment Completion
+    condition: check_status.true
+    inputs:
+      method: POST
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_audit"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_audit_id: "@guid()"
+        eap_session_id: "@outputs('parse_input')?['session_id']"
+        eap_action: "DEPLOYMENT_COMPLETED"
+        eap_agent: "DVO"
+        eap_details: "@concat('Deployment ', outputs('parse_input')?['deployment_code'], ' completed with status: ', if(equals(body('health_check')?['status'], 'healthy'), 'SUCCESS', 'FAILED'))"
+    run_after: update_final_status
+
+  # Step 4b: Not approved error
+  - id: not_approved_error
+    type: Response
+    name: Not Approved Error
+    condition: check_status.false
+    inputs:
+      statusCode: 400
+      headers:
+        Content-Type: application/json
+      body:
+        error: true
+        message: "Deployment is not in approved status"
+        deployment_code: "@outputs('parse_input')?['deployment_code']"
+        current_status: "@first(body('get_deployment')?['value'])?['eap_status']"
+
+  # Step 9: Return success response
+  - id: return_response
+    type: Response
+    name: Return Response
+    inputs:
+      statusCode: 200
+      headers:
+        Content-Type: application/json
+      body:
+        success: true
+        deployment_code: "@outputs('parse_input')?['deployment_code']"
+        status: "@if(equals(body('health_check')?['status'], 'healthy'), 'completed', 'failed')"
+        health_check_passed: "@equals(body('health_check')?['status'], 'healthy')"
+        request_id: "@outputs('parse_input')?['request_id']"
+
+error_handling:
+  on_error:
+    - id: update_failed_status
+      type: HTTP
+      name: Update Failed Status
+      inputs:
+        method: PATCH
+        uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_deployments(@{first(body('get_deployment')?['value'])?['eap_deploymentid']})"
+        headers:
+          Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+          Content-Type: application/json
+        body:
+          eap_status: "failed"
+          eap_error_details: "@actions('failed_action')?['error']?['message']"
+          eap_completed_at: "@utcNow()"

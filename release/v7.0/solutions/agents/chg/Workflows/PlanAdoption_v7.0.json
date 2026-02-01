@@ -1,13 +1,284 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "initiative_name": {
+                  "type": "string"
+                },
+                "target_adoption_rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "timeline_weeks": {
+                  "type": "integer",
+                  "minimum": 4
+                },
+                "user_count": {
+                  "type": "integer"
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "initiative_name": "@coalesce(triggerBody()?['initiative_name'], 'MPA Implementation')",
+            "target_adoption_rate": "@coalesce(triggerBody()?['target_adoption_rate'], 85)",
+            "timeline_weeks": "@coalesce(triggerBody()?['timeline_weeks'], 12)",
+            "user_count": "@coalesce(triggerBody()?['user_count'], 150)",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Define_Adoption_Phases": {
+          "type": "Compose",
+          "inputs": {
+            "adoption_curve": {
+              "innovators": {
+                "percentage": 2.5,
+                "characteristics": "Technology enthusiasts, risk-tolerant",
+                "engagement": "Early access, feedback opportunities"
+              },
+              "early_adopters": {
+                "percentage": 13.5,
+                "characteristics": "Opinion leaders, visionaries",
+                "engagement": "Champion network, showcase opportunities"
+              },
+              "early_majority": {
+                "percentage": 34,
+                "characteristics": "Pragmatists, want proven solutions",
+                "engagement": "Case studies, peer testimonials"
+              },
+              "late_majority": {
+                "percentage": 34,
+                "characteristics": "Skeptics, need extensive support",
+                "engagement": "Hands-on training, ongoing support"
+              },
+              "laggards": {
+                "percentage": 16,
+                "characteristics": "Traditionalists, change-resistant",
+                "engagement": "Mandatory compliance, extra support"
+              }
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Calculate_Adoption_Milestones": {
+          "type": "Compose",
+          "inputs": {
+            "milestones": {
+              "week_2": {
+                "target_adoption": 5,
+                "target_users": "@mul(outputs('Parse_Input')?['user_count'], 0.05)",
+                "focus": "Innovators and pilot team",
+                "success_criteria": "Pilot team active and providing feedback"
+              },
+              "week_4": {
+                "target_adoption": 16,
+                "target_users": "@mul(outputs('Parse_Input')?['user_count'], 0.16)",
+                "focus": "Early adopters engaged",
+                "success_criteria": "Champion network established, positive testimonials"
+              },
+              "week_8": {
+                "target_adoption": 50,
+                "target_users": "@mul(outputs('Parse_Input')?['user_count'], 0.50)",
+                "focus": "Early majority adoption",
+                "success_criteria": "Majority of teams using system regularly"
+              },
+              "week_12": {
+                "target_adoption": 85,
+                "target_users": "@mul(outputs('Parse_Input')?['user_count'], 0.85)",
+                "focus": "Late majority and laggard support",
+                "success_criteria": "Target adoption rate achieved"
+              }
+            },
+            "adoption_velocity": {
+              "slow_start": "Weeks 1-4: Foundation building, pilot validation",
+              "acceleration": "Weeks 5-8: Rapid expansion with proven success",
+              "sustain": "Weeks 9-12: Address remaining barriers, solidify habits"
+            }
+          },
+          "runAfter": {
+            "Define_Adoption_Phases": ["Succeeded"]
+          }
+        },
+        "Create_Training_Plan": {
+          "type": "Compose",
+          "inputs": {
+            "training_components": {
+              "awareness_training": {
+                "duration": "30 minutes",
+                "delivery": "Self-paced online",
+                "audience": "All users",
+                "timing": "Week 1-2",
+                "content": ["What is MPA", "Benefits overview", "Getting started"]
+              },
+              "foundational_training": {
+                "duration": "2 hours",
+                "delivery": "Instructor-led virtual",
+                "audience": "Primary users",
+                "timing": "Weeks 2-4",
+                "content": ["Core workflows", "Key features", "Basic use cases"]
+              },
+              "advanced_training": {
+                "duration": "4 hours",
+                "delivery": "Hands-on workshop",
+                "audience": "Power users and champions",
+                "timing": "Weeks 3-6",
+                "content": ["Advanced features", "Best practices", "Troubleshooting"]
+              },
+              "just_in_time_support": {
+                "duration": "Ongoing",
+                "delivery": "In-app guidance, help desk",
+                "audience": "All users",
+                "timing": "Continuous",
+                "content": ["Contextual help", "FAQs", "Tips and tricks"]
+              }
+            },
+            "training_metrics": {
+              "completion_rate_target": 95,
+              "proficiency_assessment_target": 80,
+              "support_ticket_reduction_target": 30
+            }
+          },
+          "runAfter": {
+            "Calculate_Adoption_Milestones": ["Succeeded"]
+          }
+        },
+        "Define_Support_Model": {
+          "type": "Compose",
+          "inputs": {
+            "support_tiers": {
+              "tier_0_self_service": {
+                "channels": ["In-app help", "Knowledge base", "Video tutorials"],
+                "availability": "24/7",
+                "expected_resolution": "Immediate"
+              },
+              "tier_1_champion_network": {
+                "channels": ["Peer support", "Team champions", "Slack channel"],
+                "availability": "Business hours",
+                "expected_resolution": "Within 4 hours"
+              },
+              "tier_2_help_desk": {
+                "channels": ["Ticketing system", "Email", "Chat"],
+                "availability": "Business hours",
+                "expected_resolution": "Within 1 business day"
+              },
+              "tier_3_specialist": {
+                "channels": ["Escalation", "Expert consultation"],
+                "availability": "As needed",
+                "expected_resolution": "Within 3 business days"
+              }
+            },
+            "champion_network": {
+              "ratio": "1 champion per 10 users",
+              "responsibilities": ["Peer support", "Feedback collection", "Adoption advocacy"],
+              "recognition": ["Monthly champion meetings", "Special access", "Recognition program"]
+            }
+          },
+          "runAfter": {
+            "Create_Training_Plan": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "CHG",
+            "status": "success",
+            "data": {
+              "plan_summary": {
+                "initiative": "@outputs('Parse_Input')?['initiative_name']",
+                "target_adoption_rate": "@outputs('Parse_Input')?['target_adoption_rate']",
+                "timeline_weeks": "@outputs('Parse_Input')?['timeline_weeks']",
+                "user_count": "@outputs('Parse_Input')?['user_count']"
+              },
+              "adoption_curve": "@outputs('Define_Adoption_Phases')?['adoption_curve']",
+              "milestones": "@outputs('Calculate_Adoption_Milestones')?['milestones']",
+              "adoption_velocity": "@outputs('Calculate_Adoption_Milestones')?['adoption_velocity']",
+              "training_plan": "@outputs('Create_Training_Plan')?['training_components']",
+              "training_metrics": "@outputs('Create_Training_Plan')?['training_metrics']",
+              "support_model": "@outputs('Define_Support_Model')?['support_tiers']",
+              "champion_network": "@outputs('Define_Support_Model')?['champion_network']"
+            },
+            "confidence": "HIGH",
+            "sources": ["ADOPTION_FRAMEWORK", "BEST_PRACTICES", "AGENT_KB"],
+            "recommendations": [
+              "Start champion recruitment immediately",
+              "Prepare self-service resources before launch",
+              "Plan for extra support during weeks 4-8"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Define_Support_Model": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

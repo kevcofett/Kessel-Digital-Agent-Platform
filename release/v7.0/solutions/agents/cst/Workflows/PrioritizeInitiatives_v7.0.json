@@ -1,13 +1,335 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "initiatives": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": { "type": "string" },
+                      "description": { "type": "string" },
+                      "estimated_value": { "type": "number" },
+                      "estimated_effort": { "type": "string" }
+                    }
+                  }
+                },
+                "prioritization_criteria": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "constraints": {
+                  "type": "object"
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "initiatives": "@coalesce(triggerBody()?['initiatives'], createArray())",
+            "prioritization_criteria": "@coalesce(triggerBody()?['prioritization_criteria'], createArray('strategic_value', 'feasibility', 'urgency', 'resource_requirements'))",
+            "constraints": "@coalesce(triggerBody()?['constraints'], json('{\"budget\": 5000000, \"timeline_months\": 12, \"team_capacity\": 100}'))",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Define_Prioritization_Framework": {
+          "type": "Compose",
+          "inputs": {
+            "scoring_criteria": {
+              "strategic_value": {
+                "weight": 0.30,
+                "description": "Alignment with strategic objectives and potential impact",
+                "scale": { "min": 1, "max": 10 }
+              },
+              "feasibility": {
+                "weight": 0.25,
+                "description": "Technical and organizational capability to execute",
+                "scale": { "min": 1, "max": 10 }
+              },
+              "urgency": {
+                "weight": 0.20,
+                "description": "Time-sensitivity and competitive pressure",
+                "scale": { "min": 1, "max": 10 }
+              },
+              "resource_requirements": {
+                "weight": 0.15,
+                "description": "Budget and team requirements (inverse scoring)",
+                "scale": { "min": 1, "max": 10 }
+              },
+              "risk_level": {
+                "weight": 0.10,
+                "description": "Execution and outcome risk (inverse scoring)",
+                "scale": { "min": 1, "max": 10 }
+              }
+            },
+            "prioritization_matrix": {
+              "quick_wins": { "impact": "high", "effort": "low", "priority": "immediate" },
+              "major_projects": { "impact": "high", "effort": "high", "priority": "planned" },
+              "fill_ins": { "impact": "low", "effort": "low", "priority": "opportunistic" },
+              "thankless_tasks": { "impact": "low", "effort": "high", "priority": "deprioritize" }
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Score_Sample_Initiatives": {
+          "type": "Compose",
+          "inputs": {
+            "scored_initiatives": [
+              {
+                "name": "Digital Transformation Initiative",
+                "scores": {
+                  "strategic_value": 9,
+                  "feasibility": 6,
+                  "urgency": 8,
+                  "resource_requirements": 4,
+                  "risk_level": 5
+                },
+                "weighted_score": 6.85,
+                "category": "major_projects",
+                "estimated_investment": 2500000,
+                "estimated_timeline_months": 18
+              },
+              {
+                "name": "Customer Experience Enhancement",
+                "scores": {
+                  "strategic_value": 8,
+                  "feasibility": 8,
+                  "urgency": 7,
+                  "resource_requirements": 7,
+                  "risk_level": 8
+                },
+                "weighted_score": 7.65,
+                "category": "quick_wins",
+                "estimated_investment": 800000,
+                "estimated_timeline_months": 6
+              },
+              {
+                "name": "Operational Efficiency Program",
+                "scores": {
+                  "strategic_value": 7,
+                  "feasibility": 7,
+                  "urgency": 6,
+                  "resource_requirements": 6,
+                  "risk_level": 7
+                },
+                "weighted_score": 6.75,
+                "category": "major_projects",
+                "estimated_investment": 1200000,
+                "estimated_timeline_months": 12
+              },
+              {
+                "name": "Market Expansion Strategy",
+                "scores": {
+                  "strategic_value": 9,
+                  "feasibility": 5,
+                  "urgency": 5,
+                  "resource_requirements": 3,
+                  "risk_level": 4
+                },
+                "weighted_score": 5.85,
+                "category": "major_projects",
+                "estimated_investment": 3000000,
+                "estimated_timeline_months": 24
+              }
+            ]
+          },
+          "runAfter": {
+            "Define_Prioritization_Framework": ["Succeeded"]
+          }
+        },
+        "Apply_Constraints_And_Rank": {
+          "type": "Compose",
+          "inputs": {
+            "constraint_analysis": {
+              "total_investment_required": 7500000,
+              "available_budget": 5000000,
+              "budget_gap": 2500000,
+              "total_resources_required": 120,
+              "available_capacity": 100,
+              "capacity_gap": 20
+            },
+            "prioritized_initiatives": [
+              {
+                "rank": 1,
+                "name": "Customer Experience Enhancement",
+                "weighted_score": 7.65,
+                "fits_constraints": true,
+                "recommendation": "Proceed immediately",
+                "cumulative_investment": 800000
+              },
+              {
+                "rank": 2,
+                "name": "Operational Efficiency Program",
+                "weighted_score": 6.75,
+                "fits_constraints": true,
+                "recommendation": "Proceed in Q2",
+                "cumulative_investment": 2000000
+              },
+              {
+                "rank": 3,
+                "name": "Digital Transformation Initiative",
+                "weighted_score": 6.85,
+                "fits_constraints": true,
+                "recommendation": "Proceed with phased approach",
+                "cumulative_investment": 4500000
+              },
+              {
+                "rank": 4,
+                "name": "Market Expansion Strategy",
+                "weighted_score": 5.85,
+                "fits_constraints": false,
+                "recommendation": "Defer to next fiscal year",
+                "cumulative_investment": 7500000
+              }
+            ],
+            "resource_allocation_plan": {
+              "phase_1_q1_q2": ["Customer Experience Enhancement"],
+              "phase_2_q3_q4": ["Operational Efficiency Program", "Digital Transformation Initiative Phase 1"],
+              "phase_3_next_year": ["Digital Transformation Initiative Phase 2", "Market Expansion Strategy"]
+            }
+          },
+          "runAfter": {
+            "Score_Sample_Initiatives": ["Succeeded"]
+          }
+        },
+        "Generate_Roadmap": {
+          "type": "Compose",
+          "inputs": {
+            "implementation_roadmap": {
+              "year_1": {
+                "Q1": {
+                  "initiatives": ["Customer Experience Enhancement"],
+                  "investment": 400000,
+                  "key_milestones": ["Project kickoff", "Quick wins delivered"]
+                },
+                "Q2": {
+                  "initiatives": ["Customer Experience Enhancement", "Operational Efficiency Program"],
+                  "investment": 700000,
+                  "key_milestones": ["CX Phase 1 complete", "OE assessment done"]
+                },
+                "Q3": {
+                  "initiatives": ["Operational Efficiency Program", "Digital Transformation Initiative"],
+                  "investment": 800000,
+                  "key_milestones": ["OE quick wins", "DT foundation laid"]
+                },
+                "Q4": {
+                  "initiatives": ["Digital Transformation Initiative"],
+                  "investment": 600000,
+                  "key_milestones": ["DT Phase 1 complete"]
+                }
+              },
+              "year_2": {
+                "focus": ["Digital Transformation Phase 2", "Market Expansion Strategy"],
+                "estimated_investment": 4000000
+              }
+            },
+            "dependencies": [
+              { "initiative": "Operational Efficiency Program", "depends_on": null, "blocking": false },
+              { "initiative": "Digital Transformation Initiative", "depends_on": "Operational Efficiency Program", "blocking": true },
+              { "initiative": "Market Expansion Strategy", "depends_on": "Digital Transformation Initiative", "blocking": false }
+            ]
+          },
+          "runAfter": {
+            "Apply_Constraints_And_Rank": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "CST",
+            "status": "success",
+            "data": {
+              "prioritization_summary": {
+                "initiatives_evaluated": "@length(outputs('Score_Sample_Initiatives')?['scored_initiatives'])",
+                "constraints_applied": "@outputs('Parse_Input')?['constraints']"
+              },
+              "scoring_framework": "@outputs('Define_Prioritization_Framework')?['scoring_criteria']",
+              "scored_initiatives": "@outputs('Score_Sample_Initiatives')?['scored_initiatives']",
+              "prioritized_list": "@outputs('Apply_Constraints_And_Rank')?['prioritized_initiatives']",
+              "constraint_analysis": "@outputs('Apply_Constraints_And_Rank')?['constraint_analysis']",
+              "implementation_roadmap": "@outputs('Generate_Roadmap')?['implementation_roadmap']",
+              "dependencies": "@outputs('Generate_Roadmap')?['dependencies']"
+            },
+            "confidence": "HIGH",
+            "sources": ["PRIORITIZATION_FRAMEWORK", "BEST_PRACTICES", "AGENT_KB"],
+            "recommendations": [
+              "Start with highest-scoring quick wins for momentum",
+              "Phase major initiatives to stay within constraints",
+              "Review and adjust priorities quarterly"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Generate_Roadmap": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

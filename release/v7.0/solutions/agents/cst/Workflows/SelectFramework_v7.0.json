@@ -1,13 +1,312 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "business_context": {
+                  "type": "string"
+                },
+                "strategic_objectives": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "industry": {
+                  "type": "string"
+                },
+                "company_size": {
+                  "type": "string",
+                  "enum": ["startup", "smb", "enterprise"]
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "business_context": "@coalesce(triggerBody()?['business_context'], 'general')",
+            "strategic_objectives": "@coalesce(triggerBody()?['strategic_objectives'], createArray('growth', 'efficiency', 'innovation'))",
+            "industry": "@coalesce(triggerBody()?['industry'], 'general')",
+            "company_size": "@coalesce(triggerBody()?['company_size'], 'enterprise')",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Load_Framework_Library": {
+          "type": "Compose",
+          "inputs": {
+            "frameworks": {
+              "porters_five_forces": {
+                "name": "Porter's Five Forces",
+                "category": "competitive_analysis",
+                "best_for": ["competitive_positioning", "market_entry", "industry_analysis"],
+                "components": ["supplier_power", "buyer_power", "competitive_rivalry", "threat_of_substitution", "threat_of_new_entry"],
+                "complexity": "medium",
+                "time_requirement": "2-4 weeks"
+              },
+              "swot_analysis": {
+                "name": "SWOT Analysis",
+                "category": "situation_analysis",
+                "best_for": ["strategic_planning", "quick_assessment", "opportunity_identification"],
+                "components": ["strengths", "weaknesses", "opportunities", "threats"],
+                "complexity": "low",
+                "time_requirement": "1-2 weeks"
+              },
+              "bcg_matrix": {
+                "name": "BCG Growth-Share Matrix",
+                "category": "portfolio_management",
+                "best_for": ["portfolio_optimization", "resource_allocation", "investment_decisions"],
+                "components": ["stars", "question_marks", "cash_cows", "dogs"],
+                "complexity": "medium",
+                "time_requirement": "2-3 weeks"
+              },
+              "ansoff_matrix": {
+                "name": "Ansoff Growth Matrix",
+                "category": "growth_strategy",
+                "best_for": ["growth_planning", "market_expansion", "product_development"],
+                "components": ["market_penetration", "market_development", "product_development", "diversification"],
+                "complexity": "low",
+                "time_requirement": "1-2 weeks"
+              },
+              "mckinsey_7s": {
+                "name": "McKinsey 7-S Framework",
+                "category": "organizational_alignment",
+                "best_for": ["change_management", "organizational_design", "strategy_execution"],
+                "components": ["strategy", "structure", "systems", "shared_values", "style", "staff", "skills"],
+                "complexity": "high",
+                "time_requirement": "4-8 weeks"
+              },
+              "balanced_scorecard": {
+                "name": "Balanced Scorecard",
+                "category": "performance_management",
+                "best_for": ["strategy_execution", "kpi_development", "organizational_alignment"],
+                "components": ["financial", "customer", "internal_processes", "learning_growth"],
+                "complexity": "high",
+                "time_requirement": "4-6 weeks"
+              },
+              "value_chain": {
+                "name": "Value Chain Analysis",
+                "category": "operational_excellence",
+                "best_for": ["cost_optimization", "competitive_advantage", "process_improvement"],
+                "components": ["inbound_logistics", "operations", "outbound_logistics", "marketing_sales", "service"],
+                "complexity": "medium",
+                "time_requirement": "3-4 weeks"
+              },
+              "blue_ocean": {
+                "name": "Blue Ocean Strategy",
+                "category": "innovation_strategy",
+                "best_for": ["market_creation", "differentiation", "innovation"],
+                "components": ["eliminate", "reduce", "raise", "create"],
+                "complexity": "high",
+                "time_requirement": "6-12 weeks"
+              }
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Match_Frameworks_To_Objectives": {
+          "type": "Compose",
+          "inputs": {
+            "objective_framework_mapping": {
+              "growth": ["ansoff_matrix", "bcg_matrix", "blue_ocean"],
+              "efficiency": ["value_chain", "mckinsey_7s", "balanced_scorecard"],
+              "innovation": ["blue_ocean", "swot_analysis", "porters_five_forces"],
+              "competitive_positioning": ["porters_five_forces", "swot_analysis", "value_chain"],
+              "organizational_change": ["mckinsey_7s", "balanced_scorecard", "swot_analysis"],
+              "market_expansion": ["ansoff_matrix", "blue_ocean", "porters_five_forces"]
+            },
+            "size_adjustments": {
+              "startup": { "prefer_complexity": "low", "time_factor": 0.5 },
+              "smb": { "prefer_complexity": "medium", "time_factor": 0.75 },
+              "enterprise": { "prefer_complexity": "high", "time_factor": 1.0 }
+            }
+          },
+          "runAfter": {
+            "Load_Framework_Library": ["Succeeded"]
+          }
+        },
+        "Score_And_Rank_Frameworks": {
+          "type": "Compose",
+          "inputs": {
+            "scored_frameworks": [
+              {
+                "framework": "swot_analysis",
+                "fit_score": 85,
+                "rationale": "Excellent starting point for strategic analysis, low complexity, quick insights",
+                "recommended_sequence": 1
+              },
+              {
+                "framework": "porters_five_forces",
+                "fit_score": 78,
+                "rationale": "Strong for competitive positioning and market understanding",
+                "recommended_sequence": 2
+              },
+              {
+                "framework": "ansoff_matrix",
+                "fit_score": 72,
+                "rationale": "Ideal for growth strategy development",
+                "recommended_sequence": 3
+              },
+              {
+                "framework": "balanced_scorecard",
+                "fit_score": 68,
+                "rationale": "Recommended for strategy execution and measurement",
+                "recommended_sequence": 4
+              }
+            ],
+            "selection_criteria": {
+              "objective_alignment": 0.40,
+              "complexity_fit": 0.25,
+              "time_availability": 0.20,
+              "industry_relevance": 0.15
+            }
+          },
+          "runAfter": {
+            "Match_Frameworks_To_Objectives": ["Succeeded"]
+          }
+        },
+        "Generate_Framework_Recommendations": {
+          "type": "Compose",
+          "inputs": {
+            "primary_recommendation": {
+              "framework": "swot_analysis",
+              "name": "SWOT Analysis",
+              "fit_score": 85,
+              "implementation_steps": [
+                "Gather cross-functional team for input session",
+                "Document internal strengths and weaknesses",
+                "Analyze external opportunities and threats",
+                "Cross-reference findings to identify strategic options",
+                "Prioritize actions based on impact and feasibility"
+              ],
+              "expected_outcomes": [
+                "Clear understanding of current position",
+                "Identified strategic options",
+                "Prioritized action items"
+              ],
+              "success_factors": [
+                "Honest internal assessment",
+                "Comprehensive external research",
+                "Cross-functional participation"
+              ]
+            },
+            "complementary_frameworks": [
+              {
+                "framework": "porters_five_forces",
+                "synergy": "Deepens competitive analysis from SWOT",
+                "sequence": "After SWOT completion"
+              },
+              {
+                "framework": "ansoff_matrix",
+                "synergy": "Translates SWOT insights into growth strategies",
+                "sequence": "After competitive analysis"
+              }
+            ],
+            "framework_combination_plan": {
+              "phase_1": { "framework": "swot_analysis", "duration": "2 weeks", "focus": "Situation analysis" },
+              "phase_2": { "framework": "porters_five_forces", "duration": "3 weeks", "focus": "Competitive deep-dive" },
+              "phase_3": { "framework": "ansoff_matrix", "duration": "2 weeks", "focus": "Growth strategy" }
+            }
+          },
+          "runAfter": {
+            "Score_And_Rank_Frameworks": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "CST",
+            "status": "success",
+            "data": {
+              "selection_summary": {
+                "business_context": "@outputs('Parse_Input')?['business_context']",
+                "strategic_objectives": "@outputs('Parse_Input')?['strategic_objectives']",
+                "company_size": "@outputs('Parse_Input')?['company_size']",
+                "frameworks_evaluated": "@length(outputs('Load_Framework_Library')?['frameworks'])"
+              },
+              "available_frameworks": "@outputs('Load_Framework_Library')?['frameworks']",
+              "scored_frameworks": "@outputs('Score_And_Rank_Frameworks')?['scored_frameworks']",
+              "selection_criteria": "@outputs('Score_And_Rank_Frameworks')?['selection_criteria']",
+              "primary_recommendation": "@outputs('Generate_Framework_Recommendations')?['primary_recommendation']",
+              "complementary_frameworks": "@outputs('Generate_Framework_Recommendations')?['complementary_frameworks']",
+              "implementation_plan": "@outputs('Generate_Framework_Recommendations')?['framework_combination_plan']"
+            },
+            "confidence": "HIGH",
+            "sources": ["FRAMEWORK_LIBRARY", "BEST_PRACTICES", "AGENT_KB"],
+            "recommendations": [
+              "Start with SWOT for foundational analysis",
+              "Layer additional frameworks for deeper insights",
+              "Adapt framework complexity to organizational capacity"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Generate_Framework_Recommendations": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

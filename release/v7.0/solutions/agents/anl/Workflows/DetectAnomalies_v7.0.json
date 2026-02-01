@@ -1,13 +1,253 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id", "metrics"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "metrics": {
+                  "type": "object",
+                  "properties": {
+                    "impressions": { "type": "number" },
+                    "clicks": { "type": "number" },
+                    "conversions": { "type": "number" },
+                    "spend": { "type": "number" },
+                    "ctr": { "type": "number" },
+                    "cpa": { "type": "number" },
+                    "roas": { "type": "number" }
+                  }
+                },
+                "historical_baseline": {
+                  "type": "object"
+                },
+                "detection_sensitivity": {
+                  "type": "string",
+                  "enum": ["low", "medium", "high"],
+                  "default": "medium"
+                },
+                "campaign_id": {
+                  "type": "string"
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "metrics": "@triggerBody()?['metrics']",
+            "historical_baseline": "@triggerBody()?['historical_baseline']",
+            "detection_sensitivity": "@coalesce(triggerBody()?['detection_sensitivity'], 'medium')",
+            "campaign_id": "@coalesce(triggerBody()?['campaign_id'], 'UNKNOWN')",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Load_Thresholds": {
+          "type": "Compose",
+          "inputs": {
+            "sensitivity_thresholds": {
+              "low": {
+                "variance_threshold": 0.40,
+                "z_score_threshold": 3.0,
+                "description": "Only flag major deviations"
+              },
+              "medium": {
+                "variance_threshold": 0.25,
+                "z_score_threshold": 2.0,
+                "description": "Balance between sensitivity and noise"
+              },
+              "high": {
+                "variance_threshold": 0.15,
+                "z_score_threshold": 1.5,
+                "description": "Flag smaller deviations for close monitoring"
+              }
+            },
+            "metric_specific_thresholds": {
+              "ctr": { "min_normal": 0.005, "max_normal": 0.05 },
+              "cpa": { "max_acceptable_variance": 0.35 },
+              "roas": { "min_acceptable": 1.0, "max_acceptable_variance": 0.30 },
+              "spend": { "max_daily_variance": 0.20 },
+              "impressions": { "min_daily": 1000 }
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Calculate_Variances": {
+          "type": "Compose",
+          "inputs": {
+            "metrics_analyzed": "@outputs('Parse_Input')?['metrics']",
+            "baseline": "@outputs('Parse_Input')?['historical_baseline']",
+            "variances": {
+              "ctr": {
+                "current": "@outputs('Parse_Input')?['metrics']?['ctr']",
+                "baseline": "@coalesce(outputs('Parse_Input')?['historical_baseline']?['ctr'], 0.01)",
+                "variance_percent": "@if(equals(coalesce(outputs('Parse_Input')?['historical_baseline']?['ctr'], 0.01), 0), 0, mul(div(sub(outputs('Parse_Input')?['metrics']?['ctr'], coalesce(outputs('Parse_Input')?['historical_baseline']?['ctr'], 0.01)), coalesce(outputs('Parse_Input')?['historical_baseline']?['ctr'], 0.01)), 100))"
+              },
+              "cpa": {
+                "current": "@outputs('Parse_Input')?['metrics']?['cpa']",
+                "baseline": "@coalesce(outputs('Parse_Input')?['historical_baseline']?['cpa'], 50)",
+                "variance_percent": "@if(equals(coalesce(outputs('Parse_Input')?['historical_baseline']?['cpa'], 50), 0), 0, mul(div(sub(outputs('Parse_Input')?['metrics']?['cpa'], coalesce(outputs('Parse_Input')?['historical_baseline']?['cpa'], 50)), coalesce(outputs('Parse_Input')?['historical_baseline']?['cpa'], 50)), 100))"
+              },
+              "roas": {
+                "current": "@outputs('Parse_Input')?['metrics']?['roas']",
+                "baseline": "@coalesce(outputs('Parse_Input')?['historical_baseline']?['roas'], 2.0)",
+                "variance_percent": "@if(equals(coalesce(outputs('Parse_Input')?['historical_baseline']?['roas'], 2.0), 0), 0, mul(div(sub(outputs('Parse_Input')?['metrics']?['roas'], coalesce(outputs('Parse_Input')?['historical_baseline']?['roas'], 2.0)), coalesce(outputs('Parse_Input')?['historical_baseline']?['roas'], 2.0)), 100))"
+              },
+              "spend": {
+                "current": "@outputs('Parse_Input')?['metrics']?['spend']",
+                "baseline": "@coalesce(outputs('Parse_Input')?['historical_baseline']?['spend'], 1000)",
+                "variance_percent": "@if(equals(coalesce(outputs('Parse_Input')?['historical_baseline']?['spend'], 1000), 0), 0, mul(div(sub(outputs('Parse_Input')?['metrics']?['spend'], coalesce(outputs('Parse_Input')?['historical_baseline']?['spend'], 1000)), coalesce(outputs('Parse_Input')?['historical_baseline']?['spend'], 1000)), 100))"
+              }
+            }
+          },
+          "runAfter": {
+            "Load_Thresholds": ["Succeeded"]
+          }
+        },
+        "Detect_Anomalies": {
+          "type": "Compose",
+          "inputs": {
+            "threshold": "@outputs('Load_Thresholds')?['sensitivity_thresholds']?[outputs('Parse_Input')?['detection_sensitivity']]?['variance_threshold']",
+            "anomaly_checks": {
+              "ctr_anomaly": {
+                "metric": "CTR",
+                "is_anomaly": "@greater(abs(outputs('Calculate_Variances')?['variances']?['ctr']?['variance_percent']), mul(outputs('Load_Thresholds')?['sensitivity_thresholds']?[outputs('Parse_Input')?['detection_sensitivity']]?['variance_threshold'], 100))",
+                "severity": "@if(greater(abs(outputs('Calculate_Variances')?['variances']?['ctr']?['variance_percent']), 50), 'HIGH', if(greater(abs(outputs('Calculate_Variances')?['variances']?['ctr']?['variance_percent']), 25), 'MEDIUM', 'LOW'))",
+                "direction": "@if(greater(outputs('Calculate_Variances')?['variances']?['ctr']?['variance_percent'], 0), 'ABOVE_BASELINE', 'BELOW_BASELINE')"
+              },
+              "cpa_anomaly": {
+                "metric": "CPA",
+                "is_anomaly": "@greater(abs(outputs('Calculate_Variances')?['variances']?['cpa']?['variance_percent']), mul(outputs('Load_Thresholds')?['sensitivity_thresholds']?[outputs('Parse_Input')?['detection_sensitivity']]?['variance_threshold'], 100))",
+                "severity": "@if(greater(abs(outputs('Calculate_Variances')?['variances']?['cpa']?['variance_percent']), 50), 'HIGH', if(greater(abs(outputs('Calculate_Variances')?['variances']?['cpa']?['variance_percent']), 25), 'MEDIUM', 'LOW'))",
+                "direction": "@if(greater(outputs('Calculate_Variances')?['variances']?['cpa']?['variance_percent'], 0), 'ABOVE_BASELINE', 'BELOW_BASELINE')"
+              },
+              "roas_anomaly": {
+                "metric": "ROAS",
+                "is_anomaly": "@greater(abs(outputs('Calculate_Variances')?['variances']?['roas']?['variance_percent']), mul(outputs('Load_Thresholds')?['sensitivity_thresholds']?[outputs('Parse_Input')?['detection_sensitivity']]?['variance_threshold'], 100))",
+                "severity": "@if(greater(abs(outputs('Calculate_Variances')?['variances']?['roas']?['variance_percent']), 50), 'HIGH', if(greater(abs(outputs('Calculate_Variances')?['variances']?['roas']?['variance_percent']), 25), 'MEDIUM', 'LOW'))",
+                "direction": "@if(greater(outputs('Calculate_Variances')?['variances']?['roas']?['variance_percent'], 0), 'ABOVE_BASELINE', 'BELOW_BASELINE')"
+              },
+              "spend_anomaly": {
+                "metric": "SPEND",
+                "is_anomaly": "@greater(abs(outputs('Calculate_Variances')?['variances']?['spend']?['variance_percent']), mul(outputs('Load_Thresholds')?['sensitivity_thresholds']?[outputs('Parse_Input')?['detection_sensitivity']]?['variance_threshold'], 100))",
+                "severity": "@if(greater(abs(outputs('Calculate_Variances')?['variances']?['spend']?['variance_percent']), 50), 'HIGH', if(greater(abs(outputs('Calculate_Variances')?['variances']?['spend']?['variance_percent']), 25), 'MEDIUM', 'LOW'))",
+                "direction": "@if(greater(outputs('Calculate_Variances')?['variances']?['spend']?['variance_percent'], 0), 'ABOVE_BASELINE', 'BELOW_BASELINE')"
+              }
+            }
+          },
+          "runAfter": {
+            "Calculate_Variances": ["Succeeded"]
+          }
+        },
+        "Generate_Recommendations": {
+          "type": "Compose",
+          "inputs": {
+            "recommendations": {
+              "ctr_low": "Review creative fatigue and audience targeting - CTR below baseline",
+              "ctr_high": "Investigate click quality and potential fraud - CTR above normal range",
+              "cpa_high": "Conversion path issues detected - review landing pages and targeting",
+              "cpa_low": "Strong performance - consider scaling budget allocation",
+              "roas_low": "Revenue efficiency declining - review product mix and pricing",
+              "roas_high": "Exceptional performance - validate attribution and scale",
+              "spend_high": "Budget pacing ahead of schedule - review daily caps",
+              "spend_low": "Under-delivery detected - check campaign status and bids"
+            },
+            "action_priority": {
+              "HIGH": "Immediate action required within 24 hours",
+              "MEDIUM": "Review and address within 48-72 hours",
+              "LOW": "Monitor trend and address if pattern continues"
+            }
+          },
+          "runAfter": {
+            "Detect_Anomalies": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "ANL",
+            "status": "success",
+            "data": {
+              "detection_summary": {
+                "campaign_id": "@outputs('Parse_Input')?['campaign_id']",
+                "sensitivity_level": "@outputs('Parse_Input')?['detection_sensitivity']",
+                "metrics_analyzed": 4
+              },
+              "variance_analysis": "@outputs('Calculate_Variances')?['variances']",
+              "anomaly_details": "@outputs('Detect_Anomalies')?['anomaly_checks']",
+              "thresholds_applied": "@outputs('Load_Thresholds')?['sensitivity_thresholds']?[outputs('Parse_Input')?['detection_sensitivity']]",
+              "recommendations": "@outputs('Generate_Recommendations')?['recommendations']"
+            },
+            "confidence": "HIGH",
+            "sources": ["CALCULATION", "BASELINE_DATA", "AGENT_KB"],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Generate_Recommendations": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

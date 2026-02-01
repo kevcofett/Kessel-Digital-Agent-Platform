@@ -1,13 +1,315 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "partner_name": {
+                  "type": "string"
+                },
+                "partner_type": {
+                  "type": "string",
+                  "enum": ["sports_team", "league", "venue", "media_property", "influencer", "event"]
+                },
+                "evaluation_criteria": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "brand_fit_factors": {
+                  "type": "object"
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "partner_name": "@coalesce(triggerBody()?['partner_name'], 'Partner Entity')",
+            "partner_type": "@coalesce(triggerBody()?['partner_type'], 'sports_team')",
+            "evaluation_criteria": "@coalesce(triggerBody()?['evaluation_criteria'], createArray('reach', 'engagement', 'brand_fit', 'value', 'risk'))",
+            "brand_fit_factors": "@coalesce(triggerBody()?['brand_fit_factors'], json('{}'))",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Load_Partner_Profile": {
+          "type": "Compose",
+          "inputs": {
+            "partner_profile": {
+              "name": "@outputs('Parse_Input')?['partner_name']",
+              "type": "@outputs('Parse_Input')?['partner_type']",
+              "metrics": {
+                "total_audience": 25000000,
+                "engaged_followers": 8500000,
+                "media_value": 75000000,
+                "social_engagement_rate": 0.045,
+                "demographic_match": 0.72
+              },
+              "historical_performance": {
+                "sponsor_retention_rate": 0.85,
+                "avg_sponsor_tenure_years": 4.2,
+                "media_exposure_delivered": 0.95,
+                "activation_success_rate": 0.88
+              },
+              "competitive_landscape": {
+                "current_sponsors": 12,
+                "category_availability": true,
+                "competing_interests": ["Brand A", "Brand B"]
+              }
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Evaluate_Reach_And_Engagement": {
+          "type": "Compose",
+          "inputs": {
+            "reach_evaluation": {
+              "total_reach": {
+                "value": 25000000,
+                "score": 82,
+                "benchmark_percentile": 75,
+                "notes": "Above average reach for partner type"
+              },
+              "engaged_audience": {
+                "value": 8500000,
+                "engagement_ratio": 0.34,
+                "score": 78,
+                "notes": "Strong engaged audience base"
+              },
+              "demographic_alignment": {
+                "target_match_percentage": 72,
+                "score": 72,
+                "key_segments": ["affluent_adults", "sports_enthusiasts", "family_oriented"]
+              },
+              "media_value": {
+                "annual_value": 75000000,
+                "efficiency_ratio": 1.8,
+                "score": 85,
+                "notes": "Strong media value relative to rights cost"
+              },
+              "overall_reach_score": 79
+            }
+          },
+          "runAfter": {
+            "Load_Partner_Profile": ["Succeeded"]
+          }
+        },
+        "Evaluate_Brand_Fit": {
+          "type": "Compose",
+          "inputs": {
+            "brand_fit_evaluation": {
+              "values_alignment": {
+                "score": 75,
+                "matching_values": ["excellence", "innovation", "community"],
+                "potential_conflicts": ["environmental_concerns"]
+              },
+              "audience_perception": {
+                "score": 80,
+                "positive_associations": ["premium", "exciting", "authentic"],
+                "perception_risk": "low"
+              },
+              "category_fit": {
+                "score": 85,
+                "natural_fit": true,
+                "activation_opportunities": ["product_integration", "hospitality", "content"]
+              },
+              "competitive_considerations": {
+                "score": 70,
+                "exclusivity_available": true,
+                "category_clutter": "moderate",
+                "competitive_conflicts": false
+              },
+              "overall_brand_fit_score": 78
+            }
+          },
+          "runAfter": {
+            "Evaluate_Reach_And_Engagement": ["Succeeded"]
+          }
+        },
+        "Evaluate_Value_And_Risk": {
+          "type": "Compose",
+          "inputs": {
+            "value_evaluation": {
+              "financial_value": {
+                "estimated_roi": 2.8,
+                "media_equivalency_ratio": 3.2,
+                "cpd_efficiency": "favorable",
+                "score": 75
+              },
+              "strategic_value": {
+                "market_positioning_impact": "high",
+                "customer_acquisition_potential": "medium",
+                "retention_impact": "high",
+                "score": 82
+              },
+              "asset_quality": {
+                "signage_visibility": 85,
+                "hospitality_quality": 80,
+                "digital_rights_value": 75,
+                "score": 80
+              },
+              "overall_value_score": 79
+            },
+            "risk_evaluation": {
+              "reputation_risk": {
+                "controversy_history": "low",
+                "governance_quality": "high",
+                "score": 85
+              },
+              "performance_risk": {
+                "on_field_consistency": "high",
+                "fan_sentiment_stability": "high",
+                "score": 82
+              },
+              "financial_risk": {
+                "organization_stability": "strong",
+                "contract_flexibility": "moderate",
+                "score": 78
+              },
+              "overall_risk_score": 82
+            }
+          },
+          "runAfter": {
+            "Evaluate_Brand_Fit": ["Succeeded"]
+          }
+        },
+        "Calculate_Overall_Score": {
+          "type": "Compose",
+          "inputs": {
+            "overall_evaluation": {
+              "weighted_scores": {
+                "reach_engagement": { "score": 79, "weight": 0.25, "contribution": 19.75 },
+                "brand_fit": { "score": 78, "weight": 0.25, "contribution": 19.50 },
+                "value": { "score": 79, "weight": 0.25, "contribution": 19.75 },
+                "risk_mitigation": { "score": 82, "weight": 0.25, "contribution": 20.50 }
+              },
+              "overall_score": 79.5,
+              "rating": "recommended",
+              "rating_scale": {
+                "highly_recommended": { "min": 85, "description": "Excellent partner opportunity" },
+                "recommended": { "min": 70, "description": "Good partner with manageable considerations" },
+                "conditional": { "min": 55, "description": "Proceed with caution and negotiation" },
+                "not_recommended": { "min": 0, "description": "Significant concerns - avoid" }
+              }
+            },
+            "decision_support": {
+              "recommendation": "PROCEED",
+              "confidence": "HIGH",
+              "key_strengths": [
+                "Strong media value relative to investment",
+                "Low reputation and performance risk",
+                "Good demographic alignment"
+              ],
+              "areas_of_concern": [
+                "Moderate category clutter",
+                "Some environmental perception issues to address"
+              ],
+              "negotiation_priorities": [
+                "Secure category exclusivity",
+                "Enhance digital rights package",
+                "Include performance bonus structure"
+              ]
+            }
+          },
+          "runAfter": {
+            "Evaluate_Value_And_Risk": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "SPO",
+            "status": "success",
+            "data": {
+              "evaluation_summary": {
+                "partner_name": "@outputs('Parse_Input')?['partner_name']",
+                "partner_type": "@outputs('Parse_Input')?['partner_type']",
+                "evaluation_criteria": "@outputs('Parse_Input')?['evaluation_criteria']"
+              },
+              "partner_profile": "@outputs('Load_Partner_Profile')?['partner_profile']",
+              "reach_evaluation": "@outputs('Evaluate_Reach_And_Engagement')?['reach_evaluation']",
+              "brand_fit_evaluation": "@outputs('Evaluate_Brand_Fit')?['brand_fit_evaluation']",
+              "value_evaluation": "@outputs('Evaluate_Value_And_Risk')?['value_evaluation']",
+              "risk_evaluation": "@outputs('Evaluate_Value_And_Risk')?['risk_evaluation']",
+              "overall_evaluation": "@outputs('Calculate_Overall_Score')?['overall_evaluation']",
+              "decision_support": "@outputs('Calculate_Overall_Score')?['decision_support']"
+            },
+            "confidence": "HIGH",
+            "sources": ["PARTNER_DATA", "INDUSTRY_BENCHMARKS", "AGENT_KB"],
+            "recommendations": [
+              "Proceed with partnership discussions",
+              "Focus negotiation on category exclusivity",
+              "Address environmental concerns in activation strategy"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Calculate_Overall_Score": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

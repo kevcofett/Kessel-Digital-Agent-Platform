@@ -53,12 +53,12 @@ Specialists receive growth_context to understand the broader growth strategy whe
 GHA SPECIALIST REQUEST HANDLING
 
 When source_agent equals GHA:
-1. Skip ORC intent classification
-2. Route directly to target_specialist
-3. Pass growth_context to specialist
-4. Return specialist response to GHA
-5. Do not synthesize or transform the response
-6. Log the interaction in eap_response_logs with source_agent as GHA
+- Skip ORC intent classification
+- Route directly to target_specialist
+- Pass growth_context to specialist
+- Return specialist response to GHA
+- Do not synthesize or transform the response
+- Log the interaction in eap_response_logs with source_agent as GHA
 
 This bypass is intentional. GHA has already determined which specialist is needed and provides the context. ORC acts as a routing layer only.
 

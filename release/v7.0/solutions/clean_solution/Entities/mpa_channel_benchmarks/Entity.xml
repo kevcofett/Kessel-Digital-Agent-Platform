@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>mpa_channel_benchmarks</Name>
+  <EntityInfo>
+    <entity Name="mpa_channel_benchmarks">
+      <DisplayName>Channel Benchmark</DisplayName>
+      <DisplayCollectionName>Channel Benchmarks</DisplayCollectionName>
+      <Description>Stores channel performance benchmarks by vertical, region, and channel type for MPA agents.</Description>
+      <OwnershipTypeMask>OrganizationOwned</OwnershipTypeMask>
+      <IsActivity>false</IsActivity>
+      <IsAvailableOffline>true</IsAvailableOffline>
+      <IsCustomizable>1</IsCustomizable>
+      <IsRenameable>1</IsRenameable>
+      <CanCreateAttributes>1</CanCreateAttributes>
+      <CanCreateForms>1</CanCreateForms>
+      <CanCreateViews>1</CanCreateViews>
+      <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+      <PrimaryIdAttribute>mpa_channel_benchmarkid</PrimaryIdAttribute>
+      <PrimaryNameAttribute>mpa_name</PrimaryNameAttribute>
+      <IntroducedVersion>7.0.0.0</IntroducedVersion>
+      <localizedNames>
+        <localizedName description="Channel Benchmark" languagecode="1033" />
+      </localizedNames>
+      <Descriptions>
+        <Description description="Stores channel performance benchmarks" languagecode="1033" />
+      </Descriptions>
+      <attributes>
+        <attribute PhysicalName="mpa_channel_benchmarkid">
+          <Type>primarykey</Type>
+          <DisplayName>Benchmark ID</DisplayName>
+          <Description>Unique identifier for the benchmark</Description>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="mpa_name">
+          <Type>nvarchar</Type>
+          <MaxLength>200</MaxLength>
+          <DisplayName>Benchmark Name</DisplayName>
+          <Description>Name of the benchmark</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <IsPrimaryName>1</IsPrimaryName>
+        </attribute>
+
+        <attribute PhysicalName="mpa_channel_id">
+          <Type>lookup</Type>
+          <DisplayName>Channel</DisplayName>
+          <Description>Link to the channel</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <LookupStyle>single</LookupStyle>
+          <Targets>
+            <Target>mpa_Channel</Target>
+          </Targets>
+        </attribute>
+
+        <attribute PhysicalName="mpa_vertical_id">
+          <Type>lookup</Type>
+          <DisplayName>Vertical</DisplayName>
+          <Description>Link to the vertical</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <LookupStyle>single</LookupStyle>
+          <Targets>
+            <Target>mpa_Vertical</Target>
+          </Targets>
+        </attribute>
+
+        <attribute PhysicalName="mpa_region">
+          <Type>picklist</Type>
+          <DisplayName>Region</DisplayName>
+          <Description>Geographic region for the benchmark</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <OptionSet>
+            <Options>
+              <Option value="100000000" label="global" />
+              <Option value="100000001" label="north_america" />
+              <Option value="100000002" label="emea" />
+              <Option value="100000003" label="apac" />
+              <Option value="100000004" label="latam" />
+            </Options>
+          </OptionSet>
+        </attribute>
+
+        <attribute PhysicalName="mpa_cpm_low">
+          <Type>money</Type>
+          <DisplayName>CPM Low</DisplayName>
+          <Description>Low end of CPM range</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Precision>4</Precision>
+        </attribute>
+
+        <attribute PhysicalName="mpa_cpm_median">
+          <Type>money</Type>
+          <DisplayName>CPM Median</DisplayName>
+          <Description>Median CPM</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Precision>4</Precision>
+        </attribute>
+
+        <attribute PhysicalName="mpa_cpm_high">
+          <Type>money</Type>
+          <DisplayName>CPM High</DisplayName>
+          <Description>High end of CPM range</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Precision>4</Precision>
+        </attribute>
+
+        <attribute PhysicalName="mpa_ctr_low">
+          <Type>decimal</Type>
+          <DisplayName>CTR Low</DisplayName>
+          <Description>Low end of CTR range (percentage)</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Precision>4</Precision>
+          <MinValue>0</MinValue>
+          <MaxValue>100</MaxValue>
+        </attribute>
+
+        <attribute PhysicalName="mpa_ctr_median">
+          <Type>decimal</Type>
+          <DisplayName>CTR Median</DisplayName>
+          <Description>Median CTR (percentage)</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Precision>4</Precision>
+          <MinValue>0</MinValue>
+          <MaxValue>100</MaxValue>
+        </attribute>
+
+        <attribute PhysicalName="mpa_ctr_high">
+          <Type>decimal</Type>
+          <DisplayName>CTR High</DisplayName>
+          <Description>High end of CTR range (percentage)</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Precision>4</Precision>
+          <MinValue>0</MinValue>
+          <MaxValue>100</MaxValue>
+        </attribute>
+
+        <attribute PhysicalName="mpa_conversion_rate_low">
+          <Type>decimal</Type>
+          <DisplayName>Conversion Rate Low</DisplayName>
+          <Description>Low end of conversion rate range (percentage)</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Precision>4</Precision>
+          <MinValue>0</MinValue>
+          <MaxValue>100</MaxValue>
+        </attribute>
+
+        <attribute PhysicalName="mpa_conversion_rate_median">
+          <Type>decimal</Type>
+          <DisplayName>Conversion Rate Median</DisplayName>
+          <Description>Median conversion rate (percentage)</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Precision>4</Precision>
+          <MinValue>0</MinValue>
+          <MaxValue>100</MaxValue>
+        </attribute>
+
+        <attribute PhysicalName="mpa_conversion_rate_high">
+          <Type>decimal</Type>
+          <DisplayName>Conversion Rate High</DisplayName>
+          <Description>High end of conversion rate range (percentage)</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Precision>4</Precision>
+          <MinValue>0</MinValue>
+          <MaxValue>100</MaxValue>
+        </attribute>
+
+        <attribute PhysicalName="mpa_viewability_rate">
+          <Type>decimal</Type>
+          <DisplayName>Viewability Rate</DisplayName>
+          <Description>Expected viewability rate (percentage)</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Precision>2</Precision>
+          <MinValue>0</MinValue>
+          <MaxValue>100</MaxValue>
+        </attribute>
+
+        <attribute PhysicalName="mpa_benchmark_date">
+          <Type>datetime</Type>
+          <DisplayName>Benchmark Date</DisplayName>
+          <Description>Date the benchmark data was collected</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>DateOnly</Format>
+        </attribute>
+
+        <attribute PhysicalName="mpa_source">
+          <Type>nvarchar</Type>
+          <MaxLength>200</MaxLength>
+          <DisplayName>Source</DisplayName>
+          <Description>Source of the benchmark data</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="mpa_sample_size">
+          <Type>int</Type>
+          <DisplayName>Sample Size</DisplayName>
+          <Description>Number of data points in the sample</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <MinValue>0</MinValue>
+          <MaxValue>2147483647</MaxValue>
+        </attribute>
+
+        <attribute PhysicalName="mpa_is_active">
+          <Type>bit</Type>
+          <DisplayName>Is Active</DisplayName>
+          <Description>Whether the benchmark is currently active</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <DefaultValue>1</DefaultValue>
+        </attribute>
+
+        <attribute PhysicalName="createdon">
+          <Type>datetime</Type>
+          <DisplayName>Created On</DisplayName>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="modifiedon">
+          <Type>datetime</Type>
+          <DisplayName>Modified On</DisplayName>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="statecode">
+          <Type>state</Type>
+          <DisplayName>Status</DisplayName>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="statuscode">
+          <Type>status</Type>
+          <DisplayName>Status Reason</DisplayName>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+      </attributes>
+    </entity>
+  </EntityInfo>
+</Entity>

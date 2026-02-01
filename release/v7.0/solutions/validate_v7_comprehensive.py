@@ -19,7 +19,7 @@ SOLUTION_ZIP = "Consulting_and_Marketing_Agent_Platform_V7.0.zip"
 DATA_IMPORT_ZIP = "KDAP_V7.0_Data_Import.zip"
 
 # Expected components
-EXPECTED_AGENTS = ["orc", "anl", "aud", "cha", "cst", "chg", "doc", "gha", "mkt", "prf", "spo", "docs", "dvo"]
+EXPECTED_AGENTS = ["orc", "anl", "aud", "cha", "cst", "chg", "doc", "gha", "mkt", "prf", "spo", "docs", "dvo", "mmm", "mmo", "tal", "dyn", "rmn", "ses", "mei", "sal", "dta"]
 REQUIRED_ROOT_FILES = ["[Content_Types].xml", "Solution.xml", "customizations.xml"]
 REQUIRED_FOLDERS = ["Entities", "Workflows"]
 VALID_REQUIRED_LEVELS = ["none", "recommended", "systemrequired"]
@@ -675,12 +675,21 @@ def validate_customizations():
         results.add_pass(f"Workflows defined: {len(workflows)}")
         results.add_info(f"Option sets defined: {len(option_sets)}")
 
-        # Check for common issues
+        # Check for common issues - entity names are in child Name element, not attribute
         for entity in entities:
-            name = entity.get("Name", "Unknown")
-            # Check for valid schema names
-            if not name.islower() and '_' not in name:
-                results.add_warning(f"Entity naming: {name} (should use lowercase with prefix)")
+            name_elem = entity.find("Name")
+            if name_elem is not None:
+                # Get the OriginalName attribute or text content
+                name = name_elem.get("OriginalName") or name_elem.text or "Unknown"
+                # Check for valid schema names (should have prefix like eap_, mpa_, ca_)
+                if name != "Unknown" and '_' not in name:
+                    results.add_warning(f"Entity naming: {name} (should use lowercase with prefix)")
+            # Also check nested entity element
+            inner_entity = entity.find(".//entity")
+            if inner_entity is not None:
+                inner_name = inner_entity.get("Name", "")
+                if inner_name and '_' not in inner_name:
+                    results.add_warning(f"Entity naming: {inner_name} (should use lowercase with prefix)")
 
         return True
 

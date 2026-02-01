@@ -2,19 +2,19 @@
 <ImportExportXml version="9.2.0.0" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="KesselDigital" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Entities>
       <Entity>
-        <Name LocalizedName="EAP Capability Implementation" OriginalName="eap_capability_implementation">eap_capability_implementation</Name>
-        <ObjectTypeCode>eap_capability_implementation</ObjectTypeCode>
+        <Name LocalizedName="EAP Capability Implementation" OriginalName="eap_capability_impl">eap_capability_impl</Name>
+        <ObjectTypeCode>eap_capability_impl</ObjectTypeCode>
         <EntityInfo>
-          <entity Name="eap_capability_implementation">
+          <entity Name="eap_capability_impl">
             <LocalizedNames>
               <LocalizedName description="EAP Capability Implementation" languagecode="1033" />
             </LocalizedNames>
             <Descriptions>
               <Description description="Implementation registry per environment with priority ordering" languagecode="1033" />
             </Descriptions>
-            <PrimaryIdAttribute>eap_capability_implementationid</PrimaryIdAttribute>
-            <PrimaryNameAttribute>capability_code</PrimaryNameAttribute>
-            <EntitySetName>eap_capability_implementations</EntitySetName>
+            <PrimaryIdAttribute>eap_capability_implid</PrimaryIdAttribute>
+            <PrimaryNameAttribute>eap_name</PrimaryNameAttribute>
+            <EntitySetName>eap_capability_impls</EntitySetName>
             <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
             <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
             <IsCustomEntity>1</IsCustomEntity>
@@ -49,6 +49,24 @@
             <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
             <IntroducedVersion>1.0.0.0</IntroducedVersion>
             <attributes>
+            <attribute PhysicalName="eap_name">
+              <Type>String</Type>
+              <Name>eap_name</Name>
+              <LogicalName>eap_name</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <IsPrimaryName>1</IsPrimaryName>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>200</MaxLength>
+              <displaynames>
+                <displayname description="Implementation Name" languagecode="1033" />
+              </displaynames>
+            </attribute>
             <attribute PhysicalName="capability_code">
               <Type>String</Type>
               <Name>capability_code</Name>
@@ -224,7 +242,7 @@
                 <displayname description="Fallback Implementation" languagecode="1033" />
               </displaynames>
               <LookupTypes>
-                <LookupType id="00000000-0000-0000-0000-000000000000">eap_capability_implementation</LookupType>
+                <LookupType id="00000000-0000-0000-0000-000000000000">eap_capability_impl</LookupType>
               </LookupTypes>
             </attribute>
             <attribute PhysicalName="timeout_seconds">

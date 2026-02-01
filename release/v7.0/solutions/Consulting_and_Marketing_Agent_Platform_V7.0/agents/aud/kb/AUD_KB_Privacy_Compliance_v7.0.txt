@@ -1,0 +1,330 @@
+DOCUMENT: AUD_KB_Privacy_Compliance_v7.0.txt
+CATEGORY: Audience Knowledge Base
+TOPICS: privacy, GDPR, CCPA, consent management, data protection, compliance
+VERSION: 1.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+RELATED: AUD_KB_First_Party_Data_v1, AUD_KB_Targeting_Strategy_v1
+
+AUD PRIVACY COMPLIANCE v1
+
+PURPOSE
+
+This document provides guidance on privacy-compliant audience strategies. Reference when users ask about GDPR, CCPA, consent requirements, or privacy-first targeting approaches.
+
+REGULATORY FRAMEWORK
+
+GDPR - EUROPEAN UNION
+
+The General Data Protection Regulation establishes strict requirements for processing personal data of EU residents.
+
+Key Requirements:
+- Lawful basis required for all processing
+- Explicit consent for marketing purposes
+- Right to access personal data
+- Right to rectification of inaccurate data
+- Right to erasure (right to be forgotten)
+- Right to data portability
+- Right to object to processing
+- 72-hour breach notification requirement
+
+Lawful Bases for Processing:
+- Consent: Freely given, specific, informed, unambiguous
+- Contract: Necessary for contract performance
+- Legal obligation: Required by law
+- Vital interests: Life or death situations
+- Public task: Official authority exercise
+- Legitimate interests: Balanced against individual rights
+
+Marketing Implications:
+- Email marketing requires explicit opt-in consent
+- Cookies require consent before placement
+- Profiling for targeting requires lawful basis
+- Cross-border transfers need legal mechanisms
+- Data minimization principle applies
+
+Penalties:
+- Up to 4 percent of global annual revenue
+- Up to 20 million euros
+- Regulatory enforcement actions
+- Reputational damage
+
+CCPA AND CPRA - CALIFORNIA
+
+The California Consumer Privacy Act and California Privacy Rights Act provide consumer rights over personal information.
+
+Consumer Rights:
+- Right to know what data is collected
+- Right to know if data is sold or shared
+- Right to delete personal information
+- Right to opt-out of sale or sharing
+- Right to correct inaccurate information
+- Right to limit use of sensitive personal information
+- Right to non-discrimination for exercising rights
+
+Business Obligations:
+- Privacy policy disclosure requirements
+- Do Not Sell My Personal Information link
+- Respond to consumer requests within 45 days
+- Verify consumer identity for requests
+- Train employees handling consumer inquiries
+
+Advertising Implications:
+- Sharing data for targeted advertising may constitute sale
+- Opt-out mechanisms required for cross-context behavioral advertising
+- Sensitive personal information has additional restrictions
+- Global Privacy Control signals must be honored
+
+US STATE PRIVACY LAWS
+
+Additional state laws creating patchwork requirements:
+
+Virginia VCDPA:
+- Similar structure to CCPA
+- Opt-in required for sensitive data processing
+- No private right of action
+
+Colorado CPA:
+- Universal opt-out mechanism required
+- Consent required for sensitive data
+- Data protection assessments required
+
+Connecticut CTDPA:
+- Recognizes Global Privacy Control
+- Consent for sensitive data processing
+- 60-day cure period for violations
+
+Other States:
+- Utah, Texas, Oregon, Montana, and others pending
+- Varying definitions and requirements
+- Monitor for new legislation
+
+CONSENT MANAGEMENT
+
+CONSENT COLLECTION PRINCIPLES
+
+Valid consent requires:
+- Freely given without coercion
+- Specific to stated purposes
+- Informed with clear explanation
+- Unambiguous affirmative action
+- Demonstrable and documented
+- Easy to withdraw
+
+Consent Anti-Patterns to Avoid:
+- Pre-checked boxes
+- Bundled consent with service access
+- Vague or overly broad language
+- Hidden consent in terms of service
+- Dark patterns that manipulate choice
+- Consent fatigue exploitation
+
+CONSENT MANAGEMENT PLATFORMS
+
+CMP Selection Criteria:
+- Geographic coverage for target markets
+- Integration with advertising platforms
+- Customization for brand experience
+- Reporting and audit trail capabilities
+- Mobile and app support
+- Price and total cost of ownership
+
+Implementation Best Practices:
+- Clear and specific consent language
+- Granular options by purpose and vendor
+- Easy preference center access
+- Regular consent refresh for long relationships
+- Sync consent state across touchpoints
+- Document all consent collection
+
+Consent String Standards:
+- IAB TCF 2.2 for programmatic advertising
+- GPP (Global Privacy Platform) for US states
+- Platform-specific consent signals
+
+PREFERENCE CENTER DESIGN
+
+Core Elements:
+- Clear explanation of data usage
+- Granular controls by purpose
+- Easy toggle or checkbox interface
+- Save and confirmation functionality
+- Link from all communications
+
+Purpose Categories to Include:
+- Essential or functional cookies
+- Analytics and performance
+- Personalization
+- Advertising and targeting
+- Third-party sharing
+
+DATA MINIMIZATION
+
+COLLECTION PRINCIPLES
+
+Collect only data necessary for stated purpose:
+- Define purpose before collection
+- Evaluate necessity of each field
+- Avoid nice-to-have data collection
+- Document justification for each data point
+
+Field-Level Assessment:
+- Is this field required for the stated purpose?
+- Could the purpose be achieved with less data?
+- Is there a less intrusive alternative?
+- How long do we need to retain this data?
+
+RETENTION POLICIES
+
+Retention Period Guidelines:
+- Transaction data: As required by financial regulations
+- Marketing consent: Duration of relationship plus proof period
+- Behavioral data: 13-24 months typical
+- Customer service records: Per legal requirements
+- Analytics data: Aggregate and anonymize after analysis
+
+Automated Deletion:
+- Implement automated purge processes
+- Regular audit of data age
+- Exception handling for legal holds
+- Documentation of deletion actions
+
+ANONYMIZATION AND AGGREGATION
+
+When to Anonymize:
+- Analytics and reporting
+- Benchmarking and research
+- Long-term trend analysis
+- Sharing with third parties
+
+Anonymization Techniques:
+- Data masking and hashing
+- K-anonymity requirements
+- Differential privacy approaches
+- Aggregation thresholds
+
+PRIVACY-FIRST TARGETING
+
+COOKIELESS STRATEGIES
+
+As third-party cookies deprecate, alternative approaches include:
+
+Contextual Targeting:
+- Align ads with content context
+- No user-level tracking required
+- Keyword and semantic analysis
+- Brand safety alignment benefit
+
+Publisher First-Party Data:
+- Seller-defined audiences
+- Publisher authenticated users
+- Content affinity segments
+- High-quality, consented data
+
+Cohort-Based Approaches:
+- Privacy Sandbox Topics API
+- Aggregated interest categories
+- No individual-level tracking
+- Browser-managed privacy
+
+First-Party Identity:
+- Authenticated user targeting
+- Hashed email matching
+- Consent-based activation
+- Highest match quality
+
+PRIVACY-PRESERVING MEASUREMENT
+
+Aggregated Reporting:
+- Aggregate attribution APIs
+- Summary reports without user-level data
+- Minimum threshold requirements
+
+Incrementality Focus:
+- Geo-based lift measurement
+- Holdout group methodology
+- No individual tracking required
+
+Modeled Conversions:
+- Statistical modeling for gaps
+- Calibrated with consented data
+- Transparent methodology disclosure
+
+CLEAN ROOM COMPLIANCE
+
+Privacy Benefits:
+- Data never leaves owner control
+- Query-level access, not data access
+- Aggregation and noise requirements
+- Audit trail of all queries
+
+Compliance Considerations:
+- Data processing agreements required
+- Purpose limitation still applies
+- Output must meet anonymization standards
+- User rights extend to clean room data
+
+COMPLIANCE OPERATIONS
+
+DATA SUBJECT REQUEST HANDLING
+
+Request Types:
+- Access requests: Provide copy of data
+- Deletion requests: Remove personal data
+- Correction requests: Fix inaccurate data
+- Portability requests: Provide in machine-readable format
+- Opt-out requests: Stop processing for specified purposes
+
+Response Requirements:
+- Acknowledge within specified timeframe
+- Verify identity before fulfilling
+- Complete within regulatory deadline
+- Document all actions taken
+- Maintain request log for audit
+
+VENDOR MANAGEMENT
+
+Due Diligence Requirements:
+- Data processing agreements in place
+- Security certifications (SOC 2, ISO 27001)
+- Sub-processor disclosure
+- Breach notification provisions
+- Audit rights
+
+Ongoing Monitoring:
+- Annual vendor reviews
+- Security questionnaire updates
+- Processing activity documentation
+- Contract renewal compliance checks
+
+BREACH RESPONSE
+
+Preparation:
+- Incident response plan documented
+- Response team identified
+- Communication templates ready
+- Regulatory contacts established
+
+Response Steps:
+- Contain and assess the breach
+- Document scope and impact
+- Notify regulators within required timeframe
+- Notify affected individuals if required
+- Implement remediation measures
+- Conduct post-incident review
+
+CROSS-REFERENCES
+
+For first-party data strategy: See AUD_KB_First_Party_Data_v1
+For targeting approaches: See AUD_KB_Targeting_Strategy_v1
+For segmentation methods: See AUD_KB_Segmentation_Methods_v1
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial creation
+- Regulatory framework (GDPR, CCPA, state laws)
+- Consent management guidance
+- Data minimization principles
+- Privacy-first targeting strategies
+- Compliance operations

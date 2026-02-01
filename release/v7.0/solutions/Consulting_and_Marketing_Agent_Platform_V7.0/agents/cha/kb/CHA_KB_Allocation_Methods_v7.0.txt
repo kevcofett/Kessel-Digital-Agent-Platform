@@ -1,0 +1,324 @@
+DOCUMENT: CHA_KB_Allocation_Methods_v7.0.txt
+CATEGORY: Channel Knowledge Base
+TOPICS: budget allocation, optimization approaches, constraint handling, reallocation triggers
+VERSION: 1.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+RELATED: CHA_KB_Channel_Registry_v1, CHA_KB_Channel_Playbooks_v1
+
+CHA ALLOCATION METHODS v1
+
+PURPOSE
+
+This document provides budget allocation formulas and optimization approaches for the Channel Strategy Agent. Reference this document when distributing budgets across channels, handling constraints, and identifying reallocation triggers.
+
+ALLOCATION PRINCIPLES
+
+PRINCIPLE 1: DIMINISHING RETURNS
+
+Every channel has a saturation point where additional spend yields decreasing returns. Marginal efficiency declines as:
+- Frequency exceeds optimal range
+- Audience pool depletes
+- Competition increases for same inventory
+- Creative fatigue accumulates
+
+Formula Application:
+- Efficiency Index = (Conversions at Budget N) / (Conversions at Budget N-1)
+- Healthy Range: 0.85-1.00
+- Warning Zone: 0.70-0.84
+- Reallocation Trigger: Below 0.70
+
+PRINCIPLE 2: MINIMUM VIABLE INVESTMENT
+
+Underfunded channels cannot optimize. Platform algorithms require sufficient data volume. Below minimums:
+- Learning phases extend indefinitely
+- Delivery becomes inconsistent
+- Optimization signals insufficient
+- Wasted spend on ineffective reach
+
+Approach: Fund fewer channels properly rather than many channels poorly.
+
+PRINCIPLE 3: FULL FUNNEL BALANCE
+
+Imbalanced funnels create inefficiency:
+- Upper heavy: Demand without capture
+- Lower heavy: Capture without demand generation
+- Missing mid: Poor conversion rates
+
+Rebalancing requires 4-8 weeks to show impact due to customer journey timelines.
+
+ALLOCATION FORMULAS
+
+OBJECTIVE-BASED ALLOCATION
+
+Awareness Objective Formula:
+- Upper Funnel: 60-70%
+- Mid Funnel: 20-30%
+- Lower Funnel: 10-20%
+
+Consideration Objective Formula:
+- Upper Funnel: 30-40%
+- Mid Funnel: 40-50%
+- Lower Funnel: 20-30%
+
+Performance Objective Formula:
+- Upper Funnel: 20-30%
+- Mid Funnel: 20-30%
+- Lower Funnel: 40-60%
+
+Retention Objective Formula:
+- Upper Funnel: 10-20%
+- Mid Funnel: 20-30%
+- Lower Funnel: 50-70%
+
+BUDGET TIER ALLOCATION
+
+Small Budget (Under 50K monthly):
+- Maximum Channels: 3-4
+- Primary Channel: 40-50%
+- Secondary Channel: 25-35%
+- Tertiary Channels: 15-25% combined
+- Test Budget: 0% (insufficient scale)
+
+Medium Budget (50K-250K monthly):
+- Maximum Channels: 4-6
+- Primary Channel: 30-40%
+- Secondary Channels: 20-30% each
+- Tertiary Channels: 10-15% each
+- Test Budget: 10-15%
+
+Large Budget (250K-1M monthly):
+- Maximum Channels: 6-8
+- Primary Channels: 20-30% each
+- Secondary Channels: 15-20% each
+- Tertiary Channels: 5-10% each
+- Test Budget: 15-20%
+
+Enterprise Budget (Over 1M monthly):
+- Maximum Channels: 8-12
+- Primary Channels: 15-25% each
+- Secondary Channels: 10-15% each
+- Tertiary Channels: 5-10% each
+- Test Budget: 20-25%
+
+CHANNEL CONCENTRATION LIMITS
+
+Single Channel Maximum: 40% of total budget
+- Exception: Search for high-intent performance campaigns up to 50%
+- Rationale: Risk diversification, diminishing returns
+
+Category Maximum: 50% in any single category
+- Exception: Retail media for ecommerce up to 60%
+- Rationale: Channel diversity, audience variation
+
+Minimum Per Channel: 5% of total or platform minimum
+- If below 5%, evaluate channel necessity
+- Below platform minimum is wasted spend
+
+OPTIMIZATION APPROACHES
+
+PERFORMANCE OPTIMIZATION
+
+Efficiency-Based Reallocation:
+1. Rank channels by efficiency metric (CPA, ROAS, or CPM depending on objective)
+2. Identify top performers (top 25%)
+3. Identify underperformers (bottom 25%)
+4. Shift 10-20% from underperformers to top performers
+5. Maintain minimum viable budgets
+6. Evaluate after 2-4 weeks
+
+Marginal Return Optimization:
+1. Calculate marginal CPA/ROAS for each channel
+2. Compare marginal efficiency to average
+3. If marginal efficiency less than 70% of average, reduce budget
+4. If marginal efficiency greater than average, increase budget
+5. Rebalance until marginal efficiency equalizes across channels
+
+Frequency Optimization:
+1. Monitor frequency across all channels
+2. Target optimal frequency by channel type
+3. Reduce budget on channels exceeding optimal frequency
+4. Reallocate to channels with room to grow
+
+AWARENESS OPTIMIZATION
+
+Reach Optimization:
+1. Calculate incremental reach per additional spend
+2. When reach curve flattens (less than 2% incremental), reallocate
+3. Prioritize channels with untapped reach potential
+4. Consider audience overlap between channels
+
+Brand Lift Optimization:
+1. Measure brand lift by channel where available
+2. Calculate cost per point of brand lift
+3. Reallocate toward channels with highest lift efficiency
+4. Maintain minimum presence in complementary channels
+
+Share of Voice Optimization:
+1. Estimate competitive spend by channel
+2. Target share of voice by strategic priority
+3. Concentrate in channels where SOV can reach threshold
+4. Minimum viable SOV typically 15-20% for impact
+
+INCREMENTALITY OPTIMIZATION
+
+Holdout Testing Approach:
+1. Create holdout group (10-15% of audience)
+2. Measure conversion difference exposed vs holdout
+3. Calculate incremental conversions per channel
+4. Reallocate based on true incrementality not attributed conversions
+
+Geo-Based Testing:
+1. Select matched test and control markets
+2. Increase/decrease channel spend in test markets
+3. Measure conversion difference vs control
+4. Apply findings to allocation decisions
+
+Media Mix Modeling Integration:
+1. If MMM data available, use coefficient estimates
+2. Calculate optimal allocation based on response curves
+3. Compare MMM recommendations to performance data
+4. Blend approaches for robust allocation
+
+CONSTRAINT HANDLING
+
+BUDGET CONSTRAINTS
+
+Budget Reduction Scenario:
+1. First reduce test budget allocation
+2. Second reduce lowest efficiency channels
+3. Third reduce tertiary channels
+4. Maintain minimum viable in primary and secondary
+5. If further cuts needed, eliminate rather than underfund
+
+Priority Sequence for Cuts:
+- First: Test channels, new channels
+- Second: Awareness channels (longer-term impact)
+- Third: Consideration channels
+- Last: Conversion channels (protect near-term revenue)
+
+Budget Increase Scenario:
+1. First increase proven high-efficiency channels
+2. Second add test allocation for new opportunities
+3. Third expand to new channels meeting minimum threshold
+4. Fourth increase consideration for future pipeline
+
+Priority Sequence for Increases:
+- First: Channels with proven diminishing returns headroom
+- Second: New channel tests at minimum viable
+- Third: Awareness to fuel demand generation
+- Fourth: Consideration for nurturing
+
+PLATFORM CONSTRAINTS
+
+Learning Phase Handling:
+- Meta: 50 conversions per week minimum
+- Google: 30 conversions per week minimum
+- TikTok: 50 conversions per week minimum
+- Solution: Broaden conversion events if volume insufficient
+
+Inventory Constraints:
+- CTV: Limited premium inventory
+- Podcast Host-Read: Limited host availability
+- LinkedIn: Limited B2B audience
+- Solution: Book early, accept higher CPMs, diversify placements
+
+Seasonality Constraints:
+- Q4: 20-40% CPM increases typical
+- January: Reduced competition, lower CPMs
+- Solution: Adjust allocation for seasonal efficiency
+
+VERTICAL CONSTRAINTS
+
+B2B Constraints:
+- LinkedIn CPMs 2-3x consumer
+- Smaller audience pools
+- Longer consideration cycles
+- Solution: Higher CPA tolerance, longer attribution windows
+
+Ecommerce Constraints:
+- Heavy retail media requirements
+- Competitive shopping environment
+- Thin margins require efficiency
+- Solution: Strict ROAS targets, real-time optimization
+
+CPG Constraints:
+- In-store attribution challenges
+- Retailer data requirements
+- Long purchase cycles
+- Solution: Household reach metrics, retailer media investment
+
+REALLOCATION TRIGGERS
+
+EFFICIENCY TRIGGERS
+
+Immediate Reallocation (Within 1 Week):
+- CPA increases 50% or more week-over-week
+- ROAS drops below 50% of target
+- Budget delivery falls below 70% of planned
+- Fraud or brand safety incident detected
+
+Standard Reallocation (Within 2-4 Weeks):
+- CPA increases 20-50% sustained over 2 weeks
+- ROAS consistently below target for 2 weeks
+- Marginal efficiency below 70% of average
+- Frequency exceeds optimal range by 50%
+
+Review Reallocation (Monthly):
+- Channel efficiency ranking shifts
+- New channel test shows promise
+- Competitive landscape changes
+- Business objectives shift
+
+PERFORMANCE PATTERN TRIGGERS
+
+Declining Efficiency Pattern:
+- Signal: CPA increasing week-over-week for 3+ weeks
+- Diagnosis: Audience saturation, creative fatigue, competition
+- Action: Reduce budget 15-25%, refresh creative, expand targeting
+
+Stagnant Reach Pattern:
+- Signal: Reach curve flat, frequency increasing
+- Diagnosis: Audience pool exhausted
+- Action: Expand targeting, add channels, accept lower reach efficiency
+
+Attribution Shift Pattern:
+- Signal: One channel gaining share of attributed conversions
+- Diagnosis: Last-touch bias, funnel imbalance, true efficiency change
+- Action: Validate with holdout test before major reallocation
+
+Seasonal Pattern:
+- Signal: Efficiency changes align with calendar
+- Diagnosis: Seasonal demand fluctuation, competitive pressure
+- Action: Adjust baseline expectations, plan proactive reallocation
+
+REALLOCATION EXECUTION
+
+Phased Approach:
+- Move maximum 20% of channel budget per week
+- Monitor for 3-5 days before next phase
+- Document changes and rationale
+- Set triggers for reversal
+
+Rapid Response Approach (Emergency Only):
+- Move up to 50% if urgent issue detected
+- Notify stakeholders immediately
+- Document reasoning and expected impact
+- Plan follow-up review within 48 hours
+
+CROSS-REFERENCES
+
+For channel codes and benchmarks: See CHA_KB_Channel_Registry_v1
+For channel playbooks: See CHA_KB_Channel_Playbooks_v1
+For analytics methods: See ANL_KB_Attribution_Models_v1
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial creation
+- Allocation principles documented
+- Objective-based formulas
+- Budget tier guidance
+- Optimization approaches
+- Constraint handling
+- Reallocation triggers

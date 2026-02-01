@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <entity name="eap_user_roles" displayname="User Roles">
+    <records>
+      <record id="ROLE-VIEWER">
+        <field name="eap_code" value="VIEWER" />
+        <field name="eap_name" value="Viewer" />
+        <field name="eap_description" value="Read-only access to view deployment status, history, and agent configurations." />
+        <field name="eap_role_level" value="100000000" label="viewer" />
+        <field name="eap_permissions" value="[&quot;view_deployments&quot;,&quot;view_history&quot;,&quot;view_agents&quot;,&quot;view_sessions&quot;]" />
+        <field name="eap_environment_access" value="development,staging,production" />
+        <field name="eap_is_system" value="1" />
+        <field name="eap_is_active" value="1" />
+      </record>
+      <record id="ROLE-DEVELOPER">
+        <field name="eap_code" value="DEVELOPER" />
+        <field name="eap_name" value="Developer" />
+        <field name="eap_description" value="Can validate agents and deploy to development environment only." />
+        <field name="eap_role_level" value="100000001" label="developer" />
+        <field name="eap_permissions" value="[&quot;view_deployments&quot;,&quot;view_history&quot;,&quot;view_agents&quot;,&quot;view_sessions&quot;,&quot;validate_agents&quot;,&quot;deploy_development&quot;]" />
+        <field name="eap_environment_access" value="development" />
+        <field name="eap_is_system" value="1" />
+        <field name="eap_is_active" value="1" />
+      </record>
+      <record id="ROLE-OPERATOR">
+        <field name="eap_code" value="OPERATOR" />
+        <field name="eap_name" value="Operator" />
+        <field name="eap_description" value="Can deploy to staging, rollback staging deployments, and view audit logs." />
+        <field name="eap_role_level" value="100000002" label="operator" />
+        <field name="eap_permissions" value="[&quot;view_deployments&quot;,&quot;view_history&quot;,&quot;view_agents&quot;,&quot;view_sessions&quot;,&quot;validate_agents&quot;,&quot;deploy_development&quot;,&quot;deploy_staging&quot;,&quot;rollback_staging&quot;,&quot;view_audit&quot;]" />
+        <field name="eap_environment_access" value="development,staging" />
+        <field name="eap_is_system" value="1" />
+        <field name="eap_is_active" value="1" />
+      </record>
+      <record id="ROLE-RELEASE-MANAGER">
+        <field name="eap_code" value="RELEASE_MANAGER" />
+        <field name="eap_name" value="Release Manager" />
+        <field name="eap_description" value="Can deploy to production with approval, rollback production, and manage deployment schedules." />
+        <field name="eap_role_level" value="100000003" label="release_manager" />
+        <field name="eap_permissions" value="[&quot;view_deployments&quot;,&quot;view_history&quot;,&quot;view_agents&quot;,&quot;view_sessions&quot;,&quot;validate_agents&quot;,&quot;deploy_development&quot;,&quot;deploy_staging&quot;,&quot;rollback_staging&quot;,&quot;view_audit&quot;,&quot;deploy_production&quot;,&quot;rollback_production&quot;,&quot;manage_schedules&quot;,&quot;approve_deployments&quot;]" />
+        <field name="eap_environment_access" value="development,staging,production" />
+        <field name="eap_is_system" value="1" />
+        <field name="eap_is_active" value="1" />
+      </record>
+      <record id="ROLE-ADMIN">
+        <field name="eap_code" value="ADMIN" />
+        <field name="eap_name" value="Administrator" />
+        <field name="eap_description" value="Full access to all platform capabilities including policy management and emergency bypass." />
+        <field name="eap_role_level" value="100000004" label="admin" />
+        <field name="eap_permissions" value="[&quot;*&quot;]" />
+        <field name="eap_environment_access" value="development,staging,production" />
+        <field name="eap_is_system" value="1" />
+        <field name="eap_is_active" value="1" />
+      </record>
+      <record id="ROLE-SERVICE-ACCOUNT">
+        <field name="eap_code" value="SERVICE_ACCOUNT" />
+        <field name="eap_name" value="Service Account" />
+        <field name="eap_description" value="Automated service account for CI/CD pipelines. Can deploy to dev/staging, production requires human approval." />
+        <field name="eap_role_level" value="100000005" label="service_account" />
+        <field name="eap_permissions" value="[&quot;validate_agents&quot;,&quot;deploy_development&quot;,&quot;deploy_staging&quot;,&quot;request_production_approval&quot;]" />
+        <field name="eap_environment_access" value="development,staging" />
+        <field name="eap_is_system" value="1" />
+        <field name="eap_is_active" value="1" />
+      </record>
+    </records>
+  </entity>
+</entities>

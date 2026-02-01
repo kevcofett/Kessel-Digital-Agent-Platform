@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name LocalizedName="Platform Sessions" OriginalName="eap_sessions">eap_sessions</Name>
+  <ObjectTypeCode>10400</ObjectTypeCode>
+  <EntityInfo>
+    <entity Name="eap_sessions">
+      <LocalizedNames>
+        <LocalizedName description="Platform Sessions" languagecode="1033" />
+      </LocalizedNames>
+      <LocalizedCollectionNames>
+        <LocalizedCollectionName description="Platform Sessions" languagecode="1033" />
+      </LocalizedCollectionNames>
+      <Descriptions>
+        <Description description="Platform-wide session tracking for all MCMAP agent interactions. Tracks session lifecycle, agent handoffs, and context persistence across multi-agent workflows." languagecode="1033" />
+      </Descriptions>
+      <PrimaryNameAttribute>eap_session_id</PrimaryNameAttribute>
+      <attributes>
+        <attribute PhysicalName="eap_sessionsId">
+          <Type>primarykey</Type>
+          <Name>eap_sessionsid</Name>
+          <LogicalName>eap_sessionsid</LogicalName>
+          <RequiredLevel>systemrequired</RequiredLevel>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+          <ImeMode>auto</ImeMode>
+          <IsCustomField>0</IsCustomField>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>7.0.0.0</IntroducedVersion>
+          <IsCustomizable>1</IsCustomizable>
+          <IsRenameable>1</IsRenameable>
+          <CanModifySearchSettings>1</CanModifySearchSettings>
+          <CanModifyRequirementLevelSettings>0</CanModifyRequirementLevelSettings>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>0</IsSortableEnabled>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat xsi:nil="true" />
+          <IsSearchable>0</IsSearchable>
+          <IsFilterable>0</IsFilterable>
+          <IsRetrievable>0</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <displaynames>
+            <displayname description="Platform Session" languagecode="1033" />
+          </displaynames>
+        </attribute>
+        <attribute PhysicalName="eap_session_id">
+          <Type>nvarchar</Type>
+          <Name>eap_session_id</Name>
+          <LogicalName>eap_session_id</LogicalName>
+          <IsPrimaryName>1</IsPrimaryName>
+          <RequiredLevel>recommended</RequiredLevel>
+          <MaxLength>100</MaxLength>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+          <ImeMode>auto</ImeMode>
+          <IsCustomField>1</IsCustomField>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>7.0.0.0</IntroducedVersion>
+          <IsCustomizable>1</IsCustomizable>
+          <IsRenameable>1</IsRenameable>
+          <CanModifySearchSettings>1</CanModifySearchSettings>
+          <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>1</IsSortableEnabled>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat xsi:nil="true" />
+          <IsSearchable>1</IsSearchable>
+          <IsFilterable>1</IsFilterable>
+          <IsRetrievable>1</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <displaynames>
+            <displayname description="Session ID" languagecode="1033" />
+          </displaynames>
+          <Descriptions>
+            <Description description="Unique identifier for the platform session" languagecode="1033" />
+          </Descriptions>
+        </attribute>
+        <attribute PhysicalName="eap_user_id">
+          <Type>nvarchar</Type>
+          <Name>eap_user_id</Name>
+          <LogicalName>eap_user_id</LogicalName>
+          <RequiredLevel>recommended</RequiredLevel>
+          <MaxLength>100</MaxLength>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+          <ImeMode>auto</ImeMode>
+          <IsCustomField>1</IsCustomField>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>7.0.0.0</IntroducedVersion>
+          <IsCustomizable>1</IsCustomizable>
+          <IsRenameable>1</IsRenameable>
+          <CanModifySearchSettings>1</CanModifySearchSettings>
+          <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>1</IsSortableEnabled>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat xsi:nil="true" />
+          <IsSearchable>1</IsSearchable>
+          <IsFilterable>1</IsFilterable>
+          <IsRetrievable>1</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <displaynames>
+            <displayname description="User ID" languagecode="1033" />
+          </displaynames>
+          <Descriptions>
+            <Description description="Azure AD user identifier" languagecode="1033" />
+          </Descriptions>
+        </attribute>
+        <attribute PhysicalName="eap_start_time">
+          <Type>datetime</Type>
+          <Name>eap_start_time</Name>
+          <LogicalName>eap_start_time</LogicalName>
+          <RequiredLevel>recommended</RequiredLevel>
+          <Format>DateAndTime</Format>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+          <ImeMode>auto</ImeMode>
+          <IsCustomField>1</IsCustomField>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>7.0.0.0</IntroducedVersion>
+          <IsCustomizable>1</IsCustomizable>
+          <IsRenameable>1</IsRenameable>
+          <CanModifySearchSettings>1</CanModifySearchSettings>
+          <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>1</IsSortableEnabled>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat xsi:nil="true" />
+          <IsSearchable>0</IsSearchable>
+          <IsFilterable>1</IsFilterable>
+          <IsRetrievable>1</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <displaynames>
+            <displayname description="Start Time" languagecode="1033" />
+          </displaynames>
+          <Descriptions>
+            <Description description="Session start timestamp" languagecode="1033" />
+          </Descriptions>
+        </attribute>
+        <attribute PhysicalName="eap_end_time">
+          <Type>datetime</Type>
+          <Name>eap_end_time</Name>
+          <LogicalName>eap_end_time</LogicalName>
+          <RequiredLevel>none</RequiredLevel>
+          <Format>DateAndTime</Format>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+          <ImeMode>auto</ImeMode>
+          <IsCustomField>1</IsCustomField>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>7.0.0.0</IntroducedVersion>
+          <IsCustomizable>1</IsCustomizable>
+          <IsRenameable>1</IsRenameable>
+          <CanModifySearchSettings>1</CanModifySearchSettings>
+          <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>1</IsSortableEnabled>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat xsi:nil="true" />
+          <IsSearchable>0</IsSearchable>
+          <IsFilterable>1</IsFilterable>
+          <IsRetrievable>1</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <displaynames>
+            <displayname description="End Time" languagecode="1033" />
+          </displaynames>
+          <Descriptions>
+            <Description description="Session end timestamp (null if active)" languagecode="1033" />
+          </Descriptions>
+        </attribute>
+        <attribute PhysicalName="eap_status">
+          <Type>picklist</Type>
+          <Name>eap_status</Name>
+          <LogicalName>eap_status</LogicalName>
+          <RequiredLevel>recommended</RequiredLevel>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+          <ImeMode>auto</ImeMode>
+          <IsCustomField>1</IsCustomField>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>7.0.0.0</IntroducedVersion>
+          <IsCustomizable>1</IsCustomizable>
+          <IsRenameable>1</IsRenameable>
+          <CanModifySearchSettings>1</CanModifySearchSettings>
+          <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>1</IsSortableEnabled>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat xsi:nil="true" />
+          <IsSearchable>0</IsSearchable>
+          <IsFilterable>1</IsFilterable>
+          <IsRetrievable>1</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <displaynames>
+            <displayname description="Status" languagecode="1033" />
+          </displaynames>
+          <Descriptions>
+            <Description description="Current session status" languagecode="1033" />
+          </Descriptions>
+          <optionset Name="eap_session_status">
+            <OptionSetType>Picklist</OptionSetType>
+            <IntroducedVersion>7.0.0.0</IntroducedVersion>
+            <displaynames>
+              <displayname description="Session Status" languagecode="1033" />
+            </displaynames>
+            <Descriptions>
+              <Description description="Session lifecycle status" languagecode="1033" />
+            </Descriptions>
+            <options>
+              <option value="100000000">
+                <labels>
+                  <label description="Active" languagecode="1033" />
+                </labels>
+              </option>
+              <option value="100000001">
+                <labels>
+                  <label description="Paused" languagecode="1033" />
+                </labels>
+              </option>
+              <option value="100000002">
+                <labels>
+                  <label description="Completed" languagecode="1033" />
+                </labels>
+              </option>
+              <option value="100000003">
+                <labels>
+                  <label description="Abandoned" languagecode="1033" />
+                </labels>
+              </option>
+              <option value="100000004">
+                <labels>
+                  <label description="Error" languagecode="1033" />
+                </labels>
+              </option>
+            </options>
+          </optionset>
+        </attribute>
+        <attribute PhysicalName="eap_current_agent">
+          <Type>nvarchar</Type>
+          <Name>eap_current_agent</Name>
+          <LogicalName>eap_current_agent</LogicalName>
+          <RequiredLevel>none</RequiredLevel>
+          <MaxLength>10</MaxLength>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+          <ImeMode>auto</ImeMode>
+          <IsCustomField>1</IsCustomField>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>7.0.0.0</IntroducedVersion>
+          <IsCustomizable>1</IsCustomizable>
+          <IsRenameable>1</IsRenameable>
+          <CanModifySearchSettings>1</CanModifySearchSettings>
+          <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>1</IsSortableEnabled>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat xsi:nil="true" />
+          <IsSearchable>1</IsSearchable>
+          <IsFilterable>1</IsFilterable>
+          <IsRetrievable>1</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <displaynames>
+            <displayname description="Current Agent" languagecode="1033" />
+          </displaynames>
+          <Descriptions>
+            <Description description="Agent code currently handling the session (ORC, ANL, AUD, etc.)" languagecode="1033" />
+          </Descriptions>
+        </attribute>
+        <attribute PhysicalName="eap_agents_invoked">
+          <Type>ntext</Type>
+          <Name>eap_agents_invoked</Name>
+          <LogicalName>eap_agents_invoked</LogicalName>
+          <RequiredLevel>none</RequiredLevel>
+          <MaxLength>2000</MaxLength>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+          <ImeMode>auto</ImeMode>
+          <IsCustomField>1</IsCustomField>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>7.0.0.0</IntroducedVersion>
+          <IsCustomizable>1</IsCustomizable>
+          <IsRenameable>1</IsRenameable>
+          <CanModifySearchSettings>1</CanModifySearchSettings>
+          <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>0</IsSortableEnabled>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat xsi:nil="true" />
+          <IsSearchable>0</IsSearchable>
+          <IsFilterable>0</IsFilterable>
+          <IsRetrievable>1</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <displaynames>
+            <displayname description="Agents Invoked" languagecode="1033" />
+          </displaynames>
+          <Descriptions>
+            <Description description="JSON array of agent codes invoked during this session" languagecode="1033" />
+          </Descriptions>
+        </attribute>
+        <attribute PhysicalName="eap_context">
+          <Type>ntext</Type>
+          <Name>eap_context</Name>
+          <LogicalName>eap_context</LogicalName>
+          <RequiredLevel>none</RequiredLevel>
+          <MaxLength>1048576</MaxLength>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+          <ImeMode>auto</ImeMode>
+          <IsCustomField>1</IsCustomField>
+          <IsAuditEnabled>0</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>7.0.0.0</IntroducedVersion>
+          <IsCustomizable>1</IsCustomizable>
+          <IsRenameable>1</IsRenameable>
+          <CanModifySearchSettings>1</CanModifySearchSettings>
+          <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>0</IsSortableEnabled>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat xsi:nil="true" />
+          <IsSearchable>0</IsSearchable>
+          <IsFilterable>0</IsFilterable>
+          <IsRetrievable>1</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <displaynames>
+            <displayname description="Session Context" languagecode="1033" />
+          </displaynames>
+          <Descriptions>
+            <Description description="JSON object containing session context and memory" languagecode="1033" />
+          </Descriptions>
+        </attribute>
+        <attribute PhysicalName="eap_interaction_count">
+          <Type>int</Type>
+          <Name>eap_interaction_count</Name>
+          <LogicalName>eap_interaction_count</LogicalName>
+          <RequiredLevel>none</RequiredLevel>
+          <MinValue>0</MinValue>
+          <MaxValue>2147483647</MaxValue>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+          <ImeMode>auto</ImeMode>
+          <IsCustomField>1</IsCustomField>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>7.0.0.0</IntroducedVersion>
+          <IsCustomizable>1</IsCustomizable>
+          <IsRenameable>1</IsRenameable>
+          <CanModifySearchSettings>1</CanModifySearchSettings>
+          <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>1</IsSortableEnabled>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat xsi:nil="true" />
+          <IsSearchable>0</IsSearchable>
+          <IsFilterable>1</IsFilterable>
+          <IsRetrievable>1</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <displaynames>
+            <displayname description="Interaction Count" languagecode="1033" />
+          </displaynames>
+          <Descriptions>
+            <Description description="Number of user interactions in this session" languagecode="1033" />
+          </Descriptions>
+        </attribute>
+        <attribute PhysicalName="eap_domain">
+          <Type>nvarchar</Type>
+          <Name>eap_domain</Name>
+          <LogicalName>eap_domain</LogicalName>
+          <RequiredLevel>none</RequiredLevel>
+          <MaxLength>50</MaxLength>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+          <ImeMode>auto</ImeMode>
+          <IsCustomField>1</IsCustomField>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>7.0.0.0</IntroducedVersion>
+          <IsCustomizable>1</IsCustomizable>
+          <IsRenameable>1</IsRenameable>
+          <CanModifySearchSettings>1</CanModifySearchSettings>
+          <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>1</IsSortableEnabled>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat xsi:nil="true" />
+          <IsSearchable>1</IsSearchable>
+          <IsFilterable>1</IsFilterable>
+          <IsRetrievable>1</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <displaynames>
+            <displayname description="Domain" languagecode="1033" />
+          </displaynames>
+          <Descriptions>
+            <Description description="Primary domain for this session (MPA, Consulting, Growth, etc.)" languagecode="1033" />
+          </Descriptions>
+        </attribute>
+      </attributes>
+      <EntitySetName>eap_sessionses</EntitySetName>
+      <IsBPFEntity>0</IsBPFEntity>
+      <IsLogicalEntity>0</IsLogicalEntity>
+      <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+      <IsActivity>0</IsActivity>
+      <IsActivityParty>0</IsActivityParty>
+      <IsAvailableOffline>1</IsAvailableOffline>
+      <IsChildEntity>0</IsChildEntity>
+      <IsInteractionCentricEnabled>0</IsInteractionCentricEnabled>
+      <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+      <IsMailMergeEnabled>0</IsMailMergeEnabled>
+      <IsVisibleInMobile>1</IsVisibleInMobile>
+      <IsVisibleInMobileClient>1</IsVisibleInMobileClient>
+      <IsReadOnlyInMobileClient>0</IsReadOnlyInMobileClient>
+      <HasActivities>0</HasActivities>
+      <HasNotes>0</HasNotes>
+      <IsAuditEnabled>1</IsAuditEnabled>
+      <IsQuickCreateEnabled>1</IsQuickCreateEnabled>
+      <IsReadingPaneEnabled>1</IsReadingPaneEnabled>
+      <IsValidForQueue>0</IsValidForQueue>
+      <IsConnectionsEnabled>0</IsConnectionsEnabled>
+      <IconLargeName xsi:nil="true" />
+      <IconMediumName xsi:nil="true" />
+      <IconSmallName xsi:nil="true" />
+      <IconVectorName xsi:nil="true" />
+      <IsCustomEntity>1</IsCustomEntity>
+      <IntroducedVersion>7.0.0.0</IntroducedVersion>
+      <IsOneNoteIntegrationEnabled>0</IsOneNoteIntegrationEnabled>
+      <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+      <IsKnowledgeManagementEnabled>0</IsKnowledgeManagementEnabled>
+      <IsSLAEnabled>0</IsSLAEnabled>
+      <EntityHelpUrlEnabled>0</EntityHelpUrlEnabled>
+      <EntityHelpUrl xsi:nil="true" />
+      <ChangeTrackingEnabled>0</ChangeTrackingEnabled>
+      <IsEnabledForExternalChannels>0</IsEnabledForExternalChannels>
+      <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
+      <SyncToExternalSearchIndex>0</SyncToExternalSearchIndex>
+      <EntityColor>#0D6EFD</EntityColor>
+    </entity>
+  </EntityInfo>
+</Entity>

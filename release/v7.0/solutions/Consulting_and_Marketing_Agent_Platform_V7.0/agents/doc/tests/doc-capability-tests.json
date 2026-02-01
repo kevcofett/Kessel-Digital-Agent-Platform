@@ -1,0 +1,193 @@
+{
+  "version": "1.0.0",
+  "description": "Capability tests for DOC (Document Generation) Agent",
+  "created": "2026-01-19",
+  "agent": {
+    "code": "DOC",
+    "name": "Document Generation",
+    "capabilities": ["media_plan_generation", "brief_creation", "report_export", "template_management", "multi_format_output"]
+  },
+  "total_tests": 15,
+  "categories": {
+    "plan_generation": 4,
+    "brief_creation": 4,
+    "report_export": 4,
+    "integration": 3
+  },
+  "tests": [
+    {
+      "id": "DOC-001",
+      "category": "plan_generation",
+      "name": "Standard Media Plan Generation",
+      "input": "Generate a complete media plan document from our session data",
+      "expected_flow": "GenerateDocument",
+      "expected_output_contains": ["document_url", "sections", "download_link"],
+      "priority": "P0",
+      "tags": ["generation", "media-plan"]
+    },
+    {
+      "id": "DOC-002",
+      "category": "plan_generation",
+      "name": "Executive Summary Generation",
+      "input": "Create an executive summary of our media strategy",
+      "expected_flow": "GenerateDocument",
+      "expected_output_contains": ["summary", "key_recommendations", "budget_overview"],
+      "priority": "P0",
+      "tags": ["generation", "executive"]
+    },
+    {
+      "id": "DOC-003",
+      "category": "plan_generation",
+      "name": "Channel Plan Detail",
+      "input": "Generate detailed channel-by-channel plan documentation",
+      "expected_flow": "GenerateDocument",
+      "expected_output_contains": ["channel_details", "tactics", "kpis_per_channel"],
+      "priority": "P1",
+      "tags": ["generation", "channel-detail"]
+    },
+    {
+      "id": "DOC-004",
+      "category": "plan_generation",
+      "name": "Budget Allocation Document",
+      "input": "Create a budget allocation breakdown document",
+      "expected_flow": "GenerateDocument",
+      "expected_output_contains": ["budget_tables", "allocation_charts", "timeline"],
+      "priority": "P1",
+      "tags": ["generation", "budget"]
+    },
+    {
+      "id": "DOC-005",
+      "category": "brief_creation",
+      "name": "Media Brief Generation",
+      "input": "Generate a media brief for agency partners",
+      "expected_flow": "GenerateDocument",
+      "expected_output_contains": ["objectives", "target_audience", "channels", "requirements"],
+      "priority": "P0",
+      "tags": ["brief", "media"]
+    },
+    {
+      "id": "DOC-006",
+      "category": "brief_creation",
+      "name": "Creative Brief Generation",
+      "input": "Create a creative brief based on our media strategy",
+      "expected_flow": "GenerateDocument",
+      "expected_output_contains": ["creative_direction", "messaging", "formats", "specs"],
+      "priority": "P0",
+      "tags": ["brief", "creative"]
+    },
+    {
+      "id": "DOC-007",
+      "category": "brief_creation",
+      "name": "RFP Document Creation",
+      "input": "Generate an RFP document for media vendor selection",
+      "expected_flow": "GenerateDocument",
+      "expected_output_contains": ["requirements", "evaluation_criteria", "timeline", "scope"],
+      "priority": "P1",
+      "tags": ["brief", "rfp"]
+    },
+    {
+      "id": "DOC-008",
+      "category": "brief_creation",
+      "name": "Campaign Brief",
+      "input": "Create a comprehensive campaign brief for the Q2 launch",
+      "expected_flow": "GenerateDocument",
+      "expected_output_contains": ["campaign_overview", "objectives", "tactics", "measurement"],
+      "priority": "P1",
+      "tags": ["brief", "campaign"]
+    },
+    {
+      "id": "DOC-009",
+      "category": "report_export",
+      "name": "PDF Export",
+      "input": "Export the media plan as a PDF document",
+      "expected_flow": "GenerateDocument",
+      "expected_output_contains": ["pdf_url", "file_size", "page_count"],
+      "expected_format": "pdf",
+      "priority": "P0",
+      "tags": ["export", "pdf"]
+    },
+    {
+      "id": "DOC-010",
+      "category": "report_export",
+      "name": "PowerPoint Export",
+      "input": "Export as a PowerPoint presentation for stakeholders",
+      "expected_flow": "GenerateDocument",
+      "expected_output_contains": ["pptx_url", "slide_count", "download_link"],
+      "expected_format": "pptx",
+      "priority": "P0",
+      "tags": ["export", "pptx"]
+    },
+    {
+      "id": "DOC-011",
+      "category": "report_export",
+      "name": "Excel Budget Export",
+      "input": "Export budget details to Excel spreadsheet",
+      "expected_flow": "GenerateDocument",
+      "expected_output_contains": ["xlsx_url", "worksheets", "download_link"],
+      "expected_format": "xlsx",
+      "priority": "P1",
+      "tags": ["export", "excel"]
+    },
+    {
+      "id": "DOC-012",
+      "category": "report_export",
+      "name": "Multi-Format Export",
+      "input": "Export the plan in PDF, PPTX, and XLSX formats",
+      "expected_flow": "GenerateDocument",
+      "expected_output_contains": ["export_package", "file_urls", "format_list"],
+      "priority": "P1",
+      "tags": ["export", "multi-format"]
+    },
+    {
+      "id": "DOC-013",
+      "category": "integration",
+      "name": "DOC from ORC Session",
+      "input": "Generate document from the current planning session",
+      "expected_flow": "GenerateDocument",
+      "expected_behavior": "DOC pulls session data from ORC context",
+      "secondary_agent": "ORC",
+      "priority": "P0",
+      "tags": ["integration", "session"]
+    },
+    {
+      "id": "DOC-014",
+      "category": "integration",
+      "name": "DOC with ANL Projections",
+      "input": "Include ANL projections in the media plan document",
+      "expected_flow": "GenerateDocument",
+      "expected_behavior": "DOC includes analytics projections",
+      "secondary_agent": "ANL",
+      "priority": "P1",
+      "tags": ["integration", "projections"]
+    },
+    {
+      "id": "DOC-015",
+      "category": "integration",
+      "name": "Full Documentation Suite",
+      "input": "Generate complete documentation: plan, brief, and exports",
+      "expected_flow": "GenerateDocument",
+      "expected_output_contains": ["media_plan", "brief", "export_files"],
+      "priority": "P1",
+      "tags": ["integration", "comprehensive"]
+    }
+  ],
+  "execution_instructions": {
+    "environment": "Copilot Studio test environment",
+    "prerequisites": [
+      "DOC agent deployed",
+      "GenerateDocument flow connected",
+      "Document templates configured",
+      "Session data available"
+    ],
+    "pass_criteria": {
+      "P0_tests": "100% pass required",
+      "P1_tests": "90% pass required"
+    },
+    "metrics_to_capture": [
+      "Response time (ms)",
+      "Document generation time (ms)",
+      "Output completeness (1-5)",
+      "Format accuracy (1-5)"
+    ]
+  }
+}

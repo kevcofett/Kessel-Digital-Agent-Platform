@@ -1,0 +1,95 @@
+================================================================================
+KDAP v7.0 POWER PLATFORM IMPORT VALIDATION REPORT
+Generated: 2026-01-31T22:11:16.738299
+================================================================================
+
+EXECUTIVE SUMMARY
+----------------------------------------
+Total Tests:    1759
+Passed:         1755 (99%)
+Failed:         4
+Warnings:       0
+Skipped:        0
+
+✗ STATUS: FAILURES DETECTED
+  Solution requires fixes before import
+
+RESULTS BY CATEGORY
+----------------------------------------
+
+✗ ZIP Structural Integrity [CRITICAL]
+  Target: Power Platform Import
+  PASS: 0/1  FAIL: 1  WARN: 0
+
+✗ Solution Package Structure [CRITICAL]
+  Target: Power Platform Import
+  PASS: 0/1  FAIL: 1  WARN: 0
+
+✗ XML Schema Validation [CRITICAL]
+  Target: Dataverse Entity Import
+  PASS: 0/1  FAIL: 1  WARN: 0
+
+✓ Entity Relationship Integrity [CRITICAL]
+  Target: Dataverse Relationships
+  PASS: 0/0  FAIL: 0  WARN: 0
+
+✓ Power Automate Flow Validation [CRITICAL]
+  Target: Flow Deployment
+  PASS: 2/2  FAIL: 0  WARN: 0
+
+✓ AI Builder Prompt Validation [HIGH]
+  Target: Copilot Studio Prompts
+  PASS: 1/1  FAIL: 0  WARN: 0
+
+✓ Copilot Studio Topic Validation [HIGH]
+  Target: Topic Import
+  PASS: 0/0  FAIL: 0  WARN: 0
+
+✓ KB Document Compliance [HIGH]
+  Target: Knowledge Base
+  PASS: 1540/1540  FAIL: 0  WARN: 0
+
+✓ Instruction File Compliance [HIGH]
+  Target: Agent Instructions
+  PASS: 52/52  FAIL: 0  WARN: 0
+
+✓ Seed Data Schema Alignment [HIGH]
+  Target: Data Import
+  PASS: 0/0  FAIL: 0  WARN: 0
+
+✓ YAML-to-JSON Conversion [MEDIUM]
+  Target: Flow Conversion
+  PASS: 160/160  FAIL: 0  WARN: 0
+
+✗ ZIP Package Integrity [CRITICAL]
+  Target: Import Readiness
+  PASS: 0/1  FAIL: 1  WARN: 0
+
+================================================================================
+FAILURES (MUST FIX BEFORE IMPORT)
+================================================================================
+
+[ZIP-000] ZIP file exists
+  Category: ZIP Structural Integrity (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0.zip
+  Message: Solution ZIP file not found
+
+[PKG-001] Solution ZIP exists
+  Category: Solution Package Structure (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0.zip
+  Message: Solution ZIP file not found
+  Fix: Run: cd solutions && zip -r solution.zip Consulting_and_Marketing_Agent_Platform_V7.0/
+
+[ENT-001] Entities directory exists
+  Category: XML Schema Validation (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities
+  Message: Entities directory not found
+
+[ZIP-001] ZIP exists
+  Category: ZIP Package Integrity (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0.zip
+  Message: Solution ZIP not found
+
+================================================================================
+END OF REPORT
+================================================================================

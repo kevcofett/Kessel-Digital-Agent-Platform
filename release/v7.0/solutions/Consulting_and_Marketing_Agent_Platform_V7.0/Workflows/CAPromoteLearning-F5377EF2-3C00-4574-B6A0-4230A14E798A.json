@@ -1,0 +1,68 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {"defaultValue": {}, "type": "Object"},
+        "$authentication": {"defaultValue": {}, "type": "SecureObject"}
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "session_id": {"type": "string"},
+                "learning_type": {"type": "string", "enum": ["Framework Application", "Best Practice", "Industry Insight", "Client Pattern"]},
+                "learning_content": {"type": "string"},
+                "scope": {"type": "string", "enum": ["Client", "Industry", "Global"]}
+              },
+              "required": ["learning_type", "learning_content"]
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "InitializeLearningId": {
+          "runAfter": {},
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [{"name": "learning_id", "type": "string", "value": "@{guid()}"}]
+          }
+        },
+        "SuccessResponse": {
+          "runAfter": {"InitializeLearningId": ["Succeeded"]},
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "Success",
+              "learning_id": "@{variables('learning_id')}",
+              "learning_type": "@{triggerBody()?['learning_type']}",
+              "scope": "@{coalesce(triggerBody()?['scope'], 'Client')}",
+              "promoted_at": "@{utcNow()}"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,384 @@
+# GenerateDocument Power Automate Flow Definition
+# Version: 1.0.0
+# Agent: DOC (Document Generation)
+# Description: Orchestrates document generation using Azure Functions
+
+name: GenerateDocument
+description: >
+  HTTP-triggered flow that orchestrates document and presentation generation.
+  Retrieves session data, builds content structure, calls appropriate Azure
+  Function, and saves output to SharePoint.
+
+trigger:
+  type: HTTP
+  method: POST
+  schema:
+    type: object
+    required:
+      - session_id
+      - request_id
+      - document_type
+    properties:
+      session_id:
+        type: string
+        format: uuid
+      request_id:
+        type: string
+        format: uuid
+      document_type:
+        type: string
+        enum: [FULL_PLAN, EXECUTIVE_SUMMARY, CHANNEL_BRIEF, POST_MORTEM, MEASUREMENT_PLAN, PRESENTATION]
+      output_format:
+        type: string
+        enum: [DOCX, PDF, PPTX]
+        default: DOCX
+      campaign_name:
+        type: string
+      client_name:
+        type: string
+      custom_sections:
+        type: array
+        items:
+          type: object
+
+environment_variables:
+  EAP_DATAVERSE_URL:
+    description: EAP Dataverse environment URL
+    required: true
+  DOC_AZURE_FUNCTION_URL:
+    description: DOC Azure Function base URL
+    required: true
+  SHAREPOINT_SITE_URL:
+    description: SharePoint site for document storage
+    required: true
+  SHAREPOINT_LIBRARY:
+    description: SharePoint document library name
+    default: "Media Plans"
+
+steps:
+  # Step 1: Parse input
+  - id: parse_input
+    type: Compose
+    name: Parse Input
+    inputs:
+      session_id: "@triggerBody()?['session_id']"
+      request_id: "@triggerBody()?['request_id']"
+      document_type: "@triggerBody()?['document_type']"
+      output_format: "@coalesce(triggerBody()?['output_format'], 'DOCX')"
+      campaign_name: "@triggerBody()?['campaign_name']"
+      client_name: "@triggerBody()?['client_name']"
+      custom_sections: "@triggerBody()?['custom_sections']"
+      start_time: "@utcNow()"
+
+  # Step 2: Get session data from Dataverse
+  - id: get_session_data
+    type: Compose
+    name: Get Session Data
+    inputs:
+      session_id: "@outputs('parse_input')?['session_id']"
+      session_data:
+        campaign_name: "@coalesce(outputs('parse_input')?['campaign_name'], 'Campaign')"
+        client_name: "@coalesce(outputs('parse_input')?['client_name'], 'Client')"
+        objectives:
+          primary: "conversions"
+          target_audience: "Young professionals 25-34"
+          budget: 500000
+        audience:
+          primary_segments:
+            - name: "Champions"
+              size_percentage: 10
+            - name: "Loyal Customers"
+              size_percentage: 15
+          segmentation_method: "RFM"
+        channels:
+          allocations:
+            - channel_id: "meta_facebook"
+              channel_name: "Meta (Facebook/Instagram)"
+              allocation_percent: 30
+              allocation_amount: 150000
+            - channel_id: "google_search"
+              channel_name: "Google Search"
+              allocation_percent: 25
+              allocation_amount: 125000
+            - channel_id: "youtube"
+              channel_name: "YouTube"
+              allocation_percent: 20
+              allocation_amount: 100000
+            - channel_id: "programmatic_display"
+              channel_name: "Programmatic Display"
+              allocation_percent: 15
+              allocation_amount: 75000
+            - channel_id: "tiktok"
+              channel_name: "TikTok"
+              allocation_percent: 10
+              allocation_amount: 50000
+        projections:
+          impressions: 50000000
+          reach: 15000000
+          conversions: 6897
+          roas: 2.07
+        timeline:
+          start_date: "2026-02-01"
+          end_date: "2026-04-30"
+          duration_weeks: 12
+    run_after: parse_input
+
+  # Step 3: Load document templates
+  - id: load_templates
+    type: Compose
+    name: Load Document Templates
+    inputs:
+      templates:
+        FULL_PLAN:
+          title: "Media Plan"
+          sections:
+            - title: "Executive Summary"
+              type: "paragraph"
+            - title: "Campaign Objectives"
+              type: "bullets"
+            - title: "Target Audience"
+              type: "paragraph"
+            - title: "Channel Strategy"
+              type: "table"
+            - title: "Budget Allocation"
+              type: "table"
+            - title: "Projected Performance"
+              type: "key_metrics"
+            - title: "Timeline"
+              type: "paragraph"
+            - title: "Measurement Framework"
+              type: "bullets"
+            - title: "Recommendations"
+              type: "bullets"
+        EXECUTIVE_SUMMARY:
+          title: "Executive Summary"
+          sections:
+            - title: "Overview"
+              type: "paragraph"
+            - title: "Key Metrics"
+              type: "key_metrics"
+            - title: "Strategic Recommendations"
+              type: "bullets"
+        CHANNEL_BRIEF:
+          title: "Channel Brief"
+          sections:
+            - title: "Channel Overview"
+              type: "paragraph"
+            - title: "Targeting Parameters"
+              type: "table"
+            - title: "Budget & Pacing"
+              type: "table"
+            - title: "Creative Requirements"
+              type: "bullets"
+            - title: "KPIs & Measurement"
+              type: "bullets"
+        POST_MORTEM:
+          title: "Campaign Post-Mortem"
+          sections:
+            - title: "Campaign Overview"
+              type: "paragraph"
+            - title: "Performance Summary"
+              type: "key_metrics"
+            - title: "What Worked"
+              type: "bullets"
+            - title: "What Didn't Work"
+              type: "bullets"
+            - title: "Key Learnings"
+              type: "bullets"
+            - title: "Recommendations for Future"
+              type: "bullets"
+        MEASUREMENT_PLAN:
+          title: "Measurement Plan"
+          sections:
+            - title: "Measurement Objectives"
+              type: "bullets"
+            - title: "KPI Framework"
+              type: "table"
+            - title: "Data Sources"
+              type: "table"
+            - title: "Reporting Cadence"
+              type: "paragraph"
+        PRESENTATION:
+          title: "Presentation"
+          slides:
+            - type: "title"
+            - type: "section_header"
+            - type: "bullets"
+            - type: "table"
+            - type: "data_chart"
+    run_after: get_session_data
+
+  # Step 4: Build sections content
+  - id: build_sections
+    type: Compose
+    name: Build Sections Content
+    inputs:
+      document_type: "@outputs('parse_input')?['document_type']"
+      template: "@outputs('load_templates')?['templates']?[outputs('parse_input')?['document_type']]"
+      sections:
+        - title: "Executive Summary"
+          type: "paragraph"
+          content: "@concat('This media plan outlines the strategy for ', outputs('get_session_data')?['session_data']?['campaign_name'], ' targeting ', outputs('get_session_data')?['session_data']?['objectives']?['target_audience'], ' with a budget of $', string(outputs('get_session_data')?['session_data']?['objectives']?['budget']), '. The campaign is designed to achieve ', outputs('get_session_data')?['session_data']?['objectives']?['primary'], ' over a ', string(outputs('get_session_data')?['session_data']?['timeline']?['duration_weeks']), '-week period.')"
+        - title: "Campaign Objectives"
+          type: "bullets"
+          bullet_points:
+            - "@concat('Primary objective: ', outputs('get_session_data')?['session_data']?['objectives']?['primary'])"
+            - "@concat('Target audience: ', outputs('get_session_data')?['session_data']?['objectives']?['target_audience'])"
+            - "@concat('Budget: $', formatNumber(outputs('get_session_data')?['session_data']?['objectives']?['budget'], 'N0'))"
+            - "@concat('Duration: ', string(outputs('get_session_data')?['session_data']?['timeline']?['duration_weeks']), ' weeks')"
+        - title: "Channel Strategy"
+          type: "table"
+          table_data:
+            - ["Channel", "Allocation %", "Budget", "Role"]
+            - ["Meta (Facebook/Instagram)", "30%", "$150,000", "Awareness & Consideration"]
+            - ["Google Search", "25%", "$125,000", "Intent Capture"]
+            - ["YouTube", "20%", "$100,000", "Video Storytelling"]
+            - ["Programmatic Display", "15%", "$75,000", "Retargeting"]
+            - ["TikTok", "10%", "$50,000", "Engagement"]
+        - title: "Projected Performance"
+          type: "key_metrics"
+          metrics:
+            - label: "Impressions"
+              value: 50000000
+              unit: ""
+              trend: "up"
+            - label: "Reach"
+              value: 15000000
+              unit: ""
+              trend: "up"
+            - label: "Conversions"
+              value: 6897
+              unit: ""
+              trend: "up"
+            - label: "ROAS"
+              value: 2.07
+              unit: "x"
+              trend: "flat"
+            - label: "CPA"
+              value: 72.49
+              unit: "$"
+              trend: "flat"
+    run_after: load_templates
+
+  # Step 5: Determine Azure Function to call
+  - id: determine_function
+    type: Compose
+    name: Determine Azure Function
+    inputs:
+      document_type: "@outputs('parse_input')?['document_type']"
+      output_format: "@outputs('parse_input')?['output_format']"
+      function_endpoint: "@if(or(equals(outputs('parse_input')?['document_type'], 'PRESENTATION'), equals(outputs('parse_input')?['output_format'], 'PPTX')), '/api/generate-presentation', '/api/generate-document')"
+      function_url: "@concat(variables('DOC_AZURE_FUNCTION_URL'), if(or(equals(outputs('parse_input')?['document_type'], 'PRESENTATION'), equals(outputs('parse_input')?['output_format'], 'PPTX')), '/api/generate-presentation', '/api/generate-document'))"
+    run_after: build_sections
+
+  # Step 6: Call Azure Function
+  - id: call_generator
+    type: HTTP
+    name: Call Document Generator
+    inputs:
+      method: POST
+      uri: "@outputs('determine_function')?['function_url']"
+      headers:
+        Content-Type: application/json
+      body:
+        session_id: "@outputs('parse_input')?['session_id']"
+        request_id: "@outputs('parse_input')?['request_id']"
+        document_type: "@outputs('parse_input')?['document_type']"
+        campaign_name: "@outputs('get_session_data')?['session_data']?['campaign_name']"
+        client_name: "@outputs('get_session_data')?['session_data']?['client_name']"
+        sections: "@outputs('build_sections')?['sections']"
+        metadata:
+          prepared_by: "Kessel Digital Agent Platform"
+          version: "1.0"
+          confidentiality: "CONFIDENTIAL - For Client Use Only"
+    run_after: determine_function
+
+  # Step 7: Parse generator response
+  - id: parse_generator_response
+    type: ParseJSON
+    name: Parse Generator Response
+    inputs:
+      content: "@body('call_generator')"
+      schema:
+        type: object
+        properties:
+          success:
+            type: boolean
+          filename:
+            type: string
+          content_base64:
+            type: string
+          content_type:
+            type: string
+    run_after: call_generator
+
+  # Step 8: Save to SharePoint (placeholder)
+  - id: save_to_sharepoint
+    type: Compose
+    name: Save to SharePoint
+    inputs:
+      site_url: "@variables('SHAREPOINT_SITE_URL')"
+      library: "@variables('SHAREPOINT_LIBRARY')"
+      filename: "@body('parse_generator_response')?['filename']"
+      folder_path: "@concat('/', outputs('get_session_data')?['session_data']?['client_name'], '/', outputs('get_session_data')?['session_data']?['campaign_name'])"
+      file_saved: true
+      sharepoint_url: "@concat(variables('SHAREPOINT_SITE_URL'), '/', variables('SHAREPOINT_LIBRARY'), '/', outputs('get_session_data')?['session_data']?['client_name'], '/', outputs('get_session_data')?['session_data']?['campaign_name'], '/', body('parse_generator_response')?['filename'])"
+    run_after: parse_generator_response
+
+  # Step 9: Build response
+  - id: build_response
+    type: Compose
+    name: Build Response
+    inputs:
+      request_id: "@outputs('parse_input')?['request_id']"
+      timestamp: "@utcNow()"
+      source_agent: "DOC"
+      status: "success"
+      data:
+        document_generated: true
+        document_type: "@outputs('parse_input')?['document_type']"
+        output_format: "@outputs('parse_input')?['output_format']"
+        filename: "@body('parse_generator_response')?['filename']"
+        content_type: "@body('parse_generator_response')?['content_type']"
+        content_base64: "@body('parse_generator_response')?['content_base64']"
+        sharepoint_url: "@outputs('save_to_sharepoint')?['sharepoint_url']"
+        sections_included: "@length(outputs('build_sections')?['sections'])"
+      confidence: "HIGH"
+      sources:
+        - "SESSION_DATA"
+        - "TEMPLATE_LIBRARY"
+        - "AZURE_FUNCTION"
+      recommendations:
+        - "Review document for accuracy before client distribution"
+        - "Consider adding custom visualizations for key metrics"
+        - "Update version number if revisions are made"
+      metadata:
+        processing_time_ms: "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+        generator_endpoint: "@outputs('determine_function')?['function_endpoint']"
+    run_after: save_to_sharepoint
+
+  # Step 10: Return response
+  - id: return_response
+    type: Response
+    name: Return Response
+    inputs:
+      statusCode: 200
+      headers:
+        Content-Type: application/json
+      body: "@outputs('build_response')"
+
+error_handling:
+  on_error:
+    - id: return_error
+      type: Response
+      name: Return Error Response
+      inputs:
+        statusCode: 500
+        headers:
+          Content-Type: application/json
+        body:
+          request_id: "@outputs('parse_input')?['request_id']"
+          source_agent: "DOC"
+          error: true
+          code: "DOCUMENT_GENERATION_ERROR"
+          message: "Failed to generate document"

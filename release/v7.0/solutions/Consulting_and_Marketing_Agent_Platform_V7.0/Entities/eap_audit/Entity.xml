@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>eap_audit</Name>
+  <EntityInfo>
+    <entity Name="eap_audit">
+      <DisplayName>Audit Log</DisplayName>
+      <DisplayCollectionName>Audit Logs</DisplayCollectionName>
+      <Description>Immutable audit trail for MCMAP platform operations, security events, and compliance tracking.</Description>
+      <OwnershipTypeMask>OrganizationOwned</OwnershipTypeMask>
+      <IsActivity>false</IsActivity>
+      <IsAvailableOffline>false</IsAvailableOffline>
+      <IsCustomizable>1</IsCustomizable>
+      <IsRenameable>1</IsRenameable>
+      <CanCreateAttributes>1</CanCreateAttributes>
+      <CanCreateForms>1</CanCreateForms>
+      <CanCreateViews>1</CanCreateViews>
+      <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+      <PrimaryIdAttribute>eap_auditid</PrimaryIdAttribute>
+      <PrimaryNameAttribute>eap_name</PrimaryNameAttribute>
+      <IntroducedVersion>7.0.0.0</IntroducedVersion>
+      <localizedNames>
+        <localizedName description="Audit Log" languagecode="1033" />
+      </localizedNames>
+      <Descriptions>
+        <Description description="Immutable audit trail for MCMAP platform" languagecode="1033" />
+      </Descriptions>
+      <attributes>
+        <attribute PhysicalName="eap_auditid">
+          <Type>primarykey</Type>
+          <DisplayName>Audit ID</DisplayName>
+          <Description>Unique identifier for the audit record</Description>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_name">
+          <Type>nvarchar</Type>
+          <MaxLength>200</MaxLength>
+          <DisplayName>Event Name</DisplayName>
+          <Description>Name of the audit event</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <IsPrimaryName>1</IsPrimaryName>
+        </attribute>
+
+        <attribute PhysicalName="eap_event_id">
+          <Type>nvarchar</Type>
+          <MaxLength>100</MaxLength>
+          <DisplayName>Event ID</DisplayName>
+          <Description>Unique identifier for this specific event</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_event_type">
+          <Type>picklist</Type>
+          <DisplayName>Event Type</DisplayName>
+          <Description>Category of audit event</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <OptionSet>
+            <Options>
+              <Option value="100000000" label="authentication_success" />
+              <Option value="100000001" label="authentication_failure" />
+              <Option value="100000002" label="authorization_granted" />
+              <Option value="100000003" label="authorization_denied" />
+              <Option value="100000004" label="deployment_started" />
+              <Option value="100000005" label="deployment_completed" />
+              <Option value="100000006" label="deployment_failed" />
+              <Option value="100000007" label="rollback_initiated" />
+              <Option value="100000008" label="rollback_completed" />
+              <Option value="100000009" label="policy_evaluated" />
+              <Option value="100000010" label="policy_violation" />
+              <Option value="100000011" label="approval_requested" />
+              <Option value="100000012" label="approval_granted" />
+              <Option value="100000013" label="approval_denied" />
+              <Option value="100000014" label="config_changed" />
+              <Option value="100000015" label="capability_check" />
+              <Option value="100000016" label="data_access" />
+              <Option value="100000017" label="data_export" />
+            </Options>
+          </OptionSet>
+        </attribute>
+
+        <attribute PhysicalName="eap_user_id">
+          <Type>nvarchar</Type>
+          <MaxLength>100</MaxLength>
+          <DisplayName>User ID</DisplayName>
+          <Description>ID of the user who triggered the event</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_user_email">
+          <Type>nvarchar</Type>
+          <MaxLength>256</MaxLength>
+          <DisplayName>User Email</DisplayName>
+          <Description>Email of the user at time of event</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_user_roles">
+          <Type>nvarchar</Type>
+          <MaxLength>1000</MaxLength>
+          <DisplayName>User Roles</DisplayName>
+          <Description>Comma-separated list of user roles at time of event</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_auth_method">
+          <Type>picklist</Type>
+          <DisplayName>Auth Method</DisplayName>
+          <Description>Authentication method used</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <OptionSet>
+            <Options>
+              <Option value="100000000" label="azure_ad" />
+              <Option value="100000001" label="service_principal" />
+              <Option value="100000002" label="managed_identity" />
+              <Option value="100000003" label="api_key" />
+            </Options>
+          </OptionSet>
+        </attribute>
+
+        <attribute PhysicalName="eap_operation">
+          <Type>nvarchar</Type>
+          <MaxLength>500</MaxLength>
+          <DisplayName>Operation</DisplayName>
+          <Description>The operation that was performed</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_resource">
+          <Type>nvarchar</Type>
+          <MaxLength>500</MaxLength>
+          <DisplayName>Resource</DisplayName>
+          <Description>The resource that was affected</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_outcome">
+          <Type>picklist</Type>
+          <DisplayName>Outcome</DisplayName>
+          <Description>Outcome of the operation</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <OptionSet>
+            <Options>
+              <Option value="100000000" label="success" />
+              <Option value="100000001" label="failure" />
+              <Option value="100000002" label="partial" />
+            </Options>
+          </OptionSet>
+        </attribute>
+
+        <attribute PhysicalName="eap_error_details">
+          <Type>ntext</Type>
+          <DisplayName>Error Details</DisplayName>
+          <Description>Detailed error information if applicable</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>Text</Format>
+        </attribute>
+
+        <attribute PhysicalName="eap_request_context">
+          <Type>ntext</Type>
+          <DisplayName>Request Context</DisplayName>
+          <Description>JSON object with IP address, session ID, and other context</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>Text</Format>
+        </attribute>
+
+        <attribute PhysicalName="eap_policy_context">
+          <Type>ntext</Type>
+          <DisplayName>Policy Context</DisplayName>
+          <Description>JSON object with policy evaluation details if applicable</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>Text</Format>
+        </attribute>
+
+        <attribute PhysicalName="eap_previous_hash">
+          <Type>nvarchar</Type>
+          <MaxLength>128</MaxLength>
+          <DisplayName>Previous Hash</DisplayName>
+          <Description>SHA-256 hash of the previous audit entry for chain integrity</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_entry_hash">
+          <Type>nvarchar</Type>
+          <MaxLength>128</MaxLength>
+          <DisplayName>Entry Hash</DisplayName>
+          <Description>SHA-256 hash of this entry including previous hash</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_timestamp">
+          <Type>datetime</Type>
+          <DisplayName>Timestamp</DisplayName>
+          <Description>Timestamp when the event occurred (UTC)</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>DateAndTime</Format>
+        </attribute>
+
+        <attribute PhysicalName="createdon">
+          <Type>datetime</Type>
+          <DisplayName>Created On</DisplayName>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="modifiedon">
+          <Type>datetime</Type>
+          <DisplayName>Modified On</DisplayName>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="statecode">
+          <Type>state</Type>
+          <DisplayName>Status</DisplayName>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="statuscode">
+          <Type>status</Type>
+          <DisplayName>Status Reason</DisplayName>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+      </attributes>
+    </entity>
+  </EntityInfo>
+</Entity>

@@ -1,0 +1,413 @@
+DOCUMENT: PRF_KB_Forecasting_Accuracy_v7.0.txt
+CATEGORY: Performance Knowledge Base
+TOPICS: forecasting, accuracy, calibration, variance analysis, prediction
+VERSION: 1.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+RELATED: PRF_KB_Attribution_Models_v1, ANL_KB_Projection_Methods_v1
+
+PRF FORECASTING ACCURACY v1
+
+PURPOSE
+
+This document provides guidance on measuring and improving forecast accuracy. Reference when users ask about projection reliability, variance analysis, or calibration of performance estimates.
+
+FORECASTING FUNDAMENTALS
+
+WHY ACCURACY MATTERS
+
+Budget Decisions:
+Inaccurate forecasts lead to misallocated resources. Over-projection causes overspending, under-projection causes missed opportunities.
+
+Stakeholder Trust:
+Consistently inaccurate forecasts erode confidence in the planning process. Trust once lost is difficult to rebuild.
+
+Optimization Capability:
+Accurate forecasts enable proactive optimization. When actuals diverge from forecast, clear signals indicate where to investigate.
+
+Planning Efficiency:
+Accurate forecasts reduce the need for constant plan revisions. Teams can execute with confidence rather than continuously re-planning.
+
+TYPES OF FORECASTS
+
+Reach Forecasts:
+- Unique users exposed to campaign
+- Depends on targeting breadth and budget
+- Typically 80-90% accuracy achievable
+- Platform-specific reach tools available
+
+Impression Forecasts:
+- Total ad exposures delivered
+- Most predictable forecast type
+- Typically 85-95% accuracy achievable
+- Pacing tools provide real-time guidance
+
+Conversion Forecasts:
+- Desired actions taken by users
+- Most variable forecast type
+- Typically 70-85% accuracy achievable
+- Highly dependent on external factors
+
+Revenue Forecasts:
+- Revenue generated from conversions
+- Compounds conversion uncertainty
+- Typically 65-80% accuracy achievable
+- AOV and mix variability adds complexity
+
+Short-Term vs Long-Term:
+- 1-2 week forecasts: highest accuracy
+- 4-8 week forecasts: moderate accuracy
+- 12+ week forecasts: lower accuracy
+- Longer horizons have more variables
+
+ACCURACY METRICS
+
+MEAN ABSOLUTE PERCENTAGE ERROR (MAPE)
+
+MAPE is the standard measure for forecast accuracy.
+
+Formula:
+MAPE = (1/n) x SUM(|Actual - Forecast| / Actual) x 100
+
+Interpretation:
+- 0-10% MAPE: Excellent accuracy
+- 10-20% MAPE: Good accuracy
+- 20-30% MAPE: Acceptable accuracy
+- 30%+ MAPE: Poor accuracy, needs improvement
+
+Benchmarks by Forecast Type:
+- Impressions: Target less than 10% MAPE
+- Reach: Target less than 15% MAPE
+- Clicks: Target less than 20% MAPE
+- Conversions: Target less than 25% MAPE
+- Revenue: Target less than 25% MAPE
+
+WEIGHTED MAPE
+
+Standard MAPE treats all periods equally. Weighted MAPE adjusts for period importance.
+
+When to Use:
+- When some periods matter more than others
+- When spend varies significantly by period
+- When seasonal importance differs
+
+Calculation:
+Weight each period by spend or importance, then calculate weighted average of absolute percentage errors.
+
+FORECAST BIAS
+
+Bias measures systematic over or under-prediction.
+
+Formula:
+Bias = MEAN(Forecast - Actual) / MEAN(Actual) x 100
+
+Interpretation:
+- Positive bias: Systematically over-forecasting
+- Negative bias: Systematically under-forecasting
+- Zero bias: Unbiased forecasts
+- Bias should be within +/- 5%
+
+Detection Indicators:
+- Consistent same-direction misses
+- Forecast always high or always low
+- Pattern persists across campaigns
+- Platform or channel-specific bias
+
+Correction Approaches:
+- Identify bias source
+- Apply bias adjustment factor
+- Recalibrate underlying models
+- Review assumption validity
+
+ACCURACY BY FORECAST TYPE
+
+Impressions:
+- Highest accuracy potential
+- Budget directly controls delivery
+- Platform tools reliable
+- MAPE benchmark: 5-10%
+
+Reach:
+- Moderate accuracy potential
+- Depends on targeting uniqueness
+- Frequency affects efficiency
+- MAPE benchmark: 10-15%
+
+Clicks and Engagement:
+- Variable accuracy potential
+- Creative quality impacts significantly
+- Competition affects costs
+- MAPE benchmark: 15-25%
+
+Conversions:
+- Lowest accuracy potential
+- Many external factors
+- Funnel steps compound variance
+- MAPE benchmark: 20-30%
+
+VARIANCE ANALYSIS
+
+FORECAST VS ACTUAL FRAMEWORK
+
+Standard Analysis Approach:
+1. Calculate variance: Actual - Forecast
+2. Calculate variance percent: (Actual - Forecast) / Forecast x 100
+3. Determine direction: Over or under performance
+4. Assess materiality: Significant or within tolerance
+5. Identify root cause: Why did variance occur
+6. Document learning: What to apply going forward
+
+Materiality Thresholds:
+- Within +/- 10%: Within tolerance, no action
+- 10-20% variance: Investigate, document
+- 20-30% variance: Root cause required, action needed
+- 30%+ variance: Major investigation, process review
+
+ROOT CAUSE CATEGORIES
+
+Internal Factors:
+
+Execution Variance:
+- Creative launched late
+- Targeting changed mid-flight
+- Budget pacing issues
+- Optimization actions taken
+
+Creative Variance:
+- Performance better/worse than expected
+- Fatigue faster/slower than expected
+- New creative outperformed/underperformed
+- Format mix differed from plan
+
+Timing Variance:
+- Flight dates shifted
+- Seasonality different than expected
+- Day-of-week patterns changed
+- Time-of-day patterns shifted
+
+External Factors:
+
+Competition Variance:
+- Competitive spend increased/decreased
+- New competitor entered market
+- Competitive messaging changed
+- Industry dynamics shifted
+
+Economic Variance:
+- Consumer spending changed
+- Economic conditions shifted
+- Category demand fluctuated
+- Pricing environment changed
+
+Seasonality Variance:
+- Seasonal patterns differed from historical
+- Weather impacted behavior
+- Events affected attention
+- Cultural moments shifted timing
+
+Data Factors:
+
+Tracking Variance:
+- Pixel issues affected measurement
+- App tracking changes impacted data
+- Cross-device matching changed
+- Attribution window shifts
+
+Attribution Variance:
+- Model changes affected credit
+- Conversion delay differed
+- Assisted conversions shifted
+- Multi-touch allocation changed
+
+DOCUMENTATION REQUIREMENTS
+
+For Each Significant Variance:
+- Variance magnitude and direction
+- Root cause category and specifics
+- Evidence supporting root cause
+- Impact on business outcomes
+- Actions taken in response
+- Learnings for future forecasts
+
+CALIBRATION TECHNIQUES
+
+HISTORICAL CALIBRATION
+
+Using Past Accuracy to Adjust:
+1. Calculate historical MAPE by forecast type
+2. Calculate historical bias by forecast type
+3. Apply bias correction to new forecasts
+4. Widen confidence intervals based on MAPE
+5. Document calibration factors used
+
+Confidence Interval Widening:
+If historical MAPE = 20%, widen forecast range by +/- 20%.
+- Forecast: 10,000 conversions
+- Calibrated range: 8,000 - 12,000 conversions
+- Present range rather than point estimate
+
+Segmented Calibration:
+Different accuracy patterns by:
+- Channel (social vs search vs display)
+- Campaign type (awareness vs conversion)
+- Timeframe (launch vs sustained)
+- Audience (prospecting vs retargeting)
+
+REAL-TIME CALIBRATION
+
+In-Flight Adjustments:
+Monitor pacing and early performance to adjust forecasts during campaign.
+
+Early Warning Signals:
+- Week 1 pacing off by 20%+: Adjust forecast
+- CTR 30%+ different than expected: Reassess conversions
+- CPM 20%+ different than expected: Adjust impression forecast
+- Conversion rate variance early: Adjust conversion forecast
+
+Recalibration Triggers:
+- Significant early variance detected
+- External event impacts campaign
+- Creative performance differs materially
+- Platform or tracking changes occur
+
+CHANNEL-SPECIFIC CALIBRATION
+
+Paid Search:
+- Highest forecast accuracy typically
+- Query volume more predictable
+- Competition monitoring essential
+- Calibrate by match type and campaign type
+
+Paid Social:
+- Moderate forecast accuracy
+- Algorithm changes affect delivery
+- Creative performance variable
+- Calibrate by objective and audience type
+
+Programmatic Display:
+- Variable forecast accuracy
+- Inventory availability fluctuates
+- Fraud and viewability factors
+- Calibrate by inventory type and targeting
+
+CTV and Video:
+- Lower forecast accuracy
+- Inventory constraints common
+- Measurement gaps exist
+- Wider confidence intervals needed
+
+IMPROVING ACCURACY
+
+DATA QUALITY IMPROVEMENTS
+
+Better Inputs for Better Outputs:
+- Clean historical performance data
+- Accurate benchmark information
+- Current competitive intelligence
+- Validated assumption inputs
+
+Data Hygiene Practices:
+- Regular data audits
+- Tracking verification
+- Anomaly detection
+- Missing data handling
+
+MODEL REFINEMENT
+
+When to Update Projection Models:
+- Systematic bias detected
+- Accuracy degraded over time
+- Market conditions changed materially
+- New data sources available
+
+Model Improvement Approaches:
+- Incorporate additional variables
+- Update coefficient estimates
+- Add segmentation to models
+- Integrate machine learning where appropriate
+
+ASSUMPTION VALIDATION
+
+Testing Key Assumptions:
+- CPM assumptions vs actuals
+- CTR assumptions vs benchmarks
+- Conversion rate assumptions vs funnel data
+- AOV assumptions vs historical
+
+Assumption Documentation:
+- List all assumptions explicitly
+- Source each assumption
+- Confidence level for each
+- Sensitivity to assumption changes
+
+LEARNING INTEGRATION
+
+Incorporating Past Learnings:
+- Update benchmarks from actuals
+- Refine seasonal factors
+- Adjust for known patterns
+- Document institutional knowledge
+
+Continuous Improvement Cycle:
+1. Make forecast
+2. Execute campaign
+3. Measure actuals
+4. Analyze variance
+5. Extract learnings
+6. Update forecast approach
+7. Repeat
+
+REPORTING STANDARDS
+
+ACCURACY REPORTING
+
+Regular Accuracy Reviews:
+- Campaign-level accuracy report
+- Channel-level accuracy analysis
+- Forecast type accuracy tracking
+- Trend analysis over time
+
+Review Cadence:
+- Weekly during active campaigns
+- Monthly for accuracy trends
+- Quarterly for process improvement
+- Annual for methodology review
+
+STAKEHOLDER COMMUNICATION
+
+Presenting Forecasts:
+- Present ranges, not single points
+- State confidence level
+- Disclose key assumptions
+- Acknowledge uncertainty
+
+Presenting Variances:
+- Lead with magnitude and direction
+- Explain root cause clearly
+- Describe actions taken
+- Share learnings extracted
+
+CONTINUOUS IMPROVEMENT
+
+Tracking Accuracy Trends:
+- Dashboard of accuracy metrics
+- Trend lines over time
+- Comparison to benchmarks
+- Identification of improvement areas
+
+Improvement Targets:
+- Set accuracy improvement goals
+- Track progress quarterly
+- Celebrate improvements
+- Address persistent issues
+
+CROSS-REFERENCES
+
+For attribution models: See PRF_KB_Attribution_Models_v1
+For projection methods: See ANL_KB_Projection_Methods_v1
+For incrementality methods: See ANL_KB_Incrementality_Methods_v1
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial creation covering accuracy metrics, variance analysis, calibration techniques, and continuous improvement

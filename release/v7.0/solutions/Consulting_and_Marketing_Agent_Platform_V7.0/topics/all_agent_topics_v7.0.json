@@ -1,0 +1,309 @@
+{
+  "version": "7.0.0.0",
+  "generated": "2026-01-31",
+  "description": "Copilot Studio topic definitions for all MCMAP v7.0 agents",
+  "topics": {
+    "ORC": {
+      "agent_code": "ORC",
+      "agent_name": "Orchestrator",
+      "topics": [
+        {
+          "topic_id": "orc_greeting",
+          "name": "Greeting",
+          "trigger_phrases": ["hello", "hi there", "hey", "good morning", "good afternoon", "start", "begin"],
+          "description": "Greet users and introduce MCMAP capabilities",
+          "action": "display_greeting_and_menu"
+        },
+        {
+          "topic_id": "orc_help",
+          "name": "Help Menu",
+          "trigger_phrases": ["help", "what can you do", "options", "menu", "capabilities", "features"],
+          "description": "Display available capabilities and agent options",
+          "action": "display_help_menu"
+        },
+        {
+          "topic_id": "orc_switch_agent",
+          "name": "Switch Agent",
+          "trigger_phrases": ["switch to", "go to", "talk to", "connect me with", "I need"],
+          "description": "Route user to a specific specialist agent",
+          "action": "route_to_agent"
+        },
+        {
+          "topic_id": "orc_session_status",
+          "name": "Session Status",
+          "trigger_phrases": ["session status", "where am I", "current progress", "what step"],
+          "description": "Display current session state and progress",
+          "action": "display_session_status"
+        }
+      ]
+    },
+    "ANL": {
+      "agent_code": "ANL",
+      "agent_name": "Analytics",
+      "topics": [
+        {
+          "topic_id": "anl_calculate_projection",
+          "name": "Calculate Projection",
+          "trigger_phrases": ["calculate projection", "estimate reach", "project impressions", "forecast media", "how many impressions"],
+          "description": "Calculate media projections based on budget and parameters",
+          "action": "call_prompt:anl_projection_calculate"
+        },
+        {
+          "topic_id": "anl_run_scenario",
+          "name": "Run Scenario",
+          "trigger_phrases": ["what if", "scenario analysis", "run scenario", "test scenario", "compare options"],
+          "description": "Run what-if scenario analysis",
+          "action": "call_prompt:anl_scenario_run"
+        },
+        {
+          "topic_id": "anl_detect_anomaly",
+          "name": "Detect Anomalies",
+          "trigger_phrases": ["find anomalies", "detect issues", "unusual patterns", "data anomaly", "something wrong"],
+          "description": "Detect anomalies in performance data",
+          "action": "call_prompt:anl_anomaly_detect"
+        }
+      ]
+    },
+    "AUD": {
+      "agent_code": "AUD",
+      "agent_name": "Audience",
+      "topics": [
+        {
+          "topic_id": "aud_create_segment",
+          "name": "Create Segment",
+          "trigger_phrases": ["create segment", "define audience", "target audience", "who should we target", "segment users"],
+          "description": "Create audience segments based on criteria",
+          "action": "call_prompt:aud_segment_create"
+        },
+        {
+          "topic_id": "aud_calculate_ltv",
+          "name": "Calculate LTV",
+          "trigger_phrases": ["calculate ltv", "lifetime value", "customer value", "segment value", "ltv analysis"],
+          "description": "Calculate customer lifetime value",
+          "action": "call_prompt:aud_ltv_calculate"
+        }
+      ]
+    },
+    "CHA": {
+      "agent_code": "CHA",
+      "agent_name": "Channel",
+      "topics": [
+        {
+          "topic_id": "cha_optimize_allocation",
+          "name": "Optimize Allocation",
+          "trigger_phrases": ["optimize allocation", "allocate budget", "channel mix", "where to spend", "budget split"],
+          "description": "Optimize budget allocation across channels",
+          "action": "call_prompt:cha_allocation_optimize"
+        },
+        {
+          "topic_id": "cha_lookup_benchmark",
+          "name": "Lookup Benchmarks",
+          "trigger_phrases": ["benchmark", "industry average", "typical cpm", "expected ctr", "what is normal"],
+          "description": "Retrieve channel benchmarks",
+          "action": "call_prompt:cha_benchmark_lookup"
+        }
+      ]
+    },
+    "SPO": {
+      "agent_code": "SPO",
+      "agent_name": "SupplyPath",
+      "topics": [
+        {
+          "topic_id": "spo_analyze_fees",
+          "name": "Analyze Fees",
+          "trigger_phrases": ["analyze fees", "fee breakdown", "supply path costs", "programmatic fees", "transparency"],
+          "description": "Analyze programmatic supply path fees",
+          "action": "call_prompt:spo_fee_analyze"
+        },
+        {
+          "topic_id": "spo_evaluate_partner",
+          "name": "Evaluate Partner",
+          "trigger_phrases": ["evaluate partner", "ssp review", "partner assessment", "vendor evaluation"],
+          "description": "Evaluate programmatic partners",
+          "action": "call_prompt:spo_partner_evaluate"
+        }
+      ]
+    },
+    "DOC": {
+      "agent_code": "DOC",
+      "agent_name": "Document",
+      "topics": [
+        {
+          "topic_id": "doc_generate",
+          "name": "Generate Document",
+          "trigger_phrases": ["generate document", "create report", "export plan", "make pdf", "create presentation"],
+          "description": "Generate documents from session data",
+          "action": "call_prompt:doc_generate"
+        },
+        {
+          "topic_id": "doc_create_brief",
+          "name": "Create Brief",
+          "trigger_phrases": ["create brief", "write brief", "media brief", "campaign brief"],
+          "description": "Create brief documents",
+          "action": "call_prompt:doc_brief_create"
+        }
+      ]
+    },
+    "PRF": {
+      "agent_code": "PRF",
+      "agent_name": "Performance",
+      "topics": [
+        {
+          "topic_id": "prf_analyze_attribution",
+          "name": "Analyze Attribution",
+          "trigger_phrases": ["attribution analysis", "channel attribution", "what drove conversions", "performance attribution"],
+          "description": "Analyze marketing attribution",
+          "action": "call_prompt:prf_attribution_analyze"
+        },
+        {
+          "topic_id": "prf_extract_learnings",
+          "name": "Extract Learnings",
+          "trigger_phrases": ["what did we learn", "campaign learnings", "key insights", "post mortem", "performance review"],
+          "description": "Extract learnings from campaigns",
+          "action": "call_prompt:prf_learning_extract"
+        }
+      ]
+    },
+    "CST": {
+      "agent_code": "CST",
+      "agent_name": "ConsultingStrategy",
+      "topics": [
+        {
+          "topic_id": "cst_select_framework",
+          "name": "Select Framework",
+          "trigger_phrases": ["which framework", "recommend framework", "best approach", "strategic framework", "swot or porter"],
+          "description": "Select appropriate consulting framework",
+          "action": "call_prompt:cst_framework_select"
+        },
+        {
+          "topic_id": "cst_develop_strategy",
+          "name": "Develop Strategy",
+          "trigger_phrases": ["develop strategy", "strategic plan", "create strategy", "strategic recommendations"],
+          "description": "Develop strategic recommendations",
+          "action": "call_prompt:cst_strategy_develop"
+        }
+      ]
+    },
+    "CHG": {
+      "agent_code": "CHG",
+      "agent_name": "ChangeManagement",
+      "topics": [
+        {
+          "topic_id": "chg_assess_readiness",
+          "name": "Assess Readiness",
+          "trigger_phrases": ["readiness assessment", "change readiness", "are we ready", "organizational readiness"],
+          "description": "Assess organizational change readiness",
+          "action": "call_prompt:chg_readiness_assess"
+        },
+        {
+          "topic_id": "chg_plan_adoption",
+          "name": "Plan Adoption",
+          "trigger_phrases": ["adoption plan", "change plan", "implementation plan", "how to adopt"],
+          "description": "Create change adoption plan",
+          "action": "call_prompt:chg_adoption_plan"
+        }
+      ]
+    },
+    "MKT": {
+      "agent_code": "MKT",
+      "agent_name": "MarketingStrategy",
+      "topics": [
+        {
+          "topic_id": "mkt_gtm_plan",
+          "name": "GTM Planning",
+          "trigger_phrases": ["go to market", "gtm plan", "launch plan", "market entry", "how to launch"],
+          "description": "Create go-to-market plans",
+          "action": "call_prompt:mkt_gtm_plan"
+        },
+        {
+          "topic_id": "mkt_competitive_analyze",
+          "name": "Competitive Analysis",
+          "trigger_phrases": ["competitive analysis", "competitor review", "market competition", "who are competitors"],
+          "description": "Analyze competitive landscape",
+          "action": "call_prompt:mkt_competitive_analyze"
+        }
+      ]
+    },
+    "GHA": {
+      "agent_code": "GHA",
+      "agent_name": "GrowthHacking",
+      "topics": [
+        {
+          "topic_id": "gha_growth_context",
+          "name": "Growth Context",
+          "trigger_phrases": ["growth strategy", "growth plan", "how to grow", "growth hacking", "startup growth"],
+          "description": "Start growth strategy workflow",
+          "action": "call_prompt:gha_intent_classify"
+        },
+        {
+          "topic_id": "gha_north_star",
+          "name": "North Star Metric",
+          "trigger_phrases": ["north star", "key metric", "main kpi", "what to measure", "success metric"],
+          "description": "Define North Star metric",
+          "action": "call_prompt:gha_northstar_define"
+        },
+        {
+          "topic_id": "gha_lifecycle",
+          "name": "Lifecycle Analysis",
+          "trigger_phrases": ["aarrr", "funnel analysis", "lifecycle", "acquisition retention", "pirate metrics"],
+          "description": "Analyze AARRR lifecycle stages",
+          "action": "call_prompt:gha_lifecycle_analyze"
+        },
+        {
+          "topic_id": "gha_tactics",
+          "name": "Growth Tactics",
+          "trigger_phrases": ["growth tactics", "growth ideas", "how to acquire", "retention tactics", "viral growth"],
+          "description": "Recommend growth tactics",
+          "action": "call_prompt:gha_tactic_recommend"
+        },
+        {
+          "topic_id": "gha_experiment",
+          "name": "Design Experiment",
+          "trigger_phrases": ["design experiment", "ab test", "growth experiment", "test idea", "hypothesis"],
+          "description": "Design growth experiments",
+          "action": "call_prompt:gha_experiment_design"
+        }
+      ]
+    },
+    "DOCS": {
+      "agent_code": "DOCS",
+      "agent_name": "DocumentationAssistant",
+      "topics": [
+        {
+          "topic_id": "docs_content_access",
+          "name": "Documentation Access",
+          "trigger_phrases": ["documentation", "how do I", "where is", "help with", "guide for", "tutorial"],
+          "description": "Access platform documentation",
+          "action": "call_prompt:docs_content_access"
+        }
+      ]
+    },
+    "DVO": {
+      "agent_code": "DVO",
+      "agent_name": "DevOps",
+      "topics": [
+        {
+          "topic_id": "dvo_validate",
+          "name": "Validate Agent",
+          "trigger_phrases": ["validate agent", "check agent", "verify configuration", "validation"],
+          "description": "Validate agent configuration",
+          "action": "call_prompt:dvo_validate_agent"
+        },
+        {
+          "topic_id": "dvo_deploy",
+          "name": "Deploy Agent",
+          "trigger_phrases": ["deploy", "release", "push to production", "deploy agent", "start deployment"],
+          "description": "Deploy agents to environment",
+          "action": "call_prompt:dvo_deployment_plan"
+        },
+        {
+          "topic_id": "dvo_rollback",
+          "name": "Rollback Deployment",
+          "trigger_phrases": ["rollback", "revert", "undo deployment", "go back", "previous version"],
+          "description": "Rollback deployment",
+          "action": "call_prompt:dvo_rollback_execute"
+        }
+      ]
+    }
+  }
+}

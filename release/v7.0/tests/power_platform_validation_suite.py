@@ -130,6 +130,307 @@ SYSTEM_ENTITIES = {
 }
 
 # ============================================================================
+# CATEGORY 0: ZIP Structural Integrity Tests (NEW - CRITICAL)
+# ============================================================================
+
+def validate_zip_structural_integrity(category: TestCategory) -> None:
+    """Validate ZIP has correct structure for Power Platform import."""
+
+    if not SOLUTION_ZIP.exists():
+        category.results.append(TestResult(
+            test_id="ZIP-000",
+            test_name="ZIP file exists",
+            category=category.name,
+            priority=Priority.CRITICAL,
+            status=Status.FAIL,
+            message="Solution ZIP file not found",
+            file_path=str(SOLUTION_ZIP)
+        ))
+        return
+
+    try:
+        with zipfile.ZipFile(SOLUTION_ZIP, 'r') as zf:
+            file_list = zf.namelist()
+
+            # ZIP-001: Single Solution.xml (only at root)
+            solution_files = [f for f in file_list if f.lower().endswith('solution.xml')]
+            if len(solution_files) == 1 and solution_files[0] == "Solution.xml":
+                category.results.append(TestResult(
+                    test_id="ZIP-001",
+                    test_name="Single Solution.xml at root",
+                    category=category.name,
+                    priority=Priority.CRITICAL,
+                    status=Status.PASS,
+                    message="Exactly one Solution.xml at root",
+                    file_path="Solution.xml"
+                ))
+            else:
+                category.results.append(TestResult(
+                    test_id="ZIP-001",
+                    test_name="Single Solution.xml at root",
+                    category=category.name,
+                    priority=Priority.CRITICAL,
+                    status=Status.FAIL,
+                    message=f"Found {len(solution_files)} Solution.xml files: {solution_files}",
+                    file_path=str(SOLUTION_ZIP),
+                    remediation="Remove duplicate Solution.xml files from Other/, platform/ folders"
+                ))
+
+            # ZIP-002: Single customizations.xml (only at root)
+            customizations_files = [f for f in file_list if f.lower().endswith('customizations.xml')]
+            if len(customizations_files) == 1 and customizations_files[0] == "customizations.xml":
+                category.results.append(TestResult(
+                    test_id="ZIP-002",
+                    test_name="Single customizations.xml at root",
+                    category=category.name,
+                    priority=Priority.CRITICAL,
+                    status=Status.PASS,
+                    message="Exactly one customizations.xml at root",
+                    file_path="customizations.xml"
+                ))
+            else:
+                category.results.append(TestResult(
+                    test_id="ZIP-002",
+                    test_name="Single customizations.xml at root",
+                    category=category.name,
+                    priority=Priority.CRITICAL,
+                    status=Status.FAIL,
+                    message=f"Found {len(customizations_files)} customizations.xml files: {customizations_files}",
+                    file_path=str(SOLUTION_ZIP),
+                    remediation="Remove duplicate customizations.xml files from Other/, platform/ folders"
+                ))
+
+            # ZIP-003: Single [Content_Types].xml at root
+            content_types_files = [f for f in file_list if '[Content_Types].xml' in f]
+            root_ct = [f for f in content_types_files if f == "[Content_Types].xml"]
+            if len(root_ct) == 1 and len(content_types_files) == 1:
+                category.results.append(TestResult(
+                    test_id="ZIP-003",
+                    test_name="Single [Content_Types].xml at root",
+                    category=category.name,
+                    priority=Priority.CRITICAL,
+                    status=Status.PASS,
+                    message="Exactly one [Content_Types].xml at root",
+                    file_path="[Content_Types].xml"
+                ))
+            else:
+                category.results.append(TestResult(
+                    test_id="ZIP-003",
+                    test_name="Single [Content_Types].xml at root",
+                    category=category.name,
+                    priority=Priority.CRITICAL,
+                    status=Status.FAIL,
+                    message=f"Found {len(content_types_files)} [Content_Types].xml files: {content_types_files}",
+                    file_path=str(SOLUTION_ZIP),
+                    remediation="Remove duplicate [Content_Types].xml files"
+                ))
+
+            # ZIP-004: No BOM in XML files
+            bom_files = []
+            for name in file_list:
+                if name.endswith('.xml'):
+                    try:
+                        content = zf.read(name)
+                        if content.startswith(b'\xef\xbb\xbf'):
+                            bom_files.append(name)
+                    except:
+                        pass
+
+            if not bom_files:
+                category.results.append(TestResult(
+                    test_id="ZIP-004",
+                    test_name="No UTF-8 BOM in XML files",
+                    category=category.name,
+                    priority=Priority.CRITICAL,
+                    status=Status.PASS,
+                    message="No XML files have UTF-8 BOM prefix",
+                    file_path=str(SOLUTION_ZIP)
+                ))
+            else:
+                category.results.append(TestResult(
+                    test_id="ZIP-004",
+                    test_name="No UTF-8 BOM in XML files",
+                    category=category.name,
+                    priority=Priority.CRITICAL,
+                    status=Status.FAIL,
+                    message=f"{len(bom_files)} XML files have UTF-8 BOM: {bom_files[:5]}{'...' if len(bom_files) > 5 else ''}",
+                    file_path=str(SOLUTION_ZIP),
+                    remediation="Remove UTF-8 BOM (EF BB BF) from XML files"
+                ))
+
+            # ZIP-005: No path prefixes (./ or ../)
+            prefix_files = [f for f in file_list if f.startswith('./') or f.startswith('../')]
+            if not prefix_files:
+                category.results.append(TestResult(
+                    test_id="ZIP-005",
+                    test_name="No path prefixes",
+                    category=category.name,
+                    priority=Priority.CRITICAL,
+                    status=Status.PASS,
+                    message="No files have ./ or ../ path prefixes",
+                    file_path=str(SOLUTION_ZIP)
+                ))
+            else:
+                category.results.append(TestResult(
+                    test_id="ZIP-005",
+                    test_name="No path prefixes",
+                    category=category.name,
+                    priority=Priority.CRITICAL,
+                    status=Status.FAIL,
+                    message=f"Files with path prefixes: {prefix_files[:5]}",
+                    file_path=str(SOLUTION_ZIP),
+                    remediation="Recreate ZIP without ./ or ../ path prefixes"
+                ))
+
+            # ZIP-006: Forward slashes only (no backslashes)
+            backslash_files = [f for f in file_list if '\\' in f]
+            if not backslash_files:
+                category.results.append(TestResult(
+                    test_id="ZIP-006",
+                    test_name="Forward slashes only",
+                    category=category.name,
+                    priority=Priority.CRITICAL,
+                    status=Status.PASS,
+                    message="All paths use forward slashes",
+                    file_path=str(SOLUTION_ZIP)
+                ))
+            else:
+                category.results.append(TestResult(
+                    test_id="ZIP-006",
+                    test_name="Forward slashes only",
+                    category=category.name,
+                    priority=Priority.CRITICAL,
+                    status=Status.FAIL,
+                    message=f"Files with backslashes: {backslash_files[:5]}",
+                    file_path=str(SOLUTION_ZIP),
+                    remediation="Recreate ZIP with forward slashes on macOS/Linux"
+                ))
+
+            # ZIP-007: No macOS metadata files
+            macos_files = [f for f in file_list if '__MACOSX' in f or f.endswith('.DS_Store')]
+            if not macos_files:
+                category.results.append(TestResult(
+                    test_id="ZIP-007",
+                    test_name="No macOS metadata",
+                    category=category.name,
+                    priority=Priority.HIGH,
+                    status=Status.PASS,
+                    message="No __MACOSX or .DS_Store files",
+                    file_path=str(SOLUTION_ZIP)
+                ))
+            else:
+                category.results.append(TestResult(
+                    test_id="ZIP-007",
+                    test_name="No macOS metadata",
+                    category=category.name,
+                    priority=Priority.HIGH,
+                    status=Status.FAIL,
+                    message=f"macOS metadata files found: {macos_files[:5]}",
+                    file_path=str(SOLUTION_ZIP),
+                    remediation="Recreate ZIP with -x '*.DS_Store' -x '__MACOSX/*'"
+                ))
+
+            # ZIP-008: Lowercase extensions
+            uppercase_ext_files = [f for f in file_list if f.endswith('.XML') or f.endswith('.JSON')]
+            if not uppercase_ext_files:
+                category.results.append(TestResult(
+                    test_id="ZIP-008",
+                    test_name="Lowercase extensions",
+                    category=category.name,
+                    priority=Priority.MEDIUM,
+                    status=Status.PASS,
+                    message="All extensions are lowercase",
+                    file_path=str(SOLUTION_ZIP)
+                ))
+            else:
+                category.results.append(TestResult(
+                    test_id="ZIP-008",
+                    test_name="Lowercase extensions",
+                    category=category.name,
+                    priority=Priority.MEDIUM,
+                    status=Status.WARN,
+                    message=f"Uppercase extensions: {uppercase_ext_files[:5]}",
+                    file_path=str(SOLUTION_ZIP)
+                ))
+
+            # ZIP-009: Content types complete
+            if "[Content_Types].xml" in file_list:
+                ct_content = zf.read("[Content_Types].xml").decode('utf-8')
+                extensions_in_zip = set()
+                for f in file_list:
+                    if '.' in f:
+                        ext = f.rsplit('.', 1)[-1].lower()
+                        extensions_in_zip.add(ext)
+
+                declared_extensions = set(re.findall(r'Extension="([^"]+)"', ct_content))
+                missing = extensions_in_zip - declared_extensions - {'gitkeep'}
+
+                if not missing:
+                    category.results.append(TestResult(
+                        test_id="ZIP-009",
+                        test_name="Content types complete",
+                        category=category.name,
+                        priority=Priority.HIGH,
+                        status=Status.PASS,
+                        message="All file extensions declared in [Content_Types].xml",
+                        file_path="[Content_Types].xml"
+                    ))
+                else:
+                    category.results.append(TestResult(
+                        test_id="ZIP-009",
+                        test_name="Content types complete",
+                        category=category.name,
+                        priority=Priority.HIGH,
+                        status=Status.WARN,
+                        message=f"Missing extensions in [Content_Types].xml: {missing}",
+                        file_path="[Content_Types].xml",
+                        remediation="Add missing extensions to [Content_Types].xml"
+                    ))
+
+            # ZIP-010: No case-insensitive duplicate paths
+            lower_paths = {}
+            duplicates = []
+            for f in file_list:
+                lower = f.lower()
+                if lower in lower_paths:
+                    duplicates.append((lower_paths[lower], f))
+                else:
+                    lower_paths[lower] = f
+
+            if not duplicates:
+                category.results.append(TestResult(
+                    test_id="ZIP-010",
+                    test_name="No case-insensitive duplicates",
+                    category=category.name,
+                    priority=Priority.CRITICAL,
+                    status=Status.PASS,
+                    message="No case-insensitive duplicate paths",
+                    file_path=str(SOLUTION_ZIP)
+                ))
+            else:
+                category.results.append(TestResult(
+                    test_id="ZIP-010",
+                    test_name="No case-insensitive duplicates",
+                    category=category.name,
+                    priority=Priority.CRITICAL,
+                    status=Status.FAIL,
+                    message=f"Case-insensitive duplicates: {duplicates[:3]}",
+                    file_path=str(SOLUTION_ZIP),
+                    remediation="Remove duplicate files with different casing"
+                ))
+
+    except zipfile.BadZipFile as e:
+        category.results.append(TestResult(
+            test_id="ZIP-000",
+            test_name="ZIP file valid",
+            category=category.name,
+            priority=Priority.CRITICAL,
+            status=Status.FAIL,
+            message=f"Invalid ZIP file: {e}",
+            file_path=str(SOLUTION_ZIP)
+        ))
+
+# ============================================================================
 # CATEGORY 1: Solution Package Structure Tests
 # ============================================================================
 
@@ -2074,6 +2375,13 @@ def main():
     print()
 
     categories = []
+
+    # Category 0: ZIP Structural Integrity (NEW - CRITICAL)
+    print("Running Category 0: ZIP Structural Integrity...")
+    cat0 = TestCategory("ZIP Structural Integrity", Priority.CRITICAL, "Power Platform Import")
+    validate_zip_structural_integrity(cat0)
+    categories.append(cat0)
+    print(f"  PASS: {cat0.passed}  FAIL: {cat0.failed}  WARN: {cat0.warnings}")
 
     # Category 1: Solution Package Structure
     print("Running Category 1: Solution Package Structure...")

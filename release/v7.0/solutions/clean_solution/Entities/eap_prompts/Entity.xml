@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>eap_prompts</Name>
+  <EntityInfo>
+    <entity Name="eap_prompts">
+      <DisplayName>AI Prompt</DisplayName>
+      <DisplayCollectionName>AI Prompts</DisplayCollectionName>
+      <Description>Stores AI Builder prompt definitions for MCMAP agents.</Description>
+      <OwnershipTypeMask>OrganizationOwned</OwnershipTypeMask>
+      <IsActivity>false</IsActivity>
+      <IsAvailableOffline>true</IsAvailableOffline>
+      <IsCustomizable>1</IsCustomizable>
+      <IsRenameable>1</IsRenameable>
+      <CanCreateAttributes>1</CanCreateAttributes>
+      <CanCreateForms>1</CanCreateForms>
+      <CanCreateViews>1</CanCreateViews>
+      <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+      <PrimaryIdAttribute>eap_promptid</PrimaryIdAttribute>
+      <PrimaryNameAttribute>eap_name</PrimaryNameAttribute>
+      <IntroducedVersion>7.0.0.0</IntroducedVersion>
+      <localizedNames>
+        <localizedName description="AI Prompt" languagecode="1033" />
+      </localizedNames>
+      <Descriptions>
+        <Description description="Stores AI Builder prompt definitions" languagecode="1033" />
+      </Descriptions>
+      <attributes>
+        <attribute PhysicalName="eap_promptid">
+          <Type>primarykey</Type>
+          <DisplayName>Prompt ID</DisplayName>
+          <Description>Unique identifier for the prompt</Description>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_name">
+          <Type>nvarchar</Type>
+          <MaxLength>100</MaxLength>
+          <DisplayName>Prompt Name</DisplayName>
+          <Description>Name of the prompt</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <IsPrimaryName>1</IsPrimaryName>
+        </attribute>
+
+        <attribute PhysicalName="eap_code">
+          <Type>nvarchar</Type>
+          <MaxLength>50</MaxLength>
+          <DisplayName>Prompt Code</DisplayName>
+          <Description>Unique code for the prompt (e.g., gha_intent_classify)</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_agent_id">
+          <Type>lookup</Type>
+          <DisplayName>Agent</DisplayName>
+          <Description>Link to the agent that owns this prompt</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <LookupStyle>single</LookupStyle>
+          <Targets>
+            <Target>eap_agents</Target>
+          </Targets>
+        </attribute>
+
+        <attribute PhysicalName="eap_description">
+          <Type>nvarchar</Type>
+          <MaxLength>2000</MaxLength>
+          <DisplayName>Description</DisplayName>
+          <Description>Description of what the prompt does</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_template">
+          <Type>ntext</Type>
+          <DisplayName>Template</DisplayName>
+          <Description>The prompt template text</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>Text</Format>
+          <MaxLength>1048576</MaxLength>
+        </attribute>
+
+        <attribute PhysicalName="eap_parameters">
+          <Type>ntext</Type>
+          <DisplayName>Parameters</DisplayName>
+          <Description>JSON schema defining prompt parameters</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>Text</Format>
+        </attribute>
+
+        <attribute PhysicalName="eap_output_schema">
+          <Type>ntext</Type>
+          <DisplayName>Output Schema</DisplayName>
+          <Description>JSON schema defining expected output format</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>Text</Format>
+        </attribute>
+
+        <attribute PhysicalName="eap_model">
+          <Type>picklist</Type>
+          <DisplayName>Model</DisplayName>
+          <Description>Target AI model for this prompt</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <OptionSet>
+            <Options>
+              <Option value="100000000" label="gpt-4" />
+              <Option value="100000001" label="gpt-4-turbo" />
+              <Option value="100000002" label="gpt-4o" />
+              <Option value="100000003" label="gpt-35-turbo" />
+              <Option value="100000004" label="claude-3-opus" />
+              <Option value="100000005" label="claude-3-sonnet" />
+            </Options>
+          </OptionSet>
+        </attribute>
+
+        <attribute PhysicalName="eap_temperature">
+          <Type>decimal</Type>
+          <DisplayName>Temperature</DisplayName>
+          <Description>Temperature setting for the model (0-2)</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <MinValue>0</MinValue>
+          <MaxValue>2</MaxValue>
+          <Precision>2</Precision>
+        </attribute>
+
+        <attribute PhysicalName="eap_max_tokens">
+          <Type>int</Type>
+          <DisplayName>Max Tokens</DisplayName>
+          <Description>Maximum tokens for the response</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <MinValue>1</MinValue>
+          <MaxValue>128000</MaxValue>
+        </attribute>
+
+        <attribute PhysicalName="eap_ai_builder_id">
+          <Type>nvarchar</Type>
+          <MaxLength>100</MaxLength>
+          <DisplayName>AI Builder ID</DisplayName>
+          <Description>ID of the deployed AI Builder prompt</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_version">
+          <Type>nvarchar</Type>
+          <MaxLength>20</MaxLength>
+          <DisplayName>Version</DisplayName>
+          <Description>Version of the prompt</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_is_active">
+          <Type>bit</Type>
+          <DisplayName>Is Active</DisplayName>
+          <Description>Whether the prompt is currently active</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <DefaultValue>1</DefaultValue>
+        </attribute>
+
+        <attribute PhysicalName="createdon">
+          <Type>datetime</Type>
+          <DisplayName>Created On</DisplayName>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="modifiedon">
+          <Type>datetime</Type>
+          <DisplayName>Modified On</DisplayName>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="statecode">
+          <Type>state</Type>
+          <DisplayName>Status</DisplayName>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="statuscode">
+          <Type>status</Type>
+          <DisplayName>Status Reason</DisplayName>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+      </attributes>
+    </entity>
+  </EntityInfo>
+</Entity>

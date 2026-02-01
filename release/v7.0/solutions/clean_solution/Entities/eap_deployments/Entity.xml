@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>eap_deployments</Name>
+  <EntityInfo>
+    <entity Name="eap_deployments">
+      <DisplayName>Deployment</DisplayName>
+      <DisplayCollectionName>Deployments</DisplayCollectionName>
+      <Description>Tracks DVO agent deployments, rollbacks, and deployment history for MCMAP platform.</Description>
+      <OwnershipTypeMask>OrganizationOwned</OwnershipTypeMask>
+      <IsActivity>false</IsActivity>
+      <IsAvailableOffline>false</IsAvailableOffline>
+      <IsCustomizable>1</IsCustomizable>
+      <IsRenameable>1</IsRenameable>
+      <CanCreateAttributes>1</CanCreateAttributes>
+      <CanCreateForms>1</CanCreateForms>
+      <CanCreateViews>1</CanCreateViews>
+      <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+      <PrimaryIdAttribute>eap_deploymentid</PrimaryIdAttribute>
+      <PrimaryNameAttribute>eap_name</PrimaryNameAttribute>
+      <IntroducedVersion>7.0.0.0</IntroducedVersion>
+      <localizedNames>
+        <localizedName description="Deployment" languagecode="1033" />
+      </localizedNames>
+      <Descriptions>
+        <Description description="Tracks DVO agent deployments and rollbacks" languagecode="1033" />
+      </Descriptions>
+      <attributes>
+        <attribute PhysicalName="eap_deploymentid">
+          <Type>primarykey</Type>
+          <DisplayName>Deployment ID</DisplayName>
+          <Description>Unique identifier for the deployment</Description>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_name">
+          <Type>nvarchar</Type>
+          <MaxLength>200</MaxLength>
+          <DisplayName>Deployment Name</DisplayName>
+          <Description>Name of the deployment</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <IsPrimaryName>1</IsPrimaryName>
+        </attribute>
+
+        <attribute PhysicalName="eap_deployment_code">
+          <Type>nvarchar</Type>
+          <MaxLength>50</MaxLength>
+          <DisplayName>Deployment Code</DisplayName>
+          <Description>Unique code for the deployment (e.g., DEP-20260131-001)</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_environment">
+          <Type>picklist</Type>
+          <DisplayName>Environment</DisplayName>
+          <Description>Target deployment environment</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <OptionSet>
+            <Options>
+              <Option value="100000000" label="development" />
+              <Option value="100000001" label="staging" />
+              <Option value="100000002" label="production" />
+            </Options>
+          </OptionSet>
+        </attribute>
+
+        <attribute PhysicalName="eap_deployment_type">
+          <Type>picklist</Type>
+          <DisplayName>Deployment Type</DisplayName>
+          <Description>Type of deployment</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <OptionSet>
+            <Options>
+              <Option value="100000000" label="full" />
+              <Option value="100000001" label="incremental" />
+              <Option value="100000002" label="rollback" />
+              <Option value="100000003" label="hotfix" />
+            </Options>
+          </OptionSet>
+        </attribute>
+
+        <attribute PhysicalName="eap_status">
+          <Type>picklist</Type>
+          <DisplayName>Status</DisplayName>
+          <Description>Current status of the deployment</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <OptionSet>
+            <Options>
+              <Option value="100000000" label="pending_approval" />
+              <Option value="100000001" label="approved" />
+              <Option value="100000002" label="in_progress" />
+              <Option value="100000003" label="completed" />
+              <Option value="100000004" label="failed" />
+              <Option value="100000005" label="rolled_back" />
+              <Option value="100000006" label="cancelled" />
+            </Options>
+          </OptionSet>
+        </attribute>
+
+        <attribute PhysicalName="eap_agents">
+          <Type>nvarchar</Type>
+          <MaxLength>500</MaxLength>
+          <DisplayName>Agents</DisplayName>
+          <Description>Comma-separated list of agent codes being deployed</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_version_from">
+          <Type>nvarchar</Type>
+          <MaxLength>20</MaxLength>
+          <DisplayName>Version From</DisplayName>
+          <Description>Previous version before deployment</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_version_to">
+          <Type>nvarchar</Type>
+          <MaxLength>20</MaxLength>
+          <DisplayName>Version To</DisplayName>
+          <Description>Target version for deployment</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_initiated_by">
+          <Type>nvarchar</Type>
+          <MaxLength>100</MaxLength>
+          <DisplayName>Initiated By</DisplayName>
+          <Description>User ID who initiated the deployment</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_approved_by">
+          <Type>nvarchar</Type>
+          <MaxLength>100</MaxLength>
+          <DisplayName>Approved By</DisplayName>
+          <Description>User ID who approved the deployment</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_started_at">
+          <Type>datetime</Type>
+          <DisplayName>Started At</DisplayName>
+          <Description>Timestamp when deployment started</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>DateAndTime</Format>
+        </attribute>
+
+        <attribute PhysicalName="eap_completed_at">
+          <Type>datetime</Type>
+          <DisplayName>Completed At</DisplayName>
+          <Description>Timestamp when deployment completed</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>DateAndTime</Format>
+        </attribute>
+
+        <attribute PhysicalName="eap_deployment_log">
+          <Type>ntext</Type>
+          <DisplayName>Deployment Log</DisplayName>
+          <Description>JSON array of deployment log entries</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>Text</Format>
+          <MaxLength>1048576</MaxLength>
+        </attribute>
+
+        <attribute PhysicalName="eap_error_details">
+          <Type>ntext</Type>
+          <DisplayName>Error Details</DisplayName>
+          <Description>Error details if deployment failed</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>Text</Format>
+        </attribute>
+
+        <attribute PhysicalName="eap_rollback_of">
+          <Type>lookup</Type>
+          <DisplayName>Rollback Of</DisplayName>
+          <Description>Link to the deployment being rolled back (if rollback)</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <LookupStyle>single</LookupStyle>
+          <Targets>
+            <Target>eap_deployments</Target>
+          </Targets>
+        </attribute>
+
+        <attribute PhysicalName="eap_health_check_passed">
+          <Type>bit</Type>
+          <DisplayName>Health Check Passed</DisplayName>
+          <Description>Whether post-deployment health check passed</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <DefaultValue>0</DefaultValue>
+        </attribute>
+
+        <attribute PhysicalName="createdon">
+          <Type>datetime</Type>
+          <DisplayName>Created On</DisplayName>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="modifiedon">
+          <Type>datetime</Type>
+          <DisplayName>Modified On</DisplayName>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="statecode">
+          <Type>state</Type>
+          <DisplayName>Status</DisplayName>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="statuscode">
+          <Type>status</Type>
+          <DisplayName>Status Reason</DisplayName>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+      </attributes>
+    </entity>
+  </EntityInfo>
+</Entity>

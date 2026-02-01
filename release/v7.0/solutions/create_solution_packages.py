@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KDAP v6.0 Solution Package Generator
+KDAP v7.0 Solution Package Generator
 Creates Power Platform solution packages for import into Mastercard environments.
 
 Generates:
@@ -53,7 +53,7 @@ PUBLISHER = {
 }
 
 # Solution version
-SOLUTION_VERSION = "6.1.0.0"
+SOLUTION_VERSION = "7.0.0.0"
 
 # Agent definitions
 AGENTS = {
@@ -62,42 +62,42 @@ AGENTS = {
         "name": "Analytics Agent",
         "description": "Advanced analytics, budget optimization, forecasting, and Monte Carlo simulation",
         "capabilities": ["ANL_BUDGET_OPTIMIZE", "ANL_MONTECARLO", "ANL_ATTRIBUTION"],
-        "flows": ["MPA v6 CalculateAllocation", "MPA v6 RunScenario", "MPA v6 DetectAnomalies"]
+        "flows": ["MPA v7CalculateAllocation", "MPA v7RunScenario", "MPA v7DetectAnomalies"]
     },
     "aud": {
         "code": "AUD",
         "name": "Audience Agent",
         "description": "Audience segmentation, propensity scoring, and targeting optimization",
         "capabilities": ["AUD_PROPENSITY_SCORE"],
-        "flows": ["MPA v6 SegmentAudience", "MPA v6 CalculateLTV"]
+        "flows": ["MPA v7SegmentAudience", "MPA v7CalculateLTV"]
     },
     "cha": {
         "code": "CHA",
         "name": "Channel Agent",
         "description": "Channel strategy, media mix modeling, and touchpoint optimization",
         "capabilities": ["CHA_MEDIA_MIX"],
-        "flows": ["MPA v6 LookupBenchmarks", "MPA v6 AnalyzeCompetitive"]
+        "flows": ["MPA v7LookupBenchmarks", "MPA v7AnalyzeCompetitive"]
     },
     "chg": {
         "code": "CHG",
         "name": "Change Management Agent",
         "description": "Change management, stakeholder mapping, and adoption planning",
         "capabilities": [],
-        "flows": ["MPA v6 MapStakeholders", "MPA v6 PlanAdoption", "MPA v6 AssessReadiness"]
+        "flows": ["MPA v7MapStakeholders", "MPA v7PlanAdoption", "MPA v7AssessReadiness"]
     },
     "cst": {
         "code": "CST",
         "name": "Consulting Agent",
         "description": "Strategic consulting, initiative prioritization, and framework selection",
         "capabilities": ["CST_PRIORITIZE"],
-        "flows": ["MPA v6 PrioritizeInitiatives", "MPA v6 SelectFramework", "MPA v6 DevelopStrategy"]
+        "flows": ["MPA v7PrioritizeInitiatives", "MPA v7SelectFramework", "MPA v7DevelopStrategy"]
     },
     "doc": {
         "code": "DOC",
         "name": "Document Agent",
         "description": "Document generation, brief creation, and content management",
         "capabilities": [],
-        "flows": ["MPA v6 GenerateDocument", "MPA v6 CreateBrief"]
+        "flows": ["MPA v7GenerateDocument", "MPA v7CreateBrief"]
     },
     "mkt": {
         "code": "MKT",
@@ -111,21 +111,21 @@ AGENTS = {
         "name": "Orchestrator Agent",
         "description": "Multi-agent coordination, workflow orchestration, and session management",
         "capabilities": [],
-        "flows": ["MPA v6 RouteToSpecialist", "MPA v6 GetSessionState", "MPA v6 UpdateProgress", "MPA_Workflow_Orchestrate"]
+        "flows": ["MPA v7RouteToSpecialist", "MPA v7GetSessionState", "MPA v7UpdateProgress", "MPA_Workflow_Orchestrate"]
     },
     "prf": {
         "code": "PRF",
         "name": "Performance Agent",
         "description": "Performance analysis, anomaly detection, and attribution modeling",
         "capabilities": ["PRF_ANOMALY_DETECT"],
-        "flows": ["MPA v6 AnalyzePerformance", "MPA v6 ExtractLearnings", "MPA v6 ApplyAnalysis"]
+        "flows": ["MPA v7AnalyzePerformance", "MPA v7ExtractLearnings", "MPA v7ApplyAnalysis"]
     },
     "spo": {
         "code": "SPO",
         "name": "Sponsorship Agent",
         "description": "Sponsorship evaluation, partner assessment, and ROI analysis",
         "capabilities": [],
-        "flows": ["MPA v6 EvaluatePartner", "MPA v6 CalculateProjection", "MPA v6 CalculateNBI", "MPA v6 AnalyzeFees"]
+        "flows": ["MPA v7EvaluatePartner", "MPA v7CalculateProjection", "MPA v7CalculateNBI", "MPA v7AnalyzeFees"]
     }
 }
 
@@ -868,7 +868,7 @@ def create_agent_solution(agent_code: str, agent_config: Dict, output_dir: Path)
 def create_deployment_guide(output_dir: Path, packages: List[Path]) -> Path:
     """Create deployment guide for the solution packages."""
 
-    guide_content = f"""# KDAP v6.0 Solution Deployment Guide
+    guide_content = f"""# KDAP v7.0 Solution Deployment Guide
 
 **Version:** {SOLUTION_VERSION}
 **Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
@@ -1019,7 +1019,7 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     print("=" * 60)
-    print("KDAP v6.0 Solution Package Generator")
+    print("KDAP v7.0 Solution Package Generator")
     print("=" * 60)
     print(f"Output Directory: {output_dir}")
     print(f"Solution Version: {SOLUTION_VERSION}")

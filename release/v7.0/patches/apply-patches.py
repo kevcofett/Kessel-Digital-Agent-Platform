@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-MPA v6.0.2 Patch Application Script
-Applies patches to fix 10 test failures from MPA v6.0 test suite.
+MPA v7.0 Patch Application Script
+Applies patches to fix test failures from MPA v7.0 test suite.
 
 Usage:
     python3 apply-patches.py --all                    # Apply all patches
@@ -329,7 +329,7 @@ def apply_all_patches(dry_run: bool = False) -> bool:
     manifest = load_manifest()
 
     print(f"\n{BOLD}{'='*60}{RESET}")
-    print(f"{BOLD}MPA v6.0.2 Patch Application{RESET}")
+    print(f"{BOLD}MPA v7.0 Patch Application{RESET}")
     print(f"{BOLD}{'='*60}{RESET}")
     print(f"\nTotal patches: {len(manifest['patches'])}")
     print(f"Tests to fix: {manifest['summary']['total_failures_addressed']}")
@@ -362,7 +362,7 @@ def apply_all_patches(dry_run: bool = False) -> bool:
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Apply MPA v6.0.2 patches')
+    parser = argparse.ArgumentParser(description='Apply MPA v7.0 patches')
     parser.add_argument('--all', action='store_true', help='Apply all patches')
     parser.add_argument('--patch', type=str, help='Apply specific patch (e.g., PATCH-001)')
     parser.add_argument('--dry-run', action='store_true', help='Preview changes without applying')

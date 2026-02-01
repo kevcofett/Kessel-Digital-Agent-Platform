@@ -1,0 +1,188 @@
+# InitiateDeployment Power Automate Flow Definition
+# Version: 1.0.0
+# Agent: DVO (DevOps Agent)
+# Description: Initiates deployment workflow and creates deployment record
+
+name: InitiateDeployment
+description: >
+  HTTP-triggered flow that initiates a deployment request, validates prerequisites,
+  creates a deployment record in Dataverse, and returns deployment status.
+
+trigger:
+  type: HTTP
+  method: POST
+  schema:
+    type: object
+    required:
+      - session_id
+      - environment
+      - agents
+    properties:
+      session_id:
+        type: string
+        format: uuid
+        description: Current session identifier
+      environment:
+        type: string
+        enum:
+          - development
+          - staging
+          - production
+        description: Target deployment environment
+      agents:
+        type: array
+        items:
+          type: string
+        description: List of agent codes to deploy
+      version_to:
+        type: string
+        description: Target version for deployment
+      deployment_type:
+        type: string
+        enum:
+          - full
+          - incremental
+          - hotfix
+        default: incremental
+        description: Type of deployment
+      initiated_by:
+        type: string
+        description: User ID initiating the deployment
+
+environment_variables:
+  EAP_DATAVERSE_URL:
+    description: EAP Dataverse environment URL
+    required: true
+  DVO_COPILOT_ENDPOINT:
+    description: DevOps Agent Copilot Studio endpoint URL
+    required: true
+
+steps:
+  # Step 1: Parse and validate input
+  - id: parse_input
+    type: Compose
+    name: Parse Input
+    inputs:
+      session_id: "@triggerBody()?['session_id']"
+      environment: "@triggerBody()?['environment']"
+      agents: "@triggerBody()?['agents']"
+      version_to: "@coalesce(triggerBody()?['version_to'], '7.0.0.0')"
+      deployment_type: "@coalesce(triggerBody()?['deployment_type'], 'incremental')"
+      initiated_by: "@triggerBody()?['initiated_by']"
+      deployment_code: "@concat('DEP-', formatDateTime(utcNow(), 'yyyyMMdd'), '-', substring(guid(), 0, 4))"
+      request_id: "@guid()"
+      timestamp: "@utcNow()"
+
+  # Step 2: Check environment gate
+  - id: check_environment_gate
+    type: HTTP
+    name: Check Environment Gate
+    inputs:
+      method: GET
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_environment_gates?$filter=eap_environment eq '@{outputs('parse_input')?['environment']}'"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+    run_after: parse_input
+
+  # Step 3: Validate gate requirements
+  - id: validate_gate
+    type: Condition
+    name: Check Gate Requirements
+    expression:
+      equals:
+        - "@first(body('check_environment_gate')?['value'])?['eap_gate_open']"
+        - true
+    run_after: check_environment_gate
+
+  # Step 4a: Gate Open - Create deployment record
+  - id: create_deployment
+    type: HTTP
+    name: Create Deployment Record
+    condition: validate_gate.true
+    inputs:
+      method: POST
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_deployments"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_name: "@concat('Deployment ', outputs('parse_input')?['deployment_code'])"
+        eap_deployment_code: "@outputs('parse_input')?['deployment_code']"
+        eap_environment: "@outputs('parse_input')?['environment']"
+        eap_deployment_type: "@outputs('parse_input')?['deployment_type']"
+        eap_status: "pending_approval"
+        eap_agents: "@join(outputs('parse_input')?['agents'], ',')"
+        eap_version_to: "@outputs('parse_input')?['version_to']"
+        eap_initiated_by: "@outputs('parse_input')?['initiated_by']"
+    run_after: validate_gate
+
+  # Step 5: Log deployment initiation
+  - id: log_deployment
+    type: HTTP
+    name: Log Deployment Initiation
+    condition: validate_gate.true
+    inputs:
+      method: POST
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_audit"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_audit_id: "@guid()"
+        eap_session_id: "@outputs('parse_input')?['session_id']"
+        eap_action: "DEPLOYMENT_INITIATED"
+        eap_agent: "DVO"
+        eap_details: "@concat('Initiated deployment ', outputs('parse_input')?['deployment_code'], ' to ', outputs('parse_input')?['environment'])"
+    run_after: create_deployment
+
+  # Step 4b: Gate Closed - Return error
+  - id: gate_closed_error
+    type: Response
+    name: Gate Closed Error
+    condition: validate_gate.false
+    inputs:
+      statusCode: 403
+      headers:
+        Content-Type: application/json
+      body:
+        error: true
+        message: "Environment gate is closed. Deployment not allowed."
+        environment: "@outputs('parse_input')?['environment']"
+        request_id: "@outputs('parse_input')?['request_id']"
+
+  # Step 6: Return success response
+  - id: return_response
+    type: Response
+    name: Return Response
+    inputs:
+      statusCode: 200
+      headers:
+        Content-Type: application/json
+      body:
+        success: true
+        deployment_code: "@outputs('parse_input')?['deployment_code']"
+        environment: "@outputs('parse_input')?['environment']"
+        agents: "@outputs('parse_input')?['agents']"
+        status: "pending_approval"
+        request_id: "@outputs('parse_input')?['request_id']"
+        next_step: "Await approval from authorized approver"
+
+error_handling:
+  on_error:
+    - id: log_error
+      type: HTTP
+      name: Log Error
+      inputs:
+        method: POST
+        uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_error_logs"
+        headers:
+          Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+          Content-Type: application/json
+        body:
+          eap_error_id: "@guid()"
+          eap_session_id: "@outputs('parse_input')?['session_id']"
+          eap_request_id: "@outputs('parse_input')?['request_id']"
+          eap_error_message: "@actions('failed_action')?['error']?['message']"
+          eap_agent: "DVO"
+          eap_action: "DEPLOYMENT_INITIATION"

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-6-Rule Compliance Validator for v6.0 Multi-Agent Architecture
+6-Rule Compliance Validator for v7.0 Multi-Agent Architecture
 Validates all instruction and KB files against Copilot Studio requirements.
 """
 
@@ -303,7 +303,7 @@ def generate_report(results: List[Dict]) -> str:
     kb_files = [r for r in results if r['type'] == 'kb']
     
     report = []
-    report.append("VALIDATION REPORT - V6.0 MULTI-AGENT ARCHITECTURE")
+    report.append("VALIDATION REPORT - V7.0 MULTI-AGENT ARCHITECTURE")
     report.append("=" * 60)
     report.append("")
     report.append(f"Generated: {timestamp}")
@@ -415,7 +415,7 @@ def generate_report(results: List[Dict]) -> str:
 def main():
     """Main validation runner."""
     print("=" * 60)
-    print("V6.0 Multi-Agent Compliance Validator")
+    print("V7.0 Multi-Agent Compliance Validator")
     print("=" * 60)
     print()
     

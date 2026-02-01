@@ -13,7 +13,7 @@
               <Description description="Implementation registry per environment with priority ordering" languagecode="1033" />
             </Descriptions>
             <PrimaryIdAttribute>eap_capability_implid</PrimaryIdAttribute>
-            <PrimaryNameAttribute>capability_code</PrimaryNameAttribute>
+            <PrimaryNameAttribute>eap_name</PrimaryNameAttribute>
             <EntitySetName>eap_capability_impls</EntitySetName>
             <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
             <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
@@ -49,6 +49,24 @@
             <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
             <IntroducedVersion>1.0.0.0</IntroducedVersion>
             <attributes>
+            <attribute PhysicalName="eap_name">
+              <Type>String</Type>
+              <Name>eap_name</Name>
+              <LogicalName>eap_name</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <IsPrimaryName>1</IsPrimaryName>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>200</MaxLength>
+              <displaynames>
+                <displayname description="Implementation Name" languagecode="1033" />
+              </displaynames>
+            </attribute>
             <attribute PhysicalName="capability_code">
               <Type>String</Type>
               <Name>capability_code</Name>
@@ -1296,7 +1314,7 @@
               <Description description="Observability and logging for all capability invocations" languagecode="1033" />
             </Descriptions>
             <PrimaryIdAttribute>eap_telemetryid</PrimaryIdAttribute>
-            <PrimaryNameAttribute>capability_code</PrimaryNameAttribute>
+            <PrimaryNameAttribute>eap_name</PrimaryNameAttribute>
             <EntitySetName>eap_telemetrys</EntitySetName>
             <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
             <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
@@ -1332,6 +1350,24 @@
             <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
             <IntroducedVersion>1.0.0.0</IntroducedVersion>
             <attributes>
+            <attribute PhysicalName="eap_name">
+              <Type>String</Type>
+              <Name>eap_name</Name>
+              <LogicalName>eap_name</LogicalName>
+              <RequiredLevel>ApplicationRequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <IsPrimaryName>1</IsPrimaryName>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <Format>Text</Format>
+              <MaxLength>200</MaxLength>
+              <displaynames>
+                <displayname description="Event Name" languagecode="1033" />
+              </displaynames>
+            </attribute>
             <attribute PhysicalName="session_id">
               <Type>String</Type>
               <Name>session_id</Name>

@@ -1,0 +1,86 @@
+================================================================================
+KDAP v7.0 POWER PLATFORM IMPORT VALIDATION REPORT
+Generated: 2026-02-01T05:21:36.110112
+================================================================================
+
+EXECUTIVE SUMMARY
+----------------------------------------
+Total Tests:    2213
+Passed:         2210 (99%)
+Failed:         0
+Warnings:       3
+Skipped:        0
+
+✓ STATUS: ALL CRITICAL TESTS PASSED
+  Solution is ready for Power Platform import
+
+RESULTS BY CATEGORY
+----------------------------------------
+
+✓ ZIP Structural Integrity [CRITICAL]
+  Target: Power Platform Import
+  PASS: 9/10  FAIL: 0  WARN: 1
+
+✓ Solution Package Structure [CRITICAL]
+  Target: Power Platform Import
+  PASS: 12/12  FAIL: 0  WARN: 0
+
+✓ XML Schema Validation [CRITICAL]
+  Target: Dataverse Entity Import
+  PASS: 119/120  FAIL: 0  WARN: 1
+
+✓ Entity Relationship Integrity [CRITICAL]
+  Target: Dataverse Relationships
+  PASS: 7/7  FAIL: 0  WARN: 0
+
+✓ Power Automate Flow Validation [CRITICAL]
+  Target: Flow Deployment
+  PASS: 254/254  FAIL: 0  WARN: 0
+
+✓ AI Builder Prompt Validation [HIGH]
+  Target: Copilot Studio Prompts
+  PASS: 39/39  FAIL: 0  WARN: 0
+
+✓ Copilot Studio Topic Validation [HIGH]
+  Target: Topic Import
+  PASS: 2/3  FAIL: 0  WARN: 1
+
+✓ KB Document Compliance [HIGH]
+  Target: Knowledge Base
+  PASS: 1540/1540  FAIL: 0  WARN: 0
+
+✓ Instruction File Compliance [HIGH]
+  Target: Agent Instructions
+  PASS: 52/52  FAIL: 0  WARN: 0
+
+✓ Seed Data Schema Alignment [HIGH]
+  Target: Data Import
+  PASS: 12/12  FAIL: 0  WARN: 0
+
+✓ YAML-to-JSON Conversion [MEDIUM]
+  Target: Flow Conversion
+  PASS: 160/160  FAIL: 0  WARN: 0
+
+✓ ZIP Package Integrity [CRITICAL]
+  Target: Import Readiness
+  PASS: 4/4  FAIL: 0  WARN: 0
+
+================================================================================
+WARNINGS (REVIEW RECOMMENDED)
+================================================================================
+
+[ZIP-009] Content types complete
+  File: [Content_Types].xml
+  Message: Missing extensions in [Content_Types].xml: {'6/'}
+
+[ENT-005] IsPrimaryName flag set
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_sessions/Entity.xml
+  Message: IsPrimaryName flag not set on 'eap_session_id'
+
+[TOP-005] Trigger phrases unique
+  File: topics
+  Message: Duplicate trigger phrases across topics: 1 duplicates
+
+================================================================================
+END OF REPORT
+================================================================================

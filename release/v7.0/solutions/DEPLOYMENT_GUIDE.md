@@ -1,159 +1,200 @@
-# KDAP v6.0 Solution Deployment Guide
+# KDAP v7.0 Solution Deployment Guide
 
-**Version:** 6.1.0.0
-**Generated:** 2026-01-21 11:23:32
+**Version:** 7.0.0
+**Generated:** 2026-02-01
+**Target:** Mastercard Copilot Studio Environment
 
 ## Overview
 
-This package contains Power Platform solutions for deploying the Kessel Digital Agent Platform (KDAP) to Mastercard environments.
+This package contains the Power Platform solution for deploying the Kessel Digital Agent Platform (KDAP) v7.0 to the Mastercard environment.
+
+## What's New in v7.0
+
+- **Consolidated Solution Package** - Single ZIP replaces multiple agent-specific packages
+- **Separate Data Import** - Reference data imported via Configuration Migration Tool
+- **Power Platform Compliant Structure** - Clean solution ZIP with standard folders only
 
 ## Solution Packages
 
-### Platform Solution (Deploy First)
-
-| Package | Description |
-|---------|-------------|
-| EAPPlatform_6_1_0_0.zip | Core platform tables, flows, and connections |
-
-### Agent Solutions (Deploy After Platform)
-
-| Package | Agent | Description |
-|---------|-------|-------------|
-| EAPANLAgent_6_1_0_0.zip | Analytics Agent | Advanced analytics, budget optimization, forecasti... |
-| EAPAUDAgent_6_1_0_0.zip | Audience Agent | Audience segmentation, propensity scoring, and tar... |
-| EAPCHAAgent_6_1_0_0.zip | Channel Agent | Channel strategy, media mix modeling, and touchpoi... |
-| EAPCHGAgent_6_1_0_0.zip | Change Management Agent | Change management, stakeholder mapping, and adopti... |
-| EAPCSTAgent_6_1_0_0.zip | Consulting Agent | Strategic consulting, initiative prioritization, a... |
-| EAPDOCAgent_6_1_0_0.zip | Document Agent | Document generation, brief creation, and content m... |
-| EAPMKTAgent_6_1_0_0.zip | Marketing Agent | Marketing strategy, campaign planning, and market ... |
-| EAPORCAgent_6_1_0_0.zip | Orchestrator Agent | Multi-agent coordination, workflow orchestration, ... |
-| EAPPRFAgent_6_1_0_0.zip | Performance Agent | Performance analysis, anomaly detection, and attri... |
-| EAPSPOAgent_6_1_0_0.zip | Sponsorship Agent | Sponsorship evaluation, partner assessment, and RO... |
-
-
-## Deployment Order
-
-**IMPORTANT:** Solutions must be deployed in this order:
-
-1. **EAPPlatform** - Core platform (required by all agents)
-2. **Agent solutions** - Can be deployed in any order after platform
+| Package | Size | Description |
+|---------|------|-------------|
+| `Consulting_and_Marketing_Agent_Platform_V7.0.zip` | 250 KB | Core platform: entities, flows, option sets |
+| `KDAP_V7.0_Data_Import.zip` | 38 KB | Reference data (CMT format) |
 
 ## Prerequisites
 
-Before importing solutions:
+Before importing:
 
-1. **Azure Resources**
-   - Azure Functions deployed (7 ML endpoints)
+1. **Power Platform Environment**
+   - Copilot Studio environment provisioned
+   - System Administrator role assigned
+   - Dataverse enabled
+
+2. **Tools Required**
+   - PAC CLI (recommended) or Power Platform Admin Center
+   - Configuration Migration Tool (for data import)
+
+3. **Azure Resources** (if using ML endpoints)
+   - Azure Functions deployed
    - Function keys configured
    - CORS enabled for Power Platform
 
-2. **Power Platform**
-   - Environment created (Production or Sandbox)
-   - System Administrator role
-   - Dataverse enabled
+## Deployment Steps
 
-3. **Connections**
-   - HTTP Premium connector license
-   - Dataverse connector configured
+### Step 1: Import Solution Package
 
-4. **Source Environment Requirements (CRITICAL)**
-   - All Dataverse tables must exist in source environment before solution export
-   - Tables must have PrimaryNameAttribute properly defined
-   - Custom columns must use publisher prefix (e.g., `eap_`, `mpa_`, `ca_`)
-   - Solution packages MUST be exported via PAC CLI from source environment
+**Using PAC CLI (Recommended):**
 
-## Import Steps
+```bash
+# Authenticate to Mastercard environment
+pac auth create --environment https://[mastercard-env].crm.dynamics.com
 
-### Using Power Apps Admin Center
+# Import solution
+pac solution import --path Consulting_and_Marketing_Agent_Platform_V7.0.zip --activate-plugins
+```
+
+**Using Power Platform Admin Center:**
 
 1. Navigate to https://admin.powerplatform.microsoft.com
-2. Select target environment
-3. Go to Solutions > Import
-4. Upload solution ZIP file
+2. Select Mastercard target environment
+3. Go to Solutions → Import
+4. Upload `Consulting_and_Marketing_Agent_Platform_V7.0.zip`
 5. Follow import wizard
 6. Activate flows after import
 
-### Using PAC CLI (Recommended)
+### Step 2: Import Reference Data
 
-PAC CLI is the **preferred method** for solution import/export based on deployment learnings.
+**Using Configuration Migration Tool:**
 
-**Exporting from Source Environment:**
+1. Download [Configuration Migration Tool](https://docs.microsoft.com/power-platform/admin/manage-configuration-data)
+2. Run `DataMigrationUtility.exe`
+3. Select **Import data**
+4. Connect to Mastercard environment
+5. Select `KDAP_V7.0_Data_Import.zip`
+6. Review mappings → Import
 
-```bash
-# Authenticate to source environment
-pac auth create --environment https://aragornai.crm.dynamics.com
+**Data included:**
 
-# Export solution (all tables must exist first)
-pac solution export --name EnterpriseAIPlatformv10 --path ./EAPPlatform_complete.zip --overwrite
-```
+| Entity | Records | Description |
+|--------|---------|-------------|
+| eap_agents | 13 | Agent definitions (ORC, ANL, AUD, CHA, etc.) |
+| eap_config | 13 | Platform configuration settings |
+| eap_user_roles | 6 | User role definitions |
+| ca_frameworks | 10 | Consulting agent frameworks |
 
-**Importing to Target Environment:**
+### Step 3: Configure AI Builder Prompts
 
-```bash
-# Authenticate to target environment
-pac auth create --environment https://[target-env].crm.dynamics.com
+1. Navigate to make.powerapps.com → AI Builder → Models
+2. Import `ai_builder_prompts_all_agents_v7.0.json`
+3. Import `gha_ai_builder_prompts.json`
+4. Activate all prompts
 
-# Import platform first
-pac solution import --path EAPPlatform_6_1_0_0.zip --activate-plugins
+### Step 4: Configure Copilot Studio Agents
 
-# Import agent solutions
-pac solution import --path EAPANLAgent_6_1_0_0.zip --activate-plugins
-pac solution import --path EAPAUDAgent_6_1_0_0.zip --activate-plugins
-# ... repeat for other agents
-```
+For each agent in `agents/` folder:
 
-**Important:** Do NOT use programmatically generated solution packages. Always export from a working Dataverse environment using PAC CLI.
+1. Open Copilot Studio
+2. Create or update agent
+3. Upload instructions from `agents/{code}/instructions/`
+4. Configure knowledge base from `agents/{code}/kb/`
+5. Import topics from `topics/all_agent_topics_v7.0.json`
+
+**Agent codes:** ORC, ANL, AUD, CHA, CST, CHG, DOC, GHA, MKT, PRF, SPO, DOCS, DVO
 
 ## Post-Deployment Configuration
 
-### 1. Configure Environment Variables
+### 1. Environment Variables
 
-Set the following environment variables in each environment:
+Configure in Power Platform Admin Center → Environments → [Mastercard] → Settings:
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| eap_ml_base_url | Azure Functions base URL | https://kdap-ml-*.azurewebsites.net |
+| Variable | Description | Value |
+|----------|-------------|-------|
+| eap_ml_base_url | Azure Functions base URL | https://kdap-ml-mc.azurewebsites.net |
 | eap_ml_function_key | Azure Functions key | (from Azure portal) |
 
-### 2. Activate Flows
+### 2. Activate Cloud Flows
 
-After import, manually activate all flows:
-1. Go to Solutions > [Solution Name] > Cloud flows
-2. Select each flow > Turn On
+1. Go to Solutions → Consulting and Marketing Agent Platform
+2. Select Cloud flows
+3. Turn on each flow
 
-### 3. Configure Copilot Studio
+### 3. Connection References
 
-1. Create/update Copilot topics to call the flows
-2. Upload knowledge base files from each agent's /kb directory
-3. Configure agent instructions from /instructions directory
+Verify these connections are configured:
+- Dataverse connector
+- HTTP Premium connector (for ML endpoints)
 
-## Verification
+## Verification Checklist
 
-Run the validation script to verify deployment:
+After deployment, verify:
+
+- [ ] Solution imported without errors
+- [ ] All 24 Dataverse entities created
+- [ ] Reference data imported (check eap_agents table)
+- [ ] 28 Cloud flows activated
+- [ ] AI Builder prompts active
+- [ ] Copilot agents responding
+
+**Quick validation:**
 
 ```bash
-python validate_deployment.py --environment https://[env].crm.dynamics.com
+# Check solution status
+pac solution list
+
+# Verify entity count
+pac paportal list --environment https://[mastercard-env].crm.dynamics.com
 ```
 
 ## Troubleshooting
 
-### Common Issues
+### Import Fails with "Invalid Solution File"
 
-1. **Missing dependencies**
-   - Ensure EAPPlatform is imported first
-   - Check all connectors are available
+**Cause:** ZIP contains non-standard folders
+**Solution:** Use the cleaned `Consulting_and_Marketing_Agent_Platform_V7.0.zip` (250 KB version)
 
-2. **Flow activation fails**
-   - Verify connection references
-   - Check connector licenses
+### Data Import Shows Zero Records
 
-3. **ML endpoint errors**
-   - Verify Azure Functions are running
-   - Check function key is correct
+**Cause:** Entity schema mismatch
+**Solution:** Ensure solution is imported before data import
+
+### Flows Fail to Activate
+
+**Cause:** Missing connection references
+**Solution:**
+1. Edit flow → Update connection references
+2. Re-import with `--activate-plugins` flag
+
+### Agent Not Responding
+
+**Cause:** Topics not imported or KB files missing
+**Solution:** Verify Copilot Studio agent configuration
+
+## Rollback
+
+If issues occur:
+
+1. **Solution:** Solutions → [Solution] → Delete
+2. **Data:** Manual cleanup required (no automatic rollback)
+3. **Agents:** Delete from Copilot Studio
+
+## File Reference
+
+```
+release/v7.0/solutions/
+├── Consulting_and_Marketing_Agent_Platform_V7.0.zip    # Main solution (IMPORT THIS)
+├── KDAP_V7.0_Data_Import.zip                           # Reference data
+├── Consulting_and_Marketing_Agent_Platform_V7.0/       # Extracted contents
+│   ├── agents/                                         # Copilot agent configs
+│   ├── topics/                                         # Agent topics
+│   ├── data/                                           # Seed data sources
+│   ├── ai_builder_prompts_all_agents_v7.0.json        # AI Builder prompts
+│   └── gha_ai_builder_prompts.json                    # GHA prompts
+├── DEPLOYMENT_GUIDE.md                                 # This file
+└── DEPLOYMENT_SEQUENCE_V7.0.md                         # Detailed sequence
+```
 
 ## Support
 
-For deployment issues, contact:
+For deployment issues:
 - Kessel Digital: support@kesseldigital.com
-- GitHub: https://github.com/Kessel-Digital/KDAP
-
+- Internal: #kdap-support Slack channel

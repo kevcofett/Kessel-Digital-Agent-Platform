@@ -1,0 +1,304 @@
+================================================================================
+KDAP v7.0 POWER PLATFORM IMPORT VALIDATION REPORT
+Generated: 2026-01-31T20:42:25.089543
+================================================================================
+
+EXECUTIVE SUMMARY
+----------------------------------------
+Total Tests:    2204
+Passed:         2155 (97%)
+Failed:         34
+Warnings:       15
+Skipped:        0
+
+✗ STATUS: FAILURES DETECTED
+  Solution requires fixes before import
+
+RESULTS BY CATEGORY
+----------------------------------------
+
+✓ Solution Package Structure [CRITICAL]
+  Target: Power Platform Import
+  PASS: 11/12  FAIL: 0  WARN: 1
+
+✗ XML Schema Validation [CRITICAL]
+  Target: Dataverse Entity Import
+  PASS: 93/111  FAIL: 13  WARN: 5
+
+✓ Entity Relationship Integrity [CRITICAL]
+  Target: Dataverse Relationships
+  PASS: 7/7  FAIL: 0  WARN: 0
+
+✓ Power Automate Flow Validation [CRITICAL]
+  Target: Flow Deployment
+  PASS: 254/254  FAIL: 0  WARN: 0
+
+✗ AI Builder Prompt Validation [HIGH]
+  Target: Copilot Studio Prompts
+  PASS: 28/49  FAIL: 21  WARN: 0
+
+✓ Copilot Studio Topic Validation [HIGH]
+  Target: Topic Import
+  PASS: 2/3  FAIL: 0  WARN: 1
+
+✓ KB Document Compliance [HIGH]
+  Target: Knowledge Base
+  PASS: 1532/1540  FAIL: 0  WARN: 8
+
+✓ Instruction File Compliance [HIGH]
+  Target: Agent Instructions
+  PASS: 52/52  FAIL: 0  WARN: 0
+
+✓ Seed Data Schema Alignment [HIGH]
+  Target: Data Import
+  PASS: 12/12  FAIL: 0  WARN: 0
+
+✓ YAML-to-JSON Conversion [MEDIUM]
+  Target: Flow Conversion
+  PASS: 160/160  FAIL: 0  WARN: 0
+
+✓ ZIP Package Integrity [CRITICAL]
+  Target: Import Readiness
+  PASS: 4/4  FAIL: 0  WARN: 0
+
+================================================================================
+FAILURES (MUST FIX BEFORE IMPORT)
+================================================================================
+
+[ENT-004] PrimaryNameAttribute references valid field
+  Category: XML Schema Validation (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_agents/Entity.xml
+  Message: Field 'eap_name' not found in attributes
+
+[ENT-004] PrimaryNameAttribute references valid field
+  Category: XML Schema Validation (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/ca_frameworks/Entity.xml
+  Message: Field 'ca_name' not found in attributes
+
+[ENT-004] PrimaryNameAttribute references valid field
+  Category: XML Schema Validation (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_user_roles/Entity.xml
+  Message: Field 'eap_name' not found in attributes
+
+[ENT-004] PrimaryNameAttribute references valid field
+  Category: XML Schema Validation (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_audit/Entity.xml
+  Message: Field 'eap_name' not found in attributes
+
+[ENT-004] PrimaryNameAttribute references valid field
+  Category: XML Schema Validation (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_config/Entity.xml
+  Message: Field 'eap_name' not found in attributes
+
+[ENT-004] PrimaryNameAttribute references valid field
+  Category: XML Schema Validation (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_capabilities/Entity.xml
+  Message: Field 'eap_name' not found in attributes
+
+[ENT-004] PrimaryNameAttribute references valid field
+  Category: XML Schema Validation (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_user_profiles/Entity.xml
+  Message: Field 'eap_name' not found in attributes
+
+[ENT-004] PrimaryNameAttribute references valid field
+  Category: XML Schema Validation (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_growth_sessions/Entity.xml
+  Message: Field 'eap_name' not found in attributes
+
+[ENT-004] PrimaryNameAttribute references valid field
+  Category: XML Schema Validation (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_prompts/Entity.xml
+  Message: Field 'eap_name' not found in attributes
+
+[ENT-004] PrimaryNameAttribute references valid field
+  Category: XML Schema Validation (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_capability_impl/Entity.xml
+  Message: Field 'eap_name' not found in attributes
+
+[ENT-004] PrimaryNameAttribute references valid field
+  Category: XML Schema Validation (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_telemetry/Entity.xml
+  Message: Field 'eap_name' not found in attributes
+
+[ENT-004] PrimaryNameAttribute references valid field
+  Category: XML Schema Validation (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/mpa_channel_benchmarks/Entity.xml
+  Message: Field 'mpa_name' not found in attributes
+
+[ENT-004] PrimaryNameAttribute references valid field
+  Category: XML Schema Validation (CRITICAL)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_deployments/Entity.xml
+  Message: Field 'eap_name' not found in attributes
+
+[PRO-003] Prompt name present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing name
+
+[PRO-004] Template present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing template
+
+[PRO-003] Prompt name present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing name
+
+[PRO-004] Template present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing template
+
+[PRO-003] Prompt name present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing name
+
+[PRO-004] Template present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing template
+
+[PRO-003] Prompt name present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing name
+
+[PRO-004] Template present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing template
+
+[PRO-003] Prompt name present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing name
+
+[PRO-004] Template present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing template
+
+[PRO-003] Prompt name present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing name
+
+[PRO-004] Template present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing template
+
+[PRO-003] Prompt name present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing name
+
+[PRO-004] Template present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing template
+
+[PRO-003] Prompt name present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing name
+
+[PRO-004] Template present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing template
+
+[PRO-003] Prompt name present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing name
+
+[PRO-004] Template present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing template
+
+[PRO-003] Prompt name present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing name
+
+[PRO-004] Template present
+  Category: AI Builder Prompt Validation (HIGH)
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/gha_ai_builder_prompts.json
+  Message: Prompt 'unknown' missing template
+
+[PRO-002] prompt_id unique
+  Category: AI Builder Prompt Validation (HIGH)
+  File: ai_builder_prompts
+  Message: Duplicate prompt IDs: {'unknown'}
+
+================================================================================
+WARNINGS (REVIEW RECOMMENDED)
+================================================================================
+
+[PKG-008] No hidden files
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0.zip
+  Message: Hidden files found in ZIP: ['agents/chg/flows/.gitkeep', 'agents/mkt/flows/.gitkeep', 'agents/cst/flows/.gitkeep']
+
+[ENT-005] IsPrimaryName flag set
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_sessions/Entity.xml
+  Message: IsPrimaryName flag not set on 'eap_session_id'
+
+[ENT-009] RequiredLevel valid
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_sessions/Entity.xml
+  Message: Invalid RequiredLevel 'applicationrequired' on 'eap_session_id'
+
+[ENT-009] RequiredLevel valid
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_sessions/Entity.xml
+  Message: Invalid RequiredLevel 'applicationrequired' on 'eap_user_id'
+
+[ENT-009] RequiredLevel valid
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_sessions/Entity.xml
+  Message: Invalid RequiredLevel 'applicationrequired' on 'eap_start_time'
+
+[ENT-009] RequiredLevel valid
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_sessions/Entity.xml
+  Message: Invalid RequiredLevel 'applicationrequired' on 'eap_status'
+
+[TOP-011] Phrase length valid
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/topics/all_agent_topics_v7.0.json
+  Message: Phrase 'hi...' length 2 outside range [3, 256]
+
+[KB-006] ALL-CAPS headers
+  File: v7.0/agents/gha/kb/GHA_KB_Growth_Channels_v7.0.txt
+  Message: No ALL-CAPS headers detected
+
+[KB-006] ALL-CAPS headers
+  File: v7.0/agents/gha/kb/GHA_KB_Growth_KPIs_v7.0.txt
+  Message: No ALL-CAPS headers detected
+
+[KB-006] ALL-CAPS headers
+  File: v7.0/agents/gha/kb/GHA_KB_Campaign_Patterns_v7.0.txt
+  Message: No ALL-CAPS headers detected
+
+[KB-006] ALL-CAPS headers
+  File: v7.0/agents/gha/kb/GHA_KB_Fintech_Cases_v7.0.txt
+  Message: No ALL-CAPS headers detected
+
+[KB-006] ALL-CAPS headers
+  File: v7.0/agents/gha/kb/GHA_KB_Growth_Channels_v7.0.txt
+  Message: No ALL-CAPS headers detected
+
+[KB-006] ALL-CAPS headers
+  File: v7.0/agents/gha/kb/GHA_KB_Growth_KPIs_v7.0.txt
+  Message: No ALL-CAPS headers detected
+
+[KB-006] ALL-CAPS headers
+  File: v7.0/agents/gha/kb/GHA_KB_Campaign_Patterns_v7.0.txt
+  Message: No ALL-CAPS headers detected
+
+[KB-006] ALL-CAPS headers
+  File: v7.0/agents/gha/kb/GHA_KB_Fintech_Cases_v7.0.txt
+  Message: No ALL-CAPS headers detected
+
+================================================================================
+END OF REPORT
+================================================================================

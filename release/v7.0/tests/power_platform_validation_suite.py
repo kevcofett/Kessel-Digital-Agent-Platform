@@ -358,9 +358,17 @@ def validate_zip_structural_integrity(category: TestCategory) -> None:
                 ct_content = zf.read("[Content_Types].xml").decode('utf-8')
                 extensions_in_zip = set()
                 for f in file_list:
-                    if '.' in f:
-                        ext = f.rsplit('.', 1)[-1].lower()
-                        extensions_in_zip.add(ext)
+                    # Skip directories (end with /)
+                    if f.endswith('/'):
+                        continue
+                    # Get the filename part (after last /)
+                    filename = f.rsplit('/', 1)[-1] if '/' in f else f
+                    # Only extract extension if the filename has a dot
+                    if '.' in filename:
+                        ext = filename.rsplit('.', 1)[-1].lower()
+                        # Filter out invalid extensions (contain / or are not alphanumeric)
+                        if ext.isalnum() and len(ext) <= 10:
+                            extensions_in_zip.add(ext)
 
                 declared_extensions = set(re.findall(r'Extension="([^"]+)"', ct_content))
                 missing = extensions_in_zip - declared_extensions - {'gitkeep'}

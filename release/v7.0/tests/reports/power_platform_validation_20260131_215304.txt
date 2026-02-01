@@ -1,14 +1,14 @@
 ================================================================================
 KDAP v7.0 POWER PLATFORM IMPORT VALIDATION REPORT
-Generated: 2026-01-31T21:53:31.511407
+Generated: 2026-01-31T21:53:04.034715
 ================================================================================
 
 EXECUTIVE SUMMARY
 ----------------------------------------
-Total Tests:    2212
-Passed:         2212 (100%)
+Total Tests:    2213
+Passed:         2211 (99%)
 Failed:         0
-Warnings:       0
+Warnings:       2
 Skipped:        0
 
 ✓ STATUS: ALL CRITICAL TESTS PASSED
@@ -23,7 +23,7 @@ RESULTS BY CATEGORY
 
 ✓ Solution Package Structure [CRITICAL]
   Target: Power Platform Import
-  PASS: 12/12  FAIL: 0  WARN: 0
+  PASS: 11/12  FAIL: 0  WARN: 1
 
 ✓ XML Schema Validation [CRITICAL]
   Target: Dataverse Entity Import
@@ -43,7 +43,7 @@ RESULTS BY CATEGORY
 
 ✓ Copilot Studio Topic Validation [HIGH]
   Target: Topic Import
-  PASS: 2/2  FAIL: 0  WARN: 0
+  PASS: 2/3  FAIL: 0  WARN: 1
 
 ✓ KB Document Compliance [HIGH]
   Target: Knowledge Base
@@ -64,6 +64,18 @@ RESULTS BY CATEGORY
 ✓ ZIP Package Integrity [CRITICAL]
   Target: Import Readiness
   PASS: 4/4  FAIL: 0  WARN: 0
+
+================================================================================
+WARNINGS (REVIEW RECOMMENDED)
+================================================================================
+
+[PKG-008] No hidden files
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0.zip
+  Message: Hidden files found in ZIP: ['agents/chg/flows/.gitkeep', 'agents/mkt/flows/.gitkeep', 'agents/cst/flows/.gitkeep']
+
+[TOP-011] Phrase length valid
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/topics/all_agent_topics_v7.0.json
+  Message: Phrase 'hi...' length 2 outside range [3, 256]
 
 ================================================================================
 END OF REPORT

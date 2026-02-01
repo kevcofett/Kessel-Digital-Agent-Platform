@@ -61,11 +61,11 @@ RCT FUNDAMENTALS
 Randomized Controlled Trials randomly assign units to treatment and control, ensuring groups are comparable on all factors except treatment.
 
 RCT DESIGN
-1. Define population and sample
-2. Randomly assign to treatment vs control
-3. Apply treatment to treatment group only
-4. Measure outcomes in both groups
-5. Calculate Average Treatment Effect
+- Define population and sample
+- Randomly assign to treatment vs control
+- Apply treatment to treatment group only
+- Measure outcomes in both groups
+- Calculate Average Treatment Effect
 
 AVERAGE TREATMENT EFFECT (ATE)
 ATE = Mean(Outcome_Treatment) - Mean(Outcome_Control)
@@ -193,12 +193,12 @@ SYNTHETIC CONTROL OVERVIEW
 When no good control unit exists, synthetic control constructs one by weighting multiple comparison units to match the treated unit pre-treatment.
 
 SYNTHETIC CONTROL CONSTRUCTION
-1. Identify treated unit (e.g., region with campaign)
-2. Identify donor pool (regions without campaign)
-3. Select matching variables
-4. Find weights that minimize pre-treatment difference
-5. Apply weights to post-treatment outcomes
-6. Treatment effect = Treated outcome - Synthetic control outcome
+- Identify treated unit (e.g., region with campaign)
+- Identify donor pool (regions without campaign)
+- Select matching variables
+- Find weights that minimize pre-treatment difference
+- Apply weights to post-treatment outcomes
+- Treatment effect = Treated outcome - Synthetic control outcome
 
 WEIGHT CALCULATION
 Minimize: Sum_t_pre (Y_treated_t - Sum_j (W_j x Y_j_t))^2
@@ -336,10 +336,10 @@ KERNEL MATCHING
 Weight all controls by distance from treated unit.
 
 PSM PROCEDURE
-1. Estimate propensity score for all units
-2. Match treated to control units
-3. Check covariate balance after matching
-4. Estimate treatment effect on matched sample
+- Estimate propensity score for all units
+- Match treated to control units
+- Check covariate balance after matching
+- Estimate treatment effect on matched sample
 
 INVERSE PROBABILITY WEIGHTING (IPW)
 

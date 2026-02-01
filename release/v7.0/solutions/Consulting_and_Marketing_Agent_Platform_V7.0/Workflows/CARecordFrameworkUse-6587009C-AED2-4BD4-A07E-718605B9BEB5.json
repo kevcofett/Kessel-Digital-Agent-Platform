@@ -1,0 +1,59 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {"defaultValue": {}, "type": "Object"},
+        "$authentication": {"defaultValue": {}, "type": "SecureObject"}
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "session_id": {"type": "string", "description": "Session ID"},
+                "framework_name": {"type": "string", "description": "Framework used"},
+                "application_context": {"type": "string", "description": "How framework was applied"}
+              },
+              "required": ["session_id", "framework_name"]
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "SuccessResponse": {
+          "runAfter": {},
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "Success",
+              "message": "Framework usage recorded",
+              "framework": "@{triggerBody()?['framework_name']}",
+              "recorded_at": "@{utcNow()}"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

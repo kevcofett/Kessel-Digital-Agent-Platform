@@ -1,0 +1,239 @@
+# UpdateProgress Power Automate Flow Definition
+# Version: 1.0.0
+# Agent: ORC (Orchestrator)
+# Description: Updates session progress - advances steps/gates and updates plan state
+
+name: UpdateProgress
+description: >
+  HTTP-triggered flow that updates session progress in EAP Dataverse.
+  Can advance workflow steps, complete gates, and update plan state fields.
+  Used after specialist agents complete their work.
+
+trigger:
+  type: HTTP
+  method: POST
+  schema:
+    type: object
+    required:
+      - session_id
+    properties:
+      session_id:
+        type: string
+        format: uuid
+        description: Session identifier to update
+      action:
+        type: string
+        enum:
+          - advance_step
+          - complete_gate
+          - set_step
+          - update_plan_state
+        description: Type of progress update
+      target_step:
+        type: integer
+        minimum: 1
+        maximum: 10
+        description: Target step (for set_step action)
+      plan_state_updates:
+        type: object
+        description: Partial plan state to merge
+      conversation_summary:
+        type: string
+        description: Updated conversation summary
+
+environment_variables:
+  EAP_DATAVERSE_URL:
+    description: EAP Dataverse environment URL
+    required: true
+
+steps:
+  # Step 1: Parse input
+  - id: parse_input
+    type: Compose
+    name: Parse Input
+    inputs:
+      session_id: "@triggerBody()?['session_id']"
+      action: "@coalesce(triggerBody()?['action'], 'update_plan_state')"
+      target_step: "@triggerBody()?['target_step']"
+      plan_state_updates: "@triggerBody()?['plan_state_updates']"
+      conversation_summary: "@triggerBody()?['conversation_summary']"
+      request_timestamp: "@utcNow()"
+
+  # Step 2: Get current session state
+  - id: get_current_session
+    type: HTTP
+    name: Get Current Session
+    inputs:
+      method: GET
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_sessions(@{outputs('parse_input')?['session_id']})"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+    run_after: parse_input
+
+  # Step 3: Parse current state
+  - id: parse_current_state
+    type: Compose
+    name: Parse Current State
+    inputs:
+      current_step: "@body('get_current_session')?['eap_workflow_step']"
+      current_gate: "@body('get_current_session')?['eap_workflow_gate']"
+      current_plan_state: "@json(coalesce(body('get_current_session')?['eap_plan_state'], '{}'))"
+      session_type: "@body('get_current_session')?['eap_session_type']"
+    run_after: get_current_session
+
+  # Step 4: Calculate new step/gate based on action
+  - id: calculate_new_progress
+    type: Compose
+    name: Calculate New Progress
+    inputs:
+      new_step: "@if(equals(outputs('parse_input')?['action'], 'advance_step'), min(add(outputs('parse_current_state')?['current_step'], 1), 10), if(equals(outputs('parse_input')?['action'], 'set_step'), outputs('parse_input')?['target_step'], outputs('parse_current_state')?['current_step']))"
+      new_gate: "@if(lessOrEquals(variables('new_step'), 1), 0, if(lessOrEquals(variables('new_step'), 3), 1, if(lessOrEquals(variables('new_step'), 6), 2, if(lessOrEquals(variables('new_step'), 9), 3, 4))))"
+      gate_changed: "@not(equals(variables('new_gate'), outputs('parse_current_state')?['current_gate']))"
+    run_after: parse_current_state
+
+  # Step 5: Merge plan state updates
+  - id: merge_plan_state
+    type: Compose
+    name: Merge Plan State Updates
+    inputs:
+      merged_plan_state: "@union(outputs('parse_current_state')?['current_plan_state'], coalesce(outputs('parse_input')?['plan_state_updates'], json('{}')))"
+    run_after: calculate_new_progress
+
+  # Step 6: Build update payload
+  - id: build_update_payload
+    type: Compose
+    name: Build Update Payload
+    inputs:
+      eap_workflow_step: "@outputs('calculate_new_progress')?['new_step']"
+      eap_workflow_gate: "@outputs('calculate_new_progress')?['new_gate']"
+      eap_plan_state: "@string(outputs('merge_plan_state')?['merged_plan_state'])"
+      eap_conversation_summary: "@coalesce(outputs('parse_input')?['conversation_summary'], body('get_current_session')?['eap_conversation_summary'])"
+    run_after: merge_plan_state
+
+  # Step 7: Update session in Dataverse
+  - id: update_session
+    type: HTTP
+    name: Update Session in Dataverse
+    inputs:
+      method: PATCH
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_sessions(@{outputs('parse_input')?['session_id']})"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body: "@outputs('build_update_payload')"
+    run_after: build_update_payload
+
+  # Step 8: Log session event
+  - id: log_session_event
+    type: HTTP
+    name: Log Session Event
+    inputs:
+      method: POST
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_session_logs"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_entry_id: "@guid()"
+        eap_session_id: "@outputs('parse_input')?['session_id']"
+        eap_event_type: "@if(outputs('calculate_new_progress')?['gate_changed'], 'gate_passed', 'step_advanced')"
+        eap_workflow_step: "@outputs('calculate_new_progress')?['new_step']"
+        eap_workflow_gate: "@outputs('calculate_new_progress')?['new_gate']"
+        eap_details: "@string(createArray('action', outputs('parse_input')?['action'], 'from_step', outputs('parse_current_state')?['current_step'], 'to_step', outputs('calculate_new_progress')?['new_step']))"
+    run_after: update_session
+
+  # Step 9: Check for workflow completion
+  - id: check_completion
+    type: Condition
+    name: Workflow Complete?
+    expression:
+      equals:
+        - "@outputs('calculate_new_progress')?['new_step']"
+        - 10
+    run_after: log_session_event
+
+  # Step 10a: Log completion event
+  - id: log_completion
+    type: HTTP
+    name: Log Completion Event
+    condition: check_completion.true
+    inputs:
+      method: POST
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_session_logs"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_entry_id: "@guid()"
+        eap_session_id: "@outputs('parse_input')?['session_id']"
+        eap_event_type: "completed"
+        eap_workflow_step: 10
+        eap_workflow_gate: 4
+    run_after: check_completion
+
+  # Step 10b: Validate Gate 3 execution readiness (when checking gate 3)
+  - id: validate_gate3_execution
+    type: Compose
+    name: Validate Gate 3 Execution Readiness
+    condition: "@and(equals(outputs('calculate_new_progress')?['new_gate'], 3), contains(outputs('parse_input')?['action'], 'complete_gate'))"
+    inputs:
+      gate3_validation:
+        channels_selected: "@not(empty(outputs('parse_current_state')?['current_plan_state']?['channels']))"
+        budget_allocated: "@and(not(empty(outputs('parse_current_state')?['current_plan_state']?['budget'])), greater(coalesce(outputs('parse_current_state')?['current_plan_state']?['budget']?['total_budget'], 0), 0))"
+        partners_identified: "@or(not(empty(outputs('parse_current_state')?['current_plan_state']?['partners'])), equals(outputs('parse_current_state')?['current_plan_state']?['supply_path_defined'], true))"
+        projections_complete: "@not(empty(outputs('parse_current_state')?['current_plan_state']?['anl_projections']))"
+        gate_status: "@if(and(variables('channels_selected'), variables('budget_allocated')), if(and(variables('partners_identified'), variables('projections_complete')), 'pass', 'partial'), 'fail')"
+        missing_requirements: "@createArray(if(not(variables('channels_selected')), 'No channels have been selected. Please complete channel strategy first.', null), if(not(variables('budget_allocated')), 'Budget has not been allocated. Please define budget distribution.', null), if(not(variables('partners_identified')), 'Supply path partners have not been identified. Consider running SPO analysis.', null), if(not(variables('projections_complete')), 'Projections have not been calculated. Run analytics before proceeding.', null))"
+        recommendations: "@createArray(if(not(variables('channels_selected')), 'Route to CHA agent for channel selection', null), if(not(variables('budget_allocated')), 'Define total budget and allocation percentages', null), if(not(variables('partners_identified')), 'Route to SPO agent for supply path optimization', null), if(not(variables('projections_complete')), 'Route to ANL agent for projections', null))"
+    run_after: check_completion
+
+  # Step 11: Build response
+  - id: build_response
+    type: Compose
+    name: Build Response
+    inputs:
+      success: true
+      session_id: "@outputs('parse_input')?['session_id']"
+      action: "@outputs('parse_input')?['action']"
+      previous_state:
+        step: "@outputs('parse_current_state')?['current_step']"
+        gate: "@outputs('parse_current_state')?['current_gate']"
+      new_state:
+        step: "@outputs('calculate_new_progress')?['new_step']"
+        gate: "@outputs('calculate_new_progress')?['new_gate']"
+        gate_name: "@if(equals(outputs('calculate_new_progress')?['new_gate'], 0), 'Initialization', if(equals(outputs('calculate_new_progress')?['new_gate'], 1), 'Foundation', if(equals(outputs('calculate_new_progress')?['new_gate'], 2), 'Strategy', if(equals(outputs('calculate_new_progress')?['new_gate'], 3), 'Execution', 'Documentation'))))"
+      gate_changed: "@outputs('calculate_new_progress')?['gate_changed']"
+      gate3_validation: "@coalesce(outputs('validate_gate3_execution')?['gate3_validation'], null)"
+      workflow_complete: "@equals(outputs('calculate_new_progress')?['new_step'], 10)"
+      updated_at: "@utcNow()"
+    run_after:
+      - log_session_event
+      - log_completion
+      - validate_gate3_execution
+
+  # Step 12: Return response
+  - id: return_response
+    type: Response
+    name: Return Response
+    inputs:
+      statusCode: 200
+      headers:
+        Content-Type: application/json
+      body: "@outputs('build_response')"
+
+error_handling:
+  on_error:
+    - id: return_error
+      type: Response
+      name: Return Error Response
+      inputs:
+        statusCode: 500
+        headers:
+          Content-Type: application/json
+        body:
+          success: false
+          error: true
+          code: "UPDATE_FAILED"
+          message: "Failed to update session progress"
+          session_id: "@outputs('parse_input')?['session_id']"

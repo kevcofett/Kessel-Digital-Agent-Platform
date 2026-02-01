@@ -1,13 +1,241 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id", "user_intent"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "user_intent": {
+                  "type": "string"
+                },
+                "user_message": {
+                  "type": "string"
+                },
+                "context": {
+                  "type": "object"
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "user_intent": "@triggerBody()?['user_intent']",
+            "user_message": "@coalesce(triggerBody()?['user_message'], '')",
+            "context": "@coalesce(triggerBody()?['context'], json('{}'))",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Load_Agent_Registry": {
+          "type": "Compose",
+          "inputs": {
+            "agents": {
+              "ANL": {
+                "name": "Analytics Agent",
+                "capabilities": ["budget_allocation", "scenario_modeling", "anomaly_detection", "forecasting"],
+                "intents": ["allocate_budget", "run_scenario", "detect_anomaly", "forecast"],
+                "priority": 1,
+                "status": "active"
+              },
+              "AUD": {
+                "name": "Audience Agent",
+                "capabilities": ["audience_segmentation", "ltv_calculation", "persona_development"],
+                "intents": ["segment_audience", "calculate_ltv", "build_persona"],
+                "priority": 1,
+                "status": "active"
+              },
+              "CHA": {
+                "name": "Channel Agent",
+                "capabilities": ["benchmark_lookup", "competitive_analysis", "channel_recommendations"],
+                "intents": ["lookup_benchmarks", "analyze_competition", "recommend_channels"],
+                "priority": 1,
+                "status": "active"
+              },
+              "CHG": {
+                "name": "Change Agent",
+                "capabilities": ["readiness_assessment", "stakeholder_mapping", "adoption_planning"],
+                "intents": ["assess_readiness", "map_stakeholders", "plan_adoption"],
+                "priority": 2,
+                "status": "active"
+              },
+              "CST": {
+                "name": "Consulting Strategy Agent",
+                "capabilities": ["framework_selection", "initiative_prioritization", "strategy_development"],
+                "intents": ["select_framework", "prioritize_initiatives", "develop_strategy"],
+                "priority": 2,
+                "status": "active"
+              },
+              "DOC": {
+                "name": "Document Agent",
+                "capabilities": ["brief_creation", "document_generation", "template_management"],
+                "intents": ["create_brief", "generate_document", "use_template"],
+                "priority": 1,
+                "status": "active"
+              },
+              "PRF": {
+                "name": "Performance Agent",
+                "capabilities": ["performance_analysis", "optimization_recommendations", "learning_extraction"],
+                "intents": ["analyze_performance", "optimize_campaign", "extract_learnings"],
+                "priority": 1,
+                "status": "active"
+              },
+              "SPO": {
+                "name": "Sponsorship Agent",
+                "capabilities": ["fee_analysis", "nbi_calculation", "projection_modeling", "partner_evaluation"],
+                "intents": ["analyze_fees", "calculate_nbi", "project_revenue", "evaluate_partner"],
+                "priority": 2,
+                "status": "active"
+              }
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Classify_Intent": {
+          "type": "Compose",
+          "inputs": {
+            "intent_classification": {
+              "primary_intent": "@outputs('Parse_Input')?['user_intent']",
+              "confidence": 0.92,
+              "secondary_intents": [],
+              "requires_multi_agent": false
+            },
+            "intent_to_agent_mapping": {
+              "allocate_budget": "ANL",
+              "run_scenario": "ANL",
+              "detect_anomaly": "ANL",
+              "segment_audience": "AUD",
+              "calculate_ltv": "AUD",
+              "lookup_benchmarks": "CHA",
+              "analyze_competition": "CHA",
+              "assess_readiness": "CHG",
+              "map_stakeholders": "CHG",
+              "plan_adoption": "CHG",
+              "select_framework": "CST",
+              "prioritize_initiatives": "CST",
+              "develop_strategy": "CST",
+              "create_brief": "DOC",
+              "generate_document": "DOC",
+              "analyze_performance": "PRF",
+              "extract_learnings": "PRF",
+              "analyze_fees": "SPO",
+              "calculate_nbi": "SPO",
+              "project_revenue": "SPO",
+              "evaluate_partner": "SPO"
+            }
+          },
+          "runAfter": {
+            "Load_Agent_Registry": ["Succeeded"]
+          }
+        },
+        "Determine_Routing": {
+          "type": "Compose",
+          "inputs": {
+            "routing_decision": {
+              "selected_agent": "@outputs('Classify_Intent')?['intent_to_agent_mapping']?[outputs('Parse_Input')?['user_intent']]",
+              "routing_reason": "Direct intent match with high confidence",
+              "fallback_agent": "ORC",
+              "routing_type": "direct",
+              "estimated_response_time_ms": 2000
+            },
+            "routing_context": {
+              "session_id": "@outputs('Parse_Input')?['session_id']",
+              "request_id": "@outputs('Parse_Input')?['request_id']",
+              "user_intent": "@outputs('Parse_Input')?['user_intent']",
+              "user_message": "@outputs('Parse_Input')?['user_message']",
+              "context": "@outputs('Parse_Input')?['context']"
+            }
+          },
+          "runAfter": {
+            "Classify_Intent": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "ORC",
+            "status": "success",
+            "data": {
+              "routing_decision": "@outputs('Determine_Routing')?['routing_decision']",
+              "routing_context": "@outputs('Determine_Routing')?['routing_context']",
+              "intent_classification": "@outputs('Classify_Intent')?['intent_classification']",
+              "available_agents": "@outputs('Load_Agent_Registry')?['agents']"
+            },
+            "confidence": "HIGH",
+            "sources": ["AGENT_REGISTRY", "INTENT_CLASSIFIER", "AGENT_KB"],
+            "recommendations": [
+              "Route to selected specialist agent",
+              "Monitor response time",
+              "Prepare fallback if needed"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Determine_Routing": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

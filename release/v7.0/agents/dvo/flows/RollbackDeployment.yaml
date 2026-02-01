@@ -1,0 +1,232 @@
+# RollbackDeployment Power Automate Flow Definition
+# Version: 1.0.0
+# Agent: DVO (DevOps Agent)
+# Description: Rolls back a failed or problematic deployment
+
+name: RollbackDeployment
+description: >
+  HTTP-triggered flow that initiates a rollback of a deployment,
+  restores the previous version, and updates deployment records.
+
+trigger:
+  type: HTTP
+  method: POST
+  schema:
+    type: object
+    required:
+      - session_id
+      - deployment_code
+    properties:
+      session_id:
+        type: string
+        format: uuid
+        description: Current session identifier
+      deployment_code:
+        type: string
+        description: Deployment code to rollback
+      rollback_reason:
+        type: string
+        description: Reason for the rollback
+      initiated_by:
+        type: string
+        description: User ID initiating the rollback
+
+environment_variables:
+  EAP_DATAVERSE_URL:
+    description: EAP Dataverse environment URL
+    required: true
+  DVO_COPILOT_ENDPOINT:
+    description: DevOps Agent Copilot Studio endpoint URL
+    required: true
+
+steps:
+  # Step 1: Parse input
+  - id: parse_input
+    type: Compose
+    name: Parse Input
+    inputs:
+      session_id: "@triggerBody()?['session_id']"
+      deployment_code: "@triggerBody()?['deployment_code']"
+      rollback_reason: "@coalesce(triggerBody()?['rollback_reason'], 'Manual rollback requested')"
+      initiated_by: "@triggerBody()?['initiated_by']"
+      rollback_code: "@concat('RB-', formatDateTime(utcNow(), 'yyyyMMdd'), '-', substring(guid(), 0, 4))"
+      request_id: "@guid()"
+      timestamp: "@utcNow()"
+
+  # Step 2: Get original deployment record
+  - id: get_deployment
+    type: HTTP
+    name: Get Original Deployment
+    inputs:
+      method: GET
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_deployments?$filter=eap_deployment_code eq '@{outputs('parse_input')?['deployment_code']}'"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+    run_after: parse_input
+
+  # Step 3: Validate deployment can be rolled back
+  - id: check_rollback_eligible
+    type: Condition
+    name: Check Rollback Eligibility
+    expression:
+      or:
+        - equals:
+            - "@first(body('get_deployment')?['value'])?['eap_status']"
+            - "completed"
+        - equals:
+            - "@first(body('get_deployment')?['value'])?['eap_status']"
+            - "failed"
+    run_after: get_deployment
+
+  # Step 4a: Create rollback deployment record
+  - id: create_rollback_record
+    type: HTTP
+    name: Create Rollback Record
+    condition: check_rollback_eligible.true
+    inputs:
+      method: POST
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_deployments"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_name: "@concat('Rollback ', outputs('parse_input')?['rollback_code'])"
+        eap_deployment_code: "@outputs('parse_input')?['rollback_code']"
+        eap_environment: "@first(body('get_deployment')?['value'])?['eap_environment']"
+        eap_deployment_type: "rollback"
+        eap_status: "in_progress"
+        eap_agents: "@first(body('get_deployment')?['value'])?['eap_agents']"
+        eap_version_from: "@first(body('get_deployment')?['value'])?['eap_version_to']"
+        eap_version_to: "@first(body('get_deployment')?['value'])?['eap_version_from']"
+        eap_initiated_by: "@outputs('parse_input')?['initiated_by']"
+        eap_started_at: "@utcNow()"
+        "eap_rollback_of@odata.bind": "/eap_deployments(@{first(body('get_deployment')?['value'])?['eap_deploymentid']})"
+    run_after: check_rollback_eligible
+
+  # Step 5: Execute rollback for each agent
+  - id: rollback_agents
+    type: ForEach
+    name: Rollback Agents
+    condition: check_rollback_eligible.true
+    foreach: "@split(first(body('get_deployment')?['value'])?['eap_agents'], ',')"
+    actions:
+      - id: rollback_single_agent
+        type: HTTP
+        name: Rollback Single Agent
+        inputs:
+          method: POST
+          uri: "@{variables('DVO_COPILOT_ENDPOINT')}/api/rollback"
+          headers:
+            Content-Type: application/json
+          body:
+            agent_code: "@items('rollback_agents')"
+            environment: "@first(body('get_deployment')?['value'])?['eap_environment']"
+            target_version: "@first(body('get_deployment')?['value'])?['eap_version_from']"
+            rollback_code: "@outputs('parse_input')?['rollback_code']"
+        timeout: PT5M
+    run_after: create_rollback_record
+
+  # Step 6: Update original deployment status
+  - id: update_original_deployment
+    type: HTTP
+    name: Update Original Deployment
+    condition: check_rollback_eligible.true
+    inputs:
+      method: PATCH
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_deployments(@{first(body('get_deployment')?['value'])?['eap_deploymentid']})"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_status: "rolled_back"
+    run_after: rollback_agents
+
+  # Step 7: Update rollback record to completed
+  - id: update_rollback_status
+    type: HTTP
+    name: Update Rollback Status
+    condition: check_rollback_eligible.true
+    inputs:
+      method: PATCH
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_deployments(@{body('create_rollback_record')?['eap_deploymentid']})"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_status: "completed"
+        eap_completed_at: "@utcNow()"
+        eap_health_check_passed: true
+    run_after: update_original_deployment
+
+  # Step 8: Log rollback
+  - id: log_rollback
+    type: HTTP
+    name: Log Rollback
+    condition: check_rollback_eligible.true
+    inputs:
+      method: POST
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_audit"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_audit_id: "@guid()"
+        eap_session_id: "@outputs('parse_input')?['session_id']"
+        eap_action: "DEPLOYMENT_ROLLBACK"
+        eap_agent: "DVO"
+        eap_details: "@concat('Rollback ', outputs('parse_input')?['rollback_code'], ' completed for deployment ', outputs('parse_input')?['deployment_code'], '. Reason: ', outputs('parse_input')?['rollback_reason'])"
+    run_after: update_rollback_status
+
+  # Step 4b: Not eligible error
+  - id: not_eligible_error
+    type: Response
+    name: Not Eligible Error
+    condition: check_rollback_eligible.false
+    inputs:
+      statusCode: 400
+      headers:
+        Content-Type: application/json
+      body:
+        error: true
+        message: "Deployment is not eligible for rollback"
+        deployment_code: "@outputs('parse_input')?['deployment_code']"
+        current_status: "@first(body('get_deployment')?['value'])?['eap_status']"
+        eligible_statuses:
+          - completed
+          - failed
+
+  # Step 9: Return success response
+  - id: return_response
+    type: Response
+    name: Return Response
+    inputs:
+      statusCode: 200
+      headers:
+        Content-Type: application/json
+      body:
+        success: true
+        rollback_code: "@outputs('parse_input')?['rollback_code']"
+        original_deployment: "@outputs('parse_input')?['deployment_code']"
+        status: "completed"
+        restored_version: "@first(body('get_deployment')?['value'])?['eap_version_from']"
+        request_id: "@outputs('parse_input')?['request_id']"
+
+error_handling:
+  on_error:
+    - id: log_rollback_error
+      type: HTTP
+      name: Log Rollback Error
+      inputs:
+        method: POST
+        uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_error_logs"
+        headers:
+          Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+          Content-Type: application/json
+        body:
+          eap_error_id: "@guid()"
+          eap_session_id: "@outputs('parse_input')?['session_id']"
+          eap_request_id: "@outputs('parse_input')?['request_id']"
+          eap_error_message: "@actions('failed_action')?['error']?['message']"
+          eap_agent: "DVO"
+          eap_action: "DEPLOYMENT_ROLLBACK"

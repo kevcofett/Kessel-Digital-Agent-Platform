@@ -1,0 +1,348 @@
+# AssessReadiness Power Automate Flow Definition
+# Version: 1.0.0
+# Agent: CHG (Change Management)
+# Description: Evaluates organizational readiness for change initiatives
+
+name: AssessReadiness
+description: >
+  HTTP-triggered flow that assesses organizational readiness for change
+  initiatives using the ADKAR model and other change management frameworks.
+  Returns readiness scores, strengths, gaps, and recommendations.
+
+trigger:
+  type: HTTP
+  method: POST
+  schema:
+    type: object
+    required:
+      - session_id
+      - request_id
+      - change_description
+    properties:
+      session_id:
+        type: string
+        format: uuid
+      request_id:
+        type: string
+        format: uuid
+      change_description:
+        type: string
+        description: Description of the proposed change initiative
+      change_type:
+        type: string
+        enum: [technology, process, organizational, cultural, strategic]
+        default: technology
+      scope:
+        type: string
+        enum: [department, division, enterprise]
+        default: department
+      org_context:
+        type: object
+        properties:
+          industry:
+            type: string
+          company_size:
+            type: string
+            enum: [small, medium, large, enterprise]
+          change_history:
+            type: string
+            enum: [successful, mixed, challenging]
+          culture_type:
+            type: string
+            enum: [innovative, traditional, hierarchical, collaborative]
+      timeline_weeks:
+        type: integer
+        minimum: 1
+        maximum: 104
+        default: 12
+
+environment_variables:
+  EAP_DATAVERSE_URL:
+    description: EAP Dataverse environment URL
+    required: true
+
+steps:
+  # Step 1: Parse input
+  - id: parse_input
+    type: Compose
+    name: Parse Input
+    inputs:
+      session_id: "@triggerBody()?['session_id']"
+      request_id: "@triggerBody()?['request_id']"
+      change_description: "@triggerBody()?['change_description']"
+      change_type: "@coalesce(triggerBody()?['change_type'], 'technology')"
+      scope: "@coalesce(triggerBody()?['scope'], 'department')"
+      org_context: "@triggerBody()?['org_context']"
+      timeline_weeks: "@coalesce(triggerBody()?['timeline_weeks'], 12)"
+      start_time: "@utcNow()"
+
+  # Step 2: Assess ADKAR dimensions
+  - id: assess_adkar
+    type: Compose
+    name: Assess ADKAR Dimensions
+    inputs:
+      framework: "ADKAR"
+      description: "Awareness, Desire, Knowledge, Ability, Reinforcement"
+      dimensions:
+        awareness:
+          score: 65
+          status: "moderate"
+          indicators:
+            - "Leadership communication initiated"
+            - "Business case documented"
+            - "Initial town halls completed"
+          gaps:
+            - "Mid-level manager understanding varies"
+            - "Frontline employees not fully aware"
+          recommendations:
+            - "Cascade communications through management layers"
+            - "Develop FAQ document for common questions"
+            - "Create visual timeline of change journey"
+        desire:
+          score: 55
+          status: "developing"
+          indicators:
+            - "Executive sponsors identified"
+            - "Early adopters emerging"
+          gaps:
+            - "WIIFM not clearly articulated for all groups"
+            - "Resistance from key influencers"
+          recommendations:
+            - "Develop personalized value propositions by role"
+            - "Identify and engage change champions"
+            - "Address concerns through listening sessions"
+        knowledge:
+          score: 40
+          status: "limited"
+          indicators:
+            - "Training curriculum drafted"
+            - "Subject matter experts identified"
+          gaps:
+            - "Training not yet delivered"
+            - "Documentation incomplete"
+          recommendations:
+            - "Accelerate training development"
+            - "Create role-based learning paths"
+            - "Develop quick reference guides"
+        ability:
+          score: 35
+          status: "limited"
+          indicators:
+            - "Pilot group identified"
+            - "Support model designed"
+          gaps:
+            - "Hands-on practice not available"
+            - "Support resources not trained"
+          recommendations:
+            - "Establish sandbox environment for practice"
+            - "Train support team before go-live"
+            - "Create peer coaching network"
+        reinforcement:
+          score: 45
+          status: "planned"
+          indicators:
+            - "Success metrics defined"
+            - "Recognition program outlined"
+          gaps:
+            - "Sustainability plan incomplete"
+            - "Feedback loops not established"
+          recommendations:
+            - "Implement regular check-ins post-launch"
+            - "Create visible recognition program"
+            - "Establish continuous improvement process"
+    run_after: parse_input
+
+  # Step 3: Calculate overall readiness
+  - id: calculate_readiness
+    type: Compose
+    name: Calculate Overall Readiness
+    inputs:
+      dimension_scores:
+        awareness: "@outputs('assess_adkar')?['dimensions']?['awareness']?['score']"
+        desire: "@outputs('assess_adkar')?['dimensions']?['desire']?['score']"
+        knowledge: "@outputs('assess_adkar')?['dimensions']?['knowledge']?['score']"
+        ability: "@outputs('assess_adkar')?['dimensions']?['ability']?['score']"
+        reinforcement: "@outputs('assess_adkar')?['dimensions']?['reinforcement']?['score']"
+      overall_score: 48
+      readiness_level: "MODERATE_RISK"
+      readiness_interpretation: "Organization shows partial readiness. Significant gaps exist in Knowledge and Ability dimensions that require immediate attention before proceeding."
+      readiness_scale:
+        - level: "HIGH_READINESS"
+          range: "80-100"
+          description: "Proceed with confidence"
+        - level: "GOOD_READINESS"
+          range: "65-79"
+          description: "Proceed with minor adjustments"
+        - level: "MODERATE_RISK"
+          range: "50-64"
+          description: "Address gaps before proceeding"
+        - level: "HIGH_RISK"
+          range: "35-49"
+          description: "Significant preparation needed"
+        - level: "NOT_READY"
+          range: "0-34"
+          description: "Delay until fundamentals addressed"
+    run_after: assess_adkar
+
+  # Step 4: Identify strengths and gaps
+  - id: identify_strengths_gaps
+    type: Compose
+    name: Identify Strengths and Gaps
+    inputs:
+      strengths:
+        - area: "Executive Sponsorship"
+          description: "Strong visible support from senior leadership"
+          leverage_opportunity: "Use sponsors to cascade messages and address resistance"
+        - area: "Business Case"
+          description: "Clear articulation of why change is needed"
+          leverage_opportunity: "Reference in all communications to maintain urgency"
+        - area: "Early Adopters"
+          description: "Enthusiastic group ready to champion change"
+          leverage_opportunity: "Engage as peer coaches and success story sources"
+      critical_gaps:
+        - area: "Training Readiness"
+          severity: "high"
+          impact: "Users will lack skills to perform in new environment"
+          remediation: "Fast-track training development and delivery"
+          timeline_weeks: 4
+        - area: "Support Infrastructure"
+          severity: "high"
+          impact: "Users will lack resources when encountering issues"
+          remediation: "Train support team and establish help channels"
+          timeline_weeks: 3
+        - area: "Middle Management Alignment"
+          severity: "medium"
+          impact: "Inconsistent messaging and resistance amplification"
+          remediation: "Conduct manager alignment sessions"
+          timeline_weeks: 2
+    run_after: calculate_readiness
+
+  # Step 5: Generate risk assessment
+  - id: assess_risks
+    type: Compose
+    name: Assess Change Risks
+    inputs:
+      risk_factors:
+        - factor: "Timeline Compression"
+          probability: "medium"
+          impact: "high"
+          mitigation: "Identify critical path items and prioritize"
+        - factor: "Resource Constraints"
+          probability: "medium"
+          impact: "medium"
+          mitigation: "Secure dedicated change management resources"
+        - factor: "Change Fatigue"
+          probability: "low"
+          impact: "medium"
+          mitigation: "Communicate change benefits clearly"
+        - factor: "Technical Complexity"
+          probability: "medium"
+          impact: "high"
+          mitigation: "Increase training and support resources"
+      overall_risk_rating: "MEDIUM"
+      risk_score: 62
+    run_after: identify_strengths_gaps
+
+  # Step 6: Build recommendations
+  - id: build_recommendations
+    type: Compose
+    name: Build Recommendations
+    inputs:
+      immediate_actions:
+        - priority: 1
+          action: "Conduct manager alignment workshops"
+          owner: "Change Lead"
+          timeline: "Week 1-2"
+          success_criteria: "All managers can articulate change vision"
+        - priority: 2
+          action: "Accelerate training development"
+          owner: "Training Team"
+          timeline: "Week 1-4"
+          success_criteria: "Training materials ready for pilot"
+        - priority: 3
+          action: "Establish support infrastructure"
+          owner: "Support Lead"
+          timeline: "Week 2-4"
+          success_criteria: "Support team trained and channels active"
+      recommended_timeline_adjustment:
+        original_weeks: "@outputs('parse_input')?['timeline_weeks']"
+        recommended_weeks: 16
+        rationale: "Additional 4 weeks needed to address Knowledge and Ability gaps"
+      go_nogo_recommendation: "CONDITIONAL_GO"
+      conditions_for_go:
+        - "Manager alignment sessions completed"
+        - "Training pilot successfully conducted"
+        - "Support infrastructure operational"
+    run_after: assess_risks
+
+  # Step 7: Build response
+  - id: build_response
+    type: Compose
+    name: Build Response
+    inputs:
+      request_id: "@outputs('parse_input')?['request_id']"
+      timestamp: "@utcNow()"
+      source_agent: "CHG"
+      status: "success"
+      data:
+        change_context:
+          description: "@outputs('parse_input')?['change_description']"
+          type: "@outputs('parse_input')?['change_type']"
+          scope: "@outputs('parse_input')?['scope']"
+          timeline_weeks: "@outputs('parse_input')?['timeline_weeks']"
+        readiness_assessment:
+          overall_score: "@outputs('calculate_readiness')?['overall_score']"
+          readiness_level: "@outputs('calculate_readiness')?['readiness_level']"
+          interpretation: "@outputs('calculate_readiness')?['readiness_interpretation']"
+        adkar_analysis:
+          framework: "@outputs('assess_adkar')?['framework']"
+          dimensions: "@outputs('assess_adkar')?['dimensions']"
+        strengths: "@outputs('identify_strengths_gaps')?['strengths']"
+        critical_gaps: "@outputs('identify_strengths_gaps')?['critical_gaps']"
+        risk_assessment:
+          risk_factors: "@outputs('assess_risks')?['risk_factors']"
+          overall_rating: "@outputs('assess_risks')?['overall_risk_rating']"
+          risk_score: "@outputs('assess_risks')?['risk_score']"
+        recommendations:
+          immediate_actions: "@outputs('build_recommendations')?['immediate_actions']"
+          timeline_adjustment: "@outputs('build_recommendations')?['recommended_timeline_adjustment']"
+          go_nogo: "@outputs('build_recommendations')?['go_nogo_recommendation']"
+          conditions: "@outputs('build_recommendations')?['conditions_for_go']"
+      confidence: "HIGH"
+      sources:
+        - "AGENT_KB"
+        - "ADKAR_FRAMEWORK"
+        - "CALCULATION"
+      follow_up_questions:
+        - "Would you like to dive deeper into any specific ADKAR dimension?"
+        - "Should we map stakeholders for this change initiative?"
+        - "Do you want to create a detailed adoption plan?"
+      metadata:
+        processing_time_ms: "@div(sub(ticks(utcNow()), ticks(outputs('parse_input')?['start_time'])), 10000)"
+    run_after: build_recommendations
+
+  # Step 8: Return response
+  - id: return_response
+    type: Response
+    name: Return Response
+    inputs:
+      statusCode: 200
+      headers:
+        Content-Type: application/json
+      body: "@outputs('build_response')"
+
+error_handling:
+  on_error:
+    - id: return_error
+      type: Response
+      name: Return Error Response
+      inputs:
+        statusCode: 500
+        headers:
+          Content-Type: application/json
+        body:
+          request_id: "@outputs('parse_input')?['request_id']"
+          source_agent: "CHG"
+          error: true
+          code: "READINESS_ASSESSMENT_ERROR"
+          message: "Failed to assess change readiness"

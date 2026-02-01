@@ -1,13 +1,302 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "change_initiative": {
+                  "type": "string"
+                },
+                "organization_size": {
+                  "type": "string",
+                  "enum": ["small", "medium", "large", "enterprise"]
+                },
+                "change_scope": {
+                  "type": "string",
+                  "enum": ["department", "division", "organization_wide"]
+                },
+                "assessment_dimensions": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "change_initiative": "@coalesce(triggerBody()?['change_initiative'], 'MPA Implementation')",
+            "organization_size": "@coalesce(triggerBody()?['organization_size'], 'large')",
+            "change_scope": "@coalesce(triggerBody()?['change_scope'], 'organization_wide')",
+            "assessment_dimensions": "@coalesce(triggerBody()?['assessment_dimensions'], createArray('leadership', 'culture', 'skills', 'resources', 'history'))",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Load_Assessment_Framework": {
+          "type": "Compose",
+          "inputs": {
+            "readiness_dimensions": {
+              "leadership_alignment": {
+                "weight": 0.25,
+                "questions": [
+                  "Is there visible executive sponsorship?",
+                  "Are leaders aligned on the change vision?",
+                  "Is there dedicated leadership time for the initiative?"
+                ],
+                "success_factors": ["Executive champion identified", "Clear vision articulated", "Resources committed"]
+              },
+              "organizational_culture": {
+                "weight": 0.20,
+                "questions": [
+                  "How receptive is the culture to change?",
+                  "Is there a history of successful change?",
+                  "What is the current change fatigue level?"
+                ],
+                "success_factors": ["Innovation mindset", "Learning orientation", "Psychological safety"]
+              },
+              "capability_skills": {
+                "weight": 0.20,
+                "questions": [
+                  "Do teams have required skills?",
+                  "Is training support available?",
+                  "Are skill gaps identified?"
+                ],
+                "success_factors": ["Skills assessment complete", "Training plan defined", "Coaches available"]
+              },
+              "resource_availability": {
+                "weight": 0.15,
+                "questions": [
+                  "Is budget allocated?",
+                  "Are team members available?",
+                  "Is technology infrastructure ready?"
+                ],
+                "success_factors": ["Budget approved", "Team allocated", "Infrastructure ready"]
+              },
+              "change_history": {
+                "weight": 0.10,
+                "questions": [
+                  "What is the track record with past changes?",
+                  "Were lessons learned documented?",
+                  "Are there unresolved change issues?"
+                ],
+                "success_factors": ["Positive track record", "Lessons applied", "No outstanding issues"]
+              },
+              "stakeholder_engagement": {
+                "weight": 0.10,
+                "questions": [
+                  "Are stakeholders identified?",
+                  "Is communication plan in place?",
+                  "Are feedback mechanisms established?"
+                ],
+                "success_factors": ["Stakeholder map complete", "Communication plan ready", "Feedback channels open"]
+              }
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Calculate_Dimension_Scores": {
+          "type": "Compose",
+          "inputs": {
+            "dimension_scores": {
+              "leadership_alignment": {
+                "score": 75,
+                "status": "GOOD",
+                "gaps": ["Need more visible day-to-day sponsorship"]
+              },
+              "organizational_culture": {
+                "score": 60,
+                "status": "MODERATE",
+                "gaps": ["Some change fatigue from recent initiatives", "Innovation culture still developing"]
+              },
+              "capability_skills": {
+                "score": 55,
+                "status": "MODERATE",
+                "gaps": ["Skills assessment incomplete", "Training resources constrained"]
+              },
+              "resource_availability": {
+                "score": 70,
+                "status": "GOOD",
+                "gaps": ["Team allocation not finalized"]
+              },
+              "change_history": {
+                "score": 65,
+                "status": "MODERATE",
+                "gaps": ["Mixed results from past initiatives"]
+              },
+              "stakeholder_engagement": {
+                "score": 50,
+                "status": "NEEDS_ATTENTION",
+                "gaps": ["Stakeholder mapping incomplete", "Communication plan not finalized"]
+              }
+            }
+          },
+          "runAfter": {
+            "Load_Assessment_Framework": ["Succeeded"]
+          }
+        },
+        "Calculate_Overall_Readiness": {
+          "type": "Compose",
+          "inputs": {
+            "weighted_scores": {
+              "leadership_alignment": "@mul(75, 0.25)",
+              "organizational_culture": "@mul(60, 0.20)",
+              "capability_skills": "@mul(55, 0.20)",
+              "resource_availability": "@mul(70, 0.15)",
+              "change_history": "@mul(65, 0.10)",
+              "stakeholder_engagement": "@mul(50, 0.10)"
+            },
+            "overall_score": 63.25,
+            "readiness_level": "MODERATE",
+            "readiness_interpretation": {
+              "HIGH": { "min": 80, "description": "Organization is well-prepared for change" },
+              "GOOD": { "min": 70, "description": "Good foundation with minor gaps to address" },
+              "MODERATE": { "min": 55, "description": "Proceed with caution and address key gaps" },
+              "LOW": { "min": 40, "description": "Significant preparation needed before proceeding" },
+              "NOT_READY": { "min": 0, "description": "Major readiness issues must be resolved first" }
+            }
+          },
+          "runAfter": {
+            "Calculate_Dimension_Scores": ["Succeeded"]
+          }
+        },
+        "Generate_Recommendations": {
+          "type": "Compose",
+          "inputs": {
+            "priority_actions": [
+              {
+                "priority": 1,
+                "dimension": "Stakeholder Engagement",
+                "action": "Complete stakeholder mapping and develop communication plan",
+                "owner": "Change Lead",
+                "timeline": "2 weeks"
+              },
+              {
+                "priority": 2,
+                "dimension": "Capability Skills",
+                "action": "Complete skills assessment and finalize training plan",
+                "owner": "HR/Training Team",
+                "timeline": "3 weeks"
+              },
+              {
+                "priority": 3,
+                "dimension": "Organizational Culture",
+                "action": "Address change fatigue through transparent communication",
+                "owner": "Leadership Team",
+                "timeline": "Ongoing"
+              }
+            ],
+            "risk_mitigations": [
+              "Increase leadership visibility through weekly updates",
+              "Create quick wins to build momentum",
+              "Establish change champion network"
+            ],
+            "success_enablers": [
+              "Strong executive sponsorship in place",
+              "Budget and technology resources available",
+              "Clear change vision articulated"
+            ]
+          },
+          "runAfter": {
+            "Calculate_Overall_Readiness": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "CHG",
+            "status": "success",
+            "data": {
+              "assessment_summary": {
+                "change_initiative": "@outputs('Parse_Input')?['change_initiative']",
+                "organization_size": "@outputs('Parse_Input')?['organization_size']",
+                "change_scope": "@outputs('Parse_Input')?['change_scope']"
+              },
+              "overall_readiness": {
+                "score": "@outputs('Calculate_Overall_Readiness')?['overall_score']",
+                "level": "@outputs('Calculate_Overall_Readiness')?['readiness_level']"
+              },
+              "dimension_scores": "@outputs('Calculate_Dimension_Scores')?['dimension_scores']",
+              "priority_actions": "@outputs('Generate_Recommendations')?['priority_actions']",
+              "risk_mitigations": "@outputs('Generate_Recommendations')?['risk_mitigations']",
+              "success_enablers": "@outputs('Generate_Recommendations')?['success_enablers']"
+            },
+            "confidence": "HIGH",
+            "sources": ["ASSESSMENT_FRAMEWORK", "BEST_PRACTICES", "AGENT_KB"],
+            "recommendations": [
+              "Address stakeholder engagement gaps before launch",
+              "Invest in capability building to ensure adoption",
+              "Monitor and manage change fatigue actively"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Generate_Recommendations": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

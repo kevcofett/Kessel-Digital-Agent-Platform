@@ -1,13 +1,96 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared_commondataserviceforapps",
+        "runtimeSource": "embedded",
+        "connection": { "connectionReferenceLogicalName": "mpa_dataverse" },
+        "api": { "name": "shared_commondataserviceforapps" }
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": { "defaultValue": {}, "type": "Object" },
+        "$authentication": { "defaultValue": {}, "type": "SecureObject" }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "model_type", "input_data"],
+              "properties": {
+                "session_id": { "type": "string", "format": "uuid" },
+                "model_type": { "type": "string", "enum": ["mmm", "attribution", "forecasting", "clustering"] },
+                "input_data": { "type": "object" },
+                "environment": { "type": "string", "default": "production" }
+              }
+            },
+            "method": "POST"
+          }
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "model_type": "@triggerBody()?['model_type']",
+            "input_data": "@triggerBody()?['input_data']",
+            "environment": "@coalesce(triggerBody()?['environment'], 'production')",
+            "request_id": "@guid()",
+            "timestamp": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Get_Endpoint_Config": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "eap_config",
+              "$filter": "eap_key eq 'ml.endpoint.@{outputs('Parse_Input')?['model_type']}'"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": { "Parse_Input": ["Succeeded"] }
+        },
+        "Route_To_Endpoint": {
+          "type": "Compose",
+          "inputs": {
+            "model_type": "@outputs('Parse_Input')?['model_type']",
+            "endpoint_resolved": true,
+            "routing_status": "success"
+          },
+          "runAfter": { "Get_Endpoint_Config": ["Succeeded"] }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": { "Content-Type": "application/json" },
+            "body": {
+              "success": true,
+              "session_id": "@outputs('Parse_Input')?['session_id']",
+              "request_id": "@outputs('Parse_Input')?['request_id']",
+              "model_type": "@outputs('Parse_Input')?['model_type']",
+              "routing_result": "@outputs('Route_To_Endpoint')",
+              "timestamp": "@outputs('Parse_Input')?['timestamp']"
+            }
+          },
+          "runAfter": { "Route_To_Endpoint": ["Succeeded"] }
+        }
+      }
     }
   }
 }

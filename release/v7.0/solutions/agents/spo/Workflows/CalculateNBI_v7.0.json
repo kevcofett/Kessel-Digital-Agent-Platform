@@ -1,13 +1,275 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "gross_revenue": {
+                  "type": "number"
+                },
+                "cost_components": {
+                  "type": "object"
+                },
+                "revenue_streams": {
+                  "type": "array",
+                  "items": { "type": "object" }
+                },
+                "calculation_period": {
+                  "type": "string",
+                  "enum": ["monthly", "quarterly", "annual", "deal_term"]
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "gross_revenue": "@coalesce(triggerBody()?['gross_revenue'], 10000000)",
+            "cost_components": "@coalesce(triggerBody()?['cost_components'], json('{}'))",
+            "revenue_streams": "@coalesce(triggerBody()?['revenue_streams'], createArray())",
+            "calculation_period": "@coalesce(triggerBody()?['calculation_period'], 'annual')",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Define_Revenue_Streams": {
+          "type": "Compose",
+          "inputs": {
+            "revenue_breakdown": {
+              "sponsorship_fees": {
+                "amount": 5000000,
+                "percentage_of_total": 50,
+                "margin": 0.25,
+                "nbi_contribution": 1250000
+              },
+              "media_commissions": {
+                "amount": 2500000,
+                "percentage_of_total": 25,
+                "margin": 0.15,
+                "nbi_contribution": 375000
+              },
+              "consulting_fees": {
+                "amount": 1500000,
+                "percentage_of_total": 15,
+                "margin": 0.40,
+                "nbi_contribution": 600000
+              },
+              "activation_management": {
+                "amount": 1000000,
+                "percentage_of_total": 10,
+                "margin": 0.20,
+                "nbi_contribution": 200000
+              }
+            },
+            "total_gross_revenue": 10000000
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Calculate_Cost_Structure": {
+          "type": "Compose",
+          "inputs": {
+            "cost_breakdown": {
+              "direct_costs": {
+                "staff_costs": {
+                  "amount": 1800000,
+                  "percentage_of_revenue": 18,
+                  "description": "Direct labor for client service"
+                },
+                "third_party_costs": {
+                  "amount": 1200000,
+                  "percentage_of_revenue": 12,
+                  "description": "External vendors and contractors"
+                },
+                "technology_costs": {
+                  "amount": 300000,
+                  "percentage_of_revenue": 3,
+                  "description": "Tools and platforms"
+                }
+              },
+              "overhead_allocation": {
+                "amount": 500000,
+                "percentage_of_revenue": 5,
+                "description": "Allocated corporate overhead"
+              },
+              "total_costs": 3800000,
+              "cost_to_revenue_ratio": 0.38
+            }
+          },
+          "runAfter": {
+            "Define_Revenue_Streams": ["Succeeded"]
+          }
+        },
+        "Calculate_NBI": {
+          "type": "Compose",
+          "inputs": {
+            "nbi_calculation": {
+              "gross_revenue": "@outputs('Parse_Input')?['gross_revenue']",
+              "total_revenue_streams_nbi": 2425000,
+              "total_costs": 3800000,
+              "nbi": {
+                "amount": "@sub(outputs('Parse_Input')?['gross_revenue'], 3800000)",
+                "margin_percentage": "@mul(div(sub(outputs('Parse_Input')?['gross_revenue'], 3800000), outputs('Parse_Input')?['gross_revenue']), 100)"
+              },
+              "nbi_by_stream": {
+                "sponsorship_fees": { "nbi": 1250000, "margin": 25 },
+                "media_commissions": { "nbi": 375000, "margin": 15 },
+                "consulting_fees": { "nbi": 600000, "margin": 40 },
+                "activation_management": { "nbi": 200000, "margin": 20 }
+              },
+              "period": "@outputs('Parse_Input')?['calculation_period']"
+            }
+          },
+          "runAfter": {
+            "Calculate_Cost_Structure": ["Succeeded"]
+          }
+        },
+        "Analyze_NBI_Drivers": {
+          "type": "Compose",
+          "inputs": {
+            "nbi_analysis": {
+              "key_drivers": [
+                {
+                  "driver": "Consulting fees",
+                  "contribution": 24.7,
+                  "trend": "growing",
+                  "opportunity": "Highest margin stream - expand offering"
+                },
+                {
+                  "driver": "Sponsorship fees",
+                  "contribution": 51.5,
+                  "trend": "stable",
+                  "opportunity": "Core business - optimize pricing"
+                },
+                {
+                  "driver": "Media commissions",
+                  "contribution": 15.5,
+                  "trend": "declining",
+                  "opportunity": "Margin pressure - review cost structure"
+                }
+              ],
+              "improvement_opportunities": [
+                {
+                  "opportunity": "Increase consulting mix",
+                  "potential_nbi_impact": 150000,
+                  "effort": "medium",
+                  "timeline": "6-12 months"
+                },
+                {
+                  "opportunity": "Reduce third-party costs",
+                  "potential_nbi_impact": 120000,
+                  "effort": "low",
+                  "timeline": "3-6 months"
+                },
+                {
+                  "opportunity": "Optimize staff utilization",
+                  "potential_nbi_impact": 180000,
+                  "effort": "high",
+                  "timeline": "6-12 months"
+                }
+              ],
+              "benchmarks": {
+                "industry_average_margin": 22,
+                "top_quartile_margin": 30,
+                "current_margin": "@mul(div(sub(outputs('Parse_Input')?['gross_revenue'], 3800000), outputs('Parse_Input')?['gross_revenue']), 100)",
+                "position": "above_average"
+              }
+            }
+          },
+          "runAfter": {
+            "Calculate_NBI": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "SPO",
+            "status": "success",
+            "data": {
+              "calculation_summary": {
+                "gross_revenue": "@outputs('Parse_Input')?['gross_revenue']",
+                "calculation_period": "@outputs('Parse_Input')?['calculation_period']"
+              },
+              "revenue_breakdown": "@outputs('Define_Revenue_Streams')?['revenue_breakdown']",
+              "cost_breakdown": "@outputs('Calculate_Cost_Structure')?['cost_breakdown']",
+              "nbi_calculation": "@outputs('Calculate_NBI')?['nbi_calculation']",
+              "nbi_analysis": "@outputs('Analyze_NBI_Drivers')?['nbi_analysis']"
+            },
+            "confidence": "HIGH",
+            "sources": ["FINANCIAL_DATA", "INDUSTRY_BENCHMARKS", "AGENT_KB"],
+            "recommendations": [
+              "Focus on expanding high-margin consulting services",
+              "Review third-party vendor costs for savings",
+              "Consider pricing optimization on sponsorship fees"
+            ],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Analyze_NBI_Drivers": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

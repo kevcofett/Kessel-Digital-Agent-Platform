@@ -1,0 +1,132 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "code": "GHA",
+    "name": "Growth Hacking Agent"
+  },
+  "categories": {
+    "lifecycle": 3,
+    "frameworks": 2,
+    "tactics": 3,
+    "coordination": 2,
+    "projection": 2
+  },
+  "tests": [
+    {
+      "id": "GHA-001",
+      "name": "AARRR Lifecycle Analysis",
+      "input": "Analyze our AARRR funnel",
+      "expected_capability": "GHA_LIFECYCLE_ANALYZE",
+      "expected_output_contains": ["acquisition", "activation", "retention", "referral", "revenue"],
+      "priority": "P0",
+      "tags": ["lifecycle", "aarrr", "core"]
+    },
+    {
+      "id": "GHA-002",
+      "name": "North Star Metric Definition",
+      "input": "What should our North Star metric be?",
+      "expected_capability": "GHA_NORTH_STAR_DEFINE",
+      "expected_output_contains": ["metric", "success"],
+      "priority": "P0",
+      "tags": ["lifecycle", "north-star", "core"]
+    },
+    {
+      "id": "GHA-003",
+      "name": "Lifecycle Stage Priority",
+      "input": "Which lifecycle stage should we focus on first?",
+      "expected_capability": "GHA_LIFECYCLE_ANALYZE",
+      "expected_output_contains": ["stage", "priority"],
+      "priority": "P1",
+      "tags": ["lifecycle", "priority"]
+    },
+    {
+      "id": "GHA-004",
+      "name": "Growth Framework Selection",
+      "input": "Which growth framework should we use for a fintech app?",
+      "expected_capability": "GHA_FRAMEWORK_SELECT",
+      "expected_output_contains": ["framework", "AARRR"],
+      "priority": "P0",
+      "tags": ["frameworks", "fintech", "core"]
+    },
+    {
+      "id": "GHA-005",
+      "name": "Hook Model Application",
+      "input": "Help me apply the Hook Model to our product",
+      "expected_capability": "GHA_PSYCHOLOGY_APPLY",
+      "expected_output_contains": ["trigger", "action", "reward", "investment"],
+      "priority": "P1",
+      "tags": ["frameworks", "hook-model", "psychology"]
+    },
+    {
+      "id": "GHA-006",
+      "name": "Tactic Recommendation",
+      "input": "What growth tactics should I use for retention?",
+      "expected_capability": "GHA_TACTIC_RECOMMEND",
+      "expected_output_contains": ["tactic", "retention"],
+      "priority": "P0",
+      "tags": ["tactics", "retention", "core"]
+    },
+    {
+      "id": "GHA-007",
+      "name": "Referral Program Design",
+      "input": "Design a referral program for credit card activation",
+      "expected_capability": "GHA_TACTIC_RECOMMEND",
+      "expected_output_contains": ["referral", "incentive"],
+      "priority": "P1",
+      "tags": ["tactics", "referral", "fintech"]
+    },
+    {
+      "id": "GHA-008",
+      "name": "Experiment Design",
+      "input": "Design an A/B test for our onboarding flow",
+      "expected_capability": "GHA_EXPERIMENT_DESIGN",
+      "expected_output_contains": ["hypothesis", "test", "variant"],
+      "priority": "P1",
+      "tags": ["tactics", "experiment", "ab-test"]
+    },
+    {
+      "id": "GHA-009",
+      "name": "Competitor Growth Analysis",
+      "input": "How do competitors like Nubank grow acquisition?",
+      "expected_capability": "GHA_COMPETITOR_GROWTH",
+      "expected_output_contains": ["competitor", "acquisition"],
+      "priority": "P1",
+      "tags": ["coordination", "competitor", "fintech"]
+    },
+    {
+      "id": "GHA-010",
+      "name": "Specialist Coordination - ANL",
+      "input": "Project the ROI for this referral program",
+      "expected_capability": "GHA_GROWTH_PROJECT",
+      "expected_specialist_request": "ANL",
+      "expected_output_contains": ["projection", "ROI"],
+      "priority": "P0",
+      "tags": ["coordination", "projection", "anl"]
+    },
+    {
+      "id": "GHA-011",
+      "name": "Growth Projection with Scenarios",
+      "input": "Project growth impact for proposed tactics",
+      "expected_capability": "GHA_GROWTH_PROJECT",
+      "expected_output_contains": ["projection", "scenario"],
+      "priority": "P1",
+      "tags": ["projection", "scenarios"]
+    },
+    {
+      "id": "GHA-012",
+      "name": "Growth Plan Synthesis",
+      "input": "Generate a complete growth strategy document",
+      "expected_capability": "GHA_GROWTH_SYNTHESIZE",
+      "expected_specialist_request": "DOC",
+      "expected_output_contains": ["strategy", "document"],
+      "priority": "P1",
+      "tags": ["projection", "synthesis", "doc"]
+    }
+  ],
+  "validation_rules": {
+    "response_max_words": 400,
+    "must_cite_kb": true,
+    "prose_only": true,
+    "confidence_levels": ["HIGH", "MEDIUM", "LOW", "VERY LOW"]
+  }
+}

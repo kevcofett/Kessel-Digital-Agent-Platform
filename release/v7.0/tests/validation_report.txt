@@ -1,0 +1,130 @@
+================================================================================
+KDAP v7.0 POWER PLATFORM IMPORT VALIDATION REPORT
+Generated: 2026-01-31T20:45:10.203372
+================================================================================
+
+EXECUTIVE SUMMARY
+----------------------------------------
+Total Tests:    2207
+Passed:         2192 (99%)
+Failed:         0
+Warnings:       15
+Skipped:        0
+
+✓ STATUS: ALL CRITICAL TESTS PASSED
+  Solution is ready for Power Platform import
+
+RESULTS BY CATEGORY
+----------------------------------------
+
+✓ Solution Package Structure [CRITICAL]
+  Target: Power Platform Import
+  PASS: 11/12  FAIL: 0  WARN: 1
+
+✓ XML Schema Validation [CRITICAL]
+  Target: Dataverse Entity Import
+  PASS: 119/124  FAIL: 0  WARN: 5
+
+✓ Entity Relationship Integrity [CRITICAL]
+  Target: Dataverse Relationships
+  PASS: 7/7  FAIL: 0  WARN: 0
+
+✓ Power Automate Flow Validation [CRITICAL]
+  Target: Flow Deployment
+  PASS: 254/254  FAIL: 0  WARN: 0
+
+✓ AI Builder Prompt Validation [HIGH]
+  Target: Copilot Studio Prompts
+  PASS: 39/39  FAIL: 0  WARN: 0
+
+✓ Copilot Studio Topic Validation [HIGH]
+  Target: Topic Import
+  PASS: 2/3  FAIL: 0  WARN: 1
+
+✓ KB Document Compliance [HIGH]
+  Target: Knowledge Base
+  PASS: 1532/1540  FAIL: 0  WARN: 8
+
+✓ Instruction File Compliance [HIGH]
+  Target: Agent Instructions
+  PASS: 52/52  FAIL: 0  WARN: 0
+
+✓ Seed Data Schema Alignment [HIGH]
+  Target: Data Import
+  PASS: 12/12  FAIL: 0  WARN: 0
+
+✓ YAML-to-JSON Conversion [MEDIUM]
+  Target: Flow Conversion
+  PASS: 160/160  FAIL: 0  WARN: 0
+
+✓ ZIP Package Integrity [CRITICAL]
+  Target: Import Readiness
+  PASS: 4/4  FAIL: 0  WARN: 0
+
+================================================================================
+WARNINGS (REVIEW RECOMMENDED)
+================================================================================
+
+[PKG-008] No hidden files
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0.zip
+  Message: Hidden files found in ZIP: ['agents/chg/flows/.gitkeep', 'agents/mkt/flows/.gitkeep', 'agents/cst/flows/.gitkeep']
+
+[ENT-005] IsPrimaryName flag set
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_sessions/Entity.xml
+  Message: IsPrimaryName flag not set on 'eap_session_id'
+
+[ENT-009] RequiredLevel valid
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_sessions/Entity.xml
+  Message: Invalid RequiredLevel 'applicationrequired' on 'eap_session_id'
+
+[ENT-009] RequiredLevel valid
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_sessions/Entity.xml
+  Message: Invalid RequiredLevel 'applicationrequired' on 'eap_user_id'
+
+[ENT-009] RequiredLevel valid
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_sessions/Entity.xml
+  Message: Invalid RequiredLevel 'applicationrequired' on 'eap_start_time'
+
+[ENT-009] RequiredLevel valid
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/Entities/eap_sessions/Entity.xml
+  Message: Invalid RequiredLevel 'applicationrequired' on 'eap_status'
+
+[TOP-011] Phrase length valid
+  File: v7.0/solutions/Consulting_and_Marketing_Agent_Platform_V7.0/topics/all_agent_topics_v7.0.json
+  Message: Phrase 'hi...' length 2 outside range [3, 256]
+
+[KB-006] ALL-CAPS headers
+  File: v7.0/agents/gha/kb/GHA_KB_Growth_Channels_v7.0.txt
+  Message: No ALL-CAPS headers detected
+
+[KB-006] ALL-CAPS headers
+  File: v7.0/agents/gha/kb/GHA_KB_Growth_KPIs_v7.0.txt
+  Message: No ALL-CAPS headers detected
+
+[KB-006] ALL-CAPS headers
+  File: v7.0/agents/gha/kb/GHA_KB_Campaign_Patterns_v7.0.txt
+  Message: No ALL-CAPS headers detected
+
+[KB-006] ALL-CAPS headers
+  File: v7.0/agents/gha/kb/GHA_KB_Fintech_Cases_v7.0.txt
+  Message: No ALL-CAPS headers detected
+
+[KB-006] ALL-CAPS headers
+  File: v7.0/agents/gha/kb/GHA_KB_Growth_Channels_v7.0.txt
+  Message: No ALL-CAPS headers detected
+
+[KB-006] ALL-CAPS headers
+  File: v7.0/agents/gha/kb/GHA_KB_Growth_KPIs_v7.0.txt
+  Message: No ALL-CAPS headers detected
+
+[KB-006] ALL-CAPS headers
+  File: v7.0/agents/gha/kb/GHA_KB_Campaign_Patterns_v7.0.txt
+  Message: No ALL-CAPS headers detected
+
+[KB-006] ALL-CAPS headers
+  File: v7.0/agents/gha/kb/GHA_KB_Fintech_Cases_v7.0.txt
+  Message: No ALL-CAPS headers detected
+
+================================================================================
+END OF REPORT
+================================================================================

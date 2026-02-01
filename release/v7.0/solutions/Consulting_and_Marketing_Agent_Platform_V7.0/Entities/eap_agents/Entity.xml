@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>eap_agents</Name>
+  <EntityInfo>
+    <entity Name="eap_agents">
+      <DisplayName>Agent</DisplayName>
+      <DisplayCollectionName>Agents</DisplayCollectionName>
+      <Description>Registry of all MCMAP agents with their configurations, status, and metadata.</Description>
+      <OwnershipTypeMask>OrganizationOwned</OwnershipTypeMask>
+      <IsActivity>false</IsActivity>
+      <IsAvailableOffline>true</IsAvailableOffline>
+      <IsCustomizable>1</IsCustomizable>
+      <IsRenameable>1</IsRenameable>
+      <CanCreateAttributes>1</CanCreateAttributes>
+      <CanCreateForms>1</CanCreateForms>
+      <CanCreateViews>1</CanCreateViews>
+      <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+      <PrimaryIdAttribute>eap_agentid</PrimaryIdAttribute>
+      <PrimaryNameAttribute>eap_name</PrimaryNameAttribute>
+      <IntroducedVersion>7.0.0.0</IntroducedVersion>
+      <localizedNames>
+        <localizedName description="Agent" languagecode="1033" />
+      </localizedNames>
+      <Descriptions>
+        <Description description="Registry of all MCMAP agents" languagecode="1033" />
+      </Descriptions>
+      <attributes>
+        <attribute PhysicalName="eap_agentid">
+          <Type>primarykey</Type>
+          <DisplayName>Agent ID</DisplayName>
+          <Description>Unique identifier for the agent</Description>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_name">
+          <Type>nvarchar</Type>
+          <MaxLength>100</MaxLength>
+          <DisplayName>Agent Name</DisplayName>
+          <Description>Full name of the agent</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <IsPrimaryName>1</IsPrimaryName>
+        </attribute>
+
+        <attribute PhysicalName="eap_code">
+          <Type>nvarchar</Type>
+          <MaxLength>10</MaxLength>
+          <DisplayName>Agent Code</DisplayName>
+          <Description>Three-letter code for the agent (ORC, ANL, AUD, etc.)</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_description">
+          <Type>nvarchar</Type>
+          <MaxLength>2000</MaxLength>
+          <DisplayName>Description</DisplayName>
+          <Description>Full description of the agent's purpose and capabilities</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_domain">
+          <Type>picklist</Type>
+          <DisplayName>Domain</DisplayName>
+          <Description>Functional domain of the agent</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <OptionSet>
+            <Options>
+              <Option value="100000000" label="PLATFORM_CORE" />
+              <Option value="100000001" label="MPA_DOMAIN" />
+              <Option value="100000002" label="CONSULTING_DOMAIN" />
+              <Option value="100000003" label="GROWTH_DOMAIN" />
+              <Option value="100000004" label="SUPPORT_DOMAIN" />
+              <Option value="100000005" label="INFRASTRUCTURE" />
+              <Option value="100000006" label="EXTERNAL" />
+            </Options>
+          </OptionSet>
+        </attribute>
+
+        <attribute PhysicalName="eap_status">
+          <Type>picklist</Type>
+          <DisplayName>Agent Status</DisplayName>
+          <Description>Current status of the agent</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <OptionSet>
+            <Options>
+              <Option value="100000000" label="active" />
+              <Option value="100000001" label="pending" />
+              <Option value="100000002" label="deprecated" />
+              <Option value="100000003" label="disabled" />
+              <Option value="100000004" label="external_pending" />
+              <Option value="100000005" label="infra_pending" />
+            </Options>
+          </OptionSet>
+        </attribute>
+
+        <attribute PhysicalName="eap_version">
+          <Type>nvarchar</Type>
+          <MaxLength>20</MaxLength>
+          <DisplayName>Version</DisplayName>
+          <Description>Current version of the agent</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_instructions_file">
+          <Type>nvarchar</Type>
+          <MaxLength>256</MaxLength>
+          <DisplayName>Instructions File</DisplayName>
+          <Description>Filename of the Copilot instructions file</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_kb_files">
+          <Type>ntext</Type>
+          <DisplayName>KB Files</DisplayName>
+          <Description>JSON array of knowledge base filenames</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>Text</Format>
+        </attribute>
+
+        <attribute PhysicalName="eap_routing_keywords">
+          <Type>ntext</Type>
+          <DisplayName>Routing Keywords</DisplayName>
+          <Description>JSON array of keywords that route to this agent</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>Text</Format>
+        </attribute>
+
+        <attribute PhysicalName="eap_handoff_to">
+          <Type>nvarchar</Type>
+          <MaxLength>200</MaxLength>
+          <DisplayName>Handoff To</DisplayName>
+          <Description>Comma-separated list of agent codes this agent can hand off to</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_handoff_from">
+          <Type>nvarchar</Type>
+          <MaxLength>200</MaxLength>
+          <DisplayName>Handoff From</DisplayName>
+          <Description>Comma-separated list of agent codes that can hand off to this agent</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_copilot_id">
+          <Type>nvarchar</Type>
+          <MaxLength>100</MaxLength>
+          <DisplayName>Copilot ID</DisplayName>
+          <Description>ID of the deployed Copilot Studio agent</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_last_deployed">
+          <Type>datetime</Type>
+          <DisplayName>Last Deployed</DisplayName>
+          <Description>Timestamp of last deployment</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>DateAndTime</Format>
+        </attribute>
+
+        <attribute PhysicalName="createdon">
+          <Type>datetime</Type>
+          <DisplayName>Created On</DisplayName>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="modifiedon">
+          <Type>datetime</Type>
+          <DisplayName>Modified On</DisplayName>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="statecode">
+          <Type>state</Type>
+          <DisplayName>Status</DisplayName>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="statuscode">
+          <Type>status</Type>
+          <DisplayName>Status Reason</DisplayName>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+      </attributes>
+    </entity>
+  </EntityInfo>
+</Entity>

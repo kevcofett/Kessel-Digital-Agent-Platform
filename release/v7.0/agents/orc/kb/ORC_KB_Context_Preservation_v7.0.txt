@@ -202,13 +202,13 @@ RETURN CONTEXT HANDLING
 When specialist agent returns, orchestrator must integrate output.
 
 Integration Steps:
-1. Validate response format
-2. Extract key outputs
-3. Update session state
-4. Check for conflicts with existing context
-5. Resolve conflicts if present
-6. Update progress markers
-7. Determine next action
+- Validate response format
+- Extract key outputs
+- Update session state
+- Check for conflicts with existing context
+- Resolve conflicts if present
+- Update progress markers
+- Determine next action
 
 Conflict Resolution:
 When new data conflicts with existing context:
@@ -305,11 +305,11 @@ When to Restore Previous State:
 - System failure recovery needed
 
 Rollback Procedure:
-1. Confirm user intent to rollback
-2. Identify target recovery point
-3. Restore context to that point
-4. Notify user of restored state
-5. Continue from recovery point
+- Confirm user intent to rollback
+- Identify target recovery point
+- Restore context to that point
+- Notify user of restored state
+- Continue from recovery point
 
 User Confirmation Requirements:
 Never rollback without user confirmation unless:

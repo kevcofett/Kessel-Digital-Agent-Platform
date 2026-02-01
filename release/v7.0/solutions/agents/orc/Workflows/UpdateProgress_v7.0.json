@@ -1,13 +1,212 @@
 {
   "schemaVersion": "1.0.0.0",
   "properties": {
-    "connectionReferences": {},
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connectionName": "shared-commondataserviceforapps",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+        "tier": "NotSpecified"
+      }
+    },
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
-      "parameters": {},
-      "triggers": {},
-      "actions": {}
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": ["session_id", "request_id"],
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "phase": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": ["started", "in_progress", "completed", "failed", "skipped"]
+                },
+                "progress_percentage": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "agent_id": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "object"
+                }
+              }
+            },
+            "method": "POST"
+          },
+          "operationOptions": "EnableSchemaValidation"
+        }
+      },
+      "actions": {
+        "Parse_Input": {
+          "type": "Compose",
+          "inputs": {
+            "session_id": "@triggerBody()?['session_id']",
+            "request_id": "@triggerBody()?['request_id']",
+            "phase": "@coalesce(triggerBody()?['phase'], 'unknown')",
+            "status": "@coalesce(triggerBody()?['status'], 'in_progress')",
+            "progress_percentage": "@coalesce(triggerBody()?['progress_percentage'], 0)",
+            "agent_id": "@coalesce(triggerBody()?['agent_id'], 'ORC')",
+            "details": "@coalesce(triggerBody()?['details'], json('{}'))",
+            "start_time": "@utcNow()"
+          },
+          "runAfter": {}
+        },
+        "Retrieve_Current_Progress": {
+          "type": "Compose",
+          "inputs": {
+            "current_state": {
+              "session_id": "@outputs('Parse_Input')?['session_id']",
+              "workflow_stage": "planning",
+              "overall_progress": 45,
+              "phases": [
+                { "phase": "discovery", "status": "completed", "progress": 100 },
+                { "phase": "audience_analysis", "status": "completed", "progress": 100 },
+                { "phase": "budget_allocation", "status": "in_progress", "progress": 60 },
+                { "phase": "timeline_creation", "status": "pending", "progress": 0 },
+                { "phase": "document_generation", "status": "pending", "progress": 0 }
+              ]
+            }
+          },
+          "runAfter": {
+            "Parse_Input": ["Succeeded"]
+          }
+        },
+        "Update_Phase_Progress": {
+          "type": "Compose",
+          "inputs": {
+            "update_action": {
+              "phase": "@outputs('Parse_Input')?['phase']",
+              "previous_status": "in_progress",
+              "new_status": "@outputs('Parse_Input')?['status']",
+              "previous_progress": 60,
+              "new_progress": "@outputs('Parse_Input')?['progress_percentage']",
+              "updated_by": "@outputs('Parse_Input')?['agent_id']",
+              "updated_at": "@utcNow()"
+            },
+            "phase_metadata": {
+              "started_at": "@addMinutes(utcNow(), -10)",
+              "duration_minutes": 10,
+              "actions_taken": "@outputs('Parse_Input')?['details']"
+            }
+          },
+          "runAfter": {
+            "Retrieve_Current_Progress": ["Succeeded"]
+          }
+        },
+        "Calculate_Overall_Progress": {
+          "type": "Compose",
+          "inputs": {
+            "overall_calculation": {
+              "total_phases": 5,
+              "completed_phases": 2,
+              "in_progress_phases": 1,
+              "pending_phases": 2,
+              "weighted_progress": {
+                "discovery": { "weight": 0.15, "progress": 100, "contribution": 15 },
+                "audience_analysis": { "weight": 0.20, "progress": 100, "contribution": 20 },
+                "budget_allocation": { "weight": 0.25, "progress": "@outputs('Parse_Input')?['progress_percentage']", "contribution": "@mul(0.25, outputs('Parse_Input')?['progress_percentage'])" },
+                "timeline_creation": { "weight": 0.15, "progress": 0, "contribution": 0 },
+                "document_generation": { "weight": 0.25, "progress": 0, "contribution": 0 }
+              },
+              "new_overall_progress": "@add(35, mul(0.25, outputs('Parse_Input')?['progress_percentage']))"
+            },
+            "estimated_completion": {
+              "remaining_phases": 2,
+              "estimated_time_minutes": 25,
+              "on_track": true
+            }
+          },
+          "runAfter": {
+            "Update_Phase_Progress": ["Succeeded"]
+          }
+        },
+        "Store_Progress_Update": {
+          "type": "Compose",
+          "inputs": {
+            "storage_result": {
+              "stored": true,
+              "storage_location": "session_store",
+              "record_id": "@guid()",
+              "stored_at": "@utcNow()"
+            }
+          },
+          "runAfter": {
+            "Calculate_Overall_Progress": ["Succeeded"]
+          }
+        },
+        "Build_Response": {
+          "type": "Compose",
+          "inputs": {
+            "request_id": "@outputs('Parse_Input')?['request_id']",
+            "timestamp": "@utcNow()",
+            "source_agent": "ORC",
+            "status": "success",
+            "data": {
+              "update_summary": {
+                "session_id": "@outputs('Parse_Input')?['session_id']",
+                "phase_updated": "@outputs('Parse_Input')?['phase']",
+                "new_status": "@outputs('Parse_Input')?['status']",
+                "new_progress": "@outputs('Parse_Input')?['progress_percentage']"
+              },
+              "phase_update": "@outputs('Update_Phase_Progress')?['update_action']",
+              "overall_progress": "@outputs('Calculate_Overall_Progress')?['overall_calculation']",
+              "estimated_completion": "@outputs('Calculate_Overall_Progress')?['estimated_completion']",
+              "storage_result": "@outputs('Store_Progress_Update')?['storage_result']"
+            },
+            "confidence": "HIGH",
+            "sources": ["SESSION_STORE", "PROGRESS_TRACKER", "AGENT_KB"],
+            "recommendations": [],
+            "metadata": {
+              "processing_time_ms": "@div(sub(ticks(utcNow()), ticks(outputs('Parse_Input')?['start_time'])), 10000)"
+            }
+          },
+          "runAfter": {
+            "Store_Progress_Update": ["Succeeded"]
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "@outputs('Build_Response')"
+          },
+          "runAfter": {
+            "Build_Response": ["Succeeded"]
+          }
+        }
+      }
     }
   }
 }

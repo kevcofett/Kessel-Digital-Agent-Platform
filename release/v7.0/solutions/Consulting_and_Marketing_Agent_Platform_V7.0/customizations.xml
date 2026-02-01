@@ -2,19 +2,19 @@
 <ImportExportXml version="9.2.0.0" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="KesselDigital" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Entities>
       <Entity>
-        <Name LocalizedName="EAP Capability Implementation" OriginalName="eap_capability_implementation">eap_capability_implementation</Name>
-        <ObjectTypeCode>eap_capability_implementation</ObjectTypeCode>
+        <Name LocalizedName="EAP Capability Implementation" OriginalName="eap_capability_impl">eap_capability_impl</Name>
+        <ObjectTypeCode>eap_capability_impl</ObjectTypeCode>
         <EntityInfo>
-          <entity Name="eap_capability_implementation">
+          <entity Name="eap_capability_impl">
             <LocalizedNames>
               <LocalizedName description="EAP Capability Implementation" languagecode="1033" />
             </LocalizedNames>
             <Descriptions>
               <Description description="Implementation registry per environment with priority ordering" languagecode="1033" />
             </Descriptions>
-            <PrimaryIdAttribute>eap_capability_implementationid</PrimaryIdAttribute>
+            <PrimaryIdAttribute>eap_capability_implid</PrimaryIdAttribute>
             <PrimaryNameAttribute>capability_code</PrimaryNameAttribute>
-            <EntitySetName>eap_capability_implementations</EntitySetName>
+            <EntitySetName>eap_capability_impls</EntitySetName>
             <IsDuplicateCheckSupported>0</IsDuplicateCheckSupported>
             <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
             <IsCustomEntity>1</IsCustomEntity>
@@ -224,7 +224,7 @@
                 <displayname description="Fallback Implementation" languagecode="1033" />
               </displaynames>
               <LookupTypes>
-                <LookupType id="00000000-0000-0000-0000-000000000000">eap_capability_implementation</LookupType>
+                <LookupType id="00000000-0000-0000-0000-000000000000">eap_capability_impl</LookupType>
               </LookupTypes>
             </attribute>
             <attribute PhysicalName="timeout_seconds">
@@ -2674,165 +2674,556 @@
       </Entity>
   </Entities>
   <Workflows>
-      <Workflow WorkflowId="{a7ba6eb1-0e47-42ac-b39f-9b5f5df8a100}" Name="MPA Initialize Session">
-        <JsonFileName>/Workflows/MPA_Initialize_Session.json</JsonFileName>
+      <!-- ============================================== -->
+      <!-- MPA WORKFLOWS (13) -->
+      <!-- ============================================== -->
+      <Workflow WorkflowId="{d0e70b38-dae8-f011-8544-002248084b3a}" Name="MPA Initialize Session">
+        <JsonFileName>/Workflows/MPAInitializeSession-D0E70B38-DAE8-F011-8544-002248084B3A.json</JsonFileName>
         <Type>1</Type>
         <Subprocess>0</Subprocess>
         <Category>5</Category>
         <Mode>0</Mode>
         <Scope>4</Scope>
-        <OnDemand>1</OnDemand>
+        <OnDemand>0</OnDemand>
         <TriggerOnCreate>0</TriggerOnCreate>
         <TriggerOnDelete>0</TriggerOnDelete>
         <AsyncAutodelete>0</AsyncAutodelete>
         <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
-        <StateCode>0</StateCode>
-        <StatusCode>1</StatusCode>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
         <RunAs>1</RunAs>
         <IsTransacted>1</IsTransacted>
-        <IntroducedVersion>1.0.0.0</IntroducedVersion>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
         <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
         <PrimaryEntity>none</PrimaryEntity>
         <LocalizedNames>
           <LocalizedName description="MPA Initialize Session" languagecode="1033" />
         </LocalizedNames>
       </Workflow>
-      <Workflow WorkflowId="{81dfc840-a981-41d7-86d4-8545c937afec}" Name="MPA_Memory_Initialize">
-        <JsonFileName>/Workflows/MPA_Memory_Initialize.json</JsonFileName>
+      <Workflow WorkflowId="{7a24b2fd-c92d-4b8e-a9b5-24a41e54ba39}" Name="MPA Capture Feedback">
+        <JsonFileName>/Workflows/MPACaptureFeedback-7A24B2FD-C92D-4B8E-A9B5-24A41E54BA39.json</JsonFileName>
         <Type>1</Type>
         <Subprocess>0</Subprocess>
         <Category>5</Category>
         <Mode>0</Mode>
         <Scope>4</Scope>
-        <OnDemand>1</OnDemand>
+        <OnDemand>0</OnDemand>
         <TriggerOnCreate>0</TriggerOnCreate>
         <TriggerOnDelete>0</TriggerOnDelete>
         <AsyncAutodelete>0</AsyncAutodelete>
         <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
-        <StateCode>0</StateCode>
-        <StatusCode>1</StatusCode>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
         <RunAs>1</RunAs>
         <IsTransacted>1</IsTransacted>
-        <IntroducedVersion>1.0.0.0</IntroducedVersion>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
         <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
         <PrimaryEntity>none</PrimaryEntity>
         <LocalizedNames>
-          <LocalizedName description="MPA_Memory_Initialize" languagecode="1033" />
+          <LocalizedName description="MPA Capture Feedback" languagecode="1033" />
         </LocalizedNames>
       </Workflow>
-      <Workflow WorkflowId="{e99656a3-a2a2-47db-9342-f44d205a93c0}" Name="MPA_Memory_Store">
-        <JsonFileName>/Workflows/MPA_Memory_Store.json</JsonFileName>
+      <Workflow WorkflowId="{11f26a37-d5e8-f011-8544-6045bd060784}" Name="MPA Create Plan">
+        <JsonFileName>/Workflows/MPACreatePlan-11F26A37-D5E8-F011-8544-6045BD060784.json</JsonFileName>
         <Type>1</Type>
         <Subprocess>0</Subprocess>
         <Category>5</Category>
         <Mode>0</Mode>
         <Scope>4</Scope>
-        <OnDemand>1</OnDemand>
+        <OnDemand>0</OnDemand>
         <TriggerOnCreate>0</TriggerOnCreate>
         <TriggerOnDelete>0</TriggerOnDelete>
         <AsyncAutodelete>0</AsyncAutodelete>
         <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
-        <StateCode>0</StateCode>
-        <StatusCode>1</StatusCode>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
         <RunAs>1</RunAs>
         <IsTransacted>1</IsTransacted>
-        <IntroducedVersion>1.0.0.0</IntroducedVersion>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
         <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
         <PrimaryEntity>none</PrimaryEntity>
         <LocalizedNames>
-          <LocalizedName description="MPA_Memory_Store" languagecode="1033" />
+          <LocalizedName description="MPA Create Plan" languagecode="1033" />
         </LocalizedNames>
       </Workflow>
-      <Workflow WorkflowId="{3b7bb054-ba98-4265-b8c2-e8645a087fe2}" Name="MPA_Proactive_Evaluate">
-        <JsonFileName>/Workflows/MPA_Proactive_Evaluate.json</JsonFileName>
+      <Workflow WorkflowId="{4faec868-abe9-f011-8543-000d3a3320e6}" Name="MPA Create PostMortem">
+        <JsonFileName>/Workflows/MPACreatePostMortem-4FAEC868-ABE9-F011-8543-000D3A3320E6.json</JsonFileName>
         <Type>1</Type>
         <Subprocess>0</Subprocess>
         <Category>5</Category>
         <Mode>0</Mode>
         <Scope>4</Scope>
-        <OnDemand>1</OnDemand>
+        <OnDemand>0</OnDemand>
         <TriggerOnCreate>0</TriggerOnCreate>
         <TriggerOnDelete>0</TriggerOnDelete>
         <AsyncAutodelete>0</AsyncAutodelete>
         <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
-        <StateCode>0</StateCode>
-        <StatusCode>1</StatusCode>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
         <RunAs>1</RunAs>
         <IsTransacted>1</IsTransacted>
-        <IntroducedVersion>1.0.0.0</IntroducedVersion>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
         <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
         <PrimaryEntity>none</PrimaryEntity>
         <LocalizedNames>
-          <LocalizedName description="MPA_Proactive_Evaluate" languagecode="1033" />
+          <LocalizedName description="MPA Create PostMortem" languagecode="1033" />
         </LocalizedNames>
       </Workflow>
-      <Workflow WorkflowId="{4fa6ae8b-e51d-4ce9-995a-8778c128abcc}" Name="MPA_File_Process">
-        <JsonFileName>/Workflows/MPA_File_Process.json</JsonFileName>
+      <Workflow WorkflowId="{76280a60-a6e9-f011-8543-000d3a3320e6}" Name="MPA Generate Document">
+        <JsonFileName>/Workflows/MPAGenerateDocument-76280A60-A6E9-F011-8543-000D3A3320E6.json</JsonFileName>
         <Type>1</Type>
         <Subprocess>0</Subprocess>
         <Category>5</Category>
         <Mode>0</Mode>
         <Scope>4</Scope>
-        <OnDemand>1</OnDemand>
+        <OnDemand>0</OnDemand>
         <TriggerOnCreate>0</TriggerOnCreate>
         <TriggerOnDelete>0</TriggerOnDelete>
         <AsyncAutodelete>0</AsyncAutodelete>
         <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
-        <StateCode>0</StateCode>
-        <StatusCode>1</StatusCode>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
         <RunAs>1</RunAs>
         <IsTransacted>1</IsTransacted>
-        <IntroducedVersion>1.0.0.0</IntroducedVersion>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
         <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
         <PrimaryEntity>none</PrimaryEntity>
         <LocalizedNames>
-          <LocalizedName description="MPA_File_Process" languagecode="1033" />
+          <LocalizedName description="MPA Generate Document" languagecode="1033" />
         </LocalizedNames>
       </Workflow>
-      <Workflow WorkflowId="{fbeb4520-cfbd-4ab8-9b32-282118794e87}" Name="MPA_ML_Endpoint_Router">
-        <JsonFileName>/Workflows/MPA_ML_Endpoint_Router.json</JsonFileName>
+      <Workflow WorkflowId="{5cdba48f-a8e9-f011-8543-000d3a3320e6}" Name="MPA Import Performance">
+        <JsonFileName>/Workflows/MPAImportPerformance-5CDBA48F-A8E9-F011-8543-000D3A3320E6.json</JsonFileName>
         <Type>1</Type>
         <Subprocess>0</Subprocess>
         <Category>5</Category>
         <Mode>0</Mode>
         <Scope>4</Scope>
-        <OnDemand>1</OnDemand>
+        <OnDemand>0</OnDemand>
         <TriggerOnCreate>0</TriggerOnCreate>
         <TriggerOnDelete>0</TriggerOnDelete>
         <AsyncAutodelete>0</AsyncAutodelete>
         <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
-        <StateCode>0</StateCode>
-        <StatusCode>1</StatusCode>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
         <RunAs>1</RunAs>
         <IsTransacted>1</IsTransacted>
-        <IntroducedVersion>1.0.0.0</IntroducedVersion>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
         <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
         <PrimaryEntity>none</PrimaryEntity>
         <LocalizedNames>
-          <LocalizedName description="MPA_ML_Endpoint_Router" languagecode="1033" />
+          <LocalizedName description="MPA Import Performance" languagecode="1033" />
         </LocalizedNames>
       </Workflow>
-      <Workflow WorkflowId="{2530c4b8-7dd1-4b9f-a42d-20bd52e51fe3}" Name="MPA_Telemetry_Logger">
-        <JsonFileName>/Workflows/MPA_Telemetry_Logger.json</JsonFileName>
+      <Workflow WorkflowId="{5554fcb8-b7e9-f011-8544-6045bd09a586}" Name="MPA Process Media Brief">
+        <JsonFileName>/Workflows/MPAProcessMediaBrief-5554FCB8-B7E9-F011-8544-6045BD09A586.json</JsonFileName>
         <Type>1</Type>
         <Subprocess>0</Subprocess>
         <Category>5</Category>
         <Mode>0</Mode>
         <Scope>4</Scope>
-        <OnDemand>1</OnDemand>
+        <OnDemand>0</OnDemand>
         <TriggerOnCreate>0</TriggerOnCreate>
         <TriggerOnDelete>0</TriggerOnDelete>
         <AsyncAutodelete>0</AsyncAutodelete>
         <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
-        <StateCode>0</StateCode>
-        <StatusCode>1</StatusCode>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
         <RunAs>1</RunAs>
         <IsTransacted>1</IsTransacted>
-        <IntroducedVersion>1.0.0.0</IntroducedVersion>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
         <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
         <PrimaryEntity>none</PrimaryEntity>
         <LocalizedNames>
-          <LocalizedName description="MPA_Telemetry_Logger" languagecode="1033" />
+          <LocalizedName description="MPA Process Media Brief" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{3220b1e7-9e6e-4f20-9915-2bdef6d8f9ae}" Name="MPA Promote Learning">
+        <JsonFileName>/Workflows/MPAPromoteLearning-3220B1E7-9E6E-4F20-9915-2BDEF6D8F9AE.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>0</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="MPA Promote Learning" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{c5a57b52-dee8-f011-8544-6045bd060784}" Name="MPA Save Section">
+        <JsonFileName>/Workflows/MPASaveSection-C5A57B52-DEE8-F011-8544-6045BD060784.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>0</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="MPA Save Section" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{7fb900f5-d8e8-f011-8544-6045bd09a586}" Name="MPA Search Benchmarks">
+        <JsonFileName>/Workflows/MPASearchBenchmarks-7FB900F5-D8E8-F011-8544-6045BD09A586.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>0</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="MPA Search Benchmarks" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{b284973e-d8e8-f011-8544-6045bd09a586}" Name="MPA Search Channels">
+        <JsonFileName>/Workflows/MPASearchChannels-B284973E-D8E8-F011-8544-6045BD09A586.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>0</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="MPA Search Channels" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{81ba4fba-b4a8-4e20-84e7-170b9071044d}" Name="MPA Track KB Usage">
+        <JsonFileName>/Workflows/MPATrackKBUsage-81BA4FBA-B4A8-4E20-84E7-170B9071044D.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>0</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="MPA Track KB Usage" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{f4264a05-a5e9-f011-8544-6045bd09a586}" Name="MPA Validate Plan">
+        <JsonFileName>/Workflows/MPAValidatePlan-F4264A05-A5E9-F011-8544-6045BD09A586.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>0</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="MPA Validate Plan" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <!-- ============================================== -->
+      <!-- CONSULTING AGENT WORKFLOWS (8) -->
+      <!-- ============================================== -->
+      <Workflow WorkflowId="{c43947b5-66d9-4683-bd95-0cc96e238d4f}" Name="CA Initialize Session">
+        <JsonFileName>/Workflows/CAInitializeSession-C43947B5-66D9-4683-BD95-0CC96E238D4F.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>0</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="CA Initialize Session" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{ce8cebca-a3ee-48dc-8ce0-c04f4f240230}" Name="CA Create Analysis">
+        <JsonFileName>/Workflows/CACreateAnalysis-CE8CEBCA-A3EE-48DC-8CE0-C04F4F240230.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>0</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="CA Create Analysis" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{e1946d5e-b08d-48a1-9830-a15e383de5c6}" Name="CA Create Deliverable">
+        <JsonFileName>/Workflows/CACreateDeliverable-E1946D5E-B08D-48A1-9830-A15E383DE5C6.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>0</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="CA Create Deliverable" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{9c45f1b4-9204-4927-a7d4-e0bfd00d06cf}" Name="CA Create Recommendation">
+        <JsonFileName>/Workflows/CACreateRecommendation-9C45F1B4-9204-4927-A7D4-E0BFD00D06CF.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>0</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="CA Create Recommendation" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{f5377ef2-3c00-4574-b6a0-4230a14e798a}" Name="CA Promote Learning">
+        <JsonFileName>/Workflows/CAPromoteLearning-F5377EF2-3C00-4574-B6A0-4230A14E798A.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>0</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="CA Promote Learning" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{6587009c-aed2-4bd4-a07e-718605b9beb5}" Name="CA Record Framework Use">
+        <JsonFileName>/Workflows/CARecordFrameworkUse-6587009C-AED2-4BD4-A07E-718605B9BEB5.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>0</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="CA Record Framework Use" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{01e0ebac-a2f7-4e5a-924b-5da8257c18e1}" Name="CA Search Benchmarks">
+        <JsonFileName>/Workflows/CASearchBenchmarks-01E0EBAC-A2F7-4E5A-924B-5DA8257C18E1.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>0</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="CA Search Benchmarks" languagecode="1033" />
+        </LocalizedNames>
+      </Workflow>
+      <Workflow WorkflowId="{7809120b-a8d0-41b6-a365-9432987c8992}" Name="CA Search Frameworks">
+        <JsonFileName>/Workflows/CASearchFrameworks-7809120B-A8D0-41B6-A365-9432987C8992.json</JsonFileName>
+        <Type>1</Type>
+        <Subprocess>0</Subprocess>
+        <Category>5</Category>
+        <Mode>0</Mode>
+        <Scope>4</Scope>
+        <OnDemand>0</OnDemand>
+        <TriggerOnCreate>0</TriggerOnCreate>
+        <TriggerOnDelete>0</TriggerOnDelete>
+        <AsyncAutodelete>0</AsyncAutodelete>
+        <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+        <StateCode>1</StateCode>
+        <StatusCode>2</StatusCode>
+        <RunAs>1</RunAs>
+        <IsTransacted>1</IsTransacted>
+        <IntroducedVersion>7.0.0.0</IntroducedVersion>
+        <IsCustomizable>1</IsCustomizable>
+        <BusinessProcessType>0</BusinessProcessType>
+        <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+        <ModernFlowType>0</ModernFlowType>
+        <PrimaryEntity>none</PrimaryEntity>
+        <LocalizedNames>
+          <LocalizedName description="CA Search Frameworks" languagecode="1033" />
         </LocalizedNames>
       </Workflow>
   </Workflows>

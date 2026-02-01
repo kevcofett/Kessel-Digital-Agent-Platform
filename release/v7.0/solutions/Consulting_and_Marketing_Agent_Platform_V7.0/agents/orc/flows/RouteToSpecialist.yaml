@@ -1,0 +1,500 @@
+# RouteToSpecialist Power Automate Flow Definition
+# Version: 1.0.0
+# Agent: ORC (Orchestrator)
+# Description: Routes user requests through ORC to specialist agents
+
+name: RouteToSpecialist
+description: >
+  HTTP-triggered flow that receives user messages, routes them through the
+  Orchestrator Agent for intent classification, and dispatches to specialist
+  agents as needed. Returns synthesized responses to Copilot Studio.
+
+trigger:
+  type: HTTP
+  method: POST
+  schema:
+    type: object
+    required:
+      - user_message
+      - session_id
+    properties:
+      user_message:
+        type: string
+        description: The user's message to process
+      session_id:
+        type: string
+        format: uuid
+        description: Current session identifier
+      current_step:
+        type: integer
+        minimum: 1
+        maximum: 10
+        description: Current workflow step (defaults to session's current step)
+      conversation_context:
+        type: string
+        description: Summary of recent conversation for context
+      source_agent:
+        type: string
+        description: Source agent code if request comes from another agent (e.g., GHA)
+        enum:
+          - USER
+          - GHA
+          - ORC
+        default: USER
+      target_specialist:
+        type: string
+        description: Target specialist if source agent knows which specialist is needed
+      growth_context:
+        type: object
+        description: Growth plan context from GHA for specialist requests
+        properties:
+          growth_session_id:
+            type: string
+          growth_workflow_step:
+            type: integer
+          north_star_metric:
+            type: string
+          priority_stages:
+            type: array
+          growth_plan_state:
+            type: object
+
+environment_variables:
+  ORC_COPILOT_ENDPOINT:
+    description: Orchestrator Copilot Studio endpoint URL
+    required: true
+  EAP_DATAVERSE_URL:
+    description: EAP Dataverse environment URL
+    required: true
+  MULTI_AGENT_FEATURE_FLAG:
+    description: Feature flag key for multi-agent routing
+    default: multi_agent_enabled
+
+steps:
+  # Step 1: Parse and validate input
+  - id: parse_input
+    type: Compose
+    name: Parse Input
+    inputs:
+      user_message: "@triggerBody()?['user_message']"
+      session_id: "@triggerBody()?['session_id']"
+      current_step: "@coalesce(triggerBody()?['current_step'], 1)"
+      conversation_context: "@triggerBody()?['conversation_context']"
+      source_agent: "@coalesce(triggerBody()?['source_agent'], 'USER')"
+      target_specialist: "@triggerBody()?['target_specialist']"
+      growth_context: "@triggerBody()?['growth_context']"
+      is_gha_request: "@equals(coalesce(triggerBody()?['source_agent'], 'USER'), 'GHA')"
+      request_id: "@guid()"
+      timestamp: "@utcNow()"
+
+  # Step 2: Check feature flag
+  - id: check_feature_flag
+    type: HTTP
+    name: Check Multi-Agent Feature Flag
+    inputs:
+      method: GET
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_feature_flags?$filter=eap_flag_key eq '@{variables('MULTI_AGENT_FEATURE_FLAG')}'"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+    run_after: parse_input
+
+  # Step 3: Condition - Route based on feature flag
+  - id: feature_flag_check
+    type: Condition
+    name: Is Multi-Agent Enabled?
+    expression:
+      equals:
+        - "@first(body('check_feature_flag')?['value'])?['eap_flag_value']"
+        - "true"
+    run_after: check_feature_flag
+
+  # Step 3b: Check if this is a GHA specialist request
+  - id: check_gha_request
+    type: Condition
+    name: Is GHA Specialist Request?
+    expression:
+      equals:
+        - "@outputs('parse_input')?['is_gha_request']"
+        - true
+    run_after: feature_flag_check
+
+  # Step 3c: GHA Request Path - Get specialist endpoint directly
+  - id: get_gha_specialist_endpoint
+    type: HTTP
+    name: Get Specialist for GHA Request
+    condition: check_gha_request.true
+    inputs:
+      method: GET
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_agents?$filter=eap_agent_code eq '@{outputs('parse_input')?['target_specialist']}' and eap_agent_status eq 1"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+    run_after: check_gha_request
+
+  # Step 3d: Build GHA specialist request with growth context
+  - id: build_gha_specialist_request
+    type: Compose
+    name: Build GHA Specialist Request
+    condition: check_gha_request.true
+    inputs:
+      request_id: "@guid()"
+      timestamp: "@utcNow()"
+      source_agent: "GHA"
+      target_agent: "@outputs('parse_input')?['target_specialist']"
+      request_type: "GHA_SPECIALIST_REQUEST"
+      growth_context: "@outputs('parse_input')?['growth_context']"
+      session_context:
+        session_id: "@outputs('parse_input')?['session_id']"
+        growth_session_id: "@outputs('parse_input')?['growth_context']?['growth_session_id']"
+        growth_workflow_step: "@outputs('parse_input')?['growth_context']?['growth_workflow_step']"
+      parameters:
+        user_message: "@outputs('parse_input')?['user_message']"
+        growth_plan_state: "@outputs('parse_input')?['growth_context']?['growth_plan_state']"
+    run_after: get_gha_specialist_endpoint
+
+  # Step 3e: Call specialist for GHA
+  - id: call_gha_specialist
+    type: HTTP
+    name: Call Specialist for GHA
+    condition: check_gha_request.true
+    inputs:
+      method: POST
+      uri: "@{first(body('get_gha_specialist_endpoint')?['value'])?['eap_agent_endpoint']}/api/messages"
+      headers:
+        Content-Type: application/json
+      body:
+        text: "@outputs('parse_input')?['user_message']"
+        context:
+          request: "@outputs('build_gha_specialist_request')"
+    run_after: build_gha_specialist_request
+    timeout: PT45S
+
+  # Step 3f: Log GHA specialist response
+  - id: log_gha_specialist_response
+    type: HTTP
+    name: Log GHA Specialist Response
+    condition: check_gha_request.true
+    inputs:
+      method: POST
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_response_logs"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_entry_id: "@guid()"
+        eap_session_id: "@outputs('parse_input')?['session_id']"
+        eap_request_id: "@outputs('build_gha_specialist_request')?['request_id']"
+        eap_agent: "@outputs('parse_input')?['target_specialist']"
+        eap_source_agent: "GHA"
+        eap_status: "@coalesce(body('call_gha_specialist')?['status'], 'success')"
+        eap_confidence: "@coalesce(body('call_gha_specialist')?['confidence'], 'MEDIUM')"
+    run_after: call_gha_specialist
+
+  # Step 3g: Return GHA specialist response (no synthesis needed - goes back to GHA)
+  - id: return_gha_response
+    type: Response
+    name: Return Response to GHA
+    condition: check_gha_request.true
+    inputs:
+      statusCode: 200
+      headers:
+        Content-Type: application/json
+      body:
+        source_agent: "GHA"
+        target_agent: "@outputs('parse_input')?['target_specialist']"
+        specialist_response: "@body('call_gha_specialist')"
+        request_id: "@outputs('build_gha_specialist_request')?['request_id']"
+        status: "success"
+    run_after: log_gha_specialist_response
+
+  # Step 4a: Multi-Agent Path - Get session state (non-GHA requests)
+  - id: get_session_state
+    type: HTTP
+    name: Get Session State
+    condition:
+      and:
+        - feature_flag_check.true
+        - check_gha_request.false
+    inputs:
+      method: GET
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_sessions(@{outputs('parse_input')?['session_id']})"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+    run_after: check_gha_request
+
+  # Step 5: Build ORC request payload
+  - id: build_orc_request
+    type: Compose
+    name: Build ORC Request
+    condition: feature_flag_check.true
+    inputs:
+      request_id: "@outputs('parse_input')?['request_id']"
+      timestamp: "@outputs('parse_input')?['timestamp']"
+      source_agent: "ORC"
+      target_agent: "ORC"
+      request_type: "ROUTE_REQUEST"
+      session_context:
+        session_id: "@outputs('parse_input')?['session_id']"
+        workflow_step: "@coalesce(body('get_session_state')?['eap_workflow_step'], outputs('parse_input')?['current_step'])"
+        workflow_gate: "@coalesce(body('get_session_state')?['eap_workflow_gate'], 0)"
+        session_type: "@coalesce(body('get_session_state')?['eap_session_type'], 'Planning')"
+        plan_state: "@json(coalesce(body('get_session_state')?['eap_plan_state'], '{}'))"
+        created_at: "@body('get_session_state')?['createdon']"
+        updated_at: "@utcNow()"
+        conversation_history_summary: "@outputs('parse_input')?['conversation_context']"
+      parameters:
+        user_message: "@outputs('parse_input')?['user_message']"
+        classify_intent: true
+    run_after: get_session_state
+
+  # Step 6: Call ORC for intent classification
+  - id: call_orc_classify
+    type: HTTP
+    name: Call ORC for Intent Classification
+    condition: feature_flag_check.true
+    inputs:
+      method: POST
+      uri: "@{variables('ORC_COPILOT_ENDPOINT')}/api/messages"
+      headers:
+        Content-Type: application/json
+      body:
+        text: "@outputs('parse_input')?['user_message']"
+        context:
+          request: "@outputs('build_orc_request')"
+          instruction: "Classify the user intent and determine which specialist agent should handle this request. Return a routing decision."
+    run_after: build_orc_request
+    timeout: PT60S
+
+  # Step 7: Parse routing decision
+  - id: parse_routing
+    type: Compose
+    name: Parse Routing Decision
+    condition: feature_flag_check.true
+    inputs:
+      target_agent: "@body('call_orc_classify')?['routing_decision']?['target_agent']"
+      request_type: "@body('call_orc_classify')?['routing_decision']?['request_type']"
+      confidence: "@body('call_orc_classify')?['routing_decision']?['confidence']"
+      rationale: "@body('call_orc_classify')?['routing_decision']?['rationale']"
+      requires_specialist: "@not(equals(body('call_orc_classify')?['routing_decision']?['target_agent'], 'ORC'))"
+    run_after: call_orc_classify
+
+  # Step 8: Log routing decision
+  - id: log_routing
+    type: HTTP
+    name: Log Routing Decision
+    condition: feature_flag_check.true
+    inputs:
+      method: POST
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_routing_logs"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_entry_id: "@guid()"
+        eap_session_id: "@outputs('parse_input')?['session_id']"
+        eap_request_id: "@outputs('parse_input')?['request_id']"
+        eap_source_agent: "ORC"
+        eap_target_agent: "@outputs('parse_routing')?['target_agent']"
+        eap_request_type: "@outputs('parse_routing')?['request_type']"
+        eap_routing_confidence: "@outputs('parse_routing')?['confidence']"
+        eap_routing_rationale: "@outputs('parse_routing')?['rationale']"
+        eap_workflow_step: "@outputs('build_orc_request')?['session_context']?['workflow_step']"
+        eap_workflow_gate: "@outputs('build_orc_request')?['session_context']?['workflow_gate']"
+    run_after: parse_routing
+
+  # Step 9: Condition - Route to specialist or handle in ORC
+  - id: check_needs_specialist
+    type: Condition
+    name: Needs Specialist?
+    condition: feature_flag_check.true
+    expression:
+      equals:
+        - "@outputs('parse_routing')?['requires_specialist']"
+        - true
+    run_after: log_routing
+
+  # Step 10a: Get specialist endpoint
+  - id: get_specialist_endpoint
+    type: HTTP
+    name: Get Specialist Agent Endpoint
+    condition: check_needs_specialist.true
+    inputs:
+      method: GET
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_agents?$filter=eap_agent_code eq '@{outputs('parse_routing')?['target_agent']}' and eap_agent_status eq 1"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+    run_after: check_needs_specialist
+
+  # Step 11: Build specialist request
+  - id: build_specialist_request
+    type: Compose
+    name: Build Specialist Request
+    condition: check_needs_specialist.true
+    inputs:
+      request_id: "@guid()"
+      timestamp: "@utcNow()"
+      source_agent: "ORC"
+      target_agent: "@outputs('parse_routing')?['target_agent']"
+      request_type: "@outputs('parse_routing')?['request_type']"
+      session_context: "@outputs('build_orc_request')?['session_context']"
+      parameters:
+        user_message: "@outputs('parse_input')?['user_message']"
+        orc_context: "@body('call_orc_classify')?['context_for_specialist']"
+    run_after: get_specialist_endpoint
+
+  # Step 12: Call specialist agent
+  - id: call_specialist
+    type: HTTP
+    name: Call Specialist Agent
+    condition: check_needs_specialist.true
+    inputs:
+      method: POST
+      uri: "@{first(body('get_specialist_endpoint')?['value'])?['eap_agent_endpoint']}/api/messages"
+      headers:
+        Content-Type: application/json
+      body:
+        text: "@outputs('parse_input')?['user_message']"
+        context:
+          request: "@outputs('build_specialist_request')"
+    run_after: build_specialist_request
+    timeout: PT45S
+
+  # Step 13: Log specialist response
+  - id: log_specialist_response
+    type: HTTP
+    name: Log Specialist Response
+    condition: check_needs_specialist.true
+    inputs:
+      method: POST
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_response_logs"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_entry_id: "@guid()"
+        eap_session_id: "@outputs('parse_input')?['session_id']"
+        eap_request_id: "@outputs('build_specialist_request')?['request_id']"
+        eap_agent: "@outputs('parse_routing')?['target_agent']"
+        eap_status: "@coalesce(body('call_specialist')?['status'], 'success')"
+        eap_confidence: "@coalesce(body('call_specialist')?['confidence'], 'MEDIUM')"
+        eap_processing_time_ms: "@sub(ticks(utcNow()), ticks(outputs('build_specialist_request')?['timestamp']))"
+    run_after: call_specialist
+
+  # Step 14: Synthesize response through ORC
+  - id: synthesize_response
+    type: HTTP
+    name: Synthesize Final Response
+    condition: check_needs_specialist.true
+    inputs:
+      method: POST
+      uri: "@{variables('ORC_COPILOT_ENDPOINT')}/api/messages"
+      headers:
+        Content-Type: application/json
+      body:
+        text: "Synthesize response for user"
+        context:
+          instruction: "Synthesize the specialist response into a user-friendly format"
+          specialist_response: "@body('call_specialist')"
+          original_request: "@outputs('parse_input')?['user_message']"
+          session_context: "@outputs('build_orc_request')?['session_context']"
+    run_after: log_specialist_response
+    timeout: PT30S
+
+  # Step 15: Update session state if needed
+  - id: update_session
+    type: HTTP
+    name: Update Session State
+    inputs:
+      method: PATCH
+      uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_sessions(@{outputs('parse_input')?['session_id']})"
+      headers:
+        Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+        Content-Type: application/json
+      body:
+        eap_plan_state: "@string(coalesce(body('synthesize_response')?['updated_plan_state'], body('call_orc_classify')?['updated_plan_state'], json('{}')))"
+        modifiedon: "@utcNow()"
+    run_after:
+      - synthesize_response
+      - call_orc_classify
+
+  # Step 16: Build final response
+  - id: build_response
+    type: Compose
+    name: Build Final Response
+    inputs:
+      response_text: "@coalesce(body('synthesize_response')?['text'], body('call_orc_classify')?['text'])"
+      confidence: "@coalesce(body('synthesize_response')?['confidence'], body('call_orc_classify')?['confidence'])"
+      sources: "@coalesce(body('synthesize_response')?['sources'], body('call_orc_classify')?['sources'])"
+      next_step_suggestion: "@coalesce(body('synthesize_response')?['next_step'], body('call_orc_classify')?['next_step'])"
+      routing_path:
+        - agent: "ORC"
+          action: "classify"
+        - agent: "@outputs('parse_routing')?['target_agent']"
+          action: "@outputs('parse_routing')?['request_type']"
+          condition: "@outputs('parse_routing')?['requires_specialist']"
+      metadata:
+        request_id: "@outputs('parse_input')?['request_id']"
+        session_id: "@outputs('parse_input')?['session_id']"
+        total_processing_time_ms: "@sub(ticks(utcNow()), ticks(outputs('parse_input')?['timestamp']))"
+    run_after: update_session
+
+  # Step 4b: Fallback Path - Route to MPA v5.5
+  - id: fallback_to_mpa
+    type: HTTP
+    name: Fallback to MPA v5.5
+    condition: feature_flag_check.false
+    inputs:
+      method: POST
+      uri: "@{variables('MPA_V55_ENDPOINT')}/api/messages"
+      headers:
+        Content-Type: application/json
+      body:
+        text: "@outputs('parse_input')?['user_message']"
+        session_id: "@outputs('parse_input')?['session_id']"
+    run_after: feature_flag_check
+    timeout: PT60S
+
+  # Step 17: Return response
+  - id: return_response
+    type: Response
+    name: Return Response
+    inputs:
+      statusCode: 200
+      headers:
+        Content-Type: application/json
+      body: "@coalesce(outputs('build_response'), body('fallback_to_mpa'))"
+
+error_handling:
+  on_error:
+    - id: log_error
+      type: HTTP
+      name: Log Error
+      inputs:
+        method: POST
+        uri: "@{variables('EAP_DATAVERSE_URL')}/api/data/v9.2/eap_error_logs"
+        headers:
+          Authorization: "Bearer @{body('Get_Access_Token')?['access_token']}"
+          Content-Type: application/json
+        body:
+          eap_error_id: "@guid()"
+          eap_session_id: "@outputs('parse_input')?['session_id']"
+          eap_request_id: "@outputs('parse_input')?['request_id']"
+          eap_error_message: "@actions('failed_action')?['error']?['message']"
+          eap_error_code: "@actions('failed_action')?['error']?['code']"
+          eap_failed_step: "@actions('failed_action')?['name']"
+
+    - id: return_error_response
+      type: Response
+      name: Return Error Response
+      inputs:
+        statusCode: 500
+        headers:
+          Content-Type: application/json
+        body:
+          error: true
+          message: "An error occurred processing your request"
+          request_id: "@outputs('parse_input')?['request_id']"
+          fallback_available: true

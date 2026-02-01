@@ -1,0 +1,578 @@
+DOCUMENT: SPO_KB_Brand_Safety_v7.0.txt
+CATEGORY: Supply Path Knowledge Base
+TOPICS: brand safety, brand suitability, verification, blocklists, MFA
+VERSION: 1.0
+DATE: January 2026
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+RELATED: SPO_KB_Fee_Analysis_v1, SPO_KB_Partner_Evaluation_v1
+
+SPO BRAND SAFETY v1
+
+PURPOSE
+
+This document provides guidance on brand safety within programmatic supply paths. Reference when users ask about safety configurations, verification vendors, or suitability strategies.
+
+BRAND SAFETY FUNDAMENTALS
+
+SAFETY VS SUITABILITY
+
+Brand Safety:
+- Avoiding content universally harmful to brands
+- Illegal content, hate speech, violence
+- Non-negotiable categories
+- Binary: safe or unsafe
+
+Brand Suitability:
+- Content appropriateness varies by brand
+- Depends on brand values and tolerance
+- Alcohol brand on cocktail recipe: suitable
+- Childrens brand on cocktail recipe: unsuitable
+- Spectrum, not binary
+
+INDUSTRY STANDARDS
+
+GARM (Global Alliance for Responsible Media):
+- Industry standard framework
+- Defines content categories and risk levels
+- Floor: Minimum safety standard
+- Ceiling: Maximum suitability control
+
+TAG (Trustworthy Accountability Group):
+- Brand safety certification program
+- Certifies vendors and publishers
+- Requires inventory quality standards
+- Look for TAG Certified badge
+
+RISK CATEGORIES
+
+GARM Framework Categories:
+
+Adult and Explicit Sexual Content:
+- Floor: Block explicit pornography
+- Ceiling: Block all adult themes
+
+Arms and Ammunition:
+- Floor: Block illegal weapons sales
+- Ceiling: Block all weapons content
+
+Crime and Harmful Acts:
+- Floor: Block content promoting illegal acts
+- Ceiling: Block all crime-related content
+
+Death, Injury, Military Conflict:
+- Floor: Block graphic violence
+- Ceiling: Block all conflict content
+
+Online Piracy:
+- Floor: Block illegal streaming sites
+- Ceiling: Block all piracy discussion
+
+Hate Speech and Discrimination:
+- Floor: Block content promoting hatred
+- Ceiling: Block all sensitive identity content
+
+Obscenity and Profanity:
+- Floor: Block excessive profanity
+- Ceiling: Block all profanity
+
+Illegal Drugs, Tobacco, Alcohol:
+- Floor: Block illegal drug sales
+- Ceiling: Block all substance content
+
+Spam and Malware:
+- Floor: Block malicious sites
+- Ceiling: Maximum protection available
+
+Terrorism:
+- Floor: Block content supporting terrorism
+- Ceiling: Block all terrorism discussion
+
+Sensitive Social Issues:
+- Floor: Block inflammatory content
+- Ceiling: Block all political content
+
+Custom Category Development:
+- Identify brand-specific concerns
+- Work with verification vendors
+- Create keyword and topic lists
+- Test and refine over time
+
+VERIFICATION ECOSYSTEM
+
+MAJOR VENDORS
+
+DoubleVerify (DV):
+- Leading verification provider
+- Pre-bid and post-bid solutions
+- Authentic Brand Safety product
+- Custom category capabilities
+- Strong in display and video
+
+Integral Ad Science (IAS):
+- Major verification competitor
+- Context Control Targeting
+- Quality Attention measurement
+- Strong video verification
+- Publisher certification program
+
+Oracle/MOAT:
+- Oracle Advertising portfolio
+- Attention analytics
+- Brand safety measurement
+- Cross-platform capabilities
+- Often bundled with Oracle data
+
+CAPABILITY COMPARISON
+
+Pre-Bid Filtering:
+- DV: Authentic Brand Suitability
+- IAS: Context Control
+- MOAT: Limited pre-bid
+
+Post-Bid Measurement:
+- All vendors provide
+- Impression-level analysis
+- Reporting and dashboards
+- Violation alerting
+
+Video Verification:
+- DV: Strong video coverage
+- IAS: Video-first approach
+- MOAT: Video attention focus
+
+Custom Segments:
+- DV: Flexible customization
+- IAS: Topic-level control
+- MOAT: Oracle category integration
+
+FEE STRUCTURES
+
+Pre-Bid Filtering:
+- Typically 0.05-0.15 dollars CPM
+- Higher for custom categories
+- Volume discounts available
+- Reduces wasted impressions
+
+Post-Bid Measurement Only:
+- Typically 0.02-0.05 dollars CPM
+- Lower cost, reactive approach
+- Good for monitoring
+- Does not prevent violations
+
+Bundled Verification:
+- Viewability plus safety plus fraud
+- Typically 0.10-0.20 dollars CPM
+- Efficient for full protection
+- Negotiate package pricing
+
+PRE-BID VS POST-BID
+
+Pre-Bid Advantages:
+- Prevents violations before they happen
+- No wasted impressions on unsafe content
+- Proactive brand protection
+- Higher value per impression served
+
+Pre-Bid Limitations:
+- Reduces available inventory
+- May miss false positives
+- Classification lag for new content
+- Higher cost than post-bid
+
+Post-Bid Advantages:
+- Lower cost
+- Full impression coverage
+- Identifies violations for reporting
+- Vendor dispute leverage
+
+Post-Bid Limitations:
+- Reactive, damage already done
+- Brand already associated with content
+- Requires manual remediation
+- Violation already counted
+
+Recommendation:
+Use pre-bid for high-risk categories and premium placements. Use post-bid for monitoring and lower-risk campaigns. Combine both for comprehensive protection.
+
+IMPLEMENTATION APPROACHES
+
+DSP Integration:
+- Most DSPs integrate major vendors
+- Enable at campaign or account level
+- Set thresholds for blocking
+- Monitor impact on delivery
+
+Tag-Based:
+- Verification tags in creative
+- Measure all impressions
+- Works across platforms
+- No pre-bid blocking capability
+
+Reporting and Optimization:
+- Review violation reports weekly
+- Identify problem publishers
+- Add to blocklists
+- Adjust category settings
+
+MADE-FOR-ADVERTISING (MFA) SITES
+
+DEFINITION AND IDENTIFICATION
+
+What is MFA:
+- Sites designed to arbitrage ad revenue
+- Content exists to generate pageviews
+- Low-quality, often AI-generated content
+- Aggressive ad loading, poor experience
+- Clicks often accidental or incentivized
+
+MFA Characteristics:
+- High ad-to-content ratio
+- Slideshow and gallery formats
+- Clickbait headlines
+- Content farms and aggregators
+- Unknown publishers with high volume
+
+Detection Approaches:
+- Manual review of top spend domains
+- Verification vendor MFA scoring
+- Attention metrics analysis
+- Session quality indicators
+- Publisher transparency research
+
+IMPACT ON CAMPAIGNS
+
+Attention Metrics:
+- MFA sites have very low attention
+- Ads may load but not be seen
+- Viewability may technically pass
+- Actual human attention near zero
+
+Waste Calculation:
+MFA Waste = MFA Spend x (1 - Attention Factor)
+Example: 100,000 dollars MFA spend, 10% attention
+Waste = 100,000 x 0.90 = 90,000 dollars wasted
+
+Hidden Costs Beyond CPM:
+- Brand reputation risk
+- False performance signals
+- Wasted creative effort
+- Opportunity cost of real media
+
+AVOIDANCE STRATEGIES
+
+Inclusion Lists:
+- Only buy from approved publishers
+- Highest protection, limited scale
+- Good for premium campaigns
+- Requires list maintenance
+
+Quality Floors:
+- Set minimum quality thresholds
+- Use verification vendor scores
+- Balance protection with scale
+- Test threshold impact on delivery
+
+Verification Tools:
+- DV MFA detection
+- IAS quality scoring
+- MOAT attention metrics
+- Multiple signals recommended
+
+Publisher Transparency:
+- Research unfamiliar publishers
+- Check ads.txt and sellers.json
+- Review site content quality
+- Trust but verify supply paths
+
+INCLUSION VS EXCLUSION STRATEGIES
+
+BLOCKLIST MANAGEMENT
+
+Standard Categories:
+- Start with GARM floor categories
+- Add industry-specific exclusions
+- Review quarterly for updates
+- Monitor for over-blocking
+
+Custom Lists:
+- Brand-specific blocked domains
+- Competitor exclusions
+- Problem publisher additions
+- Requires ongoing maintenance
+
+Maintenance Requirements:
+- Review violation reports monthly
+- Add new problem domains
+- Remove false positives
+- Update for URL changes
+
+Blocklist Limitations:
+- Cannot block what you do not know
+- New domains appear constantly
+- Sophisticated actors rotate domains
+- Reactive by nature
+
+INCLUSION LIST BENEFITS
+
+Quality Control:
+- Know exactly where ads appear
+- Highest brand safety possible
+- Transparent to stakeholders
+- Premium inventory access
+
+Transparency:
+- Full visibility into placements
+- Easier reporting and governance
+- Builds trust with leadership
+- Simplifies compliance
+
+TRADE-OFFS WITH SCALE
+
+Scale Impact:
+- Inclusion lists reduce reach
+- May limit targeting effectiveness
+- Higher CPMs for premium inventory
+- Requires balance with goals
+
+Minimum Viable List:
+- 500-1000 domains for broad reach
+- 100-200 domains for premium focus
+- Expand based on performance
+- Monitor reach impact
+
+HYBRID APPROACHES
+
+Premium Tier Plus Verified Open:
+- Tier 1: Inclusion list only
+- Tier 2: Open with pre-bid filtering
+- Allocate budget by tier
+- Test and optimize allocation
+
+Testing Framework:
+- Run A/B tests by safety level
+- Compare performance and safety
+- Optimize allocation over time
+- Document findings for benchmarks
+
+CONTEXTUAL SAFETY
+
+KEYWORD BLOCKING
+
+How It Works:
+- Block pages containing keywords
+- Simple but blunt approach
+- High false positive rate
+- Example: blocking gun blocks Super Bowl shotgun formation
+
+Limitations:
+- Context not considered
+- News blocked inappropriately
+- Over-blocking harms publishers
+- Reduces inventory unnecessarily
+
+Best Practices:
+- Use sparingly for extreme terms
+- Combine with contextual targeting
+- Review blocked content samples
+- Refine lists based on findings
+
+SEMANTIC VS KEYWORD
+
+Keyword Blocking:
+- Matches exact words
+- No understanding of meaning
+- High false positive rate
+- Simple to implement
+
+Semantic Analysis:
+- Understands page meaning
+- Classifies content intent
+- Lower false positive rate
+- More sophisticated technology
+
+Recommendation:
+Prefer semantic classification over keyword blocking. Reserve keywords for terms that are universally problematic regardless of context.
+
+CONTEXTUAL TARGETING
+
+Positive Targeting for Safety:
+- Target safe content categories
+- Sports, entertainment, lifestyle
+- Known-safe publishers
+- Proactive rather than reactive
+
+AI-Powered Classification:
+- Machine learning content analysis
+- Image and video recognition
+- Real-time classification
+- Improving accuracy over time
+
+NEWS ADJACENCY
+
+Challenge:
+- News covers inherently sensitive topics
+- Blocking news hurts quality publishers
+- Important information for advertisers
+- Brand adjacency concerns real
+
+Responsible News Support:
+- Support quality journalism
+- Block specific articles, not outlets
+- Use sentiment analysis
+- Consider NEWS exception lists
+
+Nuanced Blocking:
+- Block only negative sentiment
+- Allow neutral and positive coverage
+- Topic-level rather than outlet-level
+- Review false positive impact
+
+SAFETY BY CHANNEL
+
+DISPLAY AND PROGRAMMATIC
+
+Considerations:
+- Highest MFA risk
+- Most fraud exposure
+- Requires multiple protections
+- Monitor violation rates closely
+
+Recommendations:
+- Pre-bid verification required
+- Publisher transparency review
+- Attention metrics monitoring
+- Regular blocklist updates
+
+VIDEO AND CTV
+
+Content-Level Controls:
+- Video inventory more controlled
+- CTV generally safer than display
+- Content rating available
+- Genre targeting recommended
+
+Specific Concerns:
+- User-generated video risk
+- FAST channel quality varies
+- App-level versus content-level
+- Verify inventory sources
+
+SOCIAL
+
+Platform-Specific Tools:
+- Meta brand safety controls
+- TikTok inventory filters
+- YouTube content exclusions
+- Platform-native protections
+
+Limitations:
+- Less control than open web
+- Platform classifications vary
+- User-generated content risk
+- Limited third-party verification
+
+RETAIL MEDIA
+
+Generally Safer Environment:
+- Retail sites are controlled
+- Commercial content context
+- Lower risk categories
+- Focus on competitor separation
+
+Considerations:
+- Review placement on product pages
+- Category adjacency matters
+- Customer review content
+- Search result context
+
+REPORTING AND GOVERNANCE
+
+SAFETY METRICS
+
+Block Rate:
+- Percentage of bids blocked
+- Benchmark: 5-15% for standard protection
+- Higher indicates aggressive settings
+- Monitor for over-blocking
+
+Violation Rate:
+- Post-bid violations as percent
+- Benchmark: less than 1% for well-protected
+- Higher indicates protection gaps
+- Investigate spike causes
+
+Benchmarks by Vertical:
+- CPG: 8-12% block rate typical
+- Financial: 12-18% block rate typical
+- Pharma: 15-25% block rate typical
+- Entertainment: 5-10% block rate typical
+
+ESCALATION PROCEDURES
+
+Incident Response:
+- Document violation immediately
+- Screenshot and preserve evidence
+- Notify verification vendor
+- Add to blocklist
+- Report to DSP if applicable
+
+Vendor Communication:
+- Provide specific examples
+- Request classification review
+- Track resolution timeline
+- Escalate if unresolved
+
+BRAND SAFETY COSTS
+
+FEE ANALYSIS
+
+Verification Costs by Approach:
+- Basic post-bid: 0.02-0.05 dollars CPM
+- Pre-bid filtering: 0.05-0.15 dollars CPM
+- Full stack: 0.10-0.20 dollars CPM
+- Custom categories: Additional 0.02-0.05 dollars
+
+Annual Cost Example:
+100 million impressions at 0.10 dollars CPM verification
+Annual cost: 10,000 dollars
+Prevented violations: 5 million impressions
+Value protected: 50,000 dollars in brand safety incidents
+
+ROI OF SAFETY INVESTMENT
+
+Avoided Costs:
+- PR crisis management
+- Brand reputation damage
+- Media coverage costs
+- Executive attention time
+
+Positive ROI Indicators:
+- Low violation rates
+- No brand safety incidents
+- Stakeholder confidence
+- Competitive advantage
+
+HIDDEN COSTS OF UNSAFE INVENTORY
+
+Brand Damage:
+- Customer trust erosion
+- Social media backlash
+- News coverage
+- Long-term brand equity impact
+
+Wasted Spend:
+- Impressions on MFA
+- Fraud exposure
+- Low-attention inventory
+- Unviewable placements
+
+CROSS-REFERENCES
+
+For fee analysis: See SPO_KB_Fee_Analysis_v1
+For partner evaluation: See SPO_KB_Partner_Evaluation_v1
+For NBI calculation: See SPO_KB_NBI_Calculation_v1
+
+VERSION HISTORY
+
+Version 1.0 - January 2026 - Initial creation covering brand safety fundamentals, verification ecosystem, MFA, inclusion/exclusion strategies, and channel-specific guidance

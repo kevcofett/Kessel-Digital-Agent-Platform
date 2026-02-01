@@ -1,0 +1,44 @@
+mpa_kpicode,mpa_kpiname,mpa_category,mpa_formula,mpa_unit,mpa_format,mpa_direction,mpa_confidence_level,mpa_notes,mpa_isactive
+CAC,Customer Acquisition Cost,Acquisition,Total Spend / Conversions,$,$0.00,Lower is Better,High,Primary acquisition metric. LTV must justify CAC.,Yes
+CPA,Cost Per Acquisition,Acquisition,Total Spend / Acquisitions,$,$0.00,Lower is Better,High,Generic acquisition cost metric.,Yes
+CPL,Cost Per Lead,Acquisition,Total Spend / Leads,$,$0.00,Lower is Better,Medium,Lead quality varies significantly.,Yes
+CPCV,Cost Per Completed View,Acquisition,Total Spend / Completed Views,$,$0.000,Lower is Better,High,Video completion cost metric.,Yes
+ROAS,Return on Ad Spend,Efficiency,(Revenue - Ad Spend) / Ad Spend,x,0.0x,Higher is Better,Low,"CORRECT FORMULA uses profit over spend. Platform ROAS (Revenue/Spend) differs. Result of 1.0 means 100% return. FLAWED AS PRIMARY KPI without incrementality testing.",Yes
+iROAS,Incremental ROAS,Efficiency,(Incremental Revenue - Ad Spend) / Ad Spend,x,0.0x,Higher is Better,Medium,Preferred to standard ROAS. Requires incrementality testing. True value measurement. Same formula as ROAS but uses incremental revenue.,Yes
+ROI,Return on Investment,Efficiency,(Revenue - Cost) / Cost * 100,%,0.0%,Higher is Better,Low,Requires full cost accounting. Different from ROAS as includes all costs not just ad spend.,Yes
+MER,Marketing Efficiency Ratio,Efficiency,Total Revenue / Total Marketing Spend,x,0.0x,Higher is Better,Medium,Blended metric for portfolio view. Better than channel ROAS. Target 3x to 8x depending on margin.,Yes
+NWM,Net Working Media,Efficiency,Gross Spend * (1 - Total Fee Pct),%,0.0%,Higher is Better,High,Percentage reaching publishers.,Yes
+CPM,Cost Per Mille,Delivery,Spend / (Impressions / 1000),$,$0.00,Lower is Better,High,Varies by channel and seasonality. 2025-2026 ranges: Display $1-15 Search $2-8 Social $5-25 CTV $15-45.,Yes
+CPC,Cost Per Click,Delivery,Spend / Clicks,$,$0.00,Lower is Better,High,Quality of clicks matters. 2025-2026 ranges: Search $0.50-5.00 Social $0.30-3.00 Display $0.10-2.00.,Yes
+REACH,Unique Reach,Delivery,Unique Users Reached,count,"#,##0",Higher is Better,Medium,Cross-platform reach is estimated.,Yes
+FREQUENCY,Average Frequency,Delivery,Impressions / Unique Users,x,0.0x,Optimal Range,Medium,Optimal varies by objective. Typically 2-5 for awareness. 5-8 for consideration.,Yes
+IMPRESSIONS,Total Impressions,Delivery,Sum of Ad Impressions,count,"#,##0",Higher is Better,High,Vanity metric unless paired with quality.,Yes
+SOV,Share of Voice,Delivery,(Brand Impressions / Category Impressions) * 100,%,0.0%,Higher is Better,Medium,Competitive metric. SOV above SOM drives growth. Binet and Field research supports ESOV investment.,Yes
+CTR,Click-Through Rate,Engagement,(Clicks / Impressions) * 100,%,0.00%,Higher is Better,High,Creative and targeting dependent. 2025-2026 benchmarks: Search 2-6% Display 0.05-0.15% Social 0.5-2%.,Yes
+VTR,View-Through Rate,Engagement,(Completed Views / Video Starts) * 100,%,0.00%,Higher is Better,High,Completion rates vary by length. 15s: 70-90% 30s: 50-70% 60s: 30-50%.,Yes
+ENGAGEMENT_RATE,Engagement Rate,Engagement,(Engagements / Impressions) * 100,%,0.00%,Higher is Better,Medium,Platform-specific definitions.,Yes
+ATTENTION_SCORE,Attention Score,Engagement,Weighted attention seconds per impression,score,0.0,Higher is Better,Medium,Emerging metric. Adelaide and Lumen are leading providers. Better outcome predictor than viewability.,Yes
+BOUNCE_RATE,Bounce Rate,Engagement,(Single Page Sessions / Total Sessions) * 100,%,0.00%,Lower is Better,High,Landing page quality indicator.,Yes
+CVR,Conversion Rate,Conversion,(Conversions / Clicks) * 100,%,0.00%,Higher is Better,Medium,Define conversion clearly. 2025-2026 benchmarks: Ecommerce 1-4% Lead Gen 2-8% B2B 1-3%.,Yes
+AOV,Average Order Value,Conversion,Revenue / Orders,$,$0.00,Higher is Better,High,Key for ecommerce.,Yes
+LTV,Customer Lifetime Value,Conversion,Avg Revenue per Customer * Avg Customer Lifespan,$,$0.00,Higher is Better,Low,Requires historical data.,Yes
+LTV_CAC,LTV to CAC Ratio,Conversion,LTV / CAC,x,0.0x,Higher is Better,Medium-Low,Below 3:1 unsustainable.,Yes
+NTB_RATE,New-to-Brand Rate,Conversion,(New Customers / Total Customers) * 100,%,0.0%,Higher is Better,High,Critical for retail media. Amazon and Walmart report NTB. Measures true acquisition.,Yes
+VIEWABILITY,Viewability Rate,Quality,(Viewable Impressions / Total Impressions) * 100,%,0.0%,Higher is Better,High,MRC standard: 50% in view 1+ sec. 2025-2026 target: 70%+ premium 60%+ standard.,Yes
+IVT_RATE,Invalid Traffic Rate,Quality,(Invalid Impressions / Total Impressions) * 100,%,0.0%,Lower is Better,High,Above 5% indicates issues. 2025-2026 target: Below 3%.,Yes
+MFA_RATE,Made-For-Advertising Rate,Quality,(MFA Impressions / Total Impressions) * 100,%,0.0%,Lower is Better,Medium,MFA sites offer low value. Target below 5%.,Yes
+BRAND_SAFETY,Brand Safety Rate,Quality,(Safe Impressions / Total Impressions) * 100,%,0.0%,Higher is Better,High,Verification partner required. 2025-2026 target: 98%+.,Yes
+AIDED_AWARENESS,Aided Brand Awareness,Brand,(Respondents Recognizing Brand / Total Respondents) * 100,%,0.0%,Higher is Better,Medium,Survey-based metric. Requires brand lift study. Measures awareness when prompted with brand name.,Yes
+BRAND_CONSIDERATION,Brand Consideration,Brand,(Respondents Considering Brand / Total Respondents) * 100,%,0.0%,Higher is Better,Medium,Survey-based metric. Requires brand lift study. Measures mid-funnel brand health.,Yes
+BRAND_PREFERENCE,Brand Preference,Brand,(Respondents Preferring Brand / Total Respondents) * 100,%,0.0%,Higher is Better,Medium,Survey-based metric. Requires brand lift study. Lower-funnel brand metric.,Yes
+BRAND_LIFT,Brand Lift Percentage,Brand,((Exposed - Control) / Control) * 100,%,0.0%,Higher is Better,Medium,Calculated from brand lift studies. Measures incremental brand impact. Requires test and control.,Yes
+TOTAL_FEE_PCT,Total Fee Percentage,SPO,Sum of All Fees / Gross Spend * 100,%,0.0%,Lower is Better,High,Above 35% triggers SPO analysis.,Yes
+DSP_FEE,DSP Platform Fee,SPO,DSP Fee / Gross Spend * 100,%,0.0%,Lower is Better,High,Walled gardens often 0% explicit.,Yes
+SSP_TAKE,SSP Take Rate,SPO,SSP Fee / Gross Spend * 100,%,0.0%,Lower is Better,High,High rates indicate inefficiency.,Yes
+NET_BENEFIT,Net Benefit Index,SPO,Fee Savings Pct - (Effectiveness Loss Pct * Weight),%,0.0%,Higher is Better,Medium,NBI > 0 recommends optimization.,Yes
+PACING_INDEX,Pacing Index,Pacing,Spend Pct / Time Pct,x,0.00x,Optimal Range,High,"Below 0.85 underpacing, above 1.15 overpacing.",Yes
+DAILY_SPEND,Daily Spend Rate,Pacing,Budget / Campaign Days,$,$0.00,Target,High,Use for pacing calculations.,Yes
+BUDGET_UTIL,Budget Utilization,Pacing,(Spent / Budget) * 100,%,0.0%,Higher is Better,High,Target 95-100%.,Yes
+INCREMENTALITY,Incrementality Rate,Incrementality,(Incremental Conversions / Total Attributed Conversions) * 100,%,0.0%,Higher is Better,Medium,True measure of campaign value. Requires geo or holdout testing. Gold standard for measurement.,Yes
+iCAC,Incremental CAC,Incrementality,Ad Spend / Incremental Conversions,$,$0.00,Lower is Better,Medium,True acquisition cost accounting for incrementality. Higher but more accurate than standard CAC.,Yes
+CARBON_INTENSITY,Carbon Intensity,Sustainability,gCO2e / 1000 Impressions,gCO2e,0.0,Lower is Better,Medium,Emerging sustainability metric. Display 0.5-3.0 Video 3.0-15.0 CTV 5.0-20.0.,Yes

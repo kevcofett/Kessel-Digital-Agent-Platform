@@ -1,0 +1,518 @@
+AUD KNOWLEDGE BASE - IDENTITY RESOLUTION v1
+VERSION: 1.0
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+
+================================================================================
+SECTION 1 - IDENTITY RESOLUTION FUNDAMENTALS
+================================================================================
+
+IDENTITY RESOLUTION DEFINITION
+
+Identity resolution links disparate data points and identifiers to create a unified view of individuals across devices, channels, and time.
+
+WHY IDENTITY MATTERS
+- Cross-device targeting and measurement
+- Frequency management
+- Customer journey understanding
+- Personalization at scale
+- Attribution accuracy
+
+IDENTITY CHALLENGES
+- Cookie deprecation
+- Mobile identifier restrictions (ATT)
+- Cross-platform fragmentation
+- Privacy regulations
+- Walled garden limitations
+
+IDENTIFIER TYPES
+
+DETERMINISTIC IDENTIFIERS
+Exact, known identifiers.
+- Hashed email address
+- Hashed phone number
+- Login credentials
+- Customer ID
+
+PROBABILISTIC IDENTIFIERS
+Inferred connections based on signals.
+- Device fingerprinting
+- IP-based inference
+- Behavioral patterns
+- Location signals
+
+DEVICE IDENTIFIERS
+Platform-specific device tokens.
+- Apple IDFA (requires ATT consent)
+- Google GAID (Privacy Sandbox evolving)
+- CTV device IDs
+- Household IDs
+
+PLATFORM IDENTIFIERS
+Walled garden user IDs.
+- Google User ID
+- Meta User ID
+- Amazon Customer ID
+- Not portable across platforms
+
+================================================================================
+SECTION 2 - DETERMINISTIC MATCHING
+================================================================================
+
+DETERMINISTIC APPROACH
+
+Deterministic matching uses exact identifier matches for highest accuracy.
+
+HOW IT WORKS
+1. User provides identifier (email, phone)
+2. Identifier is hashed for privacy
+3. Hash compared to other datasets
+4. Exact match confirms same person
+
+COMMON DETERMINISTIC IDENTIFIERS
+
+HASHED EMAIL
+- Most widely used identifier
+- SHA-256 hashing standard
+- Requires user to provide email
+- Match rates: 40-70% typical
+
+HASHED PHONE
+- Growing in importance
+- Multiple formats (normalize first)
+- Often used with email
+- Match rates: 30-50% typical
+
+LOGIN DATA
+- Highest accuracy
+- Limited to authenticated environments
+- First-party or partner data
+- Essential for walled gardens
+
+MATCH RATE FACTORS
+
+DATA QUALITY
+- Email validity
+- Standardization (lowercase, trim)
+- Recency of data
+- Complete vs partial records
+
+PLATFORM COVERAGE
+- User base overlap
+- Identifier availability
+- Authentication rates
+- Geographic factors
+
+DETERMINISTIC ADVANTAGES
+- High accuracy (95%+ when matched)
+- Privacy-friendly (hashed)
+- Durable over time
+- Regulatory compliant
+
+DETERMINISTIC LIMITATIONS
+- Lower match rates
+- Requires user-provided data
+- Cross-platform gaps
+- Not real-time collection
+
+================================================================================
+SECTION 3 - PROBABILISTIC MATCHING
+================================================================================
+
+PROBABILISTIC APPROACH
+
+Probabilistic matching infers identity connections using signals and statistical models.
+
+HOW IT WORKS
+1. Collect multiple signals
+2. Build probability model
+3. Calculate match likelihood
+4. Apply confidence threshold
+5. Link records above threshold
+
+SIGNALS USED
+
+DEVICE SIGNALS
+- Browser type and version
+- Operating system
+- Screen resolution
+- Language settings
+- Installed fonts
+
+NETWORK SIGNALS
+- IP address
+- Connection type
+- ISP information
+- Geographic location
+
+BEHAVIORAL SIGNALS
+- Browsing patterns
+- Time of day usage
+- Content preferences
+- Purchase behavior
+
+PROBABILISTIC MATCHING QUALITY
+
+CONFIDENCE SCORES
+Models output probability of match.
+- High confidence: 85%+ probability
+- Medium confidence: 70-85%
+- Low confidence: 50-70%
+- Threshold depends on use case
+
+ACCURACY CONSIDERATIONS
+- False positive risk
+- False negative risk
+- Varies by signal quality
+- Degrades over time
+
+PROBABILISTIC ADVANTAGES
+- Higher match rates
+- No direct identifier needed
+- Real-time capable
+- Broad coverage
+
+PROBABILISTIC LIMITATIONS
+- Lower accuracy
+- Privacy concerns
+- Browser restrictions increasing
+- Regulatory scrutiny
+
+================================================================================
+SECTION 4 - IDENTITY GRAPHS
+================================================================================
+
+IDENTITY GRAPH DEFINITION
+
+An identity graph is a database that links identifiers, devices, and touchpoints to unified user profiles.
+
+GRAPH COMPONENTS
+
+NODES
+Entities in the graph.
+- Identifiers (email, phone, device ID)
+- Devices
+- Households
+- Individuals
+
+EDGES
+Connections between nodes.
+- Deterministic links (login)
+- Probabilistic links (inferred)
+- Strength/confidence score
+- Timestamp of link
+
+IDENTITY GRAPH PROVIDERS
+
+LIVERAMP
+- RampID identifier
+- Deterministic focus
+- Publisher and marketer coverage
+- Data connectivity platform
+
+THE TRADE DESK (UID2)
+- Unified ID 2.0
+- Open-source framework
+- Email-based identifier
+- Industry collaboration
+
+EXPERIAN
+- Consumer database
+- Offline data integration
+- Cross-device graph
+- Demographic enhancement
+
+ORACLE/BLUEKAI
+- Third-party data integration
+- Cross-device graph
+- Audience segments
+- Campaign activation
+
+TRANSUNION/NEUSTAR
+- Consumer identity
+- Cross-device linking
+- Offline integration
+- Measurement applications
+
+GRAPH QUALITY FACTORS
+
+SCALE
+- Number of identifiers
+- Geographic coverage
+- Channel coverage
+
+ACCURACY
+- Deterministic vs probabilistic mix
+- Validation processes
+- Decay management
+
+FRESHNESS
+- Update frequency
+- Real-time capabilities
+- Historical depth
+
+COVERAGE
+- Platform reach
+- Publisher network
+- Advertiser adoption
+
+================================================================================
+SECTION 5 - CROSS-DEVICE METHODOLOGY
+================================================================================
+
+CROSS-DEVICE CHALLENGE
+
+Users operate multiple devices.
+- Average: 3-4 devices per person
+- Desktop, mobile, tablet, CTV
+- Home, work, mobile contexts
+- Fragmented identifiers
+
+CROSS-DEVICE LINKING METHODS
+
+DETERMINISTIC CROSS-DEVICE
+- Login-based linking
+- Same email across devices
+- Highest accuracy
+- Limited coverage
+
+PROBABILISTIC CROSS-DEVICE
+- Signal-based inference
+- IP address matching
+- Behavioral patterns
+- Broader coverage, lower accuracy
+
+HYBRID APPROACH
+- Deterministic where available
+- Probabilistic to extend
+- Confidence scoring
+- Industry standard
+
+HOUSEHOLD GRAPHS
+
+HOUSEHOLD DEFINITION
+Linking devices and individuals within same household.
+
+HOUSEHOLD SIGNALS
+- Shared IP address
+- Shared WiFi network
+- Geographic proximity
+- Behavioral patterns
+
+HOUSEHOLD APPLICATIONS
+- CTV targeting
+- Household reach
+- Cross-screen frequency
+- Family targeting
+
+CROSS-DEVICE MEASUREMENT
+
+CROSS-DEVICE ATTRIBUTION
+Attribute conversions across devices.
+- User sees ad on mobile
+- Converts on desktop
+- Need device link to attribute
+
+CROSS-DEVICE FREQUENCY
+Manage frequency across devices.
+- Prevent over-exposure
+- Coordinate messaging
+- Optimize sequence
+
+================================================================================
+SECTION 6 - PRIVACY-FIRST IDENTITY
+================================================================================
+
+PRIVACY REGULATIONS IMPACT
+
+GDPR
+- Consent required for processing
+- Right to erasure
+- Data minimization
+- Purpose limitation
+
+CCPA/CPRA
+- Opt-out rights
+- Do not sell provisions
+- Sensitive data restrictions
+- Consumer rights
+
+PRIVACY-COMPLIANT APPROACHES
+
+CONSENT-BASED IDENTITY
+- Explicit user consent
+- Clear value exchange
+- Preference management
+- Easy withdrawal
+
+FIRST-PARTY IDENTITY
+- Owned customer data
+- Direct relationships
+- Higher trust
+- Better durability
+
+PRIVACY SANDBOX
+
+GOOGLE PRIVACY SANDBOX
+Chrome privacy-preserving alternatives.
+
+TOPICS API
+- Interest-based targeting
+- Browser-determined topics
+- Limited taxonomy
+- Weekly refresh
+
+PROTECTED AUDIENCES
+- On-device interest groups
+- Browser-based auction
+- No cross-site tracking
+- Replaces third-party audiences
+
+ATTRIBUTION REPORTING
+- Privacy-preserving attribution
+- Aggregated reports
+- Limited granularity
+- Noise for privacy
+
+UNIVERSAL IDENTIFIERS
+
+UID2 (UNIFIED ID 2.0)
+- Email-based, hashed
+- Opt-out supported
+- Open source
+- Industry adoption growing
+
+ID5
+- Alternative universal ID
+- Probabilistic and deterministic
+- Publisher adoption
+- European focus
+
+LIVERAMP RAMPID
+- Deterministic identifier
+- Wide platform support
+- Data connectivity
+- Enterprise focus
+
+================================================================================
+SECTION 7 - IMPLEMENTATION GUIDANCE
+================================================================================
+
+IDENTITY STRATEGY DEVELOPMENT
+
+ASSESSMENT
+1. Audit current identifiers
+2. Map data collection points
+3. Evaluate match rates
+4. Identify gaps
+
+STRATEGY
+1. Prioritize first-party data
+2. Select identity partners
+3. Implement consent management
+4. Activate across channels
+
+EXECUTION
+1. Technical integration
+2. Data onboarding
+3. Testing and validation
+4. Ongoing optimization
+
+DATA ONBOARDING
+
+ONBOARDING PROCESS
+1. Extract customer data
+2. Standardize and clean
+3. Hash identifiers
+4. Upload to identity platform
+5. Match to device graph
+6. Activate in media platforms
+
+BEST PRACTICES
+- Normalize all data before hashing
+- Include multiple identifiers
+- Refresh regularly (monthly+)
+- Monitor match rates
+
+MATCH RATE OPTIMIZATION
+
+IMPROVE MATCH RATES
+- Collect more identifiers
+- Improve data quality
+- Use multiple identity partners
+- Include offline data
+- Leverage publisher authenticated traffic
+
+MONITOR AND OPTIMIZE
+- Track match rates over time
+- Identify drop-off points
+- Test identity solutions
+- Benchmark against industry
+
+================================================================================
+SECTION 8 - AGENT APPLICATION GUIDANCE
+================================================================================
+
+IDENTITY RECOMMENDATIONS
+
+WHEN TO PRIORITIZE IDENTITY
+- Cross-device campaigns
+- Frequency management critical
+- Personalization at scale
+- Attribution accuracy needed
+- Customer journey focus
+
+IDENTITY PARTNER SELECTION
+- Assess coverage in target audience
+- Evaluate accuracy claims
+- Understand pricing model
+- Check platform integrations
+- Review privacy compliance
+
+IDENTITY-BASED TARGETING
+
+FIRST-PARTY AUDIENCES
+- Customer match through identity graph
+- Extend first-party reach
+- Cross-device activation
+- Suppression lists
+
+THIRD-PARTY AUDIENCES
+- Identity-based segments
+- Cross-device targeting
+- Declining availability
+- Privacy considerations
+
+MEASUREMENT APPLICATIONS
+
+CROSS-DEVICE ATTRIBUTION
+- Link touchpoints across devices
+- More complete journey view
+- Better credit allocation
+
+FREQUENCY MANAGEMENT
+- Cross-device frequency caps
+- Unified exposure tracking
+- Optimize total frequency
+
+INCREMENTALITY
+- Holdout across devices
+- More accurate measurement
+- True incremental lift
+
+WARNING SIGNS
+- Match rates below 30%: Data quality issue
+- Declining match rates: Identifier decay
+- High false positive rate: Probabilistic quality
+- Platform discrepancies: Integration issues
+
+FUTURE CONSIDERATIONS
+- Cookie deprecation continues
+- Mobile identifiers restricted
+- Privacy regulations expanding
+- First-party data more valuable
+- Contextual alternatives growing
+
+================================================================================
+END OF DOCUMENT
+================================================================================

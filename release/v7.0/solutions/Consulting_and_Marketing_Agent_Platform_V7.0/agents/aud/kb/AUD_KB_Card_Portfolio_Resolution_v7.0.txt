@@ -1,0 +1,462 @@
+AUD_KB_Card_Portfolio_Resolution_v7.0.txt
+VERSION: 1.0
+STATUS: Production Ready
+COMPLIANCE: 6-Rule Compliant
+LAST UPDATED: 2026-01-18
+CHARACTER COUNT: 19467
+
+================================================================================
+SECTION 1 - CARD PORTFOLIO FUNDAMENTALS
+================================================================================
+
+OVERVIEW
+
+Card portfolio resolution addresses the unique challenge of linking payment card activity to individual consumer identities and understanding the complete payment behavior across a cardholder portfolio. This capability is particularly valuable for financial services marketers and merchants seeking to understand customer lifetime value, wallet share, and cross-sell opportunities. The strategic importance of card-level identity resolution has grown as payment methods proliferate and consumers maintain multiple cards across issuers.
+
+Payment card data provides unique identity signals that complement traditional identifiers. Transaction patterns reveal behavioral signatures, while card-on-file relationships create deterministic linkages across merchants. Understanding how to leverage these signals while respecting privacy and regulatory requirements is essential for effective audience development in financial services marketing.
+
+CARD DATA SIGNAL TAXONOMY
+
+Card-Level Identifiers
+- Primary account number hash provides pseudonymous card linkage
+- Bank identification number indicates issuer and card type
+- Card network identifier distinguishes Mastercard Visa Amex Discover
+- Token identifiers from network tokenization services
+- Device account numbers from mobile wallet provisioning
+
+Transaction-Level Signals
+- Merchant category code indicates purchase type
+- Transaction amount provides spend value signal
+- Transaction timestamp enables temporal pattern analysis
+- Authorization response indicates card validity
+- Card present versus card not present flag
+
+Cardholder Attributes
+- Billing address from card registration
+- Name as appears on card
+- Issuer relationship attributes where available
+- Credit limit and utilization indicators
+- Account tenure and loyalty tier
+
+CARD PORTFOLIO COMPOSITION
+
+Multi-Card Consumer Patterns
+- Average consumer maintains three to four payment cards
+- Primary card receives sixty to seventy percent of spend
+- Secondary cards used for specific categories or rewards optimization
+- Credit versus debit allocation varies by income and credit access
+- Prepaid and decoupled debit add complexity to portfolio view
+
+Portfolio Evolution Dynamics
+- New card acquisition signals life stage changes
+- Card closure indicates dissatisfaction or consolidation
+- Spend migration between cards reveals preference shifts
+- Dormant card reactivation triggered by promotional offers
+- Portfolio composition changes with economic conditions
+
+
+================================================================================
+SECTION 2 - CARDHOLDER IDENTITY LINKAGE
+================================================================================
+
+OVERVIEW
+
+Linking payment cards to individual identities requires combining deterministic and probabilistic approaches that account for the unique characteristics of card data. The challenge is complicated by privacy restrictions on sharing cardholder PII and the prevalence of multiple cards per consumer.
+
+DETERMINISTIC CARD LINKAGE
+
+Card-on-File Linkage
+- Same card used across multiple merchants creates direct linkage
+- Tokenized card references enable cross-merchant identity
+- Recurring payment relationships provide stable connections
+- Subscription services create long-term card-merchant bonds
+- Digital wallet card associations link cards to device identities
+
+Authentication-Based Linkage
+- Three-D Secure enrollment links card to identity record
+- Issuer authentication events provide high-confidence matches
+- Fraud alert contacts verify cardholder identity
+- Dispute resolution processes confirm legitimate cardholders
+- PIN verification provides additional identity confirmation
+
+Address Verification Linkage
+- AVS matches connect cards to physical addresses
+- Billing address updates tracked over time
+- Shipping address correlation for card-not-present
+- Address normalization required for effective matching
+- Multi-tenant addresses require additional disambiguation
+
+PROBABILISTIC CARD LINKAGE
+
+Behavioral Matching
+- Spending pattern similarity across cards suggests same holder
+- Merchant visitation overlap indicates shared identity
+- Geographic spending patterns provide location signals
+- Temporal patterns reveal daily and weekly routines
+- Category preferences create behavioral fingerprints
+
+Transaction Sequence Analysis
+- Sequential transactions across cards suggest same consumer
+- Time gaps between transactions indicate travel or task completion
+- Complementary purchases suggest same shopping trip
+- Recurring pattern alignment indicates household sharing
+- Anomaly detection identifies potential card sharing
+
+Device Association
+- Digital wallet enrollment links card to device
+- Browser card storage creates cookie linkage
+- Mobile app card storage links to device identifiers
+- Checkout session data provides temporary linkages
+- IP address correlation supplements device signals
+
+LINKAGE CONFIDENCE SCORING
+
+Confidence Factor Weights
+- Deterministic links from authentication receive highest weight
+- Card-on-file links weighted by merchant category stability
+- Behavioral similarity weighted by pattern distinctiveness
+- Device associations weighted by identifier persistence
+- Geographic alignment provides supporting weight
+
+Score Calibration for Cards
+- True match rate varies significantly by linkage type
+- Household card sharing creates legitimate ambiguity
+- Corporate card programs require special handling
+- Authorized user cards share identity by design
+- Gift card and prepaid complicate linkage scoring
+
+Threshold Optimization
+- Precision-focused thresholds for targeting decisions
+- Recall-focused thresholds for suppression decisions
+- Use-case-specific threshold selection
+- Dynamic thresholds based on data freshness
+- Segment-specific thresholds for heterogeneous populations
+
+
+================================================================================
+SECTION 3 - WALLET SHARE CALCULATION
+================================================================================
+
+OVERVIEW
+
+Wallet share represents the proportion of a consumer total payment activity captured by a specific card or merchant. Accurate wallet share calculation enables assessment of customer potential, competitive positioning, and cross-sell opportunity sizing. This metric is foundational for financial services and retail marketing strategies.
+
+WALLET SHARE COMPONENTS
+
+Total Wallet Estimation
+- Consumer total payment capacity estimated from demographics
+- Income-based spending models provide category budgets
+- Geographic cost-of-living adjustments refine estimates
+- Life stage factors influence category allocations
+- Economic indicators affect aggregate spending levels
+
+Observed Spend Calculation
+- Transaction sum within measurement period
+- Category-level aggregation for detailed analysis
+- Merchant-level aggregation for competitive view
+- Channel-level split for omnichannel analysis
+- Seasonal adjustment for fair period comparison
+
+Share Calculation Methods
+- Simple ratio of observed to estimated total
+- Bayesian estimation incorporating prior knowledge
+- Cohort-based benchmarking for relative positioning
+- Panel-calibrated estimates using ground truth data
+- Machine learning models predicting unobserved spend
+
+CATEGORY-LEVEL WALLET SHARE
+
+Category Definition Standards
+- Merchant category code groupings for transaction classification
+- Custom category hierarchies for strategic alignment
+- Cross-category purchases require allocation rules
+- Ambiguous merchants need consistent treatment
+- New merchant category assignment protocols
+
+Category Share Calculation
+- Category-specific total wallet estimates
+- Observed category spend from classified transactions
+- Share calculation within category boundary
+- Cross-category comparison for portfolio view
+- Category growth potential assessment
+
+Share of Requirements
+- Specific product category share calculation
+- Competitive brand share within category
+- Channel share for omnichannel retailers
+- Format share for multi-format operators
+- Trip type share for shopping missions
+
+COMPETITIVE WALLET SHARE
+
+Merchant-Level Competition
+- Share of category spend at focal merchant
+- Competitor spend estimation from panel or survey data
+- Switching behavior analysis between merchants
+- Loyalty program tier correlation with share
+- Promotional response impact on share dynamics
+
+Network-Level Competition
+- Card network share of consumer payment volume
+- Issuer share within card network
+- Debit versus credit share by consumer
+- Mobile wallet share of card transactions
+- Emerging payment method share trends
+
+Temporal Share Dynamics
+- Share trend analysis over time periods
+- Seasonality patterns in share fluctuation
+- Event-driven share changes identification
+- New competitor impact on share
+- Promotional period share lift measurement
+
+WALLET SHARE APPLICATIONS
+
+Customer Value Assessment
+- High-share customers indicate loyalty and satisfaction
+- Low-share customers represent growth opportunity
+- Share trajectory predicts future engagement
+- Category-specific share reveals cross-sell potential
+- Share combined with spend indicates strategic priority
+
+Competitive Intelligence
+- Market share estimation from card transaction data
+- Competitor promotional impact assessment
+- New market entrant share capture tracking
+- Geographic share variation analysis
+- Channel shift impact on merchant share
+
+Marketing Optimization
+- Share-based audience segmentation for targeting
+- Share growth campaigns versus acquisition focus
+- Category development versus share capture tradeoffs
+- Loyalty program effectiveness measured by share
+- Share-based budget allocation across segments
+
+
+================================================================================
+SECTION 4 - MASTERCARD-SPECIFIC PATTERNS
+================================================================================
+
+OVERVIEW
+
+Mastercard transaction data provides unique identity resolution opportunities through the network perspective on consumer payment behavior. Understanding Mastercard-specific data assets, capabilities, and constraints enables effective audience development while respecting network rules and privacy requirements.
+
+MASTERCARD DATA ASSETS
+
+Aggregated Insights
+- Spending pulse reports provide macro spending trends
+- Geographic spending indices benchmark regional activity
+- Category growth metrics indicate consumer preference shifts
+- Cross-border spending patterns reveal travel behavior
+- Economic indicator correlations support forecasting
+
+Anonymized Transaction Data
+- Hashed card identifiers enable longitudinal analysis
+- Merchant-level transaction aggregates available
+- Category-level spend patterns by geography
+- Day-part and day-of-week transaction patterns
+- Online versus in-store channel distribution
+
+Location Intelligence
+- Transaction location provides point-of-sale geography
+- Travel patterns from cross-market transactions
+- Commute inference from weekday transaction locations
+- Home location estimation from evening and weekend patterns
+- Work location estimation from weekday patterns
+
+MASTERCARD AUDIENCES
+
+Spending Segmentation
+- Affluent consumer identification from spend levels
+- Category enthusiast segments based on share of wallet
+- Brand loyal versus variety seeking behavioral types
+- Price sensitivity segments from promotional response
+- Channel preference segments for omnichannel targeting
+
+Life Stage Indicators
+- New homeowner indicators from merchant patterns
+- New parent signals from baby category purchases
+- Empty nester indicators from travel and dining shifts
+- Retiree patterns from daytime transaction timing
+- Student indicators from campus merchant activity
+
+Business Targeting
+- Small business identification from commercial card patterns
+- B2B spend patterns for business services marketing
+- Business travel indicators for corporate services
+- Seasonal business patterns for timing optimization
+- Business growth indicators from spend trajectory
+
+INTEGRATION PATTERNS
+
+Clean Room Collaboration
+- First-party data matched within privacy-safe environment
+- Aggregated overlap analysis without record-level sharing
+- Modeled audience expansion using network patterns
+- Measurement integration for closed-loop attribution
+- Suppression integration for customer exclusion
+
+API Integration
+- Real-time transaction authorization enrichment
+- Batch file delivery for audience activation
+- Webhook notifications for event-triggered marketing
+- SDK integration for mobile app experiences
+- Dashboard access for self-service analytics
+
+Data Delivery Formats
+- Hashed identifier files for platform activation
+- Aggregated audience counts for planning
+- Indexed files for onboarding to media platforms
+- Geographic heat maps for location-based activation
+- Time-series data for trend analysis
+
+
+================================================================================
+SECTION 5 - PRIVACY AND COMPLIANCE
+================================================================================
+
+OVERVIEW
+
+Card portfolio resolution operates within a complex regulatory environment that includes financial services regulations, network rules, and general privacy laws. Maintaining compliance while enabling effective marketing requires careful attention to data handling practices and governance frameworks.
+
+REGULATORY FRAMEWORK
+
+Financial Services Regulations
+- Gramm-Leach-Bliley Act governs financial data sharing in United States
+- PCI DSS standards protect cardholder data security
+- State financial privacy laws add additional requirements
+- Open banking regulations affect data access in various jurisdictions
+- Anti-money laundering rules constrain certain data uses
+
+Network Rules
+- Card network data use restrictions limit marketing applications
+- Merchant agreements specify permitted data uses
+- Acquirer processor contracts govern data handling
+- Interchange fee rules affect data value propositions
+- Cross-border data flow restrictions vary by region
+
+Privacy Regulations
+- GDPR restricts processing of payment data in European Union
+- CCPA provides California consumer rights over financial data
+- Sector-specific privacy rules apply to financial institutions
+- Emerging state privacy laws expand compliance requirements
+- International data transfer mechanisms required for global programs
+
+COMPLIANCE MECHANISMS
+
+Data Minimization
+- Collect only data elements necessary for stated purpose
+- Aggregate data to minimum granularity needed
+- Hash or tokenize identifiers where possible
+- Delete raw transaction data after processing
+- Limit data retention to compliance requirements
+
+Purpose Limitation
+- Document specific purposes for each data use
+- Obtain appropriate consent for marketing uses
+- Separate analytical uses from targeting uses
+- Restrict secondary uses without additional consent
+- Audit data uses against documented purposes
+
+Security Controls
+- Encryption at rest and in transit for card data
+- Access controls limiting data visibility
+- Audit logging of all data access
+- Incident response procedures for breaches
+- Regular security assessments and penetration testing
+
+CONSENT MANAGEMENT
+
+Consumer Consent Frameworks
+- Opt-in consent required for certain marketing uses
+- Opt-out mechanisms must be clearly available
+- Consent granularity affects permitted uses
+- Consent withdrawal must be honored promptly
+- Consent records must be maintained for audit
+
+Issuer and Network Consent
+- Cardholder agreements with issuers govern data use
+- Network rules specify required disclosures
+- Merchant disclosures at point of sale
+- App permissions for mobile wallet data
+- Browser consent for cookie-based tracking
+
+Cross-Organizational Consent
+- Data sharing agreements document permitted uses
+- Clean room participation requires consent frameworks
+- Onboarding to third parties requires appropriate consent
+- Joint controller relationships need clear agreements
+- Processor agreements specify data handling requirements
+
+================================================================================
+SECTION 6 - AGENT APPLICATION GUIDANCE
+================================================================================
+
+WHEN TO USE THIS KNOWLEDGE
+
+This knowledge base document should be referenced when the AUD Agent encounters the following scenarios and queries.
+
+Card Data Audience Development
+- Questions about building audiences from payment transaction data
+- Requests involving card portfolio analysis for marketing
+- Wallet share estimation for customer value assessment
+- Card-based identity linkage for cross-device targeting
+- Mastercard data integration for audience enrichment
+
+Financial Services Marketing
+- Targeting strategies using card spending behavior
+- Cross-sell opportunity identification from portfolio gaps
+- Loyalty program optimization using transaction patterns
+- Competitive intelligence from card network data
+- Customer lifetime value estimation from card activity
+
+Compliance and Privacy Guidance
+- Data use restrictions for card-based marketing
+- Consent requirements for transaction data
+- Network rule compliance for marketing programs
+- Privacy regulation impact on card data audiences
+- Clean room implementation for card data collaboration
+
+INTEGRATION WITH OTHER AGENTS
+
+AUD Agent Internal Usage
+- Apply card linkage algorithms for cardholder identity resolution
+- Use wallet share calculations for audience value scoring
+- Leverage Mastercard patterns for audience enrichment
+- Implement privacy controls in audience delivery workflows
+- Monitor compliance status for card-based audiences
+
+Cross-Agent Data Flows
+- NDS Agent uses card transaction patterns for spend modeling
+- CSO Agent leverages card journey data for sequence optimization
+- PRF Agent requires card-level measurement for attribution
+- ANL Agent uses card data for marketing mix analysis
+- DOC Agent references card methodology in compliance documentation
+
+PRACTICAL IMPLEMENTATION RECOMMENDATIONS
+
+Starting Point Selection
+- Begin with first-party card-on-file data for highest confidence
+- Add behavioral matching incrementally as patterns stabilize
+- Implement wallet share at category level before merchant level
+- Establish compliance framework before data activation
+- Build clean room capability before external data integration
+
+Quality Assurance Protocols
+- Validate linkage accuracy using known cardholder panels
+- Monitor wallet share estimates against survey benchmarks
+- Audit compliance controls on regular schedule
+- Review consent records for completeness
+- Test suppression effectiveness regularly
+
+Common Pitfalls and Mitigations
+- Over-reliance on behavioral matching leads to household confusion
+- Wallet share overestimation from category definition gaps
+- Compliance gaps from evolving regulatory requirements
+- Stale linkages from card replacement and portfolio changes
+- Network rule violations from improper data use
+
+================================================================================
+END OF DOCUMENT
+================================================================================

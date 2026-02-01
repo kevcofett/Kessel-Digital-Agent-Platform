@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2.0.0" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="KesselDigital" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SolutionManifest>
+    <UniqueName>ConsultingMarketingAgentPlatform</UniqueName>
+    <LocalizedNames>
+      <LocalizedName description="Consulting and Marketing Agent Platform V7.0" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="MCMAP Enterprise AI Agent Platform for Data and Services. Includes 13 active agents (ORC, ANL, AUD, CHA, SPO, DOC, PRF, CST, CHG, MKT, GHA, DOCS, DVO), platform infrastructure, Databricks integration preparation, and all v7.0 updates." languagecode="1033" />
+    </Descriptions>
+    <Version>7.0.0.0</Version>
+    <Managed>0</Managed>
+    <Publisher>
+      <UniqueName>kesseldigital</UniqueName>
+      <LocalizedNames>
+        <LocalizedName description="Kessel Digital" languagecode="1033" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Kessel Digital Agent Platform Publisher" languagecode="1033" />
+      </Descriptions>
+      <EMailAddress xsi:nil="true" />
+      <SupportingWebsiteUrl xsi:nil="true" />
+      <CustomizationPrefix>eap</CustomizationPrefix>
+      <CustomizationOptionValuePrefix>10000</CustomizationOptionValuePrefix>
+    </Publisher>
+    <RootComponents>
+      <!-- Platform Core Agents -->
+      <RootComponent type="29" schemaName="eap_orc_agent" behavior="0" />
+
+      <!-- MPA Domain Agents -->
+      <RootComponent type="29" schemaName="eap_anl_agent" behavior="0" />
+      <RootComponent type="29" schemaName="eap_aud_agent" behavior="0" />
+      <RootComponent type="29" schemaName="eap_cha_agent" behavior="0" />
+      <RootComponent type="29" schemaName="eap_spo_agent" behavior="0" />
+
+      <!-- Support Domain Agents -->
+      <RootComponent type="29" schemaName="eap_doc_agent" behavior="0" />
+      <RootComponent type="29" schemaName="eap_prf_agent" behavior="0" />
+      <RootComponent type="29" schemaName="eap_docs_agent" behavior="0" />
+
+      <!-- Consulting Domain Agents -->
+      <RootComponent type="29" schemaName="eap_cst_agent" behavior="0" />
+      <RootComponent type="29" schemaName="eap_chg_agent" behavior="0" />
+      <RootComponent type="29" schemaName="eap_mkt_agent" behavior="0" />
+
+      <!-- Growth Domain Agent -->
+      <RootComponent type="29" schemaName="eap_gha_agent" behavior="0" />
+
+      <!-- Infrastructure Domain Agent -->
+      <RootComponent type="29" schemaName="eap_dvo_agent" behavior="0" />
+
+      <!-- Dataverse Tables -->
+      <RootComponent type="1" schemaName="eap_sessions" behavior="0" />
+      <RootComponent type="1" schemaName="eap_telemetry" behavior="0" />
+      <RootComponent type="1" schemaName="eap_audit" behavior="0" />
+      <RootComponent type="1" schemaName="eap_agents" behavior="0" />
+      <RootComponent type="1" schemaName="eap_capabilities" behavior="0" />
+      <RootComponent type="1" schemaName="eap_capability_impl" behavior="0" />
+      <RootComponent type="1" schemaName="eap_prompts" behavior="0" />
+      <RootComponent type="1" schemaName="eap_user_profiles" behavior="0" />
+      <RootComponent type="1" schemaName="eap_user_roles" behavior="0" />
+      <RootComponent type="1" schemaName="eap_config" behavior="0" />
+      <RootComponent type="1" schemaName="eap_growth_sessions" behavior="0" />
+      <RootComponent type="1" schemaName="mpa_kpis" behavior="0" />
+      <RootComponent type="1" schemaName="mpa_channel_benchmarks" behavior="0" />
+      <RootComponent type="1" schemaName="ca_frameworks" behavior="0" />
+
+      <!-- Workflows -->
+      <RootComponent type="29" schemaName="mpa_initialize_session" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_memory_store" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_memory_initialize" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_telemetry_logger" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_file_process" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_ml_endpoint_router" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_proactive_evaluate" behavior="0" />
+
+      <!-- AI Builder Prompts - ORC -->
+      <RootComponent type="400" schemaName="orc_intent_classify" behavior="0" />
+      <RootComponent type="400" schemaName="orc_validate_gate" behavior="0" />
+
+      <!-- AI Builder Prompts - GHA (10 prompts) -->
+      <RootComponent type="400" schemaName="gha_intent_classify" behavior="0" />
+      <RootComponent type="400" schemaName="gha_framework_select" behavior="0" />
+      <RootComponent type="400" schemaName="gha_lifecycle_analyze" behavior="0" />
+      <RootComponent type="400" schemaName="gha_northstar_define" behavior="0" />
+      <RootComponent type="400" schemaName="gha_tactic_recommend" behavior="0" />
+      <RootComponent type="400" schemaName="gha_psychology_apply" behavior="0" />
+      <RootComponent type="400" schemaName="gha_competitor_growth" behavior="0" />
+      <RootComponent type="400" schemaName="gha_experiment_design" behavior="0" />
+      <RootComponent type="400" schemaName="gha_growth_project" behavior="0" />
+      <RootComponent type="400" schemaName="gha_growth_synthesize" behavior="0" />
+    </RootComponents>
+    <MissingDependencies />
+  </SolutionManifest>
+</ImportExportXml>

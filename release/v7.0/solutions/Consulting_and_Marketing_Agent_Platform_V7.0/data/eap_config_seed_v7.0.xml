@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <entity name="eap_config" displayname="Configurations">
+    <records>
+      <!-- Platform Settings -->
+      <record id="CFG-PLATFORM-VERSION">
+        <field name="eap_key" value="platform.version" />
+        <field name="eap_name" value="Platform Version" />
+        <field name="eap_value" value="7.0.0.0" />
+        <field name="eap_category" value="100000000" label="platform" />
+        <field name="eap_environment" value="100000000" label="all" />
+        <field name="eap_description" value="Current MCMAP platform version" />
+        <field name="eap_is_secret" value="0" />
+        <field name="eap_is_enabled" value="1" />
+        <field name="eap_version" value="7.0.0" />
+      </record>
+      <record id="CFG-SESSION-TIMEOUT">
+        <field name="eap_key" value="platform.session_timeout_minutes" />
+        <field name="eap_name" value="Session Timeout" />
+        <field name="eap_value" value="60" />
+        <field name="eap_category" value="100000000" label="platform" />
+        <field name="eap_environment" value="100000000" label="all" />
+        <field name="eap_description" value="Session timeout in minutes" />
+        <field name="eap_is_secret" value="0" />
+        <field name="eap_is_enabled" value="1" />
+        <field name="eap_version" value="7.0.0" />
+      </record>
+      <record id="CFG-MAX-AGENTS">
+        <field name="eap_key" value="platform.max_concurrent_agents" />
+        <field name="eap_name" value="Max Concurrent Agents" />
+        <field name="eap_value" value="5" />
+        <field name="eap_category" value="100000000" label="platform" />
+        <field name="eap_environment" value="100000000" label="all" />
+        <field name="eap_description" value="Maximum number of agents that can be invoked in a single session" />
+        <field name="eap_is_secret" value="0" />
+        <field name="eap_is_enabled" value="1" />
+        <field name="eap_version" value="7.0.0" />
+      </record>
+
+      <!-- Feature Flags -->
+      <record id="CFG-FF-GHA">
+        <field name="eap_key" value="feature.gha_enabled" />
+        <field name="eap_name" value="GHA Agent Enabled" />
+        <field name="eap_value" value="true" />
+        <field name="eap_category" value="100000003" label="feature_flag" />
+        <field name="eap_environment" value="100000000" label="all" />
+        <field name="eap_description" value="Enable Growth Hacking Agent" />
+        <field name="eap_is_secret" value="0" />
+        <field name="eap_is_enabled" value="1" />
+        <field name="eap_version" value="7.0.0" />
+      </record>
+      <record id="CFG-FF-DVO">
+        <field name="eap_key" value="feature.dvo_enabled" />
+        <field name="eap_name" value="DVO Agent Enabled" />
+        <field name="eap_value" value="true" />
+        <field name="eap_category" value="100000003" label="feature_flag" />
+        <field name="eap_environment" value="100000000" label="all" />
+        <field name="eap_description" value="Enable DevOps Agent" />
+        <field name="eap_is_secret" value="0" />
+        <field name="eap_is_enabled" value="1" />
+        <field name="eap_version" value="7.0.0" />
+      </record>
+      <record id="CFG-FF-DATABRICKS">
+        <field name="eap_key" value="feature.databricks_export_enabled" />
+        <field name="eap_name" value="Databricks Export Enabled" />
+        <field name="eap_value" value="false" />
+        <field name="eap_category" value="100000003" label="feature_flag" />
+        <field name="eap_environment" value="100000000" label="all" />
+        <field name="eap_description" value="Enable Databricks data export (preparation only in v7.0)" />
+        <field name="eap_is_secret" value="0" />
+        <field name="eap_is_enabled" value="1" />
+        <field name="eap_version" value="7.0.0" />
+      </record>
+      <record id="CFG-FF-MULTI-AGENT">
+        <field name="eap_key" value="feature.multi_agent_sessions" />
+        <field name="eap_name" value="Multi-Agent Sessions" />
+        <field name="eap_value" value="true" />
+        <field name="eap_category" value="100000003" label="feature_flag" />
+        <field name="eap_environment" value="100000000" label="all" />
+        <field name="eap_description" value="Enable multi-agent session workflows" />
+        <field name="eap_is_secret" value="0" />
+        <field name="eap_is_enabled" value="1" />
+        <field name="eap_version" value="7.0.0" />
+      </record>
+
+      <!-- Databricks Configuration (Preparation) -->
+      <record id="CFG-DB-WORKSPACE">
+        <field name="eap_key" value="databricks.workspace_url" />
+        <field name="eap_name" value="Databricks Workspace URL" />
+        <field name="eap_value" value="" />
+        <field name="eap_category" value="100000006" label="databricks" />
+        <field name="eap_environment" value="100000003" label="production" />
+        <field name="eap_description" value="Databricks workspace URL for data export" />
+        <field name="eap_is_secret" value="0" />
+        <field name="eap_is_enabled" value="0" />
+        <field name="eap_version" value="7.0.0" />
+      </record>
+      <record id="CFG-DB-CATALOG">
+        <field name="eap_key" value="databricks.unity_catalog" />
+        <field name="eap_name" value="Unity Catalog Name" />
+        <field name="eap_value" value="mcmap_catalog" />
+        <field name="eap_category" value="100000006" label="databricks" />
+        <field name="eap_environment" value="100000003" label="production" />
+        <field name="eap_description" value="Unity Catalog name for MCMAP data" />
+        <field name="eap_is_secret" value="0" />
+        <field name="eap_is_enabled" value="0" />
+        <field name="eap_version" value="7.0.0" />
+      </record>
+
+      <!-- Security Settings -->
+      <record id="CFG-SEC-MFA">
+        <field name="eap_key" value="security.mfa_required_production" />
+        <field name="eap_name" value="MFA Required for Production" />
+        <field name="eap_value" value="true" />
+        <field name="eap_category" value="100000004" label="security" />
+        <field name="eap_environment" value="100000003" label="production" />
+        <field name="eap_description" value="Require MFA for production deployments" />
+        <field name="eap_is_secret" value="0" />
+        <field name="eap_is_enabled" value="1" />
+        <field name="eap_version" value="7.0.0" />
+      </record>
+      <record id="CFG-SEC-DUAL-APPROVAL">
+        <field name="eap_key" value="security.dual_approval_production" />
+        <field name="eap_name" value="Dual Approval for Production" />
+        <field name="eap_value" value="true" />
+        <field name="eap_category" value="100000004" label="security" />
+        <field name="eap_environment" value="100000003" label="production" />
+        <field name="eap_description" value="Require dual approval for production deployments" />
+        <field name="eap_is_secret" value="0" />
+        <field name="eap_is_enabled" value="1" />
+        <field name="eap_version" value="7.0.0" />
+      </record>
+
+      <!-- Telemetry Settings -->
+      <record id="CFG-TEL-ENABLED">
+        <field name="eap_key" value="telemetry.enabled" />
+        <field name="eap_name" value="Telemetry Enabled" />
+        <field name="eap_value" value="true" />
+        <field name="eap_category" value="100000005" label="telemetry" />
+        <field name="eap_environment" value="100000000" label="all" />
+        <field name="eap_description" value="Enable platform telemetry collection" />
+        <field name="eap_is_secret" value="0" />
+        <field name="eap_is_enabled" value="1" />
+        <field name="eap_version" value="7.0.0" />
+      </record>
+      <record id="CFG-TEL-RETENTION">
+        <field name="eap_key" value="telemetry.retention_days" />
+        <field name="eap_name" value="Telemetry Retention Days" />
+        <field name="eap_value" value="90" />
+        <field name="eap_category" value="100000005" label="telemetry" />
+        <field name="eap_environment" value="100000000" label="all" />
+        <field name="eap_description" value="Number of days to retain telemetry data" />
+        <field name="eap_is_secret" value="0" />
+        <field name="eap_is_enabled" value="1" />
+        <field name="eap_version" value="7.0.0" />
+      </record>
+    </records>
+  </entity>
+</entities>

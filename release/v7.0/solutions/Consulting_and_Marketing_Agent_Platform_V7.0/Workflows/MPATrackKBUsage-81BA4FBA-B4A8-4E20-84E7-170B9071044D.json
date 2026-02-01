@@ -1,0 +1,245 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "d1e2f3a4-5b6c-7d8e-9f0a-1b2c3d4e5f6a"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "session_id": {
+                  "type": "string",
+                  "description": "Session ID"
+                },
+                "kb_files": {
+                  "type": "array",
+                  "description": "Array of KB files with optional relevance scores",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "file_name": {
+                        "type": "string"
+                      },
+                      "relevance_score": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                },
+                "query_text": {
+                  "type": "string",
+                  "description": "The user query"
+                },
+                "agent_type": {
+                  "type": "string",
+                  "description": "MPA, CA, or EAP"
+                }
+              },
+              "required": [
+                "kb_files",
+                "agent_type"
+              ]
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "InitializeAgentTypeCode": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "e2f3a4b5-6c7d-8e9f-0a1b-2c3d4e5f6a7b"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varAgentTypeCode",
+                "type": "integer",
+                "value": 100000000
+              }
+            ]
+          }
+        },
+        "InitializeFilesTracked": {
+          "runAfter": {
+            "InitializeAgentTypeCode": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f3a4b5c6-7d8e-9f0a-1b2c-3d4e5f6a7b8c"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varFilesTracked",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "SwitchAgentType": {
+          "runAfter": {
+            "InitializeFilesTracked": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a4b5c6d7-8e9f-0a1b-2c3d-4e5f6a7b8c9d"
+          },
+          "type": "Switch",
+          "expression": "@triggerBody()?['agent_type']",
+          "cases": {
+            "MPA": {
+              "case": "MPA",
+              "actions": {
+                "SetMPA": {
+                  "runAfter": {},
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "varAgentTypeCode",
+                    "value": 100000000
+                  }
+                }
+              }
+            },
+            "CA": {
+              "case": "CA",
+              "actions": {
+                "SetCA": {
+                  "runAfter": {},
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "varAgentTypeCode",
+                    "value": 100000001
+                  }
+                }
+              }
+            },
+            "EAP": {
+              "case": "EAP",
+              "actions": {
+                "SetEAP": {
+                  "runAfter": {},
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "varAgentTypeCode",
+                    "value": 100000002
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "actions": {}
+          }
+        },
+        "ForEachKBFile": {
+          "foreach": "@triggerBody()?['kb_files']",
+          "actions": {
+            "CreateUsageRecord": {
+              "runAfter": {},
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "mpa_kbusages",
+                  "item/mpa_kbfilename": "@items('ForEachKBFile')?['file_name']",
+                  "item/mpa_sessionid": "@triggerBody()?['session_id']",
+                  "item/mpa_querytext": "@triggerBody()?['query_text']",
+                  "item/mpa_relevancescore": "@coalesce(items('ForEachKBFile')?['relevance_score'], 0)",
+                  "item/mpa_feedbackreceived": 100000000,
+                  "item/mpa_agenttype": "@variables('varAgentTypeCode')",
+                  "item/mpa_usedat": "@utcNow()"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "IncrementCounter": {
+              "runAfter": {
+                "CreateUsageRecord": [
+                  "Succeeded"
+                ]
+              },
+              "type": "IncrementVariable",
+              "inputs": {
+                "name": "varFilesTracked",
+                "value": 1
+              }
+            }
+          },
+          "runAfter": {
+            "SwitchAgentType": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b5c6d7e8-9f0a-1b2c-3d4e-5f6a7b8c9d0e"
+          },
+          "type": "Foreach",
+          "runtimeConfiguration": {
+            "concurrency": {
+              "repetitions": 10
+            }
+          }
+        },
+        "SuccessResponse": {
+          "runAfter": {
+            "ForEachKBFile": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c6d7e8f9-0a1b-2c3d-4e5f-6a7b8c9d0e1f"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "Success",
+              "files_tracked": "@{variables('varFilesTracked')}"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

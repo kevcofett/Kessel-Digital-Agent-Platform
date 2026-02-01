@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <entity name="eap_agents" displayname="Agents">
+    <records>
+      <record id="ORC-001">
+        <field name="eap_code" value="ORC" />
+        <field name="eap_name" value="Orchestrator" />
+        <field name="eap_description" value="Platform core agent responsible for intent classification, session management, workflow orchestration, and routing to specialist agents." />
+        <field name="eap_domain" value="100000000" label="PLATFORM_CORE" />
+        <field name="eap_status" value="100000000" label="active" />
+        <field name="eap_version" value="7.0.0" />
+        <field name="eap_instructions_file" value="ORC_Copilot_Instructions_v7.0.txt" />
+        <field name="eap_kb_files" value="[&quot;ORC_KB_Intent_Classification_v7.0.txt&quot;,&quot;ORC_KB_Session_Management_v7.0.txt&quot;,&quot;ORC_KB_Workflow_Gates_v7.0.txt&quot;]" />
+        <field name="eap_routing_keywords" value="[&quot;help&quot;,&quot;start&quot;,&quot;menu&quot;,&quot;options&quot;,&quot;switch&quot;,&quot;navigate&quot;]" />
+        <field name="eap_handoff_to" value="ANL,AUD,CHA,SPO,DOC,PRF,CST,CHG,MKT,GHA,DOCS,DVO" />
+        <field name="eap_handoff_from" value="ANL,AUD,CHA,SPO,DOC,PRF,CST,CHG,MKT,GHA,DOCS,DVO" />
+      </record>
+      <record id="ANL-001">
+        <field name="eap_code" value="ANL" />
+        <field name="eap_name" value="Analytics" />
+        <field name="eap_description" value="MPA domain agent for projections, calculations, scenario modeling, and data analysis." />
+        <field name="eap_domain" value="100000001" label="MPA_DOMAIN" />
+        <field name="eap_status" value="100000000" label="active" />
+        <field name="eap_version" value="7.0.0" />
+        <field name="eap_instructions_file" value="ANL_Copilot_Instructions_v7.0.txt" />
+        <field name="eap_kb_files" value="[&quot;ANL_KB_Projections_v7.0.txt&quot;,&quot;ANL_KB_Calculations_v7.0.txt&quot;,&quot;ANL_KB_Modeling_v7.0.txt&quot;]" />
+        <field name="eap_routing_keywords" value="[&quot;calculate&quot;,&quot;project&quot;,&quot;estimate&quot;,&quot;forecast&quot;,&quot;model&quot;,&quot;analyze&quot;,&quot;scenario&quot;]" />
+        <field name="eap_handoff_to" value="ORC,AUD,CHA,DOC" />
+        <field name="eap_handoff_from" value="ORC,AUD,CHA" />
+      </record>
+      <record id="AUD-001">
+        <field name="eap_code" value="AUD" />
+        <field name="eap_name" value="Audience" />
+        <field name="eap_description" value="MPA domain agent for audience segmentation, LTV calculation, and targeting strategy." />
+        <field name="eap_domain" value="100000001" label="MPA_DOMAIN" />
+        <field name="eap_status" value="100000000" label="active" />
+        <field name="eap_version" value="7.0.0" />
+        <field name="eap_instructions_file" value="AUD_Copilot_Instructions_v7.0.txt" />
+        <field name="eap_kb_files" value="[&quot;AUD_KB_Segmentation_v7.0.txt&quot;,&quot;AUD_KB_LTV_v7.0.txt&quot;,&quot;AUD_KB_Targeting_v7.0.txt&quot;]" />
+        <field name="eap_routing_keywords" value="[&quot;audience&quot;,&quot;segment&quot;,&quot;targeting&quot;,&quot;ltv&quot;,&quot;lifetime value&quot;,&quot;demographics&quot;]" />
+        <field name="eap_handoff_to" value="ORC,ANL,CHA,DOC" />
+        <field name="eap_handoff_from" value="ORC,ANL,GHA" />
+      </record>
+      <record id="CHA-001">
+        <field name="eap_code" value="CHA" />
+        <field name="eap_name" value="Channel" />
+        <field name="eap_description" value="MPA domain agent for channel selection, mix optimization, and benchmark lookup." />
+        <field name="eap_domain" value="100000001" label="MPA_DOMAIN" />
+        <field name="eap_status" value="100000000" label="active" />
+        <field name="eap_version" value="7.0.0" />
+        <field name="eap_instructions_file" value="CHA_Copilot_Instructions_v2.txt" />
+        <field name="eap_kb_files" value="[&quot;CHA_KB_Channel_Selection_v7.0.txt&quot;,&quot;CHA_KB_Benchmarks_v7.0.txt&quot;,&quot;CHA_KB_Mix_Optimization_v7.0.txt&quot;]" />
+        <field name="eap_routing_keywords" value="[&quot;channel&quot;,&quot;media&quot;,&quot;allocation&quot;,&quot;benchmark&quot;,&quot;mix&quot;,&quot;social&quot;,&quot;display&quot;,&quot;video&quot;]" />
+        <field name="eap_handoff_to" value="ORC,ANL,SPO,DOC" />
+        <field name="eap_handoff_from" value="ORC,ANL,AUD,GHA" />
+      </record>
+      <record id="SPO-001">
+        <field name="eap_code" value="SPO" />
+        <field name="eap_name" value="SupplyPath" />
+        <field name="eap_description" value="MPA domain agent for programmatic supply path optimization and fee analysis." />
+        <field name="eap_domain" value="100000001" label="MPA_DOMAIN" />
+        <field name="eap_status" value="100000000" label="active" />
+        <field name="eap_version" value="7.0.0" />
+        <field name="eap_instructions_file" value="SPO_Copilot_Instructions_v1.txt" />
+        <field name="eap_kb_files" value="[&quot;SPO_KB_Supply_Path_v7.0.txt&quot;,&quot;SPO_KB_Fee_Analysis_v7.0.txt&quot;,&quot;SPO_KB_Partners_v7.0.txt&quot;]" />
+        <field name="eap_routing_keywords" value="[&quot;supply path&quot;,&quot;programmatic&quot;,&quot;ssp&quot;,&quot;dsp&quot;,&quot;fees&quot;,&quot;transparency&quot;]" />
+        <field name="eap_handoff_to" value="ORC,CHA,DOC" />
+        <field name="eap_handoff_from" value="ORC,CHA" />
+      </record>
+      <record id="DOC-001">
+        <field name="eap_code" value="DOC" />
+        <field name="eap_name" value="Document" />
+        <field name="eap_description" value="Support domain agent for document generation and export functionality." />
+        <field name="eap_domain" value="100000004" label="SUPPORT_DOMAIN" />
+        <field name="eap_status" value="100000000" label="active" />
+        <field name="eap_version" value="7.0.0" />
+        <field name="eap_instructions_file" value="DOC_Copilot_Instructions_v7.0.txt" />
+        <field name="eap_kb_files" value="[&quot;DOC_KB_Templates_v7.0.txt&quot;,&quot;DOC_KB_Export_v7.0.txt&quot;]" />
+        <field name="eap_routing_keywords" value="[&quot;document&quot;,&quot;export&quot;,&quot;generate&quot;,&quot;pdf&quot;,&quot;powerpoint&quot;,&quot;brief&quot;]" />
+        <field name="eap_handoff_to" value="ORC" />
+        <field name="eap_handoff_from" value="ORC,ANL,AUD,CHA,SPO,PRF,CST,CHG,MKT,GHA" />
+      </record>
+      <record id="PRF-001">
+        <field name="eap_code" value="PRF" />
+        <field name="eap_name" value="Performance" />
+        <field name="eap_description" value="Support domain agent for attribution analysis, anomaly detection, and performance insights." />
+        <field name="eap_domain" value="100000004" label="SUPPORT_DOMAIN" />
+        <field name="eap_status" value="100000000" label="active" />
+        <field name="eap_version" value="7.0.0" />
+        <field name="eap_instructions_file" value="PRF_Copilot_Instructions_v1.txt" />
+        <field name="eap_kb_files" value="[&quot;PRF_KB_Attribution_v7.0.txt&quot;,&quot;PRF_KB_Anomaly_Detection_v7.0.txt&quot;,&quot;PRF_KB_Insights_v7.0.txt&quot;]" />
+        <field name="eap_routing_keywords" value="[&quot;performance&quot;,&quot;attribution&quot;,&quot;results&quot;,&quot;metrics&quot;,&quot;kpi&quot;,&quot;anomaly&quot;]" />
+        <field name="eap_handoff_to" value="ORC,ANL,DOC" />
+        <field name="eap_handoff_from" value="ORC,ANL" />
+      </record>
+      <record id="CST-001">
+        <field name="eap_code" value="CST" />
+        <field name="eap_name" value="ConsultingStrategy" />
+        <field name="eap_description" value="Consulting domain agent for strategic frameworks, analysis, and recommendations." />
+        <field name="eap_domain" value="100000002" label="CONSULTING_DOMAIN" />
+        <field name="eap_status" value="100000000" label="active" />
+        <field name="eap_version" value="7.0.0" />
+        <field name="eap_instructions_file" value="CST_Copilot_Instructions_v7.0.txt" />
+        <field name="eap_kb_files" value="[&quot;CST_KB_Frameworks_v7.0.txt&quot;,&quot;CST_KB_Strategy_v7.0.txt&quot;,&quot;CST_KB_Analysis_v7.0.txt&quot;]" />
+        <field name="eap_routing_keywords" value="[&quot;strategy&quot;,&quot;framework&quot;,&quot;swot&quot;,&quot;porter&quot;,&quot;analysis&quot;,&quot;consulting&quot;]" />
+        <field name="eap_handoff_to" value="ORC,CHG,MKT,DOC" />
+        <field name="eap_handoff_from" value="ORC,GHA" />
+      </record>
+      <record id="CHG-001">
+        <field name="eap_code" value="CHG" />
+        <field name="eap_name" value="ChangeManagement" />
+        <field name="eap_description" value="Consulting domain agent for adoption planning, stakeholder management, and change readiness." />
+        <field name="eap_domain" value="100000002" label="CONSULTING_DOMAIN" />
+        <field name="eap_status" value="100000000" label="active" />
+        <field name="eap_version" value="7.0.0" />
+        <field name="eap_instructions_file" value="CHG_Copilot_Instructions_v2.txt" />
+        <field name="eap_kb_files" value="[&quot;CHG_KB_Change_Models_v7.0.txt&quot;,&quot;CHG_KB_Adoption_v7.0.txt&quot;,&quot;CHG_KB_Stakeholders_v7.0.txt&quot;]" />
+        <field name="eap_routing_keywords" value="[&quot;change&quot;,&quot;adoption&quot;,&quot;stakeholder&quot;,&quot;readiness&quot;,&quot;transformation&quot;]" />
+        <field name="eap_handoff_to" value="ORC,CST,DOC" />
+        <field name="eap_handoff_from" value="ORC,CST" />
+      </record>
+      <record id="MKT-001">
+        <field name="eap_code" value="MKT" />
+        <field name="eap_name" value="MarketingStrategy" />
+        <field name="eap_description" value="Consulting domain agent for GTM planning, positioning, and marketing strategy." />
+        <field name="eap_domain" value="100000002" label="CONSULTING_DOMAIN" />
+        <field name="eap_status" value="100000000" label="active" />
+        <field name="eap_version" value="7.0.0" />
+        <field name="eap_instructions_file" value="MKT_Copilot_Instructions_v2.txt" />
+        <field name="eap_kb_files" value="[&quot;MKT_KB_GTM_v7.0.txt&quot;,&quot;MKT_KB_Positioning_v7.0.txt&quot;,&quot;MKT_KB_Competitive_v7.0.txt&quot;]" />
+        <field name="eap_routing_keywords" value="[&quot;marketing&quot;,&quot;gtm&quot;,&quot;go to market&quot;,&quot;positioning&quot;,&quot;competitive&quot;,&quot;launch&quot;]" />
+        <field name="eap_handoff_to" value="ORC,CST,CHA,DOC" />
+        <field name="eap_handoff_from" value="ORC,CST,GHA" />
+      </record>
+      <record id="GHA-001">
+        <field name="eap_code" value="GHA" />
+        <field name="eap_name" value="GrowthHacking" />
+        <field name="eap_description" value="Growth domain agent for AARRR funnel analysis, viral mechanics, and growth experimentation." />
+        <field name="eap_domain" value="100000003" label="GROWTH_DOMAIN" />
+        <field name="eap_status" value="100000000" label="active" />
+        <field name="eap_version" value="7.0.0" />
+        <field name="eap_instructions_file" value="GHA_Copilot_Instructions_v7.0.txt" />
+        <field name="eap_kb_files" value="[&quot;GHA_KB_AARRR_Framework_v7.0.txt&quot;,&quot;GHA_KB_North_Star_Metrics_v7.0.txt&quot;,&quot;GHA_KB_Growth_Tactics_v7.0.txt&quot;,&quot;GHA_KB_Viral_Mechanics_v7.0.txt&quot;,&quot;GHA_KB_Growth_Workflows_v7.0.txt&quot;]" />
+        <field name="eap_routing_keywords" value="[&quot;growth&quot;,&quot;aarrr&quot;,&quot;funnel&quot;,&quot;viral&quot;,&quot;experiment&quot;,&quot;north star&quot;,&quot;acquisition&quot;,&quot;retention&quot;]" />
+        <field name="eap_handoff_to" value="ORC,AUD,CHA,CST,MKT,DOC" />
+        <field name="eap_handoff_from" value="ORC" />
+      </record>
+      <record id="DOCS-001">
+        <field name="eap_code" value="DOCS" />
+        <field name="eap_name" value="DocumentationAssistant" />
+        <field name="eap_description" value="Support domain agent for platform documentation access and guidance." />
+        <field name="eap_domain" value="100000004" label="SUPPORT_DOMAIN" />
+        <field name="eap_status" value="100000000" label="active" />
+        <field name="eap_version" value="7.0.0" />
+        <field name="eap_instructions_file" value="DOCS_Copilot_Instructions_v7.0.txt" />
+        <field name="eap_kb_files" value="[&quot;DOCS_KB_Platform_Guide_v7.0.txt&quot;,&quot;DOCS_KB_Agent_Reference_v7.0.txt&quot;]" />
+        <field name="eap_routing_keywords" value="[&quot;documentation&quot;,&quot;help&quot;,&quot;how to&quot;,&quot;guide&quot;,&quot;manual&quot;,&quot;reference&quot;]" />
+        <field name="eap_handoff_to" value="ORC" />
+        <field name="eap_handoff_from" value="ORC" />
+      </record>
+      <record id="DVO-001">
+        <field name="eap_code" value="DVO" />
+        <field name="eap_name" value="DevOps" />
+        <field name="eap_description" value="Infrastructure domain agent for deployment orchestration, validation, and rollback management." />
+        <field name="eap_domain" value="100000005" label="INFRASTRUCTURE" />
+        <field name="eap_status" value="100000000" label="active" />
+        <field name="eap_version" value="7.0.0" />
+        <field name="eap_instructions_file" value="DVO_Copilot_Instructions_v7.0.txt" />
+        <field name="eap_kb_files" value="[&quot;DVO_KB_Deployment_Patterns_v7.0.txt&quot;,&quot;DVO_KB_Platform_Configs_v7.0.txt&quot;,&quot;DVO_KB_Rollback_Procedures_v7.0.txt&quot;,&quot;DVO_KB_Enterprise_Security_v7.0.txt&quot;,&quot;DVO_KB_CAAT_Integration_v7.0.txt&quot;]" />
+        <field name="eap_routing_keywords" value="[&quot;deploy&quot;,&quot;deployment&quot;,&quot;rollback&quot;,&quot;validate&quot;,&quot;release&quot;,&quot;version&quot;]" />
+        <field name="eap_handoff_to" value="ORC" />
+        <field name="eap_handoff_from" value="ORC" />
+      </record>
+    </records>
+  </entity>
+</entities>

@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{8cb1026b-11c3-42f4-ba63-2c7f4f772683}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="mpa_planname" select="1" icon="1" preview="1">
+        <row name="result" id="mpa_mediaplanid">
+          <cell name="mpa_planname" width="300" />
+          <cell name="mpa_plancode" width="150" />
+          <cell name="mpa_clientid" width="150" />
+          <cell name="mpa_status" width="150" />
+          <cell name="mpa_currentstep" width="150" />
+          <cell name="mpa_totalbudget" width="150" />
+          <cell name="mpa_startdate" width="150" />
+          <cell name="mpa_enddate" width="150" />
+          <cell name="mpa_activeversionid" width="150" />
+          <cell name="mpa_createdby" width="150" />
+          <cell name="mpa_createdat" width="150" />
+          <cell name="mpa_updatedat" width="150" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="mpa_mediaplan">
+          <attribute name="mpa_mediaplanid" />
+          <attribute name="mpa_planname" />
+          <attribute name="createdon" />
+          <order attribute="mpa_planname" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="mpa_plancode" />
+          <attribute name="mpa_clientid" />
+          <attribute name="mpa_status" />
+          <attribute name="mpa_currentstep" />
+          <attribute name="mpa_totalbudget" />
+          <attribute name="mpa_startdate" />
+          <attribute name="mpa_enddate" />
+          <attribute name="mpa_activeversionid" />
+          <attribute name="mpa_createdby" />
+          <attribute name="mpa_createdat" />
+          <attribute name="mpa_updatedat" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Active Media Plans" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

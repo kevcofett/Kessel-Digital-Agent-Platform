@@ -6,7 +6,7 @@
       <LocalizedName description="Consulting and Marketing Agent Platform V7.0" languagecode="1033" />
     </LocalizedNames>
     <Descriptions>
-      <Description description="MCMAP Enterprise AI Agent Platform for Data and Services. Includes 13 active agents (ORC, ANL, AUD, CHA, SPO, DOC, PRF, CST, CHG, MKT, GHA, DOCS, DVO), platform infrastructure, Databricks integration preparation, and all v7.0 updates." languagecode="1033" />
+      <Description description="MCMAP Enterprise AI Agent Platform for Data and Services. Includes 13 active agents (ORC, ANL, AUD, CHA, SPO, DOC, PRF, CST, CHG, MKT, GHA, DOCS, DVO), complete Dataverse entities, AI Builder prompts, workflows, seed data, topic definitions, and Databricks integration preparation. Full v7.0 release with all components complete and production-ready." languagecode="1033" />
     </Descriptions>
     <Version>7.0.0.0</Version>
     <Managed>0</Managed>
@@ -24,32 +24,46 @@
       <CustomizationOptionValuePrefix>10000</CustomizationOptionValuePrefix>
     </Publisher>
     <RootComponents>
-      <!-- Platform Core Agents -->
+      <!-- ============================================== -->
+      <!-- PLATFORM CORE AGENTS -->
+      <!-- ============================================== -->
       <RootComponent type="29" schemaName="eap_orc_agent" behavior="0" />
 
-      <!-- MPA Domain Agents -->
+      <!-- ============================================== -->
+      <!-- MPA DOMAIN AGENTS -->
+      <!-- ============================================== -->
       <RootComponent type="29" schemaName="eap_anl_agent" behavior="0" />
       <RootComponent type="29" schemaName="eap_aud_agent" behavior="0" />
       <RootComponent type="29" schemaName="eap_cha_agent" behavior="0" />
       <RootComponent type="29" schemaName="eap_spo_agent" behavior="0" />
 
-      <!-- Support Domain Agents -->
+      <!-- ============================================== -->
+      <!-- SUPPORT DOMAIN AGENTS -->
+      <!-- ============================================== -->
       <RootComponent type="29" schemaName="eap_doc_agent" behavior="0" />
       <RootComponent type="29" schemaName="eap_prf_agent" behavior="0" />
       <RootComponent type="29" schemaName="eap_docs_agent" behavior="0" />
 
-      <!-- Consulting Domain Agents -->
+      <!-- ============================================== -->
+      <!-- CONSULTING DOMAIN AGENTS -->
+      <!-- ============================================== -->
       <RootComponent type="29" schemaName="eap_cst_agent" behavior="0" />
       <RootComponent type="29" schemaName="eap_chg_agent" behavior="0" />
       <RootComponent type="29" schemaName="eap_mkt_agent" behavior="0" />
 
-      <!-- Growth Domain Agent -->
+      <!-- ============================================== -->
+      <!-- GROWTH DOMAIN AGENT -->
+      <!-- ============================================== -->
       <RootComponent type="29" schemaName="eap_gha_agent" behavior="0" />
 
-      <!-- Infrastructure Domain Agent -->
+      <!-- ============================================== -->
+      <!-- INFRASTRUCTURE DOMAIN AGENT -->
+      <!-- ============================================== -->
       <RootComponent type="29" schemaName="eap_dvo_agent" behavior="0" />
 
-      <!-- Dataverse Tables -->
+      <!-- ============================================== -->
+      <!-- DATAVERSE TABLES - PLATFORM CORE -->
+      <!-- ============================================== -->
       <RootComponent type="1" schemaName="eap_sessions" behavior="0" />
       <RootComponent type="1" schemaName="eap_telemetry" behavior="0" />
       <RootComponent type="1" schemaName="eap_audit" behavior="0" />
@@ -60,12 +74,40 @@
       <RootComponent type="1" schemaName="eap_user_profiles" behavior="0" />
       <RootComponent type="1" schemaName="eap_user_roles" behavior="0" />
       <RootComponent type="1" schemaName="eap_config" behavior="0" />
-      <RootComponent type="1" schemaName="eap_growth_sessions" behavior="0" />
-      <RootComponent type="1" schemaName="mpa_kpis" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- DATAVERSE TABLES - MPA DOMAIN -->
+      <!-- ============================================== -->
+      <RootComponent type="1" schemaName="eap_Client" behavior="0" />
+      <RootComponent type="1" schemaName="eap_Session" behavior="0" />
+      <RootComponent type="1" schemaName="mpa_Benchmark" behavior="0" />
+      <RootComponent type="1" schemaName="mpa_Channel" behavior="0" />
+      <RootComponent type="1" schemaName="mpa_KPI" behavior="0" />
+      <RootComponent type="1" schemaName="mpa_MediaPlan" behavior="0" />
+      <RootComponent type="1" schemaName="mpa_PlanAllocation" behavior="0" />
+      <RootComponent type="1" schemaName="mpa_PlanData" behavior="0" />
+      <RootComponent type="1" schemaName="mpa_PlanVersion" behavior="0" />
+      <RootComponent type="1" schemaName="mpa_Vertical" behavior="0" />
       <RootComponent type="1" schemaName="mpa_channel_benchmarks" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- DATAVERSE TABLES - GROWTH DOMAIN -->
+      <!-- ============================================== -->
+      <RootComponent type="1" schemaName="eap_growth_sessions" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- DATAVERSE TABLES - CONSULTING DOMAIN -->
+      <!-- ============================================== -->
       <RootComponent type="1" schemaName="ca_frameworks" behavior="0" />
 
-      <!-- Workflows -->
+      <!-- ============================================== -->
+      <!-- DATAVERSE TABLES - INFRASTRUCTURE -->
+      <!-- ============================================== -->
+      <RootComponent type="1" schemaName="eap_deployments" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- WORKFLOWS - PLATFORM -->
+      <!-- ============================================== -->
       <RootComponent type="29" schemaName="mpa_initialize_session" behavior="0" />
       <RootComponent type="29" schemaName="mpa_memory_store" behavior="0" />
       <RootComponent type="29" schemaName="mpa_memory_initialize" behavior="0" />
@@ -74,11 +116,99 @@
       <RootComponent type="29" schemaName="mpa_ml_endpoint_router" behavior="0" />
       <RootComponent type="29" schemaName="mpa_proactive_evaluate" behavior="0" />
 
-      <!-- AI Builder Prompts - ORC -->
+      <!-- ============================================== -->
+      <!-- WORKFLOWS - MPA (from v5.5) -->
+      <!-- ============================================== -->
+      <RootComponent type="29" schemaName="mpa_capture_feedback" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_create_plan" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_create_post_mortem" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_generate_document" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_import_performance" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_process_media_brief" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_promote_learning" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_save_section" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_search_benchmarks" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_search_channels" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_track_kb_usage" behavior="0" />
+      <RootComponent type="29" schemaName="mpa_validate_plan" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- WORKFLOWS - CONSULTING (from v5.5) -->
+      <!-- ============================================== -->
+      <RootComponent type="29" schemaName="ca_create_analysis" behavior="0" />
+      <RootComponent type="29" schemaName="ca_create_deliverable" behavior="0" />
+      <RootComponent type="29" schemaName="ca_create_recommendation" behavior="0" />
+      <RootComponent type="29" schemaName="ca_initialize_session" behavior="0" />
+      <RootComponent type="29" schemaName="ca_promote_learning" behavior="0" />
+      <RootComponent type="29" schemaName="ca_record_framework_use" behavior="0" />
+      <RootComponent type="29" schemaName="ca_search_benchmarks" behavior="0" />
+      <RootComponent type="29" schemaName="ca_search_frameworks" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- AI BUILDER PROMPTS - ORC -->
+      <!-- ============================================== -->
       <RootComponent type="400" schemaName="orc_intent_classify" behavior="0" />
       <RootComponent type="400" schemaName="orc_validate_gate" behavior="0" />
+      <RootComponent type="400" schemaName="orc_session_summarize" behavior="0" />
 
-      <!-- AI Builder Prompts - GHA (10 prompts) -->
+      <!-- ============================================== -->
+      <!-- AI BUILDER PROMPTS - ANL -->
+      <!-- ============================================== -->
+      <RootComponent type="400" schemaName="anl_projection_calculate" behavior="0" />
+      <RootComponent type="400" schemaName="anl_scenario_run" behavior="0" />
+      <RootComponent type="400" schemaName="anl_anomaly_detect" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- AI BUILDER PROMPTS - AUD -->
+      <!-- ============================================== -->
+      <RootComponent type="400" schemaName="aud_segment_create" behavior="0" />
+      <RootComponent type="400" schemaName="aud_ltv_calculate" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- AI BUILDER PROMPTS - CHA -->
+      <!-- ============================================== -->
+      <RootComponent type="400" schemaName="cha_allocation_optimize" behavior="0" />
+      <RootComponent type="400" schemaName="cha_benchmark_lookup" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- AI BUILDER PROMPTS - SPO -->
+      <!-- ============================================== -->
+      <RootComponent type="400" schemaName="spo_fee_analyze" behavior="0" />
+      <RootComponent type="400" schemaName="spo_partner_evaluate" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- AI BUILDER PROMPTS - DOC -->
+      <!-- ============================================== -->
+      <RootComponent type="400" schemaName="doc_generate" behavior="0" />
+      <RootComponent type="400" schemaName="doc_brief_create" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- AI BUILDER PROMPTS - PRF -->
+      <!-- ============================================== -->
+      <RootComponent type="400" schemaName="prf_attribution_analyze" behavior="0" />
+      <RootComponent type="400" schemaName="prf_learning_extract" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- AI BUILDER PROMPTS - CST -->
+      <!-- ============================================== -->
+      <RootComponent type="400" schemaName="cst_framework_select" behavior="0" />
+      <RootComponent type="400" schemaName="cst_strategy_develop" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- AI BUILDER PROMPTS - CHG -->
+      <!-- ============================================== -->
+      <RootComponent type="400" schemaName="chg_readiness_assess" behavior="0" />
+      <RootComponent type="400" schemaName="chg_adoption_plan" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- AI BUILDER PROMPTS - MKT -->
+      <!-- ============================================== -->
+      <RootComponent type="400" schemaName="mkt_gtm_plan" behavior="0" />
+      <RootComponent type="400" schemaName="mkt_competitive_analyze" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- AI BUILDER PROMPTS - GHA (10 prompts) -->
+      <!-- ============================================== -->
       <RootComponent type="400" schemaName="gha_intent_classify" behavior="0" />
       <RootComponent type="400" schemaName="gha_framework_select" behavior="0" />
       <RootComponent type="400" schemaName="gha_lifecycle_analyze" behavior="0" />
@@ -89,6 +219,19 @@
       <RootComponent type="400" schemaName="gha_experiment_design" behavior="0" />
       <RootComponent type="400" schemaName="gha_growth_project" behavior="0" />
       <RootComponent type="400" schemaName="gha_growth_synthesize" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- AI BUILDER PROMPTS - DOCS -->
+      <!-- ============================================== -->
+      <RootComponent type="400" schemaName="docs_content_access" behavior="0" />
+
+      <!-- ============================================== -->
+      <!-- AI BUILDER PROMPTS - DVO -->
+      <!-- ============================================== -->
+      <RootComponent type="400" schemaName="dvo_validate_agent" behavior="0" />
+      <RootComponent type="400" schemaName="dvo_deployment_plan" behavior="0" />
+      <RootComponent type="400" schemaName="dvo_rollback_execute" behavior="0" />
+
     </RootComponents>
     <MissingDependencies />
   </SolutionManifest>

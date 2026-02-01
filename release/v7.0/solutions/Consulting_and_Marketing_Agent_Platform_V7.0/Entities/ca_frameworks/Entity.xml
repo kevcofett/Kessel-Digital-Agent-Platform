@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>ca_frameworks</Name>
+  <EntityInfo>
+    <entity Name="ca_frameworks">
+      <DisplayName>Consulting Framework</DisplayName>
+      <DisplayCollectionName>Consulting Frameworks</DisplayCollectionName>
+      <Description>Stores consulting frameworks and methodologies for CST, CHG, and MKT agents.</Description>
+      <OwnershipTypeMask>OrganizationOwned</OwnershipTypeMask>
+      <IsActivity>false</IsActivity>
+      <IsAvailableOffline>true</IsAvailableOffline>
+      <IsCustomizable>1</IsCustomizable>
+      <IsRenameable>1</IsRenameable>
+      <CanCreateAttributes>1</CanCreateAttributes>
+      <CanCreateForms>1</CanCreateForms>
+      <CanCreateViews>1</CanCreateViews>
+      <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+      <PrimaryIdAttribute>ca_frameworkid</PrimaryIdAttribute>
+      <PrimaryNameAttribute>ca_name</PrimaryNameAttribute>
+      <IntroducedVersion>7.0.0.0</IntroducedVersion>
+      <localizedNames>
+        <localizedName description="Consulting Framework" languagecode="1033" />
+      </localizedNames>
+      <Descriptions>
+        <Description description="Stores consulting frameworks and methodologies" languagecode="1033" />
+      </Descriptions>
+      <attributes>
+        <attribute PhysicalName="ca_frameworkid">
+          <Type>primarykey</Type>
+          <DisplayName>Framework ID</DisplayName>
+          <Description>Unique identifier for the framework</Description>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="ca_name">
+          <Type>nvarchar</Type>
+          <MaxLength>200</MaxLength>
+          <DisplayName>Framework Name</DisplayName>
+          <Description>Name of the framework (e.g., Porter's Five Forces, SWOT)</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="ca_code">
+          <Type>nvarchar</Type>
+          <MaxLength>50</MaxLength>
+          <DisplayName>Framework Code</DisplayName>
+          <Description>Unique code for the framework</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="ca_category">
+          <Type>picklist</Type>
+          <DisplayName>Category</DisplayName>
+          <Description>Category of the framework</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <OptionSet>
+            <Options>
+              <Option value="100000000" label="strategy" />
+              <Option value="100000001" label="analysis" />
+              <Option value="100000002" label="planning" />
+              <Option value="100000003" label="execution" />
+              <Option value="100000004" label="change_management" />
+              <Option value="100000005" label="marketing" />
+              <Option value="100000006" label="growth" />
+            </Options>
+          </OptionSet>
+        </attribute>
+
+        <attribute PhysicalName="ca_description">
+          <Type>nvarchar</Type>
+          <MaxLength>4000</MaxLength>
+          <DisplayName>Description</DisplayName>
+          <Description>Full description of the framework</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="ca_use_cases">
+          <Type>ntext</Type>
+          <DisplayName>Use Cases</DisplayName>
+          <Description>JSON array of use cases for this framework</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>Text</Format>
+        </attribute>
+
+        <attribute PhysicalName="ca_components">
+          <Type>ntext</Type>
+          <DisplayName>Components</DisplayName>
+          <Description>JSON array of framework components/steps</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>Text</Format>
+        </attribute>
+
+        <attribute PhysicalName="ca_template">
+          <Type>ntext</Type>
+          <DisplayName>Template</DisplayName>
+          <Description>JSON template for applying this framework</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>Text</Format>
+        </attribute>
+
+        <attribute PhysicalName="ca_agent_codes">
+          <Type>nvarchar</Type>
+          <MaxLength>100</MaxLength>
+          <DisplayName>Agent Codes</DisplayName>
+          <Description>Comma-separated list of agents that use this framework</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="ca_source">
+          <Type>nvarchar</Type>
+          <MaxLength>200</MaxLength>
+          <DisplayName>Source</DisplayName>
+          <Description>Source/origin of the framework (e.g., McKinsey, BCG)</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="ca_usage_count">
+          <Type>int</Type>
+          <DisplayName>Usage Count</DisplayName>
+          <Description>Number of times this framework has been used</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <MinValue>0</MinValue>
+          <MaxValue>2147483647</MaxValue>
+          <DefaultValue>0</DefaultValue>
+        </attribute>
+
+        <attribute PhysicalName="ca_is_active">
+          <Type>bit</Type>
+          <DisplayName>Is Active</DisplayName>
+          <Description>Whether the framework is active</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <DefaultValue>1</DefaultValue>
+        </attribute>
+
+        <attribute PhysicalName="createdon">
+          <Type>datetime</Type>
+          <DisplayName>Created On</DisplayName>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="modifiedon">
+          <Type>datetime</Type>
+          <DisplayName>Modified On</DisplayName>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="statecode">
+          <Type>state</Type>
+          <DisplayName>Status</DisplayName>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="statuscode">
+          <Type>status</Type>
+          <DisplayName>Status Reason</DisplayName>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+      </attributes>
+    </entity>
+  </EntityInfo>
+</Entity>

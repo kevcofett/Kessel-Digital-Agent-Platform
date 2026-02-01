@@ -1,0 +1,413 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "mpa_sharedcommondataserviceforapps_1d3b7"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "df0d499f-f251-45bc-a987-b21826a40cc6"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "client_id": {
+                  "type": "string",
+                  "description": "GUID of the client"
+                },
+                "campaign_name": {
+                  "type": "string",
+                  "description": "Name for the media plan"
+                },
+                "user_id": {
+                  "type": "string",
+                  "description": "GUID of the user creating the plan"
+                },
+                "total_budget": {
+                  "type": "number",
+                  "description": "Total campaign budget"
+                },
+                "start_date": {
+                  "type": "string",
+                  "description": "Campaign start date (YYYY-MM-DD)"
+                },
+                "end_date": {
+                  "type": "string",
+                  "description": "Campaign end date (YYYY-MM-DD)"
+                }
+              },
+              "required": [
+                "client_id",
+                "campaign_name",
+                "user_id"
+              ]
+            },
+            "triggerAuthenticationType": "Tenant"
+          }
+        }
+      },
+      "actions": {
+        "InitializePlanCode": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "ce6807ba-ae8f-4403-87b8-f50f1869f5dd"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "plan_code",
+                "type": "string",
+                "value": "@{concat('PLN-', formatDateTime(utcNow(), 'yyyyMMddHHmmss'))}"
+              }
+            ]
+          }
+        },
+        "GetClient": {
+          "runAfter": {
+            "InitializePlanCode": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0a4cfa36-e992-4f34-86f2-903e716fca6b"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "eap_clients",
+              "recordId": "@triggerBody()?['client_id']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "CreateMediaPlan": {
+          "runAfter": {
+            "GetClient": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "47f0fea3-e01f-4909-bb9e-b56be4d0f5af"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_mediaplan",
+              "item/mpa_clientid": "@triggerBody()?['client_id']",
+              "item/mpa_currentstep": 1,
+              "item/mpa_plancode": "@variables('plan_code')",
+              "item/mpa_planname": "@triggerBody()?['campaign_name']",
+              "item/mpa_status": 100000000,
+              "item/mpa_createdat": "@utcNow()",
+              "item/mpa_createdby": "@triggerBody()?['user_id']",
+              "item/mpa_enddate": "@triggerBody()?['end_date']",
+              "item/mpa_startdate": "@triggerBody()?['start_date']",
+              "item/mpa_totalbudget": "@triggerBody()?['total_budget']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "InitializeVersionCode": {
+          "runAfter": {
+            "CreateMediaPlan": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "eed9509d-a890-488e-ab86-d0ceeccd82d8"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "version_code",
+                "type": "string",
+                "value": "@{concat(variables('plan_code'), '-V1')}"
+              }
+            ]
+          }
+        },
+        "CreateInitialVersion": {
+          "runAfter": {
+            "InitializeVersionCode": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2eacec65-d13f-4787-b0ba-e60d113d1028"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_planversion",
+              "item/mpa_MediaPlan@odata.bind": "@outputs('CreateMediaPlan')?['body/mpa_mediaplanid']",
+              "item/mpa_versioncode": "@variables('version_code')",
+              "item/mpa_versionname": "@concat(triggerBody()?['campaign_name'], ' - Version 1')",
+              "item/mpa_versionnumber": 1,
+              "item/mpa_versionstatus": 100000000,
+              "item/mpa_createdat": "@utcNow()",
+              "item/mpa_createdby": "@triggerBody()?['user_id']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "UpdatePlanActiveVersion": {
+          "runAfter": {
+            "CreateInitialVersion": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b85fe943-8cff-4dbb-86b8-52547f0f3e8c"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "UpdateOnlyRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "mpa_mediaplan",
+              "recordId": "@outputs('CreateMediaPlan')?['body/mpa_mediaplanid']",
+              "item/mpa_activeversionid": "@outputs('CreateInitialVersion')?['body/mpa_planversionid']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "InitializeSectionTypes": {
+          "runAfter": {
+            "UpdatePlanActiveVersion": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4f835be9-4bed-42d5-b01a-cb90dd34114a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "section_types",
+                "type": "array",
+                "value": [
+                  {
+                    "type": 100000000,
+                    "name": "Client Context"
+                  },
+                  {
+                    "type": 100000001,
+                    "name": "Objectives & KPIs"
+                  },
+                  {
+                    "type": 100000002,
+                    "name": "Budget Framework"
+                  },
+                  {
+                    "type": 100000003,
+                    "name": "Target Audience"
+                  },
+                  {
+                    "type": 100000004,
+                    "name": "Channel Strategy"
+                  },
+                  {
+                    "type": 100000005,
+                    "name": "Partner Selection"
+                  },
+                  {
+                    "type": 100000006,
+                    "name": "Measurement Framework"
+                  },
+                  {
+                    "type": 100000007,
+                    "name": "Optimization Strategy"
+                  },
+                  {
+                    "type": 100000008,
+                    "name": "Compliance & Brand Safety"
+                  },
+                  {
+                    "type": 100000009,
+                    "name": "Finalization & Output"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "InitializeStepCounter": {
+          "runAfter": {
+            "InitializeSectionTypes": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b775f177-a2b5-4147-9c45-104f18c021e0"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "step_counter",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "CreateAllSections": {
+          "foreach": "@variables('section_types')",
+          "actions": {
+            "IncrementStepCounter": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "53290bf3-d90d-476c-ae4b-272661bee874"
+              },
+              "type": "IncrementVariable",
+              "inputs": {
+                "name": "step_counter",
+                "value": 1
+              }
+            },
+            "CreateSection": {
+              "runAfter": {
+                "IncrementStepCounter": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "cbd608fe-0386-419d-81e4-7612639e6ab1"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "mpa_plandata",
+                  "item/mpa_datatitle": "@items('CreateAllSections')?['name']",
+                  "item/mpa_MediaPlan@odata.bind": "@outputs('CreateMediaPlan')?['body/mpa_mediaplanid']",
+                  "item/mpa_PlanVersion@odata.bind": "@outputs('CreateInitialVersion')?['body/mpa_planversionid']",
+                  "item/mpa_sectionstatus": 100000000,
+                  "item/mpa_sectiontype": "@items('CreateAllSections')?['type']",
+                  "item/mpa_stepnumber": "@variables('step_counter')",
+                  "item/mpa_createdat": "@utcNow()",
+                  "item/mpa_sectiondata": "@'{}'"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "InitializeStepCounter": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "61330802-269f-4bd3-bb8c-609c7af22762"
+          },
+          "type": "Foreach"
+        },
+        "SuccessResponse": {
+          "runAfter": {
+            "CreateAllSections": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "44eff9cb-af3c-4f2a-8704-2eec369408f2"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "Success",
+              "plan_id": "@{outputs('CreateMediaPlan')?['body/mpa_mediaplanid']}",
+              "plan_code": "@{variables('plan_code')}",
+              "version_id": "@{outputs('CreateInitialVersion')?['body/mpa_planversionid']}",
+              "version_code": "@{variables('version_code')}",
+              "client_name": "@{outputs('GetClient')?['body/eap_clientname']}",
+              "sections_created": 10,
+              "message": "Media plan created successfully with all sections initialized"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string"
+                },
+                "plan_id": {
+                  "type": "string"
+                },
+                "plan_code": {
+                  "type": "string"
+                },
+                "version_id": {
+                  "type": "string"
+                },
+                "version_code": {
+                  "type": "string"
+                },
+                "client_name": {
+                  "type": "string"
+                },
+                "sections_created": {
+                  "type": "integer"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

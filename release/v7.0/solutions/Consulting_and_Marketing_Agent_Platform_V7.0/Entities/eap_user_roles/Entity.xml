@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>eap_user_roles</Name>
+  <EntityInfo>
+    <entity Name="eap_user_roles">
+      <DisplayName>User Role</DisplayName>
+      <DisplayCollectionName>User Roles</DisplayCollectionName>
+      <Description>Defines roles for MCMAP platform access control and permissions.</Description>
+      <OwnershipTypeMask>OrganizationOwned</OwnershipTypeMask>
+      <IsActivity>false</IsActivity>
+      <IsAvailableOffline>true</IsAvailableOffline>
+      <IsCustomizable>1</IsCustomizable>
+      <IsRenameable>1</IsRenameable>
+      <CanCreateAttributes>1</CanCreateAttributes>
+      <CanCreateForms>1</CanCreateForms>
+      <CanCreateViews>1</CanCreateViews>
+      <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+      <PrimaryIdAttribute>eap_user_roleid</PrimaryIdAttribute>
+      <PrimaryNameAttribute>eap_name</PrimaryNameAttribute>
+      <IntroducedVersion>7.0.0.0</IntroducedVersion>
+      <localizedNames>
+        <localizedName description="User Role" languagecode="1033" />
+      </localizedNames>
+      <Descriptions>
+        <Description description="Defines roles for MCMAP platform access control" languagecode="1033" />
+      </Descriptions>
+      <attributes>
+        <attribute PhysicalName="eap_user_roleid">
+          <Type>primarykey</Type>
+          <DisplayName>User Role ID</DisplayName>
+          <Description>Unique identifier for the role</Description>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_name">
+          <Type>nvarchar</Type>
+          <MaxLength>100</MaxLength>
+          <DisplayName>Role Name</DisplayName>
+          <Description>Name of the role</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_code">
+          <Type>nvarchar</Type>
+          <MaxLength>50</MaxLength>
+          <DisplayName>Role Code</DisplayName>
+          <Description>Unique code for the role</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_description">
+          <Type>nvarchar</Type>
+          <MaxLength>2000</MaxLength>
+          <DisplayName>Description</DisplayName>
+          <Description>Description of the role and its permissions</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_role_level">
+          <Type>picklist</Type>
+          <DisplayName>Role Level</DisplayName>
+          <Description>Level of the role in the hierarchy</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <OptionSet>
+            <Options>
+              <Option value="100000000" label="viewer" />
+              <Option value="100000001" label="developer" />
+              <Option value="100000002" label="operator" />
+              <Option value="100000003" label="release_manager" />
+              <Option value="100000004" label="admin" />
+              <Option value="100000005" label="service_account" />
+            </Options>
+          </OptionSet>
+        </attribute>
+
+        <attribute PhysicalName="eap_permissions">
+          <Type>ntext</Type>
+          <DisplayName>Permissions</DisplayName>
+          <Description>JSON array of permission codes granted by this role</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>Text</Format>
+        </attribute>
+
+        <attribute PhysicalName="eap_azure_ad_group">
+          <Type>nvarchar</Type>
+          <MaxLength>100</MaxLength>
+          <DisplayName>Azure AD Group</DisplayName>
+          <Description>Azure AD group ID that maps to this role</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_environment_access">
+          <Type>nvarchar</Type>
+          <MaxLength>100</MaxLength>
+          <DisplayName>Environment Access</DisplayName>
+          <Description>Comma-separated list of environments (development, staging, production)</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_is_system">
+          <Type>bit</Type>
+          <DisplayName>Is System Role</DisplayName>
+          <Description>Whether this is a system-defined role</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <DefaultValue>0</DefaultValue>
+        </attribute>
+
+        <attribute PhysicalName="eap_is_active">
+          <Type>bit</Type>
+          <DisplayName>Is Active</DisplayName>
+          <Description>Whether the role is active</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <DefaultValue>1</DefaultValue>
+        </attribute>
+
+        <attribute PhysicalName="createdon">
+          <Type>datetime</Type>
+          <DisplayName>Created On</DisplayName>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="modifiedon">
+          <Type>datetime</Type>
+          <DisplayName>Modified On</DisplayName>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="statecode">
+          <Type>state</Type>
+          <DisplayName>Status</DisplayName>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="statuscode">
+          <Type>status</Type>
+          <DisplayName>Status Reason</DisplayName>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+      </attributes>
+    </entity>
+  </EntityInfo>
+</Entity>

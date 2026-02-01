@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>eap_capability_impl</Name>
+  <EntityInfo>
+    <entity Name="eap_capability_impl">
+      <DisplayName>Capability Implementation</DisplayName>
+      <DisplayCollectionName>Capability Implementations</DisplayCollectionName>
+      <Description>Links capabilities to specific agent implementations with execution details.</Description>
+      <OwnershipTypeMask>OrganizationOwned</OwnershipTypeMask>
+      <IsActivity>false</IsActivity>
+      <IsAvailableOffline>true</IsAvailableOffline>
+      <IsCustomizable>1</IsCustomizable>
+      <IsRenameable>1</IsRenameable>
+      <CanCreateAttributes>1</CanCreateAttributes>
+      <CanCreateForms>1</CanCreateForms>
+      <CanCreateViews>1</CanCreateViews>
+      <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+      <PrimaryIdAttribute>eap_capability_implid</PrimaryIdAttribute>
+      <PrimaryNameAttribute>eap_name</PrimaryNameAttribute>
+      <IntroducedVersion>7.0.0.0</IntroducedVersion>
+      <localizedNames>
+        <localizedName description="Capability Implementation" languagecode="1033" />
+      </localizedNames>
+      <Descriptions>
+        <Description description="Links capabilities to specific agent implementations" languagecode="1033" />
+      </Descriptions>
+      <attributes>
+        <attribute PhysicalName="eap_capability_implid">
+          <Type>primarykey</Type>
+          <DisplayName>Implementation ID</DisplayName>
+          <Description>Unique identifier for the implementation</Description>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_name">
+          <Type>nvarchar</Type>
+          <MaxLength>200</MaxLength>
+          <DisplayName>Implementation Name</DisplayName>
+          <Description>Name of the implementation</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_capability_id">
+          <Type>lookup</Type>
+          <DisplayName>Capability</DisplayName>
+          <Description>Link to the capability being implemented</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <LookupStyle>single</LookupStyle>
+          <Targets>
+            <Target>eap_capabilities</Target>
+          </Targets>
+        </attribute>
+
+        <attribute PhysicalName="eap_agent_id">
+          <Type>lookup</Type>
+          <DisplayName>Agent</DisplayName>
+          <Description>Link to the agent implementing this capability</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <LookupStyle>single</LookupStyle>
+          <Targets>
+            <Target>eap_agents</Target>
+          </Targets>
+        </attribute>
+
+        <attribute PhysicalName="eap_implementation_type">
+          <Type>picklist</Type>
+          <DisplayName>Implementation Type</DisplayName>
+          <Description>How the capability is implemented</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <OptionSet>
+            <Options>
+              <Option value="100000000" label="ai_builder_prompt" />
+              <Option value="100000001" label="power_automate_flow" />
+              <Option value="100000002" label="dataverse_action" />
+              <Option value="100000003" label="azure_function" />
+              <Option value="100000004" label="copilot_topic" />
+              <Option value="100000005" label="kb_lookup" />
+            </Options>
+          </OptionSet>
+        </attribute>
+
+        <attribute PhysicalName="eap_prompt_id">
+          <Type>lookup</Type>
+          <DisplayName>Prompt</DisplayName>
+          <Description>Link to AI Builder prompt if applicable</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <LookupStyle>single</LookupStyle>
+          <Targets>
+            <Target>eap_prompts</Target>
+          </Targets>
+        </attribute>
+
+        <attribute PhysicalName="eap_flow_id">
+          <Type>nvarchar</Type>
+          <MaxLength>100</MaxLength>
+          <DisplayName>Flow ID</DisplayName>
+          <Description>ID of the Power Automate flow if applicable</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="eap_config">
+          <Type>ntext</Type>
+          <DisplayName>Configuration</DisplayName>
+          <Description>JSON object with implementation-specific configuration</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <Format>Text</Format>
+        </attribute>
+
+        <attribute PhysicalName="eap_is_primary">
+          <Type>bit</Type>
+          <DisplayName>Is Primary</DisplayName>
+          <Description>Whether this is the primary implementation for the capability</Description>
+          <RequiredLevel>none</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+          <DefaultValue>0</DefaultValue>
+        </attribute>
+
+        <attribute PhysicalName="eap_version">
+          <Type>nvarchar</Type>
+          <MaxLength>20</MaxLength>
+          <DisplayName>Version</DisplayName>
+          <Description>Version of the implementation</Description>
+          <RequiredLevel>required</RequiredLevel>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="createdon">
+          <Type>datetime</Type>
+          <DisplayName>Created On</DisplayName>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="modifiedon">
+          <Type>datetime</Type>
+          <DisplayName>Modified On</DisplayName>
+          <IsCustomizable>0</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="statecode">
+          <Type>state</Type>
+          <DisplayName>Status</DisplayName>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+
+        <attribute PhysicalName="statuscode">
+          <Type>status</Type>
+          <DisplayName>Status Reason</DisplayName>
+          <IsCustomizable>1</IsCustomizable>
+        </attribute>
+      </attributes>
+    </entity>
+  </EntityInfo>
+</Entity>

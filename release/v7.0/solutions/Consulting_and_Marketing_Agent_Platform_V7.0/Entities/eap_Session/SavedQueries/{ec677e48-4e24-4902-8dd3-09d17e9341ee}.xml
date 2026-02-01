@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{ec677e48-4e24-4902-8dd3-09d17e9341ee}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="eap_sessioncode" select="1" icon="1" preview="1">
+        <row name="result" id="eap_sessionid">
+          <cell name="eap_sessioncode" width="300" />
+          <cell name="eap_agentcode" width="150" />
+          <cell name="eap_status" width="150" />
+          <cell name="eap_userid" width="150" />
+          <cell name="eap_clientid" width="150" />
+          <cell name="eap_planid" width="150" />
+          <cell name="eap_sessiondata" width="150" />
+          <cell name="eap_startedat" width="150" />
+          <cell name="eap_endedat" width="150" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="eap_session">
+          <attribute name="eap_sessionid" />
+          <attribute name="eap_sessioncode" />
+          <attribute name="createdon" />
+          <order attribute="eap_sessioncode" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="eap_agentcode" />
+          <attribute name="eap_status" />
+          <attribute name="eap_userid" />
+          <attribute name="eap_clientid" />
+          <attribute name="eap_planid" />
+          <attribute name="eap_sessiondata" />
+          <attribute name="eap_startedat" />
+          <attribute name="eap_endedat" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Active Sessions" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
